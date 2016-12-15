@@ -1,0 +1,10 @@
+C:\Study\Programs\ContinuousGeneralizer\VBClass\bin\Release\VBClass.dll
+C:\Study\Programs\ContinuousGeneralizer\VBClass\bin\Release\VBClass.pdb
+C:\Study\Programs\ContinuousGeneralizer\VBClass\bin\Release\VBClass.xml
+C:\Study\Programs\ContinuousGeneralizer\VBClass\obj\Release\ResolveAssemblyReference.cache
+C:\Study\Programs\ContinuousGeneralizer\VBClass\obj\Release\VBClass.Resources.resources
+C:\Study\Programs\ContinuousGeneralizer\VBClass\obj\Release\GenerateResource.read.1.tlog
+C:\Study\Programs\ContinuousGeneralizer\VBClass\obj\Release\GenerateResource.write.1.tlog
+C:\Study\Programs\ContinuousGeneralizer\VBClass\obj\Release\VBClass.dll
+C:\Study\Programs\ContinuousGeneralizer\VBClass\obj\Release\VBClass.xml
+C:\Study\Programs\ContinuousGeneralizer\VBClass\obj\Release\VBClass.pdb

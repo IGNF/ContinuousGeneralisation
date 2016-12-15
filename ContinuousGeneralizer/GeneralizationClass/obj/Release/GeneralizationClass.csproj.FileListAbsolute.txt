@@ -1,0 +1,14 @@
+C:\Study\Programs\ContinuousGeneralizer\GeneralizationClass\bin\Release\GeneralizationClass.dll
+C:\Study\Programs\ContinuousGeneralizer\GeneralizationClass\bin\Release\GeneralizationClass.pdb
+C:\Study\Programs\ContinuousGeneralizer\GeneralizationClass\bin\Release\MorphingClass.dll
+C:\Study\Programs\ContinuousGeneralizer\GeneralizationClass\bin\Release\VBClass.dll
+C:\Study\Programs\ContinuousGeneralizer\GeneralizationClass\bin\Release\C5.dll
+C:\Study\Programs\ContinuousGeneralizer\GeneralizationClass\bin\Release\CPlusClass.dll
+C:\Study\Programs\ContinuousGeneralizer\GeneralizationClass\bin\Release\MorphingClass.pdb
+C:\Study\Programs\ContinuousGeneralizer\GeneralizationClass\bin\Release\VBClass.pdb
+C:\Study\Programs\ContinuousGeneralizer\GeneralizationClass\bin\Release\VBClass.xml
+C:\Study\Programs\ContinuousGeneralizer\GeneralizationClass\bin\Release\C5.pdb
+C:\Study\Programs\ContinuousGeneralizer\GeneralizationClass\bin\Release\CPlusClass.pdb
+C:\Study\Programs\ContinuousGeneralizer\GeneralizationClass\obj\Release\ResolveAssemblyReference.cache
+C:\Study\Programs\ContinuousGeneralizer\GeneralizationClass\obj\Release\GeneralizationClass.dll
+C:\Study\Programs\ContinuousGeneralizer\GeneralizationClass\obj\Release\GeneralizationClass.pdb
