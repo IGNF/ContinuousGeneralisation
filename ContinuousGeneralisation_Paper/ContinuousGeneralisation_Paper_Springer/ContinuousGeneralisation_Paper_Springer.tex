@@ -1,0 +1,258 @@
+%%%%%%%%%%%%%%%%%%%% author.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% sample root file for your "contribution" to a contributed volume
+%
+% Use this file as a template for your own input.
+%
+%%%%%%%%%%%%%%%% Springer %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% RECOMMENDED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[graybox]{svmult}
+\usepackage{etex}
+
+
+%\usepackage[english]{babel}
+%
+\usepackage[utf8]{inputenc}
+% choose options for [] as required from the list
+% in the Reference Guide
+
+\usepackage{mathptmx}       % selects Times Roman as basic font
+\usepackage{helvet}         % selects Helvetica as sans-serif font
+\usepackage{courier}        % selects Courier as typewriter font
+\usepackage{type1cm}        % activate if the above 3 fonts are
+                            % not available on your system
+%
+\usepackage{makeidx}         % allows index generation
+\usepackage{graphicx}        % standard LaTeX graphics tool
+\usepackage{caption}
+                             % when including figure files
+\usepackage{multicol}        % used for the two-column index
+\usepackage[bottom]{footmisc}% places footnotes at page bottom
+\usepackage{pdflscape}
+%\usepackage{rotating}
+\usepackage{afterpage}
+\usepackage[disable]{todonotes}
+%\usepackage{todonotes}
+\usepackage[backend=bibtex,bibstyle=authoryear,citestyle=authoryear,
+firstinits=true,doi=false,isbn=false,url=false,eprint=false,dashed=false,natbib=true]{biblatex}
+%\renewcommand*{\bibfont}{\small}
+\addbibresource{References.bib}
+\usepackage{subfigure}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{setspace}
+\usepackage{epstopdf}
+\usepackage{flafter} %make sure that the floats are not placed 
+%before their definition
+\usepackage{times}
+\usepackage{bm}
+\usepackage{gensymb}  % for degree sign, e.g., temperature
+\usepackage{amsmath}
+\usepackage{amstext}
+\usepackage{array}  %for define the fomats of columns in a table
+\usepackage{dcolumn}
+\usepackage[T1]{fontenc}
+\usepackage{pgfplots}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{tabularx}
+\usepackage{adjustbox}
+\usepackage{capt-of}
+%\usepackage{siunitx} %for scientific 
+%notation
+%%we do this because of a bug of package floatrow
+%\let\tmp\newinsert
+%\let\newinsert\newbox
+%\usepackage{floatrow}
+%\let\newinsert\tmp
+
+\usepackage{verbatimbox}  %for \addvbuffer
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{xspace}
+%\usepackage{pdfcomment}
+%\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+%		\node[shape=circle,draw,inner sep=1pt] (char) {#1};}}
+%\newcommand*\circledtwo[1]{\tikz[baseline=(char.base)]{
+%		\node[shape=circle,draw,inner sep=0.1pt] (char) {#1};}}
+% \newcommand{\ml}{\ensuremath{M_+}\xspace}
+% \newcommand{\ms}{\ensuremath{M_-}\xspace}
+
+\newcommand{\mypar}[1]{\bigskip\noindent\textbf{#1.}~}
+
+\newcommand{\e}[1]{\times 10^{#1}}
+
+\graphicspath{{figures/}}
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+
+%For the references, the following commands make the titles 
+%lowercase while keep the initial letters of journal names 
+%uppercase
+\DeclareFieldFormat{titlecase}{\MakeSentenceCase*{#1}}
+\newbibmacro*{journal}{%
+	\iffieldundef{journaltitle}
+	{}
+	{\printtext[journaltitle]{%
+			\printfield[myplain]{journaltitle}%
+			\setunit{\subtitlepunct}%
+			\printfield[myplain]{journalsubtitle}}}}
+\DeclareFieldFormat{myplain}{#1}
+
+%Remove the quotation marks for the titles in the reference
+\DeclareFieldFormat[article,inbook,incollection,inproceedings,patent,thesis,unpublished]{citetitle}{#1}
+\DeclareFieldFormat[article,inbook,incollection,inproceedings,patent,thesis,unpublished]{title}{#1}
+\DeclareNameAlias{author}{last-first}
+
+%%Using \DeclarePairedDelimiter from mathtools, you could define 
+%%macros \ceil and \floor, which will scale the delimiters 
+%%properly (if starred):
+%\usepackage{mathtools}
+%\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+%\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\pgfplotsset{
+	compat=newest,
+	xlabel near ticks,
+	ylabel near ticks
+}
+\newcommand{\Astar}{A$^{\!\star}$\xspace}
+\newcommand{\tstar}{\ensuremath{t\xspace}}
+\newcommand{\Pistar}{\ensuremath{\Pi}} % {\Pi_{\mathrm{start}}(\tstar)}
+\newcommand{\Pstart}{\ensuremath{\mathpzc{P}_\mathrm{start}}\xspace}
+\newcommand{\Pgoal}{\ensuremath{\mathpzc{P}_\mathrm{goal}}\xspace}
+\newcommand{\Pnode}{\ensuremath{\mathpzc{P}_{t,i}}\xspace}
+\newcommand{\Tgoal}{\ensuremath{T_\mathrm{goal}}\xspace}
+
+\renewcommand{\textfraction}{0.01}
+\renewcommand{\topfraction}{0.99}
+\renewcommand{\bottomfraction}{0.99}
+\renewcommand{\dbltopfraction}{0.99} % fit big float above 
+%2-col. text
+%\renewcommand\thesection{\arabic{section}}
+%\renewcommand\thesubsection{\thesection.\arabic{subsection}}
+
+
+
+\newcolumntype{x}[1]{>{\raggedleft\arraybackslash\hspace{0pt}}b{#1}}
+\newcolumntype{y}[1]{>{\centering\arraybackslash\hspace{0pt}}b{#1}}
+%\newcolumntype{y}[2]{>{\centering\arraybackslash\hspace{0pt}}D{.}{.}{#1}b{#2}}
+%\newcolumntype{d}[1]{D{.}{.}{#1}}
+\newcolumntype{L}{>{$}l<{$}}% math-mode version of "l" column 
+%type
+\newcolumntype{R}{>{$}r<{$}}% math-mode version of "r" column 
+%type
+\newcolumntype{C}{>{$}c<{$}}% math-mode version of "c" column 
+%type
+
+%This style looks better than $\mathrm{non-comp}$ in which "-" 
+%looks like the symbol of minus 
+\newcommand\nonhyphencomp{\operatorname{non-comp}}
+\newcommand\inthyphenleng{\operatorname{int-leng}}
+\newcommand\goalhyphentype{\operatorname{goal-type}}
+\newcommand\goalhyphennon{\operatorname{goal-non}}
+\newcommand\goalhyphenshape{\operatorname{goal-shape}}
+%\newcolumntype{y}[1]{>{\raggedleft\arraybackslash\hspace{0pt}}p{#1}}
+%\newcolumntype{x}[1]{>{\centering\arraybackslash\hspace{0pt}}p{#1}}
+
+
+% see the list of further useful packages
+% in the Reference Guide
+
+\makeindex             % used for the subject index
+                       % please use the style svind.ist with
+                       % your makeindex program
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\title*{Title \protect\\ title 
+	}
+\titlerunning{title running}
+% Use \titlerunning{Short Title} for an abbreviated version of
+% your contribution title if the original one is too long
+%\author{Dongliang Peng, Alexander Wolff, and Jan-Henrik Haunert}
+% Use \authorrunning{Short Title} for an abbreviated version of
+% your contribution title if the original one is too long
+% \institute{Name of First Author \at Name, Address of Institute, \email{name@email.address}
+% \and Name of Second Author \at Name, Address of Institute
+% \email{name@email.address}}
+\institute{
+%	Dongliang Peng 
+%	\at Chair of Computer Science I, University of W\"urzburg, 
+%	Germany \\
+%	\email{dongliang.peng@uni-wuerzburg.de}
+%	\and
+%	% 
+%	Alexander Wolff 
+%	\at Chair of Computer Science I, University 
+%	of W\"urzburg, Germany \\
+%	\url{URL: 
+%	
+%http://www1.informatik.uni-wuerzburg.de/en/staff/wolff_alexander}
+%	\and
+%	%
+%	Jan-Henrik Haunert 
+%	\at Institute for Geoinformatics and Remote Sensing (IGF), 
+%	University of Osnabr\"uck, Germany \\
+%	\email{janhhaunert@uni-osnabrueck.de}
+}
+%
+% Use the package "url.sty" to avoid
+% problems with special characters
+% used in your e-mail or web address
+%
+\maketitle
+
+\newcommand{\myabstract}{text}
+
+
+\abstract*{\myabstract}
+
+\abstract{\myabstract}
+
+
+\keywords{Text, Text}
+
+
+\section{Introduction}
+\label{sec:Introduction}
+
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics{SubdivisionName}
+	\caption{The subdivision graph $G$ whose nodes are the
+          subdivisions \Pnode, and there is an edge
+          from~\Pnode to~$\mathpzc{P}_{t+1,j}$ if
+          $\mathpzc{P}_{t+1,j}$ is the result of aggregating a
+          smallest polygon~$p$ of~\Pnode into a neighbor
+          of~$p$.}
+	\label{fig:SubdivisionName}
+\end{figure}
+
+\mypar{Notation}
+Text. 
+
+
+\section{Section Title}
+\label{sec:AStarAlgorithm}
+
+Text.
+
+\subsection{Text}
+\label{sec:Formalizing}
+
+
+
+\section{Conclusions}
+\label{sec:Conclusions}
+
+Text
+
+\printbibliography
+%\bibliographystyle{plainnat}
+%%	\bibliography{References}
+%\input{referenc}
+\end{document}

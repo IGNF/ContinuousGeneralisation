@@ -1,0 +1,1 @@
+maximizing average compactness instead of smallest compactness
