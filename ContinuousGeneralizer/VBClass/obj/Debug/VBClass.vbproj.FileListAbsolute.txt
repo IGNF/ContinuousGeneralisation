@@ -1,8 +1,0 @@
-C:\Study\Programs\ContinuousGeneralizer\VBClass\bin\Debug\VBClass.dll
-C:\Study\Programs\ContinuousGeneralizer\VBClass\bin\Debug\VBClass.pdb
-C:\Study\Programs\ContinuousGeneralizer\VBClass\bin\Debug\VBClass.xml
-C:\Study\Programs\ContinuousGeneralizer\VBClass\obj\Debug\VBClass.Resources.resources
-C:\Study\Programs\ContinuousGeneralizer\VBClass\obj\Debug\VBClass.vbproj.GenerateResource.Cache
-C:\Study\Programs\ContinuousGeneralizer\VBClass\obj\Debug\VBClass.dll
-C:\Study\Programs\ContinuousGeneralizer\VBClass\obj\Debug\VBClass.xml
-C:\Study\Programs\ContinuousGeneralizer\VBClass\obj\Debug\VBClass.pdb

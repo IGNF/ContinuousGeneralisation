@@ -1,8 +1,0 @@
-C:\Study\Programs\ContinuousGeneralizer\MorphingClass\bin\x64\Debug\MorphingClass.dll
-C:\Study\Programs\ContinuousGeneralizer\MorphingClass\bin\x64\Debug\MorphingClass.pdb
-C:\Study\Programs\ContinuousGeneralizer\MorphingClass\bin\x64\Debug\ILOG.Concert.dll
-C:\Study\Programs\ContinuousGeneralizer\MorphingClass\bin\x64\Debug\ILOG.CPLEX.dll
-C:\Study\Programs\ContinuousGeneralizer\MorphingClass\obj\x64\Debug\MorphingClass.csprojResolveAssemblyReference.cache
-C:\Study\Programs\ContinuousGeneralizer\MorphingClass\obj\x64\Debug\MorphingClass.csproj.ResolveComReference.cache
-C:\Study\Programs\ContinuousGeneralizer\MorphingClass\obj\x64\Debug\MorphingClass.dll
-C:\Study\Programs\ContinuousGeneralizer\MorphingClass\obj\x64\Debug\MorphingClass.pdb

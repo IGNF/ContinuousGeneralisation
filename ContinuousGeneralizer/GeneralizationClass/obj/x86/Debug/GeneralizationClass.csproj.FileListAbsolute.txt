@@ -1,6 +1,0 @@
-C:\Study\Programs\ContinuousGeneralizer\GeneralizationClass\bin\x86\Debug\GeneralizationClass.dll
-C:\Study\Programs\ContinuousGeneralizer\GeneralizationClass\bin\x86\Debug\GeneralizationClass.pdb
-C:\Study\Programs\ContinuousGeneralizer\GeneralizationClass\obj\x86\Debug\GeneralizationClass.csprojResolveAssemblyReference.cache
-C:\Study\Programs\ContinuousGeneralizer\GeneralizationClass\obj\x86\Debug\GeneralizationClass.csproj.ResolveComReference.cache
-C:\Study\Programs\ContinuousGeneralizer\GeneralizationClass\obj\x86\Debug\GeneralizationClass.dll
-C:\Study\Programs\ContinuousGeneralizer\GeneralizationClass\obj\x86\Debug\GeneralizationClass.pdb
