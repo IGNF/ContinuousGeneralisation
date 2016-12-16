@@ -33,7 +33,8 @@
 \usepackage{pdflscape}
 %\usepackage{rotating}
 \usepackage{afterpage}
-\usepackage[disable]{todonotes}
+%\usepackage[disable]{todonotes}
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
 %\usepackage{todonotes}
 \usepackage[backend=bibtex,bibstyle=authoryear,citestyle=authoryear,
 firstinits=true,doi=false,isbn=false,url=false,eprint=false,dashed=false,natbib=true]{biblatex}
@@ -59,6 +60,9 @@ firstinits=true,doi=false,isbn=false,url=false,eprint=false,dashed=false,natbib=
 \usepackage{tabularx}
 \usepackage{adjustbox}
 \usepackage{capt-of}
+%\usepackage{marginnote}
+\usepackage{xargs}   % Use more than one 
+%optional parameter in a new commands
 %\usepackage{siunitx} %for scientific 
 %notation
 %%we do this because of a bug of package floatrow
@@ -124,6 +128,8 @@ firstinits=true,doi=false,isbn=false,url=false,eprint=false,dashed=false,natbib=
 \newcommand{\Pnode}{\ensuremath{\mathpzc{P}_{t,i}}\xspace}
 \newcommand{\Tgoal}{\ensuremath{T_\mathrm{goal}}\xspace}
 
+\newcommandx{\marginalcomment}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
+
 \renewcommand{\textfraction}{0.01}
 \renewcommand{\topfraction}{0.99}
 \renewcommand{\bottomfraction}{0.99}
@@ -167,9 +173,8 @@ firstinits=true,doi=false,isbn=false,url=false,eprint=false,dashed=false,natbib=
 
 \begin{document}
 
-\title*{Title \protect\\ title 
-	}
-\titlerunning{title running}
+\title*{Continuous Generalization of Buildings}
+\titlerunning{Continuous Generalization of Buildings}
 % Use \titlerunning{Short Title} for an abbreviated version of
 % your contribution title if the original one is too long
 %\author{Dongliang Peng, Alexander Wolff, and Jan-Henrik Haunert}
@@ -215,22 +220,220 @@ firstinits=true,doi=false,isbn=false,url=false,eprint=false,dashed=false,natbib=
 
 \keywords{Text, Text}
 
+\section{Discussion}
+\label{sec:Discussion}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics{Framework}
+	\caption{Framework.}
+	\label{fig:Framework}
+\end{figure}
+
+
+
+We discussed two ways of achieving continuous generalization of 
+buildings. 
+
+The first way is that we cover the smallest block at each step. 
+Should we consider the density of the buildings? 
+\marginalcomment{relevant comment. If small buildings exist in 
+	all blocks, there will be small buildings remaining at small 
+	scales in the blocks that have not been covered.}
+A disadvantage 
+is that some small buildings in a large block may exist very 
+long.
+Alternatively, we may cover two buildings together if they are 
+close enough, say the distance is smaller than d. We can 
+increase d so that we will cover more and more buildings 
+together. To avoid overlap between two covers, we may need to 
+use Voronoi diagrams of the original buildings. We can cover 
+buildings without overlap if we always use a cover inside the 
+Voronoi cells of these buildings. This idea about Voronoi cells 
+is used in Topologically Safe Curved Schematization (van Goethem 
+et al. 2013). We may need to try different possible covers. 
+Unfortunately, this trying may be very time-consuming, probably 
+NP-hard.
+
+The second way is that we grow buildings by buffering with an 
+increasing radius, and then merge the buffers overlapping each 
+other. A disadvantage is that the corners of the buffers 
+\marginalcomment{this may be avoided by using square buffers 
+(the Minkowski sum is done with a square rather than a circle), 
+don't know if it's available in ESRI products}
+\marginalcomment{We can also think about the method described at 
+%\url{http://stackoverflow.com/questions/1109536/an-algorithm-for-inflating-deflating-offsetting-buffering-polygons#}
+ }
+are not 
+orthogonal anymore. Two kinds of buffer:
+
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\linewidth]{BufferRoundJoint}
+	\caption{BufferRoundJoint.}
+	\label{fig:BufferRoundJoint}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\linewidth]{BufferMiterJoint}
+	\caption{BufferMiterJoint.}
+	\label{fig:BufferMiterJoint}
+\end{figure}
+
+
+
+
+A disadvantage of buffering based on miter joint is that the 
+method is sensitive to noise. By sensitive, if there is a short 
+edge at the end or a sharp corner, then the result will be very 
+different to the case that there is no such short edge. In 
+contrary, buffers based on round joint are continuous and stable.
+
+This method should be easier to implement than the first method.
+\marginalcomment{We can erode back in order to keep enough 
+distance between buildings. The operator of growing and 
+shrinking of buffers are mentioned in paper Automated Processing 
+for Map Generalization with Modular Operator Services (Neun 
+2009).
+} 
+We may not need to erode back after buffering. In this second 
+strategy, undesired very small shapes or holes might appear at 
+some point, and should be reverted until the growing totally 
+collapses the hole or makes the small parts big enough. As 
+buffers are not allowed to cross roads, we may clip some parts 
+of the buffers off along the roads.
+If we buffer with miter joint, it can happen that a very sharp 
+angle yields a very long buffer. Fortunately, we do not have 
+this situation so far. Otherwise, we may need to cut the long 
+buffer at some point.
+We may have small holes after buffering and merging the buffers 
+of the buildings, which is not nice. See below as an example, 
+where we can find a small “white” hole in the middle. We may 
+simply fill out all the holes having small area.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\linewidth/2]{BufferWithHole}
+	\caption{BufferWithHole.}
+	\label{fig:BufferWithHole}
+\end{figure}
+
+
+We have two maps at different scales. We generalize the 
+buildings on the larger-scale map, and we use the boundaries of 
+the buildings on the smaller-scale map as the limits of the 
+generalization (including growing).
+
+
+We have a requirement that the buildings should not cross 
+existing roads. Therefore, we need to cut the the enlarged 
+buildings by the roads. If we do this cut, then some buildings 
+may almost touch each other, but separated by roads. The 
+too-close buildings will look ugly. To avoid the ugly 
+performance, we should also make buffers for roads, and require 
+that the enlarged buildings should be outside the buffers of the 
+roads. Should we use the same radius that we used for enlarging 
+buildings? With the buffers of roads growing, we may need to 
+move enlarged buildings, otherwise, the enlarged buildings will 
+overlap the buffers of roads. 
+We may move by a method based on least-squares adjustment. In 
+this method, we may assign large weight for keeping the distance 
+between a road and a building. We may assign small weight for 
+keeping the distance between buildings because buildings will be 
+buffered and merged later.
+
+We want to enlarge the buildings by a radius r, and require that 
+the distance between any two buildings after the enlargement 
+should be 2d at least. To achieve this aim, we first buffer the 
+buildings by a radius r+d, and then buffer the enlarged 
+buildings by a radius -d. Following is an example, where r=10 
+and d=15.
+
+Buffering the original buildings with radius 25
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\linewidth]{BufferRadius25}
+	\caption{BufferRadius25.}
+	\label{fig:BufferRadius25}
+\end{figure}
+
+Buffering the enlarged buildings with radius -15 (erosion). We 
+call the result Map A. Unfortunately, we produced some spikes by 
+this erosion. Since we used the miter joint and we allow the 
+enlargements twice of radius r=10 away from the original 
+buildings, the corners of the enlarged buildings can be 2r=20 
+from the original buildings. After erosion, the smallest 
+distance between two buildings can be as small as 0. I will give 
+more details.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\linewidth]{MapA}
+	\caption{MapA.}
+	\label{fig:MapA}
+\end{figure}
+
+Buffering the original buildings with radius 10. We call the 
+result Map B.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[width=\linewidth]{MapB}
+	\caption{MapB.}
+	\label{fig:MapB}
+\end{figure}
+
+To remove the spikes in Map A, we may subtract Map B from Map A. 
+Then we get some leftovers in Map A. The outward triangles of 
+the leftovers are the spikes which we want to remove. We 
+subtract those outward triangles from Map A, which may guarantee 
+that we will have removed the spikes in Map A.
+
+To remove the spikes in Map A, Guillaume suggested that we could 
+%buffer by a small value -ɛ, and then buffer again by ɛ.
+
+Should we buffer from the original buildings or buffer from the 
+buildings from the previous step?
+
+
+Elimination
+If every building should have area 4d2at least, we buffer 
+buildings with radius xd (x<2). After the buffering, some too 
+small buildings will be eliminated. The small buildings which 
+manage to merge with other buildings may survive. The eliminated 
+buildings should not participate in next buffering step, which 
+uses larger d.
+
+
+
+
+Issues regarding the data:
+
+%How were the layers of data road_25k and road_100k produced?
+%Was road_25k produced by surveying?
+%Was road_100k generalized from road_25k?
+%
+%How were the layers of data building_15k, building_25k, 
+%urban_area_50k, and urban_area_100k produced?
+%Was building_15k produced by surveying?
+%Was building_25k derived from building_15k by the methods 
+%illustrated in paper Optimization Approaches for Generalization 
+%and Data Abstraction (Sester, 2005)?
+%Was urban_area_50k derived from building_15k by constructing 
+%buffers and filling out the holes of the buffers?
+%Was urban_area_100k derived from building_15k by constructing 
+%buffers and filling out the holes of the buffers?
+
+
 
 \section{Introduction}
 \label{sec:Introduction}
 
 
-\begin{figure}[tb]
-	\centering
-	\includegraphics{SubdivisionName}
-	\caption{The subdivision graph $G$ whose nodes are the
-          subdivisions \Pnode, and there is an edge
-          from~\Pnode to~$\mathpzc{P}_{t+1,j}$ if
-          $\mathpzc{P}_{t+1,j}$ is the result of aggregating a
-          smallest polygon~$p$ of~\Pnode into a neighbor
-          of~$p$.}
-	\label{fig:SubdivisionName}
-\end{figure}
+
 
 \mypar{Notation}
 Text. 

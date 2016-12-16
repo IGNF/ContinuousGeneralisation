@@ -8,7 +8,7 @@ using namespace System;
 using namespace std;
 
 //#include <Eigen/Sparse>
-#include <C:\Study\Programs\ContinuousGeneralizer\Citations\eigen\Eigen/Sparse>
+#include <C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\Citations\eigen\Eigen/Sparse>
 using namespace Eigen;
 
 int xid( int id ) { return 2*id; }

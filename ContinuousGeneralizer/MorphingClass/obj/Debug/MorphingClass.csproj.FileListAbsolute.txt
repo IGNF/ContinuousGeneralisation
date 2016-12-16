@@ -21,3 +21,15 @@ C:\Study\Programs\ContinuousGeneralizer\MorphingClass\obj\Debug\MorphingClass.dl
 C:\Study\Programs\ContinuousGeneralizer\MorphingClass\obj\Debug\MorphingClass.pdb
 C:\Study\Programs\ContinuousGeneralizer\MorphingClass\bin\Debug\ESRI.ArcGIS.ADF.dll
 C:\Study\Programs\ContinuousGeneralizer\MorphingClass\bin\Debug\ESRI.ArcGIS.ADF.xml
+C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\obj\Debug\MorphingClass.csprojResolveAssemblyReference.cache
+C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\obj\Debug\MorphingClass.csproj.ResolveComReference.cache
+C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\obj\Debug\MorphingClass.dll
+C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\obj\Debug\MorphingClass.pdb
+C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\Debug\MorphingClass.dll
+C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\Debug\MorphingClass.pdb
+C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\Debug\C5.dll
+C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\Debug\ESRI.ArcGIS.ADF.dll
+C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\Debug\ILOG.Concert.dll
+C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\Debug\ILOG.CPLEX.dll
+C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\Debug\C5.pdb
+C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\Debug\ESRI.ArcGIS.ADF.xml
