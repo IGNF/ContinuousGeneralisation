@@ -88,7 +88,7 @@ namespace MorphingClass.CMorphingMethods
             int intMaxBackKforJ = SetintMaxBackKforJ(pParameterInitialize.cboIntMaxBackKforJ.SelectedIndex, intMaxBackKforI);
             int intMulti = Convert.ToInt32(pParameterInitialize.txtMulti.Text);
             int intIncrease = Convert.ToInt32(pParameterInitialize.txtIncrease.Text);
-            pParameterInitialize.strMorphingMethod = pParameterInitialize.cboMorphingMethod.Text;
+            CConstants .strMethod = pParameterInitialize.cboMorphingMethod.Text;
 
             //delegation of morphing method
             DlgCreateTable dlgCreateTable = SetDlgCreateTable(pParameterInitialize.cboMorphingMethod.Text);
@@ -225,8 +225,8 @@ namespace MorphingClass.CMorphingMethods
 
             double dblStandardLength = CGeometricMethods.CalDis(0, 0, StandardVectorCpt.X, StandardVectorCpt.Y);
             intMaxBackKforI--;
-            CHelperFunction.SaveCtrlLine(pCtrlCptsLtLt, intMaxBackKforI + "_" + pParameterInitialize.strMorphingMethod + "CtrlLine", dblStandardLength, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
-            CHelperFunction.SaveCorrLine(pCorrCptsLtLt, intMaxBackKforI + "_" + pParameterInitialize.strMorphingMethod + "CorrLine", pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
+            CHelperFunction.SaveCtrlLine(pCtrlCptsLtLt, intMaxBackKforI + "_" + CConstants.strMethod + "CtrlLine", dblStandardLength, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
+            CHelperFunction.SaveCorrLine(pCorrCptsLtLt, intMaxBackKforI + "_" + CConstants.strMethod + "CorrLine", pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
 
             CHelperFunction.SetMoveVectorForCorrCptsLtLt(_CorrCptsLtLt);
 

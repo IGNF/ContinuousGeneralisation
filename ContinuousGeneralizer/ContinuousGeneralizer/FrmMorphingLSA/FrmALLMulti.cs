@@ -31,7 +31,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
         public FrmALLMulti()
         {
             InitializeComponent();
-            //_ParameterInitialize.strMorphingMethod = "LandingTime";
+            //CConstants.strMethod = "LandingTime";
         }
 
         public FrmALLMulti(CDataRecords pDataRecords)
@@ -45,7 +45,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             ParameterInitialize.cboLayer  = this.cboLayer;
             ParameterInitialize.txtInterpolationNum = this.txtInterpolatedNum;
             ParameterInitialize.txtIterationNum = this.txtIterationNum;
-            ParameterInitialize.strMorphingMethod = "ALLMulti";
+            CConstants.strMethod = "ALLMulti";
             //进行Load操作，初始化变量
             _FrmOperation = new CFrmOperation(ref ParameterInitialize);
             _FrmOperation.FrmLoad();

@@ -30,61 +30,11 @@ namespace MorphingClass.CGeneralizationMethods
     /// Continuous Aggregation of Maps based on Dijkstra: CAMDijkstra
     /// </summary>
     /// <remarks></remarks>
-    public class CCAMDijkstra : CMorphingBaseCpg
+    public class CCAMDijkstra : CAreaAggregation_Base
     {
-        public static double dblLamda = 0.5;
-        //public static double dblLamda2 = 1 - dblLamda1;
-
-        //for some prompt settings
-        private int _intFactor = 2;
-        //private int _intFactor = 8;
-        private void UpdateStartEnd(ref int intStart, ref int intEnd)
-        {
-            //intStart = 77;
-            //intEnd = intStart + 1;
-
-            dblLamda = 0.5;
-            //dblLamda2 = 1 - dblLamda1;
-        }
-
-        public List<CRegion> InitialCrgLt { set; get; }
-        //public int intTotalTimeNum { set; get; } //Note that intTotalTimeNum may count a step that only changes the type of a polygon (without aggregation)
-        
-        private double[,] _adblTD;
-        private CPairVal_SD<int, int> _TypePVSD;
-
-        public double dblCost { set; get; }
-        public CStrObjLtSD StrObjLtSD { set; get; }
-
-        //if we change the list, we may need to change the comparer named CAACCompare
-        public static IList<string> strKeyLt = new List<string>
-        {
-            "ID",
-            "n",
-            "m",
-            "Factor",
-            "#Edges",
-            "#Nodes",
-            "EstType",
-            "CostType",
-            "RatioTypeCE",
-            "EstComp",
-            "CostComp",
-            "RatioCompCE",
-            "RatioTypeComp",
-            "WeightedSum",
-            "TimeFirst(ms)",
-            "TimeLast(ms)",
-            "Time(ms)",
-            "Memory(MB)"
-        };
-
-        private static int _intDigits = 6;
-
-        private static int _intStart = 0;
-        private static int _intEnd = _intStart+1;
 
 
+        public static int _intPopCount;
 
 
         #region Preprocessing
@@ -95,126 +45,14 @@ namespace MorphingClass.CGeneralizationMethods
 
         public CCAMDijkstra(CParameterInitialize ParameterInitialize, string strSpecifiedFieldName = null, string strSpecifiedValue = null)
         {
-            Construct<CPolygon, CPolygon>(ParameterInitialize, 2, 0, true,1, strSpecifiedFieldName, strSpecifiedValue);
-            CConstants.strShapeConstraint = ParameterInitialize.cboShapeConstraint.Text;
-            if (CConstants.strShapeConstraint == "MaximizeMinimumCompactness" || CConstants.strShapeConstraint == "MaximizeMinimumCompactness_Combine")
-            {
-                CConstants.blnComputeCompactness = true;
-            }
-
-            if (ParameterInitialize.chkSmallest.Checked == true)
-            {
-                ParameterInitialize.strAreaAggregation = "Smallest";
-            }
-            else
-            {
-                ParameterInitialize.strAreaAggregation = "All";
-            }
-
-            //read type distance
-            var aObj = CHelperFunctionExcel.ReadDataFromExcel(ParameterInitialize.strPath + "TypeDistance.xlsx");
-            if (aObj == null) throw new ArgumentNullException("Failed to read TypeDistance.xlsx");
-
-            int intDataRow = aObj.GetUpperBound(0);
-            int intDataCol = intDataRow;  //note that intDataRow == intDataCol
-
-            //set an index for each type, so that we can access a type distance directly
-            //var intTypeIndexSD = new SortedDictionary<int, int>();
-            var pTypePVSD = new CPairVal_SD<int, int>();
-            int intTypeIndex = 0;
-            for (int i = 0; i < intDataRow; i++)
-            {
-                int intType = Convert.ToInt32(aObj[i + 1][0]);
-                if (pTypePVSD.SD.ContainsKey(intType) == false)
-                {
-                    pTypePVSD.SD.Add(intType, intTypeIndex++);
-                }
-            }
-            pTypePVSD.CreateSD_R();
-            _TypePVSD = pTypePVSD;
-
-            var adblTypeDistance = new double[intDataRow, intDataCol];
-            for (int i = 0; i < intDataRow; i++)
-            {
-                for (int j = 0; j < intDataCol; j++)
-                {
-                    adblTypeDistance[i, j] = Convert.ToDouble(aObj[i + 1][j + 1]);
-                }
-            }
-
-            _adblTD = adblTypeDistance;
+            Preprocessing(ParameterInitialize, strSpecifiedFieldName, strSpecifiedValue);
         }
 
 
         public void CAMDijkstra(int intQuitCount, string strMethod)
         {
-            Stopwatch pStopwatch = Stopwatch.StartNew();
-            CParameterInitialize pParameterInitialize = _ParameterInitialize;
-
-
-
-            var pLSCPgLt = this.ObjCGeoLtLt[0].ToExpectedClass<CPolygon, object>().ToList();
-            var pSSCPgLt = this.ObjCGeoLtLt[1].ToExpectedClass<CPolygon, object>().ToList();
-
-            //this.intTotalTimeNum = pLSCPgLt.Count - pSSCPgLt.Count + 1;
-
-            foreach (var cpg in pLSCPgLt)
-            {
-                cpg.FormCEdgeLtLt();
-                cpg.SetCEdgeLtLtLength();
-            }
-
-            foreach (var cpg in pSSCPgLt)
-            {
-                cpg.FormCEdgeLtLt();
-            }
-
-            //get region number for each polygon
-            var pstrFieldNameLtLt = this.strFieldNameLtLt;
-            var pObjValueLtLtLt = this.ObjValueLtLtLt;
-            //var intTypeIndexSD=_intTypeIndexSD;
-
-            var intLSTypeATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[0], "OBJART");  //RegionNumATIndex: the index of RegionNum in the attribute table 
-            var intSSTypeATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[1], "OBJART");
-            //var CgbEb=pLSCPgLk.ToExpectedClass<CGeometricBase<CPolygon>, CGeometricBase<CPolygon>>();
-            CHelperFunction.GetCgbTypeAndTypeIndex(pLSCPgLt.ToExpectedClass<CPolygon, CPolygon>(), _ObjValueLtLtLt[0], 0, _TypePVSD);
-            CHelperFunction.GetCgbTypeAndTypeIndex(pSSCPgLt.ToExpectedClass<CPolygon, CPolygon>(), _ObjValueLtLtLt[1], 0, _TypePVSD);
-
-
-            var intLSRegionNumATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[0], "RegionNum");  //RegionNumATIndex: the index of RegionNum in the attribute table 
-            var intSSRegionNumATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[1], "RegionNum");
-            //private CPairVal_SD<int, int> _RegionPVSD;
-            var pRegionPVSD = new CPairVal_SD<int, int>();
-            int intRegionIndex = 0;
-            for (int i = 0; i < pObjValueLtLtLt[1].Count; i++)
-            {
-                int intRegionNum = Convert.ToInt32(pObjValueLtLtLt[1][i][intSSRegionNumATIndex]);
-                if (pRegionPVSD.SD.ContainsKey(intRegionNum) == false)
-                {
-                    pRegionPVSD.SD.Add(intRegionNum, intRegionIndex++);
-                }
-            }
-
-            //ssign the polygons as well as attributes from a featureLayer into regions, without considering costs
-            var LSCrgLt = GenerateCrgLt(pLSCPgLt, pSSCPgLt.Count, pObjValueLtLtLt[0], intLSTypeATIndex, intLSRegionNumATIndex, _TypePVSD, pRegionPVSD);
-            var SSCrgLt = GenerateCrgLt(pSSCPgLt, pSSCPgLt.Count, pObjValueLtLtLt[1], intSSTypeATIndex, intSSRegionNumATIndex, _TypePVSD, pRegionPVSD);
-
-            using (var writer = new System.IO.StreamWriter(_ParameterInitialize.strSavePathBackSlash + CHelperFunction.GetTimeStamp() 
-                + "_" + "AreaAggregation.txt", false))
-            {
-                writer.Write(_ParameterInitialize.strAreaAggregation);
-            }
-
-            //apply A* algorithm to each region
-            this.InitialCrgLt = new List<CRegion>(pSSCPgLt.Count);
-            var ResultCrgLt = new List<CRegion>(pSSCPgLt.Count);
-            this.StrObjLtSD = new CStrObjLtSD(CCAMDijkstra.strKeyLt, pSSCPgLt.Count);
-
-            int intStart = 0;
-            int intEnd = SSCrgLt.Count;
-
-            UpdateStartEnd(ref intStart, ref intEnd);
-
+            SetupBasic();
+            UpdateStartEnd();
 
              switch (strMethod)
              {
@@ -223,9 +61,9 @@ namespace MorphingClass.CGeneralizationMethods
                      CRegion._lngEstimationCountEdgeLength = 0;
                      CRegion._lngEstimationCountEqual = 0;
                      
-                     for (int i = intStart; i < intEnd; i++)
+                     for (int i = _intStart; i < _intEnd; i++)
                      {
-                         ResultCrgLt.Add(AStar(LSCrgLt[i], SSCrgLt[i], this.StrObjLtSD, _ParameterInitialize.strAreaAggregation, intQuitCount));
+                         AStar(LSCrgLt[i], SSCrgLt[i], this.StrObjLtSD, _ParameterInitialize.strAreaAggregation, intQuitCount);
                      }
                      Console.WriteLine();
                      Console.WriteLine("Estimation functions that we used:");
@@ -234,9 +72,9 @@ namespace MorphingClass.CGeneralizationMethods
                          ";   EqualCases: " + CRegion._lngEstimationCountEqual);
                      break;
                  case "ILP":
-                     for (int i = intStart; i < intEnd; i++)
+                     for (int i = _intStart; i < _intEnd; i++)
                      {
-                         ResultCrgLt.Add(ILP(LSCrgLt[i], SSCrgLt[i], this.StrObjLtSD, this._adblTD, _ParameterInitialize.strAreaAggregation));
+                         ILP(LSCrgLt[i], SSCrgLt[i], this.StrObjLtSD, this._adblTD, _ParameterInitialize.strAreaAggregation);
                      }
                      break;
                  case "ILP_Extend":
@@ -247,9 +85,9 @@ namespace MorphingClass.CGeneralizationMethods
                          writer.Write(_ParameterInitialize.strSavePath);
                      }
                      ExportadblTD(_ParameterInitialize.strSavePath, this._adblTD);
-                     for (int i = intStart; i < intEnd; i++)
+                     for (int i = _intStart; i < _intEnd; i++)
                      {
-                         ResultCrgLt.Add(ILP_Extend(LSCrgLt[i], SSCrgLt[i], this._adblTD));
+                         ILP_Extend(LSCrgLt[i], SSCrgLt[i], this._adblTD);
                      }
                      //RunContinuousGeneralizer64();
                      break;
@@ -552,7 +390,7 @@ namespace MorphingClass.CGeneralizationMethods
         IRange[][] rng, CRegion lscrg, CRegion sscrg, double[,] adblTD, string strAreaAggregation)
         {
             var aCph = lscrg.CphTypeIndexSD_Area_CphGID.Keys.ToArray();
-            int intCpgCount = lscrg.CphTypeIndexSD_Area_CphGID.Count;
+            int intCpgCount = lscrg.GetCphCount();
             double dblILPSmallValue = 0;
             
             IIntVar[][][] x = new IIntVar[intCpgCount][][];
@@ -1051,7 +889,7 @@ namespace MorphingClass.CGeneralizationMethods
             {
                 try
                 {
-                    CRegion._intNodesCount = 0;
+                    CRegion._intNodesCount = 1;
                     CRegion._intStartStaticGIDLast = CRegion._intStaticGID;
                     pStopwatchLast.Restart();
                     var ExistingCorrCphsSD = new SortedDictionary<CCorrCphs, CCorrCphs>(ExistingCorrCphsSD0, ExistingCorrCphsSD0.Comparer);
@@ -1126,6 +964,7 @@ namespace MorphingClass.CGeneralizationMethods
             while (true)
             {
                 intCount++;
+                _intPopCount++;
                 var u = Q.Min;
                 if (Q.Remove(u) == false)
                 {
@@ -1154,6 +993,15 @@ namespace MorphingClass.CGeneralizationMethods
                 //u.d contains estimation, and resultcrg.d doesn't contains. if u.d > resultcrg.d, then resultcrg.d must already be the smallest cost
                 if (u.CphTypeIndexSD_Area_CphGID.Count == 1)
                 {
+                    Console.WriteLine("The number of nodes we can forget:   " + intCount);
+                    Console.WriteLine("The nodes in the stack:   " + Q.Count);
+
+                    int intCrgCount = 0;
+                    foreach (var item in ExistingCrgSDLt)
+                    {
+                        intCrgCount += item.Count;
+                    }
+
                     FinalOneCphCrg = u;
                     break;
                 }
@@ -1211,7 +1059,7 @@ namespace MorphingClass.CGeneralizationMethods
                 dblRatioTypeComp = Math.Round(FinalOneCphCrg.dblCostExactType / FinalOneCphCrg.dblCostExactCompactness, _intDigits);
             }
 
-            StrObjLtSD.SetLastObj("#Nodes", CRegion._intNodesCount + 1); //+1 is for LSCrg
+            StrObjLtSD.SetLastObj("#Nodes", CRegion._intNodesCount);
             StrObjLtSD.SetLastObj("EstType", dblRoundedCostEstimatedType);
             StrObjLtSD.SetLastObj("CostType", dblRoundedCostExactType);
             StrObjLtSD.SetLastObj("RatioTypeCE", dblRatioTypeCE);
@@ -1276,68 +1124,7 @@ namespace MorphingClass.CGeneralizationMethods
         }
         #endregion
 
-        #region Common
-
-        private void AddLineToStrObjLtSD(CStrObjLtSD StrObjLtSD, CRegion LSCrg)
-        {
-            var et = StrObjLtSD.GetEnumerator();
-            while (et.MoveNext())
-            {
-                et.Current.Value.Add(-1);
-            }
-
-            StrObjLtSD.SetLastObj("ID", LSCrg.ID);
-            StrObjLtSD.SetLastObj("n", LSCrg.CphTypeIndexSD_Area_CphGID.Count);
-            StrObjLtSD.SetLastObj("m", LSCrg.Adjacency_CorrCphsSD.Count);
-            StrObjLtSD.SetLastObj("Factor", 100000000);
-        }
-
-
-        /// <summary>
-        /// assign the polygons as well as attributes from a featureLayer into regions, without considering costs
-        /// </summary>
-        /// <param name="pCpgLt"></param>
-        /// <param name="intCrgNum"></param>
-        /// <param name="pObjValueLtLt"></param>
-        /// <param name="intTypeATIndex"></param>
-        /// <param name="intRegionNumATIndex"></param>
-        /// <param name="pTypePVSD"></param>
-        /// <param name="pRegionPVSD"></param>
-        /// <returns></returns>
-        private List<CRegion> GenerateCrgLt(List<CPolygon> pCpgLt, int intCrgNum, List<List<object>> pObjValueLtLt, int intTypeATIndex, int intRegionNumATIndex, CPairVal_SD<int, int> pTypePVSD, CPairVal_SD<int, int> pRegionPVSD)
-        {
-            var pCrgLt = new List<CRegion>(intCrgNum);
-            pCrgLt.EveryElementNew();
-
-            for (int i = 0; i < pCpgLt.Count; i++)
-            {
-                //get the type index
-                int intType = Convert.ToInt32(pObjValueLtLt[i][intTypeATIndex]);
-                int intTypeIndex;
-                pTypePVSD.SD.TryGetValue(intType, out intTypeIndex);
-
-                //get the RegionNum index
-                var intRegionNum = Convert.ToInt32(pObjValueLtLt[i][intRegionNumATIndex]);
-                int intRegionIndex;
-                pRegionPVSD.SD.TryGetValue(intRegionNum, out intRegionIndex);
-
-                //add the Cph into the corresponding Region
-                pCrgLt[intRegionIndex].AddCph(new CPatch(pCpgLt[i], -1, intTypeIndex), intTypeIndex);
-                pCrgLt[intRegionIndex].ID = intRegionNum;  //set the ID for each region
-            }
-
-            //set the ID of patches
-            foreach (var crg in pCrgLt)
-            {
-                int intCount = 0;
-                foreach (var cph in crg.CphTypeIndexSD_Area_CphGID.Keys)
-                {
-                    cph.ID = intCount++;
-                }
-            }
-            return pCrgLt;
-        }
-        #endregion
+        
 
         #region Output
         public void Output(double dblProportion)

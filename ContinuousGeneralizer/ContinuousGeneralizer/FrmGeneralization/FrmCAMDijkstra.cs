@@ -64,7 +64,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.cboLayerLt = new List<ComboBox>(2);
             ParameterInitialize.cboLayerLt.Add(this.cboLargerScaleLayer);
             ParameterInitialize.cboLayerLt.Add(this.cboSmallerScaleLayer);
-            ParameterInitialize.strMorphingMethod = "CAMDijkstra";
+            CConstants.strMethod = "CAMDijkstra";
             ParameterInitialize.cboShapeConstraint = this.cboShapeConstraint;
             ParameterInitialize.chkSmallest = this.chkSmallest;
 
@@ -491,6 +491,11 @@ namespace ContinuousGeneralizer.FrmMorphing
                 i++;
                 _pCAMDijkstra.Output(_dblProportion);
             }
+        }
+
+        private void btnGreedy_Click(object sender, EventArgs e)
+        {
+
         }
 
 

@@ -112,7 +112,6 @@ namespace MorphingClass.CUtility
         //private string _strElevation;             //高程字段
         //private string _strFieldName;             //字段名称
         //private string _strGeneralizerMethod;        //Generalizer方法
-        private string _strMorphingMethod;        //Morphing方法
         //private string _strNewFileName;           //新建图层的名字
         private string _strPath;
         private string _strSavePath;              //存储路径名
@@ -587,12 +586,6 @@ namespace MorphingClass.CUtility
         //    set { _strFieldName = value; }
         //}
 
-        /// <summary>属性：Morphing方法</summary>
-        public string strMorphingMethod
-        {
-            get { return _strMorphingMethod; }
-            set { _strMorphingMethod = value; }
-        }
 
         ///// <summary>属性：Generalizer方法</summary>
         //public string strGeneralizerMethod

@@ -183,6 +183,9 @@
     <Compile Include="CEvaluationMethods\CLengthDiff.cs" />
     <Compile Include="CEvaluationMethods\CTranslation.cs" />
     <Compile Include="CEvaluationMethods\CTranslationEvaluation.cs" />
+    <Compile Include="CGeneralizationMethods\CAreaAggregation_Base.cs" />
+    <Compile Include="CGeneralizationMethods\CAreaAggregation_Greedy.cs" />
+    <Compile Include="CGeneralizationMethods\CAreaAggregation_ILP.cs" />
     <Compile Include="CGeneralizationMethods\CBezierDetectPoint.cs" />
     <Compile Include="CGeneralizationMethods\CCAMDijkstra.cs" />
     <Compile Include="CGeneralizationMethods\CDP.cs" />

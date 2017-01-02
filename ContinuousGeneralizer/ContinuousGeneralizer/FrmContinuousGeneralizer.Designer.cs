@@ -545,7 +545,7 @@ namespace ContinuousGeneralizer
             // mnuCDTLSA
             // 
             this.mnuCDTLSA.Name = "mnuCDTLSA";
-            this.mnuCDTLSA.Size = new System.Drawing.Size(152, 22);
+            this.mnuCDTLSA.Size = new System.Drawing.Size(117, 22);
             this.mnuCDTLSA.Text = "CDTLSA";
             this.mnuCDTLSA.Click += new System.EventHandler(this.mnuCDTLSA_Click);
             // 

@@ -59,7 +59,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
             ParameterInitialize.m_mapAll = new MapClass();
             ParameterInitialize.cboLargerScaleLayer = this.cboLargerScaleLayer;
             ParameterInitialize.cboSmallerScaleLayer = this.cboSmallerScaleLayer;
-            ParameterInitialize.strMorphingMethod = "Linear";
+            CConstants.strMethod = "Linear";
 
             //进行Load操作，初始化变量
             _FrmOperation = new CFrmOperation(ref ParameterInitialize);

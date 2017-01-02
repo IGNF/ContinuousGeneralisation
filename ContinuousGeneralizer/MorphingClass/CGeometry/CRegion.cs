@@ -65,9 +65,7 @@ namespace MorphingClass.CGeometry
             {
                 if ((value < 0) || (value > double.MaxValue / 3))
                 {
-                    MessageBox.Show("incorrect value!");
-                    //throw new ArgumentException("incorrect value!");
-                    //double  ss = value;
+                    throw new ArgumentException("incorrect value!");
                 }
 
                 _dbld = value;
@@ -170,6 +168,18 @@ namespace MorphingClass.CGeometry
             return this.CphTypeIndexSD_Area_CphGID.Count;
         }
 
+        public CPatch GetSmallestCph()
+        {
+            return this.CphTypeIndexSD_Area_CphGID.GetFirstT().Key;
+        }
+
+        public int GetCphTypeIndex(CPatch cph)
+        {
+            int intTypeIndex;
+            this.CphTypeIndexSD_Area_CphGID.TryGetValue(cph, out intTypeIndex);
+            return intTypeIndex;
+        }
+
         public void AddCph(CPatch Cph, int pintTypeIndex)
         {
             this.CphTypeIndexSD_Area_CphGID.Add(Cph, pintTypeIndex);
@@ -187,7 +197,7 @@ namespace MorphingClass.CGeometry
 
         public void SetCoreCph(int intTypeIndex)
         {
-            CPatch CoreCph = new CPatch();
+            CPatch CoreCph = new CPatch(false);
             foreach (var kvp in this.CphTypeIndexSD_Area_CphGID)
             {
                 if (kvp.Key.dblArea > CoreCph.dblArea && kvp.Value == intTypeIndex)
@@ -327,7 +337,7 @@ namespace MorphingClass.CGeometry
             SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, int intFinalTypeIndex, double[,] padblTD, int intFactor)
         {
             var pAdjacency_CorrCphsSD = this.Adjacency_CorrCphsSD;
-            var mincph = this.CphTypeIndexSD_Area_CphGID.GetFirstT().Key;
+            var mincph = this.GetSmallestCph();
 
             //for every pair of neighboring Cphs, we aggregate them and generate a new Crg
             foreach (var unitingCorrCphs in pAdjacency_CorrCphsSD.Keys)
@@ -369,50 +379,41 @@ namespace MorphingClass.CGeometry
             List<SortedDictionary<CPatch, CPatch>> ExistingCphSDLt, SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, 
             int intFinalTypeIndex, double[,] padblTD, int intFactor)
         {
-            var newAdjacency_CorrCphsSD = new SortedDictionary<CCorrCphs, CCorrCphs>(pAdjacency_CorrCphsSD);  //make a copy
-            newAdjacency_CorrCphsSD.Remove(unitingCorrCphs);
+            
             var newcph = ComputeNewCph(unitingCorrCphs, ExistingCphSDLt);
-
-
-            //update the adjacencies of the two united cph
-            List<CCorrCphs> RemoveKeyLt;  //as we are not allowed to remove in the foreach loop, we record the elments needed to remove and do it later
-            List<CCorrCphs> AddKeyLt;
-            ComputeAddAndRemoveKeyLt(newAdjacency_CorrCphsSD, unitingCorrCphs, newcph, out AddKeyLt, out RemoveKeyLt);
-            SortedDictionary<CCorrCphs, CCorrCphs> tempAdjacencyCorrCphsSD = ComputeTempAdjacencyCorrCphsSD(AddKeyLt, ExistingCorrCphsSD);
-            UpdateNewAdjacency_CorrCphsSDAndExistingCorrCphsSD(newAdjacency_CorrCphsSD, ExistingCorrCphsSD, RemoveKeyLt, tempAdjacencyCorrCphsSD);
+            var newAdjacency_CorrCphsSD = ComputeNewAdjacency_CorrCphsSDAndUpdateExistingCorrCphsSD(pAdjacency_CorrCphsSD, unitingCorrCphs,newcph,ExistingCorrCphsSD);
 
 
             var frcph = unitingCorrCphs.FrCph;
             var tocph = unitingCorrCphs.ToCph;
-            int intfrTypeIndex;
-            int inttoTypeIndex;
-            this.CphTypeIndexSD_Area_CphGID.TryGetValue(frcph, out intfrTypeIndex);
-            this.CphTypeIndexSD_Area_CphGID.TryGetValue(tocph, out inttoTypeIndex);
+            int intfrTypeIndex = this.GetCphTypeIndex(frcph);
+            int inttoTypeIndex = this.GetCphTypeIndex(tocph);
+            
 
             //if the two cphs have the same type, then we only need to aggregate the smaller one into the larger one (this will certainly have smaller cost in terms of area)
             //otherwise, we need to aggregate from two directions
             if (intfrTypeIndex == inttoTypeIndex)
             {
-                yield return GenerateCrg(lscrg, sscrg, Q, ExistingCrgSDLt, newAdjacency_CorrCphsSD, frcph, tocph, newcph, unitingCorrCphs, 
+                yield return GenerateCrgAndUpdateQ(lscrg, sscrg, Q, ExistingCrgSDLt, newAdjacency_CorrCphsSD, frcph, tocph, newcph, unitingCorrCphs, 
                     intFinalTypeIndex, padblTD, intFactor);
             }
             else
             {
                 //The aggregate can happen from two directions
-                yield return GenerateCrg(lscrg, sscrg, Q, ExistingCrgSDLt, newAdjacency_CorrCphsSD, frcph, tocph, newcph, unitingCorrCphs, 
+                yield return GenerateCrgAndUpdateQ(lscrg, sscrg, Q, ExistingCrgSDLt, newAdjacency_CorrCphsSD, frcph, tocph, newcph, unitingCorrCphs, 
                     intFinalTypeIndex, padblTD, intFactor);
-                yield return GenerateCrg(lscrg, sscrg, Q, ExistingCrgSDLt, newAdjacency_CorrCphsSD, tocph, frcph, newcph, unitingCorrCphs, 
+                yield return GenerateCrgAndUpdateQ(lscrg, sscrg, Q, ExistingCrgSDLt, newAdjacency_CorrCphsSD, tocph, frcph, newcph, unitingCorrCphs, 
                     intFinalTypeIndex, padblTD, intFactor);
             }
         }
 
-        private CPatch TryGetNeighbor(CPatch mincph, CCorrCphs unitingCorrCphs)
+        public static CPatch TryGetNeighbor(CPatch cph, CCorrCphs unitingCorrCphs)
         {
-            if (mincph.CompareTo(unitingCorrCphs.FrCph) == 0)
+            if (cph.CompareTo(unitingCorrCphs.FrCph) == 0)
             {
                 return unitingCorrCphs.ToCph;
             }
-            else if (mincph.CompareTo(unitingCorrCphs.ToCph) == 0)
+            else if (cph.CompareTo(unitingCorrCphs.ToCph) == 0)
             {
                 return unitingCorrCphs.FrCph;
             }
@@ -439,7 +440,22 @@ namespace MorphingClass.CGeometry
             return newcph;
         }
 
-        private void ComputeAddAndRemoveKeyLt(SortedDictionary<CCorrCphs, CCorrCphs> newAdjacency_CorrCphsSD, CCorrCphs unitingCorrCphs, 
+        public static SortedDictionary<CCorrCphs, CCorrCphs> ComputeNewAdjacency_CorrCphsSDAndUpdateExistingCorrCphsSD(SortedDictionary<CCorrCphs, CCorrCphs> pAdjacency_CorrCphsSD, 
+            CCorrCphs unitingCorrCphs, CPatch newcph, SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD)
+        {
+            var newAdjacency_CorrCphsSD = new SortedDictionary<CCorrCphs, CCorrCphs>(pAdjacency_CorrCphsSD);  //make a copy
+            newAdjacency_CorrCphsSD.Remove(unitingCorrCphs);
+            //update the adjacencies of the two united cph
+            List<CCorrCphs> RemoveKeyLt;  //as we are not allowed to remove in the foreach loop, we record the elments needed to remove and do it later
+            List<CCorrCphs> AddKeyLt;
+            ComputeAddAndRemoveKeyLt(newAdjacency_CorrCphsSD, unitingCorrCphs, newcph, out AddKeyLt, out RemoveKeyLt);
+            SortedDictionary<CCorrCphs, CCorrCphs> tempAdjacencyCorrCphsSD = ComputeTempAdjacencyCorrCphsSD(AddKeyLt, ExistingCorrCphsSD);
+            UpdateNewAdjacency_CorrCphsSDAndExistingCorrCphsSD(newAdjacency_CorrCphsSD, ExistingCorrCphsSD, RemoveKeyLt, tempAdjacencyCorrCphsSD);
+
+            return newAdjacency_CorrCphsSD;
+        }
+
+        private static void ComputeAddAndRemoveKeyLt(SortedDictionary<CCorrCphs, CCorrCphs> newAdjacency_CorrCphsSD, CCorrCphs unitingCorrCphs, 
             CPatch newcph, out List<CCorrCphs> AddKeyLt, out List<CCorrCphs> RemoveKeyLt)
         {
             RemoveKeyLt = new List<CCorrCphs>();  //as we are not allowed to remove in the foreach loop, we record the elments needed to remove and do it later
@@ -460,7 +476,7 @@ namespace MorphingClass.CGeometry
 
         }
 
-        private SortedDictionary<CCorrCphs, CCorrCphs> ComputeTempAdjacencyCorrCphsSD(List<CCorrCphs> AddKeyLt, 
+        private static SortedDictionary<CCorrCphs, CCorrCphs> ComputeTempAdjacencyCorrCphsSD(List<CCorrCphs> AddKeyLt, 
             SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD)
         {
             var tempAdjacencyCorrCphsSD = new SortedDictionary<CCorrCphs, CCorrCphs>(CCorrCphs.pCompareCCorrCphs_CphsGID);
@@ -497,7 +513,7 @@ namespace MorphingClass.CGeometry
             return tempAdjacencyCorrCphsSD;
         }
 
-        private void UpdateNewAdjacency_CorrCphsSDAndExistingCorrCphsSD(SortedDictionary<CCorrCphs, CCorrCphs> newAdjacency_CorrCphsSD, 
+        private static void UpdateNewAdjacency_CorrCphsSDAndExistingCorrCphsSD(SortedDictionary<CCorrCphs, CCorrCphs> newAdjacency_CorrCphsSD, 
             SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, List<CCorrCphs> RemoveKeyLt, 
             SortedDictionary<CCorrCphs, CCorrCphs> tempAdjacencyCorrCphsSD)
         {
@@ -527,9 +543,72 @@ namespace MorphingClass.CGeometry
         /// <param name="intFinalTypeIndex"></param>
         /// <param name="padblTD"></param>
         /// <returns></returns>
-        private CRegion GenerateCrg(CRegion lscrg, CRegion sscrg, SortedSet<CRegion> Q, List<SortedDictionary<CRegion, CRegion>> ExistingCrgSDLt, 
+        public CRegion GenerateCrgAndUpdateQ(CRegion lscrg, CRegion sscrg, SortedSet<CRegion> Q, List<SortedDictionary<CRegion, CRegion>> ExistingCrgSDLt, 
             SortedDictionary<CCorrCphs, CCorrCphs> newAdjacency_CorrCphsSD, CPatch activecph, CPatch passivecph, CPatch unitedcph, 
-            CCorrCphs unitingCorrCphs, int intFinalTypeIndex, double[,] padblTD, int intFactor)
+            CCorrCphs unitingCorrCphs, int intFinalTypeIndex, double[,] padblTD, int intFactor=1)
+        {
+            var newCphTypeIndexSD = new SortedDictionary<CPatch, int>(this.CphTypeIndexSD_Area_CphGID, CPatch.pCompareCPatch_Area_CphGID);
+            int intactiveTypeIndex;
+            int intpassiveTypeIndex;
+            newCphTypeIndexSD.TryGetValue(activecph, out intactiveTypeIndex);
+            newCphTypeIndexSD.TryGetValue(passivecph, out intpassiveTypeIndex);
+
+            var newcrg = this.GenerateCrgChild(lscrg,  newAdjacency_CorrCphsSD, 
+             activecph,  passivecph,  unitedcph,  unitingCorrCphs,padblTD);
+
+            if (CConstants.blnComputeCompactness == true)
+            {
+                newcrg.dblMinCompactness = newcrg.CphTypeIndexSD_Area_CphGID.Keys.Min(cph => cph.dblCompactness);
+            }
+
+            ComputeExactCost(lscrg, newcrg, activecph, passivecph, unitedcph, intactiveTypeIndex, intpassiveTypeIndex, padblTD);
+
+
+            CRegion outcrg;
+            
+            if (ExistingCrgSDLt[newcrg.GetCphCount()].TryGetValue(newcrg, out outcrg))
+            {                
+                int intResult = newcrg.dblCostExact.CompareTo(outcrg.dblCostExact);
+                if (intResult == -1)
+                {
+                    //from the idea of A* algorithm, we know that outcrg must be in Q
+
+                    if (Q.Remove(outcrg)==false )
+                    {
+                        throw new ArgumentException("outcrg should be removed!");
+                    }
+                    //Q.Remove(outcrg);  //there is no decrease key function for SortedSet, so we have to remove it and later add it again
+                    outcrg.cenumColor = newcrg.cenumColor;
+                    outcrg.dblCostExactType = newcrg.dblCostExactType;                  //*****the cost will need be updated if we integrate more evaluations
+                    outcrg.dblCostExactCompactness = newcrg.dblCostExactCompactness;                  //*****the cost will need be updated if we integrate more evaluations
+                    outcrg.dblCostExactArea = newcrg.dblCostExactArea;
+                    outcrg.dblCostExact = newcrg.dblCostExact;
+                    outcrg.d = newcrg.dblCostExact + outcrg.dblCostEstimated;
+
+                    outcrg.parent = newcrg.parent;
+                    newcrg = outcrg;
+                    Q.Add(newcrg);
+                    //CRegion._intStaticGID--;
+                }
+                else
+                {
+                    //we don't need to do operation Q.Add(newcrg);
+                }
+            }
+            else
+            {
+                ComputeEstimatedCost(lscrg, sscrg, newcrg, activecph, passivecph, unitedcph, intactiveTypeIndex, intpassiveTypeIndex, 
+                    intFinalTypeIndex, padblTD, intFactor);
+                Q.Add(newcrg);
+                ExistingCrgSDLt[newcrg.GetCphCount()].Add(newcrg, newcrg);
+                CRegion._intNodesCount++;
+            }
+
+            return newcrg;
+        }
+
+        public CRegion GenerateCrgChild(CRegion lscrg, SortedDictionary<CCorrCphs, CCorrCphs> newAdjacency_CorrCphsSD, 
+            CPatch activecph, CPatch passivecph, CPatch unitedcph, CCorrCphs unitingCorrCphs, double[,] padblTD)
         {
             var newCphTypeIndexSD = new SortedDictionary<CPatch, int>(this.CphTypeIndexSD_Area_CphGID, CPatch.pCompareCPatch_Area_CphGID);
             int intactiveTypeIndex;
@@ -552,7 +631,7 @@ namespace MorphingClass.CGeometry
             newcrg.intSumCphGID = this.intSumCphGID - activecph.GID - passivecph.GID + unitedcph.GID;
             newcrg.intSumTypeIndex = this.intSumTypeIndex - intpassiveTypeIndex;
             //newcrg.intEdgeCount = this.intEdgeCount - intDecreaseEdgeCount;
-            newcrg.intInteriorEdgeCount = this.intInteriorEdgeCount - unitingCorrCphs.intSharedCEdgeCount;            
+            newcrg.intInteriorEdgeCount = this.intInteriorEdgeCount - unitingCorrCphs.intSharedCEdgeCount;
             newcrg.intExteriorEdgeCount = this.intExteriorEdgeCount;
             newcrg.dblInteriorSegmentLength = this.dblInteriorSegmentLength - unitingCorrCphs.dblSharedSegmentLength;
             newcrg.dblExteriorSegmentLength = this.dblExteriorSegmentLength;
@@ -564,42 +643,8 @@ namespace MorphingClass.CGeometry
 
             ComputeExactCost(lscrg, newcrg, activecph, passivecph, unitedcph, intactiveTypeIndex, intpassiveTypeIndex, padblTD);
 
-
-            CRegion outcrg;
-            if (ExistingCrgSDLt[newcrg.GetCphCount()].TryGetValue(newcrg, out outcrg))
-            {
-                int intResult = newcrg.dblCostExact.CompareTo(outcrg.dblCostExact);
-                if (intResult == -1)
-                {
-                    //from the idea of A* algorithm, we know that outcrg must be in Q
-                    Q.Remove(outcrg);  //there is no decrease key function for SortedSet, so we have to remove it and later add it again
-                    outcrg.cenumColor = newcrg.cenumColor;
-                    outcrg.dblCostExactType = newcrg.dblCostExactType;                  //*****the cost will need be updated if we integrate more evaluations
-                    outcrg.dblCostExactCompactness = newcrg.dblCostExactCompactness;                  //*****the cost will need be updated if we integrate more evaluations
-                    outcrg.dblCostExactArea = newcrg.dblCostExactArea;
-                    outcrg.dblCostExact = newcrg.dblCostExact;
-                    outcrg.d = newcrg.dblCostExact + outcrg.dblCostEstimated;
-
-                    outcrg.parent = newcrg.parent;
-                    newcrg = outcrg;
-
-                    //CRegion._intStaticGID--;
-                }
-            }
-            else
-            {
-                ComputeEstimatedCost(lscrg, sscrg, newcrg, activecph, passivecph, unitedcph, intactiveTypeIndex, intpassiveTypeIndex, 
-                    intFinalTypeIndex, padblTD, intFactor);
-
-                ExistingCrgSDLt[newcrg.GetCphCount()].Add(newcrg, newcrg);
-                CRegion._intNodesCount++;
-            }
-            Q.Add(newcrg);
-
             return newcrg;
         }
-
-
 
         public void InitialEstimatedCost(CRegion sscrg, double[,] padblTD, int intFactor)
         {

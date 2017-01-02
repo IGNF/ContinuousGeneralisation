@@ -66,7 +66,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.cboLayerLt.Add(this.cboInterSS);
             ParameterInitialize.cboLayerLt.Add(this.cboSingleLayer);
             ParameterInitialize.cboLayerLt.Add(this.cboSingleSmallerScaleLayer);
-            ParameterInitialize.strMorphingMethod = "CGABM";
+            CConstants.strMethod = "CGABM";
             ParameterInitialize.cboTransform = this.cboTransform;
 
             this.cboTransform.Text = "Compatible Triangulations";

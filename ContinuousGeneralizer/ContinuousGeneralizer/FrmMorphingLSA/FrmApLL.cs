@@ -35,7 +35,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
         public FrmApLL(CDataRecords pDataRecords)
         {
             InitializeComponent();
-            pDataRecords.ParameterInitialize.strMorphingMethod = "ApLL";
+            CConstants.strMethod = "ApLL";
             _DataRecords = pDataRecords;
         }
 

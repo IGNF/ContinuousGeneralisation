@@ -73,7 +73,7 @@ namespace ContinuousGeneralizer.FrmGeneralization
             ParameterInitialize.cboLayerLt.Add(this.cboSmallerScaleLayer);
             ParameterInitialize.cboLayerLt.Add(this.cboLSRoad);
             ParameterInitialize.cboLayerLt.Add(this.cboSSRoad);
-            ParameterInitialize.strMorphingMethod = "BuildingGrowing";
+            CConstants.strMethod = "BuildingGrowing";
 
             this.cboBufferStyle.SelectedIndex = 0;
 

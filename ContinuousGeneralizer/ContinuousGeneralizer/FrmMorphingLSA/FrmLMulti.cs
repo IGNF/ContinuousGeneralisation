@@ -42,7 +42,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             ParameterInitialize.cboLayer  = this.cboLayer;
             ParameterInitialize.txtInterpolationNum = this.txtInterpolatedNum;
             ParameterInitialize.txtIterationNum = this.txtIterationNum;
-            ParameterInitialize.strMorphingMethod = "LMulti";
+            CConstants.strMethod = "LMulti";
             //进行Load操作，初始化变量
             _FrmOperation = new CFrmOperation(ref ParameterInitialize);
             _FrmOperation.FrmLoad();

@@ -58,7 +58,7 @@ namespace ContinuousGeneralizer.FrmFishEye
             ParameterInitialize.m_mapFeature = new MapClass();
             ParameterInitialize.m_mapAll = new MapClass();
             ParameterInitialize.cboLayer = this.cboLayer;
-            ParameterInitialize.strMorphingMethod = "CDTLSA";
+            CConstants.strMethod = "CDTLSA";
             //进行Load操作，初始化变量
             _FrmOperation = new CFrmOperation(ref ParameterInitialize);
             _FrmOperation.FrmLoad();

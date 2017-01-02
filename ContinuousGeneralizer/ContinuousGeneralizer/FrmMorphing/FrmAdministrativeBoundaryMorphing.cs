@@ -61,7 +61,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.cboSmallerScaleLayer = this.cboSmallerScaleLayer;
             ParameterInitialize.cboSingleLayer = this.cboSingleLayer;
 
-            ParameterInitialize.strMorphingMethod = "AtBdMorphing";
+            CConstants.strMethod = "AtBdMorphing";
             //进行Load操作，初始化变量
             _FrmOperation = new CFrmOperation(ref ParameterInitialize);
             _FrmOperation.FrmLoadThreecbo();

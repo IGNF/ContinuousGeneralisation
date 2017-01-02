@@ -61,7 +61,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.cboLargerScaleLayer = this.cboLargerScaleLayer;
             ParameterInitialize.cboSmallerScaleLayer = this.cboSmallerScaleLayer;
             ParameterInitialize.txtOverlapRatio = this.txtOverlapRatio;
-            ParameterInitialize.strMorphingMethod = "LinearMulti";
+            CConstants.strMethod = "LinearMulti";
             //进行Load操作，初始化变量
             _FrmOperation = new CFrmOperation(ref ParameterInitialize);
             _FrmOperation.FrmLoadMulticbo();

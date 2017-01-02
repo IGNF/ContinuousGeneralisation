@@ -56,7 +56,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.cboLayerLt = new List<ComboBox>(2);
             ParameterInitialize.cboLayerLt.Add(this.cboLargerScaleLayer);
             ParameterInitialize.cboLayerLt.Add(this.cboSmallerScaleLayer);
-            ParameterInitialize.strMorphingMethod = "Linear";
+            CConstants.strMethod = "Linear";
 
             //进行Load操作，初始化变量
             _FrmOperation = new CFrmOperation(ref ParameterInitialize);

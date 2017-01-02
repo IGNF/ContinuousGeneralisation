@@ -60,7 +60,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.cboLargerScaleLayer = this.cboLargerScaleLayer;
             ParameterInitialize.cboSmallerScaleLayer = this.cboSmallerScaleLayer;
             ParameterInitialize.txtAngleBound = this.txtAngleBound;
-            ParameterInitialize.strMorphingMethod = "MPBDPBL";
+            CConstants.strMethod = "MPBDPBL";
             //进行Load操作，初始化变量
             _FrmOperation = new CFrmOperation(ref ParameterInitialize);
             _FrmOperation.FrmLoadMulticbo();

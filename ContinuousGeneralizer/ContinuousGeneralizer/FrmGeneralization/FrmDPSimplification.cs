@@ -48,7 +48,7 @@ namespace ContinuousGeneralizer.FrmGeneralization
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
             ParameterInitialize.cboLayerLt = new List<ComboBox>(1);
             ParameterInitialize.cboLayerLt.Add(this.cboLayer);
-            ParameterInitialize.strMorphingMethod = "DPSimplification";
+            CConstants.strMethod = "DPSimplification";
 
             //进行Load操作，初始化变量
             _FrmOperation = new CFrmOperation(ref ParameterInitialize);

@@ -49,7 +49,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.cboLargerScaleLayer = this.cboLargerScaleLayer;
             ParameterInitialize.cboSmallerScaleLayer = this.cboSmallerScaleLayer;
             ParameterInitialize.txtMaxBackK = this.txtMaxBackK;
-            ParameterInitialize.strMorphingMethod = "BSBLGOptCorMMSimplified";
+            CConstants.strMethod = "BSBLGOptCorMMSimplified";
             //进行Load操作，初始化变量
             _FrmOperation = new CFrmOperation(ref ParameterInitialize);
             _FrmOperation.FrmLoadMulticbo();

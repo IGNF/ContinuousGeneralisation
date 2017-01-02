@@ -29,14 +29,14 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
 
         public FrmALm()
         {
-            //_ParameterInitialize.strMorphingMethod = "LandingTime";
+            //CConstants.strMethod = "LandingTime";
         }
 
         public FrmALm(CDataRecords pDataRecords)
         {
             this.Name = "ALm";
             this.Text = "ALm";
-            pDataRecords.ParameterInitialize.strMorphingMethod = "ALm";
+            CConstants.strMethod = "ALm";
             _DataRecords = pDataRecords;
         }
 

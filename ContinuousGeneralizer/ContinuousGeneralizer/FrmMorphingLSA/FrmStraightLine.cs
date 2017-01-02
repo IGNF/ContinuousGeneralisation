@@ -72,7 +72,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             {
 
                 CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
-                ParameterInitialize.strMorphingMethod = "StraightLine";
+                CConstants.strMethod = "StraightLine";
 
             }
 

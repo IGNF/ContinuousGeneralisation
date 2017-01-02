@@ -31,14 +31,14 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
 
         public FrmOrdinal()
         {
-            //_ParameterInitialize.strMorphingMethod = "Ordinal";
+            //CConstants.strMethod = "Ordinal";
         }
 
         public FrmOrdinal(CDataRecords pDataRecords)
         {
             this.Name = "FrmOrdinal";
             this.Text = "FrmOrdinal";
-            pDataRecords.ParameterInitialize.strMorphingMethod = "Ordinal";
+            CConstants.strMethod = "Ordinal";
             _DataRecords = pDataRecords;
 
 

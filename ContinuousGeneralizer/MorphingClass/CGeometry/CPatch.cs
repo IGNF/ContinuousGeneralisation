@@ -34,11 +34,15 @@ namespace MorphingClass.CGeometry
         public SortedSet <CPatch> AdjacentCphSS { get; set; }  //only for the ILP
 
 
-        public CPatch()
+        public CPatch(bool blnReal = true)
         {
-
-            this.GID = _intStaticGID++;
+            this.GID = _intStaticGID;
+            if (blnReal)
+            {
+                _intStaticGID++;
+            }
         }
+
 
 
         public CPatch(CPolygon cpg, int intID, int pintTypeIndex)
@@ -109,6 +113,18 @@ namespace MorphingClass.CGeometry
             }
             return unitedcph;
         }
+
+        public CPatch GetSmallestNeighbor()
+        {
+            if (CConstants .strMethod !="Greedy")
+            {
+                throw new ArgumentOutOfRangeException("This method can only be used in the Greedy algorithm");
+            }
+
+
+            return this.AdjacentCphSS.Min();
+        }
+
 
 
         public IPolygon4 MergeCpgSS()

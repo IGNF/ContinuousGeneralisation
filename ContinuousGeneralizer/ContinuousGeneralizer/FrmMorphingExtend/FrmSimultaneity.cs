@@ -30,14 +30,14 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
 
         public FrmSimultaneity()
         {
-            //_ParameterInitialize.strMorphingMethod = "Simultaneity";
+            //CConstants.strMethod = "Simultaneity";
         }
 
         public FrmSimultaneity(CDataRecords pDataRecords)
         {
             this.Name = "FrmSimultaneity";
             this.Text = "FrmSimultaneity";
-            pDataRecords.ParameterInitialize.strMorphingMethod = "Simultaneity";
+            CConstants.strMethod = "Simultaneity";
             _DataRecords = pDataRecords;
             
 

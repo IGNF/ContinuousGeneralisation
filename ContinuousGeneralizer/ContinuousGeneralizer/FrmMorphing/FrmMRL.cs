@@ -65,7 +65,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             //ParameterInitialize.cboLayer = this.cboLargerScaleLayer;
             //ParameterInitialize.txtBendDelRatio = this.txtBendDelRatio;
             //ParameterInitialize.txtLengthBound = this.txtLengthBound;
-            ParameterInitialize.strMorphingMethod = "MRL";
+            CConstants.strMethod = "MRL";
             //进行Load操作，初始化变量
             _FrmOperation = new CFrmOperation(ref ParameterInitialize);
             _FrmOperation.FrmLoadMulticbo();

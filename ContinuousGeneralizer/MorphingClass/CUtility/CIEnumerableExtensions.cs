@@ -125,9 +125,16 @@ namespace MorphingClass.CUtility
         public static T GetFirstT<T>(this List<T> items)
         {
             return items[0];
-
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="TEnumerable"></param>
+        /// <returns></returns>
+        /// <remarks>for a dictionary, this operation takes O(log n) time;
+        /// see https://msdn.microsoft.com/en-us/library/1z8z05h2.aspx?f=255&MSPPError=-2147217396 </remarks>
         public static T GetFirstT<T>(this IEnumerable<T> TEnumerable)
         {
             IEnumerator<T> selfEnumerator = TEnumerable.GetEnumerator();

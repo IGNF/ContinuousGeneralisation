@@ -37,14 +37,14 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
 
         public FrmLandingTimeLI()
         {
-            //_ParameterInitialize.strMorphingMethod = "LandingTimeLI";
+            //CConstants.strMethod = "LandingTimeLI";
         }
 
         public FrmLandingTimeLI(CDataRecords pDataRecords)
         {
             this.Name = "FrmLandingTimeLI";
             this.Text = "FrmLandingTimeLI";
-            pDataRecords.ParameterInitialize.strMorphingMethod = "LandingTimeLI";
+            CConstants.strMethod = "LandingTimeLI";
             _DataRecords = pDataRecords;
 
 

@@ -50,7 +50,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
         private void FrmCAL_Load(object sender, EventArgs e)
         {
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
-            ParameterInitialize.strMorphingMethod = "CAL";            
+            CConstants.strMethod = "CAL";            
         }
 
         private void btnReadData_Click(object sender, EventArgs e)

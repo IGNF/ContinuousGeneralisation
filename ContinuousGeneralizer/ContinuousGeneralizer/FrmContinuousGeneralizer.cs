@@ -154,8 +154,8 @@ namespace ContinuousGeneralizer
 
         private void FrmContinuousGeneralizer_Shown(object sender, EventArgs e)
         {
-            var frmCurrent = new FrmBuildingGrowing(_DataRecords);
-            //var frmCurrent = new FrmCAMDijkstra(_DataRecords);
+            //var frmCurrent = new FrmBuildingGrowing(_DataRecords);
+            var frmCurrent = new FrmCAMDijkstra(_DataRecords);
             //var frmCurrent = new FrmCGABM(_DataRecords);
             //var frmCurrent = new FrmExtractPossibleFiles();
             frmCurrent.Show();

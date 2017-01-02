@@ -66,7 +66,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
         private void FrmLinear_AL_Load(object sender, EventArgs e)
         {
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
-            ParameterInitialize.strMorphingMethod = "Linear_AL";
+            CConstants.strMethod = "Linear_AL";
         }
 
         private void btnReadData_Click(object sender, EventArgs e)
