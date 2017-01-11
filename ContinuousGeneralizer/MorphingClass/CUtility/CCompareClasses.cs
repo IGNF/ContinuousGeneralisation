@@ -219,7 +219,7 @@ namespace MorphingClass.CUtility
     {
         public int Compare(CPatch cph1, CPatch cph2)
         {
-            int intResult = CCompareMethods.Compare(cph1.dblCompactness, cph2.dblCompactness);
+            int intResult = CCompareMethods.Compare(cph1.dblComp, cph2.dblComp);
             if (intResult == 0)
             {
                 intResult = cph1.GID.CompareTo(cph2.GID);

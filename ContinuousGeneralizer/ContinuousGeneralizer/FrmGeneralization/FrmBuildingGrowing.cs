@@ -90,7 +90,9 @@ namespace ContinuousGeneralizer.FrmGeneralization
 
             //读取数据
             _pBuildingGrowing = new CBuildingGrowing(ParameterInitialize);
-            _pBuildingGrowing.BuildingGrowing(Convert.ToDouble(this.txtBufferRadius.Text), this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
+            _pBuildingGrowing.BuildingGrowing(
+                Convert.ToDouble(this.txtBufferRadius.Text), this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text),
+                Convert.ToDouble(this.txtLargerScale.Text),Convert.ToDouble(this.txtSmallerScale.Text),Convert.ToInt32(this.txtOutput.Text));
 
             MessageBox.Show("Done!");
         }

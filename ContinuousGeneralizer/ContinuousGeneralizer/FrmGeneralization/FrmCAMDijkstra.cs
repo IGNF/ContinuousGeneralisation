@@ -50,7 +50,7 @@ namespace ContinuousGeneralizer.FrmMorphing
         {
             InitializeComponent();
         }
-
+        
         public FrmCAMDijkstra(CDataRecords pDataRecords)
         {
             InitializeComponent();
@@ -64,31 +64,46 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.cboLayerLt = new List<ComboBox>(2);
             ParameterInitialize.cboLayerLt.Add(this.cboLargerScaleLayer);
             ParameterInitialize.cboLayerLt.Add(this.cboSmallerScaleLayer);
-            CConstants.strMethod = "CAMDijkstra";
+            CConstants.strMethod = "AStar";
             ParameterInitialize.cboShapeConstraint = this.cboShapeConstraint;
             ParameterInitialize.chkSmallest = this.chkSmallest;
 
-            this.cboShapeConstraint.SelectedIndex = 2;
+            this.cboShapeConstraint.SelectedIndex = 4;
 
             //进行Load操作，初始化变量
             _FrmOperation = new CFrmOperation(ref ParameterInitialize);
         }
 
+        private void btnGreedy_Click(object sender, EventArgs e)
+        {
+            CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
+            CConstants.strMethod = "Greedy";
+            var objResultSD = new SortedDictionary<string, List<object>>();
+            var StrObjLtSD = new CStrObjLtSD(CAreaAggregation_Base.strKeyLt);
+            //读取数据
+            var pCAreaAggregation_Greedy = new CAreaAggregation_Greedy(ParameterInitialize);
+            pCAreaAggregation_Greedy.AreaAggregation();
 
+            this.txtEvaluation.Text = pCAreaAggregation_Greedy.dblCost.ToString();
+            StrObjLtSD.Merge(pCAreaAggregation_Greedy.StrObjLtSD);
+            CAreaAggregation_Base.SaveData(StrObjLtSD, ParameterInitialize, "AStar", Convert.ToInt32(txtNodes.Text));
+
+            MessageBox.Show("Done!");
+        }
 
         public void btnRun_Click(object sender, EventArgs e)
         {
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
             //var objDataLtLt = new List<List<object>>();
             var objResultSD = new SortedDictionary<string, List<object>>();
-            var StrObjLtSD= new CStrObjLtSD(CCAMDijkstra.strKeyLt);
+            var StrObjLtSD = new CStrObjLtSD(CCAMDijkstra.strKeyLt);
             //读取数据
             _pCAMDijkstra = new CCAMDijkstra(ParameterInitialize);
             _pCAMDijkstra.CAMDijkstra(Convert.ToInt32(txtNodes.Text), "AStar");
 
             this.txtEvaluation.Text = _pCAMDijkstra.dblCost.ToString();
             StrObjLtSD.Merge(_pCAMDijkstra.StrObjLtSD);
-            CCAMDijkstra.SaveData(StrObjLtSD, ParameterInitialize, "AStar", Convert.ToInt32(txtNodes.Text));
+            CAreaAggregation_Base.SaveData(StrObjLtSD, ParameterInitialize, "AStar", Convert.ToInt32(txtNodes.Text));
 
             MessageBox.Show("Done!");
         }
@@ -299,8 +314,8 @@ namespace ContinuousGeneralizer.FrmMorphing
             int intUnlimited = 2000000000;
 
             //1: MinimizeInteriorBoundaries
-            //2: MaximizeMinimumCompactness
-            //3: MaximizeMinimumCompactness_Combine
+            //2: MaximizeMinComp
+            //3: MaximizeMinComp_Combine
             //true: involving smallest
             //false: all
             //RunBasic(ParameterInitialize, "AStar", intQuitCount, 3, false);
@@ -493,10 +508,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             }
         }
 
-        private void btnGreedy_Click(object sender, EventArgs e)
-        {
 
-        }
 
 
 

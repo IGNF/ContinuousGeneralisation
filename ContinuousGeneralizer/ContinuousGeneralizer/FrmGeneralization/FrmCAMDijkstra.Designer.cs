@@ -79,15 +79,16 @@
             this.label7 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.btnGreedy = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnAdd
@@ -151,7 +152,7 @@
             this.groupBox2.Controls.Add(this.btn080);
             this.groupBox2.Controls.Add(this.btn070);
             this.groupBox2.Controls.Add(this.btn090);
-            this.groupBox2.Location = new System.Drawing.Point(12, 506);
+            this.groupBox2.Location = new System.Drawing.Point(11, 558);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(288, 221);
             this.groupBox2.TabIndex = 74;
@@ -365,16 +366,16 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.txtEvaluation);
-            this.groupBox3.Location = new System.Drawing.Point(12, 733);
+            this.groupBox3.Location = new System.Drawing.Point(12, 785);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(288, 105);
+            this.groupBox3.Size = new System.Drawing.Size(288, 53);
             this.groupBox3.TabIndex = 75;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Evaluation";
             // 
             // txtEvaluation
             // 
-            this.txtEvaluation.Location = new System.Drawing.Point(9, 45);
+            this.txtEvaluation.Location = new System.Drawing.Point(6, 19);
             this.txtEvaluation.Name = "txtEvaluation";
             this.txtEvaluation.ReadOnly = true;
             this.txtEvaluation.Size = new System.Drawing.Size(114, 20);
@@ -495,9 +496,9 @@
             this.cboShapeConstraint.Items.AddRange(new object[] {
             "NonShape",
             "MinimizeInteriorBoundaries",
-            "MaximizeMinimumCompactness",
-            "MaximizeMinimumCompactness_Combine",
-            "MaximizeAverageCompactness_Combine"});
+            "MaximizeMinComp",
+            "MaximizeMinComp_Combine",
+            "MaximizeAvgComp_Combine"});
             this.cboShapeConstraint.Location = new System.Drawing.Point(122, 19);
             this.cboShapeConstraint.Name = "cboShapeConstraint";
             this.cboShapeConstraint.Size = new System.Drawing.Size(160, 21);
@@ -505,7 +506,7 @@
             // 
             // txtNodes
             // 
-            this.txtNodes.Location = new System.Drawing.Point(205, 46);
+            this.txtNodes.Location = new System.Drawing.Point(191, 48);
             this.txtNodes.Name = "txtNodes";
             this.txtNodes.Size = new System.Drawing.Size(77, 20);
             this.txtNodes.TabIndex = 99;
@@ -514,7 +515,7 @@
             // 
             // btnRunSpecified
             // 
-            this.btnRunSpecified.Location = new System.Drawing.Point(76, 46);
+            this.btnRunSpecified.Location = new System.Drawing.Point(6, 50);
             this.btnRunSpecified.Name = "btnRunSpecified";
             this.btnRunSpecified.Size = new System.Drawing.Size(106, 25);
             this.btnRunSpecified.TabIndex = 98;
@@ -524,7 +525,7 @@
             // 
             // btnRun
             // 
-            this.btnRun.Location = new System.Drawing.Point(6, 46);
+            this.btnRun.Location = new System.Drawing.Point(6, 19);
             this.btnRun.Name = "btnRun";
             this.btnRun.Size = new System.Drawing.Size(64, 25);
             this.btnRun.TabIndex = 71;
@@ -537,7 +538,7 @@
             this.groupBox4.Controls.Add(this.btnRunILP_Extend);
             this.groupBox4.Controls.Add(this.btnRunILP);
             this.groupBox4.Controls.Add(this.btnRunILPSpecified);
-            this.groupBox4.Location = new System.Drawing.Point(12, 317);
+            this.groupBox4.Location = new System.Drawing.Point(12, 457);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(288, 56);
             this.groupBox4.TabIndex = 76;
@@ -580,13 +581,11 @@
             this.groupBox5.Controls.Add(this.label7);
             this.groupBox5.Controls.Add(this.textBox1);
             this.groupBox5.Controls.Add(this.txtNodes);
-            this.groupBox5.Controls.Add(this.label1);
             this.groupBox5.Controls.Add(this.btnRun);
-            this.groupBox5.Controls.Add(this.cboShapeConstraint);
             this.groupBox5.Controls.Add(this.btnRunSpecified);
-            this.groupBox5.Location = new System.Drawing.Point(12, 211);
+            this.groupBox5.Location = new System.Drawing.Point(9, 134);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(288, 100);
+            this.groupBox5.Size = new System.Drawing.Size(274, 100);
             this.groupBox5.TabIndex = 77;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "A Star";
@@ -594,7 +593,7 @@
             // chkOutput
             // 
             this.chkOutput.AutoSize = true;
-            this.chkOutput.Location = new System.Drawing.Point(83, 74);
+            this.chkOutput.Location = new System.Drawing.Point(56, 77);
             this.chkOutput.Name = "chkOutput";
             this.chkOutput.Size = new System.Drawing.Size(87, 17);
             this.chkOutput.TabIndex = 102;
@@ -604,7 +603,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(171, 75);
+            this.label7.Location = new System.Drawing.Point(157, 77);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(28, 13);
             this.label7.TabIndex = 101;
@@ -614,7 +613,7 @@
             // 
             this.textBox1.BackColor = System.Drawing.SystemColors.ControlLight;
             this.textBox1.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.textBox1.Location = new System.Drawing.Point(205, 72);
+            this.textBox1.Location = new System.Drawing.Point(191, 74);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(77, 20);
             this.textBox1.TabIndex = 100;
@@ -623,24 +622,14 @@
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.button1);
             this.groupBox6.Controls.Add(this.btnGreedy);
             this.groupBox6.Controls.Add(this.button3);
-            this.groupBox6.Location = new System.Drawing.Point(12, 379);
+            this.groupBox6.Location = new System.Drawing.Point(7, 46);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(288, 101);
+            this.groupBox6.Size = new System.Drawing.Size(274, 82);
             this.groupBox6.TabIndex = 78;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Greedy";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(6, 50);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(64, 25);
-            this.button1.TabIndex = 101;
-            this.button1.Text = "Run_E";
-            this.button1.UseVisualStyleBackColor = true;
             // 
             // btnGreedy
             // 
@@ -661,13 +650,25 @@
             this.button3.Text = "Run Specified";
             this.button3.UseVisualStyleBackColor = true;
             // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.groupBox5);
+            this.groupBox7.Controls.Add(this.groupBox6);
+            this.groupBox7.Controls.Add(this.cboShapeConstraint);
+            this.groupBox7.Controls.Add(this.label1);
+            this.groupBox7.Location = new System.Drawing.Point(12, 211);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(287, 240);
+            this.groupBox7.TabIndex = 79;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Greedy and AStar";
+            // 
             // FrmCAMDijkstra
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(312, 853);
-            this.Controls.Add(this.groupBox6);
-            this.Controls.Add(this.groupBox5);
+            this.ClientSize = new System.Drawing.Size(309, 853);
+            this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox3);
@@ -685,6 +686,8 @@
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.groupBox6.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox7.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -742,8 +745,8 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.CheckBox chkOutput;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btnGreedy;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.GroupBox groupBox7;
     }
 }

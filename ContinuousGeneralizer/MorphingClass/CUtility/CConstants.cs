@@ -41,7 +41,8 @@ namespace MorphingClass.CUtility
         private static Comparer<int> _ComparerInt = Comparer<int>.Default;
         private static Comparer<double> _ComparerDbl = Comparer<double>.Default;
 
-        public static bool blnComputeCompactness { set; get; }
+        public static bool blnComputeMinComp { set; get; }
+        public static bool blnComputeAvgComp { set; get; }
 
         public static string strMethod { set; get; }
         public static string strShapeConstraint { set; get; }

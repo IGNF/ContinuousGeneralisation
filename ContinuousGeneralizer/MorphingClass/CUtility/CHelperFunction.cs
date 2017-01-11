@@ -58,7 +58,7 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "CompatibleTriangulation3";
         //private static string _strPath = "C:\\Study\\Data\\Morphing Data\\Representation In Article\\ContinuousGeneralizationOfAdministrativeBoundariesBasedonMorphing\\" + _strDataFolderName + "\\";
 
-        private static string _strDataFolderName = "AreaAggregation";
+        //private static string _strDataFolderName = "AreaAggregation";
         //private static string _strDataFolderName = "AreaAggregation_85_Hole";        
         //private static string _strDataFolderName = "AreaAggregation_543";
         //private static string _strDataFolderName = "AreaAggregation_544";
@@ -71,16 +71,16 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "AreaAggregation-Computable";
         //private static string _strDataFolderName = "AreaAggregation-Uncomputable";
         //private static string _strDataFolderName = "AreaAggregation-Mostpatches";
-        private static string _strPath = "C:\\Study\\Data\\Morphing Data\\" + _strDataFolderName + "\\";
+        //private static string _strPath = "C:\\Study\\Data\\Morphing Data\\" + _strDataFolderName + "\\";
 
         //private static string _strDataFolderName = "France";
         //private static string _strDataFolderName = "France_Part";
-        //private static string _strDataFolderName = "France_Smallpart";
+        private static string _strDataFolderName = "France_Smallpart";
         //private static string _strDataFolderName = "France_WithOneHole";
         //private static string _strDataFolderName = "France_OneSquare";
         //private static string _strDataFolderName = "France_TwoSquares_Faraway";
         //private static string _strDataFolderName = "France_TwoSquares_Overlap";
-        //private static string _strPath = "C:\\Study\\Data\\Morphing Data\\BuildingGrowing\\" + _strDataFolderName + "\\";
+        private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\" + _strDataFolderName + "\\";
 
         public static IEnumerable<CPoint> GetTestCptEb()
         {

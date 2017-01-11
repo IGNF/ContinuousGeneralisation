@@ -22,8 +22,8 @@ namespace MorphingClass.CGeometry
         public int intSumCpgGID { get; set; }
 
         /// <summary>this is the real compactness 2*Sqrt(pi*A)/L.</summary>
-        public double dblCompactness { get; set; }  
-        
+        public double dblComp { get; set; }
+
         public double dblArea { get; set; }
         public double dblLength { get; set; }
 
@@ -31,21 +31,18 @@ namespace MorphingClass.CGeometry
 
         //public SortedDictionary<CPatch , List<CEdge>> Adjacent_CphsCEdgeLtSD { get; set; }  //only temporary for compute area estimation
 
-        public SortedSet <CPatch> AdjacentCphSS { get; set; }  //only for the ILP
+        public SortedSet<CPatch> AdjacentCphSS { get; set; }  //only for the ILP
 
 
-        public CPatch(bool blnReal = true)
+        public CPatch()
         {
-            this.GID = _intStaticGID;
-            if (blnReal)
-            {
-                _intStaticGID++;
-            }
+            this.GID = _intStaticGID++;
         }
 
 
 
         public CPatch(CPolygon cpg, int intID, int pintTypeIndex)
+            : this()
         {
             this.ID = intID;
             this.CpgSS = new SortedSet<CPolygon>();
@@ -53,19 +50,18 @@ namespace MorphingClass.CGeometry
             this.dblArea = (cpg.pPolygon as IArea).Area;
             this.dblLength = cpg.pPolygon.Length;
             this.intSumCpgGID = cpg.GID;
-            this.GID = _intStaticGID++;
             this.intTypeIndex = pintTypeIndex;
 
-            if (CConstants.blnComputeCompactness == true)
+            if (CConstants.blnComputeMinComp == true || CConstants.blnComputeAvgComp == true)
             {
-                this.dblCompactness = CGeometricMethods.CalCompactness(this.dblArea, this.dblLength);
+                this.dblComp = CGeometricMethods.CalCompactness(this.dblArea, this.dblLength);
             }
         }
 
         //public double ComputeCompactness()
         //{
-        //    this.dblCompactness = CGeometricMethods.CalCompactness(this.dblArea, this.dblLength);
-        //    return this.dblCompactness;
+        //    this.dblComp = CGeometricMethods.CalCompactness(this.dblArea, this.dblLength);
+        //    return this.dblComp;
         //}
 
         //public CPatch(IEnumerable<CPolygon> cpgEb, int intType, int intTypeIndex, double dblArea)
@@ -83,8 +79,7 @@ namespace MorphingClass.CGeometry
                 this.CpgSS.UnionWith(cph.CpgSS);
                 this.dblArea += cph.dblArea;
                 this.intSumCpgGID += cph.intSumCpgGID;
-            }            
-            this.GID = _intStaticGID++;
+            }
         }
 
         public CPatch Unite(CPatch other, double dblSharedSegmentLength)
@@ -92,9 +87,9 @@ namespace MorphingClass.CGeometry
             var unitedcph = UniteNoAttribute(other);
             unitedcph.dblArea = this.dblArea + other.dblArea;
             unitedcph.dblLength = this.dblLength + other.dblLength - 2 * dblSharedSegmentLength;
-            if (CConstants.blnComputeCompactness == true)
+            if (CConstants.blnComputeMinComp == true || CConstants.blnComputeAvgComp == true)
             {
-                unitedcph.dblCompactness = CGeometricMethods.CalCompactness(unitedcph.dblArea, unitedcph.dblLength);
+                unitedcph.dblComp = CGeometricMethods.CalCompactness(unitedcph.dblArea, unitedcph.dblLength);
             }
 
             return unitedcph;
@@ -107,16 +102,26 @@ namespace MorphingClass.CGeometry
             unitedcph.CpgSS.UnionWith(other.CpgSS);
             unitedcph.intSumCpgGID = this.intSumCpgGID + other.intSumCpgGID;
 
-            if (this.isCore ==true || other .isCore ==true )
+            if (this.isCore == true || other.isCore == true)
             {
                 unitedcph.isCore = true;
             }
             return unitedcph;
         }
 
+        public CPolygon GetSoloCpg()
+        {
+            if (this.CpgSS.Count > 1)
+            {
+                throw new ArgumentOutOfRangeException("There are more than one elements!");
+            }
+
+            return this.CpgSS.Min;
+        }
+
         public CPatch GetSmallestNeighbor()
         {
-            if (CConstants .strMethod !="Greedy")
+            if (CConstants.strMethod != "Greedy")
             {
                 throw new ArgumentOutOfRangeException("This method can only be used in the Greedy algorithm");
             }

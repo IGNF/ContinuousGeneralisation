@@ -73,7 +73,7 @@ namespace MorphingClass.CGeneralizationMethods
         }
 
 
-        public void BuildingGrowing(double dblBufferRadius, string strBufferStyle, double dblMiterLimit)
+        public void BuildingGrowing(double dblBufferRadius, string strBufferStyle, double dblMiterLimit, double dblLS, double dblSS, int intOutput)
         {
             //**********************************************//
             //I may need to do buffering based on Miterjoint in a more clever way

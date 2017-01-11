@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -91,10 +92,13 @@ namespace MorphingClass.CGeneralizationMethods
         {
             Construct<CPolygon, CPolygon>(ParameterInitialize, 2, 0, true,1, strSpecifiedFieldName, strSpecifiedValue);
             CConstants.strShapeConstraint = ParameterInitialize.cboShapeConstraint.Text;
-            if (CConstants.strShapeConstraint == "MaximizeMinimumCompactness" || CConstants.strShapeConstraint == "MaximizeMinimumCompactness_Combine" ||
-                CConstants.strShapeConstraint == "MaximizeAverageCompactness" || CConstants.strShapeConstraint == "MaximizeAverageCompactness_Combine")
+            if (CConstants.strShapeConstraint == "MaximizeMinComp" || CConstants.strShapeConstraint == "MaximizeMinComp_Combine")
             {
-                CConstants.blnComputeCompactness = true;
+                CConstants.blnComputeMinComp = true;
+            }
+            else if (CConstants.strShapeConstraint == "MaximizeAvgComp" || CConstants.strShapeConstraint == "MaximizeAvgComp_Combine")
+            {
+                CConstants.blnComputeAvgComp = true;
             }
 
             if (ParameterInitialize.chkSmallest.Checked == true)
@@ -188,8 +192,8 @@ namespace MorphingClass.CGeneralizationMethods
             }
 
             //ssign the polygons as well as attributes from a featureLayer into regions, without considering costs
-            this .LSCrgLt = GenerateCrgLt(pLSCPgLt, pSSCPgLt.Count, pObjValueLtLtLt[0], intLSTypeATIndex, intLSRegionNumATIndex, _TypePVSD, pRegionPVSD);
-            this. SSCrgLt = GenerateCrgLt(pSSCPgLt, pSSCPgLt.Count, pObjValueLtLtLt[1], intSSTypeATIndex, intSSRegionNumATIndex, _TypePVSD, pRegionPVSD);
+            this.LSCrgLt = GenerateCrgLt(pLSCPgLt, pSSCPgLt.Count, pObjValueLtLtLt[0], intLSTypeATIndex, intLSRegionNumATIndex, _TypePVSD, pRegionPVSD);
+            this.SSCrgLt = GenerateCrgLt(pSSCPgLt, pSSCPgLt.Count, pObjValueLtLtLt[1], intSSTypeATIndex, intSSRegionNumATIndex, _TypePVSD, pRegionPVSD);
 
             using (var writer = new System.IO.StreamWriter(_ParameterInitialize.strSavePathBackSlash + CHelperFunction.GetTimeStamp()
                 + "_" + "AreaAggregation.txt", false))
@@ -221,7 +225,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             StrObjLtSD.SetLastObj("ID", LSCrg.ID);
             StrObjLtSD.SetLastObj("n", LSCrg.CphTypeIndexSD_Area_CphGID.Count);
-            StrObjLtSD.SetLastObj("m", LSCrg.Adjacency_CorrCphsSD.Count);
+            StrObjLtSD.SetLastObj("m", LSCrg.AdjCorrCphsSD.Count);
             StrObjLtSD.SetLastObj("Factor", 100000000);
         }
 
@@ -269,6 +273,386 @@ namespace MorphingClass.CGeneralizationMethods
                 }
             }
             return pCrgLt;
+        }
+        #endregion
+
+
+        #region Output
+
+
+        protected void RecordResultForCrg(CStrObjLtSD StrObjLtSD, CRegion LSCrg, CRegion FinalOneCphCrg, int intSSTypeIndex)
+        {
+            if (FinalOneCphCrg.GetSoloCphTypeIndex() != intSSTypeIndex)
+            {
+                throw new ArgumentException("type is not correct!");
+            }
+
+            SetRegionChild(FinalOneCphCrg);
+            AdjustCost(FinalOneCphCrg, 2);
+
+            double dblRoundedCostEstimatedType = Math.Round(LSCrg.dblCostEstimatedType, _intDigits);
+            double dblRoundedCostExactType = Math.Round(FinalOneCphCrg.dblCostExactType, _intDigits);
+            double dblRoundedCostEstimatedCompactness = Math.Round(LSCrg.dblCostEstimatedCompactness, _intDigits);
+            double dblRoundedCostExactCompactness = Math.Round(FinalOneCphCrg.dblCostExactCompactness, _intDigits);
+
+            double dblRatioTypeCE = 1;
+            double dblRatioCompCE = 1;
+            double dblRatioTypeComp = 1;
+
+            if (LSCrg.GetCphCount() > 1)
+            {
+                if (LSCrg.dblCostEstimatedType > 0)
+                {
+                    dblRatioTypeCE = Math.Round(FinalOneCphCrg.dblCostExactType / LSCrg.dblCostEstimatedType, _intDigits);
+                }
+
+                dblRatioCompCE = Math.Round(FinalOneCphCrg.dblCostExactCompactness / LSCrg.dblCostEstimatedCompactness, _intDigits);
+                dblRatioTypeComp = Math.Round(FinalOneCphCrg.dblCostExactType / FinalOneCphCrg.dblCostExactCompactness, _intDigits);
+            }
+
+            if (CConstants.strMethod == "Greedy")
+            {
+                dblRoundedCostEstimatedType = -1;
+                dblRatioTypeCE = -1;
+                dblRoundedCostEstimatedCompactness = -1;
+                dblRatioCompCE = -1;
+            }
+
+            StrObjLtSD.SetLastObj("#Nodes", CRegion._intNodesCount);
+            StrObjLtSD.SetLastObj("EstType", dblRoundedCostEstimatedType);
+            StrObjLtSD.SetLastObj("CostType", dblRoundedCostExactType);
+            StrObjLtSD.SetLastObj("RatioTypeCE", dblRatioTypeCE);
+            StrObjLtSD.SetLastObj("EstComp", dblRoundedCostEstimatedCompactness);
+            StrObjLtSD.SetLastObj("CostComp", dblRoundedCostExactCompactness);
+            StrObjLtSD.SetLastObj("RatioCompCE", dblRatioCompCE);
+            StrObjLtSD.SetLastObj("RatioTypeComp", dblRatioTypeComp);
+            StrObjLtSD.SetLastObj("WeightedSum", Math.Round(FinalOneCphCrg.dblCostExact, _intDigits));
+
+        }
+
+        /// <summary>
+        /// after A star algorithm, we set the aggregation chain for each region
+        /// </summary>
+        /// <param name="pCrgLt"></param>
+        private void SetRegionChild(CRegion crg)
+        {
+            while (crg.parent != null)
+            {
+                var parentcrg = crg.parent;
+                parentcrg.child = crg;
+
+                crg = parentcrg;
+            }
+
+            this.InitialCrgLt.Add(crg);
+        }
+
+        private void AdjustCost(CRegion crg, int intEvaluationNum)
+        {
+            double dblAdjust = crg.dblArea;
+            do
+            {
+                crg.dblCostEstimated /= dblAdjust;
+                crg.dblCostExact /= dblAdjust;
+                crg.dblCostExactType /= dblAdjust;
+                crg.dblCostEstimatedType /= dblAdjust;
+                crg.d /= (dblAdjust);
+
+                crg = crg.parent;
+            } while (crg != null);
+        }
+
+        public void Output(double dblProportion)
+        {
+            var pParameterInitialize = _ParameterInitialize;
+            var pInitialCrgLt = this.InitialCrgLt;
+            int intTotalTimeNum = 1;
+            for (int i = 0; i < InitialCrgLt.Count; i++)
+            {
+                intTotalTimeNum += InitialCrgLt[i].GetCphCount() - 1;
+            }
+            int intOutputStepNum = Convert.ToInt32(Math.Floor((intTotalTimeNum - 1) * dblProportion));
+
+            var OutputCrgLt = new List<CRegion>(this.InitialCrgLt.Count);
+            var CrgSS = new SortedSet<CRegion>();
+
+            if (pParameterInitialize.strAreaAggregation == "Smallest")
+            {
+                CrgSS = new SortedSet<CRegion>(this.InitialCrgLt, CRegion.pCompareCRegion_MinArea_CphGIDTypeIndex);
+            }
+            else
+            {
+                CrgSS = new SortedSet<CRegion>(this.InitialCrgLt, CRegion.pCompareCRegion_CostExact_CphGIDTypeIndex);  //*******************we may need to change comparator here to smallest area**********//
+            }
+
+
+            for (int i = 1; i <= intOutputStepNum; i++)
+            {
+                var currentMinCrg = CrgSS.Min;
+                CrgSS.Remove(currentMinCrg);
+                var newCrg = currentMinCrg.child;
+
+                if (newCrg == null)  //if there is no child anymore, then we must output this Crg
+                {
+                    OutputCrgLt.Add(currentMinCrg);
+                    i--;
+                }
+                else
+                {
+                    CrgSS.Add(newCrg);
+                }
+            }
+
+            OutputCrgLt.AddRange(CrgSS);
+
+            OutputMap(OutputCrgLt, this._TypePVSD, dblProportion, intOutputStepNum + 1, pParameterInitialize);
+        }
+
+
+        public static void OutputMap(IEnumerable<CRegion> OutputCrgLt, CPairVal_SD<int, int> pTypePVSD, double dblProportion,
+            int intTime, CParameterInitialize pParameterInitialize)
+        {
+            int intAttributeNum = 2;
+            var pstrFieldNameLt = new List<string>(intAttributeNum);
+            pstrFieldNameLt.Add("OBJART");
+            pstrFieldNameLt.Add("RegionNum");
+
+            var pesriFieldTypeLt = new List<esriFieldType>(intAttributeNum);
+            pesriFieldTypeLt.Add(esriFieldType.esriFieldTypeInteger);
+            pesriFieldTypeLt.Add(esriFieldType.esriFieldTypeInteger);
+
+            var pobjectValueLtLt = new List<List<object>>();
+            var CpgLt = new List<CPolygon>();
+            var IpgLt = new List<IPolygon4>();
+            foreach (var crg in OutputCrgLt)
+            {
+                foreach (var CphTypeIndexKVP in crg.CphTypeIndexSD_Area_CphGID)
+                {
+                    IpgLt.Add(CphTypeIndexKVP.Key.MergeCpgSS());
+                    var pobjectValueLt = new List<object>(intAttributeNum);
+                    int intType;
+                    pTypePVSD.SD_R.TryGetValue(CphTypeIndexKVP.Value, out intType);
+                    pobjectValueLt.Add(intType);
+                    pobjectValueLt.Add(crg.ID);
+                    pobjectValueLtLt.Add(pobjectValueLt);
+                }
+            }
+
+            CSaveFeature.SaveIGeoEb(IpgLt, esriGeometryType.esriGeometryPolygon, dblProportion.ToString() + "_#" + IpgLt.Count + "_Step" + intTime.ToString() + "_" + CHelperFunction.GetTimeStamp(),
+                pParameterInitialize, pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt, strSymbolLayerPath: pParameterInitialize.strPath + "complete.lyr");
+        }
+
+
+
+        public static void SaveData(CStrObjLtSD StrObjLtSD, CParameterInitialize pParameterInitialize, string strMethod, int intQuitCount)
+        {
+            int intAtrNum = StrObjLtSD.Count;
+            int intCrgNum = StrObjLtSD.Values.GetFirstT().Count;
+
+            var pobjDataLtLt = new List<IList<object>>(intCrgNum);
+            var TempobjDataLtLt = new List<IList<object>>(intAtrNum);
+
+            //order the the lists according to the order of the keys
+            foreach (var strKey in strKeyLt)
+            {
+                List<object> valuelt;
+                StrObjLtSD.TryGetValue(strKey, out valuelt);
+                TempobjDataLtLt.Add(valuelt);
+            }
+
+            //
+            for (int j = 0; j < intCrgNum; j++)
+            {
+                var pobjDataLt = new List<object>(intAtrNum);
+                for (int i = 0; i < intAtrNum; i++)
+                {
+                    pobjDataLt.Add(TempobjDataLtLt[i][j]);
+                }
+                pobjDataLtLt.Add(pobjDataLt);
+            }
+
+            SortedSet<IList<object>> objDataLtSS = new SortedSet<IList<object>>(pobjDataLtLt, new CAACCompare());
+
+            CHelperFunctionExcel.ExportToExcel(objDataLtSS,
+                CHelperFunction.GetTimeStamp() + "_" + strMethod + "_" + pParameterInitialize.strAreaAggregation + "_" +
+                CConstants.strShapeConstraint + "_" + intQuitCount, pParameterInitialize.strSavePath, CCAMDijkstra.strKeyLt);
+            ExportForLatex(objDataLtSS, CCAMDijkstra.strKeyLt, pParameterInitialize.strSavePath);
+            ExportIDOverEstimation(objDataLtSS, pParameterInitialize.strSavePath);
+            ExportStatistic(StrObjLtSD, pParameterInitialize.strSavePath);
+        }
+
+        public static void ExportStatistic(CStrObjLtSD StrObjLtSD, string strSavePath)
+        {
+            string strData = "";
+
+            List<object> objFactorLt;
+            StrObjLtSD.TryGetValue("Factor", out objFactorLt);
+            double dblLogFactorSum = 0;
+            int intOverestimationCount = 0;
+            var intFactorCountlt = new List<int>(15);
+            intFactorCountlt.EveryElementNew();
+            for (int i = 0; i < objFactorLt.Count; i++)
+            {
+                double dblFactor = Convert.ToDouble(objFactorLt[i]);
+                double dblLogFactor = Math.Log(dblFactor, 2);
+                dblLogFactorSum += dblLogFactor;
+                intFactorCountlt[Convert.ToInt16(dblLogFactor)]++;
+                if (dblFactor > 1)
+                {
+                    intOverestimationCount++;
+                }
+            }
+
+            strData += ("& " + string.Format("{0,3}", intOverestimationCount));
+            strData += (" & " + string.Format("{0,3}", dblLogFactorSum));
+            strData += GetSumWithSpecifiedStyle(StrObjLtSD, "#Edges", "{0,10}", 0);
+            strData += GetSumWithSpecifiedStyle(StrObjLtSD, "#Nodes", "{0,8}", 0);
+            strData += GetSumWithSpecifiedStyle(StrObjLtSD, "CostType", "{0,4}", 1);
+            strData += GetSumWithSpecifiedStyle(StrObjLtSD, "CostComp", "{0,4}", 1);
+            strData += GetSumWithSpecifiedStyle(StrObjLtSD, "WeightedSum", "{0,4}", 1);
+            strData += GetSumWithSpecifiedStyle(StrObjLtSD, "Time(ms)", "{0,4}", 1, 3600000);
+            //strData += ;
+
+            //to generate coordinates like (1,6), where x is for the index of overestimation factor, 
+            //and y is for the number of domains that used the factor 
+            for (int i = 0; i < intFactorCountlt.Count; i++)
+            {
+                strData += "\n(" + i + "," + intFactorCountlt[i] + ")";
+            }
+
+            using (var writer = new StreamWriter(strSavePath + "\\" + CHelperFunction.GetTimeStamp() + "_" + "StatisticsForLatex" + ".txt", true))
+            {
+                writer.Write(strData);
+            }
+        }
+
+        private static string GetSumWithSpecifiedStyle(CStrObjLtSD StrObjLtSD, string strKey, string strformat, int intRound, double dblTime = 1)
+        {
+            List<object> objLt;
+            StrObjLtSD.TryGetValue(strKey, out objLt);
+            double dblSum = 0;
+            for (int i = 0; i < objLt.Count; i++)
+            {
+                dblSum += Convert.ToDouble(objLt[i]);
+            }
+            dblSum /= dblTime;
+
+            string strData = Uniquedigits(dblSum, intRound);
+            return " & " + string.Format(strformat, strData);
+        }
+
+        private static string Uniquedigits(double dblValue, int intRound)
+        {
+            string strData = "";
+            if (intRound > 0)
+            {
+                string strformatdigits = "0.";
+                while (intRound > 0)
+                {
+                    strformatdigits += "0";
+                    intRound--;
+                }
+                strData = dblValue.ToString(strformatdigits);
+            }
+            else
+            {
+                strData = dblValue.ToString();
+            }
+            return strData;
+        }
+
+        public static void ExportForLatex(IEnumerable<IList<object>> objDataLtEb, IEnumerable<object> objHeadEb, string strSavePath)
+        {
+            //fetch some values that we want to exprot for latex
+            IList<string> strFieldLt = new List<string>
+            {
+                "ID",
+                "n",
+                "m",
+                "Factor",
+                "RatioTypeCE",
+                "RatioCompCE",
+                //"RatioCompType",
+                //"WeightedSum",
+                "Time(ms)"  //we will output time with unit second
+            };
+
+            List<int> intIndexLt = new List<int>(strFieldLt.Count);
+            foreach (var strField in strFieldLt)
+            {
+                int intCount = 0;
+                foreach (var objHead in objHeadEb)
+                {
+                    if (strField == objHead.ToString())
+                    {
+                        intIndexLt.Add(intCount);
+                    }
+                    intCount++;
+                }
+            }
+
+            //{index[,length][:formatString]}; 
+            //length: If positive, the parameter is right-aligned; if negative, it is left-aligned.
+            //const string format = "{0,6}";
+            string strData = "";
+
+            foreach (var objDataLt in objDataLtEb)
+            {
+                strData += string.Format("{0,3}", objDataLt[intIndexLt[0]]);  //for ID
+                for (int i = 1; i < intIndexLt.Count - 1; i++)
+                {
+                    int intIndex = intIndexLt[i];
+
+                    if (i == 1 || i == 2) // for n and m
+                    {
+                        strData += (" & " + string.Format("{0,2}", objDataLt[intIndex].ToString()));
+                    }
+                    else if (i == 3)  //for overestimation facotr
+                    {
+                        strData += (" & " + string.Format("{0,3}", objDataLt[intIndex].ToString()));
+                    }
+                    else if (i == 4)
+                    {
+                        strData += (" & " + string.Format("{0,5}", Convert.ToDouble(objDataLt[intIndex]).ToString("0.000")));
+                    }
+                    else if (i == 5)
+                    {
+                        strData += (" & " + string.Format("{0,7}", Convert.ToDouble(objDataLt[intIndex]).ToString("0.000")));
+                    }
+                    else  //for time
+                    {
+                        //strData += (" & " + string.Format(format, Math.Round(Convert.ToDouble(objDataLt[intIndex]), _intDigits).ToString("0.000")));
+                        strData += (" & " + string.Format("{0,5}", Convert.ToDouble(objDataLt[intIndex]).ToString("0.000")));
+                    }
+                }
+                strData += (" & " + string.Format("{0,5}", (Convert.ToDouble(objDataLt[intIndexLt.GetLast_T()]) / 1000).ToString("0.0")));
+                strData += ("\\" + "\\" + "\n");
+            }
+
+            using (var writer = new StreamWriter(strSavePath + "\\" + CHelperFunction.GetTimeStamp() + "_" + "DetailsForLatex" + ".txt", true))
+            {
+                writer.Write(strData);
+            }
+        }
+
+        private static void ExportIDOverEstimation(IEnumerable<IList<object>> objDataLtEb, string strSavePath)
+        {
+            string strData = "";
+            foreach (var objDataLt in objDataLtEb)
+            {
+                if (Convert.ToInt32(objDataLt[3]) > 1)
+                {
+                    strData += "intSpecifiedIDLt.Add(" + objDataLt[0] + ");\n";
+                }
+                else
+                {
+                    break;
+                }
+            }
+            using (var writer = new StreamWriter(strSavePath + "\\" + CHelperFunction.GetTimeStamp() + "_" + "FormalizedOverEstimationID" + ".txt", true))
+            {
+                writer.Write(strData);
+            }
         }
         #endregion
     }

@@ -42,6 +42,10 @@ namespace MorphingClass.CGeneralizationMethods
 
         public void AreaAggregation()
         {
+
+            SetupBasic();
+            
+
             CRegion._lngEstimationCountEdgeNumber = 0;
             CRegion._lngEstimationCountEdgeLength = 0;
             CRegion._lngEstimationCountEqual = 0;
@@ -75,7 +79,7 @@ namespace MorphingClass.CGeneralizationMethods
             long lngStartMemory = 0;
             Console.WriteLine();
             Console.WriteLine("Crg:  ID  " + LSCrg.ID + ";    n  " + LSCrg.CphTypeIndexSD_Area_CphGID.Count + ";    m  " +
-                    LSCrg.Adjacency_CorrCphsSD.Count + "   " + CConstants.strShapeConstraint + "   " + strAreaAggregation);
+                    LSCrg.AdjCorrCphsSD.Count + "   " + CConstants.strShapeConstraint + "   " + strAreaAggregation);
 
             lngStartMemory = GC.GetTotalMemory(true);
             long lngTimeOverHead = pStopwatchOverHead.ElapsedMilliseconds;
@@ -96,7 +100,7 @@ namespace MorphingClass.CGeneralizationMethods
                     var ExistingCorrCphsSD = new SortedDictionary<CCorrCphs, CCorrCphs>(ExistingCorrCphsSD0, ExistingCorrCphsSD0.Comparer);
                     LSCrg.cenumColor = CEnumColor.white;
 
-                    //resultcrg = ComputeAccordFactor(LSCrg, SSCrg, strAreaAggregation, ExistingCorrCphsSD, intFactor, StrObjLtSD, intQuitCount);
+                    resultcrg = Compute(LSCrg, SSCrg, strAreaAggregation, ExistingCorrCphsSD, StrObjLtSD, this._adblTD);
                 }
                 catch (System.OutOfMemoryException ex)
                 {
@@ -133,10 +137,10 @@ namespace MorphingClass.CGeneralizationMethods
             return resultcrg;
         }
 
-        private CRegion Compute(CRegion lscrg, CRegion sscrg, string strAreaAggregation, CStrObjLtSD StrObjLtSD,
-            List<SortedDictionary<CRegion, CRegion>> ExistingCrgSDLt, List<SortedDictionary<CPatch, CPatch>> ExistingCphSDLt,
-            SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, int intFinalTypeIndex, double[,] padblTD)
+        private CRegion Compute(CRegion lscrg, CRegion sscrg, string strAreaAggregation,
+            SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, CStrObjLtSD StrObjLtSD, double[,] padblTD)
         {
+            CRegion._intNodesCount = 1;
             var currentCrg = lscrg;
 
             //after an aggregation, we whould have the largest compactness
@@ -144,48 +148,108 @@ namespace MorphingClass.CGeneralizationMethods
             while (currentCrg.GetCphCount() > 1)
             {
                 var smallestcph = currentCrg.GetSmallestCph();
-                var smallestneighborcph = new CPatch(false);
-                smallestneighborcph.dblArea = lscrg.dblArea;  //just an initial value
-                CCorrCphs unitingCorrCphs = null;
-                foreach (var pCorrCphs in currentCrg.Adjacency_CorrCphsSD.Keys)
+                //var smallestneighborcph = new CPatch();
+                //smallestneighborcph.dblArea = lscrg.dblArea;  //just an initial value
+                //CCorrCphs unitingCorrCphs = null;
+                //foreach (var pCorrCphs in currentCrg.AdjCorrCphsSD.Keys)
+                //{
+                //    var neighborcph = CRegion.TryGetNeighbor(smallestcph, pCorrCphs);
+                //    if (neighborcph != null && neighborcph.dblArea < smallestneighborcph.dblArea)
+                //    {
+                //        smallestneighborcph = neighborcph;
+                //        unitingCorrCphs = pCorrCphs;
+                //    }
+                //}
+
+                CCphRecord pcphRecord = null;
+                if (CConstants.strShapeConstraint == "MaximizeMinComp" || CConstants.strShapeConstraint == "MaximizeMinComp_Combine" ||
+                    CConstants.strShapeConstraint == "MaximizeAvgComp" || CConstants.strShapeConstraint == "MaximizeAvgComp_Combine")
                 {
-                    var neighborcph = CRegion.TryGetNeighbor(smallestcph, pCorrCphs);
-                    if (neighborcph != null && neighborcph.dblArea < smallestneighborcph.dblArea)
-                    {
-                        smallestneighborcph = neighborcph;
-                        unitingCorrCphs = pCorrCphs;
-                    }
+                    pcphRecord = GetNeighborCphByCompactness(currentCrg, smallestcph);
+                }
+                else if (CConstants.strShapeConstraint == "MinimizeInteriorBoundaries")
+                {
+                    pcphRecord = GetNeighborCphByLength(currentCrg, smallestcph);
                 }
 
-                var unitedcph = smallestcph.Unite(smallestneighborcph, unitingCorrCphs.dblSharedSegmentLength);
-                CPatch activecph = smallestneighborcph;
+                var neighborcph = pcphRecord.Cph;
+                var unitingCorrCphs = pcphRecord.CorrCphs;
+                var unitedcph = smallestcph.Unite(neighborcph, unitingCorrCphs.dblSharedSegmentLength);
+                CPatch activecph = neighborcph;
                 CPatch passivecph = smallestcph;
-                if (padblTD[smallestcph.intTypeIndex, sscrg.GetSmallestCph().intTypeIndex] <
-                     padblTD[smallestneighborcph.intTypeIndex, sscrg.GetSmallestCph().intTypeIndex])
+                int intFinalTypeIndex = sscrg.GetCphTypeIndex(sscrg.GetSmallestCph());
+                if (padblTD[currentCrg.GetCphTypeIndex(smallestcph), intFinalTypeIndex] <
+                    padblTD[currentCrg.GetCphTypeIndex(neighborcph), intFinalTypeIndex])
                 {
                     activecph = smallestcph;
-                    passivecph = smallestneighborcph;
+                    passivecph = neighborcph;
                 }
 
 
                 int intfrTypeIndex = currentCrg.GetCphTypeIndex(activecph);
                 int inttoTypeIndex = currentCrg.GetCphTypeIndex(passivecph);
 
-                var newAdjacency_CorrCphsSD = CRegion.ComputeNewAdjacency_CorrCphsSDAndUpdateExistingCorrCphsSD
-                    (currentCrg.Adjacency_CorrCphsSD, unitingCorrCphs, unitedcph, ExistingCorrCphsSD);
-                var newcrg = currentCrg.GenerateCrgChild(lscrg, newAdjacency_CorrCphsSD,
-             activecph, passivecph, unitedcph, unitingCorrCphs, padblTD);
+                var newAdjCorrCphsSD = CRegion.ComputeNewAdjCorrCphsSDAndUpdateExistingCorrCphsSD
+                    (currentCrg.AdjCorrCphsSD, unitingCorrCphs, unitedcph, ExistingCorrCphsSD);
+                var newcrg = currentCrg.GenerateCrgChildAndComputeCost(lscrg, newAdjCorrCphsSD,
+             activecph, passivecph, unitedcph, unitingCorrCphs, intfrTypeIndex, inttoTypeIndex, padblTD);
 
+                newcrg.d = newcrg.dblCostExact;
+
+                CRegion._intNodesCount++;
                 currentCrg = newcrg;
             }
 
+            RecordResultForCrg(StrObjLtSD, lscrg, currentCrg, sscrg.GetSoloCphTypeIndex());
 
-            return null;
+
+
+            return currentCrg;
         }
 
 
+        private CCphRecord GetNeighborCphByCompactness(CRegion crg, CPatch cph)
+        {
+            double dblSumComp = 0;  //the sum compactness of neighbours
+            var CphRecordsEb = crg.GetNeighborCphRecords(cph);
+            foreach (var cphrecord in CphRecordsEb)
+            {
+                dblSumComp += cphrecord.Cph.dblComp;
+            }
 
 
+            double dblMaxSumComp = 0;
+            CCphRecord maxCphRecord = null;
+            foreach (var cphrecord in CphRecordsEb)
+            {
+                var unitedcph = cph.Unite(cphrecord.Cph, cphrecord.CorrCphs.dblSharedSegmentLength);
+                double dblNewSumComp = dblSumComp - cphrecord.Cph.dblComp + unitedcph.dblComp;
 
+                if (dblMaxSumComp < dblNewSumComp)
+                {
+                    dblMaxSumComp = dblNewSumComp;
+                    maxCphRecord = cphrecord;
+                }
+            }
+
+            return maxCphRecord;
+        }
+
+        private CCphRecord GetNeighborCphByLength(CRegion crg, CPatch cph)
+        {
+            var CphRecordsEb = crg.GetNeighborCphRecords(cph);
+
+            double dblMaxSharedLength = 0;
+            CCphRecord maxCphRecord = null;
+            foreach (var cphrecord in CphRecordsEb)
+            {
+                if (dblMaxSharedLength < cphrecord.CorrCphs.dblSharedSegmentLength)
+                {
+                    maxCphRecord = cphrecord;
+                }
+            }
+
+            return maxCphRecord;
+        }
     }
 }

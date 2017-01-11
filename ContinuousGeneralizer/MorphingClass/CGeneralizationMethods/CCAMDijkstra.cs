@@ -32,11 +32,6 @@ namespace MorphingClass.CGeneralizationMethods
     /// <remarks></remarks>
     public class CCAMDijkstra : CAreaAggregation_Base
     {
-
-
-        public static int _intPopCount;
-
-
         #region Preprocessing
         public CCAMDijkstra()
         {
@@ -52,7 +47,6 @@ namespace MorphingClass.CGeneralizationMethods
         public void CAMDijkstra(int intQuitCount, string strMethod)
         {
             SetupBasic();
-            UpdateStartEnd();
 
              switch (strMethod)
              {
@@ -63,7 +57,7 @@ namespace MorphingClass.CGeneralizationMethods
                      
                      for (int i = _intStart; i < _intEnd; i++)
                      {
-                         AStar(LSCrgLt[i], SSCrgLt[i], this.StrObjLtSD, _ParameterInitialize.strAreaAggregation, intQuitCount);
+                         AStar(LSCrgLt[i], SSCrgLt[i], this.StrObjLtSD, _ParameterInitialize.strAreaAggregation, this._adblTD, intQuitCount);
                      }
                      Console.WriteLine();
                      Console.WriteLine("Estimation functions that we used:");
@@ -94,46 +88,6 @@ namespace MorphingClass.CGeneralizationMethods
                  default:
                      break;
              }
-
-
-             //this.intTotalTimeNum = pLSCPgLt.Count - pSSCPgLt.Count + 1;
-
-            //for (int i = 0; i < pSSCPgLt.Count; i++)
-            //for (int i = 514; i < 515; i++)
-            //{
-            //    Stopwatch pStopwatch2 = new Stopwatch();
-            //    pStopwatch2.Start();
-            //    switch (strMethod)
-            //    {
-            //        case "AStar": ResultCrgLt.Add(AStar(LSCrgLt[i], SSCrgLt[i], intQuitCount));
-            //            break;
-            //        case "ILP": ResultCrgLt.Add(ILP(LSCrgLt[i], SSCrgLt[i], this._adblTD));
-            //            break;
-            //        case "ILP_Extend":
-            //            //update the address stored in Path.txt
-            //            using (var writer = new System.IO.StreamWriter(
-            //                "C:\\Study\\Programs\\ContinuousGeneralizer\\ContinuousGeneralizer_ILP\\TempFiles\\Path.txt", false))
-            //            {
-            //                writer.Write(_ParameterInitialize.strSavePath);
-            //            }
-            //            ResultCrgLt.Add(ILP_Extend(LSCrgLt[i], SSCrgLt[i], this._adblTD));
-            //            break;
-            //        default:
-            //            break;
-            //    }
-            //    long lngtime = pStopwatch2.ElapsedMilliseconds;
-            //    pParameterInitialize.tsslTime.Text = lngtime.ToString();
-
-            //    //pStopwatch2.Start();
-            //}
-
-            //foreach (var crg in ResultCrgLt)
-            //{
-            //    this.dblCost += crg.dblCostExact;
-            //}
-
-            //pParameterInitialize.tsslTime.Text = "Running Time: " + pStopwatch.ElapsedMilliseconds.ToString();
-
         }
         #endregion
 
@@ -147,7 +101,7 @@ namespace MorphingClass.CGeneralizationMethods
             System.Console.WriteLine();
             System.Console.WriteLine();
             System.Console.WriteLine("Crg:  ID  " + LSCrg.ID + ";    n  " + LSCrg.CphTypeIndexSD_Area_CphGID.Count + ";    m  " +
-                LSCrg.Adjacency_CorrCphsSD.Count + "  " + _ParameterInitialize.strAreaAggregation + "================================="
+                LSCrg.AdjCorrCphsSD.Count + "  " + _ParameterInitialize.strAreaAggregation + "================================="
                 + LSCrg.ID + "  " + _ParameterInitialize.strAreaAggregation + "==============================");
             
 
@@ -370,7 +324,7 @@ namespace MorphingClass.CGeneralizationMethods
                     crg.ID = -2;
                     System.Console.WriteLine("We have used memory " + dblMemoryInMB + "MB.");
                     Console.WriteLine("Crg:  ID  " + LSCrg.ID + ";    n  " + LSCrg.CphTypeIndexSD_Area_CphGID.Count + ";    m  " + 
-                        LSCrg.Adjacency_CorrCphsSD.Count + "  could not be solved by ILP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                        LSCrg.AdjCorrCphsSD.Count + "  could not be solved by ILP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 }
                 StrObjLtSD.SetLastObj("TimeLast(ms)", pStopwatch.ElapsedMilliseconds);
                 StrObjLtSD.SetLastObj("Time(ms)", pStopwatch.ElapsedMilliseconds);
@@ -437,7 +391,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             double dblCompCostFirstPart = 1 / Convert.ToDouble(intCpgCount - 1);  //this is actually for t=1, whose compactness is known
             ILinearNumExpr pCompCostSecondPartExpr = model.LinearNumExpr();
-            var pAdjacency_CorrCphsSD = lscrg.Adjacency_CorrCphsSD;
+            var pAdjCorrCphsSD = lscrg.AdjCorrCphsSD;
             double dblConst = Convert.ToDouble(intCpgCount - 2) / Convert.ToDouble(intCpgCount - 1);
             
             for (int i = 2; i < intCpgCount; i++)   //i represents time
@@ -447,7 +401,7 @@ namespace MorphingClass.CGeneralizationMethods
                 dblCompCostFirstPart += 1 / dblNminusT;
                 double dblNorm = lscrg.dblInteriorSegmentLength * dblNminusT;
 
-                foreach (var pCorrCphs in pAdjacency_CorrCphsSD.Keys)  //we don't need to divide the value by 2 because every boundary is only counted once
+                foreach (var pCorrCphs in pAdjCorrCphsSD.Keys)  //we don't need to divide the value by 2 because every boundary is only counted once
                 {
                     for (int l = 0; l < intCpgCount; l++)
                     {
@@ -803,7 +757,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             //Output LSCrg: ID Area dblInteriorSegmentLength intTargetTypeIndex {corrcphs: GID FrCph.ID ToCph.ID dblSharedSegmentLength ...}
             string strLSCrg = LSCrg.ID + " " + LSCrg.dblArea + " " + LSCrg.dblInteriorSegmentLength + " " + SSCrg.CphTypeIndexSD_Area_CphGID.GetFirstT().Key.intTypeIndex + "\n";
-            foreach (var corrcphs in LSCrg.Adjacency_CorrCphsSD.Keys)
+            foreach (var corrcphs in LSCrg.AdjCorrCphsSD.Keys)
             {
                 strLSCrg +=corrcphs.GID + " " + corrcphs.FrCph.ID + " " + corrcphs.ToCph.ID + " " + corrcphs.dblSharedSegmentLength + "\n";
             }
@@ -858,7 +812,7 @@ namespace MorphingClass.CGeneralizationMethods
 
 
         #region AStar
-        public CRegion AStar(CRegion LSCrg, CRegion SSCrg, CStrObjLtSD StrObjLtSD, string strAreaAggregation, int intQuitCount = 200000)
+        public CRegion AStar(CRegion LSCrg, CRegion SSCrg, CStrObjLtSD StrObjLtSD, string strAreaAggregation, double[,] padblTD, int intQuitCount = 200000)
         {
             var ExistingCorrCphsSD0 = LSCrg.SetInitialAdjacency();  //also count the number of edges
             
@@ -874,7 +828,7 @@ namespace MorphingClass.CGeneralizationMethods
             long lngStartMemory = 0;
             Console.WriteLine();
             Console.WriteLine("Crg:  ID  " + LSCrg.ID + ";    n  " + LSCrg.CphTypeIndexSD_Area_CphGID.Count + ";    m  " +
-                    LSCrg.Adjacency_CorrCphsSD.Count + "   " + intQuitCount + "   " + CConstants.strShapeConstraint + "   " + strAreaAggregation);
+                    LSCrg.AdjCorrCphsSD.Count + "   " + intQuitCount + "   " + CConstants.strShapeConstraint + "   " + strAreaAggregation);
 
             lngStartMemory = GC.GetTotalMemory(true);
             long lngTimeOverHead = pStopwatchOverHead.ElapsedMilliseconds;
@@ -889,13 +843,13 @@ namespace MorphingClass.CGeneralizationMethods
             {
                 try
                 {
-                    CRegion._intNodesCount = 1;
+                    
                     CRegion._intStartStaticGIDLast = CRegion._intStaticGID;
                     pStopwatchLast.Restart();
                     var ExistingCorrCphsSD = new SortedDictionary<CCorrCphs, CCorrCphs>(ExistingCorrCphsSD0, ExistingCorrCphsSD0.Comparer);
                     LSCrg.cenumColor = CEnumColor.white;
 
-                    resultcrg = ComputeAccordFactor(LSCrg, SSCrg, strAreaAggregation, ExistingCorrCphsSD, intFactor, StrObjLtSD, intQuitCount);
+                    resultcrg = ComputeAccordFactor(LSCrg, SSCrg, strAreaAggregation, ExistingCorrCphsSD, intFactor, StrObjLtSD, padblTD, intQuitCount);
                 }
                 catch (System.OutOfMemoryException ex)
                 {
@@ -933,12 +887,12 @@ namespace MorphingClass.CGeneralizationMethods
         }
 
         private CRegion ComputeAccordFactor(CRegion LSCrg, CRegion SSCrg, string strAreaAggregation,
-            SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, int intFactor, CStrObjLtSD StrObjLtSD, int intQuitCount = 200000)
+            SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, int intFactor, CStrObjLtSD StrObjLtSD, double[,] padblTD, int intQuitCount = 200000)
         {
             int intRegionID = LSCrg.ID;  //all the regions generated in this function will have the same intRegionID
             int intSSTypeIndex = SSCrg.CphTypeIndexSD_Area_CphGID.GetFirstT().Value;
 
-            LSCrg.InitialEstimatedCost(SSCrg, _adblTD, intFactor);
+            LSCrg.InitialEstimatedCost(SSCrg, padblTD, intFactor);
             //LSCrg.SetCoreCph(intSSTypeIndex);
 
             //a region represents a node in graph, ExistingCrgSD stores all the nodes
@@ -960,11 +914,11 @@ namespace MorphingClass.CGeneralizationMethods
             var FinalOneCphCrg = new CRegion(intRegionID);
             var Q = new SortedSet<CRegion>(CRegion.pCompareCRegion_Cost_CphGIDTypeIndex);
             int intCount = 0;
+            CRegion._intNodesCount = 1;
             Q.Add(LSCrg);
             while (true)
             {
                 intCount++;
-                _intPopCount++;
                 var u = Q.Min;
                 if (Q.Remove(u) == false)
                 {
@@ -978,7 +932,7 @@ namespace MorphingClass.CGeneralizationMethods
 
                 //MessageBox.Show("click for next!");
 
-                //if (CConstants.strShapeConstraint == "MaximizeMinimumCompactness" || CConstants.strShapeConstraint == "MinimizeInteriorBoundaries")
+                //if (CConstants.strShapeConstraint == "MaximizeMinComp" || CConstants.strShapeConstraint == "MinimizeInteriorBoundaries")
                 //{
                 //    Console.WriteLine("Crg:  ID  " + u.ID + ";      GID:" + u.GID + ";      CphNum:" + u.CphTypeIndexSD_Area_CphGID.Count + ";      d:" + u.d +
                 //    ";      ExactCost:" + u.dblCostExact + ";      Compactness:" + u.dblCostExactCompactness + ";      Type:" + u.dblCostExactType / u.dblArea);
@@ -1019,56 +973,7 @@ namespace MorphingClass.CGeneralizationMethods
                 u.cenumColor = CEnumColor.black;
             }
 
-            if (FinalOneCphCrg.d > double.MaxValue / 3 || FinalOneCphCrg.CphTypeIndexSD_Area_CphGID.GetFirstT().Value != intSSTypeIndex)
-            {
-                throw new ArgumentException("incredible large cost or type is not correct!");
-            }
-
-            SetRegionChild(FinalOneCphCrg);
-            AdjustCost(FinalOneCphCrg, 2);
-            //double dblMemory = CHelperFunction.ConsumedMemoryInMB(true , lngStartMemory);
-
-
-
-            //var UncoloredCrgSS = new SortedSet<CRegion>(CRegion.pCompareCRegion_CphGID);
-            //foreach (var ExistingCrgSD in ExistingCrgSDLt)
-            //{
-            //    foreach (var ExistingCrgkvp in ExistingCrgSD)
-            //    {
-            //        UncoloredCrgSS.Add(ExistingCrgkvp.Key);
-            //    }
-            //}
-            double dblRoundedCostEstimatedType = Math.Round(LSCrg.dblCostEstimatedType, _intDigits);
-            double dblRoundedCostExactType = Math.Round(FinalOneCphCrg.dblCostExactType, _intDigits);
-            double dblRoundedCostEstimatedCompactness = Math.Round(LSCrg.dblCostEstimatedCompactness, _intDigits);
-            double dblRoundedCostExactCompactness = Math.Round(FinalOneCphCrg.dblCostExactCompactness, _intDigits);
-
-            double dblRatioTypeCE = 1;
-            double dblRatioCompCE = 1;
-            double dblRatioTypeComp = 1;
-
-            if (LSCrg.GetCphCount()>1)
-            {
-                if (LSCrg.dblCostEstimatedType > 0)
-                {
-                    dblRatioTypeCE = Math.Round(FinalOneCphCrg.dblCostExactType / LSCrg.dblCostEstimatedType, _intDigits);
-                }
-
-                dblRatioCompCE = Math.Round(FinalOneCphCrg.dblCostExactCompactness / LSCrg.dblCostEstimatedCompactness, _intDigits);
-
-                dblRatioTypeComp = Math.Round(FinalOneCphCrg.dblCostExactType / FinalOneCphCrg.dblCostExactCompactness, _intDigits);
-            }
-
-            StrObjLtSD.SetLastObj("#Nodes", CRegion._intNodesCount);
-            StrObjLtSD.SetLastObj("EstType", dblRoundedCostEstimatedType);
-            StrObjLtSD.SetLastObj("CostType", dblRoundedCostExactType);
-            StrObjLtSD.SetLastObj("RatioTypeCE", dblRatioTypeCE);
-            StrObjLtSD.SetLastObj("EstComp", dblRoundedCostEstimatedCompactness);
-            StrObjLtSD.SetLastObj("CostComp", dblRoundedCostExactCompactness);
-            StrObjLtSD.SetLastObj("RatioCompCE", dblRatioCompCE);
-            StrObjLtSD.SetLastObj("RatioTypeComp", dblRatioTypeComp);
-            StrObjLtSD.SetLastObj("WeightedSum", Math.Round(FinalOneCphCrg.d, _intDigits));
-
+            RecordResultForCrg(StrObjLtSD, LSCrg, FinalOneCphCrg, intSSTypeIndex);
             return FinalOneCphCrg;
         }
 
@@ -1076,8 +981,8 @@ namespace MorphingClass.CGeneralizationMethods
         {
             List<object> objDataLt = new List<object>(14);
             objDataLt.Add(LSCrg.ID);
-            objDataLt.Add(LSCrg.CphTypeIndexSD_Area_CphGID.Count);
-            objDataLt.Add(LSCrg.Adjacency_CorrCphsSD.Count);
+            objDataLt.Add(LSCrg.GetCphCount());
+            objDataLt.Add(LSCrg.GetAdjCount());
             objDataLt.Add(strAreaAggregation);
             for (int i = 4; i < intCount; i++)
             {
@@ -1085,341 +990,11 @@ namespace MorphingClass.CGeneralizationMethods
             }
             pobjDataLtLt.Add(objDataLt);
         }
-
-
-
-
-
-
-        /// <summary>
-        /// after A star algorithm, we set the aggregation chain for each region
-        /// </summary>
-        /// <param name="pCrgLt"></param>
-        private void SetRegionChild(CRegion crg)
-        {
-            while (crg.parent != null)
-            {
-                var parentcrg = crg.parent;
-                parentcrg.child = crg;
-
-                crg = parentcrg;
-            }
-
-            this.InitialCrgLt.Add(crg);
-        }
-
-        private void AdjustCost(CRegion crg, int intEvaluationNum)
-        {
-            double dblAdjust = crg.dblArea;
-            do
-            {
-                crg.dblCostEstimated /= dblAdjust;
-                crg.dblCostExact /= dblAdjust;
-                crg.dblCostExactType /= dblAdjust;
-                crg.dblCostEstimatedType /= dblAdjust;
-                crg.d /= (dblAdjust);
-
-                crg = crg.parent;
-            } while (crg != null);
-        }
         #endregion
 
         
 
-        #region Output
-        public void Output(double dblProportion)
-        {
-            var pParameterInitialize = _ParameterInitialize;
-            var pInitialCrgLt = this.InitialCrgLt;
-            int intTotalTimeNum = 1;
-            for (int i = 0; i < InitialCrgLt.Count; i++)
-            {
-                intTotalTimeNum += InitialCrgLt[i].GetCphCount()-1;
-            }
-            int intOutputStepNum = Convert.ToInt32(Math.Floor((intTotalTimeNum - 1) * dblProportion));
-
-            var OutputCrgLt = new List<CRegion>(this.InitialCrgLt.Count);
-            var CrgSS = new SortedSet<CRegion>();
-
-            if (pParameterInitialize.strAreaAggregation == "Smallest")
-            {
-                CrgSS = new SortedSet<CRegion>(this.InitialCrgLt, CRegion.pCompareCRegion_MinArea_CphGIDTypeIndex);
-            }
-            else
-            {
-                CrgSS = new SortedSet<CRegion>(this.InitialCrgLt, CRegion.pCompareCRegion_CostExact_CphGIDTypeIndex);  //*******************we may need to change comparator here to smallest area**********//
-            }
-
-
-            for (int i = 1; i <= intOutputStepNum; i++)
-            {
-                var currentMinCrg = CrgSS.Min;
-                CrgSS.Remove(currentMinCrg);
-                var newCrg = currentMinCrg.child;
-
-                if (newCrg == null)  //if there is no child anymore, then we must output this Crg
-                {
-                    OutputCrgLt.Add(currentMinCrg);
-                    i--;
-                }
-                else
-                {
-                    CrgSS.Add(newCrg);
-                }
-            }
-
-            OutputCrgLt.AddRange(CrgSS);
-
-            OutputMap(OutputCrgLt, this._TypePVSD, dblProportion, intOutputStepNum +1, pParameterInitialize);
-        }
-
-
-        public static void OutputMap(IEnumerable<CRegion> OutputCrgLt, CPairVal_SD<int, int> pTypePVSD, double dblProportion, 
-            int intTime, CParameterInitialize pParameterInitialize)
-        {
-            int intAttributeNum = 2;
-            var pstrFieldNameLt = new List<string>(intAttributeNum);
-            pstrFieldNameLt.Add("OBJART");
-            pstrFieldNameLt.Add("RegionNum");
-
-            var pesriFieldTypeLt = new List<esriFieldType>(intAttributeNum);
-            pesriFieldTypeLt.Add(esriFieldType.esriFieldTypeInteger);
-            pesriFieldTypeLt.Add(esriFieldType.esriFieldTypeInteger);
-
-            var pobjectValueLtLt = new List<List<object>>();
-            var CpgLt = new List<CPolygon>();
-            var IpgLt = new List<IPolygon4>();
-            foreach (var crg in OutputCrgLt)
-            {
-                foreach (var CphTypeIndexKVP in crg.CphTypeIndexSD_Area_CphGID)
-                {
-                    IpgLt.Add(CphTypeIndexKVP.Key.MergeCpgSS());
-                    var pobjectValueLt = new List<object>(intAttributeNum);
-                    int intType;
-                    pTypePVSD.SD_R.TryGetValue(CphTypeIndexKVP.Value, out intType);
-                    pobjectValueLt.Add(intType);
-                    pobjectValueLt.Add(crg.ID);
-                    pobjectValueLtLt.Add(pobjectValueLt);
-                }
-            }
-
-            CSaveFeature.SaveIGeoEb(IpgLt, esriGeometryType.esriGeometryPolygon, dblProportion.ToString() + "_#" + IpgLt.Count + "_Step" + intTime.ToString() + "_" + CHelperFunction.GetTimeStamp(),
-                pParameterInitialize, pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt, strSymbolLayerPath: pParameterInitialize.strPath + "complete.lyr");
-        }
-
-
-
-        public static void SaveData(CStrObjLtSD StrObjLtSD, CParameterInitialize pParameterInitialize, string strMethod, int intQuitCount)
-        {
-            int intAtrNum = StrObjLtSD.Count;
-            int intCrgNum=StrObjLtSD.Values.GetFirstT().Count;
-
-            var pobjDataLtLt = new List<IList<object>>(intCrgNum);
-            var TempobjDataLtLt = new List<IList<object>>(intAtrNum);
-
-            //order the the lists according to the order of the keys
-            foreach (var strKey in strKeyLt)
-            {
-                List <object> valuelt;
-                StrObjLtSD.TryGetValue(strKey, out valuelt);
-                TempobjDataLtLt.Add(valuelt);
-            }
-
-            //
-            for (int j = 0; j < intCrgNum; j++)
-            {
-                var pobjDataLt = new List<object>(intAtrNum);
-                for (int i = 0; i < intAtrNum; i++)
-                {
-                    pobjDataLt.Add(TempobjDataLtLt[i][j]);
-                }
-                pobjDataLtLt.Add(pobjDataLt);
-            }
-
-            SortedSet<IList<object>> objDataLtSS = new SortedSet<IList<object>>(pobjDataLtLt, new CAACCompare());
-
-            CHelperFunctionExcel.ExportToExcel(objDataLtSS,
-                CHelperFunction.GetTimeStamp() + "_" + strMethod + "_" + pParameterInitialize.strAreaAggregation + "_" + 
-                CConstants.strShapeConstraint + "_" + intQuitCount, pParameterInitialize.strSavePath, CCAMDijkstra.strKeyLt);
-            ExportForLatex(objDataLtSS, CCAMDijkstra.strKeyLt, pParameterInitialize.strSavePath);
-            ExportIDOverEstimation(objDataLtSS, pParameterInitialize.strSavePath);
-            ExportStatistic(StrObjLtSD, pParameterInitialize.strSavePath);
-        }
-
-        public static void ExportStatistic(CStrObjLtSD StrObjLtSD, string strSavePath)
-        {
-            string strData = "";
-
-            List<object> objFactorLt;
-            StrObjLtSD.TryGetValue("Factor", out objFactorLt);
-            double dblLogFactorSum = 0;
-            int intOverestimationCount = 0;
-            var intFactorCountlt = new List<int>(15);
-            intFactorCountlt.EveryElementNew();
-            for (int i = 0; i < objFactorLt.Count; i++)
-            {
-                double dblFactor = Convert.ToDouble(objFactorLt[i]);
-                double dblLogFactor = Math.Log(dblFactor, 2);
-                dblLogFactorSum += dblLogFactor;
-                intFactorCountlt[Convert.ToInt16(dblLogFactor)]++;
-                if (dblFactor > 1)
-                {
-                    intOverestimationCount++;
-                }
-            }
-
-            strData += ("& " + string.Format("{0,3}", intOverestimationCount));
-            strData += (" & " + string.Format("{0,3}", dblLogFactorSum));
-            strData += GetSumWithSpecifiedStyle(StrObjLtSD, "#Edges", "{0,10}",0);
-            strData += GetSumWithSpecifiedStyle(StrObjLtSD, "#Nodes", "{0,8}",0);
-            strData += GetSumWithSpecifiedStyle(StrObjLtSD, "CostType", "{0,4}", 1);
-            strData += GetSumWithSpecifiedStyle(StrObjLtSD, "CostComp", "{0,4}", 1);
-            strData += GetSumWithSpecifiedStyle(StrObjLtSD, "WeightedSum", "{0,4}", 1);
-            strData += GetSumWithSpecifiedStyle(StrObjLtSD, "Time(ms)", "{0,4}",1, 3600000);
-            //strData += ;
-
-            //to generate coordinates like (1,6), where x is for the index of overestimation factor, 
-            //and y is for the number of domains that used the factor 
-            for (int i = 0; i < intFactorCountlt.Count; i++)
-            {
-                strData += "\n(" + i + "," + intFactorCountlt[i] + ")";
-            }
-
-            using (var writer = new StreamWriter(strSavePath + "\\" + CHelperFunction.GetTimeStamp() + "_" + "StatisticsForLatex" + ".txt", true))
-            {
-                writer.Write(strData);
-            }
-        }
-
-        private static string GetSumWithSpecifiedStyle(CStrObjLtSD StrObjLtSD, string strKey, string strformat, int intRound, double dblTime = 1)
-        {
-            List<object> objLt;
-            StrObjLtSD.TryGetValue(strKey, out objLt);
-            double dblSum = 0;
-            for (int i = 0; i < objLt.Count; i++)
-            {
-                dblSum += Convert.ToDouble(objLt[i]);
-            }
-            dblSum /= dblTime;
-
-            string strData = Uniquedigits(dblSum, intRound);
-            return " & " + string.Format(strformat, strData);
-        }
-
-        private static string Uniquedigits(double dblValue, int intRound)
-        {
-            string strData = "";
-            if (intRound > 0)
-            {
-                string strformatdigits = "0.";
-                while (intRound > 0)
-                {
-                    strformatdigits += "0";
-                    intRound--;
-                }
-                strData = dblValue.ToString(strformatdigits);
-            }
-            else
-            {
-                strData = dblValue.ToString();
-            }
-            return strData;
-        }
-
-        public static void ExportForLatex(IEnumerable<IList<object>> objDataLtEb, IEnumerable<object> objHeadEb, string strSavePath)
-        {
-            //fetch some values that we want to exprot for latex
-            IList<string> strFieldLt = new List<string>
-            {
-                "ID",
-                "n",
-                "m",
-                "Factor",
-                "RatioTypeCE",
-                "RatioCompCE",
-                //"RatioCompType",
-                //"WeightedSum",
-                "Time(ms)"  //we will output time with unit second
-            };
-
-            List<int> intIndexLt = new List<int>(strFieldLt.Count);
-            foreach (var strField in strFieldLt)
-            {
-                int intCount = 0;
-                foreach (var objHead in objHeadEb)
-                {
-                    if (strField == objHead.ToString())
-                    {
-                        intIndexLt.Add(intCount);
-                    }
-                    intCount++;
-                }
-            }
-
-            //{index[,length][:formatString]}; 
-            //length: If positive, the parameter is right-aligned; if negative, it is left-aligned.
-            //const string format = "{0,6}";
-            string strData = "";
-
-            foreach (var objDataLt in objDataLtEb)
-            {
-                strData += string.Format("{0,3}", objDataLt[intIndexLt[0]]);  //for ID
-                for (int i = 1; i < intIndexLt.Count -1; i++)
-                {
-                    int intIndex = intIndexLt[i];
-
-                    if (i == 1 || i ==2) // for n and m
-                    {
-                        strData += (" & " + string.Format("{0,2}", objDataLt[intIndex].ToString()));
-                    }
-                    else if (i == 3)  //for overestimation facotr
-                    {
-                        strData += (" & " + string.Format("{0,3}", objDataLt[intIndex].ToString()));
-                    }
-                    else if (i == 4)
-                    {
-                        strData += (" & " + string.Format("{0,5}", Convert.ToDouble(objDataLt[intIndex]).ToString("0.000")));
-                    }
-                    else if (i == 5)
-                    {
-                        strData += (" & " + string.Format("{0,7}", Convert.ToDouble(objDataLt[intIndex]).ToString("0.000")));
-                    }
-                    else  //for time
-                    {
-                        //strData += (" & " + string.Format(format, Math.Round(Convert.ToDouble(objDataLt[intIndex]), _intDigits).ToString("0.000")));
-                        strData += (" & " + string.Format("{0,5}", Convert.ToDouble(objDataLt[intIndex]).ToString("0.000")));                    
-                    }
-                }
-                strData += (" & " + string.Format("{0,5}", (Convert.ToDouble(objDataLt[intIndexLt.GetLast_T()]) / 1000).ToString("0.0"))); 
-                strData += ("\\" + "\\" + "\n");
-            }
-
-            using (var writer = new StreamWriter(strSavePath + "\\" + CHelperFunction.GetTimeStamp() + "_" + "DetailsForLatex" + ".txt", true))
-            {
-                writer.Write(strData);
-            }
-        }
-
-        private static void ExportIDOverEstimation(IEnumerable<IList<object>> objDataLtEb, string strSavePath)
-        {
-            string strData = "";
-            foreach (var objDataLt in objDataLtEb)
-            {
-                if (Convert.ToInt32(objDataLt[3]) > 1)
-                {
-                    strData += "intSpecifiedIDLt.Add(" + objDataLt[0] + ");\n";
-                }
-                else
-                {
-                    break;
-                }
-            }
-            using (var writer = new StreamWriter(strSavePath + "\\" + CHelperFunction.GetTimeStamp() + "_" + "FormalizedOverEstimationID" + ".txt", true))
-            {
-                writer.Write(strData);
-            }
-        }
-        #endregion
+        
 
 
     }

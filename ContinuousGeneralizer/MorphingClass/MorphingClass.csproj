@@ -195,6 +195,7 @@
     <Compile Include="CGeneralizationMethods\CBuildingGrowing.cs" />
     <Compile Include="CGeneralizationMethods\CplexServer.cs" />
     <Compile Include="CGeneralizationMethods\CVetexCover.cs" />
+    <Compile Include="CGeometry\CCphRecord.cs" />
     <Compile Include="CGeometry\CGeometryBase\CBasicBase.cs" />
     <Compile Include="CGeometry\CGeometryBase\CLandCoverBase.cs" />
     <Compile Include="CGeometry\CGeometryBase\CLineBase.cs" />
