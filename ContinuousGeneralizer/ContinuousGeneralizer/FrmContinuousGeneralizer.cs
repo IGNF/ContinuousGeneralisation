@@ -154,8 +154,8 @@ namespace ContinuousGeneralizer
 
         private void FrmContinuousGeneralizer_Shown(object sender, EventArgs e)
         {
-            //var frmCurrent = new FrmBuildingGrowing(_DataRecords);
-            var frmCurrent = new FrmCAMDijkstra(_DataRecords);
+            var frmCurrent = new FrmBuildingGrowing(_DataRecords);
+            //var frmCurrent = new FrmCAMDijkstra(_DataRecords);
             //var frmCurrent = new FrmCGABM(_DataRecords);
             //var frmCurrent = new FrmExtractPossibleFiles();
             frmCurrent.Show();
@@ -290,7 +290,7 @@ namespace ContinuousGeneralizer
             double dblY = Math.Round(e.mapY, 6);
 
             //显示当前坐标
-            CoordinateLabel.Text = " 当前坐标 X = " + dblX.ToString() + " Y = " + dblY.ToString() + " " + this.axMapControl.MapUnits.ToString();
+            CoordinateLabel.Text = " Coordinate:  X = " + dblX.ToString() + "  Y = " + dblY.ToString() + "  " + this.axMapControl.MapUnits.ToString();
             //CoordinateLabel.Text = " 当前坐标 X = " + e.mapX.ToString() + " Y = " + e.mapY.ToString() + " " + this.axMapControl1.MapUnits.ToString().Substring(4);
 
             //对全局变量进行赋值，以用在其它地方

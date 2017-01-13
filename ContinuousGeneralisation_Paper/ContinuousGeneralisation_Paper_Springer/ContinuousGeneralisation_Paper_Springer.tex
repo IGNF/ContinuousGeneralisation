@@ -457,9 +457,11 @@ Therefore, we only need to buffer with radius $r-r_0$ at the new
 step.
 
 Our generalisation is as follows. We buffer buildings with 
-radius $d+r-r_0$, then we buffer the results with $-d$. In order 
-to 
-remove some spikes from the buffering, we buffer the results 
+radius $d+r-r_0$, and merge the buffers overlapping each 
+other.
+Then we buffer the results with $-d$.
+In order to 
+remove some spikes from the buffering, we buffer the new results 
 with $-\epsilon$, and then again with $\epsilon$. We simply set 
 $\epsilon=\frac{1}{10}d$. After these buffering operations, we 
 eliminate the buildings with area less than $d^2$.
