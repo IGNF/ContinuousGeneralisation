@@ -52,8 +52,10 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "MainlandChina-Animation-complicated";
         //private static string _strDataFolderName = "MainlandChina-Shanghai";
         //private static string _strDataFolderName = "MainlandChina";
-        //private static string _strPath = "C:\\Study\\Data\\Morphing Data\\Administrative Boundary\\" + _strDataFolderName + "\\";
-        
+        //private static string _strDataFolderName = "CompatibleTriangulation";
+        //private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\Administrative Boundary\\" + _strDataFolderName + "\\";
+        //C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralisation_Data
+
         //private static string _strDataFolderName = "LinearMorphingBothInjected";
         //private static string _strDataFolderName = "CompatibleTriangulation3";
         //private static string _strPath = "C:\\Study\\Data\\Morphing Data\\Representation In Article\\ContinuousGeneralizationOfAdministrativeBoundariesBasedonMorphing\\" + _strDataFolderName + "\\";
@@ -68,10 +70,11 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "AreaAggregation-590";
         //private static string _strDataFolderName = "AreaAggregation-Simplest";
         //private static string _strDataFolderName = "AreaAggregation_SmallInstances";
+        //private static string _strDataFolderName = "AreaAggregation_Simplest_Three";
         //private static string _strDataFolderName = "AreaAggregation-Computable";
         //private static string _strDataFolderName = "AreaAggregation-Uncomputable";
         //private static string _strDataFolderName = "AreaAggregation-Mostpatches";
-        //private static string _strPath = "C:\\Study\\Data\\Morphing Data\\" + _strDataFolderName + "\\";
+        //private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\AreaAggregation\\" + _strDataFolderName + "\\";
 
         //private static string _strDataFolderName = "France";
         //private static string _strDataFolderName = "France_Part";
@@ -81,6 +84,7 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "France_TwoSquares_Faraway";
         //private static string _strDataFolderName = "France_TwoSquares_Overlap";
         private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\" + _strDataFolderName + "\\";
+
 
         public static IEnumerable<CPoint> GetTestCptEb()
         {
@@ -100,6 +104,18 @@ namespace MorphingClass.CUtility
         {
             get { return _strDataFolderName; }
             //set { _strDataFolderName = value; }
+        }
+
+        public static bool InBoundOrReport<T>(T value, T lowerbound, T upperbound, IComparer<T> cmp = null)
+        {
+            if (cmp == null) { cmp = SCG.Comparer<T>.Default; }
+            //var tst = cmp.Compare(value, lowerbound);
+            if (cmp.Compare(value, lowerbound) == -1 ||cmp.Compare(value, upperbound) == 1  )
+            {
+                throw new ArgumentException("incorrect value!");
+            }
+
+            return true;
         }
 
         public static void testmemory()
@@ -201,9 +217,9 @@ namespace MorphingClass.CUtility
             return strPrefix + dblNumber.ToString();
         }
 
-        public static void Displaytspb(int intValue, int intTotal, ToolStripProgressBar tspb)
+        public static void Displaytspb(double dblValue, double dblTotal, ToolStripProgressBar tspb)
         {
-            tspb.Value = intValue * 100 / intTotal;
+            tspb.Value = Convert.ToInt32(dblValue * 100 / dblTotal);
         }
 
 
@@ -749,7 +765,7 @@ namespace MorphingClass.CUtility
         /// <param name="objltlt"></param>
         /// <param name="intValueIndex"></param>
         /// <param name="intTypeIndexSD"></param>
-        public static void GetCgbTypeAndTypeIndex(IEnumerable<CPolygon> TEb, List<List<object>> objltlt, int intValueIndex, CPairVal_SD<int, int> TypePVSD)
+        public static void GetCgbTypeAndTypeIndex(IEnumerable<CPolygon> TEb, List<List<object>> objltlt, int intValueIndex, CValMap_SD<int, int> TypePVSD)
             //where CGeo : class
         {
             IEnumerator<CPolygon> TEt = TEb.GetEnumerator();
@@ -778,7 +794,7 @@ namespace MorphingClass.CUtility
         }
 
 
-        //public static void GetCgbTypeAndTypeIndex<CGeo>(IEnumerable<CGeometricBase<CGeo>> TEb, List<List<object>> objltlt, int intValueIndex, CPairVal_SD<int, int> TypePVSD)
+        //public static void GetCgbTypeAndTypeIndex<CGeo>(IEnumerable<CGeometricBase<CGeo>> TEb, List<List<object>> objltlt, int intValueIndex, CValMap_SD<int, int> TypePVSD)
         //    where CGeo : class
         //{
         //    IEnumerator<CGeometricBase<CGeo>> TEt = TEb.GetEnumerator();
@@ -844,7 +860,7 @@ namespace MorphingClass.CUtility
             {
                 CtrlCpl.SetPolyline();
 
-                if (CCompareMethods.Compare(CtrlCpl.pPolyline.Length, dblStandardLength) == 0)
+                if (CCompareMethods.CompareDbl_VerySmall(CtrlCpl.pPolyline.Length, dblStandardLength) == 0)
                 {
                     cpllt1.Add(CtrlCpl);
                 }
@@ -1335,7 +1351,7 @@ namespace MorphingClass.CUtility
         public static SCG.LinkedList<CCorrespondSegment> DetectCorrespondSegment(CPolyline frcpl, CPolyline tocpl, List<CCorrespondBend> pCorrespondBendLt)
         {
             //提取对应弯曲的首尾点为对应特征点
-            SortedList<double, CCorrCpts> pCorrespondingCptSlt = new SortedList<double, CCorrCpts>(new CDblCompare());
+            SortedList<double, CCorrCpts> pCorrespondingCptSlt = new SortedList<double, CCorrCpts>(new CCompareDbl());
 
             CCorrCpts pStartCorrespondingCpt0 = new CCorrCpts(frcpl.CptLt[0], tocpl.CptLt[0]);//第一对对应特征点
             CCorrCpts pEndCorrespondingCpt0 = new CCorrCpts(frcpl.CptLt[frcpl.CptLt.Count - 1], tocpl.CptLt[tocpl.CptLt.Count - 1]);//第二对对应特征点

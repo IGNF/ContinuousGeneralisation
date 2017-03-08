@@ -25,7 +25,7 @@ namespace MorphingClass.CCorrepondObjects
 
         public int CompareTo(CPairInt other)
         {
-            return CCompareMethods.CompareDual(this, other, cpi => cpi.Int1, cpi => cpi.Int2, CConstants.ComparerInt);
+            return CCompareMethods.CompareDual(this, other, cpi => cpi.Int1, cpi => cpi.Int2);
         }
     }
 

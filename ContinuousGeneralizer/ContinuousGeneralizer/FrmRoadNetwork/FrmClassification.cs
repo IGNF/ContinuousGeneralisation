@@ -155,7 +155,7 @@ namespace ContinuousGeneralizer.RoadNetwork
                 //}
                 //else
                 //{
-                SortedList<double, CCorrCplInfo> pCorrCplInfoSLt = new SortedList<double, CCorrCplInfo>(new CDblCompare());
+                SortedList<double, CCorrCplInfo> pCorrCplInfoSLt = new SortedList<double, CCorrCplInfo>(new CCompareDbl());
                 double dblBSBufferArea = pLSCPlLt[i].dblBufferArea;
 
                 for (int j = 0; j < pSSCPlLt.Count; j++)
@@ -226,7 +226,7 @@ namespace ContinuousGeneralizer.RoadNetwork
                 //}
                 //else
                 //{
-                SortedList<double, CCorrCplInfo> pCorrCplInfoSLt = new SortedList<double, CCorrCplInfo>(new CDblCompare());
+                SortedList<double, CCorrCplInfo> pCorrCplInfoSLt = new SortedList<double, CCorrCplInfo>(new CCompareDbl());
                 double dblBSBufferArea = pLSCPlLt[i].dblBufferArea;
 
                 for (int j = 0; j < pSSCPlLt.Count; j++)

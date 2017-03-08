@@ -64,9 +64,9 @@ namespace MorphingClass.CGeometry
             if (cedge1.blnHasSlope == true && cedge2.blnHasSlope == true)   //this is the normal case
             {
                 //if (CCompareMethods.Compare(cedge1.dblSlope, cedge2.dblSlope)==0)  //parallel
-                if (CCompareMethods.CompareSlope(cedge1.dblSlope, cedge2.dblSlope) == 0)  //parallel
+                if (CCompareMethods.CompareDbl_VerySmall(cedge1.dblSlope, cedge2.dblSlope) == 0)  //parallel
                 {
-                    if (CCompareMethods.Compare(cedge1.dblYIntercept, cedge2.dblYIntercept)==0)   //parallel and with the same YIntercept
+                    if (CCompareMethods.CompareDbl_VerySmall(cedge1.dblYIntercept, cedge2.dblYIntercept)==0)   //parallel and with the same YIntercept
                     {
                         penumIntersectionType = DetectIntersectionParralel(cedge1, cedge2, out IntersectCpt, out overlapcedge);
                     }
@@ -91,7 +91,7 @@ namespace MorphingClass.CGeometry
             }
             else if (cedge1.blnHasSlope == false && cedge2.blnHasSlope == false)
             {
-                if (CCompareMethods.Compare(cedge1.FrCpt.X, cedge2.FrCpt.X) == 0)   //parallel and with the same X Coordinate
+                if (CCompareMethods.CompareDbl_VerySmall(cedge1.FrCpt.X, cedge2.FrCpt.X) == 0)   //parallel and with the same X Coordinate
                 {
                     penumIntersectionType = DetectIntersectionParralel(cedge1, cedge2, out IntersectCpt, out overlapcedge);
                 }
@@ -187,7 +187,7 @@ namespace MorphingClass.CGeometry
         {
             CEdge auxCEdge1 = cedge1;
             bool blnReversed1 = false;
-            if (CCompareMethods.CompareXY(cedge1.FrCpt, cedge1.ToCpt) == 1)
+            if (CCompareMethods.CompareCptXY(cedge1.FrCpt, cedge1.ToCpt) == 1)
             {
                 auxCEdge1 = new CEdge(cedge1.ToCpt, cedge1.FrCpt);
                 blnReversed1 = true;
@@ -195,7 +195,7 @@ namespace MorphingClass.CGeometry
 
             CEdge auxCEdge2 = cedge2;
             bool blnReversed2 = false;
-            if (CCompareMethods.CompareXY(cedge2.FrCpt, cedge2.ToCpt) == 1)
+            if (CCompareMethods.CompareCptXY(cedge2.FrCpt, cedge2.ToCpt) == 1)
             {
                 auxCEdge2 = new CEdge(cedge2.ToCpt, cedge2.FrCpt);
                 blnReversed2 = true;
@@ -241,7 +241,7 @@ namespace MorphingClass.CGeometry
 
         private CEnumIntersectionType DetectIntersectionParralelIncrease(CEdge cedge1, CEdge cedge2, out CPoint IntersectCpt, out CEdge overlapcedge)
         {
-            if (CCompareMethods.CompareXY(cedge1.ToCpt, cedge2.ToCpt) <= 0)   //we compare both x and y so that we can handle two edges which have no slope
+            if (CCompareMethods.CompareCptXY(cedge1.ToCpt, cedge2.ToCpt) <= 0)   //we compare both x and y so that we can handle two edges which have no slope
             {
                 return DetectIntersectionParralelIncreaseCEdge2Righter(cedge1, cedge2, out IntersectCpt, out overlapcedge);
             }
@@ -257,11 +257,11 @@ namespace MorphingClass.CGeometry
             IntersectCpt = null;
             overlapcedge = null;
 
-            if (CCompareMethods.CompareXY(cedge1.ToCpt, cedge2.FrCpt) == -1)   //we compare both x and y so that we can handle two edges haveing no slope
+            if (CCompareMethods.CompareCptXY(cedge1.ToCpt, cedge2.FrCpt) == -1)   //we compare both x and y so that we can handle two edges haveing no slope
             {
                 return CEnumIntersectionType.NoNo;
             }
-            else if (CCompareMethods.CompareXY(cedge1.ToCpt, cedge2.FrCpt) == 0)   //we compare both x and y so that we can handle two edges haveing no slope
+            else if (CCompareMethods.CompareCptXY(cedge1.ToCpt, cedge2.FrCpt) == 0)   //we compare both x and y so that we can handle two edges haveing no slope
             {
                 IntersectCpt = cedge1.ToCpt;
                 return CEnumIntersectionType.ToFr;
@@ -269,7 +269,7 @@ namespace MorphingClass.CGeometry
             else // if (CCompareMethods.CompareXY(cedge1.ToCpt, cedge2.FrCpt) == 1)   //we compare both x and y so that we can handle two edges haveing no slope
             {
                 CPoint frcpt = null;
-                if (CCompareMethods.CompareXY(cedge1.FrCpt, cedge2.FrCpt) == 1)   //we compare both x and y so that we can handle two edges haveing no slope
+                if (CCompareMethods.CompareCptXY(cedge1.FrCpt, cedge2.FrCpt) == 1)   //we compare both x and y so that we can handle two edges haveing no slope
                 {
                     frcpt = cedge1.FrCpt;
                 }

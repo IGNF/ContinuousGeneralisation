@@ -496,8 +496,9 @@
             this.cboShapeConstraint.Items.AddRange(new object[] {
             "NonShape",
             "MinimizeInteriorBoundaries",
-            "MaximizeMinComp",
+            "MaximizeMinComp_EdgeNumber",
             "MaximizeMinComp_Combine",
+            "MaximizeAvgComp_EdgeNumber",
             "MaximizeAvgComp_Combine"});
             this.cboShapeConstraint.Location = new System.Drawing.Point(122, 19);
             this.cboShapeConstraint.Name = "cboShapeConstraint";

@@ -170,7 +170,7 @@ namespace ContinuousGeneralizer.FrmSimilarity
             IPolyline5 newpolyline = pCol as IPolyline5;
             ITransform2D pTransform2D = newpolyline as ITransform2D;
 
-            SortedList<double, int> dblSimilaritySLt = new SortedList<double, int>(new CDblCompare());
+            SortedList<double, int> dblSimilaritySLt = new SortedList<double, int>(new CCompareDbl());
             double dblRotateAngle = 2 * Math.PI / 360;
             for (int i = 0; i < 360; i++)
             {

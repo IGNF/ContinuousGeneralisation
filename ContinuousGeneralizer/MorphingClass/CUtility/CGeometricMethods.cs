@@ -123,58 +123,6 @@ namespace MorphingClass.CUtility
             return Math.Abs(dblArea) / 2;
         }
 
-        //public static CPoint 
-
-        //public static double CalSmallestDis(CPolyline cpl)
-        //{
-        //    MessageBox.Show("to be updated!");
-        //    SortedDictionary<double, double> dblLengthSD = new SortedDictionary<double, double>(new CDblCompare());
-        //    List<double> dblLengthLt = new List<double>();
-        //    for (int i = 0; i < cpl.CptLt.Count - 1; i++)
-        //    {
-        //        double dbllength = cpl.CptLt[i].DistanceTo(cpl.CptLt[i + 1]);
-        //        dblLengthSD.Add(dbllength, dbllength);
-        //    }
-        //    return dblLengthSD.ElementAt(0).Key;
-        //}
-
-
-        ///// <summary>
-        ///// 根据点数组生成线段数组
-        ///// </summary>
-        ///// <param name="CPtLt">点数组</param>
-        ///// <returns>线段数组</returns>
-        //public static List<CEdge> CreateCEdgeLt(List<CPoint> CPtLt)
-        //{
-        //    List<CEdge> CEdgeLt = new List<CEdge>(CPtLt.Count - 1);
-        //    for (int i = 0; i < CPtLt.Count - 1; i++)
-        //    {
-        //        CEdge pEdge = new CEdge(CPtLt[i], CPtLt[i + 1]);
-        //        CEdgeLt.Add(pEdge);
-        //    }
-        //    return CEdgeLt;
-        //}
-
-        ///// <summary>
-        ///// 根据点数组生成线段数组
-        ///// </summary>
-        ///// <param name="CPtLt">点数组</param>
-        ///// <returns>线段数组</returns>
-        //public static List<CPolyline> CreateCplLt(List<CPoint> CPtLt)
-        //{
-        //    List<CPolyline> CEdgeLt = new List<CPolyline>(CPtLt.Count - 1);
-        //    for (int i = 0; i < CPtLt.Count - 1; i++)
-        //    {
-        //        List<CPoint> cptlt = new List<CPoint>(2);
-        //        cptlt.Add(CPtLt[i]);
-        //        cptlt.Add(CPtLt[i + 1]);
-
-        //        CPolyline pEdge = new CPolyline(i, cptlt);
-        //        CEdgeLt.Add(pEdge);
-        //    }
-        //    return CEdgeLt;
-        //}
-
 
 
         public static double CalDisPointToLine(CPoint cpt1, CPoint cpt2, CPoint querycpt)
@@ -1043,11 +991,7 @@ namespace MorphingClass.CUtility
         }
 
 
-        public static double CalCompactness(double dblArea, double dblLength)
-        {
-            //return dblLength / Math.Sqrt(dblArea);
-            return CConstants.dblTwoSqrtPI * Math.Sqrt(dblArea) / dblLength;
-        }
+
 
 
         ///// <summary>计算归一化的河流重要性值</summary>
@@ -2053,56 +1997,6 @@ namespace MorphingClass.CUtility
 
 
 
-        //public static bool CheckCross(List<CPolyline> cpllt, out List<CCorrespondSegment> pCorrespondCplLt)
-        //{
-        //    pCorrespondCplLt = new List<CCorrespondSegment>();
-        //    for (int i = 0; i < cpllt.Count - 1; i++)
-        //    {
-        //        IRelationalOperator pRel = cpllt[i].pPolyline as IRelationalOperator;
-        //        for (int j = i + 1; j < cpllt.Count; j++)
-        //        {
-        //            if (pRel.Crosses(cpllt[j].pPolyline) == true)
-        //            {
-        //                CCorrespondSegment pCorrespondSegment = new CCorrespondSegment(cpllt[i], cpllt[j]);
-        //                pCorrespondCplLt.Add(pCorrespondSegment);
-        //            }
-        //        }
-        //    }
-
-        //    if (pCorrespondCplLt.Count > 0)
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //}
-
-
-        //public static bool CheckSelfIntersect(List<CPolyline> cpllt, out List<CPolyline> pSelfIntersectCplLt)
-        //{
-        //    pSelfIntersectCplLt = new List<CPolyline>();
-        //    for (int i = 0; i < cpllt.Count - 1; i++)
-        //    {
-        //        ITopologicalOperator pTop = cpllt[i].pPolyline as ITopologicalOperator;
-        //        if (pTop.IsSimple == false)
-        //        {
-        //            pSelfIntersectCplLt.Add(cpllt[i]);
-        //        }
-        //    }
-
-        //    if (pSelfIntersectCplLt.Count > 0)
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //}
-
-
         public static List<List<CCorrCpts>> GetCorrCptsLtLt(List<CPolyline> InterLSCPlLt, List<CPolyline> InterSSCPlLt)
         {
             List<List<CCorrCpts>> pCorrCptsLtLt = new List<List<CCorrCpts>>(InterLSCPlLt.Count);
@@ -2128,6 +2022,23 @@ namespace MorphingClass.CUtility
             return CreateRegularCpg(pEnv.XMin, pEnv.YMin, pEnv.Width, intNumber);
         }
 
+        public static double CalCompRegularPolygon(int intEdgeNum)
+        {
+            if (intEdgeNum < 3)
+            {
+                throw new ArgumentOutOfRangeException("intEdgeNum should be larger than 2!");
+            }
+
+            double dblPIOverNum = Math.PI / intEdgeNum;
+            return Math.Sqrt(dblPIOverNum / Math.Tan(dblPIOverNum));
+        }
+
+        public static double CalCompactness(double dblArea, double dblLength)
+        {
+            //return dblLength / Math.Sqrt(dblArea);
+            return CConstants.dblTwoSqrtPI * Math.Sqrt(dblArea) / dblLength;
+        }
+
         //public static CPolygon CreateRegularCpg(CPoint centrecpt, double dblRadius = 1, int intNumber = 3)
         //{
         //    return CreateRegularCpg(centrecpt.X, centrecpt.Y, dblRadius, intNumber);
@@ -2147,6 +2058,8 @@ namespace MorphingClass.CUtility
 
             return new CPolygon(-1, cptlt);
         }
+
+
 
         /// <summary>
         /// 

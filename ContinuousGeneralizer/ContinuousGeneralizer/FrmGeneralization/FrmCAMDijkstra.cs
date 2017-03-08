@@ -86,7 +86,7 @@ namespace ContinuousGeneralizer.FrmMorphing
 
             this.txtEvaluation.Text = pCAreaAggregation_Greedy.dblCost.ToString();
             StrObjLtSD.Merge(pCAreaAggregation_Greedy.StrObjLtSD);
-            CAreaAggregation_Base.SaveData(StrObjLtSD, ParameterInitialize, "AStar", Convert.ToInt32(txtNodes.Text));
+            CAreaAggregation_Base.SaveData(StrObjLtSD, ParameterInitialize, "Greedy", Convert.ToInt32(txtNodes.Text));
 
             MessageBox.Show("Done!");
         }

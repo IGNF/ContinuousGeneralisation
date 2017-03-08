@@ -121,7 +121,7 @@ namespace MorphingClass.CMorphingMethods
             //ParameterThreshold.dblAngleBound = 0.262;
 
             //List<double> dblTranslationLt = new List<double>();
-            //SortedDictionary<double, int> ResultsSlt = new SortedDictionary<double, int>(new CDblCompare());
+            //SortedDictionary<double, int> ResultsSlt = new SortedDictionary<double, int>(new CCompareDbl());
             //for (int i = 0; i <= 25; i++)
             //{
             //    //ParameterThreshold.dblDLengthBound = 1 * (1 - 0.02 * i);
@@ -152,7 +152,7 @@ namespace MorphingClass.CMorphingMethods
 
             
             ////必须重新算一遍！！！！！！
-            ////理由：如果采用SortedList<double, CParameterResult> ResultsSlt = new SortedList<double, CParameterResult>(new CDblCompare())记录结果，
+            ////理由：如果采用SortedList<double, CParameterResult> ResultsSlt = new SortedList<double, CParameterResult>(new CCompareDbl())记录结果，
             ////      则由于基本单位是CPoint（类似调用指针），最后必然影响CParameterResult中的ResultPtLt值
             ////int intIndex = ResultsSlt.Values[0];
             ////ParameterThreshold.dblDLengthBound = 1 * (1 - 0.02 * intIndex);
@@ -312,7 +312,7 @@ namespace MorphingClass.CMorphingMethods
         /// <remarks>计算各弯曲的相对起始位置；并给按顺序编号</remarks>
         public SortedDictionary<double, CBend> NeatenBendForest(CPolyline cpl, CBendForest pBendForest)
         {
-            SortedDictionary<double, CBend> pBendSlt = new SortedDictionary<double, CBend>(new CDblCompare());
+            SortedDictionary<double, CBend> pBendSlt = new SortedDictionary<double, CBend>(new CCompareDbl());
             //整理弯曲
             for (int i = 0; i < pBendForest.Count; i++)
             {
@@ -362,13 +362,13 @@ namespace MorphingClass.CMorphingMethods
         public List<CCorrespondBend> BendTreeMatch(CBendForest CFromBendForest, CBendForest CToBendForest, CParameterThreshold ParameterThreshold)
         {
             //大比例尺独立弯曲
-            SortedDictionary<double, CBend> pFromIndependBendSlt = new SortedDictionary<double, CBend>(new CDblCompare());
+            SortedDictionary<double, CBend> pFromIndependBendSlt = new SortedDictionary<double, CBend>(new CCompareDbl());
             for (int i = 0; i < CFromBendForest.Count; i++)
             {
                 pFromIndependBendSlt.Add(CFromBendForest.ElementAt(i).Value.dblStartRL, CFromBendForest.ElementAt(i).Value);
             }
             //小比例尺独立弯曲
-            SortedDictionary<double, CBend> pToIndependBendSlt = new SortedDictionary<double, CBend>(new CDblCompare());
+            SortedDictionary<double, CBend> pToIndependBendSlt = new SortedDictionary<double, CBend>(new CCompareDbl());
             for (int i = 0; i < CToBendForest.Count; i++)
             {
                 pToIndependBendSlt.Add(CToBendForest.ElementAt(i).Value.dblStartRL, CToBendForest.ElementAt(i).Value);
@@ -391,13 +391,13 @@ namespace MorphingClass.CMorphingMethods
         public List<CCorrespondBend> BendTreeMatch2(CBendForest CFromBendForest, CBendForest CToBendForest, CParameterThreshold ParameterThreshold)
         {
             //大比例尺独立弯曲
-            SortedDictionary<double, CBend> pFromIndependBendSlt = new SortedDictionary<double, CBend>(new CDblCompare());
+            SortedDictionary<double, CBend> pFromIndependBendSlt = new SortedDictionary<double, CBend>(new CCompareDbl());
             for (int i = 0; i < CFromBendForest.Count; i++)
             {
                 pFromIndependBendSlt.Add(CFromBendForest.ElementAt(i).Value.dblStartRL, CFromBendForest.ElementAt(i).Value);
             }
             //小比例尺独立弯曲
-            SortedDictionary<double, CBend> pToIndependBendSlt = new SortedDictionary<double, CBend>(new CDblCompare());
+            SortedDictionary<double, CBend> pToIndependBendSlt = new SortedDictionary<double, CBend>(new CCompareDbl());
             for (int i = 0; i < CToBendForest.Count; i++)
             {
                 pToIndependBendSlt.Add(CToBendForest.ElementAt(i).Value.dblStartRL, CToBendForest.ElementAt(i).Value);

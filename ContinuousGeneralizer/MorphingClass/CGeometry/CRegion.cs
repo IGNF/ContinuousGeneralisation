@@ -13,7 +13,10 @@ namespace MorphingClass.CGeometry
 {
     public class CRegion : CBasicBase
     {
-        public static int _intNodesCount;
+        public static CRegion _pCrg;
+
+        public static int _intNodeCount;  //The nodes of a map graph
+        public static int _intEdgeCount;  //The edges of a map graph
         public static int _intStartStaticGIDLast;
         public static int _intStartStaticGIDAll;
         public static int _intStaticGID;
@@ -42,9 +45,9 @@ namespace MorphingClass.CGeometry
         public SortedDictionary<CPatch, int> CphTypeIndexSD_Area_CphGID { get; set; }  //Why did I use SortedDictionary? We use this comparator CPatch .pCompareCPatch_Area_CphGID
         //public SortedSet<CPatch> CphSS_Compactness_CphGID { get; set; }  //Why did I use SortedDictionary? We use this comparator CPatch .pCompareCPatch_Area_CphGID
 
-        public static long _lngEstimationCountEdgeNumber;
-        public static long _lngEstimationCountEdgeLength;
-        public static long _lngEstimationCountEqual;
+        public static long _lngEstCountEdgeNumber;
+        public static long _lngEstCountEdgeLength;
+        public static long _lngEstCountEqual;
 
         //public SortedSet<CPatch> CphAreaSS { get; set; }
         public int intSumCphGID { get; set; }
@@ -52,14 +55,14 @@ namespace MorphingClass.CGeometry
         //public int intEdgeCount { get; set; }
         public int intInteriorEdgeCount { get; set; }
         public int intExteriorEdgeCount { get; set; }
-        public double  dblInteriorSegmentLength { get; set; }
-        public double dblExteriorSegmentLength { get; set; }
+        public double  dblInteriorSegLength { get; set; }
+        public double dblExteriorSegLength { get; set; }
 
         /// <summary>this is the real compactness 2*Sqrt(pi*A)/L.</summary>
         public double dblMinComp { get; set; }
         public double dblAvgComp { get; set; } 
 
-        private double _dbld = double.MaxValue;
+        //private double _dbld = double.MaxValue;
         public double d{ get; set; }
 
         public CRegion parent { get; set; }
@@ -70,34 +73,86 @@ namespace MorphingClass.CGeometry
         public double dblSumComp { get; set; }
 
         //public double dblCostExact { get; set; }
-        public double dblCostEstimated { get; set; }
-        public double dblCostExactType { get; set; }
-        public double dblCostEstimatedType { get; set; }
-        //public double _dblCostEstimatedType;
-        public double dblCostExactCompactness { get; set; }
-        public double dblCostEstimatedCompactness { get; set; }
+        //public double dblCostEst { get; set; }
+        //public double dblCostExactType { get; set; }
+        //public double dblCostEstType { get; set; }
+        //public double _dblCostEstType;
+        //public double dblCostExactComp { get; set; }
+        //public double dblCostEstComp { get; set; }
         public double dblCostExactArea { get; set; }
-        public double dblCostEstimatedArea { get; set; }
+        public double dblCostEstArea { get; set; }
 
-        double _dblCostExact = 0;
+        public double _dblCostEstType = 0;
+        public double dblCostEstType
+        {
+            get { return _dblCostEstType; }
+            set
+            {
+                CHelperFunction.InBoundOrReport(value, 0, CConstants.dblVeryLarge,CCompareDbl_VerySmall.pCompareDbl_VerySmall);
+                _dblCostEstType = value;
+            }
+        }
+
+        public double _dblCostEstComp = 0;
+        public double dblCostEstComp
+        {
+            get { return _dblCostEstComp; }
+            set
+            {
+                CHelperFunction.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCompareDbl_VerySmall.pCompareDbl_VerySmall);
+                _dblCostEstComp = value;
+            }
+        }
+
+        public double _dblCostExactType = 0;
+        public double dblCostExactType
+        {
+            get { return _dblCostExactType; }
+            set
+            {
+                CHelperFunction.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCompareDbl_VerySmall.pCompareDbl_VerySmall);
+                _dblCostExactType = value;
+            }
+        }
+
+        public double _dblCostExactComp = 0;
+        public double dblCostExactComp
+        {
+            get { return _dblCostExactComp; }
+            set
+            {
+                CHelperFunction.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCompareDbl_VerySmall.pCompareDbl_VerySmall);
+                _dblCostExactComp = value;
+            }
+        }
+
+        private double _dblCostExact = 0;
         public double dblCostExact 
         {
             get { return _dblCostExact; }
             set
             {
-                if ((value < 0) || (value > double.MaxValue / 3))
-                {
-                    throw new ArgumentException("incorrect value!");
-                }
-
+                CHelperFunction.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCompareDbl_VerySmall.pCompareDbl_VerySmall);
                 _dblCostExact = value;
             }
         }
 
+        private double _dblCostEst = 0;
+        public double dblCostEst
+        {
+            get { return _dblCostEst; }
+            set
+            {
+                CHelperFunction.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCompareDbl_VerySmall.pCompareDbl_VerySmall);
+                _dblCostEst = value;
+            }
+        }
 
-        //public double dblCostEstimatedType
+        
+
+        //public double dblCostEstType
         //{
-        //    get { return _dblCostEstimatedType; }
+        //    get { return _dblCostEstType; }
         //    set
         //    {
         //        if (value > 2*1712083)
@@ -105,14 +160,13 @@ namespace MorphingClass.CGeometry
         //            throw new ArgumentException("incorrect value!");
         //        }
 
-        //        _dblCostEstimatedType = value;
+        //        _dblCostEstType = value;
         //    }
         //}
 
         public CRegion()
-            : this(-1)
+            :this(-1)
         {
-            this.GID = _intStaticGID++;
         }
 
         //public CRegion(int intID)
@@ -138,13 +192,13 @@ namespace MorphingClass.CGeometry
             this.CphTypeIndexSD_Area_CphGID = new SortedDictionary<CPatch, int>(CPatch.pCompareCPatch_Area_CphGID);
 
 
-            //intID==-2 is for a temporary Crg, and thus should not be counted
-            if (intID==-2)
-            {
-                _intStaticGID--;
-            }
+            ////intID==-2 is for a temporary Crg, and thus should not be counted
+            //if (intID==-2)
+            //{
+            //    _intStaticGID--;
+            //}
             //this.d = double.MaxValue;
-            
+
             this.parent = null;
             this.cenumColor = CEnumColor.white;
         }
@@ -152,6 +206,21 @@ namespace MorphingClass.CGeometry
         public ICollection<CPatch> GetCphCol()
         {
             return this.CphTypeIndexSD_Area_CphGID.Keys;
+        }
+
+        public ICollection<int> GetCphTypeIndexCol()
+        {
+            return this.CphTypeIndexSD_Area_CphGID.Values;
+        }
+
+        public int GetCphTypeIndex(CPatch cph)
+        {
+            int intTypeIndex;
+            if (this.CphTypeIndexSD_Area_CphGID.TryGetValue(cph, out intTypeIndex) == false)
+            {
+                throw new ArgumentNullException("The patch does not exist!");
+            }
+            return intTypeIndex;
         }
 
         public int GetCphCount()
@@ -179,15 +248,7 @@ namespace MorphingClass.CGeometry
             return this.CphTypeIndexSD_Area_CphGID.GetFirstT().Value;
         }
 
-        public int GetCphTypeIndex(CPatch cph)
-        {
-            int intTypeIndex;
-            if (this.CphTypeIndexSD_Area_CphGID.TryGetValue(cph, out intTypeIndex)==false)
-            {
-                throw new ArgumentNullException ("The patch does not exist!");
-            }
-            return intTypeIndex;
-        }
+
 
         public IEnumerable<CCphRecord> GetNeighborCphRecords(CPatch cph)
         {
@@ -279,7 +340,7 @@ namespace MorphingClass.CGeometry
                                 if (isKnownAdjacent == true)
                                 {
                                     ExsitedCorrCphs.SharedCEdgeLt.Add(cedge);
-                                    ExsitedCorrCphs.dblSharedSegmentLength += cedge.dblLength;
+                                    ExsitedCorrCphs.dblSharedSegLength += cedge.dblLength;
                                     ExsitedCorrCphs.intSharedCEdgeCount++;
                                 }
                                 else
@@ -287,7 +348,7 @@ namespace MorphingClass.CGeometry
                                     //List<CEdge> NewCphSharedEdgesLt = new List<CEdge>(1);
                                     //CorrCphs.SharedCEdgeLt = new List<CEdge>(1);
                                     CorrCphs.SharedCEdgeLt.Add(cedge);
-                                    CorrCphs.dblSharedSegmentLength += cedge.dblLength;
+                                    CorrCphs.dblSharedSegLength += cedge.dblLength;
                                     CorrCphs.intSharedCEdgeCount++;
 
                                     pAdjCorrCphsSD.Add(CorrCphs, CorrCphs);
@@ -295,7 +356,7 @@ namespace MorphingClass.CGeometry
                                 }
 
                                 this.intInteriorEdgeCount++;
-                                this.dblInteriorSegmentLength += cedge.dblLength;
+                                this.dblInteriorSegLength += cedge.dblLength;
                                 cedgeSD.Remove(cedge);    //every edge belongs to two polygons, if we have found the two polygons, we can remove the shared edge from the SortedDictionary
                             }
                             else  //if cedge doesn't exist in cedgeSD, then we add this cedge
@@ -311,7 +372,7 @@ namespace MorphingClass.CGeometry
             this.intExteriorEdgeCount = cedgeSD.Count;
             foreach (var cedgekvp in cedgeSD)
             {
-                this.dblExteriorSegmentLength += cedgekvp.Key.dblLength;
+                this.dblExteriorSegLength += cedgekvp.Key.dblLength;
             }
             //******************************************************************************************************//
             //to use less memory, we don't save the shared edgelist. in the method of MaximizeMinArea, we don't need the shared edgelist.
@@ -339,7 +400,9 @@ namespace MorphingClass.CGeometry
                 foreach (var cph in this.GetCphCol())
                 {
                     this.dblSumComp += cph.dblComp;
-                }                
+                }
+
+                this.dblAvgComp = this.dblSumComp / this.GetCphCount();
             }
 
             this.AdjCorrCphsSD = pAdjCorrCphsSD;
@@ -456,7 +519,7 @@ namespace MorphingClass.CGeometry
 
         private CPatch ComputeNewCph(CCorrCphs unitingCorrCphs, List<SortedDictionary<CPatch, CPatch>> ExistingCphSDLt)
         {
-            var newcph = unitingCorrCphs.FrCph.Unite(unitingCorrCphs.ToCph, unitingCorrCphs.dblSharedSegmentLength);
+            var newcph = unitingCorrCphs.FrCph.Unite(unitingCorrCphs.ToCph, unitingCorrCphs.dblSharedSegLength);
 
             //test whether this newcph has already been constructed before
             CPatch outcph;
@@ -539,7 +602,7 @@ namespace MorphingClass.CGeometry
                 else if (isExisting == false && isAdjExisting == true) //AddKeyLt[i] already exists. this means that AddKeyLt[i].FrCph was adjacent to both the united cphs. in this case we simply combine the shared edges
                 {
                     newAdjCorrCphs.SharedCEdgeLt.AddRange(AddKey.SharedCEdgeLt);
-                    newAdjCorrCphs.dblSharedSegmentLength += AddKey.dblSharedSegmentLength;
+                    newAdjCorrCphs.dblSharedSegLength += AddKey.dblSharedSegLength;
                     newAdjCorrCphs.intSharedCEdgeCount += AddKey.intSharedCEdgeCount;
                 }
                 else //if (isExisting == false && isAdjacencyExisting == false)
@@ -596,31 +659,67 @@ namespace MorphingClass.CGeometry
 
             var newcrg = this.GenerateCrgChildAndComputeCost(lscrg, newAdjCorrCphsSD,
              activecph, passivecph, unitedcph, unitingCorrCphs, intactiveTypeIndex, intpassiveTypeIndex, padblTD);
-            
+
+            var intGIDLt = new List<int>();
+            var intTypeLt = new List<int>();
+            if (newcrg.intSumCphGID==65794 &&newcrg.intSumTypeIndex==172)
+            {
+                
+                foreach (var cph in newcrg.GetCphCol())
+                {
+                    intGIDLt.Add(cph.GID);
+                }
+
+                
+                foreach (var inttype in newcrg.GetCphTypeIndexCol())
+                {
+                    intTypeLt.Add(inttype);
+                }
+
+                foreach (var item in Q)
+                {
+                    if (item.intSumCphGID== 65794 && item.intSumTypeIndex == 172)
+                    {
+                        int ss = 5;
+                    }
+                }
+            }
+
+
             CRegion outcrg;
             if (ExistingCrgSDLt[newcrg.GetCphCount()].TryGetValue(newcrg, out outcrg))
             {
                 int intResult = newcrg.dblCostExact.CompareTo(outcrg.dblCostExact);
+                //int intResult = CCompareMethods.CompareDbl_VerySmall(newcrg.dblCostExact, outcrg.dblCostExact);
+                double dblverysmall = CConstants.dblVerySmall;
                 if (intResult == -1)
                 {
                     //from the idea of A* algorithm, we know that outcrg must be in Q
-
-                    if (Q.Remove(outcrg) == false)
+                    //var Q = new SortedSet<CRegion>(CRegion.pCompareCRegion_Cost_CphGIDTypeIndex);
+                    if (Q.Remove(outcrg) == true) //there is no decrease key function for SortedSet, so we have to remove it and later add it again
                     {
-                        throw new ArgumentException("outcrg should be removed!");
-                    }
-                    //Q.Remove(outcrg);  //there is no decrease key function for SortedSet, so we have to remove it and later add it again
-                    outcrg.cenumColor = newcrg.cenumColor;
-                    outcrg.dblCostExactType = newcrg.dblCostExactType;                  //*****the cost will need be updated if we integrate more evaluations
-                    outcrg.dblCostExactCompactness = newcrg.dblCostExactCompactness;                  //*****the cost will need be updated if we integrate more evaluations
-                    outcrg.dblCostExactArea = newcrg.dblCostExactArea;
-                    outcrg.dblCostExact = newcrg.dblCostExact;
-                    outcrg.d = newcrg.dblCostExact + outcrg.dblCostEstimated;
+                        outcrg.cenumColor = newcrg.cenumColor;
+                        outcrg.dblCostExactType = newcrg.dblCostExactType;   //*****the cost will need be updated if we integrate more evaluations
+                        outcrg.dblCostExactComp = newcrg.dblCostExactComp;   //*****the cost will need be updated if we integrate more evaluations
+                        outcrg.dblCostExactArea = newcrg.dblCostExactArea;
+                        outcrg.dblCostExact = newcrg.dblCostExact;
+                        outcrg.d = newcrg.dblCostExact + outcrg.dblCostEst;
 
-                    outcrg.parent = newcrg.parent;
-                    newcrg = outcrg;
-                    Q.Add(newcrg);
-                    //CRegion._intStaticGID--;
+                        outcrg.parent = newcrg.parent;
+                        newcrg = outcrg;
+                        Q.Add(newcrg);
+                    }
+                    else
+                    {                       
+                        if (intFactor == 1)
+                        {
+                            throw new ArgumentException("outcrg should be removed!");
+                        }
+                        else
+                        {
+                            // if intFactor != 1, we are overestimating, outcrg may have been removed as the node with least cost
+                        }
+                    }
                 }
                 else
                 {
@@ -629,12 +728,13 @@ namespace MorphingClass.CGeometry
             }
             else
             {
-                ComputeEstimatedCost(lscrg, sscrg, newcrg, activecph, passivecph, unitedcph, intactiveTypeIndex, intpassiveTypeIndex,
+                ComputeEstCost(lscrg, sscrg, newcrg, activecph, passivecph, unitedcph, intactiveTypeIndex, intpassiveTypeIndex,
                     intFinalTypeIndex, padblTD, intFactor);
                 Q.Add(newcrg);
                 ExistingCrgSDLt[newcrg.GetCphCount()].Add(newcrg, newcrg);
-                CRegion._intNodesCount++;
+                CRegion._intNodeCount++;
             }
+            CRegion._intEdgeCount++;
 
             return newcrg;
         }
@@ -658,8 +758,8 @@ namespace MorphingClass.CGeometry
             //newcrg.intEdgeCount = this.intEdgeCount - intDecreaseEdgeCount;
             newcrg.intInteriorEdgeCount = this.intInteriorEdgeCount - unitingCorrCphs.intSharedCEdgeCount;
             newcrg.intExteriorEdgeCount = this.intExteriorEdgeCount;
-            newcrg.dblInteriorSegmentLength = this.dblInteriorSegmentLength - unitingCorrCphs.dblSharedSegmentLength;
-            newcrg.dblExteriorSegmentLength = this.dblExteriorSegmentLength;
+            newcrg.dblInteriorSegLength = this.dblInteriorSegLength - unitingCorrCphs.dblSharedSegLength;
+            newcrg.dblExteriorSegLength = this.dblExteriorSegLength;
 
             if (CConstants.blnComputeMinComp == true)
             {
@@ -699,44 +799,39 @@ namespace MorphingClass.CGeometry
 
         public void InitialEstimatedCost(CRegion sscrg, double[,] padblTD, int intFactor)
         {
-            this.dblCostEstimatedType = 0;
+            this.dblCostEstType = 0;
             foreach (var kvp in this.CphTypeIndexSD_Area_CphGID)
             {
-                this.dblCostEstimatedType += kvp.Key.dblArea * padblTD[kvp.Value, sscrg.CphTypeIndexSD_Area_CphGID.GetFirstT().Value];   //there is only one element in targetCrg
-                //dblCostEstimatedTypetest += kvp.Key.dblArea * padblTD[kvp.Value, targetCrg.CphTypeIndexSD_Area_CphGID.GetFirstT().Value];
+                this.dblCostEstType += kvp.Key.dblArea * padblTD[kvp.Value, sscrg.GetSoloCphTypeIndex()];   //there is only one element in targetCrg
             }
-            this.dblCostEstimatedType = intFactor * this.dblCostEstimatedType;
-            this.dblCostEstimated = (1 - CCAMDijkstra.dblLamda) * this.dblCostEstimatedType;
+            this.dblCostEstType = intFactor * this.dblCostEstType;
 
             if (CConstants.strShapeConstraint == "MaximizeMinArea")
             {
-                //this.dblCostEstimatedArea = intFactor * EstimateSumMinArea(this);
-                //this.dblCostEstimated += this.dblCostEstimatedArea;
+                //this.dblCostEstArea = intFactor * EstimateSumMinArea(this);
+                //this.dblCostEst += this.dblCostEstArea;
             }
-            else if (CConstants.strShapeConstraint == "MaximizeAvgComp")
+            else if (CConstants.strShapeConstraint == "MaximizeAvgComp_EdgeNumber")
             {
-
+                this.dblCostEstComp = intFactor * BalancedEstAvgComp_EdgeNumber(this, this, sscrg);
             }
             else if (CConstants.strShapeConstraint == "MaximizeMinComp_Combine")
             {
-                this.dblCostEstimatedCompactness = intFactor * BalancedEstimatedMinComp_Combine(this, this, sscrg);
-                this.dblCostEstimated += CCAMDijkstra.dblLamda * (this.dblArea * this.dblCostEstimatedCompactness);
+                this.dblCostEstComp = intFactor * BalancedEstMinComp_Combine(this, this, sscrg);
             }
-            else if (CConstants.strShapeConstraint == "MaximizeMinComp")
+            else if (CConstants.strShapeConstraint == "MaximizeMinComp_EdgeNumber")
             {
-                this.dblCostEstimatedCompactness = intFactor * BalancedEstimatedMinComp_EdgeNumber(this, this, sscrg);
-                this.dblCostEstimated += CCAMDijkstra.dblLamda * (this.dblArea * this.dblCostEstimatedCompactness);
+                this.dblCostEstComp = intFactor * BalancedEstMinComp_EdgeNumber(this, this, sscrg);
             }
             else if (CConstants.strShapeConstraint == "MinimizeInteriorBoundaries")
             {
-                throw new ArgumentException("You need to update the compactness!");
-
-                this.dblCostEstimatedCompactness = intFactor * BalancedEstimatedCompactnessInteriorLength_Basic(this, this);
-                double dblWeightedCostEstimatedCompactness = this.dblArea * this.dblCostEstimatedCompactness;
-                this.dblCostEstimated += dblWeightedCostEstimatedCompactness;
+                this.dblCostEstComp = intFactor * BalancedEstCompInteriorLength_Basic(this, this);
             }
 
-            this.d = this.dblCostEstimated;
+            this.dblCostEst = (1 - CCAMDijkstra.dblLamda) * this.dblCostEstType + 
+                CCAMDijkstra.dblLamda * this.dblArea * this.dblCostEstComp;
+
+            this.d = this.dblCostEst;
         }
 
         public void ComputeExactCost(CRegion lscrg, CRegion NewCrg, CPatch activecph, CPatch passivecph, CPatch unitedcph,
@@ -754,47 +849,59 @@ namespace MorphingClass.CGeometry
 
                 //NewCrg.dblCostExact = NewCrg.dblCostExactType + NewCrg.dblCostExactArea;
             }
-            else if (CConstants.strShapeConstraint == "MaximizeAvgComp" ||
+            else if (CConstants.strShapeConstraint == "MaximizeAvgComp_EdgeNumber" ||
                 CConstants.strShapeConstraint == "MaximizeAvgComp_Combine")
             {
                 //divide by intTimeNum - 2, because at each step the value for AvgComp can be 1 and there are intotal intTimeNum - 2 steps; 
                 //only when intTimeNum - 1 > 0, we are in this function and run the following codes
                 if (intTimeNum - NewCrg.GetCphCount() > 1)  //we have exact cost from t=3
                 {
-                    NewCrg.dblCostExactCompactness = ParentCrg.dblCostExactCompactness + (1 - ParentCrg.dblAvgComp) / (intTimeNum - 2);
+                    NewCrg.dblCostExactComp = ParentCrg.dblCostExactComp + (1 - ParentCrg.dblAvgComp) / (intTimeNum - 2);
                 }
                 else
                 {
-                    NewCrg.dblCostExactCompactness = 0;
+                    NewCrg.dblCostExactComp = 0;
                 }
 
                 NewCrg.dblCostExact = (1 - CCAMDijkstra.dblLamda) * NewCrg.dblCostExactType +
-                    CCAMDijkstra.dblLamda * NewCrg.dblArea * NewCrg.dblCostExactCompactness;
+                    CCAMDijkstra.dblLamda * NewCrg.dblArea * NewCrg.dblCostExactComp;
             }
-            else if (CConstants.strShapeConstraint == "MaximizeMinComp"
+            else if (CConstants.strShapeConstraint == "MaximizeMinComp_EdgeNumber"
                 || CConstants.strShapeConstraint == "MaximizeMinComp_Combine")
             {
                 //divide by intTimeNum - 2, because at each step the value for AvgComp can be 1 and there are intotal intTimeNum - 2 steps; 
                 //only when intTimeNum - 1 > 0, we are in this function and run the following codes
                 if (intTimeNum - NewCrg.GetCphCount() > 1)  //we have exact cost from t=3
                 {
-                    NewCrg.dblCostExactCompactness = ParentCrg.dblCostExactCompactness + (1 - ParentCrg.dblMinComp) / (intTimeNum - 2);
+                    NewCrg.dblCostExactComp = ParentCrg.dblCostExactComp + (1 - ParentCrg.dblMinComp) / (intTimeNum - 2);
                 }
                 else
                 {
-                    NewCrg.dblCostExactCompactness = 0;
+                    NewCrg.dblCostExactComp = 0;
                 }
 
-                NewCrg.dblCostExact = (1 - CCAMDijkstra.dblLamda) * NewCrg.dblCostExactType + 
-                    CCAMDijkstra.dblLamda * NewCrg.dblArea * NewCrg.dblCostExactCompactness;
+                NewCrg.dblCostExact = (1 - CCAMDijkstra.dblLamda) * NewCrg.dblCostExactType +
+                    CCAMDijkstra.dblLamda * NewCrg.dblArea * NewCrg.dblCostExactComp;
             }
             else if (CConstants.strShapeConstraint == "MinimizeInteriorBoundaries")
             {
-                //divide by intTimeNum - 1, because at each step the value for AvgComp can be 1; At the step of ParentCrg intTimeNum - t == NewCrg.GetCphCount();
-                NewCrg.dblCostExactCompactness = ParentCrg.dblCostExactCompactness +
-                    ParentCrg.dblInteriorSegmentLength / lscrg.dblInteriorSegmentLength / (NewCrg.GetCphCount());
+                //divide by intTimeNum - 2, because at each step the value for InteriorSegLength can be 1 and there are intotal intTimeNum - 2 steps; 
+                //only when intTimeNum - 1 > 0, we are in this function and run the following codes
+                if (intTimeNum - NewCrg.GetCphCount() > 1)  //we have exact cost from t=3
+                {
+                    // lscrg.dblInteriorSegLength * NewCrg.GetCphCount() / (intTimeNum - 1) is the expected interior length at time t-1
+                    NewCrg.dblCostExactComp = ParentCrg.dblCostExactComp +
+                    ParentCrg.dblInteriorSegLength
+                    / (lscrg.dblInteriorSegLength * NewCrg.GetCphCount() / (intTimeNum - 1))
+                    / (intTimeNum - 2);
+                }
+                else
+                {
+                    NewCrg.dblCostExactComp = 0;
+                }
+
                 NewCrg.dblCostExact = (1 - CCAMDijkstra.dblLamda) * NewCrg.dblCostExactType +
-                    CCAMDijkstra.dblLamda * NewCrg.dblArea * NewCrg.dblCostExactCompactness;
+                    CCAMDijkstra.dblLamda * NewCrg.dblArea * NewCrg.dblCostExactComp;
             }
             else if (CConstants.strShapeConstraint == "NonShape")
             {
@@ -815,23 +922,30 @@ namespace MorphingClass.CGeometry
         /// <param name="NewCrg"></param>
         /// <param name="padblTD"></param>
         /// <remarks>if we change the cost method, then we will also need to change the codes of InitialSubCostEstimated in CRegion.cs, the codes of updating existing outcrg </remarks>
-        public void ComputeEstimatedCost(CRegion lscrg, CRegion sscrg, CRegion NewCrg, CPatch activecph, CPatch passivecph, CPatch unitedcph, 
+        public void ComputeEstCost(CRegion lscrg, CRegion sscrg, CRegion NewCrg, CPatch activecph, CPatch passivecph, CPatch unitedcph, 
             int intactiveTypeIndex, int intpassiveTypeIndex, int intFinalTypeIndex, double[,] padblTD, int intFactor)
         {
             var ParentCrg = NewCrg.parent;
-            NewCrg.dblCostEstimatedType = ParentCrg.dblCostEstimatedType + intFactor * passivecph.dblArea 
+            var test = intFactor * passivecph.dblArea
+                * (padblTD[intactiveTypeIndex, intFinalTypeIndex] - padblTD[intpassiveTypeIndex, intFinalTypeIndex]);
+            NewCrg.dblCostEstType = ParentCrg.dblCostEstType + intFactor * passivecph.dblArea 
                 * (padblTD[intactiveTypeIndex, intFinalTypeIndex] - padblTD[intpassiveTypeIndex, intFinalTypeIndex]);
 
 
             if (CConstants.strShapeConstraint == "MaximizeMinArea")
             {
-                //NewCrg.dblCostEstimatedArea = intFactor*EstimateSumMinArea(NewCrg);  //will we do this twice????
+                //NewCrg.dblCostEstArea = intFactor*EstimateSumMinArea(NewCrg);  //will we do this twice????
 
-                //NewCrg.dblCostEstimated = NewCrg.dblCostEstimatedType + NewCrg.dblCostEstimatedArea;
+                //NewCrg.dblCostEst = NewCrg.dblCostEstType + NewCrg.dblCostEstArea;
             }
-            else if (CConstants.strShapeConstraint == "MaximizeAvgComp")
+            else if (CConstants.strShapeConstraint == "MaximizeAvgComp_EdgeNumber")
             {
-                throw new ArgumentOutOfRangeException("I haven't considered this case yet!");
+                NewCrg.dblCostEstComp = intFactor * BalancedEstAvgComp_EdgeNumber(NewCrg, lscrg, sscrg);
+
+                //to make dblCostEstComp comparable to dblCostEstType and to avoid digital problems, we time dblCostEstComp by area
+                //we will adjust the value later
+                NewCrg.dblCostEst = (1 - CCAMDijkstra.dblLamda) * NewCrg.dblCostEstType +
+                    CCAMDijkstra.dblLamda * NewCrg.dblArea * NewCrg.dblCostEstComp;
             }
             else if (CConstants.strShapeConstraint == "MaximizeAvgComp_Combine")
             {
@@ -839,38 +953,41 @@ namespace MorphingClass.CGeometry
             }
             else if (CConstants.strShapeConstraint == "MaximizeMinComp_Comine")
             {
-                NewCrg.dblCostEstimatedCompactness = intFactor * BalancedEstimatedMinComp_Combine(NewCrg, lscrg, sscrg);
+                NewCrg.dblCostEstComp = intFactor * BalancedEstMinComp_Combine(NewCrg, lscrg, sscrg);
 
-                //to make dblCostEstimatedCompactness comparable to dblCostEstimatedType and to avoid digital problems, we time dblCostEstimatedCompactness by area
+                //to make dblCostEstComp comparable to dblCostEstType and to avoid digital problems, we time dblCostEstComp by area
                 //we will adjust the value later
-                NewCrg.dblCostEstimated = (1 - CCAMDijkstra.dblLamda) * NewCrg.dblCostEstimatedType + 
-                    CCAMDijkstra.dblLamda * NewCrg.dblArea * NewCrg.dblCostEstimatedCompactness;   
+                NewCrg.dblCostEst = (1 - CCAMDijkstra.dblLamda) * NewCrg.dblCostEstType + 
+                    CCAMDijkstra.dblLamda * NewCrg.dblArea * NewCrg.dblCostEstComp;   
             }
-            else if (CConstants.strShapeConstraint == "MaximizeMinComp")
+            else if (CConstants.strShapeConstraint == "MaximizeMinComp_EdgeNumber")
             {
-                NewCrg.dblCostEstimatedCompactness = intFactor * BalancedEstimatedMinComp_EdgeNumber(NewCrg, lscrg, sscrg);
+                NewCrg.dblCostEstComp = intFactor * BalancedEstMinComp_EdgeNumber(NewCrg, lscrg, sscrg);
 
-                //to make dblCostEstimatedCompactness comparable to dblCostEstimatedType and to avoid digital problems, we time dblCostEstimatedCompactness by area
+                //to make dblCostEstComp comparable to dblCostEstType and to avoid digital problems, we time dblCostEstComp by area
                 //we will adjust the value later
-                NewCrg.dblCostEstimated = (1 - CCAMDijkstra.dblLamda) * NewCrg.dblCostEstimatedType + 
-                    CCAMDijkstra.dblLamda * NewCrg.dblArea * NewCrg.dblCostEstimatedCompactness;   
+                NewCrg.dblCostEst = (1 - CCAMDijkstra.dblLamda) * NewCrg.dblCostEstType + 
+                    CCAMDijkstra.dblLamda * NewCrg.dblArea * NewCrg.dblCostEstComp;   
             }
             else if (CConstants.strShapeConstraint == "MinimizeInteriorBoundaries")
             {
-                NewCrg.dblCostEstimatedCompactness = intFactor * BalancedEstimatedCompactnessInteriorLength_Basic(NewCrg, lscrg);
+                NewCrg.dblCostEstComp = intFactor * BalancedEstCompInteriorLength_Basic(NewCrg, lscrg);
 
-                ////to make dblCostEstimatedCompactness comparable to dblCostEstimatedType and to avoid digital problems, we time dblCostEstimatedCompactness by area
+                ////to make dblCostEstComp comparable to dblCostEstType and to avoid digital problems, we time dblCostEstComp by area
                 ////we will adjust the value later
-                NewCrg.dblCostEstimated = NewCrg.dblCostEstimatedType + NewCrg.dblArea * NewCrg.dblCostEstimatedCompactness;
+                NewCrg.dblCostEst = (1 - CCAMDijkstra.dblLamda) * NewCrg.dblCostEstType +
+                    CCAMDijkstra.dblLamda * NewCrg.dblArea * NewCrg.dblCostEstComp; 
             }
             else if (CConstants.strShapeConstraint == "NonShape")
             {
-                NewCrg.dblCostEstimated = NewCrg.dblCostEstimatedType;
+                NewCrg.dblCostEst = NewCrg.dblCostEstType;
             }
 
             //double dblWeight = 0.5;
-            NewCrg.d = NewCrg.dblCostExact + NewCrg.dblCostEstimated;
+            NewCrg.d = NewCrg.dblCostExact + NewCrg.dblCostEst;
         }
+
+
 
         /// <summary>
         /// currently doesn't work
@@ -881,37 +998,118 @@ namespace MorphingClass.CGeometry
         /// <remarks>we need to improve this estimation to make sure this is an upper bound.
         /// We don't need to compute one step further because the estimation based on edge number will "never" be 0</remarks>
         /// 
-        private double BalancedEstimatedMinComp_Combine(CRegion crg, CRegion lscrg, CRegion sscrg)
+        private double BalancedEstMinComp_Combine(CRegion crg, CRegion lscrg, CRegion sscrg)
         {
             if (crg.GetCphCount() == 1)
             {
                 return 0;
             }
 
-            var EstimateEdgeNumberEt = EstimateMinComp_EdgeNumber(crg).GetEnumerator();
-            var EstimateEdgeLengthEt = EstimateMinComp_EdgeLength(crg).GetEnumerator();   //we need to improve this estimation to make sure this is an upper bound
+            var EstEdgeNumberEt = EstimateMinComp_EdgeNumber(crg, lscrg).GetEnumerator();
+            var EstEdgeLengthEt = EstimateMinComp_EdgeLength(crg, lscrg).GetEnumerator();   //we need to improve this estimation to make sure this is an upper bound
 
             double dblSumCompValue = 0;
-            while (EstimateEdgeNumberEt.MoveNext() && EstimateEdgeLengthEt.MoveNext())
+            while (EstEdgeNumberEt.MoveNext() && EstEdgeLengthEt.MoveNext())
             {
-                if (EstimateEdgeNumberEt.Current < EstimateEdgeLengthEt.Current)
+                if (EstEdgeNumberEt.Current < EstEdgeLengthEt.Current)
                 {
-                    CRegion._lngEstimationCountEdgeNumber++;
+                    CRegion._lngEstCountEdgeNumber++;
                 }
-                else if (EstimateEdgeNumberEt.Current > EstimateEdgeLengthEt.Current)
+                else if (EstEdgeNumberEt.Current > EstEdgeLengthEt.Current)
                 {
-                    CRegion._lngEstimationCountEdgeLength++;
+                    CRegion._lngEstCountEdgeLength++;
                 }
                 else
                 {
-                    CRegion._lngEstimationCountEqual++;
+                    CRegion._lngEstCountEqual++;
                 }
 
-                dblSumCompValue += (1 - Math.Min(EstimateEdgeNumberEt.Current, EstimateEdgeLengthEt.Current));
+                dblSumCompValue += (1 - Math.Min(EstEdgeNumberEt.Current, EstEdgeLengthEt.Current));
             }
 
             return dblSumCompValue / (lscrg.GetCphCount() - 1);
         }
+
+        #region EstimateAvgComp_EdgeNumber
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="crg">crg.GetCphCount() > 1</param>
+        /// <param name="lscrg">lscrg.GetCphCount() > 2</param>
+        /// <param name="sscrg"></param>
+        /// <returns></returns>
+        private double BalancedEstAvgComp_EdgeNumber(CRegion crg, CRegion lscrg, CRegion sscrg)
+        {
+            // if lscrg.GetCphCount() <= 2, the domain only have two polygons
+            // A value will be divided by (lscrg.GetCphCount() - 2). To avoid being divided by 0, we directly return 0.
+            if (lscrg.GetCphCount() <= 2)
+            {
+                return 0;
+            }
+
+            return EstimatedComp_Common(EstimateAvgComp_EdgeNumber(crg, lscrg), crg, lscrg, sscrg);
+        }
+
+
+        /// <summary>
+        /// from time t to n-1
+        /// </summary>
+        /// <param name="crg"></param>
+        /// <returns></returns>
+        private IEnumerable<double> EstimateAvgComp_EdgeNumber(CRegion crg, CRegion lscrg)
+        {
+            double dblSumComp = 0;
+            var dblCompSS = new SortedSet<CValPair<double,int>>();
+            int intCompCount = 0;
+            foreach (var cph in crg.GetCphCol())
+            {
+                dblSumComp += cph.dblComp;
+                dblCompSS.Add(new CValPair<double, int>(cph.dblComp, intCompCount++));
+            }
+
+            var intEdgeCountSS = new SortedSet<int>(new CIntCompare());
+            foreach (var pCorrCphs in crg.AdjCorrCphsSD.Keys)
+            {
+                intEdgeCountSS.Add(pCorrCphs.intSharedCEdgeCount);
+            }
+            
+            int intEdgeCountAtmost = crg.intExteriorEdgeCount + crg.intInteriorEdgeCount;
+            int intEstCount = crg.GetCphCount();
+
+            IEnumerator<int> intEdgeCountSSEt = intEdgeCountSS.GetEnumerator();
+            double dblCompRegularPolygon = 0;
+            while (intEstCount > 1)
+            {
+                //if intEstCount == lscrg.GetCphCount(), we are estimating from the start map (t==1)
+                //we define that the estimation value of the start map is 0, therefore we skip intEstCount == lscrg.GetCphCount()
+                if (intEstCount < lscrg.GetCphCount())
+                {
+                    double dblAvgComp = dblSumComp / intEstCount;
+                    yield return dblAvgComp;
+                }   
+                
+                //remove the two smallest compactnesses
+                for (int i = 0; i < 2; i++)
+                {
+                    dblSumComp -= dblCompSS.Min().val1;
+                    if (dblCompSS.Remove(dblCompSS.Min())==false)
+                    {
+                        throw new ArgumentException("failed to remove the smallest element!");
+                    }
+                }
+
+                intEdgeCountSSEt.MoveNext();
+                intEdgeCountAtmost -= intEdgeCountSSEt.Current;
+                dblCompRegularPolygon = CGeometricMethods.CalCompRegularPolygon(intEdgeCountAtmost);
+
+                dblCompSS.Add(new CValPair<double, int>(dblCompRegularPolygon, intCompCount++));
+                dblSumComp += dblCompRegularPolygon;
+                intEstCount--;                
+            }
+        }
+
+
+        #endregion
 
         #region EstimateMinComp_EdgeNumber
         /// <summary>
@@ -921,19 +1119,19 @@ namespace MorphingClass.CGeometry
         /// <param name="lscrg">lscrg.GetCphCount() > 2</param>
         /// <param name="sscrg"></param>
         /// <returns></returns>
-        private double BalancedEstimatedMinComp_EdgeNumber(CRegion crg, CRegion lscrg, CRegion sscrg)
+        private double BalancedEstMinComp_EdgeNumber(CRegion crg, CRegion lscrg, CRegion sscrg)
         {
             // if lscrg.GetCphCount() <= 2, the domain only have two polygons
-            // if crg.GetCphCount() <= 1, we are at the last step
+            // A value will be divided by (lscrg.GetCphCount() - 2). To avoid being divided by 0, we directly return 0.
             if (lscrg.GetCphCount() <= 2)
             {
                 return 0;
             }
 
-            return EstimatedMinComp_Common(EstimateMinComp_EdgeNumber(crg), crg, lscrg, sscrg);
+            return EstimatedComp_Common(EstimateMinComp_EdgeNumber(crg, lscrg), crg, lscrg, sscrg);
         }
 
-        private double EstimatedMinComp_Common(IEnumerable<double> EstimateEb, CRegion crg, CRegion lscrg, CRegion sscrg)
+        private double EstimatedComp_Common(IEnumerable<double> EstimateEb, CRegion crg, CRegion lscrg, CRegion sscrg)
         {
             var EstimateEt = EstimateEb.GetEnumerator();
 
@@ -952,7 +1150,7 @@ namespace MorphingClass.CGeometry
         /// </summary>
         /// <param name="crg"></param>
         /// <returns></returns>
-        private IEnumerable<double> EstimateMinComp_EdgeNumber(CRegion crg)
+        private IEnumerable<double> EstimateMinComp_EdgeNumber(CRegion crg, CRegion lscrg)
         {
             var intEdgeCountSS = new SortedSet<int>(new CIntCompare());
             foreach (var pCorrCphs in crg.AdjCorrCphsSD.Keys)
@@ -962,85 +1160,83 @@ namespace MorphingClass.CGeometry
 
             IEnumerator<int> intEdgeCountSSEt = intEdgeCountSS.GetEnumerator();
             int intEdgeCountAtmost = crg.intExteriorEdgeCount + 2 * crg.intInteriorEdgeCount;
-            int intEstimationPolygonNum = crg.GetCphCount();
+            int intEstCount = crg.GetCphCount();
 
-            while (intEstimationPolygonNum > 1)
+            while (intEstCount > 1)
             {
                 intEdgeCountSSEt.MoveNext();
-                double dblAverageEdgeCount = Math.Floor(Convert.ToDouble(intEdgeCountAtmost) / Convert.ToDouble(intEstimationPolygonNum));
-                yield return EstimateCompactnessEdgeNumberOneCrgInstance(dblAverageEdgeCount);
+
+                //if intEstCount == lscrg.GetCphCount(), we are estimating from the start map (t==1)
+                //we define that the estimation value of the start map is 0, therefore we skip intEstCount == lscrg.GetCphCount()
+                if (intEstCount < lscrg.GetCphCount())
+                {
+                    int intAverageEdgeCount = Convert.ToInt32(Math.Floor(Convert.ToDouble(intEdgeCountAtmost) / Convert.ToDouble(intEstCount)));
+                    yield return CGeometricMethods.CalCompRegularPolygon(intAverageEdgeCount);
+                }                
 
                 intEdgeCountAtmost -= (2 * intEdgeCountSSEt.Current);
-                intEstimationPolygonNum--;
+                intEstCount--;
             }
         }
 
 
-        private double EstimateCompactnessEdgeNumberOneCrgInstance(double dblEdgeCount)
-        {
-            double dblPIOverCount = Math.PI / dblEdgeCount;
-            return Math.Sqrt(dblPIOverCount / Math.Tan(dblPIOverCount));
-        }
         #endregion
 
         #region EstimateMinComp_EdgeLength
-        private double BalancedEstimatedMinComp_EdgeLength(CRegion crg, CRegion lscrg, CRegion sscrg)
+        private double BalancedEstMinComp_EdgeLength(CRegion crg, CRegion lscrg, CRegion sscrg)
         {
             if (crg.GetCphCount() == 1)
             {
                 return 0;
             }
 
-            return EstimatedMinComp_Common(EstimateMinComp_EdgeLength(crg), crg, lscrg, sscrg);
+            return EstimatedComp_Common(EstimateMinComp_EdgeLength(crg, lscrg), crg, lscrg, sscrg);
         }
 
-        private IEnumerable<double> EstimateMinComp_EdgeLength(CRegion crg)
+        private IEnumerable<double> EstimateMinComp_EdgeLength(CRegion crg, CRegion lscrg)
         {
             throw new ArgumentException("We need to update the cost functions!");
 
-            //double dblEstimatedCompactness
-            var EstimateEt = EstimateInteriorLength(crg).GetEnumerator();
-            int intEstimationPolygonNum = crg.GetCphCount() - 1;
+            //double dblEstComp
+            var EstimateEt = EstimateInteriorLength(crg, lscrg).GetEnumerator();
+            int intEstCount = crg.GetCphCount() - 1;
             while (EstimateEt.MoveNext())
             {
-                double dblEdgeLength = crg.dblExteriorSegmentLength + 2 * EstimateEt.Current;
-                yield return EstimateCompactnessEdgeLengthOneCrgInstance(intEstimationPolygonNum--, crg.dblArea, dblEdgeLength);
+                double dblEdgeLength = crg.dblExteriorSegLength + 2 * EstimateEt.Current;
+                yield return EstimateCompEdgeLengthOneCrgInstance(intEstCount--, crg.dblArea, dblEdgeLength);
             }
         }
 
-        private double EstimateCompactnessEdgeLengthOneCrgInstance(int intPatchNum, double dblArea, double dblLength)
+        private double EstimateCompEdgeLengthOneCrgInstance(int intPatchNum, double dblArea, double dblLength)
         {
-            double dblEstimatedCompactness = 2 * Math.Sqrt(Math.PI * intPatchNum * dblArea) / dblLength;
+            double dblEstComp = 2 * Math.Sqrt(Math.PI * intPatchNum * dblArea) / dblLength;
 
-            if (dblEstimatedCompactness > 1)
+            if (dblEstComp > 1)
             {
                 return 1;
             }
-            return dblEstimatedCompactness;
+            return dblEstComp;
         }
         #endregion
 
-        #region BalancedEstimatedCompactnessInteriorLength_Basic
-        private double BalancedEstimatedCompactnessInteriorLength_Basic(CRegion crg, CRegion lscrg)
+        #region BalancedEstCompInteriorLength_Basic
+        private double BalancedEstCompInteriorLength_Basic(CRegion crg, CRegion lscrg)
         {
-            if (crg.GetCphCount() == 1)
+            // if lscrg.GetCphCount() <= 2, the domain only have two polygons
+            // A value will be divided by (lscrg.GetCphCount() - 2). To avoid being divided by 0, we directly return 0.
+            if (lscrg.GetCphCount() <= 2)
             {
                 return 0;
             }
 
-            var EstimateEt = EstimateInteriorLength(crg).GetEnumerator();
-
-            //n-t == crg.GetCphCount() - 1
-            int intNminusT = crg.GetCphCount() - 1;
-            //we include current step so that we can make the ration type/comp
-            double dblSumCompValue = crg.dblInteriorSegmentLength / intNminusT;  
-            while (EstimateEt.MoveNext())
+            var EstimateLt = EstimateInteriorLength(crg, lscrg);
+            double dblSum = 0;
+            for (int i = 0; i < EstimateLt.Count; i++)
             {
-                intNminusT--;
-                dblSumCompValue += EstimateEt.Current / intNminusT;
+                dblSum += (EstimateLt[i] / (i + 1));
             }
 
-            return dblSumCompValue / lscrg.dblInteriorSegmentLength;
+            return dblSum / (lscrg.dblInteriorSegLength / (lscrg.GetCphCount() - 1)) / (lscrg.GetCphCount() - 2);
         }
 
         /// <summary>
@@ -1049,31 +1245,43 @@ namespace MorphingClass.CGeometry
         /// <param name="crg"></param>
         /// <param name="lscrg"></param>
         /// <returns></returns>
-        private IEnumerable<double> EstimateInteriorLength(CRegion crg)
+        /// <remarks>from time t to n-1</remarks>
+        private List<double> EstimateInteriorLength(CRegion crg, CRegion lscrg)
         {
-            int intPolygonNum = crg.GetCphCount();
-            var dblSegmentLengthSS = new SortedSet<double>(new CDblCompare());  //items in dblEdgeLengthSS is ordered from largest to smallest
+            var dblSegLengthSS = new SortedSet<double>(new CCompareDbl());  //items in dblEdgeLengthSS is ordered from largest to smallest
             foreach (var pCorrCphs in crg.AdjCorrCphsSD.Keys)
             {
-                dblSegmentLengthSS.Add(pCorrCphs.dblSharedSegmentLength);
+                dblSegLengthSS.Add(pCorrCphs.dblSharedSegLength);
             }
-            IEnumerator<double> dblSegmentLengthSSEt = dblSegmentLengthSS.GetEnumerator();            
+            IEnumerator<double> dblSegLengthSSEt = dblSegLengthSS.GetEnumerator();
 
+
+            int intEstCount = crg.GetCphCount();
+            //if intEstCount == lscrg.GetCphCount(), we are estimating from the start map (t==1)
+            //we define that the estimation value of the start map is 0, therefore we skip intEstCount == lscrg.GetCphCount()
+            if (crg.GetCphCount() == lscrg.GetCphCount())
+            {
+                intEstCount--;
+            }
+
+            //from time n-1 to t
             //we compute from the last step (only one interior boundary) to the current step (many interior boundaries).             
             double dblInteriorLength = 0;
-            var dblInteriorLengthLt = new List<double>(intPolygonNum - 2);
-            for (int i = 0; i < intPolygonNum - 2; i++)
+            var dblInteriorLengthLt = new List<double>(intEstCount - 1);
+            for (int i = 0; i < intEstCount - 1; i++)
             {
-                dblSegmentLengthSSEt.MoveNext();
-                dblInteriorLength += dblSegmentLengthSSEt.Current;
+                dblSegLengthSSEt.MoveNext();
+                dblInteriorLength += dblSegLengthSSEt.Current;
 
                 dblInteriorLengthLt.Add(dblInteriorLength);
             }
 
-            for (int i = 0; i < dblInteriorLengthLt.Count; i++)
-            {
-                yield return dblInteriorLengthLt[dblInteriorLengthLt.Count - i - 1];
-            }
+            return dblInteriorLengthLt;
+
+            //for (int i = 0; i < dblInteriorLengthLt.Count; i++)
+            //{
+            //    yield return dblInteriorLengthLt[dblInteriorLengthLt.Count - i - 1];
+            //}
         }
 
 
@@ -1081,7 +1289,7 @@ namespace MorphingClass.CGeometry
 
 
         ////**************estimate the first step considering type changing
-        //private double EstimateCompactnessForFirstStep(CRegion crg)
+        //private double EstimateCompForFirstStep(CRegion crg)
         //{
         //    double dblMaxMinComp = 0;
 
@@ -1091,7 +1299,7 @@ namespace MorphingClass.CGeometry
         //        pCphTypeIndexSD_Area_CphGID.Remove(pAdjacency_CorrCphs.FrCph);
         //        pCphTypeIndexSD_Area_CphGID.Remove(pAdjacency_CorrCphs.ToCph);
 
-        //        var newcph = pAdjacency_CorrCphs.FrCph.Unite(pAdjacency_CorrCphs.ToCph, pAdjacency_CorrCphs.dblSharedSegmentLength);
+        //        var newcph = pAdjacency_CorrCphs.FrCph.Unite(pAdjacency_CorrCphs.ToCph, pAdjacency_CorrCphs.dblSharedSegLength);
         //        pCphTypeIndexSD_Area_CphGID.Add(newcph);
 
         //        dblMaxMinComp = Math.Max(dblMaxMinComp, pCphTypeIndexSD_Area_CphGID.Min(cph => cph.dblComp));
@@ -1131,7 +1339,7 @@ namespace MorphingClass.CGeometry
         //    }
 
         //    intEdgeCountAtmost -= intEdgeCount;
-        //    dblSumCompValue +=  EstimateCompactnessForOneCrgInstance(intEdgeCountAtmost);
+        //    dblSumCompValue +=  EstimateCompForOneCrgInstance(intEdgeCountAtmost);
 
         //    intCount--;
         //}
@@ -1163,17 +1371,17 @@ namespace MorphingClass.CGeometry
         //    var ParentCrg = NewCrg.parent;
         //    //double dblCostType = passivecph.dblArea * padblTD[intactiveTypeIndex, intpassiveTypeIndex];
         //    NewCrg.dblCostExactType = ParentCrg.dblCostExactType + passivecph.dblArea * padblTD[intactiveTypeIndex, intpassiveTypeIndex];
-        //    NewCrg.dblCostEstimatedType = ParentCrg.dblCostEstimatedType + intFactor*passivecph.dblArea * (padblTD[intactiveTypeIndex, intFinalTypeIndex] - padblTD[intpassiveTypeIndex, intFinalTypeIndex]);
+        //    NewCrg.dblCostEstType = ParentCrg.dblCostEstType + intFactor*passivecph.dblArea * (padblTD[intactiveTypeIndex, intFinalTypeIndex] - padblTD[intpassiveTypeIndex, intFinalTypeIndex]);
 
 
 
         //    if (CConstants.strShapeConstraint == "MaximizeMinArea")
         //    {
         //        //NewCrg.dblCostExactArea = ParentCrg.dblCostExactArea + passivecph.dblArea * ComputeCostArea(NewCrg.CphTypeIndexSD.Keys, NewCrg.dblArea);
-        //        //NewCrg.dblCostEstimatedArea = intFactor*EstimateSumMinArea(NewCrg);  //will we do this twice????
+        //        //NewCrg.dblCostEstArea = intFactor*EstimateSumMinArea(NewCrg);  //will we do this twice????
 
         //        //NewCrg.dblCostExact = NewCrg.dblCostExactType + NewCrg.dblCostExactArea;
-        //        //NewCrg.dblCo stEstimated = NewCrg.dblCostEstimatedType + NewCrg.dblCostEstimatedArea;
+        //        //NewCrg.dblCo stEstimated = NewCrg.dblCostEstType + NewCrg.dblCostEstArea;
         //    }
         //    else if (CConstants.strShapeConstraint == "MaximizeAvgComp")
         //    {
@@ -1181,26 +1389,26 @@ namespace MorphingClass.CGeometry
 
         //        if (intTimeNum > 2)
         //        {
-        //            NewCrg.dblCostExactCompactness = ParentCrg.dblCostExactCompactness + NewCrg.dblSumComp / (intTimeNum - 1);   //divide by intTimeNum because at each step, the value for AvgComp can be 1; intTimeNum - 1 == LSCrg.GetCphCount() - 2
+        //            NewCrg.dblCostExactComp = ParentCrg.dblCostExactComp + NewCrg.dblSumComp / (intTimeNum - 1);   //divide by intTimeNum because at each step, the value for AvgComp can be 1; intTimeNum - 1 == LSCrg.GetCphCount() - 2
         //        }
         //        else
         //        {
-        //            NewCrg.dblCostExactCompactness = 0;
+        //            NewCrg.dblCostExactComp = 0;
         //        }
-        //        NewCrg.dblCostEstimatedCompactness = intFactor * EstimateAvgCompes(NewCrg, intTimeNum);
+        //        NewCrg.dblCostEstComp = intFactor * EstimateAvgCompes(NewCrg, intTimeNum);
 
 
-        //        NewCrg.dblCostExact = NewCrg.dblCostExactType + NewCrg.dblCostExactCompactness;
-        //        NewCrg.dblCostEstimated = NewCrg.dblCostEstimatedType + NewCrg.dblCostEstimatedCompactness;
+        //        NewCrg.dblCostExact = NewCrg.dblCostExactType + NewCrg.dblCostExactComp;
+        //        NewCrg.dblCostEst = NewCrg.dblCostEstType + NewCrg.dblCostEstComp;
         //    }
         //    else if (CConstants.strShapeConstraint == "NonShape")
         //    {
         //        NewCrg.dblCostExact = NewCrg.dblCostExactType;
-        //        NewCrg.dblCostEstimated = NewCrg.dblCostEstimatedType;
+        //        NewCrg.dblCostEst = NewCrg.dblCostEstType;
         //    }
 
         //    //double dblWeight = 0.5;
-        //    NewCrg.d = NewCrg.dblCostExact + NewCrg.dblCostEstimated;
+        //    NewCrg.d = NewCrg.dblCostExact + NewCrg.dblCostEst;
         //}
 
         //public double EstimateSumMinArea(CRegion pCrg)

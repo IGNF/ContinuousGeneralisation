@@ -14,7 +14,7 @@ namespace MorphingClass.CUtility
     //return -1:put the first variable in front of the second one
     public class CCompareMethods
     {
-       //public static CCompareDblVerySmall _pCompareDblVerySmall = new CCompareDblVerySmall();
+       //public static CCompareDbl_VerySmall _pCompareDbl_VerySmall = new CCompareDbl_VerySmall();
 
         public static bool ConvertCompareToBool(int intCompare)
         {
@@ -48,24 +48,31 @@ namespace MorphingClass.CUtility
         //    return iResult;
         //}
 
+        ///// <summary>
+        ///// Compare two doubles
+        ///// </summary>
+        ///// <returns>1, if the first parameter larger than the second one; -1, smaller; 0, equal</returns>
+        ///// <remarks>please notice that the default value of _dblVerySmall is 0.0000000000000001, but we usually set a new _dblVerySmall with respect to the data</remarks>
+        //public static int Compare(double dbl1, double dbl2)
+        //{
+        //    return CompareDbl(dbl1, dbl2);
+        //}
+
+        //public static int CompareSlope(double dbl1, double dbl2)
+        //{
+        //    return CompareDbl(dbl1, dbl2);
+        //}
+
         /// <summary>
         /// Compare two doubles
         /// </summary>
         /// <returns>1, if the first parameter larger than the second one; -1, smaller; 0, equal</returns>
         /// <remarks>please notice that the default value of _dblVerySmall is 0.0000000000000001, but we usually set a new _dblVerySmall with respect to the data</remarks>
-        public static int Compare(double dbl1, double dbl2)
-        {
-            return CompareDbl(dbl1, dbl2, CConstants.dblVerySmall);
-        }
-
-        public static int CompareSlope(double dbl1, double dbl2)
-        {
-            return CompareDbl(dbl1, dbl2, CConstants.dblVerySmallSlope);
-        }
-
-        private  static int CompareDbl(double dbl1, double dbl2, double dblVerySmall)
+        public static int CompareDbl_VerySmall(double dbl1, double dbl2)
         {
             //dblVerySmall = 0.1;
+
+            double dblVerySmall = CConstants.dblVerySmallSlope;
 
             double dblDiff = dbl1 - dbl2;
 
@@ -148,14 +155,26 @@ namespace MorphingClass.CUtility
         /// </summary>
         /// <returns>1, if the first parameter larger than the second one; -1, smaller; 0, equal</returns>
         /// <remarks>First comapre y coordinates. If the two points have the same y coordinates, then compare x coordinates</remarks>
-        public static int CompareCptYX(CPoint cpt1, CPoint cpt2)
+        public static int CompareCptYX(CPoint cpt1, CPoint cpt2, bool blnVerySmall = true)
         {
-            return CompareDual(cpt1, cpt2, cpt => cpt.Y, cpt => cpt.X);
+            IComparer<double> cmp = null;
+            if (blnVerySmall==true)
+            {
+                cmp = CCompareDbl_VerySmall.pCompareDbl_VerySmall;
+            }
+
+            return CompareDual(cpt1, cpt2, cpt => cpt.Y, cpt => cpt.X, cmp, cmp);
         }
 
-        public static int CompareXY(CPoint cpt1, CPoint cpt2)
+        public static int CompareCptXY(CPoint cpt1, CPoint cpt2, bool blnVerySmall = true)
         {
-            return CompareDual(cpt1, cpt2, cpt => cpt.X, cpt => cpt.Y);
+            IComparer<double> cmp = null;
+            if (blnVerySmall == true)
+            {
+                cmp = CCompareDbl_VerySmall.pCompareDbl_VerySmall;
+            }
+
+            return CompareDual(cpt1, cpt2, cpt => cpt.X, cpt => cpt.Y, cmp, cmp);
         }
 
 
@@ -214,7 +233,7 @@ namespace MorphingClass.CUtility
 
         public static int CompareCRegion_CphGIDTypeIndex(CRegion crg1, CRegion crg2)
         {
-            int intResult = crg1.CphTypeIndexSD_Area_CphGID.Count.CompareTo(crg2.CphTypeIndexSD_Area_CphGID.Count);
+            int intResult = crg1.GetCphCount().CompareTo(crg2.GetCphCount());
 
             if (intResult==0)
             {
@@ -228,12 +247,12 @@ namespace MorphingClass.CUtility
 
             if (intResult == 0)
             {
-                intResult = CCompareMethods.CompareWithSameElements(crg1.CphTypeIndexSD_Area_CphGID, crg2.CphTypeIndexSD_Area_CphGID, CphTypeIndexKVP => CphTypeIndexKVP.Key);  //this will compare the GID of every CPatch in the two SortedDictionary
+                intResult = CCompareMethods.CompareWithSameElements(crg1.GetCphCol(), crg2.GetCphCol(), cph => cph);  //this will compare the GID of every CPatch in the two SortedDictionary
             }
-    
+
             if (intResult == 0)
             {
-                intResult = CCompareMethods.CompareWithSameElements(crg1.CphTypeIndexSD_Area_CphGID, crg2.CphTypeIndexSD_Area_CphGID, CphTypeIndexKVP => CphTypeIndexKVP.Value);
+                intResult = CCompareMethods.CompareWithSameElements(crg1.GetCphTypeIndexCol(), crg2.GetCphTypeIndexCol(), intTypeIndex => intTypeIndex);
             }
             return intResult;
         }
@@ -423,8 +442,8 @@ namespace MorphingClass.CUtility
         ///           5    If dblValue is larger than dblbound1 and larger than dblbound2,</returns>
         public static int CompareIncrease(double dblValue, double dblbound1, double dblbound2)
         {
-            int intCompare1 = Compare(dblValue, dblbound1);
-            int intCompare2 = Compare(dblValue, dblbound2);
+            int intCompare1 = CompareDbl_VerySmall(dblValue, dblbound1);
+            int intCompare2 = CompareDbl_VerySmall(dblValue, dblbound2);
 
             if (intCompare1 == -1)
             {
@@ -510,7 +529,8 @@ namespace MorphingClass.CUtility
         /// <param name="orderFunc2"></param>
         /// <param name="cmp"></param>
         /// <returns></returns>
-        public static int CompareDual<T, TOrder1, TOrder2>(T T1, T T2, Func<T, TOrder1> orderFunc1, Func<T, TOrder2> orderFunc2, IComparer<TOrder1> cmp1 = null, IComparer<TOrder2> cmp2 = null)
+        public static int CompareDual<T, TOrder1, TOrder2>(T T1, T T2, Func<T, TOrder1> orderFunc1, 
+            Func<T, TOrder2> orderFunc2, IComparer<TOrder1> cmp1 = null, IComparer<TOrder2> cmp2 = null)
         {
             if (cmp1 == null) { cmp1 = Comparer<TOrder1>.Default; }
             if (cmp2 == null) { cmp2 = Comparer<TOrder2>.Default; }

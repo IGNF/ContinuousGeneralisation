@@ -44,7 +44,7 @@ namespace MorphingClass.CGeometry
 
         private SortedDictionary<CPoint, CPoint> TestCloseCpts(List<CPoint> cptlt)
         {
-           var cptSD = cptlt.ToSD(cpt => cpt, new CCompareCptYX());
+           var cptSD = cptlt.ToSD(cpt => cpt, CCompareCptYX_VerySmall.pCompareCptYX_VerySmall);
 
            if (cptSD.Count == cptlt.Count)
            {
@@ -355,7 +355,7 @@ namespace MorphingClass.CGeometry
 
         private int CompareCptltAndNode(List <CPoint > cptlt1, List <CPoint > cptlt2)
         {
-            var cptSD = cptlt1.ToSD(cpt => cpt, new CCompareCptYX());
+            var cptSD = cptlt1.ToSD(cpt => cpt, new CCompareCptYX_VerySmall());
             foreach (var cpt2 in cptlt2)
             {
                 cptSD.Remove(cpt2);

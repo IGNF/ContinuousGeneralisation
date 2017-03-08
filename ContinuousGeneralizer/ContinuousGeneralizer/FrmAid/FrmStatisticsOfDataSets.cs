@@ -11,7 +11,7 @@ using ESRI.ArcGIS.ADF;
 using ESRI.ArcGIS.ADF.BaseClasses;
 using ESRI.ArcGIS.ADF.CATIDs;
 using ESRI.ArcGIS.ADF.COMSupport;
-using ESRI.ArcGIS.ADF.Resources;
+//using ESRI.ArcGIS.ADF.Resources;
 using ESRI.ArcGIS.Analyst3D;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Controls;

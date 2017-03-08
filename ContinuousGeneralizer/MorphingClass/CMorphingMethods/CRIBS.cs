@@ -232,13 +232,13 @@ namespace MorphingClass.CMorphingMethods
         public List<CCorrespondBend> BendTreeMatch(CBendForest CFromBendForest, CBendForest CToBendForest, CParameterThreshold ParameterThreshold,CParameterInitialize pParameterInitialize)
         {
             //大比例尺独立弯曲
-            SortedDictionary<double, CBend> pFromIndependBendSlt = new SortedDictionary<double, CBend>(new CDblCompare());
+            SortedDictionary<double, CBend> pFromIndependBendSlt = new SortedDictionary<double, CBend>(new CCompareDbl());
             for (int i = 0; i < CFromBendForest.Count; i++)
             {
                 pFromIndependBendSlt.Add(CFromBendForest.ElementAt(i).Value.dblStartRL, CFromBendForest.ElementAt(i).Value);
             }
             //小比例尺独立弯曲
-            SortedDictionary<double, CBend> pToIndependBendSlt = new SortedDictionary<double, CBend>(new CDblCompare());
+            SortedDictionary<double, CBend> pToIndependBendSlt = new SortedDictionary<double, CBend>(new CCompareDbl());
             for (int i = 0; i < CToBendForest.Count; i++)
             {
                 pToIndependBendSlt.Add(CToBendForest.ElementAt(i).Value.dblStartRL, CToBendForest.ElementAt(i).Value);

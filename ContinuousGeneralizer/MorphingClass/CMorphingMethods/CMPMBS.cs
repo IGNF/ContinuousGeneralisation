@@ -107,7 +107,7 @@ namespace MorphingClass.CMorphingMethods
             ////ParameterThreshold.dblToLength = tocpl.pPolyline.Length;
 
             ////List<double> dblTranslationLt = new List<double>();
-            ////SortedList<double, int> ResultsSlt = new SortedList<double, int>(new CDblCompare());
+            ////SortedList<double, int> ResultsSlt = new SortedList<double, int>(new CCompareDbl());
 
             ////计算阈值参数
             //double dblBound = 0.98;
@@ -164,7 +164,7 @@ namespace MorphingClass.CMorphingMethods
 
 
             ////必须重新算一遍！！！！！！
-            ////理由：如果采用SortedList<double, CParameterResult> ResultsSlt = new SortedList<double, CParameterResult>(new CDblCompare())记录结果，
+            ////理由：如果采用SortedList<double, CParameterResult> ResultsSlt = new SortedList<double, CParameterResult>(new CCompareDbl())记录结果，
             ////      则由于基本单位是CPoint，最后必然影响CParameterResult中的ResultPtLt值
             //int intIndex = ResultsSlt.Values[0];
             //ParameterThreshold.dblDLengthBound = 1 * (1 - 0.02 * intIndex);

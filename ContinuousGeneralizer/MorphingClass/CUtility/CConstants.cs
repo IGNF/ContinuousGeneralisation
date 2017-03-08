@@ -22,7 +22,7 @@ namespace MorphingClass.CUtility
         //10 X e6 is not good for calculate integral
         //10 X e4 and 10 X e5 is not good for constructing compatible triangulations of data Jiangxionecounty, because there are some intersections too close each other and we may identify a InIn relationship to InFr relationship
         //10 X e6 is not good for constructing compatible triangulations of data MainlandChina, because there are some intersections too close each other and we may identify a InIn relationship to InFr relationship; 10 X e7 works well
-        private static double _dblVerySmallDenominator = 1000000; //I test it many times. it seems 10 X e6 is appropriate value. This value may need change when we have different data sets
+        public static double _dblVerySmallDenominator = 1000000; //I test it many times. it seems 10 X e6 is appropriate value. This value may need change when we have different data sets
         private static double _dblSmallDisDenominator = 1000;
         private static double _dblSpecialValue = -Math.Pow(Math.PI, 10);  //we use the special value to initial some number
         private static double _dblTwoPI = 2 * Math.PI;
@@ -38,32 +38,22 @@ namespace MorphingClass.CUtility
         public static int _intMaxTypeChange = 6;
 
         private static string _strFmtIDs6="{0,3}{1,10}{2,13}{3,10}{4,9}{5,10}";
-        private static Comparer<int> _ComparerInt = Comparer<int>.Default;
-        private static Comparer<double> _ComparerDbl = Comparer<double>.Default;
 
         public static bool blnComputeMinComp { set; get; }
         public static bool blnComputeAvgComp { set; get; }
 
         public static string strMethod { set; get; }
         public static string strShapeConstraint { set; get; }
-            //        var output = string.Format("{0,3}{1,10}{2,13}{3,10}{4,9}{5,10}{6,7}{7,22}{8,7}{9,22}",
-            //    "ID:", this.ID, ";    indexID:", this.indexID , ";    GID:" , this.GID , ";    X:", this.X , ";    Y:", this.Y);
-            //Console.WriteLine(output);
+        //        var output = string.Format("{0,3}{1,10}{2,13}{3,10}{4,9}{5,10}{6,7}{7,22}{8,7}{9,22}",
+        //    "ID:", this.ID, ";    indexID:", this.indexID , ";    GID:" , this.GID , ";    X:", this.X , ";    Y:", this.Y);
+        //Console.WriteLine(output);
         //private static SortedSet
 
         //private static int _intCptGID = 0;
         //private static int _intCplGID = 0;
         //private static int _intCpgGID = 0;
 
-        public static Comparer<int> ComparerInt
-        {
-            get { return _ComparerInt; }
-        }
-
-        public static Comparer<double> ComparerDbl
-        {
-            get { return _ComparerDbl; }
-        }
+        public static double dblVeryLarge { set; get; } = double.MaxValue / 3;
 
         public static int intMaxTypeChange
         {

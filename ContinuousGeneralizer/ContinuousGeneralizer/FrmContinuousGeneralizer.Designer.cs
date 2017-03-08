@@ -34,7 +34,6 @@ namespace ContinuousGeneralizer
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmContinuousGeneralizer));
-            this.axMapControl = new ESRI.ArcGIS.Controls.AxMapControl();
             this.mnuORB = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSimAngle3 = new System.Windows.Forms.ToolStripMenuItem();
@@ -83,6 +82,7 @@ namespace ContinuousGeneralizer
             this.tbcRight = new System.Windows.Forms.TabControl();
             this.tabPageMap = new System.Windows.Forms.TabPage();
             this.axLicenseControl1 = new ESRI.ArcGIS.Controls.AxLicenseControl();
+            this.axMapControl = new ESRI.ArcGIS.Controls.AxMapControl();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.txtT = new System.Windows.Forms.TextBox();
             this.txtVtPV = new System.Windows.Forms.TextBox();
@@ -163,10 +163,10 @@ namespace ContinuousGeneralizer
             this.ststMain = new System.Windows.Forms.StatusStrip();
             this.tsslTime = new System.Windows.Forms.ToolStripStatusLabel();
             this.tspbMain = new System.Windows.Forms.ToolStripProgressBar();
-            ((System.ComponentModel.ISupportInitialize)(this.axMapControl)).BeginInit();
             this.tbcRight.SuspendLayout();
             this.tabPageMap.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axLicenseControl1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.axMapControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -190,20 +190,6 @@ namespace ContinuousGeneralizer
             this.menuStrip.SuspendLayout();
             this.ststMain.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // axMapControl
-            // 
-            this.axMapControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.axMapControl.Location = new System.Drawing.Point(3, 3);
-            this.axMapControl.Name = "axMapControl";
-            this.axMapControl.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axMapControl.OcxState")));
-            this.axMapControl.Size = new System.Drawing.Size(897, 585);
-            this.axMapControl.TabIndex = 4;
-            this.axMapControl.OnMouseDown += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseDownEventHandler(this.axMapControl_OnMouseDown);
-            this.axMapControl.OnMouseMove += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseMoveEventHandler(this.axMapControl_OnMouseMove);
-            this.axMapControl.OnAfterScreenDraw += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnAfterScreenDrawEventHandler(this.axMapControl_OnAfterScreenDraw);
-            this.axMapControl.OnExtentUpdated += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnExtentUpdatedEventHandler(this.axMapControl_OnExtentUpdated);
-            this.axMapControl.OnMapReplaced += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMapReplacedEventHandler(this.axMapControl_OnMapReplaced);
             // 
             // mnuORB
             // 
@@ -584,11 +570,24 @@ namespace ContinuousGeneralizer
             // axLicenseControl1
             // 
             this.axLicenseControl1.Enabled = true;
-            this.axLicenseControl1.Location = new System.Drawing.Point(309, 182);
+            this.axLicenseControl1.Location = new System.Drawing.Point(355, 218);
             this.axLicenseControl1.Name = "axLicenseControl1";
             this.axLicenseControl1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axLicenseControl1.OcxState")));
             this.axLicenseControl1.Size = new System.Drawing.Size(32, 32);
             this.axLicenseControl1.TabIndex = 5;
+            // 
+            // axMapControl
+            // 
+            this.axMapControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.axMapControl.Location = new System.Drawing.Point(3, 3);
+            this.axMapControl.Name = "axMapControl";
+            this.axMapControl.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axMapControl.OcxState")));
+            this.axMapControl.Size = new System.Drawing.Size(897, 585);
+            this.axMapControl.TabIndex = 7;
+            this.axMapControl.OnMouseMove += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseMoveEventHandler(this.axMapControl_OnMouseMove);
+            this.axMapControl.OnAfterScreenDraw += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnAfterScreenDrawEventHandler(this.axMapControl_OnAfterScreenDraw);
+            this.axMapControl.OnExtentUpdated += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnExtentUpdatedEventHandler(this.axMapControl_OnExtentUpdated);
+            this.axMapControl.OnMapReplaced += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMapReplacedEventHandler(this.axMapControl_OnMapReplaced);
             // 
             // splitContainer2
             // 
@@ -1306,10 +1305,10 @@ namespace ContinuousGeneralizer
             this.Text = "ContinuousGeneralizer";
             this.Load += new System.EventHandler(this.frmContinuousGeneralizer_Load);
             this.Shown += new System.EventHandler(this.FrmContinuousGeneralizer_Shown);
-            ((System.ComponentModel.ISupportInitialize)(this.axMapControl)).EndInit();
             this.tbcRight.ResumeLayout(false);
             this.tabPageMap.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.axLicenseControl1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.axMapControl)).EndInit();
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
@@ -1342,8 +1341,6 @@ namespace ContinuousGeneralizer
         }
 
         #endregion
-
-        private ESRI.ArcGIS.Controls.AxMapControl axMapControl;
         private System.Windows.Forms.ToolStripMenuItem mnuORB;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem mnuSimAngle3;
@@ -1472,7 +1469,7 @@ namespace ContinuousGeneralizer
         private System.Windows.Forms.ToolStripMenuItem mnuClear;
         private System.Windows.Forms.ToolStripMenuItem kARSToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mnuExtractPossibleFiles;
-
+        private ESRI.ArcGIS.Controls.AxMapControl axMapControl;
     }
 }
 

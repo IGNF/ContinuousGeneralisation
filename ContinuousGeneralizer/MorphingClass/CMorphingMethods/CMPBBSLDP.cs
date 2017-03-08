@@ -137,7 +137,7 @@ namespace MorphingClass.CMorphingMethods
             //ParameterThreshold.dblAngleBound = 0.262;
 
             //List<double> dblTranslationLt = new List<double>(26);
-            //SortedDictionary<double, int> ResultsSlt = new SortedDictionary<double, int>(new CDblCompare());
+            //SortedDictionary<double, int> ResultsSlt = new SortedDictionary<double, int>(new CCompareDbl());
             ////循环的方法适合找最优值
             //for (int i = 0; i <= 25; i++)
             //{
@@ -174,7 +174,7 @@ namespace MorphingClass.CMorphingMethods
 
 
             ////必须重新算一遍！！！！！！
-            ////理由：如果采用SortedList<double, CParameterResult> ResultsSlt = new SortedList<double, CParameterResult>(new CDblCompare())记录结果，
+            ////理由：如果采用SortedList<double, CParameterResult> ResultsSlt = new SortedList<double, CParameterResult>(new CCompareDbl())记录结果，
             ////      则由于基本单位是CPoint（类似调用指针），最后必然影响CParameterResult中的ResultPtLt值
             //int intIndex = ResultsSlt.ElementAt(0).Value;
             //ParameterThreshold.dblDLengthBound = 1 * (1 - 0.02 * intIndex);

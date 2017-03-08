@@ -51,19 +51,27 @@ namespace MorphingClass.CGeneralizationMethods
              switch (strMethod)
              {
                  case "AStar":
-                     CRegion._lngEstimationCountEdgeNumber = 0;
-                     CRegion._lngEstimationCountEdgeLength = 0;
-                     CRegion._lngEstimationCountEqual = 0;
-                     
+                     CRegion._lngEstCountEdgeNumber = 0;
+                     CRegion._lngEstCountEdgeLength = 0;
+                     CRegion._lngEstCountEqual = 0;
+
+                    //CRegion._pCrg = new CGeometry.CRegion();
+                    //CRegion._pCrg
+
+
+
+
+
+
                      for (int i = _intStart; i < _intEnd; i++)
                      {
                          AStar(LSCrgLt[i], SSCrgLt[i], this.StrObjLtSD, _ParameterInitialize.strAreaAggregation, this._adblTD, intQuitCount);
                      }
-                     Console.WriteLine();
-                     Console.WriteLine("Estimation functions that we used:");
-                     Console.WriteLine("By EdgeNumber: " + CRegion._lngEstimationCountEdgeNumber +
-                         ";   By EdgeLength: " + CRegion._lngEstimationCountEdgeLength +
-                         ";   EqualCases: " + CRegion._lngEstimationCountEqual);
+                     //Console.WriteLine();
+                     //Console.WriteLine("Estimation functions that we used:");
+                     //Console.WriteLine("By EdgeNumber: " + CRegion._lngEstCountEdgeNumber +
+                     //    ";   By EdgeLength: " + CRegion._lngEstCountEdgeLength +
+                     //    ";   EqualCases: " + CRegion._lngEstCountEqual);
                      break;
                  case "ILP":
                      for (int i = _intStart; i < _intEnd; i++)
@@ -399,13 +407,13 @@ namespace MorphingClass.CGeneralizationMethods
                 double dblNminusT = intCpgCount - i;
                 double dblTemp = (intCpgCount - i) * dblConst;
                 dblCompCostFirstPart += 1 / dblNminusT;
-                double dblNorm = lscrg.dblInteriorSegmentLength * dblNminusT;
+                double dblNorm = lscrg.dblInteriorSegLength * dblNminusT;
 
                 foreach (var pCorrCphs in pAdjCorrCphsSD.Keys)  //we don't need to divide the value by 2 because every boundary is only counted once
                 {
                     for (int l = 0; l < intCpgCount; l++)
                     {
-                        pCompCostSecondPartExpr.AddTerm(pCorrCphs.dblSharedSegmentLength / dblNorm, z[i - 2][pCorrCphs.FrCph.ID][pCorrCphs.ToCph.ID][l]);
+                        pCompCostSecondPartExpr.AddTerm(pCorrCphs.dblSharedSegLength / dblNorm, z[i - 2][pCorrCphs.FrCph.ID][pCorrCphs.ToCph.ID][l]);
                     }
                 }
             }
@@ -755,11 +763,11 @@ namespace MorphingClass.CGeneralizationMethods
                 writer.Write(strCphs);
             }
 
-            //Output LSCrg: ID Area dblInteriorSegmentLength intTargetTypeIndex {corrcphs: GID FrCph.ID ToCph.ID dblSharedSegmentLength ...}
-            string strLSCrg = LSCrg.ID + " " + LSCrg.dblArea + " " + LSCrg.dblInteriorSegmentLength + " " + SSCrg.CphTypeIndexSD_Area_CphGID.GetFirstT().Key.intTypeIndex + "\n";
+            //Output LSCrg: ID Area dblInteriorSegLength intTargetTypeIndex {corrcphs: GID FrCph.ID ToCph.ID dblSharedSegLength ...}
+            string strLSCrg = LSCrg.ID + " " + LSCrg.dblArea + " " + LSCrg.dblInteriorSegLength + " " + SSCrg.CphTypeIndexSD_Area_CphGID.GetFirstT().Key.intTypeIndex + "\n";
             foreach (var corrcphs in LSCrg.AdjCorrCphsSD.Keys)
             {
-                strLSCrg +=corrcphs.GID + " " + corrcphs.FrCph.ID + " " + corrcphs.ToCph.ID + " " + corrcphs.dblSharedSegmentLength + "\n";
+                strLSCrg +=corrcphs.GID + " " + corrcphs.FrCph.ID + " " + corrcphs.ToCph.ID + " " + corrcphs.dblSharedSegLength + "\n";
             }
             using (var writer = new StreamWriter(_ParameterInitialize.strSavePath + "\\" + LSCrg.ID + "\\" + "LSCrg.txt", false))
             {
@@ -818,9 +826,9 @@ namespace MorphingClass.CGeneralizationMethods
             
             Stopwatch pStopwatchOverHead = new Stopwatch();
             pStopwatchOverHead.Start();
-            int intFactor = _intFactor;
-            CRegion resultcrg = new CRegion(-2);
-            CRegion._intStartStaticGIDAll = CRegion._intStaticGID;
+            int intFactor = _intStartFactor;
+            
+            //CRegion._intStartStaticGIDAll = CRegion._intStaticGID;
             
 
             AddLineToStrObjLtSD(StrObjLtSD, LSCrg);
@@ -839,12 +847,13 @@ namespace MorphingClass.CGeneralizationMethods
             long lngTimeFirst = 0;
             long lngTimeLast = 0;
             long lngTimeAll = lngTimeOverHead;
+            CRegion resultcrg = new CRegion(-2);
             do
             {
                 try
                 {
                     
-                    CRegion._intStartStaticGIDLast = CRegion._intStaticGID;
+                    //CRegion._intStartStaticGIDLast = CRegion._intStaticGID;
                     pStopwatchLast.Restart();
                     var ExistingCorrCphsSD = new SortedDictionary<CCorrCphs, CCorrCphs>(ExistingCorrCphsSD0, ExistingCorrCphsSD0.Comparer);
                     LSCrg.cenumColor = CEnumColor.white;
@@ -870,18 +879,19 @@ namespace MorphingClass.CGeneralizationMethods
             StrObjLtSD.SetLastObj("Factor", intFactor);
             Console.WriteLine("d: " + resultcrg.d 
                 + "            Type: " + resultcrg.dblCostExactType 
-                + "            Compactness: " + resultcrg.dblCostExactCompactness);
+                + "            Compactness: " + resultcrg.dblCostExactComp);
 
-            int intExploredRegionAll = CRegion._intStaticGID - CRegion._intStartStaticGIDLast;  //we don't need to +1 because +1 is already included in _intStaticGID
+            //int intExploredRegionAll = CRegion._intStaticGID - CRegion._intStartStaticGIDLast;  //we don't need to +1 because +1 is already included in _intStaticGID
             double dblConsumedMemoryInMB = CHelperFunction.GetConsumedMemoryInMB(false);
 
-            StrObjLtSD.SetLastObj("#Edges", intExploredRegionAll);
+            StrObjLtSD.SetLastObj("#Edges", CRegion._intEdgeCount);
             StrObjLtSD.SetLastObj("TimeFirst(ms)", lngTimeFirst);
             StrObjLtSD.SetLastObj("TimeLast(ms)", lngTimeLast);
             StrObjLtSD.SetLastObj("Time(ms)", lngTimeAll);
             StrObjLtSD.SetLastObj("Memory(MB)", CHelperFunction.GetConsumedMemoryInMB(false, lngStartMemory));
 
-            Console.WriteLine("Factor:" + intFactor + "      We have visited " + intExploredRegionAll + " Regions.");
+            Console.WriteLine("Factor:" + intFactor + "      We have visited " + 
+                CRegion._intNodeCount + " Nodes and " + CRegion._intEdgeCount + " Edges.");
 
             return resultcrg;
         }
@@ -903,18 +913,19 @@ namespace MorphingClass.CGeneralizationMethods
                 ExistingCphSDLt.Add(Element);
             }
 
-            var ExistingCrgSDLt = new List<SortedDictionary<CRegion, CRegion>>(LSCrg.CphTypeIndexSD_Area_CphGID.Count + 1);
+            var ExistingCrgSDLt = new List<SortedDictionary<CRegion, CRegion>>(LSCrg.GetCphCount() + 1);
             for (int i = 0; i < ExistingCrgSDLt.Capacity; i++)
             {
                 var Element = new SortedDictionary<CRegion, CRegion>(CRegion.pCompareCRegion_CphGIDTypeIndex);  //we don't compare exact cost first because of there may be rounding problems 
                 ExistingCrgSDLt.Add(Element);
             }
-            ExistingCrgSDLt[LSCrg.CphTypeIndexSD_Area_CphGID.Count].Add(LSCrg, LSCrg);
+            ExistingCrgSDLt[LSCrg.GetCphCount()].Add(LSCrg, LSCrg);
 
             var FinalOneCphCrg = new CRegion(intRegionID);
             var Q = new SortedSet<CRegion>(CRegion.pCompareCRegion_Cost_CphGIDTypeIndex);
             int intCount = 0;
-            CRegion._intNodesCount = 1;
+            CRegion._intNodeCount = 1;
+            CRegion._intEdgeCount = 0;
             Q.Add(LSCrg);
             while (true)
             {
@@ -932,10 +943,10 @@ namespace MorphingClass.CGeneralizationMethods
 
                 //MessageBox.Show("click for next!");
 
-                //if (CConstants.strShapeConstraint == "MaximizeMinComp" || CConstants.strShapeConstraint == "MinimizeInteriorBoundaries")
+                //if (CConstants.strShapeConstraint == "MaximizeMinComp_EdgeNumber" || CConstants.strShapeConstraint == "MinimizeInteriorBoundaries")
                 //{
                 //    Console.WriteLine("Crg:  ID  " + u.ID + ";      GID:" + u.GID + ";      CphNum:" + u.CphTypeIndexSD_Area_CphGID.Count + ";      d:" + u.d +
-                //    ";      ExactCost:" + u.dblCostExact + ";      Compactness:" + u.dblCostExactCompactness + ";      Type:" + u.dblCostExactType / u.dblArea);
+                //    ";      ExactCost:" + u.dblCostExact + ";      Compactness:" + u.dblCostExactComp + ";      Type:" + u.dblCostExactType / u.dblArea);
                 //}
                 //else if (CConstants.strShapeConstraint == "NonShape")
                 //{
@@ -945,16 +956,16 @@ namespace MorphingClass.CGeneralizationMethods
 
                 //at the beginning, resultcrg.d is double.MaxValue. Later, when we first encounter that there is only one CPatch in LSCrg, resultcrg.d will be changed to the real cost
                 //u.d contains estimation, and resultcrg.d doesn't contains. if u.d > resultcrg.d, then resultcrg.d must already be the smallest cost
-                if (u.CphTypeIndexSD_Area_CphGID.Count == 1)
+                if (u.GetCphCount() == 1)
                 {
                     Console.WriteLine("The number of nodes we can forget:   " + intCount);
                     Console.WriteLine("The nodes in the stack:   " + Q.Count);
 
-                    int intCrgCount = 0;
-                    foreach (var item in ExistingCrgSDLt)
-                    {
-                        intCrgCount += item.Count;
-                    }
+                    //int intCrgCount = 0;
+                    //foreach (var item in ExistingCrgSDLt)
+                    //{
+                    //    intCrgCount += item.Count;
+                    //}
 
                     FinalOneCphCrg = u;
                     break;
@@ -963,9 +974,9 @@ namespace MorphingClass.CGeneralizationMethods
 
                 foreach (var newcrg in u.AggregateAndUpdateQ(LSCrg, SSCrg, Q, strAreaAggregation, ExistingCrgSDLt, ExistingCphSDLt, ExistingCorrCphsSD, intSSTypeIndex, _adblTD, intFactor))
                 {
-                    int intExploredRegionLast = CRegion._intStaticGID - CRegion._intStartStaticGIDLast;  //we don't need to +1 because +1 is already included in _intStaticGID
+                    //int intExploredRegionLast = CRegion._intStaticGID - CRegion._intStartStaticGIDLast;  //we don't need to +1 because +1 is already included in _intStaticGID
 
-                    if (intExploredRegionLast > intQuitCount)
+                    if (CRegion._intNodeCount > intQuitCount)
                     {
                         return new CRegion(-2);  //if we have visited 2000000 regions but haven't found an optimum aggregation sequence, then we return null and overestimate in the heuristic function 
                     }

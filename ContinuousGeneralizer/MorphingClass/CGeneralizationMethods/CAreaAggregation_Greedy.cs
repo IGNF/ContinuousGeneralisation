@@ -46,19 +46,14 @@ namespace MorphingClass.CGeneralizationMethods
             SetupBasic();
             
 
-            CRegion._lngEstimationCountEdgeNumber = 0;
-            CRegion._lngEstimationCountEdgeLength = 0;
-            CRegion._lngEstimationCountEqual = 0;
+            CRegion._lngEstCountEdgeNumber = 0;
+            CRegion._lngEstCountEdgeLength = 0;
+            CRegion._lngEstCountEqual = 0;
 
             for (int i = _intStart; i < _intEnd; i++)
             {
                 Greedy(LSCrgLt[i], SSCrgLt[i], this.StrObjLtSD, _ParameterInitialize.strAreaAggregation);
             }
-            Console.WriteLine();
-            Console.WriteLine("Estimation functions that we used:");
-            Console.WriteLine("By EdgeNumber: " + CRegion._lngEstimationCountEdgeNumber +
-                ";   By EdgeLength: " + CRegion._lngEstimationCountEdgeLength +
-                ";   EqualCases: " + CRegion._lngEstimationCountEqual);
 
         }
 
@@ -68,10 +63,7 @@ namespace MorphingClass.CGeneralizationMethods
             var ExistingCorrCphsSD0 = LSCrg.SetInitialAdjacency();  //also count the number of edges
 
             Stopwatch pStopwatchOverHead = new Stopwatch();
-            pStopwatchOverHead.Start();
-            int intFactor = _intFactor;
-            CRegion resultcrg = new CRegion(-2);
-            CRegion._intStartStaticGIDAll = CRegion._intStaticGID;
+            pStopwatchOverHead.Start();            
 
 
             AddLineToStrObjLtSD(StrObjLtSD, LSCrg);
@@ -86,61 +78,49 @@ namespace MorphingClass.CGeneralizationMethods
             pStopwatchOverHead.Stop();
 
             Stopwatch pStopwatchLast = new Stopwatch();
-            bool blnRecordTimeFirst = false;
-            long lngTimeFirst = 0;
-            long lngTimeLast = 0;
-            long lngTimeAll = lngTimeOverHead;
-            do
+            long lngTime = 0;
+
+            CRegion resultcrg = new CRegion(-2);
+            try
             {
-                try
-                {
-                    CRegion._intNodesCount = 1;
-                    CRegion._intStartStaticGIDLast = CRegion._intStaticGID;
-                    pStopwatchLast.Restart();
-                    var ExistingCorrCphsSD = new SortedDictionary<CCorrCphs, CCorrCphs>(ExistingCorrCphsSD0, ExistingCorrCphsSD0.Comparer);
-                    LSCrg.cenumColor = CEnumColor.white;
+                pStopwatchLast.Restart();
+                var ExistingCorrCphsSD = new SortedDictionary<CCorrCphs, CCorrCphs>(ExistingCorrCphsSD0, ExistingCorrCphsSD0.Comparer);
+                LSCrg.cenumColor = CEnumColor.white;
 
-                    resultcrg = Compute(LSCrg, SSCrg, strAreaAggregation, ExistingCorrCphsSD, StrObjLtSD, this._adblTD);
-                }
-                catch (System.OutOfMemoryException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
+                resultcrg = Compute(LSCrg, SSCrg, SSCrg.GetSoloCphTypeIndex(), strAreaAggregation, ExistingCorrCphsSD, StrObjLtSD, this._adblTD);
+            }
+            catch (System.OutOfMemoryException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            lngTime = pStopwatchLast.ElapsedMilliseconds + lngTimeOverHead;
 
-                if (blnRecordTimeFirst == false)
-                {
-                    lngTimeFirst = pStopwatchLast.ElapsedMilliseconds + lngTimeOverHead;
-                    blnRecordTimeFirst = true;
-                }
-                lngTimeLast = pStopwatchLast.ElapsedMilliseconds + lngTimeOverHead;
-                lngTimeAll += pStopwatchLast.ElapsedMilliseconds;
 
-                intFactor *= 2;
-            } while (resultcrg.ID == -2);
-            intFactor /= 2;
-            StrObjLtSD.SetLastObj("Factor", intFactor);
+            StrObjLtSD.SetLastObj("Factor", 1);
             Console.WriteLine("d: " + resultcrg.d
                 + "            Type: " + resultcrg.dblCostExactType
-                + "            Compactness: " + resultcrg.dblCostExactCompactness);
+                + "            Compactness: " + resultcrg.dblCostExactComp);
 
-            int intExploredRegionAll = CRegion._intStaticGID - CRegion._intStartStaticGIDLast;  //we don't need to +1 because +1 is already included in _intStaticGID
+            //int intExploredRegionAll = CRegion._intStaticGID - CRegion._intStartStaticGIDLast;  //we don't need to +1 because +1 is already included in _intStaticGID
             double dblConsumedMemoryInMB = CHelperFunction.GetConsumedMemoryInMB(false);
 
-            StrObjLtSD.SetLastObj("#Edges", intExploredRegionAll);
-            StrObjLtSD.SetLastObj("TimeFirst(ms)", lngTimeFirst);
-            StrObjLtSD.SetLastObj("TimeLast(ms)", lngTimeLast);
-            StrObjLtSD.SetLastObj("Time(ms)", lngTimeAll);
+            StrObjLtSD.SetLastObj("#Edges", CRegion._intEdgeCount);
+            StrObjLtSD.SetLastObj("TimeFirst(ms)", lngTime);
+            StrObjLtSD.SetLastObj("TimeLast(ms)", lngTime);
+            StrObjLtSD.SetLastObj("Time(ms)", lngTime);
             StrObjLtSD.SetLastObj("Memory(MB)", CHelperFunction.GetConsumedMemoryInMB(false, lngStartMemory));
 
-            Console.WriteLine("Factor:" + intFactor + "      We have visited " + intExploredRegionAll + " Regions.");
+            Console.WriteLine("We have visited " + 
+                CRegion._intNodeCount + " Nodes and " + CRegion._intEdgeCount + " Edges.");
 
             return resultcrg;
         }
 
-        private CRegion Compute(CRegion lscrg, CRegion sscrg, string strAreaAggregation,
+        private CRegion Compute(CRegion lscrg, CRegion sscrg, int intFinalTypeIndex, string strAreaAggregation,
             SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, CStrObjLtSD StrObjLtSD, double[,] padblTD)
         {
-            CRegion._intNodesCount = 1;
+            CRegion._intNodeCount = 1;
+            CRegion._intEdgeCount = 0;
             var currentCrg = lscrg;
 
             //after an aggregation, we whould have the largest compactness
@@ -162,8 +142,8 @@ namespace MorphingClass.CGeneralizationMethods
                 //}
 
                 CCphRecord pcphRecord = null;
-                if (CConstants.strShapeConstraint == "MaximizeMinComp" || CConstants.strShapeConstraint == "MaximizeMinComp_Combine" ||
-                    CConstants.strShapeConstraint == "MaximizeAvgComp" || CConstants.strShapeConstraint == "MaximizeAvgComp_Combine")
+                if (CConstants.strShapeConstraint == "MaximizeMinComp_EdgeNumber" || CConstants.strShapeConstraint == "MaximizeMinComp_Combine" ||
+                    CConstants.strShapeConstraint == "MaximizeAvgComp_EdgeNumber" || CConstants.strShapeConstraint == "MaximizeAvgComp_Combine")
                 {
                     pcphRecord = GetNeighborCphByCompactness(currentCrg, smallestcph);
                 }
@@ -174,10 +154,9 @@ namespace MorphingClass.CGeneralizationMethods
 
                 var neighborcph = pcphRecord.Cph;
                 var unitingCorrCphs = pcphRecord.CorrCphs;
-                var unitedcph = smallestcph.Unite(neighborcph, unitingCorrCphs.dblSharedSegmentLength);
+                var unitedcph = smallestcph.Unite(neighborcph, unitingCorrCphs.dblSharedSegLength);
                 CPatch activecph = neighborcph;
-                CPatch passivecph = smallestcph;
-                int intFinalTypeIndex = sscrg.GetCphTypeIndex(sscrg.GetSmallestCph());
+                CPatch passivecph = smallestcph;                
                 if (padblTD[currentCrg.GetCphTypeIndex(smallestcph), intFinalTypeIndex] <
                     padblTD[currentCrg.GetCphTypeIndex(neighborcph), intFinalTypeIndex])
                 {
@@ -196,11 +175,12 @@ namespace MorphingClass.CGeneralizationMethods
 
                 newcrg.d = newcrg.dblCostExact;
 
-                CRegion._intNodesCount++;
+                CRegion._intNodeCount++;
+                CRegion._intEdgeCount++;
                 currentCrg = newcrg;
             }
 
-            RecordResultForCrg(StrObjLtSD, lscrg, currentCrg, sscrg.GetSoloCphTypeIndex());
+            RecordResultForCrg(StrObjLtSD, lscrg, currentCrg, intFinalTypeIndex);
 
 
 
@@ -222,7 +202,7 @@ namespace MorphingClass.CGeneralizationMethods
             CCphRecord maxCphRecord = null;
             foreach (var cphrecord in CphRecordsEb)
             {
-                var unitedcph = cph.Unite(cphrecord.Cph, cphrecord.CorrCphs.dblSharedSegmentLength);
+                var unitedcph = cph.Unite(cphrecord.Cph, cphrecord.CorrCphs.dblSharedSegLength);
                 double dblNewSumComp = dblSumComp - cphrecord.Cph.dblComp + unitedcph.dblComp;
 
                 if (dblMaxSumComp < dblNewSumComp)
@@ -243,9 +223,10 @@ namespace MorphingClass.CGeneralizationMethods
             CCphRecord maxCphRecord = null;
             foreach (var cphrecord in CphRecordsEb)
             {
-                if (dblMaxSharedLength < cphrecord.CorrCphs.dblSharedSegmentLength)
+                if (dblMaxSharedLength < cphrecord.CorrCphs.dblSharedSegLength)
                 {
                     maxCphRecord = cphrecord;
+                    dblMaxSharedLength = cphrecord.CorrCphs.dblSharedSegLength;
                 }
             }
 

@@ -98,7 +98,7 @@ namespace MorphingClass.CGeometry
 
         private SortedDictionary<CPoint, List<CEdge>> IdentifyCoStartCEdge(List<CEdge> fHalfEdgeLt)
         {
-            SortedDictionary<CPoint, List<CEdge>> CoStartCEdgeSD = new SortedDictionary<CPoint, List<CEdge>>(new CCompareCptYX());
+            SortedDictionary<CPoint, List<CEdge>> CoStartCEdgeSD = new SortedDictionary<CPoint, List<CEdge>>(CCompareCptYX_VerySmall.pCompareCptYX_VerySmall);
             foreach (CEdge cedge in fHalfEdgeLt)
             {
                 List<CEdge> cedgeLt;
@@ -307,7 +307,7 @@ namespace MorphingClass.CGeometry
                 {
                     cedge.isTraversed = true;
                     cedge = cedge.cedgeNext;
-                    int intResult = CCompareMethods.CompareXY(lowestleftmostcpt, cedge.FrCpt);
+                    int intResult = CCompareMethods.CompareCptXY(lowestleftmostcpt, cedge.FrCpt);
                     if (intResult == 1)
                     {
                         lowestleftmostcpt = cedge.FrCpt;

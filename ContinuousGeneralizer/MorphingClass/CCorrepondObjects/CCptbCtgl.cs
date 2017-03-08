@@ -191,8 +191,7 @@ namespace MorphingClass.CCorrepondObjects
 
                 //FrIncidentCEdge.PrintMySelf();
                 //ToIncidentCEdge.PrintMySelf();
-
-                double dblverysmall = CConstants.dblVerySmall;
+                
                 var FrLastCEdge = FrIncidentCEdge.GetSmallerAxisAngleCEdge();
                 var ToLastCEdge = ToIncidentCEdge.GetSmallerAxisAngleCEdge();
 

@@ -35,15 +35,15 @@ namespace MorphingClass.CGeneralizationMethods
         //public static double dblLamda2 = 1 - dblLamda1;
 
         //for some prompt settings
-        protected int _intFactor = 1;
-        //private int _intFactor = 8;
+        protected int _intStartFactor = 1;
+        //private int _intStartFactor = 8;
 
         protected static int _intStart; //=0
         protected static int _intEnd; //=this.SSCrgLt.Count
         protected void UpdateStartEnd()
         {
-            _intStart = 248;
-            _intEnd = _intStart + 1;
+            //_intStart = 436;
+            //_intEnd = _intStart + 1;
 
             dblLamda = 0.5;
             //dblLamda2 = 1 - dblLamda1;
@@ -56,7 +56,7 @@ namespace MorphingClass.CGeneralizationMethods
         //public int intTotalTimeNum { set; get; } //Note that intTotalTimeNum may count a step that only changes the type of a polygon (without aggregation)
 
         protected double[,] _adblTD;
-        protected CPairVal_SD<int, int> _TypePVSD;
+        protected CValMap_SD<int, int> _TypePVSD;
 
         public double dblCost { set; get; }
         public CStrObjLtSD StrObjLtSD { set; get; }
@@ -92,11 +92,11 @@ namespace MorphingClass.CGeneralizationMethods
         {
             Construct<CPolygon, CPolygon>(ParameterInitialize, 2, 0, true,1, strSpecifiedFieldName, strSpecifiedValue);
             CConstants.strShapeConstraint = ParameterInitialize.cboShapeConstraint.Text;
-            if (CConstants.strShapeConstraint == "MaximizeMinComp" || CConstants.strShapeConstraint == "MaximizeMinComp_Combine")
+            if (CConstants.strShapeConstraint == "MaximizeMinComp_EdgeNumber" || CConstants.strShapeConstraint == "MaximizeMinComp_Combine")
             {
                 CConstants.blnComputeMinComp = true;
             }
-            else if (CConstants.strShapeConstraint == "MaximizeAvgComp" || CConstants.strShapeConstraint == "MaximizeAvgComp_Combine")
+            else if (CConstants.strShapeConstraint == "MaximizeAvgComp_EdgeNumber" || CConstants.strShapeConstraint == "MaximizeAvgComp_Combine")
             {
                 CConstants.blnComputeAvgComp = true;
             }
@@ -119,7 +119,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             //set an index for each type, so that we can access a type distance directly
             //var intTypeIndexSD = new SortedDictionary<int, int>();
-            var pTypePVSD = new CPairVal_SD<int, int>();
+            var pTypePVSD = new CValMap_SD<int, int>();
             int intTypeIndex = 0;
             for (int i = 0; i < intDataRow; i++)
             {
@@ -179,8 +179,8 @@ namespace MorphingClass.CGeneralizationMethods
 
             var intLSRegionNumATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[0], "RegionNum");  //RegionNumATIndex: the index of RegionNum in the attribute table 
             var intSSRegionNumATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[1], "RegionNum");
-            //private CPairVal_SD<int, int> _RegionPVSD;
-            var pRegionPVSD = new CPairVal_SD<int, int>();
+            //private CValMap_SD<int, int> _RegionPVSD;
+            var pRegionPVSD = new CValMap_SD<int, int>();
             int intRegionIndex = 0;
             for (int i = 0; i < pObjValueLtLtLt[1].Count; i++)
             {
@@ -241,7 +241,7 @@ namespace MorphingClass.CGeneralizationMethods
         /// <param name="pTypePVSD"></param>
         /// <param name="pRegionPVSD"></param>
         /// <returns></returns>
-        protected List<CRegion> GenerateCrgLt(List<CPolygon> pCpgLt, int intCrgNum, List<List<object>> pObjValueLtLt, int intTypeATIndex, int intRegionNumATIndex, CPairVal_SD<int, int> pTypePVSD, CPairVal_SD<int, int> pRegionPVSD)
+        protected List<CRegion> GenerateCrgLt(List<CPolygon> pCpgLt, int intCrgNum, List<List<object>> pObjValueLtLt, int intTypeATIndex, int intRegionNumATIndex, CValMap_SD<int, int> pTypePVSD, CValMap_SD<int, int> pRegionPVSD)
         {
             var pCrgLt = new List<CRegion>(intCrgNum);
             pCrgLt.EveryElementNew();
@@ -290,10 +290,10 @@ namespace MorphingClass.CGeneralizationMethods
             SetRegionChild(FinalOneCphCrg);
             AdjustCost(FinalOneCphCrg, 2);
 
-            double dblRoundedCostEstimatedType = Math.Round(LSCrg.dblCostEstimatedType, _intDigits);
+            double dblRoundedCostEstimatedType = Math.Round(LSCrg.dblCostEstType, _intDigits);
             double dblRoundedCostExactType = Math.Round(FinalOneCphCrg.dblCostExactType, _intDigits);
-            double dblRoundedCostEstimatedCompactness = Math.Round(LSCrg.dblCostEstimatedCompactness, _intDigits);
-            double dblRoundedCostExactCompactness = Math.Round(FinalOneCphCrg.dblCostExactCompactness, _intDigits);
+            double dblRoundedCostEstComp = Math.Round(LSCrg.dblCostEstComp, _intDigits);
+            double dblRoundedCostExactComp = Math.Round(FinalOneCphCrg.dblCostExactComp, _intDigits);
 
             double dblRatioTypeCE = 1;
             double dblRatioCompCE = 1;
@@ -301,29 +301,29 @@ namespace MorphingClass.CGeneralizationMethods
 
             if (LSCrg.GetCphCount() > 1)
             {
-                if (LSCrg.dblCostEstimatedType > 0)
+                if (LSCrg.dblCostEstType > 0)  //if LSCrg.dblCostEstType == 0, then we define dblRatioTypeCE = 1
                 {
-                    dblRatioTypeCE = Math.Round(FinalOneCphCrg.dblCostExactType / LSCrg.dblCostEstimatedType, _intDigits);
+                    dblRatioTypeCE = Math.Round(FinalOneCphCrg.dblCostExactType / LSCrg.dblCostEstType, _intDigits);
                 }
 
-                dblRatioCompCE = Math.Round(FinalOneCphCrg.dblCostExactCompactness / LSCrg.dblCostEstimatedCompactness, _intDigits);
-                dblRatioTypeComp = Math.Round(FinalOneCphCrg.dblCostExactType / FinalOneCphCrg.dblCostExactCompactness, _intDigits);
+                dblRatioCompCE = Math.Round(FinalOneCphCrg.dblCostExactComp / LSCrg.dblCostEstComp, _intDigits);
+                dblRatioTypeComp = Math.Round(FinalOneCphCrg.dblCostExactType / FinalOneCphCrg.dblCostExactComp, _intDigits);
             }
 
             if (CConstants.strMethod == "Greedy")
             {
                 dblRoundedCostEstimatedType = -1;
                 dblRatioTypeCE = -1;
-                dblRoundedCostEstimatedCompactness = -1;
+                dblRoundedCostEstComp = -1;
                 dblRatioCompCE = -1;
             }
 
-            StrObjLtSD.SetLastObj("#Nodes", CRegion._intNodesCount);
+            StrObjLtSD.SetLastObj("#Nodes", CRegion._intNodeCount);
             StrObjLtSD.SetLastObj("EstType", dblRoundedCostEstimatedType);
             StrObjLtSD.SetLastObj("CostType", dblRoundedCostExactType);
             StrObjLtSD.SetLastObj("RatioTypeCE", dblRatioTypeCE);
-            StrObjLtSD.SetLastObj("EstComp", dblRoundedCostEstimatedCompactness);
-            StrObjLtSD.SetLastObj("CostComp", dblRoundedCostExactCompactness);
+            StrObjLtSD.SetLastObj("EstComp", dblRoundedCostEstComp);
+            StrObjLtSD.SetLastObj("CostComp", dblRoundedCostExactComp);
             StrObjLtSD.SetLastObj("RatioCompCE", dblRatioCompCE);
             StrObjLtSD.SetLastObj("RatioTypeComp", dblRatioTypeComp);
             StrObjLtSD.SetLastObj("WeightedSum", Math.Round(FinalOneCphCrg.dblCostExact, _intDigits));
@@ -352,10 +352,10 @@ namespace MorphingClass.CGeneralizationMethods
             double dblAdjust = crg.dblArea;
             do
             {
-                crg.dblCostEstimated /= dblAdjust;
+                crg.dblCostEst /= dblAdjust;
                 crg.dblCostExact /= dblAdjust;
                 crg.dblCostExactType /= dblAdjust;
-                crg.dblCostEstimatedType /= dblAdjust;
+                crg.dblCostEstType /= dblAdjust;
                 crg.d /= (dblAdjust);
 
                 crg = crg.parent;
@@ -409,7 +409,7 @@ namespace MorphingClass.CGeneralizationMethods
         }
 
 
-        public static void OutputMap(IEnumerable<CRegion> OutputCrgLt, CPairVal_SD<int, int> pTypePVSD, double dblProportion,
+        public static void OutputMap(IEnumerable<CRegion> OutputCrgLt, CValMap_SD<int, int> pTypePVSD, double dblProportion,
             int intTime, CParameterInitialize pParameterInitialize)
         {
             int intAttributeNum = 2;
@@ -488,7 +488,7 @@ namespace MorphingClass.CGeneralizationMethods
             List<object> objFactorLt;
             StrObjLtSD.TryGetValue("Factor", out objFactorLt);
             double dblLogFactorSum = 0;
-            int intOverestimationCount = 0;
+            int intOverEstCount = 0;
             var intFactorCountlt = new List<int>(15);
             intFactorCountlt.EveryElementNew();
             for (int i = 0; i < objFactorLt.Count; i++)
@@ -499,11 +499,11 @@ namespace MorphingClass.CGeneralizationMethods
                 intFactorCountlt[Convert.ToInt16(dblLogFactor)]++;
                 if (dblFactor > 1)
                 {
-                    intOverestimationCount++;
+                    intOverEstCount++;
                 }
             }
 
-            strData += ("& " + string.Format("{0,3}", intOverestimationCount));
+            strData += ("& " + string.Format("{0,3}", intOverEstCount));
             strData += (" & " + string.Format("{0,3}", dblLogFactorSum));
             strData += GetSumWithSpecifiedStyle(StrObjLtSD, "#Edges", "{0,10}", 0);
             strData += GetSumWithSpecifiedStyle(StrObjLtSD, "#Nodes", "{0,8}", 0);

@@ -724,7 +724,7 @@ namespace MorphingClass.CUtility
             }
 
             //构建新的折线
-            SortedDictionary<double, CPoint> newcptslt = new SortedDictionary<double, CPoint>(new CDblCompare());
+            SortedDictionary<double, CPoint> newcptslt = new SortedDictionary<double, CPoint>(new CCompareDbl());
             for (int i = 0; i < ctempptlt.Count; i++)
             {
                 double dblFromStartDis = CGeometricMethods.CalDistanceFromStartPoint(cpl.pPolyline, (IPoint)ctempptlt[i], true);

@@ -18,7 +18,7 @@ namespace MorphingClass.CCorrepondObjects
         private static int _intStaticGID;
         public CPatch FrCph { get; set; }
         public CPatch ToCph { get; set; }
-        public double dblSharedSegmentLength { get; set; }
+        public double dblSharedSegLength { get; set; }
         public int intSharedCEdgeCount { get; set; }
         public List<CEdge> SharedCEdgeLt { get; set; }
         //public bool isSharedCEdgeLtComplete { get; set; }
@@ -42,11 +42,11 @@ namespace MorphingClass.CCorrepondObjects
         //}
 
         public CCorrCphs(CPatch pCph1, CPatch pCph2, CCorrCphs pCorrCphs)
-            : this(pCph1, pCph2, pCorrCphs.SharedCEdgeLt, pCorrCphs.dblSharedSegmentLength, pCorrCphs.intSharedCEdgeCount)
+            : this(pCph1, pCph2, pCorrCphs.SharedCEdgeLt, pCorrCphs.dblSharedSegLength, pCorrCphs.intSharedCEdgeCount)
         {
         }
 
-        public CCorrCphs(CPatch pCph1, CPatch pCph2, List<CEdge> pSharedCEdgeLt = null, double dblSharedSegmentLength = 0, int intShredEdgeCount = 0)
+        public CCorrCphs(CPatch pCph1, CPatch pCph2, List<CEdge> pSharedCEdgeLt = null, double dblSharedSegLength = 0, int intShredEdgeCount = 0)
         {
             this.GID = _intStaticGID++;
 
@@ -60,7 +60,7 @@ namespace MorphingClass.CCorrepondObjects
             }
             //this.SharedCEdgeLt = new List<CEdge>();
             //this.SharedCEdgeLt.AddRange(pSharedCEdgeLt);
-            this.dblSharedSegmentLength = dblSharedSegmentLength;
+            this.dblSharedSegLength = dblSharedSegLength;
             this.intSharedCEdgeCount = intSharedCEdgeCount;
 
             if (pCph1.GID <= pCph2.GID)

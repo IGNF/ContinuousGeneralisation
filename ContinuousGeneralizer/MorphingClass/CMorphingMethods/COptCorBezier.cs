@@ -283,7 +283,7 @@ namespace MorphingClass.CMorphingMethods
             //{
             //    for (int j = 1; j <= CToBezierEdgeLt.Count; j++)
             //    {
-            //        SortedDictionary<double, CTable> dblCTableSlt = new SortedDictionary<double, CTable>(new CDblCompare());
+            //        SortedDictionary<double, CTable> dblCTableSlt = new SortedDictionary<double, CTable>(new CCompareDbl());
             //        CPolyline subfrcpl1 = frcpl.GetSubPolyline(CFrBezierEdgeLt[i - 1].CptLt[0], CFrBezierEdgeLt[i - 1].CptLt[CFrBezierEdgeLt[i - 1].CptLt.Count - 1]);
             //        CPolyline subtocpl1 = tocpl.GetSubPolyline(CToBezierEdgeLt[j - 1].CptLt[0], CToBezierEdgeLt[j - 1].CptLt[CToBezierEdgeLt[j - 1].CptLt.Count - 1]);
 

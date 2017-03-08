@@ -30,7 +30,6 @@ namespace MorphingClass.CMorphingMethods
         protected int _intMaxBackKforI = 5;
         protected int _intMulti = 1;  //sometimes we need to look for the smallest sufficient look-back parameter, so we need to test a series (_intMulti) look-back parameters
         protected int _intIncrease = 1;
-        protected CCompareCptYX _pCompareCptYX = new CCompareCptYX();
         protected List < List<CPoint>> FrCptLtLt { get; set; }
         protected List<List<CPoint>>  ToCptLtLt { get; set; }
 
@@ -690,7 +689,7 @@ namespace MorphingClass.CMorphingMethods
             {
                 tocptltWithoutEnds = tocptlt.GetRange(1, tocptlt.Count - 2);
             }
-            var tocptsd = tocptltWithoutEnds.ToSD(cpt => cpt, _pCompareCptYX);
+            var tocptsd = tocptltWithoutEnds.ToSD(cpt => cpt, CCompareCptYX_VerySmall.pCompareCptYX_VerySmall);
 
             LinkedList<CCorrCpts> CtrlCptsLk = new LinkedList<CCorrCpts>();
             CtrlCptsLk.AddLast(new CCorrCpts(frcptlt[0], tocptlt[0]));     //the first pair

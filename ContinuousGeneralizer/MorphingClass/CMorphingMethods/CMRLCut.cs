@@ -189,7 +189,7 @@ namespace MorphingClass.CMorphingMethods
         /// <remarks></remarks>
         private void CalCutTime(List<CRiverNet> CBSRiverNetLt)
         {
-            SortedList<double, CRiver> dblDataSLt = new SortedList<double, CRiver>(new CDblCompare());
+            SortedList<double, CRiver> dblDataSLt = new SortedList<double, CRiver>(new CCompareDbl());
             //添加大比例尺表达图层中(包括各河网)的所有没有对应河流的河流
             for (int i = 0; i < CBSRiverNetLt.Count; i++)
             {

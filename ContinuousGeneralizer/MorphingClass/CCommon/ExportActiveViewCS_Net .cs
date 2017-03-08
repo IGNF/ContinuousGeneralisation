@@ -20,7 +20,6 @@ using System.IO;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-using ESRI.ArcGIS.esriSystem;
 using System.Windows.Forms;
 using MorphingClass.CUtility;
 

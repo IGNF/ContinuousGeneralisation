@@ -17,6 +17,7 @@ namespace MorphingClass.CGeometry
         public static CCompareCPatch_Area_CphGID pCompareCPatch_Area_CphGID = new CCompareCPatch_Area_CphGID();  //this variable should be used for CPatch itself
         public static CCompareCPatch_Compactness_CphGID pCompareCPatch_Compactness_CphGID = new CCompareCPatch_Compactness_CphGID();
 
+        
 
         public SortedSet<CPolygon> CpgSS { get; set; }
         public int intSumCpgGID { get; set; }
@@ -72,6 +73,7 @@ namespace MorphingClass.CGeometry
         //}
 
         public CPatch(IEnumerable<CPatch> cphEb)
+            :this()
         {
             this.CpgSS = new SortedSet<CPolygon>();
             foreach (var cph in cphEb)
@@ -82,11 +84,11 @@ namespace MorphingClass.CGeometry
             }
         }
 
-        public CPatch Unite(CPatch other, double dblSharedSegmentLength)
+        public CPatch Unite(CPatch other, double dblSharedSegLength)
         {
             var unitedcph = UniteNoAttribute(other);
             unitedcph.dblArea = this.dblArea + other.dblArea;
-            unitedcph.dblLength = this.dblLength + other.dblLength - 2 * dblSharedSegmentLength;
+            unitedcph.dblLength = this.dblLength + other.dblLength - 2 * dblSharedSegLength;
             if (CConstants.blnComputeMinComp == true || CConstants.blnComputeAvgComp == true)
             {
                 unitedcph.dblComp = CGeometricMethods.CalCompactness(unitedcph.dblArea, unitedcph.dblLength);

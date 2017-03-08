@@ -16,18 +16,22 @@ namespace MorphingClass.CUtility
     //return -1:put the first variable in front of the second one
     //public class CCompare
     //{
-       
-    //}
 
-    //public class CCompareDblVerySmall : IComparer<double>
-    //{
-    //    public int Compare(double x, double y)
-    //    {
-    //        return CCompareMethods.Compare(x, y);
-    //    }
     //}
+    
 
-    public class CDblCompare : IComparer<double>
+
+    public class CCompareDbl_VerySmall : IComparer<double>
+    {
+        public static CCompareDbl_VerySmall pCompareDbl_VerySmall = new CCompareDbl_VerySmall();
+
+        public int Compare(double x, double y)
+        {
+            return CCompareMethods.CompareDbl_VerySmall(x, y);
+        }
+    }
+
+    public class CCompareDbl : IComparer<double>
     {
         //CaseInsensitiveComparer MyCompare = new CaseInsensitiveComparer();
         public int Compare(double x, double y)
@@ -40,18 +44,18 @@ namespace MorphingClass.CUtility
     {
         public int Compare(IList<object> lt1, IList<object> lt2)
         {
-            int intResult = CCompareMethods.Compare(Convert.ToDouble(lt1[3]), Convert.ToDouble(lt2[3]));  //overesimation factor
+            int intResult = CCompareMethods.CompareDbl_VerySmall(Convert.ToDouble(lt1[3]), Convert.ToDouble(lt2[3]));  //overesimation factor
             if (intResult == 0)
             {
-                intResult = CCompareMethods.Compare(Convert.ToDouble(lt1[1]), Convert.ToDouble(lt2[1]));  //patch number
+                intResult = CCompareMethods.CompareDbl_VerySmall(Convert.ToDouble(lt1[1]), Convert.ToDouble(lt2[1]));  //patch number
             }
             if (intResult == 0)
             {
-                intResult = CCompareMethods.Compare(Convert.ToDouble(lt1[2]), Convert.ToDouble(lt2[2]));  //adjacency number
+                intResult = CCompareMethods.CompareDbl_VerySmall(Convert.ToDouble(lt1[2]), Convert.ToDouble(lt2[2]));  //adjacency number
             }
             if (intResult == 0)
             {
-                intResult = CCompareMethods.Compare(Convert.ToDouble(lt1[0]), Convert.ToDouble(lt2[0]));  //domain id
+                intResult = CCompareMethods.CompareDbl_VerySmall(Convert.ToDouble(lt1[0]), Convert.ToDouble(lt2[0]));  //domain id
             }
             return -intResult;
         }
@@ -85,116 +89,12 @@ namespace MorphingClass.CUtility
         }
     }
 
-    //public class CCompareGID<CGeo> : IComparer<CGeo>
-    //    where CGeo : CGeometricBase<CGeo>
-    //{
-    //    public int Compare(CGeo x, CGeo y)
-    //    {
-    //        return CCompareMethods.CompareGID(x, y);
-    //    }
-    //}
+    
 
-    //public class CCptYCompare : IComparer<double>
-    //{
-    //    //CaseInsensitiveComparer MyCompare = new CaseInsensitiveComparer();
-    //    public int Compare(CPoint cpt1, CPoint cpt2)
-    //    {
-    //        int iResult;
-    //        if (cpt1 > y)
-    //            iResult = 1;
-    //        else
-    //            iResult = -1;
-    //        return iResult;
-    //    }
-    //}
-
-
-
-
-    //public class CCptYXReverseCompareTreeSet : IComparer<CPoint>
-    //{
-
-    //    public int Compare(CPoint cpt1, CPoint cpt2)
-    //    {
-    //        int iResult = -1;
-    //        if (cpt1.Y < cpt2.Y)
-    //            iResult = 1;
-    //        else if (cpt1.Y > cpt2.Y)
-    //        {
-    //            iResult = -1;
-    //        }
-    //        else 
-    //        {
-    //            if (cpt1.X > cpt2.X)
-    //            {
-    //                iResult = 1;
-    //            }
-    //            else if (cpt1.X < cpt2.X)
-    //            {
-    //                 iResult = -1;
-    //            }
-    //            else 
-    //            {
-    //                iResult = 0;
-    //            }
-    //        }
-    //        //_intCount++;
-    //        return iResult;
-    //    }
-    //}
-
-
-    //public class CCptXYCompareTreeSet : IComparer<CPoint>
-    //{
-    //    public int Compare(CPoint cpt1, CPoint cpt2)
-    //    {
-    //        int iResult = -1;
-    //        if (cpt1.X > cpt2.X)
-    //            iResult = 1;
-    //        else if (cpt1.X < cpt2.X)
-    //        {
-    //            iResult = -1;
-    //        }
-    //        else
-    //        {
-    //            if (cpt1.Y > cpt2.Y)
-    //            {
-    //                iResult = 1;
-    //            }
-    //            else if (cpt1.Y < cpt2.Y)
-    //            {
-    //                iResult = -1;
-    //            }
-    //            else
-    //            {
-    //                iResult = 0;
-    //            }
-    //        }
-    //        return iResult;
-    //    }
-    //}
-
-    //public class CCompareGeneric<T> : IComparer<T>
-    //    where T : class
-    //{
-    //    public CCompareGeneric<T> ()
-    //{
-
-    //}
-
-    //}
-
-    //public class CComparePatch : IComparer<CPatch>
-    //{
-    //    //public int Compare(CPatch cpatch1, CPatch cpatch2)
-    //    //{
-    //    //    int iResult = CCompareMethods.Compare(crg1.IDLk, crg2.IDLk);
-    //    //    return iResult;
-    //    //}
-    //}
-
-    public class CCompareCptYX : IComparer<CPoint>
+    public class CCompareCptYX_VerySmall : IComparer<CPoint>
     {
+        public static CCompareCptYX_VerySmall pCompareCptYX_VerySmall = new CCompareCptYX_VerySmall();
+
         public int Compare(CPoint cpt1, CPoint cpt2)
         {
             return CCompareMethods.CompareCptYX(cpt1, cpt2);
@@ -202,11 +102,13 @@ namespace MorphingClass.CUtility
     }
 
 
+
+
     public class CCompareCPatch_Area_CphGID : IComparer<CPatch>
     {
         public int Compare(CPatch cph1, CPatch cph2)
         {
-            int intResult = CCompareMethods.Compare(cph1.dblArea, cph2.dblArea);
+            int intResult = CCompareMethods.CompareDbl_VerySmall(cph1.dblArea, cph2.dblArea);
             if (intResult == 0)
             {
                 intResult = cph1.GID.CompareTo(cph2.GID);
@@ -219,7 +121,8 @@ namespace MorphingClass.CUtility
     {
         public int Compare(CPatch cph1, CPatch cph2)
         {
-            int intResult = CCompareMethods.Compare(cph1.dblComp, cph2.dblComp);
+            int intResult = CCompareMethods.CompareDbl_VerySmall(cph1.dblComp, cph2.dblComp);
+            //int intResult = cph1.dblComp.CompareTo(cph2.dblComp);
             if (intResult == 0)
             {
                 intResult = cph1.GID.CompareTo(cph2.GID);
@@ -277,7 +180,8 @@ namespace MorphingClass.CUtility
     {
         public int Compare(CRegion crg1, CRegion crg2)
         {
-            int intResult = CCompareMethods.Compare(crg1.d, crg2.d);
+            //int intResult = crg1.d.CompareTo(crg2.d);
+            int intResult = CCompareMethods.CompareDbl_VerySmall(crg1.d, crg2.d);
             if (intResult == 0)
             {
                 intResult = CCompareMethods.CompareCRegion_CphGIDTypeIndex(crg1, crg2);
@@ -290,7 +194,8 @@ namespace MorphingClass.CUtility
     {
         public int Compare(CRegion crg1, CRegion crg2)
         {
-            int intResult = CCompareMethods.Compare(crg1.CphTypeIndexSD_Area_CphGID.GetFirstT().Key.dblArea, crg2.CphTypeIndexSD_Area_CphGID.GetFirstT().Key.dblArea);
+            //int intResult = crg1.GetCphCol().GetFirstT().dblArea.CompareTo(crg2.GetCphCol().GetFirstT().dblArea);
+            int intResult = CCompareMethods.CompareDbl_VerySmall(crg1.GetCphCol().GetFirstT().dblArea, crg2.GetCphCol().GetFirstT().dblArea);
             if (intResult == 0)
             {
                 intResult = CCompareMethods.CompareCRegion_CphGIDTypeIndex(crg1, crg2);
@@ -303,7 +208,8 @@ namespace MorphingClass.CUtility
     {
         public int Compare(CRegion crg1, CRegion crg2)
         {
-            int intResult = CCompareMethods.Compare(crg1.dblCostExact, crg2.dblCostExact);
+            int intResult = CCompareMethods.CompareDbl_VerySmall(crg1.dblCostExact, crg2.dblCostExact);
+            //int intResult = crg1.dblCostExact.CompareTo(crg2.dblCostExact);
             if (intResult == 0)
             {
                 intResult = CCompareMethods.CompareCRegion_CphGIDTypeIndex(crg1, crg2);
@@ -312,13 +218,13 @@ namespace MorphingClass.CUtility
         }
     }
 
-    public class CCompareCRegion_CompareDblPreLocateEqual : IComparer<CRegion>
-    {
-        public int Compare(CRegion crg1, CRegion crg2)
-        {
-            return CCompareMethods.CompareDblPostLocateEqual(crg1.d, crg2.d);
-        }
-    }
+    //public class CCompareCRegion_CompareDblPreLocateEqual : IComparer<CRegion>
+    //{
+    //    public int Compare(CRegion crg1, CRegion crg2)
+    //    {
+    //        return CCompareMethods.CompareDblPostLocateEqual(crg1.d, crg2.d);
+    //    }
+    //}
 
     //public class CCompareRegion : IComparer<CRegion>
     //{
@@ -362,101 +268,5 @@ namespace MorphingClass.CUtility
             return CCompareMethods.HandleTwoResults(intResultDiff, intResultFF);
         }
     }
-
-    //public class CComparePolygon : IComparer<CPolygon>
-    //{
-    //    public int Compare(CPolygon cpg1, CPolygon cpg2)
-    //    {
-    //        return CCompareMethods.Compare(cpg1.ID, cpg2.ID);
-    //    }
-    //}
-
-
-    //public class CCptYXReverseCompare : IComparer<CPoint>
-    //{
-    //    public int Compare(CPoint cpt1, CPoint cpt2)
-    //    {
-    //        int iResult = -1;
-    //        if (cpt1.Y < cpt2.Y)
-    //            iResult = 1;
-    //        else if (cpt1.Y == cpt2.Y)
-    //        {
-    //            if (cpt1.X > cpt2.X)
-    //            {
-    //                iResult = 1;
-    //            }
-    //            else if (cpt1.X == cpt2.X)
-    //            {
-                //iResult = cpt1.GID.CompareTo(cpt2 .GID);
-    //            }
-    //        }
-    //        //iResult = -1;
-    //        return iResult;
-    //    }
-    //}
-
-    //public class CCptYGIDReverseCompare : IComparer<CPoint>
-    //{
-    //    public int Compare(CPoint cpt1, CPoint cpt2)
-    //    {
-    //        int iResult = -1;
-    //        if (cpt1.Y < cpt2.Y)
-    //            iResult = 1;
-    //        else if (cpt1.Y == cpt2.Y)
-    //        {
-    //            iResult = cpt1.GID.CompareTo(cpt2.GID);
-    //        }
-    //        //iResult = -1;
-    //        return iResult;
-    //    }
-    //}
-
-    //public class CCptYTraversedXReverseCompare : IComparer<CPoint>
-    //{
-    //    public int Compare(CPoint cpt1, CPoint cpt2)
-    //    {
-    //        int iResult = -1;
-    //        if (cpt1.Y < cpt2.Y)
-    //            iResult = 1;
-    //        else if (cpt1.Y == cpt2.Y)
-    //        {
-    //            if (cpt1.isTraversed == true && cpt2.isTraversed == false )
-    //            {
-    //                iResult = 1;
-    //            }
-    //            else if (cpt1.isTraversed == false  && cpt2.isTraversed == true )
-    //            {
-    //                 iResult = -1;
-    //            }
-    //            else
-    //            {
-    //                if (cpt1.X > cpt2.X)
-    //                {
-    //                    iResult = 1;
-    //                }
-    //                else if (cpt1.X == cpt2.X)
-    //                {
-    //                    iResult = cpt1.GID.CompareTo(cpt2.GID);
-    //                }
-    //            }
-    //        }
-    //        //iResult = -1;
-    //        return iResult;
-    //    }
-    //}
-
-    //public class CCptXGIDCompare : IComparer<CPoint>
-    //{
-    //    public int Compare(CPoint cpt1, CPoint cpt2)
-    //    {
-    //        int iResult = -1;
-    //        if (cpt1.X > cpt2.X)
-    //            iResult = 1; 
-    //        else if (cpt1.X == cpt2.X)
-    //        {
-    //            iResult = cpt1.GID.CompareTo(cpt2 .GID);
-    //        }
-    //        return iResult;
-    //    }
-    //}
+   
 }

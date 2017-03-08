@@ -29,7 +29,8 @@ namespace MorphingClass.CUtility
         private IFeatureLayer _pSgFLayer;         //Layer of single features        
         private List<IFeatureLayer> _pFLayerLt;
         //private List<List<CPolyline>> _CPlLtLt;
-        private AxMapControl _pAxMapControl;
+        
+        //private AxMapControl _pAxMapControl;
         private IMap _pMap;                       //地图文档
         private IMap _m_mapPolyline;              //线图层集
         //private IMap _m_mapPoints;                //点图层集
@@ -163,11 +164,11 @@ namespace MorphingClass.CUtility
         }
 
 
-        public AxMapControl pAxMapControl
-        {
-            get { return _pAxMapControl; }
-            set { _pAxMapControl = value; }
-        }
+        //public AxMapControl pAxMapControl
+        //{
+        //    get { return _pAxMapControl; }
+        //    set { _pAxMapControl = value; }
+        //}
 
 
         /// <summary>属性：地图文档</summary>

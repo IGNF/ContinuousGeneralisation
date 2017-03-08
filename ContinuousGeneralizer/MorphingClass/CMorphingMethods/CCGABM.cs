@@ -176,6 +176,7 @@ namespace MorphingClass.CMorphingMethods
             var dlgTransform = SetDlgTransform(pParameterInitialize.cboTransform.Text);
             var TransSgIGeoLt = new List<IGeometry>(SgIplLt.Count);
             TransSgIGeoLt.EveryElementValue(null);
+            CHelperFunction.Displaytspb(0.5, intInterLSFaceCount, pParameterInitialize.tspbMain);
             for (int i = 0; i < intInterLSFaceCount; i++)
             {
                 Console.WriteLine("Face Num: " + i);
@@ -204,6 +205,8 @@ namespace MorphingClass.CMorphingMethods
         #region CTTransform (compatible triangulation)
         private IEnumerable<CPolyline> CTTransform(CParameterInitialize pParameterInitialize, List<IPolyline5> InterLSIplLt, List<IPolyline5> InterSSIplLt, List<IPolyline5> SgIplLt)
         {
+            CConstants.dblVerySmall /= 10;  //this assignment should equal to _dblVerySmallDenominator = 10000000
+
             var InterLSCplLt = CHelperFunction.GenerateCGeoEbAccordingToGeoEb<CPolyline>(InterLSIplLt).ToList();
             var InterSSCplLt = CHelperFunction.GenerateCGeoEbAccordingToGeoEb<CPolyline>(InterSSIplLt).ToList();
             var SgCplEb = CHelperFunction.GenerateCGeoEbAccordingToGeoEb<CPolyline>(SgIplLt);
@@ -218,7 +221,7 @@ namespace MorphingClass.CMorphingMethods
             var pInterLSCptLt = pInterLSDCEL.FaceCpgLt[1].TraverseFaceToGenerateCptLt();  //there are only two faces: the super face and a normal face
             pInterSSDCEL.FaceCpgLt[1].TraverseFaceToGenerateCptLt();  //there are only two faces: the super face and a normal face
 
-            var pInterLSCptSD = pInterLSCptLt.ToSD(cpt => cpt, new CCompareCptYX()); //we maintaine this SD so that for a point from single polyline, we can know whether this single point overlaps a point of a larger-scale polyline
+            var pInterLSCptSD = pInterLSCptLt.ToSD(cpt => cpt, new CCompareCptYX_VerySmall()); //we maintaine this SD so that for a point from single polyline, we can know whether this single point overlaps a point of a larger-scale polyline
 
             CCptbCtgl pCptbCtgl = new CCptbCtgl(pInterLSDCEL.FaceCpgLt[1], pInterSSDCEL.FaceCpgLt[1], pParameterInitialize);
             pCptbCtgl.ConstructCcptbCtgl();
@@ -227,6 +230,8 @@ namespace MorphingClass.CMorphingMethods
             {
                 yield return GenerateCorrSgCpl(pCptbCtgl, SgCpl, pInterLSCptSD);
             }
+
+            CConstants.dblVerySmall *= 10;
         }
 
 
@@ -611,7 +616,7 @@ namespace MorphingClass.CMorphingMethods
             var pCorrCptsLtLt = CGeometricMethods.GetCorrCptsLtLt(pInterLSCplLt, pInterSSCplLt);
             CHelperFunction.SetMoveVectorForCorrCptsLtLt(pCorrCptsLtLt);
 
-            var pInterLSCptSD = pInterLSCplLt.GetAllCptEb<CPolyline, CPolyline>().ToSD(cpt => cpt, new CCompareCptYX());
+            var pInterLSCptSD = pInterLSCplLt.GetAllCptEb<CPolyline, CPolyline>().ToSD(cpt => cpt, new CCompareCptYX_VerySmall());
             foreach (var SgCpl in SgCplEb)
             {
                 yield return RSGenerateCorrSgCpl(SgCpl, pInterLSCptSD);
@@ -944,7 +949,7 @@ namespace MorphingClass.CMorphingMethods
 
             double dblLSToSSRatio = CalRatioofPtNum(pLSCPlLt, pSSCPlLt);
 
-            var LScptSS = new SortedSet<CPoint>(new CCompareCptYX());
+            var LScptSS = new SortedSet<CPoint>(new CCompareCptYX_VerySmall());
             foreach (var LSCPl in pLSCPlLt)
             {
                 foreach (var cpt in LSCPl.CptLt)

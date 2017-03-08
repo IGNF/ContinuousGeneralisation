@@ -18,6 +18,7 @@ using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.SystemUI;
 
 using MorphingClass;
+using MorphingClass.CCommon;
 using MorphingClass.CGeometry;
 using MorphingClass.CEvaluationMethods;
 using MorphingClass.CUtility;
@@ -41,6 +42,16 @@ namespace ContinuousGeneralizer
 {
     public partial class FrmContinuousGeneralizer : Form
     {
+        private void FrmContinuousGeneralizer_Shown(object sender, EventArgs e)
+        {
+            //var frmCurrent = new FrmBuildingGrowing(_DataRecords);
+            var frmCurrent = new FrmCAMDijkstra(_DataRecords);
+            //var frmCurrent = new FrmCGABM(_DataRecords);
+            //var frmCurrent = new FrmExtractPossibleFiles();
+            frmCurrent.Show();
+            //frmCurrent.btnRun_Click(sender, e);
+        }
+
         private object _Missing = Type.Missing;
         private CDataRecords _DataRecords = new CDataRecords();
         private ESRI.ArcGIS.Controls.IMapControl4 m_mapControl = null;
@@ -132,7 +143,7 @@ namespace ContinuousGeneralizer
 
 
             CDataRecords pDataRecords = new CDataRecords();
-            pDataRecords.ParameterInitialize.pAxMapControl = this.axMapControl;
+            //pDataRecords.ParameterInitialize.pAxMapControl = this.axMapControl;
             pDataRecords.ParameterInitialize.m_mapControl = m_mapControl;
             pDataRecords.ParameterInitialize.ststMain = this.ststMain;
             pDataRecords.ParameterInitialize.tsslTime = this.tsslTime;
@@ -152,15 +163,7 @@ namespace ContinuousGeneralizer
 
         }
 
-        private void FrmContinuousGeneralizer_Shown(object sender, EventArgs e)
-        {
-            var frmCurrent = new FrmBuildingGrowing(_DataRecords);
-            //var frmCurrent = new FrmCAMDijkstra(_DataRecords);
-            //var frmCurrent = new FrmCGABM(_DataRecords);
-            //var frmCurrent = new FrmExtractPossibleFiles();
-            frmCurrent.Show();
-            //frmCurrent.btnRun_Click(sender, e);
-        }
+
 
         #region »ù±¾¿ØÖÆÃüÁî
 
@@ -210,6 +213,8 @@ namespace ContinuousGeneralizer
             MorphingClass.CCommon.OpenNewMapDocument openMapDoc = new MorphingClass.CCommon.OpenNewMapDocument(m_controlsSynchronizer);
             openMapDoc.OnCreate(m_controlsSynchronizer.MapControl.Object);
             openMapDoc.OnClick();
+
+
         }
 
         /// <summary>
