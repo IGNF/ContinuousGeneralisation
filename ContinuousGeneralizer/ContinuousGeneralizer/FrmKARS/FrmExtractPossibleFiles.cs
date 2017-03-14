@@ -131,7 +131,7 @@ namespace ContinuousGeneralizer.FrmKARS
             }
 
             CHelperFunctionExcel.ExportToExcel(resultobjltlt,
-                CHelperFunction.GetTimeStamp() + "_methods_position",
+                CHelperFunction.GetTimeStampWithPrefix() + "_methods_position",
                 @"C:\Study\MyWork\CodesChecking\fsvw_common_KARS_DM_Out", strHeadLt);
 
             MessageBox.Show("done!");
@@ -214,7 +214,7 @@ namespace ContinuousGeneralizer.FrmKARS
             //    CHelperFunction.GetTimeStamp() + "_out_kars_Extracted_" + astrRemainLt.Count,
             //    @"C:\Study\MyWork\CodesChecking\fsvw_common_KARS_DM_Out");
             CHelperFunctionExcel.ExportToExcel(astrPasteLt,
-                CHelperFunction.GetTimeStamp() + "_out_kars_ExtractedProcessed_" + astrPasteLt.Count,
+                CHelperFunction.GetTimeStampWithPrefix() + "_out_kars_ExtractedProcessed_" + astrPasteLt.Count,
                 @"C:\Study\MyWork\CodesChecking\fsvw_common_KARS_DM_Out");
         }
 
@@ -336,7 +336,7 @@ namespace ContinuousGeneralizer.FrmKARS
             }
 
             CHelperFunctionExcel.ExportToExcel(resultobjltlt,
-                CHelperFunction.GetTimeStamp() + "_methods_position",
+                CHelperFunction.GetTimeStampWithPrefix() + "_methods_position",
                 @"C:\Study\MyWork\CodesChecking\fsvw_common_KARS_DM_Out", strHeadLt);
 
             MessageBox.Show("done!");

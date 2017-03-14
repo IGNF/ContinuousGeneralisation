@@ -132,28 +132,28 @@ namespace MorphingClass.CGeneralizationMethods
                 var cpgeb1 = BufferAndMerge(pParameterInitialize, inputcpglt, dblradus1, 
                     strBufferStyle, dblMiterLimit, dblA, dblFactorClipper, "OverBuffering").IGeosToCGeoEB().ToList();
                 CSaveFeature.SaveCGeoEb(cpgeb1, esriGeometryType.esriGeometryPolygon,
-                    dblScale + "_First_OverBuffering" + dblradus1+"_" + pParameterInitialize.pFLayerLt[0].Name + CHelperFunction.GetTimeStamp(),
+                    dblScale + "_Step1_OverBuffering" + dblradus1+"_" + pParameterInitialize.pFLayerLt[0].Name + CHelperFunction.GetTimeStampWithPrefix(),
                     pParameterInitialize, intRed: 255);
 
                 double dblradus2 = -dblhalfD;
                 var cpgeb2 = BufferAndMerge(pParameterInitialize, cpgeb1, dblradus2, 
                     strBufferStyle, dblMiterLimit, dblA, dblFactorClipper, "SubSideBuffering").IGeosToCGeoEB().ToList();
                 CSaveFeature.SaveCGeoEb(cpgeb2, esriGeometryType.esriGeometryPolygon,
-    dblScale + "_Second_SubSideBuffering" + dblradus2 + "_" + pParameterInitialize.pFLayerLt[0].Name + CHelperFunction.GetTimeStamp(),
+    dblScale + "_Step2_SubSideBuffering" + dblradus2 + "_" + pParameterInitialize.pFLayerLt[0].Name + CHelperFunction.GetTimeStampWithPrefix(),
     pParameterInitialize, intBlue: 255);
 
                 double dblradus3 = -(dblr - dblr0) / 10;
                 var cpgeb3 = BufferAndMerge(pParameterInitialize, cpgeb2, dblradus3, 
                     strBufferStyle, dblMiterLimit, dblA, dblFactorClipper, "Erosion").IGeosToCGeoEB().ToList();
                 CSaveFeature.SaveCGeoEb(cpgeb3, esriGeometryType.esriGeometryPolygon,
-    dblScale + "_Third_Erosion" + dblradus3 + "_" + pParameterInitialize.pFLayerLt[0].Name + CHelperFunction.GetTimeStamp(),
+    dblScale + "_Step3_Erosion" + dblradus3 + "_" + pParameterInitialize.pFLayerLt[0].Name + CHelperFunction.GetTimeStampWithPrefix(),
     pParameterInitialize, intRed: 255, intBlue: 255);
 
                 double dblradus4 = -dblradus3;
                 var outputcpglt = BufferAndMerge(pParameterInitialize, cpgeb3, dblradus4, 
                     strBufferStyle, dblMiterLimit, dblA, dblFactorClipper, "Compensation").IGeosToCGeoEB().ToList();
                 CSaveFeature.SaveCGeoEb(outputcpglt, esriGeometryType.esriGeometryPolygon,
-     dblScale + "_Output_Compensation" + dblradus4 + "_" + pParameterInitialize.pFLayerLt[0].Name + CHelperFunction.GetTimeStamp(),
+     dblScale + "_Step4(Output)_Compensation" + dblradus4 + "_" + pParameterInitialize.pFLayerLt[0].Name + CHelperFunction.GetTimeStampWithPrefix(),
     pParameterInitialize, intGreen: 255);
 
                 inputcpglt = outputcpglt;

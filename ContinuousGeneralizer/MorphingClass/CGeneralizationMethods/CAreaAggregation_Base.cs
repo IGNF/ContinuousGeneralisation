@@ -111,7 +111,7 @@ namespace MorphingClass.CGeneralizationMethods
             }
 
             //read type distance
-            var aObj = CHelperFunctionExcel.ReadDataFromExcel(ParameterInitialize.strPath + "TypeDistance.xlsx");
+            var aObj = CHelperFunctionExcel.ReadDataFromExcel(ParameterInitialize.strMxdPathBackSlash + "TypeDistance.xlsx");
             if (aObj == null) throw new ArgumentNullException("Failed to read TypeDistance.xlsx");
 
             int intDataRow = aObj.GetUpperBound(0);
@@ -195,7 +195,7 @@ namespace MorphingClass.CGeneralizationMethods
             this.LSCrgLt = GenerateCrgLt(pLSCPgLt, pSSCPgLt.Count, pObjValueLtLtLt[0], intLSTypeATIndex, intLSRegionNumATIndex, _TypePVSD, pRegionPVSD);
             this.SSCrgLt = GenerateCrgLt(pSSCPgLt, pSSCPgLt.Count, pObjValueLtLtLt[1], intSSTypeATIndex, intSSRegionNumATIndex, _TypePVSD, pRegionPVSD);
 
-            using (var writer = new System.IO.StreamWriter(_ParameterInitialize.strSavePathBackSlash + CHelperFunction.GetTimeStamp()
+            using (var writer = new System.IO.StreamWriter(_ParameterInitialize.strSavePathBackSlash + CHelperFunction.GetTimeStampWithPrefix()
                 + "_" + "AreaAggregation.txt", false))
             {
                 writer.Write(_ParameterInitialize.strAreaAggregation);
@@ -438,8 +438,9 @@ namespace MorphingClass.CGeneralizationMethods
                 }
             }
 
-            CSaveFeature.SaveIGeoEb(IpgLt, esriGeometryType.esriGeometryPolygon, dblProportion.ToString() + "_#" + IpgLt.Count + "_Step" + intTime.ToString() + "_" + CHelperFunction.GetTimeStamp(),
-                pParameterInitialize, pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt, strSymbolLayerPath: pParameterInitialize.strPath + "complete.lyr");
+            CSaveFeature.SaveIGeoEb(IpgLt, esriGeometryType.esriGeometryPolygon, 
+                dblProportion.ToString() + "_#" + IpgLt.Count + "_Step" + intTime.ToString() + "_" + CHelperFunction.GetTimeStampWithPrefix(),
+                pParameterInitialize, pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt, strSymbolLayerPath: pParameterInitialize.strMxdPathBackSlash + "complete.lyr");
         }
 
 
@@ -474,7 +475,7 @@ namespace MorphingClass.CGeneralizationMethods
             SortedSet<IList<object>> objDataLtSS = new SortedSet<IList<object>>(pobjDataLtLt, new CAACCompare());
 
             CHelperFunctionExcel.ExportToExcel(objDataLtSS,
-                CHelperFunction.GetTimeStamp() + "_" + strMethod + "_" + pParameterInitialize.strAreaAggregation + "_" +
+                CHelperFunction.GetTimeStampWithPrefix() + "_" + strMethod + "_" + pParameterInitialize.strAreaAggregation + "_" +
                 CConstants.strShapeConstraint + "_" + intQuitCount, pParameterInitialize.strSavePath, CCAMDijkstra.strKeyLt);
             ExportForLatex(objDataLtSS, CCAMDijkstra.strKeyLt, pParameterInitialize.strSavePath);
             ExportIDOverEstimation(objDataLtSS, pParameterInitialize.strSavePath);

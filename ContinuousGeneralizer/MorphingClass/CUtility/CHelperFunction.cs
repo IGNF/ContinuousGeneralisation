@@ -162,12 +162,13 @@ namespace MorphingClass.CUtility
         public static void SetSavePath(CParameterInitialize ParameterInitialize)
         {
             //if we have already set a path, then we simply use that path
-            if (ParameterInitialize.strPath!=null)
+            if (ParameterInitialize.strMxdPathBackSlash != null)
             {
                 return;
             }
 
-            if (_strPath == null)
+            //_strPath, which is different from ParameterInitialize.strPath, is defined in CHelperFunction
+            if (_strPath == null)  
             {
                 SaveFileDialog SFD = new SaveFileDialog();
                 SFD.ShowDialog();
@@ -178,11 +179,16 @@ namespace MorphingClass.CUtility
             string strFileName = _strPath + GetTimeStamp();
             //string strFileName = CHelperFunction.strPath + "MorphingResults";
 
-            ParameterInitialize.strPath = _strPath;
-            ParameterInitialize.strSaveFolder = System.IO.Path.GetFileNameWithoutExtension(strFileName);
+            ParameterInitialize.strMxdPathBackSlash = _strPath;
+            ParameterInitialize.strSaveFolderName = System.IO.Path.GetFileNameWithoutExtension(strFileName);
             ParameterInitialize.strSavePath = strFileName;
             ParameterInitialize.strSavePathBackSlash = strFileName + "\\";
             ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(strFileName);
+        }
+
+        public static string GetTimeStampWithPrefix()
+        {
+            return "_" + GetTimeStamp();
         }
 
         public static string GetTimeStamp()
@@ -193,7 +199,7 @@ namespace MorphingClass.CUtility
             var strMinute = JudgeAndAddZero(DateTime.Now.Minute);
             var strSecond = JudgeAndAddZero(DateTime.Now.Second);
             var strMillisecond = JudgeAndAddZero(DateTime.Now.Millisecond,3);
-            return "_" + DateTime.Now.Year.ToString() + strMonth + strDay + "_" + strHour + strMinute + strSecond + strMillisecond;
+            return DateTime.Now.Year.ToString() + strMonth + strDay + "_" + strHour + strMinute + strSecond + strMillisecond;
         }
 
         public static string JudgeAndAddZero(double dblNumber, int intDigits = 2)
@@ -1286,7 +1292,7 @@ namespace MorphingClass.CUtility
             List<CPolyline> pInterpolatedCPlLt = pMorphingBaseCpl.GenerateInterpolatedLt(dblProportion);
 
             CParameterInitialize pParameterInitialize = pDataRecords.ParameterInitialize;
-            CHelperFunction.SaveCPlLt(pInterpolatedCPlLt, pParameterInitialize.strSaveFolder + "____" + dblProportion.ToString(), pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
+            CHelperFunction.SaveCPlLt(pInterpolatedCPlLt, pParameterInitialize.strSaveFolderName + "____" + dblProportion.ToString(), pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
 
             return pInterpolatedCPlLt;
         }

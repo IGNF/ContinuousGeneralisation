@@ -114,7 +114,7 @@ namespace MorphingClass.CUtility
         //private string _strFieldName;             //字段名称
         //private string _strGeneralizerMethod;        //Generalizer方法
         //private string _strNewFileName;           //新建图层的名字
-        private string _strPath;
+
         private string _strSavePath;              //存储路径名
         private string _strSaveFolder;              //存储路径名
         //private string _strTimeType;              //考虑时间的方式(算术平均；反幂指数；反时间距离)        
@@ -122,6 +122,15 @@ namespace MorphingClass.CUtility
         /// <summary>The whole path to strSaveFolder, already including "\\" at the end, strSavePath == strPath + strLastName + "\\"</summary>
         public string strSavePathBackSlash { get; set; }
         public string strAreaAggregation { get; set; }
+
+        /// <summary>The whole path to Data Folder, already including "\\" at the end</summary>
+        public string strMxdPathBackSlash { get; set; }
+
+        /// <summary>The whole path to strSaveFolder, without "\\" at the end, strSavePath == strPath + strLastName</summary>
+        public string strSavePath { get; set; }
+
+        /// <summary>The name of the folder used to save results, not a path</summary>
+        public string strSaveFolderName { get; set; }
 
         //private List<string> _strFieldLt;         //字段列表，创建图层时需添加的属性字段
         //private List<string> _strclstFieldsLt;    //参加时间插值字段名
@@ -602,29 +611,10 @@ namespace MorphingClass.CUtility
         //    set { _strNewFileName = value; }
         //}
 
-        /// <summary>The whole path to Data Folder, already including "\\" at the end</summary>
-        public string strPath
-        {
-            get { return _strPath; }
-            set { _strPath = value; }
-        }
-
-
-        /// <summary>The whole path to strSaveFolder, without "\\" at the end, strSavePath == strPath + strLastName</summary>
-        public string strSavePath
-        {
-            get { return _strSavePath; }
-            set { _strSavePath = value; }
-        }
 
 
 
-        /// <summary>The name of the folder used to save results, not a path</summary>
-        public string strSaveFolder
-        {
-            get { return _strSaveFolder; }
-            set { _strSaveFolder = value; }
-        }
+
 
 
         ///// <summary>属性：考虑时间的方式(算术平均；反幂指数；反时间距离)</summary>

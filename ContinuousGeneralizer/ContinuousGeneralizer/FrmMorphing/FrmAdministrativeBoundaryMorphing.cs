@@ -77,7 +77,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             SFD.ShowDialog();
             if (SFD.FileName == null || SFD.FileName == "") return;
             ParameterInitialize.strSavePath = SFD.FileName;
-            ParameterInitialize.strSaveFolder = System.IO.Path.GetFileNameWithoutExtension(SFD.FileName);
+            ParameterInitialize.strSaveFolderName = System.IO.Path.GetFileNameWithoutExtension(SFD.FileName);
             ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
 
 
