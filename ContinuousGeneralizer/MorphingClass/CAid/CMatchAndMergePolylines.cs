@@ -37,10 +37,10 @@ namespace MorphingClass.CAid
         public void MatchAndMergePolylines()
         {
             CParameterInitialize ParameterInitialize = _ParameterInitialize;
-            //List<CPolyline> pCPlLt = this.ObjCGeoLtLt[0].ToExpectedClass<CPolyline, object>().ToList();
+            //List<CPolyline> pCPlLt = this.ObjCGeoLtLt[0].AsExpectedClass<CPolyline, object>().ToList();
 
-            List<CPolyline> LSCPlLt = this.ObjCGeoLtLt[0].ToExpectedClass<CPolyline, object>().ToList();
-            List<CPolyline> SSCPlLt = this.ObjCGeoLtLt[1].ToExpectedClass<CPolyline, object>().ToList();
+            List<CPolyline> LSCPlLt = this.ObjCGeoLtLt[0].AsExpectedClass<CPolyline, object>().ToList();
+            List<CPolyline> SSCPlLt = this.ObjCGeoLtLt[1].AsExpectedClass<CPolyline, object>().ToList();
 
             long lngStartTime = System.Environment.TickCount;
             List<CPolyline> LSAttentionCPlLt = new List<CPolyline>();
@@ -259,7 +259,7 @@ namespace MorphingClass.CAid
             //double dblFrDiffY = LSCPlLt[i].pBaseLine.ToCpt.Y - LSCPlLt[i].pBaseLine.FrCpt.Y;
             //double dblToDiffX = SSCPlLt[i].pBaseLine.ToCpt.X - SSCPlLt[i].pBaseLine.FrCpt.X;
             //double dblToDiffY = SSCPlLt[i].pBaseLine.ToCpt.Y - SSCPlLt[i].pBaseLine.FrCpt.Y;
-            //double dblAngleDiff = CGeometricMethods.CalAngle2(dblFrDiffX, dblFrDiffY, dblToDiffX, dblToDiffY);
+            //double dblAngleDiff = CGeometricMethods.CalAngle_Counterclockwise(dblFrDiffX, dblFrDiffY, dblToDiffX, dblToDiffY);
 
             //if ((Math.Abs(dblAngleDiff) > (Math.PI / 2) && Math.Abs(dblAngleDiff) < (3 * Math.PI / 2)))
             //{

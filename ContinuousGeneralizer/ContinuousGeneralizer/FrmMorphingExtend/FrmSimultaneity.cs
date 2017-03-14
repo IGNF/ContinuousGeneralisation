@@ -87,7 +87,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
             //_adblAngle0 = new double[intPtCount - 2];
             //for (int i = 0; i < intPtCount - 2; i++)
             //{
-            //    _adblAngle0[i] = CGeometricMethods.CalAngle2(cpl.CptLt[i], cpl.CptLt[i + 1], cpl.CptLt[i + 2]);                
+            //    _adblAngle0[i] = CGeometricMethods.CalAngle_Counterclockwise(cpl.CptLt[i], cpl.CptLt[i + 1], cpl.CptLt[i + 2]);                
             //}
 
         }

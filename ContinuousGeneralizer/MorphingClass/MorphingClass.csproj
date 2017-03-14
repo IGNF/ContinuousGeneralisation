@@ -176,7 +176,6 @@
     <Compile Include="CAid\CStatisticsOfDataSets.cs" />
     <Compile Include="CAid\CTopologyChecker.cs" />
     <Compile Include="CCommon\ControlsSynchronizer.cs" />
-    <Compile Include="CCommon\CreateNewDocument.cs" />
     <Compile Include="CCommon\ExportActiveViewCS_Net .cs" />
     <Compile Include="CCommon\LayerVisibility.cs" />
     <Compile Include="CCommon\Maps.cs" />

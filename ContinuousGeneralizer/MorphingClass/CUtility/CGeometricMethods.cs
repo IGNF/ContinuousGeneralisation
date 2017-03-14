@@ -772,7 +772,7 @@ namespace MorphingClass.CUtility
         /// <summary>计算夹角(逆时针为正)</summary>
         /// <returns>夹角弧度值</returns>
         /// <remarks>用求差的方法求夹角，可区分夹角的方向</remarks>
-        public static double CalAngle2(CPoint precpt, CPoint midcpt, CPoint folcpt)
+        public static double CalAngle_Counterclockwise(CPoint precpt, CPoint midcpt, CPoint folcpt)
         {
             double dblpreDiffX = precpt.X - midcpt.X;
             double dblpreDiffY = precpt.Y - midcpt.Y;
@@ -780,21 +780,21 @@ namespace MorphingClass.CUtility
             double dblfolDiffX = folcpt.X - midcpt.X;
             double dblfolDiffY = folcpt.Y - midcpt.Y;
 
-            return CalAngle2(dblpreDiffX, dblpreDiffY, dblfolDiffX, dblfolDiffY);
+            return CalAngle_Counterclockwise(dblpreDiffX, dblpreDiffY, dblfolDiffX, dblfolDiffY);
         }
 
         /// <summary>计算夹角(逆时针)</summary>
         /// <returns>夹角弧度值</returns>
         /// <remarks>用求差的方法求夹角，可区分夹角的方向</remarks>
-        public static double CalAngle2(CEdge frcedge, CEdge tocedge)
+        public static double CalAngle_Counterclockwise(CEdge frcedge, CEdge tocedge)
         {
-            return CalAngle2(frcedge.FrCpt, frcedge.ToCpt, tocedge.FrCpt, tocedge.ToCpt);
+            return CalAngle_Counterclockwise(frcedge.FrCpt, frcedge.ToCpt, tocedge.FrCpt, tocedge.ToCpt);
         }
 
         /// <summary>计算夹角(逆时针)</summary>
         /// <returns>夹角弧度值</returns>
         /// <remarks>用求差的方法求夹角，可区分夹角的方向</remarks>
-        public static double CalAngle2(CPoint prefrcpt, CPoint pretocpt, CPoint folfrcpt, CPoint foltocpt)
+        public static double CalAngle_Counterclockwise(CPoint prefrcpt, CPoint pretocpt, CPoint folfrcpt, CPoint foltocpt)
         {
             double dblpreDiffX = pretocpt.X - prefrcpt.X;
             double dblpreDiffY = pretocpt.Y - prefrcpt.Y;
@@ -802,13 +802,13 @@ namespace MorphingClass.CUtility
             double dblfolDiffX = foltocpt.X - folfrcpt.X;
             double dblfolDiffY = foltocpt.Y - folfrcpt.Y;
 
-            return CalAngle2(dblpreDiffX, dblpreDiffY, dblfolDiffX, dblfolDiffY); ;
+            return CalAngle_Counterclockwise(dblpreDiffX, dblpreDiffY, dblfolDiffX, dblfolDiffY); ;
         }
 
         /// <summary>计算夹角(逆时针)</summary>
         /// <returns>夹角弧度值</returns>
         /// <remarks>用求差的方法求夹角，可区分夹角的方向</remarks>
-        public static double CalAngle2(double dblX1, double dblY1, double dblX2, double dblY2, double dblX3, double dblY3)
+        public static double CalAngle_Counterclockwise(double dblX1, double dblY1, double dblX2, double dblY2, double dblX3, double dblY3)
         {
             double dblpreDiffX = dblX1 - dblX2;
             double dblpreDiffY = dblY1 - dblY2;
@@ -816,13 +816,13 @@ namespace MorphingClass.CUtility
             double dblfolDiffX = dblX3 - dblX2;
             double dblfolDiffY = dblY3 - dblY2;
 
-            return CalAngle2(dblpreDiffX, dblpreDiffY, dblfolDiffX, dblfolDiffY);
+            return CalAngle_Counterclockwise(dblpreDiffX, dblpreDiffY, dblfolDiffX, dblfolDiffY);
         }
 
         /// <summary>compute the angle of two vectors (counter clock-wise)</summary>
         /// <returns>the radian angle</returns>
         /// <remarks>the value is in [0,2*pi)</remarks>
-        public static double CalAngle2(double dblpreDiffX, double dblpreDiffY, double dblfolDiffX, double dblfolDiffY)
+        public static double CalAngle_Counterclockwise(double dblpreDiffX, double dblpreDiffY, double dblfolDiffX, double dblfolDiffY)
         {
             //计算始向量与坐标横轴的夹角
             double dblStartAngle = CalAxisAngle(dblpreDiffX, dblpreDiffY);
@@ -1051,7 +1051,7 @@ namespace MorphingClass.CUtility
             List<double> dblanglelt = new List<double>();
             for (int i = 0; i < cptlt.Count - 2; i++)
             {
-                double dblAngle = CalAngle2(cptlt[i], cptlt[i + 1], cptlt[i + 2]);
+                double dblAngle = CalAngle_Counterclockwise(cptlt[i], cptlt[i + 1], cptlt[i + 2]);
                 dblanglelt.Add(dblAngle);
             }
             return dblanglelt;
@@ -1709,7 +1709,7 @@ namespace MorphingClass.CUtility
             if (cpt.ClosestLeftCIntersection != null)
             {
                 CIntersection pIntersection = cpt.ClosestLeftCIntersection;
-                double dblAngle = CGeometricMethods.CalAngle2(pIntersection.CEdge1, pIntersection.CEdge2);
+                double dblAngle = CGeometricMethods.CalAngle_Counterclockwise(pIntersection.CEdge1, pIntersection.CEdge2);
                 if (dblAngle > Math.PI)
                 {
                     pIntersection.CEdge2 = pIntersection.CEdge2.cedgeTwin;
@@ -1725,12 +1725,12 @@ namespace MorphingClass.CUtility
         }
 
 
-        public static IRing2 GenerateRingByCptlt(List<CPoint> cptlt, double dblFactor=1)
+        public static IRing2 GenerateRingByCptlt(List<CPoint> cptlt)
         {
             IPointCollection4 pRingCol = new RingClass();
             foreach (var cpt in cptlt)
             {
-                pRingCol.AddPoint(cpt.JudgeAndSetPoint(dblFactor));
+                pRingCol.AddPoint(cpt.JudgeAndSetPoint());
             }
 
             return pRingCol as IRing2;
@@ -1904,7 +1904,7 @@ namespace MorphingClass.CUtility
             List<List<CEdge>> cedgeltlt = new List<List<CEdge>>(cptltlt.Count);
             foreach (var cptlt in cptltlt)
             {
-                cedgeltlt.Add(FormCEdgeLt(cptlt));
+                cedgeltlt.Add(FormCEdgeEb(cptlt).ToList ());
             }
             return cedgeltlt;
         }
@@ -1913,17 +1913,26 @@ namespace MorphingClass.CUtility
         /// <summary>
         /// Construct the edge list for a list of points
         /// </summary>
+        /// <param name="blnIdentical">blnIdentical == true means the first point and the last point are the same</param>
         /// <returns>a list of edges, there are only two vertices are stored</returns>
         /// <remarks>if the set of points are from a polygon, then first point and the last point must have the same coordinates</remarks>
-        public static List<CEdge> FormCEdgeLt(List<CPoint> cptlt)
+        public static IEnumerable<CEdge> FormCEdgeEb(IEnumerable<CPoint> cptEb, bool blnIdentical = true)
         {
-            List<CEdge> cedgelt = new List<CEdge>(cptlt.Count - 1);
-            for (int i = 0; i < cptlt.Count - 1; i++)
+            var cptEt = cptEb.GetEnumerator();
+            cptEt.MoveNext();
+            var firstcpt = cptEt.Current;
+            var lastcpt = cptEt.Current;
+
+            while (cptEt.MoveNext())
             {
-                CEdge Edge = new CEdge(cptlt[i], cptlt[i + 1]);
-                cedgelt.Add(Edge);
+                yield return new CEdge(lastcpt, cptEt.Current);
+                lastcpt = cptEt.Current;
             }
-            return cedgelt;
+
+            if (blnIdentical == false)
+            {
+                yield return new CEdge(lastcpt, firstcpt);
+            }
         }
 
 
@@ -2130,6 +2139,69 @@ namespace MorphingClass.CUtility
 
             return unionedPolygon as IPolygon4;
         }
+
+
+        public static void CheckShortEdges(IEnumerable<CEdge> cedgeEb)
+        {
+            foreach (var cedge in cedgeEb)
+            {
+                if (CCompareMethods.CompareCptXY(cedge.FrCpt, cedge.ToCpt)==0)
+                {
+                    throw new ArgumentException("There is a small edge!");
+                }
+            }
+        }
+
+
+
+
+        public static IEnumerable<IEnumerable<CPoint>> RemoveClosePointsOnPaths(IEnumerable<IEnumerable<CPoint>> cptebeb, bool blnIdentical = true )
+        {
+            foreach (var cpteb in cptebeb)
+            {
+                yield return RemoveClosePointsOnPath(cpteb, blnIdentical);
+            }
+        }
+
+        public static IEnumerable<CPoint> RemoveClosePointsOnPath(IEnumerable<CPoint> cpteb, bool blnIdentical = true)
+        {
+            var cptet = cpteb.GetEnumerator();
+            cptet.MoveNext();
+            var firstcpt = cptet.Current;
+            var lastcpt = cptet.Current;
+
+            while (cptet.MoveNext ())
+            {
+                if (CCompareMethods.CompareCptYX(lastcpt, cptet.Current )!=0)
+                {
+                    yield return lastcpt;
+                    lastcpt= cptet.Current;
+                }
+            }
+
+            if (blnIdentical == true)
+            {
+                yield return lastcpt;
+            }
+            else
+            {
+                if (CCompareMethods.CompareCptYX(lastcpt, firstcpt) != 0)
+                {
+                    yield return lastcpt;
+                }
+            }
+        }
+
+        //public static IEnumerable<CEdge> RemoveShortEdges(IEnumerable<CEdge> cedgeEb)
+        //{
+        //    foreach (var cedge in cedgeEb)
+        //    {
+        //        if (CCompareMethods.CompareCptXY(cedge.FrCpt, cedge.ToCpt) == 1)
+        //        {
+        //            throw new ArgumentException("There is a small edge!");
+        //        }
+        //    }
+        //}
 
         //public static List<CEdge> RemoveDuplicated()
         //{

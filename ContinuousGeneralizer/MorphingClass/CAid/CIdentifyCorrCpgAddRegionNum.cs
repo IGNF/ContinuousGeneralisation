@@ -38,8 +38,8 @@ namespace MorphingClass.CAid
         {
             
             CParameterInitialize ParameterInitialize = _ParameterInitialize;
-            var pLSCPgLt = this.ObjCGeoLtLt[0].ToExpectedClass<CPolygon, object>().ToList();
-            var pSSCPgLt = this.ObjCGeoLtLt[1].ToExpectedClass<CPolygon, object>().ToList();
+            var pLSCPgLt = this.ObjCGeoLtLt[0].AsExpectedClass<CPolygon, object>().ToList();
+            var pSSCPgLt = this.ObjCGeoLtLt[1].AsExpectedClass<CPolygon, object>().ToList();
 
             long lngStartTime = System.Environment.TickCount;
             List<CPolygon> LSAttentionCPgLt = new List<CPolygon>();

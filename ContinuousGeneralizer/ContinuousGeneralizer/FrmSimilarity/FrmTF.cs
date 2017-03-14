@@ -162,8 +162,8 @@ namespace ContinuousGeneralizer.FrmSimilarity
             adblToIAzimuth[0] = CGeometricMethods.CalAxisAngle(dblToDiffX[0], dblToDiffY[0]);
             for (int i = 1; i < pCorrCptsLt.Count - 1; i++)
             {
-                adblFrIAzimuth[i] = adblFrIAzimuth[i - 1] + CGeometricMethods.CalAngle2(pCorrCptsLt[i - 1].FrCpt, pCorrCptsLt[i].FrCpt, pCorrCptsLt[i + 1].FrCpt) - Math.PI;
-                adblToIAzimuth[i] = adblToIAzimuth[i - 1] + CGeometricMethods.CalAngle2(pCorrCptsLt[i - 1].ToCpt, pCorrCptsLt[i].ToCpt, pCorrCptsLt[i + 1].ToCpt) - Math.PI;
+                adblFrIAzimuth[i] = adblFrIAzimuth[i - 1] + CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[i - 1].FrCpt, pCorrCptsLt[i].FrCpt, pCorrCptsLt[i + 1].FrCpt) - Math.PI;
+                adblToIAzimuth[i] = adblToIAzimuth[i - 1] + CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[i - 1].ToCpt, pCorrCptsLt[i].ToCpt, pCorrCptsLt[i + 1].ToCpt) - Math.PI;
             }
             double dblAreaFr = 0;
             double dblAreaTo = 0;

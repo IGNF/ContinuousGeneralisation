@@ -47,7 +47,7 @@ double CalAxisAngle(double dblX, double dblY) {
 /// <summary>计算夹角(逆时针)</summary>
 /// <returns>夹角弧度值</returns>
 /// <remarks>用求差的方法求夹角，可区分夹角的方向</remarks>
-double CalAngle2(double dblX1, double dblY1, double dblX2, double dblY2, double dblX3, double dblY3) {
+double CalAngle_Counterclockwise(double dblX1, double dblY1, double dblX2, double dblY2, double dblX3, double dblY3) {
     //计算始向量与坐标横轴的夹角
     double dblpreDiffX = dblX1 - dblX2;
     double dblpreDiffY = dblY1 - dblY2;
@@ -210,7 +210,7 @@ namespace CPlusClass {
 					value = (xout[i+2]-xout[i+1]) / s2Squared;
 					trips.push_back(Trip( currentRow, yid(variableIndex[i+2]), value ));
 				}
-				double newAngle = CalAngle2( xout[i], yout[i], xout[i+1], yout[i+1], xout[i+2], yout[i+2] );
+				double newAngle = CalAngle_Counterclockwise( xout[i], yout[i], xout[i+1], yout[i+1], xout[i+2], yout[i+2] );
 				rhs[currentRow] = angle[i] - newAngle;
 				currentRow++;
 

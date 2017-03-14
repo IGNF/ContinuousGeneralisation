@@ -1301,7 +1301,9 @@ namespace ContinuousGeneralizer
             this.Controls.Add(this.menuStrip);
             this.Controls.Add(this.ststMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Location = new System.Drawing.Point(400, 200);
             this.Name = "FrmContinuousGeneralizer";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "ContinuousGeneralizer";
             this.Load += new System.EventHandler(this.frmContinuousGeneralizer_Load);
             this.Shown += new System.EventHandler(this.FrmContinuousGeneralizer_Shown);

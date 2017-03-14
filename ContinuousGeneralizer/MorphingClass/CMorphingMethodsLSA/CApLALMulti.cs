@@ -121,9 +121,9 @@ namespace MorphingClass.CMorphingMethodsLSA
             for (int j = 0; j < pCorrCptsLt.Count - 2; j++)
             {
                 //较大比例尺线状要素上的夹角
-                double dblfrAngle = CGeometricMethods.CalAngle2(pCorrCptsLt[j].FrCpt, pCorrCptsLt[j + 1].FrCpt, pCorrCptsLt[j + 2].FrCpt);
+                double dblfrAngle = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[j].FrCpt, pCorrCptsLt[j + 1].FrCpt, pCorrCptsLt[j + 2].FrCpt);
                 //较小比例尺线状要素上的夹角
-                double dbltoAngle = CGeometricMethods.CalAngle2(pCorrCptsLt[j].ToCpt, pCorrCptsLt[j + 1].ToCpt, pCorrCptsLt[j + 2].ToCpt);
+                double dbltoAngle = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[j].ToCpt, pCorrCptsLt[j + 1].ToCpt, pCorrCptsLt[j + 2].ToCpt);
 
                 //角度初始值
                 for (int i = 0; i < intInterNum; i++)
@@ -197,7 +197,7 @@ namespace MorphingClass.CMorphingMethodsLSA
                     double dblProportion = (i + 1) * dblInterval;
                     X0[intBasicIndexIJ + 0, 0] = (1 - dblProportion) * pCorrCptsLt[j].FrCpt.X + dblProportion * pCorrCptsLt[j].ToCpt.X;
                     X0[intBasicIndexIJ + 1, 0] = (1 - dblProportion) * pCorrCptsLt[j].FrCpt.Y + dblProportion * pCorrCptsLt[j].ToCpt.Y;
-                    double dblAngle = CGeometricMethods.CalAngle2(X0[intBasicIndexIJ - 4, 0], X0[intBasicIndexIJ - 3, 0], X0[intBasicIndexIJ - 2, 0], X0[intBasicIndexIJ - 1, 0], X0[intBasicIndexIJ - 0, 0], X0[intBasicIndexIJ + 1, 0]);  //计算实际夹角 
+                    double dblAngle = CGeometricMethods.CalAngle_Counterclockwise(X0[intBasicIndexIJ - 4, 0], X0[intBasicIndexIJ - 3, 0], X0[intBasicIndexIJ - 2, 0], X0[intBasicIndexIJ - 1, 0], X0[intBasicIndexIJ - 0, 0], X0[intBasicIndexIJ + 1, 0]);  //计算实际夹角 
                     adblAzimuth[i, j - 1] = adblAzimuth[i, j - 2] + dblAngle - Math.PI;
                 }
             }
@@ -224,7 +224,7 @@ namespace MorphingClass.CMorphingMethodsLSA
             //            double dblProportion = (i + 1) * dblInterval;
             //            X0[intBasicIndexIJ + 0, 0] = (1 - dblProportion) * pCorrCptsLt[j].FrCpt.X + dblProportion * pCorrCptsLt[j].ToCpt.X;
             //            X0[intBasicIndexIJ + 1, 0] = (1 - dblProportion) * pCorrCptsLt[j].FrCpt.Y + dblProportion * pCorrCptsLt[j].ToCpt.Y;
-            //            double dblAngle = CGeometricMethods.CalAngle2(X0[intBasicIndexIJ - 4, 0], X0[intBasicIndexIJ - 3, 0], X0[intBasicIndexIJ - 2, 0], X0[intBasicIndexIJ - 1, 0], X0[intBasicIndexIJ - 0, 0], X0[intBasicIndexIJ + 1, 0]);  //计算实际夹角 
+            //            double dblAngle = CGeometricMethods.CalAngle_Counterclockwise(X0[intBasicIndexIJ - 4, 0], X0[intBasicIndexIJ - 3, 0], X0[intBasicIndexIJ - 2, 0], X0[intBasicIndexIJ - 1, 0], X0[intBasicIndexIJ - 0, 0], X0[intBasicIndexIJ + 1, 0]);  //计算实际夹角 
             //            adblAzimuth[i, j - 1] = adblAzimuth[i, j - 2] + dblAngle - Math.PI;
             //        }
             //    }
@@ -445,7 +445,7 @@ namespace MorphingClass.CMorphingMethodsLSA
                         for (int j = 0; j < intPtNum - 2; j++)
                         {
                             int intBasicIndexIJA1 = i * intXYNum + 2 * j;
-                            adblAngle[i, j] = CGeometricMethods.CalAngle2(Xmix[intBasicIndexIJA1 + 0, 0], Xmix[intBasicIndexIJA1 + 1, 0],
+                            adblAngle[i, j] = CGeometricMethods.CalAngle_Counterclockwise(Xmix[intBasicIndexIJA1 + 0, 0], Xmix[intBasicIndexIJA1 + 1, 0],
                                                                         Xmix[intBasicIndexIJA1 + 2, 0], Xmix[intBasicIndexIJA1 + 3, 0],
                                                                         Xmix[intBasicIndexIJA1 + 4, 0], Xmix[intBasicIndexIJA1 + 5, 0]);
                         }
@@ -488,20 +488,20 @@ namespace MorphingClass.CMorphingMethodsLSA
                         int int2J = 2 * j;
                         //源线段、第一生成线段、第二生成线段间对应点夹角
                         int l = 0;
-                        adblIntervalAngle[l, j] = CGeometricMethods.CalAngle2(pCorrCptsLt[j].FrCpt.X, pCorrCptsLt[j].FrCpt.Y,
+                        adblIntervalAngle[l, j] = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[j].FrCpt.X, pCorrCptsLt[j].FrCpt.Y,
                                                                             Xmix[(l - 0) * intXYNum + int2J + 0, 0], Xmix[(l - 0) * intXYNum + int2J + 1, 0],
                                                                             Xmix[(l + 1) * intXYNum + int2J + 0, 0], Xmix[(l + 1) * intXYNum + int2J + 1, 0]);
 
                         //倒数第二生成线段、倒数第一生成线段、目标线段间对应点夹角
                         l = intInterNum - 1;
-                        adblIntervalAngle[l, j] = CGeometricMethods.CalAngle2(Xmix[(l - 1) * intXYNum + int2J + 0, 0], Xmix[(l - 1) * intXYNum + int2J + 1, 0],
+                        adblIntervalAngle[l, j] = CGeometricMethods.CalAngle_Counterclockwise(Xmix[(l - 1) * intXYNum + int2J + 0, 0], Xmix[(l - 1) * intXYNum + int2J + 1, 0],
                                                                             Xmix[(l - 0) * intXYNum + int2J + 0, 0], Xmix[(l - 0) * intXYNum + int2J + 1, 0],
                                                                             pCorrCptsLt[j].ToCpt.X, pCorrCptsLt[j].ToCpt.Y);
 
                         //各生成线段间对应点距离
                         for (int i = 1; i < intInterNum - 1; i++)
                         {
-                            adblIntervalAngle[i, j] = CGeometricMethods.CalAngle2(Xmix[(i - 1) * intXYNum + int2J + 0, 0], Xmix[(i - 1) * intXYNum + int2J + 1, 0],
+                            adblIntervalAngle[i, j] = CGeometricMethods.CalAngle_Counterclockwise(Xmix[(i - 1) * intXYNum + int2J + 0, 0], Xmix[(i - 1) * intXYNum + int2J + 1, 0],
                                                                                 Xmix[(i - 0) * intXYNum + int2J + 0, 0], Xmix[(i - 0) * intXYNum + int2J + 1, 0],
                                                                                 Xmix[(i + 1) * intXYNum + int2J + 0, 0], Xmix[(i + 1) * intXYNum + int2J + 1, 0]);
                         }

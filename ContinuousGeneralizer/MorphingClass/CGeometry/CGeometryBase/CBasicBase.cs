@@ -16,7 +16,7 @@ namespace MorphingClass.CGeometry.CGeometryBase
         {
             return this.GID.CompareTo(other.GID);
         }
-
+        
         
 
         public int ID

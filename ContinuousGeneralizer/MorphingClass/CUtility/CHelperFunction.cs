@@ -79,11 +79,12 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "France";
         //private static string _strDataFolderName = "France_Part";
         private static string _strDataFolderName = "France_Smallpart";
+        //private static string _strDataFolderName = "France_Problematic";
         //private static string _strDataFolderName = "France_WithOneHole";
         //private static string _strDataFolderName = "France_OneSquare";
         //private static string _strDataFolderName = "France_TwoSquares_Faraway";
         //private static string _strDataFolderName = "France_TwoSquares_Overlap";
-        private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\" + _strDataFolderName + "\\";
+        private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\BuildingGrowing\\" + _strDataFolderName + "\\";
 
 
         public static IEnumerable<CPoint> GetTestCptEb()
@@ -186,15 +187,13 @@ namespace MorphingClass.CUtility
 
         public static string GetTimeStamp()
         {
-
-
             var strMonth = JudgeAndAddZero(DateTime.Now.Month);
             var strDay = JudgeAndAddZero(DateTime.Now.Day);
             var strHour = JudgeAndAddZero(DateTime.Now.Hour);
             var strMinute = JudgeAndAddZero(DateTime.Now.Minute);
             var strSecond = JudgeAndAddZero(DateTime.Now.Second);
             var strMillisecond = JudgeAndAddZero(DateTime.Now.Millisecond,3);
-            return DateTime.Now.Year.ToString() + strMonth + strDay + "_" + strHour + strMinute + strSecond + strMillisecond;
+            return "_" + DateTime.Now.Year.ToString() + strMonth + strDay + "_" + strHour + strMinute + strSecond + strMillisecond;
         }
 
         public static string JudgeAndAddZero(double dblNumber, int intDigits = 2)
@@ -512,6 +511,7 @@ namespace MorphingClass.CUtility
 
 
 
+
         /// <summary>
         /// transform some items into a list
         /// </summary>
@@ -600,6 +600,7 @@ namespace MorphingClass.CUtility
         /// <remarks>currently, we assume that there is only one exterior ring for ipg</remarks>
         public static List<List<CPoint>> GetCPtLtLtByIPG(IPolygon4 ipg, double dblFactor = 1)
         {
+            //ipg.Close();
             if (ipg.ExteriorRingCount != 1)  //exterior ring: 127.0.0.1:47873/help/1-6544/ms.help?method=page&id=ESRIGEOMETRY-7B3BAA75-000594&product=VS&productVersion=100&topicVersion=&locale=EN-US&topicLocale=EN-US
             {
                 throw new ArgumentException("I have not considered such a complicated case! This includes the case that a hole contains other holes! ");
@@ -619,7 +620,7 @@ namespace MorphingClass.CUtility
             return cptltlt;
         }
 
-        public static IEnumerable<IEnumerable<CPoint>> GetCptEbByIColEb<T>(IEnumerable<T> TEb, int intFactor = 1)
+        public static IEnumerable<IEnumerable<CPoint>> GetCptEbEbByIColEb<T>(IEnumerable<T> TEb, int intFactor = 1)
         {
             foreach (var item in TEb)
             {
@@ -627,6 +628,12 @@ namespace MorphingClass.CUtility
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pCol">for a polygon, the fisrt point and the last point are identical</param>
+        /// <param name="dblFactor"></param>
+        /// <returns></returns>
         public static IEnumerable<CPoint> GetCptEbByICol(IPointCollection4 pCol, double dblFactor = 1)
         {
             for (int i = 0; i < pCol.PointCount; i++)
@@ -634,23 +641,6 @@ namespace MorphingClass.CUtility
                 yield return new CPoint(i, pCol.get_Point(i), dblFactor);
             }
         }
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="pCol"></param>
-        ///// <returns></returns>
-        ///// <remarks>pCol将作为起点和终点的同一个点存储了两遍</remarks>
-        //public static List<CPoint> GetCptLtFromIptCol(IPointCollection4 pCol, int intFactor=1)
-        //{
-        //    List<CPoint> cptlt = new List<CPoint>(pCol.PointCount);
-        //    for (int i = 0; i < pCol.PointCount; i++)
-        //    {
-        //        CPoint cpt = new CPoint(i, pCol.get_Point(i), intFactor);
-        //        cptlt.Add(cpt);
-        //    }
-        //    return cptlt;
-        //}
 
         public static IPointCollection4 GetPointCollectionFromCptLt(List<CPoint> cptlt, esriGeometryType pesriGeometryType = esriGeometryType .esriGeometryPolyline)
         {

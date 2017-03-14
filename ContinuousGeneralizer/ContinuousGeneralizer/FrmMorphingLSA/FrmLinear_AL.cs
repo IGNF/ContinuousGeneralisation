@@ -100,8 +100,8 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             //    _adblFrLength[j] = CGeometricMethods.CalDis(FrCpl.CptLt[j], FrCpl.CptLt[j + 1]);
             //    _adblToLength[j] = CGeometricMethods.CalDis(ToCpl.CptLt[j], ToCpl.CptLt[j + 1]);
 
-            //    _adblFrAngle[j] = CGeometricMethods.CalAngle2(FrCpl.CptLt[j], FrCpl.CptLt[j + 1], FrCpl.CptLt[j + 2]);
-            //    _adblToAngle[j] = CGeometricMethods.CalAngle2(ToCpl.CptLt[j], ToCpl.CptLt[j + 1], ToCpl.CptLt[j + 2]);
+            //    _adblFrAngle[j] = CGeometricMethods.CalAngle_Counterclockwise(FrCpl.CptLt[j], FrCpl.CptLt[j + 1], FrCpl.CptLt[j + 2]);
+            //    _adblToAngle[j] = CGeometricMethods.CalAngle_Counterclockwise(ToCpl.CptLt[j], ToCpl.CptLt[j + 1], ToCpl.CptLt[j + 2]);
             //}
 
             //CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;

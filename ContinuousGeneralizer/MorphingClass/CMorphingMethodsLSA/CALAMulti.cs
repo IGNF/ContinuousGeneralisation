@@ -115,9 +115,9 @@ namespace MorphingClass.CMorphingMethodsLSA
             for (int j = 0; j < pCorrCptsLt.Count - 2; j++)
             {
                 //较大比例尺线状要素上的夹角
-                double dblfrAngle = CGeometricMethods.CalAngle2(pCorrCptsLt[j].FrCpt, pCorrCptsLt[j + 1].FrCpt, pCorrCptsLt[j + 2].FrCpt);
+                double dblfrAngle = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[j].FrCpt, pCorrCptsLt[j + 1].FrCpt, pCorrCptsLt[j + 2].FrCpt);
                 //较小比例尺线状要素上的夹角
-                double dbltoAngle = CGeometricMethods.CalAngle2(pCorrCptsLt[j].ToCpt, pCorrCptsLt[j + 1].ToCpt, pCorrCptsLt[j + 2].ToCpt);
+                double dbltoAngle = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[j].ToCpt, pCorrCptsLt[j + 1].ToCpt, pCorrCptsLt[j + 2].ToCpt);
 
                 //角度初始值
                 for (int i = 0; i < intInterNum; i++)
@@ -188,7 +188,7 @@ namespace MorphingClass.CMorphingMethodsLSA
                         double dblProportion = (i + 1) * dblInterval;
                         X0[intBasicIndexIJ + 0, 0] = (1 - dblProportion) * pCorrCptsLt[j].FrCpt.X + dblProportion * pCorrCptsLt[j].ToCpt.X;
                         X0[intBasicIndexIJ + 1, 0] = (1 - dblProportion) * pCorrCptsLt[j].FrCpt.Y + dblProportion * pCorrCptsLt[j].ToCpt.Y;
-                        double dblAngle = CGeometricMethods.CalAngle2(X0[intBasicIndexIJ - 4, 0], X0[intBasicIndexIJ - 3, 0], X0[intBasicIndexIJ - 2, 0], X0[intBasicIndexIJ - 1, 0], X0[intBasicIndexIJ - 0, 0], X0[intBasicIndexIJ + 1, 0]);  //计算实际夹角 
+                        double dblAngle = CGeometricMethods.CalAngle_Counterclockwise(X0[intBasicIndexIJ - 4, 0], X0[intBasicIndexIJ - 3, 0], X0[intBasicIndexIJ - 2, 0], X0[intBasicIndexIJ - 1, 0], X0[intBasicIndexIJ - 0, 0], X0[intBasicIndexIJ + 1, 0]);  //计算实际夹角 
                         adblAzimuth[i, j - 1] = adblAzimuth[i, j - 2] + dblAngle - Math.PI;
                     }
                 }
@@ -345,7 +345,7 @@ namespace MorphingClass.CMorphingMethodsLSA
                         for (int j = 1; j < intPtNum - 1; j++)
                         {
                             int intBasicIndexIJA1 = intBasicIndexA1 + 2 * j;
-                            double dblAngle = CGeometricMethods.CalAngle2(Xmix[intBasicIndexIJA1 - 2, 0], Xmix[intBasicIndexIJA1 - 1, 0],
+                            double dblAngle = CGeometricMethods.CalAngle_Counterclockwise(Xmix[intBasicIndexIJA1 - 2, 0], Xmix[intBasicIndexIJA1 - 1, 0],
                                                                         Xmix[intBasicIndexIJA1 + 0, 0], Xmix[intBasicIndexIJA1 + 1, 0],
                                                                         Xmix[intBasicIndexIJA1 + 2, 0], Xmix[intBasicIndexIJA1 + 3, 0]);
                             adblAzimuth[i, j] = adblAzimuth[i, j - 1] + dblAngle - Math.PI;
@@ -466,7 +466,7 @@ namespace MorphingClass.CMorphingMethodsLSA
                             for (int i = 0; i < intInterNum; i++)
                             {
                                 int intBasicIndexFi3 = i * intXYNum + 2 * intSumCount;
-                                double dblNewAngle = CGeometricMethods.CalAngle2(Xmix[intBasicIndexFi3 + 0, 0], Xmix[intBasicIndexFi3 + 1, 0],
+                                double dblNewAngle = CGeometricMethods.CalAngle_Counterclockwise(Xmix[intBasicIndexFi3 + 0, 0], Xmix[intBasicIndexFi3 + 1, 0],
                                                                                Xmix[intBasicIndexFi3 + 2, 0], Xmix[intBasicIndexFi3 + 3, 0],
                                                                                Xmix[intBasicIndexFi3 + 4, 0], Xmix[intBasicIndexFi3 + 5, 0]);
 
@@ -533,7 +533,7 @@ namespace MorphingClass.CMorphingMethodsLSA
                             int l=0;
                             //图方便，顺便计算matl
                             //第一行
-                            double dblNewAnglek1 = CGeometricMethods.CalAngle2(pCorrCptsLt[intSumCount4].FrCpt.X - Xmix[(l - 0) * intXYNum + 2 * intSumCount4 + 0, 0],
+                            double dblNewAnglek1 = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[intSumCount4].FrCpt.X - Xmix[(l - 0) * intXYNum + 2 * intSumCount4 + 0, 0],
                                                                              pCorrCptsLt[intSumCount4].FrCpt.Y - Xmix[(l - 0) * intXYNum + 2 * intSumCount4 + 1, 0],
                                                                              Xmix[(l + 1) * intXYNum + 2 * intSumCount4 + 0, 0] - Xmix[(l - 0) * intXYNum + 2 * intSumCount4 + 0, 0],
                                                                              Xmix[(l + 1) * intXYNum + 2 * intSumCount4 + 1, 0] - Xmix[(l - 0) * intXYNum + 2 * intSumCount4 + 1, 0]);
@@ -541,7 +541,7 @@ namespace MorphingClass.CMorphingMethodsLSA
 
                             //最后一行
                             l = intInterNum - 1;
-                            double dblNewAnglek2 = CGeometricMethods.CalAngle2(Xmix[(l - 1) * intXYNum + 2 * intSumCount4 + 0, 0] - Xmix[(l - 0) * intXYNum + 2 * intSumCount4 + 0, 0],
+                            double dblNewAnglek2 = CGeometricMethods.CalAngle_Counterclockwise(Xmix[(l - 1) * intXYNum + 2 * intSumCount4 + 0, 0] - Xmix[(l - 0) * intXYNum + 2 * intSumCount4 + 0, 0],
                                                                              Xmix[(l - 1) * intXYNum + 2 * intSumCount4 + 1, 0] - Xmix[(l - 0) * intXYNum + 2 * intSumCount4 + 1, 0],
                                                                              pCorrCptsLt[intSumCount4].ToCpt.X - Xmix[(l - 0) * intXYNum + 2 * intSumCount4 + 0, 0],
                                                                              pCorrCptsLt[intSumCount4].ToCpt.X - Xmix[(l - 0) * intXYNum + 2 * intSumCount4 + 1, 0]);
@@ -550,7 +550,7 @@ namespace MorphingClass.CMorphingMethodsLSA
                             //其它行
                             for (int i = 1; i < intInterNum-1; i++)
                             {
-                                double dblNewAngle = CGeometricMethods.CalAngle2(Xmix[(i - 1) * intXYNum + 2 * intSumCount4 + 0, 0] - Xmix[(i - 0) * intXYNum + 2 * intSumCount4 + 0, 0],
+                                double dblNewAngle = CGeometricMethods.CalAngle_Counterclockwise(Xmix[(i - 1) * intXYNum + 2 * intSumCount4 + 0, 0] - Xmix[(i - 0) * intXYNum + 2 * intSumCount4 + 0, 0],
                                                                                Xmix[(i - 1) * intXYNum + 2 * intSumCount4 + 1, 0] - Xmix[(i - 0) * intXYNum + 2 * intSumCount4 + 1, 0],
                                                                                Xmix[(i + 1) * intXYNum + 2 * intSumCount4 + 0, 0] - Xmix[(i - 0) * intXYNum + 2 * intSumCount4 + 0, 0],
                                                                                Xmix[(i + 1) * intXYNum + 2 * intSumCount4 + 1, 0] - Xmix[(i - 0) * intXYNum + 2 * intSumCount4 + 1, 0]);

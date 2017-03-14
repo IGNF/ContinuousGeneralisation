@@ -43,7 +43,7 @@ namespace MorphingClass.CGeneralizationMethods
         public CDPSimplification(CParameterInitialize ParameterInitialize)
         {
             Construct<CPolyline, CPolyline>(ParameterInitialize, 1);
-            _CPlLt = this.ObjCGeoLtLt[0].ToExpectedClass<CPolyline, object>().ToList();
+            _CPlLt = this.ObjCGeoLtLt[0].AsExpectedClass<CPolyline, object>().ToList();
             DivideByDP(_CPlLt);
         }
 
@@ -494,7 +494,7 @@ namespace MorphingClass.CGeneralizationMethods
             CPoint targetcpt = CGeometricMethods.GetInbetweenCpt(frcpt, tocpt, dblRatio, -1);
             pVtPl.dblRatioforMovePt = dblRatio;
             pVtPl.dblLengthforMovePt = CGeometricMethods.CalDis(targetcpt, cpt);
-            pVtPl.dblAngleDiffforMovePt = CGeometricMethods.CalAngle2(cpt, targetcpt, tocpt);
+            pVtPl.dblAngleDiffforMovePt = CGeometricMethods.CalAngle_Counterclockwise(cpt, targetcpt, tocpt);
             //pVtPl.dblDifffromMovePtX = cpt.X - dblTargetX;
             //pVtPl.dblDifffromMovePtY = cpt.Y - dblTargetY;
 

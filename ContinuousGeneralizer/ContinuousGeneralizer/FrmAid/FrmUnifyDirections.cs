@@ -122,7 +122,7 @@ namespace ContinuousGeneralizer.FrmAid
             //    double dblFrDiffY = LSCPlLt[i].pBaseLine.ToCpt.Y - LSCPlLt[i].pBaseLine.FrCpt.Y;
             //    double dblToDiffX = SSCPlLt[i].pBaseLine.ToCpt.X - SSCPlLt[i].pBaseLine.FrCpt.X;
             //    double dblToDiffY = SSCPlLt[i].pBaseLine.ToCpt.Y - SSCPlLt[i].pBaseLine.FrCpt.Y;
-            //    double dblAngleDiff = CGeometricMethods.CalAngle2(dblFrDiffX, dblFrDiffY, dblToDiffX, dblToDiffY);
+            //    double dblAngleDiff = CGeometricMethods.CalAngle_Counterclockwise(dblFrDiffX, dblFrDiffY, dblToDiffX, dblToDiffY);
 
             //    if ((Math.Abs(dblAngleDiff) > (Math.PI / 2) && Math.Abs(dblAngleDiff) < (3 * Math.PI / 2)))
             //    {

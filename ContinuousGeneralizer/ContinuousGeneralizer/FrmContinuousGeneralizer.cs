@@ -44,8 +44,8 @@ namespace ContinuousGeneralizer
     {
         private void FrmContinuousGeneralizer_Shown(object sender, EventArgs e)
         {
-            //var frmCurrent = new FrmBuildingGrowing(_DataRecords);
-            var frmCurrent = new FrmCAMDijkstra(_DataRecords);
+            var frmCurrent = new FrmBuildingGrowing(_DataRecords);
+            //var frmCurrent = new FrmCAMDijkstra(_DataRecords);
             //var frmCurrent = new FrmCGABM(_DataRecords);
             //var frmCurrent = new FrmExtractPossibleFiles();
             frmCurrent.Show();
@@ -649,33 +649,35 @@ namespace ContinuousGeneralizer
 
         private void mnuAnyTest_Click(object sender, EventArgs e)
         {
-            var cptlt= CHelperFunction .GetTestCptEb().ToList();
+            tspbMain.Value = 15;
 
-            CPolygon cpg = new CPolygon(1, cptlt);
-            cpg.CptLtLt.Add(cptlt);
-            cpg.CptLtLt.Add(cptlt);
+            //var cptlt= CHelperFunction .GetTestCptEb().ToList();
 
-
-
-
+            //CPolygon cpg = new CPolygon(1, cptlt);
+            //cpg.CptLtLt.Add(cptlt);
+            //cpg.CptLtLt.Add(cptlt);
 
 
-            CHelperFunction.testmemory();
-
-            //IList<IList<double>> intltlt = new List<IList<double>>();
-
-            //while (intltlt.Count < 40)
-            //{
-            //    intltlt.Add(testttt());
-            //}
 
 
-            //while (true)
-            //{
-            //    intltlt.Add(testttt());
-            //}
 
-            //int st = 5;        
+
+            //CHelperFunction.testmemory();
+
+            ////IList<IList<double>> intltlt = new List<IList<double>>();
+
+            ////while (intltlt.Count < 40)
+            ////{
+            ////    intltlt.Add(testttt());
+            ////}
+
+
+            ////while (true)
+            ////{
+            ////    intltlt.Add(testttt());
+            ////}
+
+            ////int st = 5;        
         }
 
         private IList<double> testttt()

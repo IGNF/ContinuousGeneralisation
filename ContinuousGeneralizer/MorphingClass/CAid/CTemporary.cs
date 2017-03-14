@@ -37,8 +37,8 @@ namespace MorphingClass.CAid
         {
             CParameterInitialize ParameterInitialize = _ParameterInitialize;
 
-            var pLSCPlLt = this.ObjCGeoLtLt[0].ToExpectedClass<CPolyline, object>().ToList();
-            //var pSSCPlLt = this.ObjCGeoLtLt[1].ToExpectedClass<CPolyline, object>().ToList();
+            var pLSCPlLt = this.ObjCGeoLtLt[0].AsExpectedClass<CPolyline, object>().ToList();
+            //var pSSCPlLt = this.ObjCGeoLtLt[1].AsExpectedClass<CPolyline, object>().ToList();
 
             var subLSCplLt = new List<CPolyline>(pLSCPlLt.Count / 2);
             var subSSCplLt = new List<CPolyline>(pLSCPlLt.Count / 2);

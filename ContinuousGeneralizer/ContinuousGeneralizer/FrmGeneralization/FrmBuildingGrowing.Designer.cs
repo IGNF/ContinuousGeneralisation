@@ -31,6 +31,14 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.txtEvaluation = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txtOutput = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.txtSmallerScale = new System.Windows.Forms.TextBox();
+            this.txtLargerScale = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             this.txtMiterLimit = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.txtBufferRadius = new System.Windows.Forms.TextBox();
@@ -68,14 +76,6 @@
             this.btn080 = new System.Windows.Forms.Button();
             this.btn070 = new System.Windows.Forms.Button();
             this.btn090 = new System.Windows.Forms.Button();
-            this.txtSmallerScale = new System.Windows.Forms.TextBox();
-            this.txtLargerScale = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.txtOutput = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -131,6 +131,79 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parameters";
             // 
+            // txtOutput
+            // 
+            this.txtOutput.Location = new System.Drawing.Point(168, 212);
+            this.txtOutput.Name = "txtOutput";
+            this.txtOutput.Size = new System.Drawing.Size(114, 20);
+            this.txtOutput.TabIndex = 116;
+            this.txtOutput.Text = "3";
+            this.txtOutput.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(6, 215);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(85, 13);
+            this.label12.TabIndex = 114;
+            this.label12.Text = "number of maps:";
+            // 
+            // txtSmallerScale
+            // 
+            this.txtSmallerScale.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.txtSmallerScale.Location = new System.Drawing.Point(165, 280);
+            this.txtSmallerScale.Name = "txtSmallerScale";
+            this.txtSmallerScale.Size = new System.Drawing.Size(114, 20);
+            this.txtSmallerScale.TabIndex = 113;
+            this.txtSmallerScale.Text = "100000";
+            this.txtSmallerScale.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // txtLargerScale
+            // 
+            this.txtLargerScale.Location = new System.Drawing.Point(165, 254);
+            this.txtLargerScale.Name = "txtLargerScale";
+            this.txtLargerScale.Size = new System.Drawing.Size(114, 20);
+            this.txtLargerScale.TabIndex = 112;
+            this.txtLargerScale.Text = "15000";
+            this.txtLargerScale.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(144, 283);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(18, 13);
+            this.label6.TabIndex = 111;
+            this.label6.Text = "1/";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(144, 257);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(18, 13);
+            this.label5.TabIndex = 110;
+            this.label5.Text = "1/";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 283);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(135, 13);
+            this.label7.TabIndex = 109;
+            this.label7.Text = "Scale of less detailed layer:";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(3, 257);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(140, 13);
+            this.label10.TabIndex = 108;
+            this.label10.Text = "Scale of more detailed layer:";
+            // 
             // txtMiterLimit
             // 
             this.txtMiterLimit.Location = new System.Drawing.Point(122, 155);
@@ -151,6 +224,7 @@
             // 
             // txtBufferRadius
             // 
+            this.txtBufferRadius.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.txtBufferRadius.Location = new System.Drawing.Point(122, 131);
             this.txtBufferRadius.Name = "txtBufferRadius";
             this.txtBufferRadius.Size = new System.Drawing.Size(158, 20);
@@ -200,7 +274,9 @@
             // 
             // cboSSRoad
             // 
+            this.cboSSRoad.BackColor = System.Drawing.SystemColors.WindowText;
             this.cboSSRoad.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboSSRoad.ForeColor = System.Drawing.SystemColors.WindowText;
             this.cboSSRoad.FormattingEnabled = true;
             this.cboSSRoad.Location = new System.Drawing.Point(122, 104);
             this.cboSSRoad.Name = "cboSSRoad";
@@ -218,7 +294,9 @@
             // 
             // cboLSRoad
             // 
+            this.cboLSRoad.BackColor = System.Drawing.SystemColors.WindowText;
             this.cboLSRoad.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboLSRoad.ForeColor = System.Drawing.SystemColors.WindowText;
             this.cboLSRoad.FormattingEnabled = true;
             this.cboLSRoad.Location = new System.Drawing.Point(122, 77);
             this.cboLSRoad.Name = "cboLSRoad";
@@ -246,7 +324,9 @@
             // 
             // cboSmallerScaleLayer
             // 
+            this.cboSmallerScaleLayer.BackColor = System.Drawing.SystemColors.WindowText;
             this.cboSmallerScaleLayer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboSmallerScaleLayer.ForeColor = System.Drawing.SystemColors.WindowText;
             this.cboSmallerScaleLayer.FormattingEnabled = true;
             this.cboSmallerScaleLayer.Location = new System.Drawing.Point(122, 50);
             this.cboSmallerScaleLayer.Name = "cboSmallerScaleLayer";
@@ -490,78 +570,6 @@
             this.btn090.Text = "t=0.9";
             this.btn090.UseVisualStyleBackColor = true;
             // 
-            // txtSmallerScale
-            // 
-            this.txtSmallerScale.Location = new System.Drawing.Point(165, 280);
-            this.txtSmallerScale.Name = "txtSmallerScale";
-            this.txtSmallerScale.Size = new System.Drawing.Size(114, 20);
-            this.txtSmallerScale.TabIndex = 113;
-            this.txtSmallerScale.Text = "100000";
-            this.txtSmallerScale.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // txtLargerScale
-            // 
-            this.txtLargerScale.Location = new System.Drawing.Point(165, 254);
-            this.txtLargerScale.Name = "txtLargerScale";
-            this.txtLargerScale.Size = new System.Drawing.Size(114, 20);
-            this.txtLargerScale.TabIndex = 112;
-            this.txtLargerScale.Text = "15000";
-            this.txtLargerScale.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(144, 283);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(18, 13);
-            this.label6.TabIndex = 111;
-            this.label6.Text = "1/";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(144, 257);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(18, 13);
-            this.label5.TabIndex = 110;
-            this.label5.Text = "1/";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 283);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(135, 13);
-            this.label7.TabIndex = 109;
-            this.label7.Text = "Scale of less detailed layer:";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(3, 257);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(140, 13);
-            this.label10.TabIndex = 108;
-            this.label10.Text = "Scale of more detailed layer:";
-            // 
-            // txtOutput
-            // 
-            this.txtOutput.Location = new System.Drawing.Point(168, 212);
-            this.txtOutput.Name = "txtOutput";
-            this.txtOutput.Size = new System.Drawing.Size(114, 20);
-            this.txtOutput.TabIndex = 116;
-            this.txtOutput.Text = "5";
-            this.txtOutput.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(6, 215);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(85, 13);
-            this.label12.TabIndex = 114;
-            this.label12.Text = "number of maps:";
-            // 
             // FrmBuildingGrowing
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -571,7 +579,9 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.btnRun);
+            this.Location = new System.Drawing.Point(50, 100);
             this.Name = "FrmBuildingGrowing";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "FrmBuildingGrowing";
             this.Load += new System.EventHandler(this.FrmBuildingGrowing_Load);
             this.groupBox3.ResumeLayout(false);

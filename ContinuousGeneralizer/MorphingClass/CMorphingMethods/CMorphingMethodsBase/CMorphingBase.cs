@@ -104,7 +104,7 @@ namespace MorphingClass.CMorphingMethods.CMorphingMethodsBase
             }
 
             //we compute the parameters of distance according to the features in the first layer
-            CGeometricMethods.CalDistanceParameters<T, CGeo>(pFirstLayerObjCGeoLt.ToExpectedClass<T, object>().ToList());
+            CGeometricMethods.CalDistanceParameters<T, CGeo>(pFirstLayerObjCGeoLt.AsExpectedClass<T, object>().ToList());
             
             //_CPlLt = pObjCGeoLtLt[0];
             this.strFieldNameLtLt = pstrFieldNameLtLt;

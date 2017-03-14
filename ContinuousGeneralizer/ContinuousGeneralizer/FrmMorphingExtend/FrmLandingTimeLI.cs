@@ -82,8 +82,8 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
             //    _adblFrLength[j] = CGeometricMethods.CalDis(pCorrCptsLt[j].FrCpt, pCorrCptsLt[j + 1].FrCpt);
             //    _adblToLength[j] = CGeometricMethods.CalDis(pCorrCptsLt[j].ToCpt, pCorrCptsLt[j + 1].ToCpt);
 
-            //    _adblFrAngle[j] = CGeometricMethods.CalAngle2(pCorrCptsLt[j].FrCpt, pCorrCptsLt[j + 1].FrCpt, pCorrCptsLt[j + 2].FrCpt);
-            //    _adblToAngle[j] = CGeometricMethods.CalAngle2(pCorrCptsLt[j].ToCpt, pCorrCptsLt[j + 1].ToCpt, pCorrCptsLt[j + 2].ToCpt);
+            //    _adblFrAngle[j] = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[j].FrCpt, pCorrCptsLt[j + 1].FrCpt, pCorrCptsLt[j + 2].FrCpt);
+            //    _adblToAngle[j] = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[j].ToCpt, pCorrCptsLt[j + 1].ToCpt, pCorrCptsLt[j + 2].ToCpt);
             //}
 
 
@@ -130,8 +130,8 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
             //            _adblFrLength[j] = CGeometricMethods.CalDis(FrCpl.CptLt[j], FrCpl.CptLt[j + 1]);
             //            _adblToLength[j] = CGeometricMethods.CalDis(ToCpl.CptLt[j], ToCpl.CptLt[j + 1]);
 
-            //            _adblFrAngle[j] = CGeometricMethods.CalAngle2(FrCpl.CptLt[j], FrCpl.CptLt[j + 1], FrCpl.CptLt[j + 2]);
-            //            _adblToAngle[j] = CGeometricMethods.CalAngle2(ToCpl.CptLt[j], ToCpl.CptLt[j + 1], ToCpl.CptLt[j + 2]);
+            //            _adblFrAngle[j] = CGeometricMethods.CalAngle_Counterclockwise(FrCpl.CptLt[j], FrCpl.CptLt[j + 1], FrCpl.CptLt[j + 2]);
+            //            _adblToAngle[j] = CGeometricMethods.CalAngle_Counterclockwise(ToCpl.CptLt[j], ToCpl.CptLt[j + 1], ToCpl.CptLt[j + 2]);
             //        }
 
             //        break;

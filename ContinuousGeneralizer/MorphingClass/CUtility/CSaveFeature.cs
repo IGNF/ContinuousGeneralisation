@@ -76,7 +76,7 @@ namespace MorphingClass.CUtility
             return pFLayer;
         }
 
-        public IFeatureLayer SaveCGeoEbToLayer<T>(IEnumerable<T> pCGeoEb, List<string> pstrFieldNameLt = null, List<List<object>> pobjectValueLtLt = null)
+        public IFeatureLayer SaveCGeosToLayer<T>(IEnumerable<T> pCGeoEb, List<string> pstrFieldNameLt = null, List<List<object>> pobjectValueLtLt = null)
             where T : CGeometricBase<T>
         {
             if (pCGeoEb != null)
@@ -90,19 +90,19 @@ namespace MorphingClass.CUtility
 
         //public IEnumerable<object> 
 
-        public IFeatureLayer SaveIGeoEbToLayer<T>(IEnumerable<T> pIGeoEb, List<string> pstrFieldNameLt = null, List<List<object>> pobjectValueLtLt = null)
+        public IFeatureLayer SaveIGeosToLayer<T>(IEnumerable<T> pIGeoEb, List<string> pstrFieldNameLt = null, List<List<object>> pobjectValueLtLt = null)
             where T : IGeometry
         {
             if (pIGeoEb != null)
             {
-                var objshapeEb = pIGeoEb.ToExpectedClass<object, T>();
+                var objshapeEb = pIGeoEb.AsExpectedClass<object, T>();
                 CommitFeatures(objshapeEb, pstrFieldNameLt, pobjectValueLtLt);
             }
 
             return this.pFeatureLayer;
         }
 
-        public IFeatureLayer SaveIGeoColToLayer(IGeometryCollection pGeoCol, List<string> pstrFieldNameLt = null, List<List<object>> pobjectValueLtLt = null)
+        public IFeatureLayer SaveIGeosToLayer(IGeometryCollection pGeoCol, List<string> pstrFieldNameLt = null, List<List<object>> pobjectValueLtLt = null)
         {
             var objshapeEb = CHelperFunction.GetTEbFromIGeoCol<object>(pGeoCol);
             CommitFeatures(objshapeEb, pstrFieldNameLt, pobjectValueLtLt);
@@ -459,7 +459,7 @@ namespace MorphingClass.CUtility
             }
 
             CSaveFeature pSaveFeature = new CSaveFeature(pesriGeometryType, strFileName, pWorkspace, m_mapControl, pstrFieldNameLt, pesriFieldTypeLt, intRed, intGreen, intBlue, dblWidth,strSymbolLayerPath, blnVisible);
-            IFeatureLayer pFLayer = pSaveFeature.SaveCGeoEbToLayer(CGeoEb, pstrFieldNameLt, pobjectValueLtLt);
+            IFeatureLayer pFLayer = pSaveFeature.SaveCGeosToLayer(CGeoEb, pstrFieldNameLt, pobjectValueLtLt);
 
             return pFLayer;
         }
@@ -487,7 +487,7 @@ namespace MorphingClass.CUtility
             }
 
             CSaveFeature pSaveFeature = new CSaveFeature(pesriGeometryType, strFileName, pWorkspace, m_mapControl, pstrFieldNameLt, pesriFieldTypeLt, intRed, intGreen, intBlue, dblWidth, strSymbolLayerPath, blnVisible);
-            IFeatureLayer pFLayer = pSaveFeature.SaveIGeoEbToLayer(IGeoEb, pstrFieldNameLt, pobjectValueLtLt);
+            IFeatureLayer pFLayer = pSaveFeature.SaveIGeosToLayer(IGeoEb, pstrFieldNameLt, pobjectValueLtLt);
 
             return pFLayer;
         }

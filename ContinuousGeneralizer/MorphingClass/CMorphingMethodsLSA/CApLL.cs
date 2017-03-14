@@ -303,9 +303,9 @@ namespace MorphingClass.CMorphingMethodsLSA
             for (int i = 0; i < pCorrCptsLt.Count - 2; i++)
             {
                 //较大比例尺线状要素上的夹角
-                double dblfrAngle = CGeometricMethods.CalAngle2(pCorrCptsLt[i].FrCpt, pCorrCptsLt[i + 1].FrCpt, pCorrCptsLt[i + 2].FrCpt);
+                double dblfrAngle = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[i].FrCpt, pCorrCptsLt[i + 1].FrCpt, pCorrCptsLt[i + 2].FrCpt);
                 //较小比例尺线状要素上的夹角
-                double dbltoAngle = CGeometricMethods.CalAngle2(pCorrCptsLt[i].ToCpt, pCorrCptsLt[i + 1].ToCpt, pCorrCptsLt[i + 2].ToCpt);
+                double dbltoAngle = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[i].ToCpt, pCorrCptsLt[i + 1].ToCpt, pCorrCptsLt[i + 2].ToCpt);
 
                 //角度初始值
                 adblAngle0[i] = (1 - dblProportion) * dblfrAngle + dblProportion * dbltoAngle;
@@ -489,7 +489,7 @@ namespace MorphingClass.CMorphingMethodsLSA
                 adblAzimuth[0] = CGeometricMethods.CalAxisAngle(Xmix[0, 0], Xmix[1, 0], Xmix[2, 0], Xmix[3, 0]);
                 for (int i = 1; i < intPtNum - 1; i++)
                 {
-                    adblAngle[i - 1] = CGeometricMethods.CalAngle2(Xmix[i * 2 - 2, 0], Xmix[i * 2 - 1, 0], Xmix[i * 2, 0], Xmix[i * 2 + 1, 0], Xmix[i * 2 + 2, 0], Xmix[i * 2 + 3, 0]);
+                    adblAngle[i - 1] = CGeometricMethods.CalAngle_Counterclockwise(Xmix[i * 2 - 2, 0], Xmix[i * 2 - 1, 0], Xmix[i * 2, 0], Xmix[i * 2 + 1, 0], Xmix[i * 2 + 2, 0], Xmix[i * 2 + 3, 0]);
                     adblAzimuth[i] = adblAzimuth[i - 1] + adblAngle[i - 1] - Math.PI;
                 }
 
@@ -634,9 +634,9 @@ namespace MorphingClass.CMorphingMethodsLSA
             {
                 if (pCorrCptsLt[i].FrCpt.isCtrl == false || pCorrCptsLt[i + 1].FrCpt.isCtrl == false || pCorrCptsLt[i + 2].FrCpt.isCtrl == false)
                 {
-                    double dblAngle = CGeometricMethods.CalAngle2(cpl.CptLt[i], cpl.CptLt[i + 1], cpl.CptLt[i + 2]);
+                    double dblAngle = CGeometricMethods.CalAngle_Counterclockwise(cpl.CptLt[i], cpl.CptLt[i + 1], cpl.CptLt[i + 2]);
                     cpl.CptLt[i + 1].dblAngleV = dblAngle - adblAngle0[i];
-                    //double dblAngle = CGeometricMethods.CalAngle2(cpl.CptLt[i], cpl.CptLt[i + 1], cpl.CptLt[i + 2]);
+                    //double dblAngle = CGeometricMethods.CalAngle_Counterclockwise(cpl.CptLt[i], cpl.CptLt[i + 1], cpl.CptLt[i + 2]);
                     //cpl.CptLt[i + 1].dblAngleV = V[intUnknownLength + intUnKnownCountA6, 0];
                     intUnKnownCountA6 += 1;
                 }

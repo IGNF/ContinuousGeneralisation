@@ -15,13 +15,21 @@ namespace MorphingClass.CGeometry.CGeometryBase
     {
         
         protected List<CEdge> _CEdgeLt;     // cedges(clockwise)???
-        
-        
-        // vertices(clockwise)??? ; for a polygon, the first point and the last point in cptlt must have the same coordinates
-        protected List<List<CPoint>> _CptLtLt;
+
+
+        // vertices(clockwise)??? ; 
+        //
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        /// for a polygon, the first point and the last point in cptlt must have the same coordinates, which is the same as in IPolygon
+        /// CptLtLt[0] indicates the only exterior ring of the polygon if applicable
+        /// </remarks>
+        public List<List<CPoint>> CptLtLt { get; set; }
         public double dblLengthSimple { get; set; }
 
-
+        
         public CPolyBase()
         {
 
@@ -51,7 +59,7 @@ namespace MorphingClass.CGeometry.CGeometryBase
         /// <remarks>如果已经生成过边，则直接返回</remarks>
         public virtual void FormCEdgeLt()
         {
-            _CEdgeLt = CGeometricMethods.FormCEdgeLt(this.CptLt);
+            _CEdgeLt = CGeometricMethods.FormCEdgeEb(this.CptLt).ToList();
         }
 
         public virtual double SetLengthSimple()
@@ -74,7 +82,7 @@ namespace MorphingClass.CGeometry.CGeometryBase
         {
             if (_CEdgeLt == null)
             {
-                _CEdgeLt = CGeometricMethods.FormCEdgeLt(this.CptLt);
+                _CEdgeLt = CGeometricMethods.FormCEdgeEb(this.CptLt).ToList();
             }
         }
 
@@ -149,17 +157,17 @@ namespace MorphingClass.CGeometry.CGeometryBase
             }
         }
 
-        //CptLtLt[0] indicates the only exterior ring of the polygon
-        public List<List<CPoint>> CptLtLt
-        {
-            get { return _CptLtLt; }
-            set { _CptLtLt = value; }
-            //set
-            //{
-            //    _CptLtLt = value;
-            //    this.CptLt = _CptLtLt[0];
-            //}
-        }
+        
+        //public List<List<CPoint>> CptLtLt
+        //{
+        //    get { return _CptLtLt; }
+        //    set { _CptLtLt = value; }
+        //    //set
+        //    //{
+        //    //    _CptLtLt = value;
+        //    //    this.CptLt = _CptLtLt[0];
+        //    //}
+        //}
 
 
         //public void AddToCptLtLt(List <CPoint> cptlt)

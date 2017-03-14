@@ -581,13 +581,13 @@ namespace MorphingClass.CMorphingMethods
         //    double dblFrDiffLLY = frcptlt[CFrVtPl.CLeftPolyline.intToID].Y - frcptlt[CFrVtPl.CLeftPolyline.intFrID].Y;
         //    double dblToDiffLLX = tocptlt[CToVtPl.CLeftPolyline.intToID].X - tocptlt[CToVtPl.CLeftPolyline.intFrID].X;
         //    double dblToDiffLLY = tocptlt[CToVtPl.CLeftPolyline.intToID].Y - tocptlt[CToVtPl.CLeftPolyline.intFrID].Y;
-        //    double dblAngleDiffLL = CGeometricMethods.CalAngle2(dblFrDiffLLX, dblFrDiffLLY, dblToDiffLLX, dblToDiffLLY);
+        //    double dblAngleDiffLL = CGeometricMethods.CalAngle_Counterclockwise(dblFrDiffLLX, dblFrDiffLLY, dblToDiffLLX, dblToDiffLLY);
 
         //    double dblFrDiffRRX = frcptlt[CFrVtPl.CRightPolyline.intToID].X - frcptlt[CFrVtPl.CRightPolyline.intFrID].X;
         //    double dblFrDiffRRY = frcptlt[CFrVtPl.CRightPolyline.intToID].Y - frcptlt[CFrVtPl.CRightPolyline.intFrID].Y;
         //    double dblToDiffRRX = tocptlt[CToVtPl.CRightPolyline.intToID].X - tocptlt[CToVtPl.CRightPolyline.intFrID].X;
         //    double dblToDiffRRY = tocptlt[CToVtPl.CRightPolyline.intToID].Y - tocptlt[CToVtPl.CRightPolyline.intFrID].Y;
-        //    double dblAngleDiffRR = CGeometricMethods.CalAngle2(dblFrDiffRRX, dblFrDiffRRY, dblToDiffRRX, dblToDiffRRY);
+        //    double dblAngleDiffRR = CGeometricMethods.CalAngle_Counterclockwise(dblFrDiffRRX, dblFrDiffRRY, dblToDiffRRX, dblToDiffRRY);
 
         //    if ((dblRatioLL >= ParameterThreshold.dblDLengthBound) && (dblRatioLL <= ParameterThreshold.dblULengthBound) &&
         //        (dblRatioRR >= ParameterThreshold.dblDLengthBound) && (dblRatioRR <= ParameterThreshold.dblULengthBound) &&

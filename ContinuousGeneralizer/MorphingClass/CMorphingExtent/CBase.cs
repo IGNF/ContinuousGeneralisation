@@ -176,9 +176,9 @@ namespace MorphingClass.CMorphingExtend
             for (int i = 0; i < pCorrCptsLt.Count - 2; i++)
             {
                 //较大比例尺线状要素上的夹角
-                double dblfrAngle = CGeometricMethods.CalAngle2(pCorrCptsLt[i].FrCpt, pCorrCptsLt[i + 1].FrCpt, pCorrCptsLt[i + 2].FrCpt);
+                double dblfrAngle = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[i].FrCpt, pCorrCptsLt[i + 1].FrCpt, pCorrCptsLt[i + 2].FrCpt);
                 //较小比例尺线状要素上的夹角
-                double dbltoAngle = CGeometricMethods.CalAngle2(pCorrCptsLt[i].ToCpt, pCorrCptsLt[i + 1].ToCpt, pCorrCptsLt[i + 2].ToCpt);
+                double dbltoAngle = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[i].ToCpt, pCorrCptsLt[i + 1].ToCpt, pCorrCptsLt[i + 2].ToCpt);
 
                 //角度初始值
                 adblAngle0[i] = (1 - dblProportion) * dblfrAngle + dblProportion * dbltoAngle;
@@ -318,7 +318,7 @@ namespace MorphingClass.CMorphingExtend
                     }
                     else
                     {
-                        double dblNewAngle = CGeometricMethods.CalAngle2(Xmix[2 * intSumCount + 0, 0], Xmix[2 * intSumCount + 1, 0],
+                        double dblNewAngle = CGeometricMethods.CalAngle_Counterclockwise(Xmix[2 * intSumCount + 0, 0], Xmix[2 * intSumCount + 1, 0],
                                                                        Xmix[2 * intSumCount + 2, 0], Xmix[2 * intSumCount + 3, 0],
                                                                        Xmix[2 * intSumCount + 4, 0], Xmix[2 * intSumCount + 5, 0]);
                         matl[intUnKnownXYLength + j, 0] = dblNewAngle - adblAngle0[intSumCount];   //图方便，顺便计算matl

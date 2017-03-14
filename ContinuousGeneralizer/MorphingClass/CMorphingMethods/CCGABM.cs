@@ -71,8 +71,8 @@ namespace MorphingClass.CMorphingMethods
             _intSg = 2;
 
 
-            List<CPolyline> pInterLSCPlLt = this.ObjCGeoLtLt[_intInterLS].ToExpectedClass<CPolyline, object>().ToList();
-            List<CPolyline> pSgCPlLt = this.ObjCGeoLtLt[_intSg].ToExpectedClass<CPolyline, object>().ToList();
+            List<CPolyline> pInterLSCPlLt = this.ObjCGeoLtLt[_intInterLS].AsExpectedClass<CPolyline, object>().ToList();
+            List<CPolyline> pSgCPlLt = this.ObjCGeoLtLt[_intSg].AsExpectedClass<CPolyline, object>().ToList();
 
             CDCEL pInterLSDCEL = new CDCEL(pInterLSCPlLt);
             pInterLSDCEL.ConstructDCEL();
@@ -124,9 +124,9 @@ namespace MorphingClass.CMorphingMethods
             var pstrFieldNameLtLt = this.strFieldNameLtLt;
             var pObjValueLtLtLt = this.ObjValueLtLtLt;
 
-            var InterLSIplLt = this.ObjIGeoLtLt[_intInterLS].ToExpectedClass<IPolyline5, object>().ToList();
-            var InterSSIplLt = this.ObjIGeoLtLt[_intInterSS].ToExpectedClass<IPolyline5, object>().ToList();
-            var SgIplLt = this.ObjIGeoLtLt[_intSg].ToExpectedClass<IPolyline5, object>().ToList();
+            var InterLSIplLt = this.ObjIGeoLtLt[_intInterLS].AsExpectedClass<IPolyline5, object>().ToList();
+            var InterSSIplLt = this.ObjIGeoLtLt[_intInterSS].AsExpectedClass<IPolyline5, object>().ToList();
+            var SgIplLt = this.ObjIGeoLtLt[_intSg].AsExpectedClass<IPolyline5, object>().ToList();
 
             Stopwatch pStopwatch = new Stopwatch();
             pStopwatch.Start();
@@ -507,9 +507,9 @@ namespace MorphingClass.CMorphingMethods
             //var pstrFieldNameLtLt = this.strFieldNameLtLt;
             //var pObjValueLtLtLt = this.ObjValueLtLtLt;
 
-            //var InterLSIplLt = this.ObjIGeoLtLt[_intInterLS].ToExpectedClass<IPolyline5, object>().ToList();
-            //var InterSSIplLt = this.ObjIGeoLtLt[_intInterSS].ToExpectedClass<IPolyline5, object>().ToList();
-            //var SgIplLt = this.ObjIGeoLtLt[_intSg].ToExpectedClass<IPolyline5, object>().ToList();
+            //var InterLSIplLt = this.ObjIGeoLtLt[_intInterLS].AsExpectedClass<IPolyline5, object>().ToList();
+            //var InterSSIplLt = this.ObjIGeoLtLt[_intInterSS].AsExpectedClass<IPolyline5, object>().ToList();
+            //var SgIplLt = this.ObjIGeoLtLt[_intSg].AsExpectedClass<IPolyline5, object>().ToList();
 
             //var intInterLSFaceNumIndex1 = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[_intInterLS], "FaceNum1");
             //var intInterLSFaceNumIndex2 = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[_intInterLS], "FaceNum2");
@@ -942,10 +942,10 @@ namespace MorphingClass.CMorphingMethods
             _intSg = 2;
             _intTransSg = 3;
 
-            List<CPolyline> pLSCPlLt = this.ObjCGeoLtLt[_intLS].ToExpectedClass<CPolyline, object>().ToList();
-            List<CPolyline> pSSCPlLt = this.ObjCGeoLtLt[_intSS].ToExpectedClass<CPolyline, object>().ToList();
-            List<CPolyline> pSgCPlLt = this.ObjCGeoLtLt[_intSg].ToExpectedClass<CPolyline, object>().ToList();
-            List<CPolyline> TransSgCPlLt = this.ObjCGeoLtLt[_intTransSg].ToExpectedClass<CPolyline, object>().ToList();
+            List<CPolyline> pLSCPlLt = this.ObjCGeoLtLt[_intLS].AsExpectedClass<CPolyline, object>().ToList();
+            List<CPolyline> pSSCPlLt = this.ObjCGeoLtLt[_intSS].AsExpectedClass<CPolyline, object>().ToList();
+            List<CPolyline> pSgCPlLt = this.ObjCGeoLtLt[_intSg].AsExpectedClass<CPolyline, object>().ToList();
+            List<CPolyline> TransSgCPlLt = this.ObjCGeoLtLt[_intTransSg].AsExpectedClass<CPolyline, object>().ToList();
 
             double dblLSToSSRatio = CalRatioofPtNum(pLSCPlLt, pSSCPlLt);
 
@@ -1046,10 +1046,10 @@ namespace MorphingClass.CMorphingMethods
 
         public void CGABM()
         {
-            List<CPolyline> pInterLSCPlLt = this.ObjCGeoLtLt[0].ToExpectedClass<CPolyline, object>().ToList();
-            List<CPolyline> pInterSSCPlLt = this.ObjCGeoLtLt[1].ToExpectedClass<CPolyline, object>().ToList();
-            List<CPolyline> pInterLSSgCPlLt = this.ObjCGeoLtLt[2].ToExpectedClass<CPolyline, object>().ToList();
-            List<CPolyline> pInterSSSgCPlLt = this.ObjCGeoLtLt[3].ToExpectedClass<CPolyline, object>().ToList();
+            List<CPolyline> pInterLSCPlLt = this.ObjCGeoLtLt[0].AsExpectedClass<CPolyline, object>().ToList();
+            List<CPolyline> pInterSSCPlLt = this.ObjCGeoLtLt[1].AsExpectedClass<CPolyline, object>().ToList();
+            List<CPolyline> pInterLSSgCPlLt = this.ObjCGeoLtLt[2].AsExpectedClass<CPolyline, object>().ToList();
+            List<CPolyline> pInterSSSgCPlLt = this.ObjCGeoLtLt[3].AsExpectedClass<CPolyline, object>().ToList();
             _CorrCptsLtLt = CGeometricMethods.GetCorrCptsLtLt(pInterLSCPlLt, pInterSSCPlLt);
             _SgCorrCptsLtLt = CGeometricMethods.GetCorrCptsLtLt(pInterLSSgCPlLt, pInterSSSgCPlLt);
 
@@ -1104,7 +1104,7 @@ namespace MorphingClass.CMorphingMethods
             pStopwatch.Stop();
             //pParameterResult.DisplayCPlLt = normaldisplaycpllt;
 
-            pCsfNormal.SaveIGeoEbToLayer(normaldisplayIplEb);
+            pCsfNormal.SaveIGeosToLayer(normaldisplayIplEb);
             normaldisplayIplEb = null;
             pCsfNormal = null;
             //foreach (var pCorrCptsLt in _CorrCptsLtLt)
@@ -1118,7 +1118,7 @@ namespace MorphingClass.CMorphingMethods
             var fadeddisplayIplEb = GenerateInterpolatedIPl(dblProportion, _SgCorrCptsLtLt).ToList<IPolyline5>();
 
             pStopwatch.Stop();
-            pCsfFade.SaveIGeoEbToLayer(fadeddisplayIplEb);
+            pCsfFade.SaveIGeosToLayer(fadeddisplayIplEb);
             pParameterInitialize.tsslTime.Text = pStopwatch.ElapsedMilliseconds.ToString();
             //pParameterResult.FadedDisplayCPlLt = fadeddisplaycpllt;
 

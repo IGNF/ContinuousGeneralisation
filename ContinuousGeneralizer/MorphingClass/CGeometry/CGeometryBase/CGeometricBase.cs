@@ -11,7 +11,7 @@ namespace MorphingClass.CGeometry.CGeometryBase
 {
     public class CGeometricBase<CGeo> : CBasicBase 
         where CGeo:class
-    //public class CGeometricBase<TGeo> :CBasicBase where TGeo : class    //it would be better if we could do it like this, but our current version doesn't support default generic type, which we need for one of the classes inheriting from this class
+        //public class CGeometricBase<TGeo> :CBasicBase where TGeo : class    //it would be better if we could do it like this, but our current version doesn't support default generic type, which we need for one of the classes inheriting from this class
     {
         
         protected int _tempID = -1;
@@ -33,11 +33,20 @@ namespace MorphingClass.CGeometry.CGeometryBase
         protected CGeo _CorrCGeo;
         protected List<CGeo> _CorrCGeoLt;
 
-        
 
-        //public virtual CGeometricBase()
+
+        public CGeometricBase()
+        {
+
+        }
+
+        public CGeometricBase(int intID, IGeometry pGeo)           
+        {
+
+        }
+
+        //public CGeometricBase<CGeo> ()
         //{
-
         //}
 
 

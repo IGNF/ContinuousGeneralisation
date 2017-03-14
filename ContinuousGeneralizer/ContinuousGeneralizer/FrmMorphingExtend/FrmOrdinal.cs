@@ -89,7 +89,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
             ////double dblAngleIntegral = 0;
             ////for (int i = 0; i < intPtCount - 2; i++)
             ////{
-            ////    _adblAngle0[i] = CGeometricMethods.CalAngle2(cpl.CptLt[i], cpl.CptLt[i + 1], cpl.CptLt[i + 2]);
+            ////    _adblAngle0[i] = CGeometricMethods.CalAngle_Counterclockwise(cpl.CptLt[i], cpl.CptLt[i + 1], cpl.CptLt[i + 2]);
             ////    dblAngleIntegral+=_adblAngle0[i];
             ////    _adblAngleIntegr0[i] = dblAngleIntegral;
             ////}
@@ -103,7 +103,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
             //double dblAngleIntegralAbs = 0;            
             //for (int i = intPtCount - 3; i >= 0; i--)
             //{
-            //    _adblAngle0[i] = CGeometricMethods.CalAngle2(cpl.CptLt[i], cpl.CptLt[i + 1], cpl.CptLt[i + 2]);
+            //    _adblAngle0[i] = CGeometricMethods.CalAngle_Counterclockwise(cpl.CptLt[i], cpl.CptLt[i + 1], cpl.CptLt[i + 2]);
             //    //夹角累计
             //    dblAngleIntegral += _adblAngle0[i] - Math.PI;
             //    _adblAngleIntegr0[i] = dblAngleIntegral;

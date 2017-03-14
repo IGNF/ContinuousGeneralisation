@@ -199,7 +199,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CCommon\OpenAttributeTable.cs" />
-    <Compile Include="CreateNewDocument.cs" />
     <Compile Include="FrmAid\FrmCalGeo_Ipe.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -971,7 +970,6 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
-    <None Include="ContinuousGeneralizer_1_TemporaryKey.pfx" />
     <None Include="ContinuousGeneralizer_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

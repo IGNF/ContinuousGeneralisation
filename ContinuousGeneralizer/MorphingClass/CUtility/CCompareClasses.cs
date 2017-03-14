@@ -101,7 +101,15 @@ namespace MorphingClass.CUtility
         }
     }
 
+    //public class CECompareCptYX_VerySmall : IEqualityComparer<CPoint>
+    //{
+    //    public static CECompareCptYX_VerySmall pCompareCptYX_E_VerySmall = new CECompareCptYX_VerySmall();
 
+    //    public bool Equals(CPoint cpt1, CPoint cpt2)
+    //    {
+    //        return CCompareMethods.ConvertCompareToBool(CCompareMethods.CompareCptYX(cpt1, cpt2));
+    //    }
+    //}
 
 
     public class CCompareCPatch_Area_CphGID : IComparer<CPatch>

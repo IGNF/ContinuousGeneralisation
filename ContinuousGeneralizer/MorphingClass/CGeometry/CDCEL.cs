@@ -57,18 +57,29 @@ namespace MorphingClass.CGeometry
 
         public void ConstructDCEL()
         {
-            _CEdgeLt = _CEdgeLt.RemoveLaterDuplicate(new CCompareCEdgeCoordinates()).ToList();
             List<CEdge> cedgelt = _CEdgeLt;
+            _CEdgeLt = _CEdgeLt.RemoveLaterDuplicate(new CCompareCEdgeCoordinates()).ToList();
 
+            if (cedgelt.Count< _CEdgeLt.Count)
+            {
+                throw new ArgumentException("Please remove before using construct DCEL!");
+            }
 
-            _HalfEdgeLt = ConstructHalfEdgeLt(cedgelt);  //already set indexID
+            //report if there is a short edge
+            //short edges may cause problems. Take a polygon as an example, an edge and its twin edge may refer to the same face
+            CGeometricMethods.CheckShortEdges(_CEdgeLt);
+            
+
+            double dblsmall = CConstants.dblVerySmall;
+            _HalfEdgeLt = ConstructHalfEdgeLt(_CEdgeLt);  //already set indexID
             this.CptLt = ConstructVertexLt(_HalfEdgeLt);         //already set indexID
+
             //ShowEdgeRelationshipAroundAllCpt();
             ConstructFaceLt();       //already set indexID           
 
             _OriginalCEdgeLt = new List<CEdge>();
             _OriginalCptLt = new List<CPoint>();
-            _OriginalCEdgeLt.AddRange(cedgelt);
+            _OriginalCEdgeLt.AddRange(_CEdgeLt);
             _OriginalCptLt.AddRange(this.CptLt);
         }
 
@@ -229,7 +240,7 @@ namespace MorphingClass.CGeometry
         {
             List<CEdge> cedgelt = _CEdgeLt;
             var rawfaceLt = InitializeFaceForEdgeLt(ref cedgelt);   //initialize a face for each edge loop
-            FindTheLeftMostVertex(ref cedgelt);                      //find the left most vertex for each face, record it in "face.LeftMostCpt"
+            FindTheLeftMostVertexForFace(ref cedgelt);                      //find the left most vertex for each face, record it in "face.LeftMostCpt"
 
             DetermineOuterOrHole(rawfaceLt);                            //determine whether a face is a hole or an outer component by the angle of the left most vertex
             GetOuterOrInnerComponents(ref rawfaceLt);             //record this face into outer component or inner components
@@ -245,10 +256,10 @@ namespace MorphingClass.CGeometry
         /// 
         /// </summary>
         /// <param name="cedgelt"></param>
-        /// <param name="cgpLk">we generate some empty faces</param>
+        /// <remarks>we generate some empty faces</remarks>
         private List<CPolygon> InitializeFaceForEdgeLt(ref List<CEdge> cedgelt)
         {
-            var cgpLk = new List<CPolygon>();
+            var cgpLt = new List<CPolygon>();
 
             foreach (CEdge cedge in cedgelt)
             {
@@ -258,19 +269,19 @@ namespace MorphingClass.CGeometry
             int intID = 0;
             foreach (CEdge cedge in cedgelt)
             {
-                InitializeFaceForEdge(cedge, ref cgpLk, ref intID);
-                InitializeFaceForEdge(cedge.cedgeTwin, ref cgpLk, ref intID);
+                InitializeFaceForEdge(cedge, ref cgpLt, ref intID);
+                InitializeFaceForEdge(cedge.cedgeTwin, ref cgpLt, ref intID);
             }
-            return cgpLk;
+            return cgpLt;
         }
 
-        private void InitializeFaceForEdge(CEdge cedge, ref List<CPolygon> cgpLk, ref int intID)
+
+        private void InitializeFaceForEdge(CEdge cedge, ref List<CPolygon> cgpLt, ref int intID)
         {
             if (cedge.cpgIncidentFace == null)
             {
-                CPolygon cpgIncidentFace = new CPolygon(intID);
-                intID++;
-                cgpLk.Add(cpgIncidentFace);
+                CPolygon cpgIncidentFace = new CPolygon(intID++);
+                cgpLt.Add(cpgIncidentFace);
                 do
                 {
                     cedge.cpgIncidentFace = cpgIncidentFace;
@@ -281,7 +292,7 @@ namespace MorphingClass.CGeometry
         #endregion
 
         #region FindTheLeftMostVertex
-        private void FindTheLeftMostVertex(ref List<CEdge> cedgelt)
+        private void FindTheLeftMostVertexForFace(ref List<CEdge> cedgelt)
         {
             foreach (CEdge cedge in cedgelt)
             {
@@ -327,7 +338,7 @@ namespace MorphingClass.CGeometry
             foreach (CPolygon cpg in rawfaceLt)
             {
                 CEdge cedgeStartAtLeftMost = cpg.cedgeStartAtLeftMost;
-                double dblAngle = CGeometricMethods.CalAngle2(cedgeStartAtLeftMost, cedgeStartAtLeftMost.cedgePrev.cedgeTwin);
+                double dblAngle = CGeometricMethods.CalAngle_Counterclockwise(cedgeStartAtLeftMost, cedgeStartAtLeftMost.cedgePrev.cedgeTwin);
                 if (dblAngle < Math.PI)
                 {
                     cpg.IsHole = false;
@@ -338,7 +349,7 @@ namespace MorphingClass.CGeometry
                 }
                 else
                 {
-                    MessageBox.Show("what happened about the angle?  CECEL.cs!");
+                    throw new ArgumentException("what happened about the angle?");
                 }
             }
 
@@ -443,7 +454,7 @@ namespace MorphingClass.CGeometry
                 }
             }
 
-
+            //add each face into FaceCpgLt
             foreach (CPolygon rawface in rawfaceLt)
             {
                 rawface.isTraversed = false;
@@ -482,6 +493,11 @@ namespace MorphingClass.CGeometry
                         var currentcedge = cedgeInnerComponent.cedgeNext;
                         do
                         {
+                            if (currentcedge.cedgeTwin.cpgIncidentFace.GID== face.GID)
+                            {
+                                throw new ArgumentOutOfRangeException("Impossible case!");
+                            }
+                                                        
                             currentcedge.cpgIncidentFace = face;
                             currentcedge = currentcedge.cedgeNext;
                         } while (currentcedge.GID != cedgeInnerComponent.GID);

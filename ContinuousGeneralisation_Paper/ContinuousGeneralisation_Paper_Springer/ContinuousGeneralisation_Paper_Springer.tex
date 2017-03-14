@@ -445,26 +445,35 @@ a map at a smaller scale.
 
 We have two requirements for an output map.
 The first one is that the distance between two 
-buildings should be at least $d$.
+buildings should be at least $d_i=0.2 \mathrm{mm}/S_i$, where 
+$S_i$ is the scale of map $i$.
 The second requirement is that a building with area less than 
-$d^2$ should be eliminated.
+$A_i=0.16\mathrm{mm}^2/S^2_i$ should be eliminated. Roughly, a 
+building with width less than 
+$w_i=\sqrt{A_i}=0.4\mathrm{mm}/S$ should be eliminated.
 In order to make sure that some small buildings will be 
-eliminated, the radius $r$ that we use to buffer buildings 
-should be smaller than $d$. We simply use $r=\frac{1}{2}d$.
-Our buildings may have been buffered with radius, in total, $r_0 
-(r_0 < r)$ from previous steps.
-Therefore, we only need to buffer with radius $r-r_0$ at the new 
+eliminated, the radius $r_i$ that we use to buffer buildings 
+should be smaller than $\frac{1}{2}w_i$. We simply use 
+$r_i=\frac{1}{4}w_i$.
+Our buildings may have been buffered with radius, in total, 
+$r_{i-1}$ from previous steps.
+Therefore, we only need to buffer with radius $r_i-r_{i-1}$ at 
+the new 
 step.
 
 Our generalisation is as follows. We buffer buildings with 
-radius $d+r-r_0$, and merge the buffers overlapping each 
+radius $\frac{1}{2}d_i+r_i-r_{i-1}$, and merge the buffers 
+overlapping 
+each 
 other.
-Then we buffer the results with $-d$.
+Then we buffer the results with $-\frac{1}{2}d_i$.
 In order to 
 remove some spikes from the buffering, we buffer the new results 
-with $-\epsilon$, and then again with $\epsilon$. We simply set 
-$\epsilon=\frac{1}{10}d$. After these buffering operations, we 
-eliminate the buildings with area less than $d^2$.
+with $-\epsilon_i$, and then again with $\epsilon_i$. We simply 
+set 
+$\epsilon_i=\frac{1}{10}(r_i-r_{i-1})$. After these buffering 
+operations, we 
+eliminate the buildings with area less than $d^2_i$.
 
 
 

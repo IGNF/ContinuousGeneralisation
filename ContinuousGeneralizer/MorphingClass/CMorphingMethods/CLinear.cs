@@ -23,8 +23,8 @@ namespace MorphingClass.CMorphingMethods
         public CLinear(CParameterInitialize ParameterInitialize)
         {
             Construct<CPolyline, CPolyline>(ParameterInitialize);
-            _LSCPlLt = this.ObjCGeoLtLt[0].ToExpectedClass<CPolyline, object>().ToList();
-            _SSCPlLt = this.ObjCGeoLtLt[1].ToExpectedClass<CPolyline, object>().ToList();
+            _LSCPlLt = this.ObjCGeoLtLt[0].AsExpectedClass<CPolyline, object>().ToList();
+            _SSCPlLt = this.ObjCGeoLtLt[1].AsExpectedClass<CPolyline, object>().ToList();
         }
 
         public CParameterResult LIMorphing()

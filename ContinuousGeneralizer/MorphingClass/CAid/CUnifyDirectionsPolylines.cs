@@ -37,14 +37,14 @@ namespace MorphingClass.CAid
         public void UnifyDirectionsPolylines()
         {
             CParameterInitialize ParameterInitialize = _ParameterInitialize;
-            //List<CPolyline> pCPlLt = this.ObjCGeoLtLt[0].ToExpectedClass<CPolyline, object>().ToList();
+            //List<CPolyline> pCPlLt = this.ObjCGeoLtLt[0].AsExpectedClass<CPolyline, object>().ToList();
 
-            List<CPolyline> LSCPlLt = this.ObjCGeoLtLt[0].ToExpectedClass<CPolyline, object>().ToList();
-            List<CPolyline> SSCPlLt = this.ObjCGeoLtLt[1].ToExpectedClass<CPolyline, object>().ToList();
+            List<CPolyline> LSCPlLt = this.ObjCGeoLtLt[0].AsExpectedClass<CPolyline, object>().ToList();
+            List<CPolyline> SSCPlLt = this.ObjCGeoLtLt[1].AsExpectedClass<CPolyline, object>().ToList();
 
             for (int i = 0; i < LSCPlLt.Count; i++)
             {
-                double dblAngleDiff = CGeometricMethods.CalAngle2(LSCPlLt[i].FrCpt, LSCPlLt[i].ToCpt, SSCPlLt[i].FrCpt, SSCPlLt[i].ToCpt);
+                double dblAngleDiff = CGeometricMethods.CalAngle_Counterclockwise(LSCPlLt[i].FrCpt, LSCPlLt[i].ToCpt, SSCPlLt[i].FrCpt, SSCPlLt[i].ToCpt);
 
                 if ((Math.Abs(dblAngleDiff) > (Math.PI / 2) && Math.Abs(dblAngleDiff) < (3 * Math.PI / 2)))
                 {

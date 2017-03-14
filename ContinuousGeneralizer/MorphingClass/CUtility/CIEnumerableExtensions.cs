@@ -5,6 +5,8 @@ using System.Collections;
 using System.Linq;
 using System.Text;
 
+using ESRI.ArcGIS.Geometry;
+
 using MorphingClass.CGeometry ;
 using MorphingClass.CGeometry.CGeometryBase;
 
@@ -25,6 +27,7 @@ namespace MorphingClass.CUtility
             }
         }
 
+        
 
         //public static void PrependRange<T>(this LinkedList<T> source, IEnumerable<T> items)
         //{
@@ -72,6 +75,28 @@ namespace MorphingClass.CUtility
             return total;
         }
 
+        //public static IEnumerable<CGeo> IGeosToCGeoEB<IGeo, CGeo>(this IEnumerable<IGeo> items)
+        //    where CGeo: CGeometricBase<CGeo>, new()
+        //    //where CGeo : new()
+        //{
+        //    int intID = 0;
+        //    foreach (var item in items)
+        //    {
+        //        var ss = new CGeo();
+        //        ss =new CGeo ()
+
+        //       yield return new CGeo();    // constructor has to be parameterless!
+        //    }
+        //}
+
+        public static IEnumerable<CPolygon> IGeosToCGeoEB(this IEnumerable<IPolygon4> items)
+        {
+            int intID = 0;
+            foreach (var item in items)
+            {
+               yield return new CPolygon(intID++, item);    // constructor has to be parameterless!
+            }
+        }
 
         public static IEnumerable<CPoint> GetAllCptEb<T, CGeo>(this IEnumerable<T> items)
             where T : CPolyBase<CGeo>
@@ -302,7 +327,7 @@ namespace MorphingClass.CUtility
 
 
 
-        public static IEnumerable<TExpected> ToExpectedClass<TExpected, TCurrent>(this IEnumerable<TCurrent> TEnumerable) where TExpected : class 
+        public static IEnumerable<TExpected> AsExpectedClass<TExpected, TCurrent>(this IEnumerable<TCurrent> TEnumerable) where TExpected : class 
         {
             var TEnumerator = TEnumerable.GetEnumerator();
             while (TEnumerator.MoveNext ())
@@ -342,16 +367,18 @@ namespace MorphingClass.CUtility
 
         public static List<List<T>> ToLtLt<T>(this IEnumerable<IEnumerable<T>> self)
         {
-           return self.SubToLt().ToList();
+            return self.Select(innerEb => innerEb.ToList()).ToList();
+
+           //return self.SubToLt().ToList();
         }
 
-        private static IEnumerable<List<T>> SubToLt<T>(this IEnumerable<IEnumerable<T>> self)
-        {
-            foreach (var item in self)
-            {
-                yield return item.ToList();
-            }
-        }
+        //private static IEnumerable<List<T>> SubToLt<T>(this IEnumerable<IEnumerable<T>> self)
+        //{
+        //    foreach (var item in self)
+        //    {
+        //        yield return item.ToList();
+        //    }
+        //}
 
         //public static LinkedList<T> ToLk<T>(this IEnumerable<T> self)
         //{
@@ -390,7 +417,40 @@ namespace MorphingClass.CUtility
             return resultsd;
         }
 
+        /// <summary>
+        /// this method works for usual data types; high efficiency
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="cmp"></param>
+        /// <returns></returns>
+        public static bool AreAnyDuplicates_BasicType<T>(this IEnumerable<T> list, IEqualityComparer<T> cmp = null)
+        {
+            if (cmp == null) { cmp = EqualityComparer<T>.Default; }
+            var hashset = new HashSet<T>(cmp);
+            return list.Any(e => !hashset.Add(e));
+        }
 
+        /// <summary>
+        /// this method works for all data types; low efficiency
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="cmp"></param>
+        /// <returns></returns>
+        public static bool AreAnyDuplicates<T>(this IEnumerable<T> Tself, IComparer<T> cmp = null)
+        {
+            if (cmp == null) { cmp = Comparer<T>.Default; }
+            var TSS = new SortedSet<T>(cmp);
+            foreach (var item in Tself)
+            {
+                if (TSS.Add(item) == false)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         /// <summary>
         /// Get the first min item in an IEnumerable, and return the index of it by minIndex

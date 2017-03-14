@@ -47,8 +47,8 @@ namespace MorphingClass.CMorphingMethods
         {
             Construct<CPolyline, CPolyline>(ParameterInitialize, blnIGeoToCGeo : false);
 
-            this.FrCptLtLt = CHelperFunction.GetCptEbByIColEb(this.ObjIGeoLtLt[0]).ToLtLt();
-            this.ToCptLtLt = CHelperFunction.GetCptEbByIColEb(this.ObjIGeoLtLt[1]).ToLtLt();
+            this.FrCptLtLt = CHelperFunction.GetCptEbEbByIColEb(this.ObjIGeoLtLt[0]).ToLtLt();
+            this.ToCptLtLt = CHelperFunction.GetCptEbEbByIColEb(this.ObjIGeoLtLt[1]).ToLtLt();
             
             this.ObjIGeoLtLt=null ;  //to save memory
         }

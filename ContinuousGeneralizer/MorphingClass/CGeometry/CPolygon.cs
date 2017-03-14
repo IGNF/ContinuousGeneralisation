@@ -12,9 +12,9 @@ using MorphingClass.CGeometry.CGeometryBase;
 
 namespace MorphingClass.CGeometry
 {
-    public class CPolygon : CPolyBase<CPolygon>, INotifyPropertyChanged
+    public class CPolygon : CPolyBase<CPolygon>
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        //public event PropertyChangedEventHandler PropertyChanged;
          /// <summary>
         /// 
         /// 要使用边（多边形）进行空间分析，需执行函数FormCEdge（FormPolygon），生成边（多边形）之后，方可使用
@@ -311,7 +311,7 @@ namespace MorphingClass.CGeometry
         {
             double dblSumX = 0;
             double dblSumY = 0;
-            var cptlt = _CptLtLt[0];
+            var cptlt = this.CptLtLt[0];
             for (int i = 0; i < cptlt.Count - 1; i++)
             {
                 dblSumX += cptlt[i].X;
