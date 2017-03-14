@@ -121,7 +121,7 @@ namespace MorphingClass.CGeneralizationMethods
 
 
                 double dblhalfD = 0.0001 * dblScale;  //d=0.2mm * dblScale
-                double dblA = 0.00000016 * dblScale * dblScale; //A=0.16mm^2 * dblScale * dblScale
+                double dblA = 0.00000016 * dblScale * dblScale; //A=0.16 mm^2 * dblScale * dblScale
                 double dblr = 0.0001 * dblScale;  //r= 1/4 sqrt(A)= 0.1 * dblScale
                 //dblr0 = 0.0001 * (dblScale-5000);  //r= 1/4 sqrt(A)= 0.1 * dblScale
                 //if (dblScale ==20000) //at the first step,  dblr0 = 0 
@@ -224,84 +224,19 @@ namespace MorphingClass.CGeneralizationMethods
             {
                 throw new ArgumentException("There are very close points!");
             }
-
-
-
-            //var cpglt = GenerateCpgEbByPaths(Paths).ToList();
-            //cpglt.ForEach(cpg => cpg.FormCEdgeLtLt());
-            //var cedgelt = new List<CEdge>();
-            //cpglt.ForEach(cpg => cpg.CEdgeLtLt.ForEach(cpgcedgelt => cedgelt.AddRange(cpgcedgelt)));
+            
 
             var cedgelt = GenerateCEdgeEbByPathsCptEbEb(pathsCptLtLt).ToList();
 
             CDCEL pDCEL = new CDCEL(cedgelt);
             pDCEL.ConstructDCEL();
-
-            //            CSaveFeature.SaveCGeoEb(pDCEL.CptLt, esriGeometryType.esriGeometryPoint,
-            //"Leftpoint_" + strName + "_" + pParameterInitialize.pFLayerLt[0].Name + CHelperFunction.GetTimeStamp(),
-            //pParameterInitialize);
-
-
-            //for (int i = 0; i < pDCEL.FaceCpgLt.Count; i++)
-            //{
-            //    if (pDCEL.FaceCpgLt[i].cedgeLkInnerComponents!=null)
-            //    {
-            //        Console.WriteLine("Face" + i + "has cedgeLkInnerComponents " + pDCEL.FaceCpgLt[i].cedgeLkInnerComponents.Count);
-            //    }
-            //}
-
-            //for (int i = 0; i < pDCEL.FaceCpgLt.Count; i++)
-            //{
-            //    Console.WriteLine("*******************************************************************");
-            //    Console.WriteLine("Face: " + i);
-            //    if (pDCEL.FaceCpgLt[i].cedgeLkInnerComponents!=null)
-            //    {
-            //        foreach (var cedgeInnerComponent in pDCEL.FaceCpgLt[i].cedgeLkInnerComponents)
-            //        {
-            //            //Console.WriteLine("An cedgeInnerComponent of Face " + i);
-            //            //cedgeInnerComponent.PrintMySelf();
-            //            if (cedgeInnerComponent.cedgeTwin.cpgIncidentFace.cedgeLkInnerComponents != null)
-            //            {
-            //                //Console.WriteLine("elments of a sub face of Face" + i);
-            //                //cedgeInnerComponent.cedgeTwin.PrintMySelf();
-
-            //                if (cedgeInnerComponent.cedgeTwin.cpgIncidentFace.cedgeLkInnerComponents.Count>30)
-            //                {
-            //                    int ss = 5;
-            //                }
-            //                Console.WriteLine(cedgeInnerComponent.cedgeTwin.cpgIncidentFace.cedgeLkInnerComponents.Count);
-            //            }
-            //        }
-            //    }
-
-
-
-            //}
-
-            //foreach (var face in pDCEL.FaceCpgLt)
-            //{
-            //    Console.WriteLine();
-            //    Console.WriteLine("new face:");
-            //}
-
-
-
-
-
+            
 
 
             var superface = pDCEL.FaceCpgLt[0];
             var CpgShowStack = new Stack<CPolygon>();
             foreach (var cedgeInnerComponent in superface.cedgeLkInnerComponents)
             {
-                //if (cedgeInnerComponent.cedgeTwin.cpgIncidentFace.cedgeLkInnerComponents!=null &&
-                //    cedgeInnerComponent.cedgeTwin.cpgIncidentFace.cedgeLkInnerComponents.Count>30)
-                //{
-                //    cedgeInnerComponent.cedgeTwin.PrintMySelf();
-
-                //    throw new ArgumentException("impossible case!");
-                //}
-
                 CpgShowStack.Push(cedgeInnerComponent.cedgeTwin.cpgIncidentFace);
             }
 
@@ -332,24 +267,8 @@ namespace MorphingClass.CGeneralizationMethods
                         var furthercedgeLkInnerComponents = faceCEdgeInnerComponent.cedgeTwin.cpgIncidentFace.cedgeLkInnerComponents;
                         if (furthercedgeLkInnerComponents != null)
                         {
-                            //Console.WriteLine();
-                            //Console.WriteLine("first two coordinates of an CpgShow:");
-                            //Console.WriteLine("x: " + CpgShow.CptLt[0].X + "        y: " + CpgShow.CptLt[0].Y);
-                            //Console.WriteLine("x: " + CpgShow.CptLt[1].X + "        y: " + CpgShow.CptLt[1].Y);
-                            //Console.WriteLine();
-                            //Console.WriteLine("first two coordinates of an outter ring:");
-                            //Console.WriteLine("x: " + outercptlt[0].X + "        y: " + outercptlt[0].Y);
-                            //Console.WriteLine("x: " + outercptlt[1].X + "        y: " + outercptlt[1].Y);
-
-
                             foreach (var furthercedgeInnerComponent in furthercedgeLkInnerComponents)
                             {
-                                //if (furthercedgeInnerComponent.cedgeTwin.cpgIncidentFace.cedgeLkInnerComponents!=null &&
-                                //    furthercedgeInnerComponent.cedgeTwin.cpgIncidentFace.cedgeLkInnerComponents.Count > 30)
-                                //{
-                                //    throw new ArgumentException("impossible case!");
-                                //}
-
                                 furthercedgeInnerComponent.cedgeTwin.PrintMySelf();
                                 CpgShowStack.Push(furthercedgeInnerComponent.cedgeTwin.cpgIncidentFace);
                             }
@@ -389,11 +308,6 @@ namespace MorphingClass.CGeneralizationMethods
             var paths = new List<List<IntPoint>>(cpgCol.Count);
             foreach (var cpg in cpgCol)
             {
-                //if (cpg.CptLtLt.Count > 1)
-                //{
-                //    throw new ArgumentOutOfRangeException("I didn't consider the case that there are more than 1 interior boundary!");
-                //}
-
                 //var path = new List<IntPoint>(cpg.CptLtLt[0].Count);
                 foreach (var cptlt in cpg.CptLtLt)
                 {

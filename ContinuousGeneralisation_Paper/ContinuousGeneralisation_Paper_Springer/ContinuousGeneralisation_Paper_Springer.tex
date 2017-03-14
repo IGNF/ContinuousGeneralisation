@@ -70,7 +70,8 @@ firstinits=true,doi=false,isbn=false,url=false,eprint=false,dashed=false,natbib=
 %\let\newinsert\newbox
 %\usepackage{floatrow}
 %\let\newinsert\tmp
-
+\usepackage{enumitem} %make items indent when using 
+%\begin{enumerate}[(a)]
 \usepackage{verbatimbox}  %for \addvbuffer
 \usepackage{hyperref}
 \usepackage{tikz}
@@ -427,7 +428,9 @@ Issues regarding the data:
 %Was urban_area_100k derived from building_15k by constructing 
 %buffers and filling out the holes of the buffers?
 
-
+%\pagebreak[4]
+%\newpage
+\clearpage
 
 \section{An idea of continuously generalising buildings}
 We have an input map at scale $1:15 \mathrm{k}$.
@@ -461,19 +464,21 @@ Therefore, we only need to buffer with radius $r_i-r_{i-1}$ at
 the new 
 step.
 
-Our generalisation is as follows. We buffer buildings with 
-radius $\frac{1}{2}d_i+r_i-r_{i-1}$, and merge the buffers 
-overlapping 
-each 
-other.
-Then we buffer the results with $-\frac{1}{2}d_i$.
-In order to 
-remove some spikes from the buffering, we buffer the new results 
-with $-\epsilon_i$, and then again with $\epsilon_i$. We simply 
-set 
+Our generalisation is as following $4$ steps:
+\begin{enumerate}[label=(\alph*),leftmargin=2\parindent]
+	\item We buffer buildings with 
+	radius $\frac{1}{2}d_i+r_i-r_{i-1}$, and merge the buffers 
+	overlapping each other.
+	\item Then we buffer the results with $-\frac{1}{2}d_i$.
+	\item In order to 
+	remove some spikes from the buffering, we buffer the new 
+	results with $-\epsilon_i$.
+	\item To compensate, we buffer with $\epsilon_i$.	
+\end{enumerate}
+We simply set 
 $\epsilon_i=\frac{1}{10}(r_i-r_{i-1})$. After these buffering 
-operations, we 
-eliminate the buildings with area less than $d^2_i$.
+operations, we eliminate the buildings with area less than 
+$d^2_i$.
 
 
 
