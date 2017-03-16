@@ -17,12 +17,15 @@ namespace MorphingClass.CGeometry
     /// <remarks>Doubly-Connected Edge List</remarks>
     public class CDCEL : CPolyBase<CPolyline>
     {
-        private List<CPolyline> _CplLt;   //could be input
-        private List<CEdge> _OriginalCEdgeLt;
-        private List<CPoint> _OriginalCptLt;
+        
         private List<CEdge> _HalfEdgeLt;  //output, we always store one edge and then imediately its twin edge; in the construction of compatible triangulations we always store the outer edges in the front of this list
         private List<CPolygon> _FaceCpgLt;      //output; superface is the first element in this list,i.e., _FaceCpgLt[0]. if a face has cedgeOuterComponent == null, then this face is super face
         private CEdgeGrid _pEdgeGrid;
+
+        //private List<CPolyline> _CplLt;   //could be input
+        //public List<CEdge> OriginalCEdgeLt { get; set; }
+        //public List<CPoint> OriginalCptLt{ get; set; }
+        //public List<CPolyline> CplLt { get; set; }
 
         public CDCEL()
         {
@@ -30,7 +33,6 @@ namespace MorphingClass.CGeometry
 
         public CDCEL(List<CPolyline> fcpllt)
         {
-            _CplLt = fcpllt;
             _CEdgeLt = CGeometricMethods.GetCEdgeLtFromCpbLt<CPolyline, CPolyline>(fcpllt);
         }
 
@@ -40,20 +42,20 @@ namespace MorphingClass.CGeometry
             _CEdgeLt.AddRange(cedgelt);
         }
 
-        /// <summary>Update the two ends of all the polylines</summary>
-        /// <remarks>at the beginning, the polylines have their own ends even in the same intersection. 
-        /// we unified the vertices of the edges when we constructed doubly connected edge list, 
-        /// now we also need to update the vertices of the polylines</remarks>
-        public void UpdateCplltEnds()
-        {
-            List<CPolyline> fcpllt = _CplLt;
-            foreach (CPolyline cpl in fcpllt)
-            {
-                int intCount = cpl.CEdgeLt.Count;
-                cpl.CptLt[0] = cpl.CEdgeLt[0].FrCpt;
-                cpl.CptLt[intCount] = cpl.CEdgeLt[intCount - 1].ToCpt;
-            }
-        }
+        ///// <summary>Update the two ends of all the polylines</summary>
+        ///// <remarks>at the beginning, the polylines have their own ends even in the same intersection. 
+        ///// we unified the vertices of the edges when we constructed doubly connected edge list, 
+        ///// now we also need to update the vertices of the polylines</remarks>
+        //public void UpdateCplltEnds()
+        //{
+        //    List<CPolyline> fcpllt = _CplLt;
+        //    foreach (CPolyline cpl in fcpllt)
+        //    {
+        //        int intCount = cpl.CEdgeLt.Count;
+        //        cpl.CptLt[0] = cpl.CEdgeLt[0].FrCpt;
+        //        cpl.CptLt[intCount] = cpl.CEdgeLt[intCount - 1].ToCpt;
+        //    }
+        //}
 
         public void ConstructDCEL()
         {
@@ -75,12 +77,7 @@ namespace MorphingClass.CGeometry
             this.CptLt = ConstructVertexLt(_HalfEdgeLt);         //already set indexID
 
             //ShowEdgeRelationshipAroundAllCpt();
-            ConstructFaceLt();       //already set indexID           
-
-            _OriginalCEdgeLt = new List<CEdge>();
-            _OriginalCptLt = new List<CPoint>();
-            _OriginalCEdgeLt.AddRange(_CEdgeLt);
-            _OriginalCptLt.AddRange(this.CptLt);
+            ConstructFaceLt();       //already set indexID 
         }
 
 
@@ -338,7 +335,8 @@ namespace MorphingClass.CGeometry
             foreach (CPolygon cpg in rawfaceLt)
             {
                 CEdge cedgeStartAtLeftMost = cpg.cedgeStartAtLeftMost;
-                double dblAngle = CGeometricMethods.CalAngle_Counterclockwise(cedgeStartAtLeftMost, cedgeStartAtLeftMost.cedgePrev.cedgeTwin);
+                double dblAngle = CGeometricMethods.CalAngle_Counterclockwise
+                    (cedgeStartAtLeftMost, cedgeStartAtLeftMost.cedgePrev.cedgeTwin);
                 if (dblAngle < Math.PI)
                 {
                     cpg.IsHole = false;
@@ -747,24 +745,9 @@ namespace MorphingClass.CGeometry
             Console.WriteLine(strName + ":  " + cedge.FrCpt.indexID + "   " + cedge.ToCpt.indexID + "   AxisAngle:" + cedge.dblAxisAngle + "   FrX:" + cedge.FrCpt.X + "   FrY:" + cedge.FrCpt.Y + "   ToX:" + cedge.ToCpt.X + "   ToY:" + cedge.ToCpt.Y);
         }
 
-        /// <summary></summary>
-        public List<CPolyline> CplLt
-        {
-            get { return _CplLt; }
-            set { _CplLt = value; }
-        }
 
-        public List<CEdge> OriginalCEdgeLt
-        {
-            get { return _OriginalCEdgeLt; }
-            set { _OriginalCEdgeLt = value; }
-        }
+        
 
-        public List<CPoint> OriginalCptLt
-        {
-            get { return _OriginalCptLt; }
-            set { _OriginalCptLt = value; }
-        }
 
         /// <summary></summary>
         /// <remarks>  //output, we always store one edge and then imediately its twin edge</remarks>

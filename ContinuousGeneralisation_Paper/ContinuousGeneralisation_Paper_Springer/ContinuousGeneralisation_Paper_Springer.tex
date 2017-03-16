@@ -36,10 +36,6 @@
 %\usepackage[disable]{todonotes}
 \usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
 %\usepackage{todonotes}
-\usepackage[backend=bibtex,bibstyle=authoryear,citestyle=authoryear,
-firstinits=true,doi=false,isbn=false,url=false,eprint=false,dashed=false,natbib=true]{biblatex}
-%\renewcommand*{\bibfont}{\small}
-\addbibresource{References.bib}
 \usepackage{subfigure}
 \usepackage[font=small,labelfont=bf]{caption}
 \usepackage{setspace}
@@ -83,6 +79,43 @@ firstinits=true,doi=false,isbn=false,url=false,eprint=false,dashed=false,natbib=
 %		\node[shape=circle,draw,inner sep=0.1pt] (char) {#1};}}
 % \newcommand{\ml}{\ensuremath{M_+}\xspace}
 % \newcommand{\ms}{\ensuremath{M_-}\xspace}
+
+
+
+\usepackage[backend=bibtex,
+bibstyle=authoryear, %without indices before names; year after 
+%names
+%style=authoryear,
+citestyle=authoryear,
+maxbibnames=20,maxcitenames=2,
+firstinits=true,
+%terseinits=true, %remove periods after initials of first names
+%style=apa, %
+%sorting=ydnt, %Sort bibliography by year (descending), name, 
+%title
+doi=false,isbn=false,url=false,
+eprint=false,dashed=false]{biblatex}
+
+%\renewcommand*{\bibfont}{\small} %set the font size of the 
+%references
+%\renewcommand*{\nameyeardelim}{\addspace} %\remove the comma 
+%between author and year citations
+%\renewcommand*{\revsdnamepunct}{} %remove commas between last 
+%%and first names in bibliography
+%\renewcommand{\labelnamepunct}{\addspace} %remove the 
+%%punctuation after the year in bibliography
+%\renewcommand{\finentrypunct}{} %remove the full stop at the 
+%%end of each bibliography entry
+\renewcommand*{\revsdnamepunct}{} %remove commas between last 
+%and first names in bibliography
+
+%remove "In:" for articles in bibliography
+\renewbibmacro{in:}{\ifentrytype{article}{}
+	{\printtext{\bibstring{in}\intitlepunct}}} 
+
+\addbibresource{References.bib}
+
+
 
 \newcommand{\mypar}[1]{\bigskip\noindent\textbf{#1.}~}
 
@@ -221,6 +254,14 @@ firstinits=true,doi=false,isbn=false,url=false,eprint=false,dashed=false,natbib=
 
 \keywords{Text, Text}
 
+\section{Introduction}
+\label{sec:Introduction}
+
+The papers we may review:   
+\textcite{vanSmaalen2003, Buchin2016, Chaudhry2008, Stoter2009},
+
+Rules for building simplification; see \textcite{Lee2005}
+
 \section{Discussion}
 \label{sec:Discussion}
 
@@ -251,8 +292,9 @@ together. To avoid overlap between two covers, we may need to
 use Voronoi diagrams of the original buildings. We can cover 
 buildings without overlap if we always use a cover inside the 
 Voronoi cells of these buildings. This idea about Voronoi cells 
-is used in Topologically Safe Curved Schematization (van Goethem 
-et al. 2013). We may need to try different possible covers. 
+is used in \textcite{vanGoethem2013}. We may need to try 
+different 
+possible covers. 
 Unfortunately, this trying may be very time-consuming, probably 
 NP-hard.
 
@@ -453,7 +495,7 @@ $S_i$ is the scale of map $i$.
 The second requirement is that a building with area less than 
 $A_i=0.16\mathrm{mm}^2/S^2_i$ should be eliminated. Roughly, a 
 building with width less than 
-$w_i=\sqrt{A_i}=0.4\mathrm{mm}/S$ should be eliminated.
+$w_i=\sqrt{A_i}=0.4\mathrm{mm}/S_i$ should be eliminated.
 In order to make sure that some small buildings will be 
 eliminated, the radius $r_i$ that we use to buffer buildings 
 should be smaller than $\frac{1}{2}w_i$. We simply use 
@@ -478,7 +520,7 @@ Our generalisation is as following $4$ steps:
 We simply set 
 $\epsilon_i=\frac{1}{10}(r_i-r_{i-1})$. After these buffering 
 operations, we eliminate the buildings with area less than 
-$d^2_i$.
+$A_i$.
 
 
 

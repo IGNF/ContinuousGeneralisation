@@ -30,6 +30,8 @@ using ESRI.ArcGIS.GeoAnalyst;
 using ESRI.ArcGIS.Maplex;
 using ESRI.ArcGIS.Output;
 using ESRI.ArcGIS.SystemUI;
+using ESRI.ArcGIS.DataManagementTools;
+
 
 using ClipperLib;
 
@@ -115,10 +117,14 @@ namespace MorphingClass.CGeneralizationMethods
                     case 2:
                         dblScale = 100000;
                         break;
+                    case 3:
+                        dblScale = 250000;
+                        break;
                     default:
                         break;
                 }
 
+                //ESRI.ArcGIS.Geoprocessing
 
                 double dblhalfD = 0.0001 * dblScale;  //d=0.2mm * dblScale
                 double dblA = 0.00000016 * dblScale * dblScale; //A=0.16 mm^2 * dblScale * dblScale
