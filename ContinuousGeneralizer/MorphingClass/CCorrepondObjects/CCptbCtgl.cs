@@ -184,10 +184,10 @@ namespace MorphingClass.CCorrepondObjects
 
 
 
-                var FrCptIndexIDFrIncidentCEdge = FrIncidentCEdge.FrCpt.indexID;      //FrCpt IndexID
-                var ToCptIndexIDFrIncidentCEdge = FrIncidentCEdge.ToCpt.indexID;      //ToCpt IndexID
-                var FrCptIndexIDToIncidentCEdge = ToIncidentCEdge.FrCpt.indexID;      //FrCpt IndexID
-                var ToCptIndexIDToIncidentCEdge = ToIncidentCEdge.ToCpt.indexID;      //ToCpt IndexID
+                //var FrCptIndexIDFrIncidentCEdge = FrIncidentCEdge.FrCpt.indexID;      //FrCpt IndexID
+                //var ToCptIndexIDFrIncidentCEdge = FrIncidentCEdge.ToCpt.indexID;      //ToCpt IndexID
+                //var FrCptIndexIDToIncidentCEdge = ToIncidentCEdge.FrCpt.indexID;      //FrCpt IndexID
+                //var ToCptIndexIDToIncidentCEdge = ToIncidentCEdge.ToCpt.indexID;      //ToCpt IndexID
 
                 //FrIncidentCEdge.PrintMySelf();
                 //ToIncidentCEdge.PrintMySelf();
@@ -195,10 +195,10 @@ namespace MorphingClass.CCorrepondObjects
                 var FrLastCEdge = FrIncidentCEdge.GetSmallerAxisAngleCEdge();
                 var ToLastCEdge = ToIncidentCEdge.GetSmallerAxisAngleCEdge();
 
-                var FrCptIndexIDFrLastCEdge = FrLastCEdge.FrCpt.indexID;      //FrCpt IndexID
-                var ToCptIndexIDFrLastCEdge = FrLastCEdge.ToCpt.indexID;      //ToCpt IndexID
-                var FrCptIndexIDToLastCEdge = ToLastCEdge.FrCpt.indexID;      //FrCpt IndexID
-                var ToCptIndexIDToLastCEdge = ToLastCEdge.ToCpt.indexID;      //ToCpt IndexID
+                //var FrCptIndexIDFrLastCEdge = FrLastCEdge.FrCpt.indexID;      //FrCpt IndexID
+                //var ToCptIndexIDFrLastCEdge = FrLastCEdge.ToCpt.indexID;      //ToCpt IndexID
+                //var FrCptIndexIDToLastCEdge = ToLastCEdge.FrCpt.indexID;      //FrCpt IndexID
+                //var ToCptIndexIDToLastCEdge = ToLastCEdge.ToCpt.indexID;      //ToCpt IndexID
 
 
 
@@ -240,10 +240,10 @@ namespace MorphingClass.CCorrepondObjects
                 {
                     //Console.WriteLine(FrCurrentCEdge.FrCpt.indexID + "   " + FrCurrentCEdge.ToCpt.indexID);
                     //Console.WriteLine(ToCurrentCEdge.FrCpt.indexID + "   " + ToCurrentCEdge.ToCpt.indexID);
-                    var FrCptIndexIDFrCurrentCEdge = FrCurrentCEdge.FrCpt.indexID;      //FrCpt IndexID
-                    var ToCptIndexIDFrCurrentCEdge = FrCurrentCEdge.ToCpt.indexID;      //ToCpt IndexID
-                    var FrCptIndexIDToCurrentCEdge = ToCurrentCEdge.FrCpt.indexID;      //FrCpt IndexID
-                    var ToCptIndexIDToCurrentCEdge = ToCurrentCEdge.ToCpt.indexID;      //ToCpt IndexID
+                    //var FrCptIndexIDFrCurrentCEdge = FrCurrentCEdge.FrCpt.indexID;      //FrCpt IndexID
+                    //var ToCptIndexIDFrCurrentCEdge = FrCurrentCEdge.ToCpt.indexID;      //ToCpt IndexID
+                    //var FrCptIndexIDToCurrentCEdge = ToCurrentCEdge.FrCpt.indexID;      //FrCpt IndexID
+                    //var ToCptIndexIDToCurrentCEdge = ToCurrentCEdge.ToCpt.indexID;      //ToCpt IndexID
 
                     //intCompare = CCompareMethods.Compare(ToCurrentCEdge.dblAxisAngle, FrCurrentCEdge.dblAxisAngle);
 
@@ -274,10 +274,10 @@ namespace MorphingClass.CCorrepondObjects
                         blnFrCurrentCEdgeChanged = true;
                     }
 
-                    FrCptIndexIDFrCurrentCEdge = FrCurrentCEdge.FrCpt.indexID;      //FrCpt IndexID
-                    ToCptIndexIDFrCurrentCEdge = FrCurrentCEdge.ToCpt.indexID;      //ToCpt IndexID
-                    FrCptIndexIDToCurrentCEdge = ToCurrentCEdge.FrCpt.indexID;      //FrCpt IndexID
-                    ToCptIndexIDToCurrentCEdge = ToCurrentCEdge.ToCpt.indexID;      //ToCpt IndexID
+                    //FrCptIndexIDFrCurrentCEdge = FrCurrentCEdge.FrCpt.indexID;      //FrCpt IndexID
+                    //ToCptIndexIDFrCurrentCEdge = FrCurrentCEdge.ToCpt.indexID;      //ToCpt IndexID
+                    //FrCptIndexIDToCurrentCEdge = ToCurrentCEdge.FrCpt.indexID;      //FrCpt IndexID
+                    //ToCptIndexIDToCurrentCEdge = ToCurrentCEdge.ToCpt.indexID;      //ToCpt IndexID
 
                 } while (((FrCurrentCEdge.dblAxisAngle == FrStopCEdge.dblAxisAngle && blnFrCurrentCEdgeChanged == true)  //if ToCurrentCEdge or FrCurrentCEdge reaches the StopCEdge, then the do-while loop is done.   we can use "==" directly because we didn't recompute the axis angle, instead we assign it
                        || (ToCurrentCEdge.dblAxisAngle == ToStopCEdge.dblAxisAngle && blnToCurrentCEdgeChanged == true))
@@ -303,16 +303,16 @@ namespace MorphingClass.CCorrepondObjects
 
         private CEdge InsertCEdge(CEdge ToCurrentCEdge, ref CEdge SmallerAxisAngleCEdge, ref List<CPoint> IntersectCptLt, ref int indexID)
         {
-            var FrCptIndexIDToCurrentCEdge = ToCurrentCEdge.FrCpt.indexID;      //FrCpt IndexID
-            var ToCptIndexIDToCurrentCEdge = ToCurrentCEdge.ToCpt.indexID;      //ToCpt IndexID
+            //var FrCptIndexIDToCurrentCEdge = ToCurrentCEdge.FrCpt.indexID;      //FrCpt IndexID
+            //var ToCptIndexIDToCurrentCEdge = ToCurrentCEdge.ToCpt.indexID;      //ToCpt IndexID
 
 
             var NextToCurrentCEdge = ToCurrentCEdge.GetLargerAxisAngleCEdge();  //we have to do this first, because ToCurrentCEdge.GetLargerAxisAngleCEdge() will be changed by inserting
-            var FrCptIndexIDNextToCurrentCEdge = NextToCurrentCEdge.FrCpt.indexID;      //FrCpt IndexID
-            var ToCptIndexIDNextToCurrentCEdge = NextToCurrentCEdge.ToCpt.indexID;      //ToCpt IndexID
+            //var FrCptIndexIDNextToCurrentCEdge = NextToCurrentCEdge.FrCpt.indexID;      //FrCpt IndexID
+            //var ToCptIndexIDNextToCurrentCEdge = NextToCurrentCEdge.ToCpt.indexID;      //ToCpt IndexID
 
-            var FrCptIndexIDSmallerAxisAngleCEdge = SmallerAxisAngleCEdge.FrCpt.indexID;      //FrCpt IndexID
-            var ToCptIndexIDSmallerAxisAngleCEdge = SmallerAxisAngleCEdge.ToCpt.indexID;      //ToCpt IndexID
+            //var FrCptIndexIDSmallerAxisAngleCEdge = SmallerAxisAngleCEdge.FrCpt.indexID;      //FrCpt IndexID
+            //var ToCptIndexIDSmallerAxisAngleCEdge = SmallerAxisAngleCEdge.ToCpt.indexID;      //ToCpt IndexID
 
             var newToCurrentCEdge = CreateNewCEdge(ToCurrentCEdge, ToCurrentCEdge.FrCpt, ToCurrentCEdge.ToCpt);  //the reason we create a new edge is that if we use this original ToCurrentCEdge, the CDCEL relationship of this edge will be changed. In this case, when we traverse around ToCurrentCEdge.ToCpt, we cannot trace the to-edges coming after ToCurrentCEdge 
             CDCEL.InsertCEdgeBySmaller(SmallerAxisAngleCEdge, newToCurrentCEdge);
@@ -334,10 +334,10 @@ namespace MorphingClass.CCorrepondObjects
             CEdge currentcedge = subcedge.cedgeTwin.cedgeNext.cedgeNext;
             do
             {
-                int intsubcedgeFrindexID = subcedge.FrCpt.indexID;
-                int intsubcedgeToindexID = subcedge.ToCpt.indexID;
-                int intFrCurrentindexID = currentcedge.FrCpt.indexID;
-                int intToCurrentindexID = currentcedge.ToCpt.indexID;
+                //int intsubcedgeFrindexID = subcedge.FrCpt.indexID;
+                //int intsubcedgeToindexID = subcedge.ToCpt.indexID;
+                //int intFrCurrentindexID = currentcedge.FrCpt.indexID;
+                //int intToCurrentindexID = currentcedge.ToCpt.indexID;
 
                 CIntersection pIntersection = subcedge.IntersectWith(currentcedge);
                 //subcedge.ToCpt.PrintMySelf();

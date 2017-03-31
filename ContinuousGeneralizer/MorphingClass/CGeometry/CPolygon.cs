@@ -15,7 +15,7 @@ namespace MorphingClass.CGeometry
     public class CPolygon : CPolyBase<CPolygon>
     {
         //public event PropertyChangedEventHandler PropertyChanged;
-         /// <summary>
+        /// <summary>
         /// 
         /// 要使用边（多边形）进行空间分析，需执行函数FormCEdge（FormPolygon），生成边（多边形）之后，方可使用
         /// </summary>
@@ -35,7 +35,7 @@ namespace MorphingClass.CGeometry
         public int intTypeIndex { get; set; } //the index (0, 1, 2, ...) of a type; used for access type distance directly
 
         public List<List<CEdge>> CEdgeLtLt { get; set; }
-        
+
 
         public CPoint CentroidCptSimple { get; set; }
 
@@ -46,7 +46,7 @@ namespace MorphingClass.CGeometry
 
         //private CPoint _CentroidCpt;
         private CPoint _LeftMostCpt;
-          private bool _IsHole;
+        private bool _IsHole;
         private bool _IsMerged;
 
         /// <summary>
@@ -90,11 +90,11 @@ namespace MorphingClass.CGeometry
 
 
 
-        public  void FormPolyBase(List<List<CPoint>> fcptltlt)
+        public void FormPolyBase(List<List<CPoint>> fcptltlt)
         {
-            if (fcptltlt.Count>0)
+            if (fcptltlt.Count > 0)
             {
-                if (fcptltlt[0].Count>0)
+                if (fcptltlt[0].Count > 0)
                 {
                     _FrCpt = fcptltlt[0][0];
                     _ToCpt = fcptltlt[0].GetLast_T();
@@ -126,7 +126,7 @@ namespace MorphingClass.CGeometry
         /// <remarks>SetPolygon will first set IPoint</remarks>
         public IPolygon4 SetPolygon()
         {
-            this.pPolygon = CGeometricMethods.GetPolygonFromCptLt(this.CptLt);           
+            this.pPolygon = CGeometricMethods.GetPolygonFromCptLt(this.CptLt);
             return this.pPolygon;
         }
 
@@ -158,121 +158,144 @@ namespace MorphingClass.CGeometry
         }
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <remarks>we suppose that there is no </remarks>
-        public List<CPoint> TraverseFaceToGenerateCptLt()
+
+
+
+        public IEnumerable<CPoint> GetOuterCptEb(bool clockwise = true, bool blnIdentical = true)
         {
-            if (_cedgeOuterComponent != null)  //this is a normal face
+            var pcedgeOuterComponent = _cedgeOuterComponent;
+            if (pcedgeOuterComponent == null)
             {
-                return TraverseToGenerateCptLt(_cedgeOuterComponent);
+                throw new ArgumentException("Super face does not have a outer ring!");
             }
-            else //this is a super face
+
+            if (clockwise == true)   //for an outer path, the edges are stored counter-clockwise in DCEL
             {
-                return TraverseToGenerateCptLt(_cedgeLkInnerComponents.First.Value);  //we suppose that there is only one InnerComponent
-            }
-        }
-
-
-        public List<CPoint> GetOuterCptLt(bool clockwise = true)
-        {
-            var outercptlt = new List<CPoint>();
-            if (_cedgeOuterComponent != null)
-            {
-               outercptlt= TraverseToGenerateCptLt(_cedgeOuterComponent);
-
-               //
-               if (clockwise == true)
-               {
-                   outercptlt.Reverse();
-               }
-            }
-            return outercptlt;
-        }
-
-        public List<List<CPoint>> GetInnerCptLtLt(bool clockwise = true)
-        {
-            var innercptltlt = new List<List<CPoint>>();
-            if (_cedgeLkInnerComponents != null)
-            {
-                foreach (var cedgeInnerComponent in _cedgeLkInnerComponents)
+                foreach (var cpt in TraverseToGetCptEb(pcedgeOuterComponent, false))
                 {
-                    innercptltlt.Add(GetInnerCptLt(cedgeInnerComponent, clockwise));
+                    yield return cpt;
                 }
             }
-            return innercptltlt;
-        }
-
-        public List<CPoint> GetInnerCptLt(CEdge cedgeInnerComponent, bool clockwise = true)
-        {
-            var innercptlt = TraverseToGenerateCptLt(cedgeInnerComponent);
-
-            if (clockwise == false)
+            else
             {
-                innercptlt.Reverse();
+                foreach (var cpt in TraverseToGetCptEb(pcedgeOuterComponent, true))
+                {
+                    yield return cpt;
+                }
             }
 
-            return innercptlt;
+            if (blnIdentical == true)
+            {
+                yield return pcedgeOuterComponent.FrCpt;
+            }
         }
 
-        //public List < List<CPoint>> TraverseFaceToGenerateCptLtLt(bool blnOuter=true, bool clockwise=true )
-        //{
-        //    if (blnOuter==true)
-        //    {
-        //        cedgeLkInnerComponents
-        //    }
+        public IEnumerable<CPoint> GetInnerCptEb(CEdge cedgeComponent, bool clockwise = true, bool blnIdentical = true)
+        {
+            var pcedgeOuterComponent = cedgeComponent;
 
+            if (clockwise == true)  //for an inner path, the edges are stored clockwise in DCEL
+            {
+                foreach (var cpt in TraverseToGetCptEb(pcedgeOuterComponent, true))
+                {
+                    yield return cpt;
+                }
+            }
+            else
+            {
+                foreach (var cpt in TraverseToGetCptEb(pcedgeOuterComponent, false))
+                {
+                    yield return cpt;
+                }
+            }
 
-
-
-        //    if (_cedgeOuterComponent != null)  //this is a normal face
-        //    {
-        //        return TraverseToGenerateCptLt(_cedgeOuterComponent);
-        //    }
-        //    else //this is a super face
-        //    {
-        //        return TraverseToGenerateCptLt(_cedgeLkInnerComponents.First.Value);  //we suppose that there is only one InnerComponent
-        //    }
-        //}
-
+            if (blnIdentical == true)
+            {
+                yield return pcedgeOuterComponent.FrCpt;
+            }
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="cedgeComponent"></param>
+        /// <param name="blnNext"></param>
         /// <returns></returns>
-        /// <remarks>we don't just use the FrCpt of cedgeOuterComponent as the start vertex, because a pair of corresponding faces may have different cedgeOuterComponent
-        ///          Instead, we use the Cpt having the smallest indexID as the start vertex</remarks>
-        private List <CPoint> TraverseToGenerateCptLt(CEdge cedgeComponent)
+        private static IEnumerable<CPoint> TraverseToGetCptEb(CEdge cedgeComponent, bool blnNext)
         {
-            var MinFrIndexIDCEdge = cedgeComponent;
-            var CurrentCEdge = cedgeComponent.cedgeNext;
-            int intCount = 1;
+            var currentcedge = cedgeComponent;
             do
             {
-                intCount++;
-                if (CurrentCEdge.FrCpt.indexID < MinFrIndexIDCEdge.FrCpt.indexID)
+                yield return currentcedge.FrCpt;
+
+                if (blnNext == true)
                 {
-                    MinFrIndexIDCEdge = CurrentCEdge;
+                    currentcedge = currentcedge.cedgeNext;
                 }
-                //Console.WriteLine(CurrentCEdge.indexID + "___" + CurrentCEdge.indexID1 + "   " + CurrentCEdge.indexID2);
-                CurrentCEdge = CurrentCEdge.cedgeNext;
-            } while (CurrentCEdge.indexID != cedgeComponent.indexID);
+                else
+                {
+                    currentcedge = currentcedge.cedgePrev;
+                }
 
-
-            var cptlt = new List<CPoint>(intCount + 1);
-            cptlt.Add(MinFrIndexIDCEdge.FrCpt);
-            cptlt.Add(MinFrIndexIDCEdge.ToCpt);
-            CurrentCEdge = MinFrIndexIDCEdge.cedgeNext;
-            do
-            {
-                cptlt.Add(CurrentCEdge.ToCpt);
-                CurrentCEdge = CurrentCEdge.cedgeNext;
-            } while (CurrentCEdge.indexID != MinFrIndexIDCEdge.indexID);
-            this.CptLt = cptlt;
-            return cptlt;
+            } while (currentcedge.GID != cedgeComponent.GID);
         }
+
+
+        public List<List<CPoint>> GetInnerCptLtLt(bool clockwise = true, bool blnIdentical = true)
+        {
+            var innercptltlt = new List<List<CPoint>>();
+            if (_cedgeLkInnerComponents != null && _cedgeLkInnerComponents.Count > 0)
+            {
+                foreach (var cedgeInnerComponent in _cedgeLkInnerComponents)
+                {
+
+                    innercptltlt.Add(GetInnerCptEb(cedgeInnerComponent, clockwise, blnIdentical).ToList());
+                }
+            }
+            else
+            {
+                throw new ArgumentException("This face does not have inner components!");
+            }
+            return innercptltlt;
+        }
+
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="cedgeComponent"></param>
+        ///// <returns></returns>
+        ///// <remarks>we don't just use the FrCpt of cedgeOuterComponent as the start vertex, because a pair of corresponding faces may have different cedgeOuterComponent
+        /////          Instead, we use the Cpt having the smallest indexID as the start vertex</remarks>
+        //private List <CPoint> TraverseToGenerateCptLt(CEdge cedgeComponent)
+        //{
+        //    var MinFrIndexIDCEdge = cedgeComponent;
+        //    var CurrentCEdge = cedgeComponent.cedgeNext;
+        //    int intCount = 1;
+        //    do
+        //    {
+        //        intCount++;
+        //        if (CurrentCEdge.FrCpt.indexID < MinFrIndexIDCEdge.FrCpt.indexID)
+        //        {
+        //            MinFrIndexIDCEdge = CurrentCEdge;
+        //        }
+        //        //Console.WriteLine(CurrentCEdge.indexID + "___" + CurrentCEdge.indexID1 + "   " + CurrentCEdge.indexID2);
+        //        CurrentCEdge = CurrentCEdge.cedgeNext;
+        //    } while (CurrentCEdge.indexID != cedgeComponent.indexID);
+
+
+        //    var cptlt = new List<CPoint>(intCount + 1);
+        //    cptlt.Add(MinFrIndexIDCEdge.FrCpt);
+        //    cptlt.Add(MinFrIndexIDCEdge.ToCpt);
+        //    CurrentCEdge = MinFrIndexIDCEdge.cedgeNext;
+        //    do
+        //    {
+        //        cptlt.Add(CurrentCEdge.ToCpt);
+        //        CurrentCEdge = CurrentCEdge.cedgeNext;
+        //    } while (CurrentCEdge.indexID != MinFrIndexIDCEdge.indexID);
+        //    this.CptLt = cptlt;
+        //    return cptlt;
+        //}
 
         /// <summary>
         /// (counter clockwise???)
@@ -295,7 +318,7 @@ namespace MorphingClass.CGeometry
             get { return _cedgeStartAtLeftMost; }
             set { _cedgeStartAtLeftMost = value; }
         }
-        
+
         public SortedDictionary<CPolygon, LinkedList<CEdge>> AdjacentSD
         {
             get { return _AdjacentSD; }
@@ -333,7 +356,7 @@ namespace MorphingClass.CGeometry
             this.CptLt = null;
             _LeftMostCpt = null;
             //_pGeo = null;
-            
+
 
 
 
@@ -351,7 +374,7 @@ namespace MorphingClass.CGeometry
             get { return _LeftMostCpt; }
             set { _LeftMostCpt = value; }
         }
-        
+
 
 
         //public CPatch cpatch
@@ -363,8 +386,8 @@ namespace MorphingClass.CGeometry
         public IPolygon4 pPolygon
         {
             get { return _pPolygon; }
-            set 
-            { 
+            set
+            {
                 _pPolygon = value;
                 _pGeo = value;
             }
@@ -381,9 +404,9 @@ namespace MorphingClass.CGeometry
             get { return _IsMerged; }
             set { _IsMerged = value; }
         }
-        
 
-       
+
+
         //public void SetPolygonAndEdge()
         //{
         //    if (this .pPolygon ==null)

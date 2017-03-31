@@ -154,13 +154,7 @@ eprint=false,dashed=false]{biblatex}
 	xlabel near ticks,
 	ylabel near ticks
 }
-\newcommand{\Astar}{A$^{\!\star}$\xspace}
-\newcommand{\tstar}{\ensuremath{t\xspace}}
-\newcommand{\Pistar}{\ensuremath{\Pi}} % {\Pi_{\mathrm{start}}(\tstar)}
-\newcommand{\Pstart}{\ensuremath{\mathpzc{P}_\mathrm{start}}\xspace}
-\newcommand{\Pgoal}{\ensuremath{\mathpzc{P}_\mathrm{goal}}\xspace}
-\newcommand{\Pnode}{\ensuremath{\mathpzc{P}_{t,i}}\xspace}
-\newcommand{\Tgoal}{\ensuremath{T_\mathrm{goal}}\xspace}
+
 
 \newcommandx{\marginalcomment}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
 
@@ -172,28 +166,6 @@ eprint=false,dashed=false]{biblatex}
 %\renewcommand\thesection{\arabic{section}}
 %\renewcommand\thesubsection{\thesection.\arabic{subsection}}
 
-
-
-\newcolumntype{x}[1]{>{\raggedleft\arraybackslash\hspace{0pt}}b{#1}}
-\newcolumntype{y}[1]{>{\centering\arraybackslash\hspace{0pt}}b{#1}}
-%\newcolumntype{y}[2]{>{\centering\arraybackslash\hspace{0pt}}D{.}{.}{#1}b{#2}}
-%\newcolumntype{d}[1]{D{.}{.}{#1}}
-\newcolumntype{L}{>{$}l<{$}}% math-mode version of "l" column 
-%type
-\newcolumntype{R}{>{$}r<{$}}% math-mode version of "r" column 
-%type
-\newcolumntype{C}{>{$}c<{$}}% math-mode version of "c" column 
-%type
-
-%This style looks better than $\mathrm{non-comp}$ in which "-" 
-%looks like the symbol of minus 
-\newcommand\nonhyphencomp{\operatorname{non-comp}}
-\newcommand\inthyphenleng{\operatorname{int-leng}}
-\newcommand\goalhyphentype{\operatorname{goal-type}}
-\newcommand\goalhyphennon{\operatorname{goal-non}}
-\newcommand\goalhyphenshape{\operatorname{goal-shape}}
-%\newcolumntype{y}[1]{>{\raggedleft\arraybackslash\hspace{0pt}}p{#1}}
-%\newcolumntype{x}[1]{>{\centering\arraybackslash\hspace{0pt}}p{#1}}
 
 
 % see the list of further useful packages
@@ -244,8 +216,72 @@ eprint=false,dashed=false]{biblatex}
 %
 \maketitle
 
-\newcommand{\myabstract}{text}
+\newcommand{\myabstract}{We proposed a method to continuous 
+generalization of buildings from a start scale to a goal scale. 
+%
+For each building at the start scale, we generate its 
+generalized form at 
+the goal scale by enlarging and simplifying. Then we grow the  
+building to the 
+generalized form to realize continuous transformation. During 
+the 
+growing, we aggregate two buildings once they become too close 
+to each other. We generate a new generalized form at the goal 
+scale for 
+the aggregated building so that we can continue growing.
+%
+After finishing the growing, we take the goal scale as the 
+start scale and repeat our continuous generalization. The start 
+scale and the target scale should not be too far away because we 
+want the intermediate results to be somewhat simplified.
 
+Our contribution is as follows. First, the buildings 
+are enlarged continuously and at the same time are simplified. 
+Second, the distance between each pair of two buildings is 
+always larger than a specified distance. Third, there is no thin 
+part in our results.}
+
+%We proposed a method to continuous 
+%generalization of buildings from a start scale to a goal scale. 
+%%
+%For each building at the start scale, we enlarge it by 
+%buffering. We simplify the enlarged building by the operator of 
+%dilation-erosion-erosion-dilation. Then we merge the 
+%simplified form with the original 
+%building so that the merged result completely contains the 
+%original 
+%shape. We use the merged shape as the building at the goal 
+%scale, and grow the original building to the 
+%goal shape to realize continuous transformation. 
+%%
+%During the 
+%growing, if two buildings become too close to each other, we 
+%aggregate them to avoid narrow gap. To aggregate, we dilate and 
+%merge the two buildings, then we erode the merged shape. To 
+%avoid 
+%failure or thin parts from the aggregation, we construct a 
+%skeleton of the dilated and merged form. We make a buffer of 
+%the 
+%skeleton 
+%and merge the buffer with the eroded shape. We take the 
+%aggregated shape which may be merged with the skeleton buffer 
+%as 
+%a new 
+%building and generate its goal shape at the goal scale so that 
+%we can grow this new building.
+%
+%Once we arrive at the goal scale, we take the goal scale as the 
+%start scale and repeat our continuous generalization. The start 
+%scale and the target scale cannot be too far away because we 
+%want to see some simplification during the growing of buildings.
+%%
+%There are several advantages of our method. First, the 
+%buildings 
+%are enlarged continuously and the same time are simplified. 
+%Second, the distance between each pair of two buildings is 
+%always larger than a specified distance. Third, there is no 
+%thin 
+%part in our results.
 
 \abstract*{\myabstract}
 
@@ -261,6 +297,14 @@ The papers we may review:
 \textcite{vanSmaalen2003, Buchin2016, Chaudhry2008, Stoter2009},
 
 Rules for building simplification; see \textcite{Lee2005}
+
+Straight skeletons for map generalization: 
+\textcite{Gold2003,Matuk2006}
+
+Geometric Simplication of Administrative Borders With Mixture of
+Irregular and Orthogonal Segments \parencite{Samsonov2016}
+
+\citetitle{Damen2008} \parencite{Damen2008}
 
 \section{Discussion}
 \label{sec:Discussion}
@@ -542,7 +586,27 @@ Text.
 \section{Conclusions}
 \label{sec:Conclusions}
 
-Text
+Because of our aggregation with skeletons and original 
+buildings, we may have too many details in the intermediate 
+results.
+
+Some buildings are too small to be eroded. We have to generate 
+squares or MBR?
+
+To make it more efficient for on line displaying, we may need 
+some external memories. First, we store the data at some key 
+scales so that we may start a generalization from the immediate 
+larger scale; $O(n)$ space. Second, we store the target shape 
+for each building; $O(n)$ space. Third, we store the aggregation 
+time and the target form for the aggregated shape; $O(n^2)$ 
+space if we count vertex number.
+%
+The displaying time is dependent on buffering and clipping. The 
+two operators are from library Clipper. The efficiency of the 
+buffering function of this library has been evaluated by 
+\textcite{Palfrader2015}.
+
+One can also discuss about our growing speed.
 
 \printbibliography
 %\bibliographystyle{plainnat}

@@ -138,7 +138,6 @@ namespace MorphingClass.CGeneralizationMethods
             double dblAlongDis = 0;
             double dblFromDis = 0;
             bool isMaxDisCptRightSide = false;
-            IPoint outipt = new PointClass();
             bool blnright = new bool();
             for (int i = pVtPl.intFrID + 1; i < pVtPl.intToID; i++)
             {

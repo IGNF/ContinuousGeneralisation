@@ -76,6 +76,8 @@
             this.btn080 = new System.Windows.Forms.Button();
             this.btn070 = new System.Windows.Forms.Button();
             this.btn090 = new System.Windows.Forms.Button();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -101,6 +103,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label13);
+            this.groupBox1.Controls.Add(this.label11);
             this.groupBox1.Controls.Add(this.txtOutput);
             this.groupBox1.Controls.Add(this.label12);
             this.groupBox1.Controls.Add(this.txtSmallerScale);
@@ -137,7 +141,7 @@
             this.txtOutput.Name = "txtOutput";
             this.txtOutput.Size = new System.Drawing.Size(114, 20);
             this.txtOutput.TabIndex = 116;
-            this.txtOutput.Text = "3";
+            this.txtOutput.Text = "4";
             this.txtOutput.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label12
@@ -154,7 +158,7 @@
             this.txtSmallerScale.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.txtSmallerScale.Location = new System.Drawing.Point(165, 280);
             this.txtSmallerScale.Name = "txtSmallerScale";
-            this.txtSmallerScale.Size = new System.Drawing.Size(114, 20);
+            this.txtSmallerScale.Size = new System.Drawing.Size(95, 20);
             this.txtSmallerScale.TabIndex = 113;
             this.txtSmallerScale.Text = "100000";
             this.txtSmallerScale.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -163,9 +167,9 @@
             // 
             this.txtLargerScale.Location = new System.Drawing.Point(165, 254);
             this.txtLargerScale.Name = "txtLargerScale";
-            this.txtLargerScale.Size = new System.Drawing.Size(114, 20);
+            this.txtLargerScale.Size = new System.Drawing.Size(95, 20);
             this.txtLargerScale.TabIndex = 112;
-            this.txtLargerScale.Text = "15000";
+            this.txtLargerScale.Text = "15";
             this.txtLargerScale.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label6
@@ -570,6 +574,24 @@
             this.btn090.Text = "t=0.9";
             this.btn090.UseVisualStyleBackColor = true;
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(262, 257);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(13, 13);
+            this.label11.TabIndex = 117;
+            this.label11.Text = "k";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(262, 283);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(13, 13);
+            this.label13.TabIndex = 118;
+            this.label13.Text = "k";
+            // 
             // FrmBuildingGrowing
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -644,5 +666,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label11;
     }
 }

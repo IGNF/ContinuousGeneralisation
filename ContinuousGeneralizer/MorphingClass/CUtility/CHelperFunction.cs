@@ -16,6 +16,7 @@ using Microsoft.Office.Interop;
 using ESRI.ArcGIS.Controls;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.DataSourcesFile;
+using ESRI.ArcGIS.DataSourcesGDB;
 using ESRI.ArcGIS.Display;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geometry;
@@ -159,7 +160,7 @@ namespace MorphingClass.CUtility
             return Math.Round(Convert.ToDouble(GC.GetTotalMemory(blnforceFullCollection) - lngStartMemoryInByte) / 1048576, 3);
         }
 
-        public static void SetSavePath(CParameterInitialize ParameterInitialize)
+        public static void SetSavePath(CParameterInitialize ParameterInitialize, bool blnCreateFileGdbWorkspace = false)
         {
             //if we have already set a path, then we simply use that path
             if (ParameterInitialize.strMxdPathBackSlash != null)
@@ -168,7 +169,7 @@ namespace MorphingClass.CUtility
             }
 
             //_strPath, which is different from ParameterInitialize.strPath, is defined in CHelperFunction
-            if (_strPath == null)  
+            if (_strPath == null)
             {
                 SaveFileDialog SFD = new SaveFileDialog();
                 SFD.ShowDialog();
@@ -184,6 +185,12 @@ namespace MorphingClass.CUtility
             ParameterInitialize.strSavePath = strFileName;
             ParameterInitialize.strSavePathBackSlash = strFileName + "\\";
             ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(strFileName);
+
+            if (blnCreateFileGdbWorkspace == true)
+            {
+                ParameterInitialize.pFileGdbWorkspace =
+                    CreateFileGdbWorkspace(ParameterInitialize.strSavePathBackSlash, "FileGdb");
+            }
         }
 
         public static string GetTimeStampWithPrefix()
@@ -1163,6 +1170,23 @@ namespace MorphingClass.CUtility
             }
             pWorkspace = pWorkspaceFactory.OpenFromFile(path, 0);
             return pWorkspace;
+        }
+
+        public static IWorkspace CreateFileGdbWorkspace(string strSavePathBackSlash, string strName)
+        {
+            // Instantiate a file geodatabase workspace factory and create a new file geodatabase.
+            // The Create method returns a workspace name object.
+            IWorkspaceFactory workspaceFactory = new FileGDBWorkspaceFactoryClass();
+            //IWorkspaceName workspaceName = workspaceFactory.Create("C:\\temp\\",
+            //  "Sample.gdb", null, 0);
+            IWorkspaceName workspaceName = workspaceFactory.Create(strSavePathBackSlash,
+  strName, null, 0);
+
+
+            // Cast the workspace name object to the IName interface and open the workspace.
+            IName name = (IName)workspaceName;
+            IWorkspace workspace = (IWorkspace)name.Open();
+            return workspace;
         }
 
 

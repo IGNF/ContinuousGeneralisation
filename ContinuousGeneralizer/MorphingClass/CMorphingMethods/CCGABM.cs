@@ -218,8 +218,11 @@ namespace MorphingClass.CMorphingMethods
             CDCEL pInterSSDCEL = new CDCEL(InterSSCplLt);
             pInterSSDCEL.ConstructDCEL();
 
-            var pInterLSCptLt = pInterLSDCEL.FaceCpgLt[1].TraverseFaceToGenerateCptLt();  //there are only two faces: the super face and a normal face
-            pInterSSDCEL.FaceCpgLt[1].TraverseFaceToGenerateCptLt();  //there are only two faces: the super face and a normal face
+            
+            //I need to check if we realy need a counter clockwise direction
+            var pInterLSCptLt = pInterLSDCEL.FaceCpgLt[1].GetOuterCptEb(false).ToList();  //there are only two faces: the super face and a normal face
+            //I need to check if we realy need a counter clockwise direction
+            pInterSSDCEL.FaceCpgLt[1].GetOuterCptEb(false).ToList();  //there are only two faces: the super face and a normal face
 
             var pInterLSCptSD = pInterLSCptLt.ToSD(cpt => cpt, new CCompareCptYX_VerySmall()); //we maintaine this SD so that for a point from single polyline, we can know whether this single point overlaps a point of a larger-scale polyline
 
@@ -487,7 +490,7 @@ namespace MorphingClass.CMorphingMethods
                 CareCEdgeLt.Add(CurrentCEdge);
                 CurrentCEdge = CurrentCEdge.cedgeNext;
 
-            } while (CurrentCEdge.indexID != cedge.indexID);
+            } while (CurrentCEdge.GID != cedge.GID);
 
             return CareCEdgeLt;
         }

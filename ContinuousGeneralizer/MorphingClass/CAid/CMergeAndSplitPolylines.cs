@@ -59,7 +59,7 @@ namespace MorphingClass.CAid
                 var SucCptLt = new List<CPoint>();
                 SucCptLt.Add(cedge.ToCpt);
                 GetCptLtUntilIntersection(SucCptLt, cedge.cedgeNext);
-                if (SucCptLt.Count == 1 || SucCptLt.GetLast_T().indexID != SucCptLt[0].indexID)   //if it is not a "hole"
+                if (SucCptLt.Count == 1 || SucCptLt.GetLast_T().GID != SucCptLt[0].GID)   //if it is not a "hole"
                 {
                     PreCptLt.Add(cedge.FrCpt);
                     cedge.isTraversed = true;

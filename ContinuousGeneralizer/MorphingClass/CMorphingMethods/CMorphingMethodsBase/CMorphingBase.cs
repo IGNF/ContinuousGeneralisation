@@ -52,14 +52,15 @@ namespace MorphingClass.CMorphingMethods.CMorphingMethodsBase
         /// <param name="strSpecifiedFieldName">read the features which have the specified values of the specified attribute</param>
         /// <param name="strSpecifiedValue"></param>
         public virtual void Construct<T, CGeo>(CParameterInitialize ParameterInitialize, int intLayerCount = 2, 
-            int intStartLayer = 0, bool blnIGeoToCGeo = true, double  dblFactor=1, string strSpecifiedFieldName = null, string strSpecifiedValue = null) 
+            int intStartLayer = 0, bool blnIGeoToCGeo = true, double  dblFactor=1, string strSpecifiedFieldName = null, 
+            string strSpecifiedValue = null, bool blnCreateFileGdbWorkspace = false) 
             where T : CPolyBase<CGeo>
             where CGeo:class
         {
             Console.WriteLine("");
             Console.WriteLine("memory consumption: " + Math.Round(Convert.ToDouble(GC.GetTotalMemory(true)) / 1048576, 1) + "MB");
 
-            CHelperFunction.SetSavePath(ParameterInitialize);
+            CHelperFunction.SetSavePath(ParameterInitialize, blnCreateFileGdbWorkspace);
 
 
             IMap pm_mapFeature = ParameterInitialize.m_mapFeature;

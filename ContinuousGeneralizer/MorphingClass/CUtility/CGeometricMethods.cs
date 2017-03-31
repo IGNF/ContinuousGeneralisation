@@ -2105,7 +2105,7 @@ namespace MorphingClass.CUtility
                 throw new ArgumentException("MergeCpgLt occurs a problem!");
             }
 
-            var cptlt = SuperFaceCpg.TraverseFaceToGenerateCptLt();
+            var cptlt = SuperFaceCpg.GetInnerCptLtLt(false)[0];  //I need to check if we realy need a counter clockwise direction
 
             //create a new polygon
             var newcptlt = new List<CPoint>(cptlt.Count);

@@ -57,7 +57,7 @@ namespace MorphingClass.CUtility
             //IDataLayer2 pDataLayer2 = pFLayer as IDataLayer2;
             //pDataLayer2 .RelativeBase.
 
-            //save Layer as layer ".lyr"
+            //save Layer as layer file ".lyr"
             //create a new LayerFile instance
             ILayerFile layerFile = new LayerFileClass();
             //create a new layer file

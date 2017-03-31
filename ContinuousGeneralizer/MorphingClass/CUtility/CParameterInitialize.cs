@@ -132,6 +132,11 @@ namespace MorphingClass.CUtility
         /// <summary>The name of the folder used to save results, not a path</summary>
         public string strSaveFolderName { get; set; }
 
+
+        /// <summary>属性：工作区</summary>
+        public IWorkspace pWorkspace { get; set; }
+        public IWorkspace pFileGdbWorkspace { get; set; }
+
         //private List<string> _strFieldLt;         //字段列表，创建图层时需添加的属性字段
         //private List<string> _strclstFieldsLt;    //参加时间插值字段名
 
@@ -234,12 +239,7 @@ namespace MorphingClass.CUtility
         //    set { _pSpatialReference = value; }
         //}
 
-        /// <summary>属性：工作区</summary>
-        public IWorkspace pWorkspace
-        {
-            get { return _pWorkspace; }
-            set { _pWorkspace = value; }
-        }
+
 
         ///// <summary>属性：插值字段复选框</summary>
         //public CheckedListBox clstFields

@@ -30,8 +30,10 @@ using ESRI.ArcGIS.GeoAnalyst;
 using ESRI.ArcGIS.Maplex;
 using ESRI.ArcGIS.Output;
 using ESRI.ArcGIS.SystemUI;
-using ESRI.ArcGIS.DataManagementTools;
-
+using ESRI.ArcGIS.Geoprocessor;
+using ESRI.ArcGIS.Geoprocessing;
+using ESRI.ArcGIS.AnalysisTools;
+using ESRI.ArcGIS.CartographyTools;
 
 using ClipperLib;
 
@@ -55,7 +57,7 @@ namespace MorphingClass.CGeneralizationMethods
         private static int _intDigits = 6;
 
         private static int _intStart = 0;
-        private static int _intEnd = _intStart+1;
+        private static int _intEnd = _intStart + 1;
 
 
 
@@ -68,7 +70,7 @@ namespace MorphingClass.CGeneralizationMethods
 
         public CBuildingGrowing(CParameterInitialize ParameterInitialize)
         {
-            Construct<CPolygon, CPolygon>(ParameterInitialize, 1, 0);
+            Construct<CPolygon, CPolygon>(ParameterInitialize, 1, 0, blnCreateFileGdbWorkspace: true);
 
 
 
@@ -97,7 +99,7 @@ namespace MorphingClass.CGeneralizationMethods
             //var SSIplLt = this.ObjIGeoLtLt[3].AsExpectedClass<IPolyline5, object>().ToList();
 
             double dblStartScale = dblLS;
-            double dblr0 = 0;
+            double dblGrowLast = 0;
             var inputcpglt = LSCpgLt;
             double dblFactorClipper = 100000000;
             int intStart = 0;
@@ -105,68 +107,174 @@ namespace MorphingClass.CGeneralizationMethods
             CHelperFunction.Displaytspb(0.5, intEnd - intStart, pParameterInitialize.tspbMain);
             for (int i = intStart; i < intEnd; i++)
             {
-                double dblScale = dblStartScale + (i + 1) * 5000;
+                double dblScale = dblStartScale + (i + 1) * 5;
                 switch (i)
                 {
                     case 0:
-                        dblScale = 25000;
+                        dblScale = 25;
                         break;
                     case 1:
-                        dblScale = 50000;
+                        dblScale = 50;
                         break;
                     case 2:
-                        dblScale = 100000;
+                        dblScale = 100;
                         break;
                     case 3:
-                        dblScale = 250000;
+                        dblScale = 250;
                         break;
                     default:
                         break;
                 }
 
-                //ESRI.ArcGIS.Geoprocessing
 
-                double dblhalfD = 0.0001 * dblScale;  //d=0.2mm * dblScale
-                double dblA = 0.00000016 * dblScale * dblScale; //A=0.16 mm^2 * dblScale * dblScale
-                double dblr = 0.0001 * dblScale;  //r= 1/4 sqrt(A)= 0.1 * dblScale
+
+
+                double dblD = 0.2 * dblScale;
+                //double dblhalfD = 0.1 * dblScale;  //d=0.2mm * dblScale
+                double dblGrow = 0.1 * dblScale;
+                double dblA = 0.16 * dblScale * dblScale; //A=0.16 mm^2 * dblScale * dblScale
+                //double dblr = dblhalfD;  //r= 1/4 sqrt(A)= 0.1 * dblScale
+                double dblSimpR = 0.2 * dblScale;  //a building should be large enough in order to have some detailes
+                //dblA = 0;
                 //dblr0 = 0.0001 * (dblScale-5000);  //r= 1/4 sqrt(A)= 0.1 * dblScale
                 //if (dblScale ==20000) //at the first step,  dblr0 = 0 
                 //{
                 //    dblr0 = 0;
                 //}
-                double dblradus1 = dblhalfD + dblr - dblr0;
-                var cpgeb1 = BufferAndMerge(pParameterInitialize, inputcpglt, dblradus1, 
+                double dblradius1 = dblGrow - dblGrowLast + dblSimpR;
+                var cpglt1 = BufferAndMerge(pParameterInitialize, inputcpglt, dblradius1,
                     strBufferStyle, dblMiterLimit, dblA, dblFactorClipper, "OverBuffering").IGeosToCGeoEB().ToList();
-                CSaveFeature.SaveCGeoEb(cpgeb1, esriGeometryType.esriGeometryPolygon,
-                    dblScale + "_Step1_OverBuffering" + dblradus1+"_" + pParameterInitialize.pFLayerLt[0].Name + CHelperFunction.GetTimeStampWithPrefix(),
-                    pParameterInitialize, intRed: 255);
+                var lyroverbuffer = CSaveFeature.SaveCGeoEb(cpglt1, esriGeometryType.esriGeometryPolygon,
+                     dblScale + "_Step1_OverBuffering" + dblradius1 + "_" + pParameterInitialize.pFLayerLt[0].Name + CHelperFunction.GetTimeStampWithPrefix(),
+                     pParameterInitialize, intRed: 255);
 
-                double dblradus2 = -dblhalfD;
-                var cpgeb2 = BufferAndMerge(pParameterInitialize, cpgeb1, dblradus2, 
+
+                double dblradius2 = -dblSimpR - dblSimpR;
+                var cpglt2 = BufferAndMerge(pParameterInitialize, cpglt1, dblradius2,
                     strBufferStyle, dblMiterLimit, dblA, dblFactorClipper, "SubSideBuffering").IGeosToCGeoEB().ToList();
-                CSaveFeature.SaveCGeoEb(cpgeb2, esriGeometryType.esriGeometryPolygon,
-    dblScale + "_Step2_SubSideBuffering" + dblradus2 + "_" + pParameterInitialize.pFLayerLt[0].Name + CHelperFunction.GetTimeStampWithPrefix(),
+                CSaveFeature.SaveCGeoEb(cpglt2, esriGeometryType.esriGeometryPolygon,
+    dblScale + "_Step2_SubSideBuffering" + dblradius2 + "_" + pParameterInitialize.pFLayerLt[0].Name + CHelperFunction.GetTimeStampWithPrefix(),
     pParameterInitialize, intBlue: 255);
 
-                double dblradus3 = -(dblr - dblr0) / 10;
-                var cpgeb3 = BufferAndMerge(pParameterInitialize, cpgeb2, dblradus3, 
-                    strBufferStyle, dblMiterLimit, dblA, dblFactorClipper, "Erosion").IGeosToCGeoEB().ToList();
-                CSaveFeature.SaveCGeoEb(cpgeb3, esriGeometryType.esriGeometryPolygon,
-    dblScale + "_Step3_Erosion" + dblradus3 + "_" + pParameterInitialize.pFLayerLt[0].Name + CHelperFunction.GetTimeStampWithPrefix(),
-    pParameterInitialize, intRed: 255, intBlue: 255);
+                //            double dblradius3 = -(dblr - dblr0) / 10;
+                //            var cpglt3 = BufferAndMerge(pParameterInitialize, cpglt2, dblradius3,
+                //                strBufferStyle, dblMiterLimit, dblA, dblFactorClipper, "Erosion").IGeosToCGeoEB().ToList();
+                //            CSaveFeature.SaveCGeoEb(cpglt3, esriGeometryType.esriGeometryPolygon,
+                //dblScale + "_Step3_Erosion" + dblradius3 + "_" + pParameterInitialize.pFLayerLt[0].Name + CHelperFunction.GetTimeStampWithPrefix(),
+                //pParameterInitialize, intRed: 255, intBlue: 255);
 
-                double dblradus4 = -dblradus3;
-                var outputcpglt = BufferAndMerge(pParameterInitialize, cpgeb3, dblradus4, 
+                double dblradius4 = dblSimpR;
+                var outputcpglt = BufferAndMerge(pParameterInitialize, cpglt2, dblradius4,
                     strBufferStyle, dblMiterLimit, dblA, dblFactorClipper, "Compensation").IGeosToCGeoEB().ToList();
                 CSaveFeature.SaveCGeoEb(outputcpglt, esriGeometryType.esriGeometryPolygon,
-     dblScale + "_Step4(Output)_Compensation" + dblradus4 + "_" + pParameterInitialize.pFLayerLt[0].Name + CHelperFunction.GetTimeStampWithPrefix(),
+     dblScale + "_Step4(Output)_Compensation" + dblradius4 + "_" + pParameterInitialize.pFLayerLt[0].Name + CHelperFunction.GetTimeStampWithPrefix(),
     pParameterInitialize, intGreen: 255);
 
                 inputcpglt = outputcpglt;
-                dblr0 = dblr;
-                CHelperFunction.Displaytspb((i+1- intStart), intEnd - intStart, pParameterInitialize.tspbMain);
+                dblGrowLast = dblGrow;
+                CHelperFunction.Displaytspb((i + 1 - intStart), intEnd - intStart, pParameterInitialize.tspbMain);
+
+
+
+
+                //arcgis
+
+
+                //// Initialize the geoprocessor. 
+                ////IGeoProcessor2 gp2 = new GeoProcessorClass();
+                //Geoprocessor gp = null;
+
+                //try
+                //{
+                //    gp = new Geoprocessor();
+                //}
+                //catch (Exception ex)
+                //{
+
+                //    throw;
+                //}
+                ////finally
+
+
+                //int ss = 5;
+
+                ////gp.Execute()
+
+                ////ESRI.ArcGIS.AnalysisTools.Buffer pBuffer = new ESRI.ArcGIS.AnalysisTools.Buffer(
+                ////    pParameterInitialize.strSavePathBackSlash + lyroverbuffer.Name,
+                ////    pParameterInitialize.strSavePathBackSlash + lyroverbuffer.Name + "_Buffered", 5);
+
+                ////pBuffer.in_features = pParameterInitialize.m_mapControl.Layer[0] as IDataset;
+
+
+                //AggregatePolygons pAggregatePolygons = new AggregatePolygons();
+                //pAggregatePolygons.in_features = pParameterInitialize.m_mapControl.Layer[0] as IDataset;
+                //pAggregatePolygons.out_feature_class = pParameterInitialize.pWorkspace.PathName + "\\" + "My_Agg";
+                ////strReturnName = pWorkspace.PathName + "\\" + pDataset.Name + "_Agg"; ;
+
+                //pAggregatePolygons.orthogonality_option = "ORTHOGONAL";
+                //pAggregatePolygons.aggregation_distance = "500 Meters";
+                ////pAggregatePolygons.
+                //gp.Execute(pAggregatePolygons, null);
+
+                ////execute the buffer tool (very easy :-))
+                ////gp.Execute(buffer, null);
+                ////IGeoProcessorResult results = (IGeoProcessorResult)gp.Execute(buffer, null);
+
+
+                ////IFeatureSimplify2
+
+
+
+                ////ESRI.ArcGIS.CoverageTools.SimplifyBuilding pSimplifyBuilding = new SimplifyBuilding();
+                ////pSimplifyBuilding.in_cover = pParameterInitialize.strSavePathBackSlash + lyroverbuffer.Name;
+                ////pSimplifyBuilding.out_cover = pParameterInitialize.strSavePathBackSlash + lyroverbuffer.Name +"_Simplified";
+                ////pSimplifyBuilding.simplification_tolerance = dblD;
+                ////pSimplifyBuilding.minimum_area = dblA;
+                ////pSimplifyBuilding.CheckConflict = "CHECK_CONFLICT ";
+
+                ////GP.Execute(pSimplifyBuilding,null);
+
+
+                ////ESRI.ArcGIS.CoverageTools.AggregatePolygons pAggregatePolygons = new AggregatePolygons();
+                ////pAggregatePolygons.
+
+
             }
 
+        }
+
+        #region 
+        //private IEnumerable<IPolygon4> GeneralizeAndReturn(CParameterInitialize pParameterInitialize, ICollection<CPolygon> CpgCol, double dblBufferRadius,
+        //    string strBufferStyle, double dblMiterLimit, double dblLimitArea, double dblFactorClipper, string strName)
+        //{
+        //    if (CpgCol.Count == 0)
+        //    {
+        //        throw new ArgumentNullException("There is no input!");
+        //    }
+        //}
+        #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cpg"></param>
+        /// <param name="dblD"></param>
+        /// <param name="dblDlast"></param>
+        /// <returns></returns>
+        /// <remarks>decide when to generate edgelt</remarks>
+        private CPolygon HandleOneBuilding(CPolygon cpg, double dblD, double dblDlast,
+            string strBufferStyle, double dblMiterLimit, double dblLimitArea, double dblFactorClipper, string strName)
+        {
+            if (cpg.CptLtLt.Count == 0)
+            {
+                throw new ArgumentNullException("There is no points in the polygon!");
+            }
+
+
+
+
+            return null;
         }
 
 
@@ -174,6 +282,12 @@ namespace MorphingClass.CGeneralizationMethods
         private IEnumerable<IPolygon4> BufferAndMerge(CParameterInitialize pParameterInitialize, ICollection<CPolygon> CpgCol, double dblBufferRadius,
             string strBufferStyle, double dblMiterLimit, double dblLimitArea, double dblFactorClipper, string strName)
         {
+            if (CpgCol.Count == 0)
+            {
+                throw new ArgumentNullException("There is no input!");
+            }
+
+
             #region Construct based on arcobjects
             //IGeometryCollection geometryBag = new GeometryBagClass();
             //foreach (var item in this.ObjIGeoLtLt[0].AsExpectedClass<IGeometry, object>())
@@ -192,9 +306,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             //keep in mind that the first point and the last point of a path are not identical
             //the direction of a path of outcome is counter-clockwise, whereas it is clockwise for a IPolygon
-            Clipper pclipper = new Clipper();
             ClipperOffset pClipperOffset = new ClipperOffset();
-
             var inputpaths = GeneratePathsByCpgCol(CpgCol, dblFactorClipper);
             switch (strBufferStyle)
             {
@@ -230,13 +342,17 @@ namespace MorphingClass.CGeneralizationMethods
             {
                 throw new ArgumentException("There are very close points!");
             }
-            
+
+
+            Clipper pclipper = new Clipper();
+            //pclipper.
+            //pclipper.Execute(ClipType.ctIntersection,)
 
             var cedgelt = GenerateCEdgeEbByPathsCptEbEb(pathsCptLtLt).ToList();
 
             CDCEL pDCEL = new CDCEL(cedgelt);
             pDCEL.ConstructDCEL();
-            
+
 
 
             var superface = pDCEL.FaceCpgLt[0];
@@ -251,7 +367,7 @@ namespace MorphingClass.CGeneralizationMethods
                 var CpgShow = CpgShowStack.Pop();
 
                 //generate outer ring
-                var outercptlt = CpgShow.GetOuterCptLt(true);
+                var outercptlt = CpgShow.GetOuterCptEb(true).ToList();
                 var outerring = CGeometricMethods.GenerateRingByCptlt(outercptlt);
 
                 //generate the polygon with outter ring and inner rings
@@ -262,11 +378,9 @@ namespace MorphingClass.CGeneralizationMethods
                 if (CpgShow.cedgeLkInnerComponents != null)
                 {
 
-
-
                     foreach (var faceCEdgeInnerComponent in CpgShow.cedgeLkInnerComponents)
                     {
-                        var innercptlt = CpgShow.GetInnerCptLt(faceCEdgeInnerComponent, false);
+                        var innercptlt = CpgShow.GetInnerCptEb(faceCEdgeInnerComponent, false).ToList();
                         var innerring = CGeometricMethods.GenerateRingByCptlt(innercptlt);
                         pGeoCol.AddGeometry(innerring);
 
@@ -283,14 +397,15 @@ namespace MorphingClass.CGeneralizationMethods
                 }
 
                 ipg.SimplifyEx(true, true, true);
-                if (strName != "Compensation" || (ipg as IArea).Area>= dblLimitArea)
+                if (strName != "Compensation" || (ipg as IArea).Area >= dblLimitArea)
                 {
                     yield return ipg;
                 }
-                
+
             }
 
         }
+
 
         public IEnumerable<IEnumerable<CPoint>> ConvertPathsToCptEbEb(List<List<IntPoint>> Paths, double dblFactorClipper)
         {
@@ -305,7 +420,7 @@ namespace MorphingClass.CGeneralizationMethods
         {
             for (int i = 0; i < path.Count; i++)
             {
-                yield return new CPoint(i, path[i].X/ dblFactorClipper, (double)path[i].Y / dblFactorClipper);
+                yield return new CPoint(i, path[i].X / dblFactorClipper, (double)path[i].Y / dblFactorClipper);
             }
         }
 
@@ -314,26 +429,30 @@ namespace MorphingClass.CGeneralizationMethods
             var paths = new List<List<IntPoint>>(cpgCol.Count);
             foreach (var cpg in cpgCol)
             {
-                //var path = new List<IntPoint>(cpg.CptLtLt[0].Count);
-                foreach (var cptlt in cpg.CptLtLt)
-                {
-                    var path = new List<IntPoint>(cptlt.Count);
-                    for (int i = 0; i < cptlt.Count-1; i++)
-                    {
-                        var cpt = cptlt[i];
-                        path.Add(new IntPoint(cpt.X* dblFactorClipper, cpt.Y* dblFactorClipper));
-                    }
-                    paths.Add(path);
-                }
+                paths.AddRange(GeneratePathByCpg(cpg, dblFactorClipper));
             }
             return paths;
+        }
+
+        public IEnumerable<List<IntPoint>> GeneratePathByCpg(CPolygon cpg, double dblFactorClipper)
+        {
+            foreach (var cptlt in cpg.CptLtLt)
+            {
+                var path = new List<IntPoint>(cptlt.Count);
+                for (int i = 0; i < cptlt.Count - 1; i++)
+                {
+                    var cpt = cptlt[i];
+                    path.Add(new IntPoint(cpt.X * dblFactorClipper, cpt.Y * dblFactorClipper));
+                }
+                yield return path;
+            }
         }
 
         public IEnumerable<CEdge> GenerateCEdgeEbByPathsCptEbEb(IEnumerable<IEnumerable<CPoint>> pathsCptEbEb)
         {
             foreach (var cptEb in pathsCptEbEb)
             {
-                foreach (var cedge in CGeometricMethods.FormCEdgeEb(cptEb,false))
+                foreach (var cedge in CGeometricMethods.FormCEdgeEb(cptEb, false))
                 {
                     yield return cedge;
                 }

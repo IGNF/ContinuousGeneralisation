@@ -589,20 +589,20 @@ namespace MorphingClass.CGeometry
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <remarks >the first and last point of the list is the same one</remarks>
-        public void TraverseEachFaceToGenerateCptLt()
-        {
-            foreach (var face in _FaceCpgLt)
-            {
-                if (face.cedgeOuterComponent != null)
-                {
-                    face.TraverseFaceToGenerateCptLt();
-                }
-            }
-        }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <remarks >the first and last point of the list is the same one</remarks>
+        //public void TraverseEachFaceToGenerateCptLt()
+        //{
+        //    foreach (var face in _FaceCpgLt)
+        //    {
+        //        if (face.cedgeOuterComponent != null)
+        //        {
+        //            face.TraverseFaceToGenerateCptLt();
+        //        }
+        //    }
+        //}
 
 
 

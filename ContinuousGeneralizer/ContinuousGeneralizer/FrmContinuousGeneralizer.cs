@@ -16,6 +16,7 @@ using ESRI.ArcGIS.DisplayUI;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.SystemUI;
+using ESRI.ArcGIS.Geoprocessor;
 
 using MorphingClass;
 using MorphingClass.CCommon;
@@ -33,6 +34,7 @@ using ContinuousGeneralizer.FrmGISCommand;
 using ContinuousGeneralizer.FrmSimilarity;
 using ContinuousGeneralizer.RoadNetwork;
 using ContinuousGeneralizer.FrmKARS;
+
 using VBClass;
 
 using ILOG.Concert;
@@ -44,12 +46,25 @@ namespace ContinuousGeneralizer
     {
         private void FrmContinuousGeneralizer_Shown(object sender, EventArgs e)
         {
+            //Geoprocessor gp = null;
+
+            //try
+            //{
+            //    gp = new Geoprocessor();
+            //}
+            //catch (System.Exception ex)
+            //{
+
+            //    throw;
+            //}
+
+
             var frmCurrent = new FrmBuildingGrowing(_DataRecords);
             //var frmCurrent = new FrmCAMDijkstra(_DataRecords);
             //var frmCurrent = new FrmCGABM(_DataRecords);
             //var frmCurrent = new FrmExtractPossibleFiles();
             frmCurrent.Show();
-            //frmCurrent.btnRun_Click(sender, e);
+            frmCurrent.btnRun_Click(sender, e);
         }
 
         private object _Missing = Type.Missing;
