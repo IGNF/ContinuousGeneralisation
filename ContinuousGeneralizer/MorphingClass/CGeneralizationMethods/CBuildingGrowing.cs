@@ -147,6 +147,11 @@ namespace MorphingClass.CGeneralizationMethods
                         dblScale = 250;
                         _intI = 3;
                         break;
+                    case 4:
+                        //CConstants.blnStop = true;
+                        dblScale = 500;
+                        _intI = 3;
+                        break;
                     default:
                         break;
                 }
