@@ -481,8 +481,8 @@ namespace ContinuousGeneralizer.FrmMorphing
             //CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
             //CParameterResult ParameterResult = _DataRecords.ParameterResult;
             //string strFileName = _dblProportion.ToString();
-            //CHelperFunction.SaveCPlLt(ParameterResult.DisplayCPlLt, strFileName+"_morphing", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
-            //CHelperFunction.SaveCPlLt(ParameterResult.FadedDisplayCPlLt, strFileName + "_DPFade", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCPlLt(ParameterResult.DisplayCPlLt, strFileName+"_morphing", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCPlLt(ParameterResult.FadedDisplayCPlLt, strFileName + "_DPFade", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
 
 
@@ -495,7 +495,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             //    cpllt.Add(_RelativeInterpolationCplLt[i]);
             //}
             //string strFileName = _dblProportion.ToString();
-            //CHelperFunction.SaveCPlLt(cpllt, strFileName, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCPlLt(cpllt, strFileName, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
         }
 
         private void btnMultiResults_Click(object sender, EventArgs e)

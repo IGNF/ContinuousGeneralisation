@@ -60,11 +60,11 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             SFD.ShowDialog();
             if (SFD.FileName == null || SFD.FileName == "") return;
             ParameterInitialize.strSavePath = SFD.FileName;
-            ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
             _pALALMulti = new CALALMulti(_DataRecords);
             _pALALMulti.ALALMultiMorphing();
 
-            CHelperFunction.SaveCPlLt(_DataRecords.ParameterResult.CResultPlLt, "ALALMulti", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            CHelpFunc.SaveCPlLt(_DataRecords.ParameterResult.CResultPlLt, "ALALMulti", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
         }
 
         public override void btnInputResults_Click(object sender, EventArgs e)
@@ -75,7 +75,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             IFeatureLayer pFLayer = (IFeatureLayer)ParameterInitialize.m_mapFeature.get_Layer(ParameterInitialize.cboLayer.SelectedIndex);
                                                                       
             ParameterInitialize.pFeatureLayer = pFLayer;
-            List<CPolyline> cpllt = CHelperFunction.GetCPlLtByFeatureLayer(pFLayer);
+            List<CPolyline> cpllt = CHelpFunc.GetCPlLtByFeatureLayer(pFLayer);
 
             CParameterResult pParameterResult = new CParameterResult();
             pParameterResult.CResultPlLt = cpllt;
@@ -94,7 +94,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
                 IMapControl4 m_mapControl = _DataRecords.ParameterInitialize.m_mapControl;
                 IGraphicsContainer pGra = m_mapControl.Map as IGraphicsContainer;
                 pGra.DeleteAllElements();
-                CHelperFunction.ViewPolyline(m_mapControl, cpllt[_intI]);  //显示生成的线段
+                CHelpFunc.ViewPolyline(m_mapControl, cpllt[_intI]);  //显示生成的线段
                 _intI -= 1;
             }
             else if (_intI < 0)
@@ -117,7 +117,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
                 IMapControl4 m_mapControl = _DataRecords.ParameterInitialize.m_mapControl;
                 IGraphicsContainer pGra = m_mapControl.Map as IGraphicsContainer;
                 pGra.DeleteAllElements();
-                CHelperFunction.ViewPolyline(m_mapControl, cpllt[_intI]);  //显示生成的线段
+                CHelpFunc.ViewPolyline(m_mapControl, cpllt[_intI]);  //显示生成的线段
                 _intI += 1;
             }
             else if (_intI >= cpllt.Count)

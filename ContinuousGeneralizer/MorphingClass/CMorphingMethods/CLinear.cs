@@ -41,7 +41,7 @@ namespace MorphingClass.CMorphingMethods
             double dblY = pSSCPlLt[0].FrCpt.Y - pLSCPlLt[0].FrCpt.Y;
             CPoint StandardVectorCpt = new CPoint(0, dblX, dblY);
             _StandardVectorCpt = StandardVectorCpt;
-            double dblStandardLength = CGeometricMethods.CalDis(0, 0, dblX, dblY);
+            double dblStandardLength = CGeoFunc.CalDis(0, 0, dblX, dblY);
 
             List<List<CCorrCpts>> pCorrCptsLtLt = new List<List<CCorrCpts>>(pLSCPlLt.Count);
 
@@ -59,7 +59,7 @@ namespace MorphingClass.CMorphingMethods
             long lngTime2 = System.Environment.TickCount - lngStartTime2;   //lngTime2
             _ParameterInitialize.tsslTime.Text = "Running Time: " + Convert.ToString(lngTime2) + "ms";  //显示运行时间
 
-            CHelperFunction.SaveCorrLine(pCorrCptsLtLt, "Linear", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
+            CHelpFunc.SaveCorrLine(pCorrCptsLtLt, "Linear", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
 
             _CorrCptsLtLt = pCorrCptsLtLt;
 

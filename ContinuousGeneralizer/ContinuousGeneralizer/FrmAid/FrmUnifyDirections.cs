@@ -96,7 +96,7 @@ namespace ContinuousGeneralizer.FrmAid
             //SaveFileDialog SFD = new SaveFileDialog();
             //SFD.ShowDialog();
             //string strPath = SFD.FileName;
-            //ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(strPath);
+            //ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(strPath);
 
             ////获取当前选择的点要素图层
             ////大比例尺要素图层
@@ -110,8 +110,8 @@ namespace ContinuousGeneralizer.FrmAid
             //ParameterInitialize.pSSFLayer = pSSFLayer;       //"(layer) would be modified"
 
             ////获取线数组
-            //List<CPolyline> LSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pBSFLayer);
-            //List<CPolyline> SSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSSFLayer);
+            //List<CPolyline> LSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pBSFLayer);
+            //List<CPolyline> SSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSSFLayer);
 
             //for (int i = 0; i < LSCPlLt.Count; i++)
             //{
@@ -122,7 +122,7 @@ namespace ContinuousGeneralizer.FrmAid
             //    double dblFrDiffY = LSCPlLt[i].pBaseLine.ToCpt.Y - LSCPlLt[i].pBaseLine.FrCpt.Y;
             //    double dblToDiffX = SSCPlLt[i].pBaseLine.ToCpt.X - SSCPlLt[i].pBaseLine.FrCpt.X;
             //    double dblToDiffY = SSCPlLt[i].pBaseLine.ToCpt.Y - SSCPlLt[i].pBaseLine.FrCpt.Y;
-            //    double dblAngleDiff = CGeometricMethods.CalAngle_Counterclockwise(dblFrDiffX, dblFrDiffY, dblToDiffX, dblToDiffY);
+            //    double dblAngleDiff = CGeoFunc.CalAngle_Counterclockwise(dblFrDiffX, dblFrDiffY, dblToDiffX, dblToDiffY);
 
             //    if ((Math.Abs(dblAngleDiff) > (Math.PI / 2) && Math.Abs(dblAngleDiff) < (3 * Math.PI / 2)))
             //    {
@@ -132,7 +132,7 @@ namespace ContinuousGeneralizer.FrmAid
             //}
 
             ////Save
-            //CHelperFunction.SaveCPlLt(SSCPlLt, ParameterInitialize.pSSFLayer.Name + "UnifiedDirections", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCPlLt(SSCPlLt, ParameterInitialize.pSSFLayer.Name + "UnifiedDirections", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
         }
 

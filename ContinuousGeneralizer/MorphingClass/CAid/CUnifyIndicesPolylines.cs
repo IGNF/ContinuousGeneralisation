@@ -77,7 +77,7 @@ namespace MorphingClass.CAid
             {
                 for (int j = 0; j < pSSCPlLt.Count; j++)
                 {
-                    double dblOverlapArea = CGeometricMethods.CalOverlapArea(pLSCPlLt[i].pBufferGeo, pSSCPlLt[j].pBufferGeo);
+                    double dblOverlapArea = CGeoFunc.CalOverlapArea(pLSCPlLt[i].pBufferGeo, pSSCPlLt[j].pBufferGeo);
                     double dblOverlapRatioLS = dblOverlapArea / pLSCPlLt[i].dblBufferArea;
                     double dblOverlapRatioSS = dblOverlapArea / pSSCPlLt[j].dblBufferArea;
 

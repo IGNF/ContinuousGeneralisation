@@ -74,10 +74,10 @@ namespace MorphingClass.CEvaluationMethods
 
             //List<CPoint> frptlt = ParameterResult.FromCpl .CptLt ;
             //List<CPoint> resultptlt = ParameterResult.CResultPtLt;
-            //double dblMinDis = CGeometricMethods.CalDis(frptlt[0], frptlt[1]);
+            //double dblMinDis = CGeoFunc.CalDis(frptlt[0], frptlt[1]);
             //for (int i = 1; i < frptlt.Count - 1; i++)
             //{
-            //    double dblDis = CGeometricMethods.CalDis(frptlt[i], frptlt[i + 1]);
+            //    double dblDis = CGeoFunc.CalDis(frptlt[i], frptlt[i + 1]);
             //    if (dblDis < dblMinDis) dblMinDis = dblDis;
             //}
             //double dbInterLSmallDis = dblMinDis / 10;
@@ -199,7 +199,7 @@ namespace MorphingClass.CEvaluationMethods
             tocedge.SetLength();
 
 
-            if (CCompareMethods.CompareCEdgeCoordinates(frcedge, tocedge)==0 ||
+            if (CCmpMethods.CmpCEdgeCoordinates(frcedge, tocedge)==0 ||
                (frcedge.dblLength == 0 && tocedge.dblLength == 0))   //为了应付刚开始时有重合的对应点
             {
                 return 0;
@@ -227,7 +227,7 @@ namespace MorphingClass.CEvaluationMethods
                 double dbltox = (1 - dblCurrentRatio) * tofrcpt.X + dblCurrentRatio * totocpt.X;
                 double dbltoy = (1 - dblCurrentRatio) * tofrcpt.Y + dblCurrentRatio * totocpt.Y;
 
-                dbledgelength += CGeometricMethods.CalDis(dblfrx, dblfry, dbltox, dbltoy);
+                dbledgelength += CGeoFunc.CalDis(dblfrx, dblfry, dbltox, dbltoy);
                 dblCurrentRatio += dblRatio;
             }
 
@@ -241,7 +241,7 @@ namespace MorphingClass.CEvaluationMethods
         /// <remarks></remarks>
         public double CalRatioIntegral(List<CPoint> resultptlt,CPolyline frcpl,CPolyline tocpl)
         {
-            //CGeometricMethods.CalDistanceParameters(frcpl);
+            //CGeoFunc.CalDistanceParameters(frcpl);
             //
 
             ////生成计算Integral指标值的线段
@@ -256,11 +256,11 @@ namespace MorphingClass.CEvaluationMethods
 
             //for (int i = 0; i < resultptlt.Count; i++)
             //{
-            //    double dblfrlength = CGeometricMethods.CalDis(resultptlt[i], frlastcpt);//计算权重值长度
+            //    double dblfrlength = CGeoFunc.CalDis(resultptlt[i], frlastcpt);//计算权重值长度
             //    //一对一、一对多、多对一都包含于此
             //    for (int j = 0; j < resultptlt[i].CorrespondingPtLt.Count; j++)
             //    {
-            //        double dbltolength = CGeometricMethods.CalDis(resultptlt[i].CorrespondingPtLt[j], tolastcpt);//计算权重值长度
+            //        double dbltolength = CGeoFunc.CalDis(resultptlt[i].CorrespondingPtLt[j], tolastcpt);//计算权重值长度
             //        double dbInterLSubintegral = CaInterLSubIntegral(frlastcpt, resultptlt[i], tolastcpt, resultptlt[i].CorrespondingPtLt[j],StandardVectorCpt, dbInterLSmallDis, dblVerySmall);
             //        dbInterLSumRatioIntegral = dbInterLSumRatioIntegral + dbInterLSubintegral * (dblfrlength + dbltolength);
 

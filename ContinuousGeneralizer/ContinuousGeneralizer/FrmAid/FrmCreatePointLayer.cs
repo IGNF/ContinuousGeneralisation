@@ -68,12 +68,12 @@ namespace ContinuousGeneralizer.FrmAid
 
 
             ////save path
-            //CHelperFunction.SetSavePath(ParameterInitialize);
+            //CHelpFunc.SetSavePath(ParameterInitialize);
 
             //long lngStartTime = System.Environment.TickCount; //记录开始时间
 
             ////读取线数据
-            //List<CPolyline> CPolylineLt = CHelperFunction.GetCPlLtByFeatureLayer(pFLayer);
+            //List<CPolyline> CPolylineLt = CHelpFunc.GetCPlLtByFeatureLayer(pFLayer);
             //List<List<CPoint>> cptltlt = new List<List<CPoint>>(CPolylineLt.Count);
             //for (int i = 0; i < CPolylineLt.Count; i++)
             //{

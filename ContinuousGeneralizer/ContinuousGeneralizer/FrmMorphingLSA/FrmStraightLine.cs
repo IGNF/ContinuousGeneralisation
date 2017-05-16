@@ -31,8 +31,8 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
     public partial class FrmStraightLine : Form
     {
         protected CDataRecords _DataRecords;                    //数据记录
-        //protected //CHelperFunction _pHelperFunction = new CHelperFunction();
-        //protected CHelperFunctionExcel _HelperFunctionExcel = new CHelperFunctionExcel();
+        //protected //CHelpFunc _pHelperFunction = new CHelpFunc();
+        //protected CHelpFuncExcel _HelperFunctionExcel = new CHelpFuncExcel();
         protected CFrmOperation _FrmOperation;
 
         protected CPolyline _RelativeInterpolationCpl;
@@ -85,7 +85,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             OFG.Filter = "xlsx files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
             OFG.ShowDialog();
             if (OFG.FileName == null || OFG.FileName == "") return;
-            _DataRecords.ParameterResult = CHelperFunctionExcel.InputDataResultPtLt(OFG.FileName);
+            _DataRecords.ParameterResult = CHelpFuncExcel.InputDataResultPtLt(OFG.FileName);
         }
 
         private void btnInputReverse_Click(object sender, EventArgs e)
@@ -94,7 +94,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             OFG.Filter = "xlsx files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
             OFG.ShowDialog();
             if (OFG.FileName == null || OFG.FileName == "") return;
-            _DataRecords.ParameterResult = CHelperFunctionExcel.InputDataReverseResultPtLt(OFG.FileName);
+            _DataRecords.ParameterResult = CHelpFuncExcel.InputDataResultPtLt(OFG.FileName, true);
         }
 
         public virtual void btnRun_Click(object sender, EventArgs e)
@@ -104,7 +104,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             SFD.ShowDialog();
             if (SFD.FileName == null || SFD.FileName == "") return;
             ParameterInitialize.strSavePath = SFD.FileName;
-            ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
             _StraightLine = new CStraightLine(_DataRecords);
         }
 
@@ -244,11 +244,11 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             //List<CPolyline> cpllt = new List<CPolyline>();
             //cpllt.Add(_RelativeInterpolationCpl);
             //string strFileName = _dblProportion.ToString();
-            //CHelperFunction.SaveCPlLt(cpllt, strFileName, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCPlLt(cpllt, strFileName, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
 
             ////保存控制点
-            //CHelperFunction.SaveControlptlt(_RelativeInterpolationCpl.CptLt,strFileName + "CtrlPt", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveControlptlt(_RelativeInterpolationCpl.CptLt,strFileName + "CtrlPt", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
         }
 
@@ -270,7 +270,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
                     ctjpllt.Add(ctjpl);
                 }
                 _DataRecords.ParameterResult.CTrajectoryPlLt = ctjpllt;
-                CHelperFunction.SaveCPlLt(ctjpllt, "Trajectories", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+                CHelpFunc.SaveCPlLt(ctjpllt, "Trajectories", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
             //}
             //catch
@@ -289,12 +289,12 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
                 List<List<double>> dblangleltlt = new List<List<double>>();
                 for (int i = 0; i < cpllt.Count ; i++)
                 {
-                    dbllengthltlt.Add(CGeometricMethods.RecordLengths(cpllt[i]));
-                    dblangleltlt.Add(CGeometricMethods.RecordAngles(cpllt[i]));
+                    dbllengthltlt.Add(CGeoFunc.RecordLengths(cpllt[i]));
+                    dblangleltlt.Add(CGeoFunc.RecordAngles(cpllt[i]));
                 }
 
-                CHelperFunctionExcel.ExportDataltltToExcel(dbllengthltlt, "lengthltlt", ParameterInitialize.strSavePath);
-                CHelperFunctionExcel.ExportDataltltToExcel(dblangleltlt, "angleltlt", ParameterInitialize.strSavePath);
+                CHelpFuncExcel.ExportDataltltToExcel(dbllengthltlt, "lengthltlt", ParameterInitialize.strSavePath);
+                CHelpFuncExcel.ExportDataltltToExcel(dblangleltlt, "angleltlt", ParameterInitialize.strSavePath);
             }
             catch
             {

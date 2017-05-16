@@ -164,7 +164,7 @@ namespace MorphingClass.CCommon
             //sNameRoot = "ExportActiveViewSampleOutput";
 
             //set the export filename (which is the nameroot + the appropriate file extension)
-            docExport.ExportFileName = sOutputDir + "_" +CHelperFunction.GetTimeStampWithPrefix() + "." + docExport.Filter.Split('.')[1].Split('|')[0].Split(')')[0];
+            docExport.ExportFileName = sOutputDir + "_" +CHelpFunc.GetTimeStampWithPrefix() + "." + docExport.Filter.Split('.')[1].Split('|')[0].Split(')')[0];
 
             //Output Image Quality of the export.  The value here will only be used if the export
             // object is a format that allows setting of Output Image Quality, i.e. a vector exporter.

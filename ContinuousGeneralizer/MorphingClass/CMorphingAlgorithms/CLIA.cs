@@ -47,11 +47,11 @@ namespace MorphingClass.CMorphingAlgorithms
 
         private void Preprocess(List<CPoint> frcptlt, List<CPoint> tocptlt, bool isDP = false)
         {
-            CGeometricMethods.CalAbsAndRatioLengthFromStart(frcptlt, isDP);
-            CGeometricMethods.CalAbsAndRatioLengthFromStart(tocptlt, isDP);
+            CGeoFunc.CalAbsAndRatioLengthFromStart(frcptlt, isDP);
+            CGeoFunc.CalAbsAndRatioLengthFromStart(tocptlt, isDP);
 
-            this.dblFrTotalLength = frcptlt.GetLast_T().dblAbsLengthFromStart;
-            this.dblToTotalLength = tocptlt.GetLast_T().dblAbsLengthFromStart;
+            this.dblFrTotalLength = frcptlt.GetLastT().dblAbsLengthFromStart;
+            this.dblToTotalLength = tocptlt.GetLastT().dblAbsLengthFromStart;
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace MorphingClass.CMorphingAlgorithms
                 {
                     if (frcptlt[intFrCount].dblRatioLengthFromStart < tocptlt[intToCount].dblRatioLengthFromStart)
                     {
-                        CPoint cpt = CGeometricMethods.QueryCPointByLength(frcptlt[intFrCount], intToCount, tocptlt);
+                        CPoint cpt = CGeoFunc.QueryCPointByLength(frcptlt[intFrCount], intToCount, tocptlt);
 
                         //we record "dblRatioLengthFromStart" so that we can compute the distance between neighbour points (e.g. distance between tocptlt[i-1] to tocptlt[i]) easily
                         //The original points, which are sotred in frcptlt or tocptlt have already had "dblRatioLengthFromStart"
@@ -94,7 +94,7 @@ namespace MorphingClass.CMorphingAlgorithms
                     }
                     else if (frcptlt[intFrCount].dblRatioLengthFromStart > tocptlt[intToCount].dblRatioLengthFromStart)
                     {
-                        CPoint cpt = CGeometricMethods.QueryCPointByLength(tocptlt[intToCount], intFrCount, frcptlt);
+                        CPoint cpt = CGeoFunc.QueryCPointByLength(tocptlt[intToCount], intFrCount, frcptlt);
                         cpt.dblRatioLengthFromStart = tocptlt[intToCount].dblRatioLengthFromStart;
 
                         yield return new CCorrCpts(cpt, tocptlt[intToCount]);
@@ -110,7 +110,7 @@ namespace MorphingClass.CMorphingAlgorithms
                 }
 
                 //the last pair
-                yield return new CCorrCpts(frcptlt.GetLast_T(), tocptlt.GetLast_T());
+                yield return new CCorrCpts(frcptlt.GetLastT(), tocptlt.GetLastT());
             }
             else if (frcptlt.Count > 1 && tocptlt.Count == 1)
             {

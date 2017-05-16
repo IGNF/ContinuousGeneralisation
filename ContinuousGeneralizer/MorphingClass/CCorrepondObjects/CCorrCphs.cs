@@ -14,7 +14,7 @@ namespace MorphingClass.CCorrepondObjects
 {
     public class CCorrCphs : CBasicBase
     {
-        public static CCompareCCorrCphs_CphsGID pCompareCCorrCphs_CphsGID = new CCompareCCorrCphs_CphsGID();
+        public static CCmpCCorrCphs_CphsGID pCmpCCorrCphs_CphsGID = new CCmpCCorrCphs_CphsGID();
         private static int _intStaticGID;
         public CPatch FrCph { get; set; }
         public CPatch ToCph { get; set; }
@@ -79,9 +79,9 @@ namespace MorphingClass.CCorrepondObjects
 
         //public int CompareTo(CCorrCphs other)
         //{
-        //    return CCompareMethods.CompareDual(this, other, corrcphs => corrcphs.FrCph.GID, corrcphs => corrcphs.ToCph.GID, CConstants.ComparerInt);
+        //    return CCmpMethods.CmpDual(this, other, corrcphs => corrcphs.FrCph.GID, corrcphs => corrcphs.ToCph.GID, CConstants.ComparerInt);
 
-        //    //return CCompareMethods.Compare(this.FrCph.CpgSS, ToCpgSS, cpg => cpg.GID);
+        //    //return CCmpMethods.Cmp(this.FrCph.CpgSS, ToCpgSS, cpg => cpg.GID);
         //}
     }
 }

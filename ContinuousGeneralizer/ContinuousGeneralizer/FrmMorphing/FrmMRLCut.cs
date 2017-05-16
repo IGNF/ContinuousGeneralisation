@@ -75,7 +75,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             SFD.ShowDialog();
             if (SFD.FileName == null || SFD.FileName == "") return;
             ParameterInitialize.strSavePath = SFD.FileName;
-            ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
 
 
             //¶ÁÈ¡Êý¾Ý
@@ -92,80 +92,80 @@ namespace ContinuousGeneralizer.FrmMorphing
             _pMRLCut.MRLCutMorphing();
 
             _DataRecords.ParameterResult = _pMRLCut.ParameterResult;
-            //CHelperFunctionExcel.KillExcel();
+            //CHelpFuncExcel.KillExcel();
         }
 
 
         private void btn010_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.1;
-            _RelativeInterpolationCplLt = CGeometricMethods.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
+            _RelativeInterpolationCplLt = CGeoFunc.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
         }
         private void btn020_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.2;
-            _RelativeInterpolationCplLt = CGeometricMethods.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
+            _RelativeInterpolationCplLt = CGeoFunc.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
         }
         private void btn030_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.3;
-            _RelativeInterpolationCplLt = CGeometricMethods.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
+            _RelativeInterpolationCplLt = CGeoFunc.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
         }
         private void btn040_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.4;
-            _RelativeInterpolationCplLt = CGeometricMethods.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
+            _RelativeInterpolationCplLt = CGeoFunc.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
         }
         private void btn050_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.5;
-            _RelativeInterpolationCplLt = CGeometricMethods.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
+            _RelativeInterpolationCplLt = CGeoFunc.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
         }
         private void btn060_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.6;
-            _RelativeInterpolationCplLt = CGeometricMethods.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
+            _RelativeInterpolationCplLt = CGeoFunc.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
         }
         private void btn070_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.7;
-            _RelativeInterpolationCplLt = CGeometricMethods.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
+            _RelativeInterpolationCplLt = CGeoFunc.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
         }
         private void btn080_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.8;
-            _RelativeInterpolationCplLt = CGeometricMethods.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
+            _RelativeInterpolationCplLt = CGeoFunc.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
         }
         private void btn090_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.9;
-            _RelativeInterpolationCplLt = CGeometricMethods.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
+            _RelativeInterpolationCplLt = CGeoFunc.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
         }
         private void btn000_Click(object sender, EventArgs e)
         {
             _dblProportion = 0;
-            _RelativeInterpolationCplLt = CGeometricMethods.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
+            _RelativeInterpolationCplLt = CGeoFunc.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
         }
         private void btn025_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.25;
-            _RelativeInterpolationCplLt = CGeometricMethods.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
+            _RelativeInterpolationCplLt = CGeoFunc.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
         }
         private void btn075_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.75;
-            _RelativeInterpolationCplLt = CGeometricMethods.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
+            _RelativeInterpolationCplLt = CGeoFunc.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
         }
         private void btn100_Click(object sender, EventArgs e)
         {
             _dblProportion = 1;
-            _RelativeInterpolationCplLt = CGeometricMethods.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
+            _RelativeInterpolationCplLt = CGeoFunc.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
         }
 
         private void btnInputedScale_Click(object sender, EventArgs e)
         {
             _dblProportion = Convert.ToDouble(this.txtProportion.Text);
-            _RelativeInterpolationCplLt = CGeometricMethods.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
+            _RelativeInterpolationCplLt = CGeoFunc.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
 
         }
 
@@ -175,7 +175,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             {
                 _dblProportion = _dblProportion - 0.02;
                 pbScale.Value = Convert.ToInt16(100 * _dblProportion);
-                _RelativeInterpolationCplLt = CGeometricMethods.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
+                _RelativeInterpolationCplLt = CGeoFunc.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
             }
             catch (Exception)
             {
@@ -188,7 +188,7 @@ namespace ContinuousGeneralizer.FrmMorphing
         {
             _dblProportion = _dblProportion + 0.02;
             pbScale.Value = Convert.ToInt16(100 * _dblProportion);
-            _RelativeInterpolationCplLt = CGeometricMethods.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
+            _RelativeInterpolationCplLt = CGeoFunc.DisplayInterpolationMixCut(_DataRecords, _dblProportion);
         }
 
         private void btnSaveInterpolation_Click(object sender, EventArgs e)
@@ -200,7 +200,7 @@ namespace ContinuousGeneralizer.FrmMorphing
                 cpllt.Add(_RelativeInterpolationCplLt[i]);
             }
             string strFileName = _dblProportion.ToString();
-            CHelperFunction.SaveCPlLt(cpllt, strFileName, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            CHelpFunc.SaveCPlLt(cpllt, strFileName, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
         }
 
 
@@ -225,9 +225,9 @@ namespace ContinuousGeneralizer.FrmMorphing
         {
             for (int i = 0; i < _DataRecords.ParameterResultToExcelLt.Count; i++)
             {
-                CHelperFunctionExcel.ExportEvaluationToExcel(_DataRecords.ParameterResultToExcelLt[i], _DataRecords.ParameterInitialize, i.ToString());
+                CHelpFuncExcel.ExportEvaluationToExcel(_DataRecords.ParameterResultToExcelLt[i], _DataRecords.ParameterInitialize, i.ToString());
             }
-            //CHelperFunctionExcel.KillExcel();
+            //CHelpFuncExcel.KillExcel();
         }
 
 

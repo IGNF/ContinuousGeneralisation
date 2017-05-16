@@ -66,7 +66,7 @@ namespace MorphingClass.CEvaluationMethods
             //double dblStandardY = resultptlt[0].CorrespondingPtLt[0].Y - resultptlt[0].Y;
             //CPoint StandardVectorCpt = new CPoint(0, dblStandardX, dblStandardY);
 
-            ////CGeometricMethods.CalDistanceParameters(frcpl);
+            ////CGeoFunc.CalDistanceParameters(frcpl);
             ////
 
             ////生成计算Deflection指标值的线段
@@ -203,7 +203,7 @@ namespace MorphingClass.CEvaluationMethods
             //    double dbltox = (1 - dblCurrentRatio) * tofrcpt.X + dblCurrentRatio * totocpt.X;
             //    double dbltoy = (1 - dblCurrentRatio) * tofrcpt.Y + dblCurrentRatio * totocpt.Y;
                 
-            //    dbledgelength += CGeometricMethods.CalDis(dblfrx, dblfry, dbltox, dbltoy);
+            //    dbledgelength += CGeoFunc.CalDis(dblfrx, dblfry, dbltox, dbltoy);
             //    dblCurrentRatio += dblRatio;
             //}
 

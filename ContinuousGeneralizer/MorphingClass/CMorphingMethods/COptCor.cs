@@ -47,8 +47,8 @@ namespace MorphingClass.CMorphingMethods
         {
             Construct<CPolyline, CPolyline>(ParameterInitialize, blnIGeoToCGeo : false);
 
-            this.FrCptLtLt = CHelperFunction.GetCptEbEbByIColEb(this.ObjIGeoLtLt[0]).ToLtLt();
-            this.ToCptLtLt = CHelperFunction.GetCptEbEbByIColEb(this.ObjIGeoLtLt[1]).ToLtLt();
+            this.FrCptLtLt = CHelpFunc.GetCptEbEbByIColEb(this.ObjIGeoLtLt[0]).ToLtLt();
+            this.ToCptLtLt = CHelpFunc.GetCptEbEbByIColEb(this.ObjIGeoLtLt[1]).ToLtLt();
             
             this.ObjIGeoLtLt=null ;  //to save memory
         }
@@ -99,13 +99,13 @@ namespace MorphingClass.CMorphingMethods
             Stopwatch pStopwatch1 = Stopwatch.StartNew();
             foreach (var cptlt in pFrCptLtLt)
             {
-                CGeometricMethods.SetEdgeLengthOnToCpt(cptlt);
+                CGeoFunc.SetEdgeLengthOnToCpt(cptlt);
             }
             foreach (var cptlt in pToCptLtLt)
             {
-                CGeometricMethods.SetEdgeLengthOnToCpt(cptlt);
+                CGeoFunc.SetEdgeLengthOnToCpt(cptlt);
             }
-            CGeometricMethods.IntegrateStandardVectorCpt(pFrCptLtLt, StandardVectorCpt);
+            CGeoFunc.IntegrateStandardVectorCpt(pFrCptLtLt, StandardVectorCpt);
             
             //generate cptltltlt
             var frcptltltlt = new List<List<List<CPoint>>>(pFrCptLtLt.Count);
@@ -170,16 +170,16 @@ namespace MorphingClass.CMorphingMethods
                         pStopwatch2.Stop();
                         lngTotalOptCorTime += pStopwatch2.ElapsedMilliseconds;
 
-                        CGeometricMethods.RemoveStandardVectorCpt(pFrCptLtLt [j], StandardVectorCpt);
+                        CGeoFunc.RemoveStandardVectorCpt(pFrCptLtLt [j], StandardVectorCpt);
                         List<CCorrCpts> CtrlCptsLt;
                         var pCorrCptsLt = GetCorrespondences(TableLt, frcptltlt, tocptltlt, pFrCptLtLt[j].Count, pToCptLtLt[j].Count, out CtrlCptsLt);
                         pCorrCptsLtLt.Add(pCorrCptsLt);
                         pCtrlCptsLtLt.Add(CtrlCptsLt);
 
 
-                        CHelperFunction.SetMoveVectorForCorrCptsLt(pCorrCptsLt);   //this will also set MoveVector for CtrlCptsLt
-                        //CsfInter0.SaveIGeoEbToLayer(CHelperFunction.MakeEb(1, GenerateInterpolatedIPl(pCorrCptsLt, 0)));
-                        //CsfInter1.SaveIGeoEbToLayer(CHelperFunction.MakeEb(1, GenerateInterpolatedIPl(pCorrCptsLt, 1)));
+                        CHelpFunc.SetMoveVectorForCorrCptsLt(pCorrCptsLt);   //this will also set MoveVector for CtrlCptsLt
+                        //CsfInter0.SaveIGeoEbToLayer(CHelpFunc.MakeEb(1, GenerateInterpolatedIPl(pCorrCptsLt, 0)));
+                        //CsfInter1.SaveIGeoEbToLayer(CHelpFunc.MakeEb(1, GenerateInterpolatedIPl(pCorrCptsLt, 1)));
                         //CsfCtrlpl.SaveIGeoEbToLayer(GenerateCorrIPlEb(CtrlCptsLt));
                         //CsfCorrpl.SaveIGeoEbToLayer(GenerateCorrIPlEb(pCorrCptsLt));
                         
@@ -200,7 +200,7 @@ namespace MorphingClass.CMorphingMethods
                         //        }
                         //    }
                         //}
-                        //pExcelSaver.WriteLine(CHelperFunction.MakeEb<object>(5, j, pLSCPlLt[j].CptLt.Count, pSSCPlLt[j].CptLt.Count, dblDistance, pStopwatch2.ElapsedMilliseconds));
+                        //pExcelSaver.WriteLine(CHelpFunc.MakeEb<object>(5, j, pLSCPlLt[j].CptLt.Count, pSSCPlLt[j].CptLt.Count, dblDistance, pStopwatch2.ElapsedMilliseconds));
                     }
                     dblTotalDistance += dblDistance;
                 }
@@ -208,26 +208,26 @@ namespace MorphingClass.CMorphingMethods
                 dblTimeLt.Add(pStopwatch1.ElapsedMilliseconds + lngTotalOptCorTime);
                 dblDistanceLt.Add(dblTotalDistance);
                 //pExcelSaver.Close ();
-                //CHelperFunctionExcel.ExportDataltltToExcel(tablevalueltlt, intMaxBackKforI + "Tableltlt0", pParameterInitialize.strSavePath);
+                //CHelpFuncExcel.ExportDataltltToExcel(tablevalueltlt, intMaxBackKforI + "Tableltlt0", pParameterInitialize.strSavePath);
                 //保存对应线
-                CHelperFunctionExcel.ExportDataltToExcel(dblTimeLt, intMaxBackKforI + "Timelt0", pParameterInitialize.strSavePath);
-                CHelperFunctionExcel.ExportDataltToExcel(dblDistanceLt, intMaxBackKforI + "Distancelt0", pParameterInitialize.strSavePath);
+                CHelpFuncExcel.ExportDataltToExcel(dblTimeLt, intMaxBackKforI + "Timelt0", pParameterInitialize.strSavePath);
+                CHelpFuncExcel.ExportDataltToExcel(dblDistanceLt, intMaxBackKforI + "Distancelt0", pParameterInitialize.strSavePath);
 
-                CHelperFunction.Displaytspb(i + 1, intMulti, pParameterInitialize.tspbMain);
-                pParameterInitialize.txtEvaluation.Text = dblDistanceLt.GetLast_T().ToString();
-                pParameterInitialize.tsslTime.Text = "Running Time: " + dblTimeLt.GetLast_T().ToString();
+                CHelpFunc.Displaytspb(i + 1, intMulti, pParameterInitialize.tspbMain);
+                pParameterInitialize.txtEvaluation.Text = dblDistanceLt.GetLastT().ToString();
+                pParameterInitialize.tsslTime.Text = "Running Time: " + dblTimeLt.GetLastT().ToString();
 
                 intMaxBackKforI = intMaxBackKforI + intIncrease;
                 _CorrCptsLtLt = pCorrCptsLtLt;
             }
 
 
-            double dblStandardLength = CGeometricMethods.CalDis(0, 0, StandardVectorCpt.X, StandardVectorCpt.Y);
+            double dblStandardLength = CGeoFunc.CalDis(0, 0, StandardVectorCpt.X, StandardVectorCpt.Y);
             intMaxBackKforI--;
-            CHelperFunction.SaveCtrlLine(pCtrlCptsLtLt, intMaxBackKforI + "_" + CConstants.strMethod + "CtrlLine", dblStandardLength, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
-            CHelperFunction.SaveCorrLine(pCorrCptsLtLt, intMaxBackKforI + "_" + CConstants.strMethod + "CorrLine", pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
+            CHelpFunc.SaveCtrlLine(pCtrlCptsLtLt, intMaxBackKforI + "_" + CConstants.strMethod + "CtrlLine", dblStandardLength, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
+            CHelpFunc.SaveCorrLine(pCorrCptsLtLt, intMaxBackKforI + "_" + CConstants.strMethod + "CorrLine", pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
 
-            CHelperFunction.SetMoveVectorForCorrCptsLtLt(_CorrCptsLtLt);
+            CHelpFunc.SetMoveVectorForCorrCptsLtLt(_CorrCptsLtLt);
 
             //the results will be recorded in _ParameterResult
             CParameterResult ParameterResult = new CParameterResult();
@@ -295,9 +295,9 @@ namespace MorphingClass.CMorphingMethods
                     CCell minCCell = new CCell();
                     minCCell.dblEvaluation = CConstants.dblHalfDoubleMax;
 
-                    minCCell = CHelperFunction.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 0, 1, 0, 1), minCCell, table => table.dblEvaluation);  //including 0 to 1, 1 to 0, 1 to 1
-                    minCCell = CHelperFunction.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 2, intBackKforI, 1, 1), minCCell, table => table.dblEvaluation); //including 2 to 1 until intBackKforI to 1
-                    minCCell = CHelperFunction.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 1, 1, 2, intBackKforJ), minCCell, table => table.dblEvaluation); //including 1 to 2 until 1 to intBackKforJ
+                    minCCell = CHelpFunc.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 0, 1, 0, 1), minCCell, table => table.dblEvaluation);  //including 0 to 1, 1 to 0, 1 to 1
+                    minCCell = CHelpFunc.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 2, intBackKforI, 1, 1), minCCell, table => table.dblEvaluation); //including 2 to 1 until intBackKforI to 1
+                    minCCell = CHelpFunc.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 1, 1, 2, intBackKforJ), minCCell, table => table.dblEvaluation); //including 1 to 2 until 1 to intBackKforJ
 
                     Table.aCell[i, j] = minCCell;
                 }
@@ -356,9 +356,9 @@ namespace MorphingClass.CMorphingMethods
                     CCell minCCell = new CCell();
                     minCCell.dblEvaluation = CConstants.dblHalfDoubleMax;  //CConstants.dblHalfDoubleMax is a very large number
 
-                    minCCell = CHelperFunction.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 1, 1, 1, 1), minCCell, table => table.dblEvaluation);  //only including 1 segment to 1 segment
-                    minCCell = CHelperFunction.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 2, intBackKforI, 1, 1), minCCell, table => table.dblEvaluation); //including 2 segments to 1 segment until intBackKforI segments to 1 segment
-                    minCCell = CHelperFunction.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 1, 1, 2, intBackKforJ), minCCell, table => table.dblEvaluation); //including 1 segment to 2 segments until 1 segment to intBackKforJ segments
+                    minCCell = CHelpFunc.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 1, 1, 1, 1), minCCell, table => table.dblEvaluation);  //only including 1 segment to 1 segment
+                    minCCell = CHelpFunc.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 2, intBackKforI, 1, 1), minCCell, table => table.dblEvaluation); //including 2 segments to 1 segment until intBackKforI segments to 1 segment
+                    minCCell = CHelpFunc.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 1, 1, 2, intBackKforJ), minCCell, table => table.dblEvaluation); //including 1 segment to 2 segments until 1 segment to intBackKforJ segments
 
                     Table.aCell[i, j] = minCCell;
                 }
@@ -492,13 +492,13 @@ namespace MorphingClass.CMorphingMethods
             minCCell.dblEvaluation = CConstants.dblHalfDoubleMax;
             if (intMinBackKforI == 0)   //we do this separately because we don't need to traverse when k1==0
             {
-                minCCell = CHelperFunction.Min(CalCell(ref T, intI, intJ, 0, 1, frcptlt, tocptlt), minCCell, table => table.dblEvaluation);
+                minCCell = CHelpFunc.Min(CalCell(ref T, intI, intJ, 0, 1, frcptlt, tocptlt), minCCell, table => table.dblEvaluation);
                 intMinBackKforI++;
             }
 
             if (intMinBackKforJ == 0)   //we do this separately because we don't need to traverse when k2==0
             {
-                minCCell = CHelperFunction.Min(CalCell(ref T, intI, intJ, 1, 0, frcptlt, tocptlt), minCCell, table => table.dblEvaluation);
+                minCCell = CHelpFunc.Min(CalCell(ref T, intI, intJ, 1, 0, frcptlt, tocptlt), minCCell, table => table.dblEvaluation);
                 intMinBackKforJ++;
             }
 
@@ -506,7 +506,7 @@ namespace MorphingClass.CMorphingMethods
             {
                 for (int k2 = intMinBackKforJ; k2 <= intMaxBackKforJ; k2++)   //k1 and k2 can be 0 at the same time because we have already set T.aCell[i, j].dblEvaluation = double.MaxValue. So it doesn't matter
                 {
-                    minCCell = CHelperFunction.Min(CalCell(ref T, intI, intJ, k1, k2, frcptlt, tocptlt), minCCell, table => table.dblEvaluation);
+                    minCCell = CHelpFunc.Min(CalCell(ref T, intI, intJ, k1, k2, frcptlt, tocptlt), minCCell, table => table.dblEvaluation);
                 }
             }
 
@@ -602,7 +602,7 @@ namespace MorphingClass.CMorphingMethods
 
                 CLIA pLIA = new CLIA(subfrcptlt, subtocptlt, true);
                 CorrCptsLt.AddRange(pLIA.CLI(false));  //to reduce memory using of Table, we interpolate here again
-                CtrlCptsLt.Add(CorrCptsLt.GetLast_T());
+                CtrlCptsLt.Add(CorrCptsLt.GetLastT());
             }
 
             return CorrCptsLt;
@@ -689,7 +689,7 @@ namespace MorphingClass.CMorphingMethods
             {
                 tocptltWithoutEnds = tocptlt.GetRange(1, tocptlt.Count - 2);
             }
-            var tocptsd = tocptltWithoutEnds.ToSD(cpt => cpt, CCompareCptYX_VerySmall.pCompareCptYX_VerySmall);
+            var tocptsd = tocptltWithoutEnds.ToSD(cpt => cpt, CCmpCptYX_VerySmall.pCmpCptYX_VerySmall);
 
             LinkedList<CCorrCpts> CtrlCptsLk = new LinkedList<CCorrCpts>();
             CtrlCptsLk.AddLast(new CCorrCpts(frcptlt[0], tocptlt[0]));     //the first pair
@@ -705,7 +705,7 @@ namespace MorphingClass.CMorphingMethods
                     tocptsd.Remove(frcpt);
                 }
             }
-            CtrlCptsLk.AddLast(new CCorrCpts(frcptlt.GetLast_T(), tocptlt.GetLast_T()));   //the last pair
+            CtrlCptsLk.AddLast(new CCorrCpts(frcptlt.GetLastT(), tocptlt.GetLastT()));   //the last pair
 
           
             //check whether the CtrlCptsLk is valid

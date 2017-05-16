@@ -62,8 +62,8 @@ namespace MorphingClass.CMorphingMethods
             _ParameterInitialize = ParameterInitialize;
 
             //获取线数组
-            _LSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pBSFLayer);
-            _SSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSSFLayer);
+            _LSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pBSFLayer);
+            _SSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSSFLayer);
         }
 
         //基于弯曲的Morphing方法
@@ -74,7 +74,7 @@ namespace MorphingClass.CMorphingMethods
             //CPolyline tocpl = _SSCPlLt[0];
 
             ////计算极小值
-            //CGeometricMethods.CalDistanceParameters(frcpl);
+            //CGeoFunc.CalDistanceParameters(frcpl);
             //
 
             //long lngStartTime = System.Environment.TickCount;  //开始时间            
@@ -108,8 +108,8 @@ namespace MorphingClass.CMorphingMethods
             //List<CPoint> pResultPtLt = pAlgorithmsHelper.BuildPointCorrespondence(pOptCorCorrespondSegmentLk, "Linear");
 
             ////保存对应线
-            //CHelperFunction.SaveCtrlLine(pOptCorCorrespondSegmentLk, "BLGOptCorMMSimplifiedControlLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
-            //CHelperFunction.SaveCorrespondLine(pResultPtLt, "BLGOptCorMMSimplifiedCorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCtrlLine(pOptCorCorrespondSegmentLk, "BLGOptCorMMSimplifiedControlLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCorrespondLine(pResultPtLt, "BLGOptCorMMSimplifiedCorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
 
             ////计算并显示运行时间
             //long lngEndTime = System.Environment.TickCount;

@@ -92,7 +92,7 @@ namespace MorphingClass.CAid
                     //for the larger-scale polyline pLSCPlLt[i], we calculate a pCorrCplInfo for each polyline in pSSCPlLt
                     for (int j = 0; j < pSSCPlLt.Count; j++)
                     {
-                        double dblOverlapArea = CGeometricMethods.CalOverlapArea(pLSCPlLt[i].pBufferGeo, pSSCPlLt[j].pBufferGeo);
+                        double dblOverlapArea = CGeoFunc.CalOverlapArea(pLSCPlLt[i].pBufferGeo, pSSCPlLt[j].pBufferGeo);
                         double dblOverlapRatio = dblOverlapArea / dblBSBufferArea;
                         CCorrCplInfo pCorrCplInfo = new CCorrCplInfo(pSSCPlLt[j], dblOverlapRatio, dblOverlapArea);
                         pCorrCplInfoSD.Add(dblOverlapRatio, pCorrCplInfo);
@@ -147,10 +147,10 @@ namespace MorphingClass.CAid
                     dblBuffer = CConstants.dblMidLength;
                     break;
                 case 1:
-                    dblBuffer = CGeometricMethods.CalMidLength<CPolyline, CPolyline>(pSSCPlLt);
+                    dblBuffer = CGeoFunc.CalMidLength<CPolyline, CPolyline>(pSSCPlLt);
                     break;
                 case 2:
-                    dblBuffer = CConstants.dblVerySmall;  //if we are sure the corresponding polylines are exactly the same
+                    dblBuffer = CConstants.dblVerySmallCoord;  //if we are sure the corresponding polylines are exactly the same
                     break;
                 default:
                     break;
@@ -259,7 +259,7 @@ namespace MorphingClass.CAid
             //double dblFrDiffY = LSCPlLt[i].pBaseLine.ToCpt.Y - LSCPlLt[i].pBaseLine.FrCpt.Y;
             //double dblToDiffX = SSCPlLt[i].pBaseLine.ToCpt.X - SSCPlLt[i].pBaseLine.FrCpt.X;
             //double dblToDiffY = SSCPlLt[i].pBaseLine.ToCpt.Y - SSCPlLt[i].pBaseLine.FrCpt.Y;
-            //double dblAngleDiff = CGeometricMethods.CalAngle_Counterclockwise(dblFrDiffX, dblFrDiffY, dblToDiffX, dblToDiffY);
+            //double dblAngleDiff = CGeoFunc.CalAngle_Counterclockwise(dblFrDiffX, dblFrDiffY, dblToDiffX, dblToDiffY);
 
             //if ((Math.Abs(dblAngleDiff) > (Math.PI / 2) && Math.Abs(dblAngleDiff) < (3 * Math.PI / 2)))
             //{

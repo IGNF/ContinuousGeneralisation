@@ -53,7 +53,7 @@ namespace MorphingClass.CGeneralizationMethods
             _ParameterInitialize = ParameterInitialize;
 
             //获取线数组
-            _CPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pFeatureLayer);
+            _CPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pFeatureLayer);
 
         }
 
@@ -65,7 +65,7 @@ namespace MorphingClass.CGeneralizationMethods
             //CParameterInitialize pParameterInitialize = _ParameterInitialize;
 
             //CParameterThreshold pParameterThreshold = new CParameterThreshold();
-            //pParameterThreshold.dblVerySmall = CGeometricMethods.CalVerySmall(CPlLt);
+            //pParameterThreshold.dblVerySmall = CGeoFunc.CalVerySmall(CPlLt);
 
 
 
@@ -90,7 +90,7 @@ namespace MorphingClass.CGeneralizationMethods
             //{
             //    CResultRiverLt.AddRange(CRiverNetLt[i].CRiverLt);
             //}
-            //CHelperFunction.CalWeightinessUnitary(CResultRiverLt);
+            //CHelpFunc.CalWeightinessUnitary(CResultRiverLt);
 
 
 
@@ -107,7 +107,7 @@ namespace MorphingClass.CGeneralizationMethods
         /// <returns>河网列</returns>
         public List<CRiverNet> BuildRiverNetLt(List<CPolyline> CPlLt, CParameterThreshold pParameterThreshold)
         {
-            double dblVerySmall = CConstants.dblVerySmall;
+            double dblVerySmall = CConstants.dblVerySmallCoord;
 
             //根据线数据生成河流数据
             List<CRiver> CAllRiverLt = new List<CRiver>();

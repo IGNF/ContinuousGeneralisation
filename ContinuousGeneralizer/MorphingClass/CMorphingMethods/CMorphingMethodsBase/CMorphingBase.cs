@@ -60,7 +60,7 @@ namespace MorphingClass.CMorphingMethods.CMorphingMethodsBase
             Console.WriteLine("");
             Console.WriteLine("memory consumption: " + Math.Round(Convert.ToDouble(GC.GetTotalMemory(true)) / 1048576, 1) + "MB");
 
-            CHelperFunction.SetSavePath(ParameterInitialize, blnCreateFileGdbWorkspace);
+            CHelpFunc.SetSavePath(ParameterInitialize, blnCreateFileGdbWorkspace);
 
 
             IMap pm_mapFeature = ParameterInitialize.m_mapFeature;
@@ -80,7 +80,7 @@ namespace MorphingClass.CMorphingMethods.CMorphingMethodsBase
                 pstrFieldNameLtLt.Add(GetFieldNameLt(pFLayer.FeatureClass));
                 pesriFieldTypeLtLt.Add(GetFieldTypeLt(pFLayer.FeatureClass));
                 List<List<object>> pObjValueLtLt;
-                pObjIGeoLtLt.Add(CHelperFunction.GetObjLtByFeatureLayer(pFLayer, out pObjValueLtLt, strSpecifiedFieldName ,  strSpecifiedValue ));
+                pObjIGeoLtLt.Add(CHelpFunc.GetObjLtByFeatureLayer(pFLayer, out pObjValueLtLt, strSpecifiedFieldName ,  strSpecifiedValue ));
                 pObjValueLtLtLt.Add(pObjValueLtLt);
                 this.ObjIGeoLtLt = pObjIGeoLtLt;
             }
@@ -91,7 +91,7 @@ namespace MorphingClass.CMorphingMethods.CMorphingMethodsBase
                 var pObjCGeoLtLt = new List<List<object>>(intLayerCount);
                 for (int i = 0; i < pObjIGeoLtLt.Count; i++)
                 {
-                    pObjCGeoLtLt.Add(CHelperFunction.GenerateCGeoEbAccordingToInputLt(pObjIGeoLtLt[i], dblFactor).ToList());
+                    pObjCGeoLtLt.Add(CHelpFunc.GenerateCGeoEbAccordingToInputLt(pObjIGeoLtLt[i], dblFactor).ToList());
                 }
                 this.ObjCGeoLtLt = pObjCGeoLtLt;
 
@@ -101,11 +101,11 @@ namespace MorphingClass.CMorphingMethods.CMorphingMethodsBase
             else
             {
                 //we get the data in order to compute the Distance Parameters
-                pFirstLayerObjCGeoLt = CHelperFunction.GenerateCGeoEbAccordingToInputLt(pObjIGeoLtLt[0], dblFactor).ToList();
+                pFirstLayerObjCGeoLt = CHelpFunc.GenerateCGeoEbAccordingToInputLt(pObjIGeoLtLt[0], dblFactor).ToList();
             }
 
             //we compute the parameters of distance according to the features in the first layer
-            CGeometricMethods.CalDistanceParameters<T, CGeo>(pFirstLayerObjCGeoLt.AsExpectedClass<T, object>().ToList());
+            CGeoFunc.CalDistanceParameters<T, CGeo>(pFirstLayerObjCGeoLt.AsExpectedClass<T, object>().ToList());
             
             //_CPlLt = pObjCGeoLtLt[0];
             this.strFieldNameLtLt = pstrFieldNameLtLt;

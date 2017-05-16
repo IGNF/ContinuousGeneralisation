@@ -59,7 +59,7 @@ namespace MorphingClass.CAid
                 var SucCptLt = new List<CPoint>();
                 SucCptLt.Add(cedge.ToCpt);
                 GetCptLtUntilIntersection(SucCptLt, cedge.cedgeNext);
-                if (SucCptLt.Count == 1 || SucCptLt.GetLast_T().GID != SucCptLt[0].GID)   //if it is not a "hole"
+                if (SucCptLt.Count == 1 || SucCptLt.GetLastT().GID != SucCptLt[0].GID)   //if it is not a "hole"
                 {
                     PreCptLt.Add(cedge.FrCpt);
                     cedge.isTraversed = true;
@@ -81,8 +81,7 @@ namespace MorphingClass.CAid
         public void GetCptLtUntilIntersection(List<CPoint> CptLt, CEdge cedge)
         {
             //var CptLt = new List<CPoint>();
-
-            double dblverysmall = CConstants.dblVerySmall;
+            
 
             var CurrentCEdge = cedge;
             while (CDCEL.IsVertexIntersection(CurrentCEdge.FrCpt) == false && CurrentCEdge.isTraversed == false)  //CurrentCEdge.isTraversed == false is useful when it is a "hole"

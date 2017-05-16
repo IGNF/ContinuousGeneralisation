@@ -87,7 +87,7 @@ namespace ContinuousGeneralizer.FrmAid
             SFD.ShowDialog();
             string strPath = SFD.FileName;
             //string strName=SFD.
-            ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(strPath);
+            ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(strPath);
 
 
             long lngStartTime = System.Environment.TickCount; //记录开始时间
@@ -95,8 +95,8 @@ namespace ContinuousGeneralizer.FrmAid
 
             if ((pFeatureLayer.FeatureClass != null) && (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint))
             {
-                List<CPoint> cptlt = CHelperFunction.GetCPtLtFromPointFeatureLayer(pFeatureLayer);
-               C5 .LinkedList <CCorrCpts> CorrCptsLk= CGeometricMethods.LookingForNeighboursByGrids(cptlt, 0);
+                List<CPoint> cptlt = CHelpFunc.GetCPtLtFromPointFeatureLayer(pFeatureLayer);
+               C5 .LinkedList <CCorrCpts> CorrCptsLk= CGeoFunc.LookingForNeighboursByGrids(cptlt, 0);
                foreach (CPoint  cpt in cptlt)
                {
                    cpt.isCtrl = true;
@@ -130,7 +130,7 @@ namespace ContinuousGeneralizer.FrmAid
             }
             else if ((pFeatureLayer.FeatureClass != null) && (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline))
             {
-                //List<CPolyline> CPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pFeatureLayer);
+                //List<CPolyline> CPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pFeatureLayer);
                 //List<CPolyline> CPlLtNew = new List<CPolyline>();
                 //for (int i = 0; i < CPlLt.Count; i++)
                 //{
@@ -146,13 +146,13 @@ namespace ContinuousGeneralizer.FrmAid
                 //    CPlLtNew.Add(newcpl);
                 //}
 
-                //CHelperFunction.SaveCPlLt(CPlLtNew, pFeatureLayer.Name + "_Enlarged", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+                //CHelpFunc.SaveCPlLt(CPlLtNew, pFeatureLayer.Name + "_Enlarged", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
             }
             else if ((pFeatureLayer.FeatureClass != null) && (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon))
             {
                 ////获取多边形数组
-                //List<CPolygon> CPolygonLt = CHelperFunction.GetCPolygonLtByFeatureLayer(pFeatureLayer);
+                //List<CPolygon> CPolygonLt = CHelpFunc.GetCPolygonLtByFeatureLayer(pFeatureLayer);
                 //List<CPolygon> CPolygonLtNew = new List<CPolygon>();
                 //for (int i = 0; i < CPolygonLt.Count; i++)
                 //{
@@ -168,7 +168,7 @@ namespace ContinuousGeneralizer.FrmAid
                 //    CPolygonLtNew.Add(newcpg);
                 //}
 
-                //CHelperFunction.SaveCPolygons(CPolygonLtNew, pFeatureLayer.Name + "_Enlarged", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+                //CHelpFunc.SaveCPolygons(CPolygonLtNew, pFeatureLayer.Name + "_Enlarged", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
             }
 
 

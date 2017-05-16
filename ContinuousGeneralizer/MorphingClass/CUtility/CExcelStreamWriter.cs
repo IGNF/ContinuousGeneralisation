@@ -31,7 +31,7 @@ namespace MorphingClass.CUtility
         {
             if (strEntireFileName == null || strEntireFileName == "")
             {
-                strEntireFileName = CHelperFunctionExcel.OpenAnExcel();
+                strEntireFileName = CHelpFuncExcel.OpenAnExcel();
             }
 
             this.sw = new StreamWriter(strEntireFileName + ".xls", blnAppend, Encoding.GetEncoding(-0));  //it's better if we can output a file with ".xlsx", but that causes problems

@@ -6,15 +6,21 @@ using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.Geodatabase;
 using MorphingClass.CUtility;
 using MorphingClass.CGeometry.CGeometryBase;
+using MorphingClass.CCorrepondObjects;
 
 namespace MorphingClass.CGeometry
 {
     //public class CEdge : LineClass  PolylineClass
     public class CEdge : CLineBase<CEdge>
     {
-        public static CCompareCEdgeCoordinates pCompareCEdgeCoordinates = new CCompareCEdgeCoordinates();
-        public double dblLength { get; set; }
-        
+        public static CCmpCEdgeCoordinates pCmpCEdgeCoordinates = new CCmpCEdgeCoordinates();
+        public double dblLength { get; set; } = CConstants.dblSpecialValue;
+
+        /// <summary>
+        /// a list of indices for EdgeGrid 
+        /// </summary>
+        public List<CValPair<int, int>> RowColVpLt { get; set; }
+
         private static int _intStaticGID;
 
         private bool _isBelongToPolyline;   //Is this cedge belongs to a polyline (linear feature) 
@@ -60,6 +66,7 @@ namespace MorphingClass.CGeometry
         private CEdge _ParentCEdge;   //used in the construction of compatible triangulations. we set Parent CEdge so that we know whether or not an edge has been traversed (we don't need to traverse its twin edge), and we know the sub edges of the edge
         private CEdge _CorrRglCEdge;
         private List<CEdge> _CorrRglSubCEdgeLt;
+        public SortedDictionary<double, CPoint> BreakCptSD { get; set; }
         //private string _strLabel;
 
         /// <summary>
@@ -147,37 +154,27 @@ namespace MorphingClass.CGeometry
 
         public double QueryPtHeight(CPoint querycpt)
         {
-            double ans = 0;
-            double a, b, c;
-
-            a = this.dblLength;
-            b = _FrCpt.DistanceTo(querycpt);
-            c = _ToCpt.DistanceTo(querycpt);
-
-            //double xx = c + b;
-            //double diff = c + b - a;
-            if (c + b <= a)  //we use "<" to handle digital problems
-            {//点在线段上
-                ans = 0;
-                return ans;
-            }
-
-            if (a == 0)
-            {//不是线段，是一个点
-                ans = b;
-                return ans;
-            }
-
-            // 组成锐角三角形，则求三角形的高
-            double p0 = (a + b + c) / 2;// 半周长
-            //double pa = p0 - a;
-            //double pb = p0 - b;
-            //double pc = p0 - c;
-            double ps = p0 * (p0 - a) * (p0 - b) * (p0 - c);
-            double s = Math.Sqrt(p0 * (p0 - a) * (p0 - b) * (p0 - c));// 海伦公式求面积
-            ans = 2 * s / a;// 返回点到线的距离（利用三角形面积公式求高）
-            return ans;
+            return CGeoFunc.CalDisBetweenCptCEdge(querycpt, this, true).dblDis;
         }
+
+        //public double DistanceTo(CEdge querycedge, bool blnCheckIntersect = true)
+        //{
+            //if (blnCheckIntersect == true)
+            //{
+            //    if (this.IsIntersectWith(querycedge))
+            //    {
+            //        return 0;
+            //    }
+            //}
+
+            //var dis1 = this.FrCpt.DistanceTo(querycedge);
+            //var dis2 = this.ToCpt.DistanceTo(querycedge);
+            //var dis3 = querycedge.FrCpt.DistanceTo(this);
+            //var dis4 = querycedge.ToCpt.DistanceTo(this);
+
+            //return Math.Min(dis1, Math.Min(dis2, Math.Min(dis3, dis4)));
+        //}
+
 
 
         public CIntersection IntersectWith(CEdge pcedge)
@@ -186,6 +183,17 @@ namespace MorphingClass.CGeometry
             pIntersection.DetectIntersection();
             return pIntersection;
         }
+
+        public bool IsIntersectWith(CEdge pcedge, 
+            bool blnTouchBothEnds = false, bool blnTouchEndEdge = false, bool blnOverlap = false)
+        {
+            CIntersection pIntersection = new CIntersection(this, pcedge);
+            pIntersection.DetectIntersection();
+
+            return pIntersection.JudgeIntersect(blnTouchBothEnds, blnTouchEndEdge, blnOverlap);
+        }
+
+        
 
         /// <summary>
         /// QueryMovedPt
@@ -200,7 +208,7 @@ namespace MorphingClass.CGeometry
         {
 
             double dblAngle = _dblAxisAngle - dblAngleDiffforMovePt;
-            CPoint targetcpt = CGeometricMethods.GetInbetweenCpt(_FrCpt, _ToCpt, dblRatioforMovePt, -1);
+            CPoint targetcpt = CGeoFunc.GetInbetweenCpt(_FrCpt, _ToCpt, dblRatioforMovePt, -1);
             double dblresultLength= (1-dblProportion )*dblLengthforMovePt ;
             double dblresultX = targetcpt.X + dblresultLength * Math.Cos(dblAngle);
             double dblresultY = targetcpt.Y + dblresultLength * Math.Sin(dblAngle);
@@ -210,7 +218,7 @@ namespace MorphingClass.CGeometry
 
         //public CEdge GetEdgeIncrease()
         //{
-        //    int intCompare = CCompareMethods.Compare(_FrCpt, _ToCpt);
+        //    int intCompare = CCmpMethods.Cmp(_FrCpt, _ToCpt);
         //    if (intCompare<=0)
         //    {
         //        return this;
@@ -223,12 +231,12 @@ namespace MorphingClass.CGeometry
 
         public double CalInbetweenCptProportion(CPoint cpt)
         {
-            return CGeometricMethods.CalInbetweenCptProportion(cpt, _FrCpt, _ToCpt);
+            return CGeoFunc.CalInbetweenCptProportion(cpt, _FrCpt, _ToCpt);
         }
 
         public CPoint GetInbetweenCpt(double dblProportion, int intID = -1)
         {
-            return CGeometricMethods.GetInbetweenCpt(_FrCpt, _ToCpt, dblProportion, intID);
+            return CGeoFunc.GetInbetweenCpt(_FrCpt, _ToCpt, dblProportion, intID);
         }
 
         public double GetDiffY()
@@ -269,6 +277,18 @@ namespace MorphingClass.CGeometry
             return this.dblLength;
         }
 
+        public double JudgeAndSetLength()
+        {
+            if (this.dblLength == CConstants.dblSpecialValue)
+            {
+                return SetLength();
+            }
+            else
+            {
+                return this.dblLength;
+            }
+        }
+
         public double JudgeAndSetAxisAngle()
         {
             if (_dblAxisAngle == CConstants.dblSpecialValue)
@@ -283,32 +303,31 @@ namespace MorphingClass.CGeometry
 
         public double SetAxisAngle()
         {
-            _dblAxisAngle = CGeometricMethods.CalAxisAngle(_FrCpt, _ToCpt);
+            _dblAxisAngle = CGeoFunc.CalAxisAngle(_FrCpt, _ToCpt);
             return _dblAxisAngle;
         }
 
         public void SetTwinCEdgeAxisAngle()
         {
-            _cedgeTwin.dblAxisAngle = CGeometricMethods.CalReversedCEdgeAxisAngle(_dblAxisAngle);
+            _cedgeTwin.dblAxisAngle = CGeoFunc.CalReversedCEdgeAxisAngle(_dblAxisAngle);
         }
 
-        public bool JudgeAndSetSlope()
+        public void JudgeAndSetSlope()
         {
-            if (_blnHasSlope == false)
+            if (_dblSlope == CConstants.dblSpecialValue)
             {
-                return SetSlope();
-            }
-            else
-            {
-                return _blnHasSlope;
+                SetSlope();
             }
         }
 
         public bool SetSlope()
         {
             double dblXDiff = _ToCpt.X - _FrCpt.X;
-            if (Math.Abs(dblXDiff) < CConstants.dblVerySmallSpecial)  //for we want to check topological relationships between edges, we use dblVerySmallSpecial instead of dblVerySmall, where dblVerySmall will be changed during checking topological relationships
+            //for we want to check topological relationships between edges, we use dblVerySmallCoordFixed instead of dblVerySmall, 
+            //where dblVerySmall will be changed during checking topological relationships
+            //if (CCmpMethods.CmpDblRange(dblXDiff, 0, CConstants.dblVerySmallCoordFixed) == 0)
             //if (dblXDiff == 0)   //this case would result we cannot identify a verticle line
+            if (CCmpMethods.CmpCoordDbl_VerySmall(dblXDiff, 0) == 0)
             {
                 _blnHasSlope = false;
             }
@@ -390,13 +409,13 @@ namespace MorphingClass.CGeometry
             var cptlt = new List<CPoint>(2);
             cptlt.Add(_FrCpt);
             cptlt.Add(_ToCpt);
-            _pPolyline = CGeometricMethods.GetPolylineFromCptLt(cptlt);
+            _pPolyline = CGeoFunc.GetIplFromCptLt(cptlt);
             return _pPolyline;
         }
 
         public int Compare(CEdge other)
         {
-            return CCompareMethods.CompareCEdgeCoordinates(this, other);
+            return CCmpMethods.CmpCEdgeCoordinates(this, other);
         }
 
         public void PrintMySelf()
@@ -589,15 +608,17 @@ namespace MorphingClass.CGeometry
             set { _IntersectLt = value; }
         }
 
-        /// <summary>
-        /// a list of cells, and a cell is a list of edges
-        /// </summary>
-        public List<List<CEdge>> CEdgeCellLtLt
-        {
-            get { return _CEdgeCellLtLt; }
-            set { _CEdgeCellLtLt = value; }
-        }
-        
+        ///// <summary>
+        ///// a list of cells, and a cell is a list of edges
+        ///// </summary>
+        //public List<List<CEdge>> CEdgeCellLtLt
+        //{
+        //    get { return _CEdgeCellLtLt; }
+        //    set { _CEdgeCellLtLt = value; }
+        //}
+
+
+
         //private double _dblSlope;
         //private double _YIntercept;
 
@@ -696,56 +717,5 @@ namespace MorphingClass.CGeometry
             get { return _CorrRglSubCEdgeLt; }
             set { _CorrRglSubCEdgeLt = value; }
         }
-
-        //public IPolyline5 pPolyline
-        //{
-        //    get { return _pPolyline; }
-        //    set { _pPolyline = value; }
-        //}
-
-
-        //public string strLabel
-        //{
-        //    get { return _strLabel; }
-        //    set { _strLabel = value; }
-        //}
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //public CMoveInformation pMoveInformation
-        //{
-        //    get { return _pMoveInformation; }
-        //    set { _pMoveInformation = value; }
-        //}
-
-        //#region IEquatable<dEdge> Members
-
-        ///// <summary>
-        ///// Checks whether two cedges are equal disregarding the direction of the cedges
-        ///// </summary>
-        ///// <param name="other"></param>
-        ///// <returns></returns>
-        //public bool Equals(CEdge other, double dblVerySmall)
-        //{
-        //    bool blnEqual = false;
-        //    if (this.FrCpt.Equals2D(other.FrCpt, dblVerySmall) && this.ToCpt.Equals2D(other.ToCpt))
-        //    {
-        //        blnEqual = true;
-        //    }
-        //    else if (this.FrCpt.Equals2D(other.ToCpt, dblVerySmall) && this.ToCpt.Equals2D(other.FrCpt))
-        //    {
-        //        blnEqual = true;
-        //    }
-        //    return blnEqual;
-        //}
-
-        //#endregion
-
-
-        //public void SetEmpty2()
-        //{
-        //    this.SetEmpty();           
-        //}
     }
 }

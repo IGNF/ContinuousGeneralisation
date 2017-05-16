@@ -34,9 +34,9 @@ namespace MorphingClass.CGeometry
         public int intType { get; set; }
         public int intTypeIndex { get; set; } //the index (0, 1, 2, ...) of a type; used for access type distance directly
 
-        public List<List<CEdge>> CEdgeLtLt { get; set; }
+        public CPolygon ParentCpg { get; set; }
 
-
+        public List<CPolygon> HoleCpgLt { get; set; }
         public CPoint CentroidCptSimple { get; set; }
 
         //public CPolygon AssigningFace { get; set; }
@@ -48,76 +48,163 @@ namespace MorphingClass.CGeometry
         private CPoint _LeftMostCpt;
         private bool _IsHole;
         private bool _IsMerged;
+        //private Func<IEnumerable<List<CPoint>>> getHoleCptLtEb;
 
         /// <summary>
         /// Initializes a new instance of a triangle
         /// </summary>
-        public CPolygon(int intID)
-            : this(intID, CHelperFunction.MakeLt<List<CPoint>>(0))
-        {
-        }
+        //public CPolygon(int intID=-2)
+        //    : this(intID, CHelpFunc.MakeLt<CPoint>(0))
+        //{
+        //}
 
-        /// <summary>
-        /// Initializes a new instance of a triangle
-        /// </summary>
-        public CPolygon()
-            : this(-2, CHelperFunction.MakeLt<List<CPoint>>(0))
-        {
-        }
+        ///// <summary>
+        ///// Initializes a new instance of a triangle
+        ///// </summary>
+        //public CPolygon()
+        //    : this(-2, CHelpFunc.MakeLt<List<CPoint>>(0))
+        //{
+        //}
 
 
 
         public CPolygon(int intID, IPolygon4 pPolygon, double dblFactor = 1)
-            : this(intID, CHelperFunction.GetCPtLtLtByIPG(pPolygon, dblFactor))
+            : this(intID, CHelpFunc.GetIpgExteriorCptLt(pPolygon, dblFactor).ToList(), 
+                  CHelpFunc.GetIpgInteriorCptLtEb(pPolygon, dblFactor))
         {
             this.pPolygon = pPolygon;
         }
 
-        public CPolygon(int intID, List<CPoint> cptlt)
-            : this(intID, CHelperFunction.MakeLt(1, cptlt))
+        //public CPolygon(int intID, List<CPoint> cptlt)
+        //    : this(intID, CHelpFunc.MakeLt(1, cptlt))
+        //{
+        //}
+
+        /// <summary>
+        /// Initializes a new instance of a CPolygon, the first point and the last point in cptlt must have the same coordinates
+        /// </summary>
+        public CPolygon(int intID, List<CPoint> cptlt, IEnumerable<List<CPoint>> holecptltlt)
+            :this(intID,cptlt,CGeoFunc.GenerateHoleCpgLt(holecptltlt).ToList())
         {
         }
 
         /// <summary>
         /// Initializes a new instance of a CPolygon, the first point and the last point in cptlt must have the same coordinates
         /// </summary>
-        public CPolygon(int intID, List<List<CPoint>> cptltlt)
+        public CPolygon(int intID = -2, List<CPoint> cptlt = null, List<CPolygon> holecpglt = null)
         {
             this.GID = _intStaticGID++;
             _intID = intID;
-            FormPolyBase(cptltlt);
+            this.strShape = "Polygon";
+            FormPolyBase(cptlt);
+
+
+            //if (holecpglt!=null)
+            //{
+            //    foreach (var holecpg in holecpglt)
+            //    {
+            //        holecpg.ParentCpg = this;
+            //    }
+            //}
+            this.HoleCpgLt = holecpglt;
         }
 
+        //public CPolygon(int intID = -2, List<CPoint> cptlt = null, List<CPolygon> holecpglt = null, Func<IEnumerable<List<CPoint>>> getHoleCptLtEb = null) : this(intID, cptlt, holecpglt)
+        //{
+        //    this.getHoleCptLtEb = getHoleCptLtEb;
+        //}
 
-
-        public void FormPolyBase(List<List<CPoint>> fcptltlt)
+        public override void FormCEdgeLt()
         {
-            if (fcptltlt.Count > 0)
+            this.CEdgeLt = CGeoFunc.FormCEdgeEb(this.CptLt).ToList();
+
+            if (this.HoleCpgLt!=null)
             {
-                if (fcptltlt[0].Count > 0)
+                foreach (var holecpg in this.HoleCpgLt)
                 {
-                    _FrCpt = fcptltlt[0][0];
-                    _ToCpt = fcptltlt[0].GetLast_T();
+                    holecpg.FormCEdgeLt();
                 }
             }
-
-
-            this.CptLtLt = fcptltlt;
-            //this.SetCptLtLt(fcptltlt);
-            //_CEdgeLt = CGeometricMethods.FormCEdgeLt(fcptlt);
         }
 
-
-        public void FormCEdgeLtLt()
+        public override void SetCEdgeLtLength()
         {
-            this.CEdgeLtLt = CGeometricMethods.FormCEdgeLtLt(this.CptLtLt);
-            this.CEdgeLt = this.CEdgeLtLt[0];
+            this.CEdgeLt.ForEach(cedge => cedge.SetLength());
+           
+            if (this.HoleCpgLt != null)
+            {
+                foreach (var holecpg in this.HoleCpgLt)
+                {
+                    holecpg.SetCEdgeLtLength();
+                }
+            }
         }
 
-        public void SetCEdgeLtLtLength()
+        public override void SetCEdgeLtAxisAngle()
         {
-            this.CEdgeLtLt.ForEach(cedgelt => cedgelt.ForEach(cedge => cedge.SetLength()));
+            this.CEdgeLt.ForEach(cedge => cedge.SetAxisAngle());
+
+            if (this.HoleCpgLt != null)
+            {
+                foreach (var holecpg in this.HoleCpgLt)
+                {
+                    holecpg.SetCEdgeLtAxisAngle();
+                }
+            }
         }
+
+        public void SetAreaSimple()
+        {
+            var cpgSK = new Stack<CPolygon>();
+            cpgSK.Push(this);
+
+            do
+            {
+                var cpg = cpgSK.Pop();
+                cpg.dblAreaSimple = CGeoFunc.CalAreaForCptEb(cpg.CptLt);
+
+                //add the holes
+                if (cpg.HoleCpgLt != null)
+                {
+                    foreach (var holecpg in cpg.HoleCpgLt)
+                    {
+                        cpgSK.Push(holecpg);
+                    }
+                }
+            } while (cpgSK.Count > 0);
+        }
+
+        public override void SetAngleDiffLt()
+        {
+            var cpgSK = new Stack<CPolygon>();
+            cpgSK.Push(this);
+
+            do
+            {
+                var cpg = cpgSK.Pop();
+                SetCpbAngleDiffLt(cpg as CPolyBase<CPolygon>);
+
+                //add the holes
+                if (cpg.HoleCpgLt != null)
+                {
+                    foreach (var holecpg in cpg.HoleCpgLt)
+                    {
+                        cpgSK.Push(holecpg);
+                    }
+                }
+            } while (cpgSK.Count>0);
+        }
+
+        
+
+        public override void JudgeAndFormCEdgeLt()
+        {
+            if (this.CEdgeLt == null)
+            {
+                FormCEdgeLt();
+            }
+        }
+
 
         /// <summary>
         /// 
@@ -126,8 +213,22 @@ namespace MorphingClass.CGeometry
         /// <remarks>SetPolygon will first set IPoint</remarks>
         public IPolygon4 SetPolygon()
         {
-            this.pPolygon = CGeometricMethods.GetPolygonFromCptLt(this.CptLt);
-            return this.pPolygon;
+            //Build a polygon segment-by-segment.
+            IPolygon4 polygon = new PolygonClass();
+
+            IGeometryCollection geometryCollection = (IGeometryCollection)polygon;
+            geometryCollection.AddGeometry(CGeoFunc.GetIrgFromCptLt(this.CptLt));
+            //add the holes
+            if (this.HoleCpgLt != null)
+            {
+                foreach (var holecpg in this.HoleCpgLt)
+                {
+                    geometryCollection.AddGeometry(CGeoFunc.GetIrgFromCptLt(holecpg.CptLt));
+                }
+            }
+
+            this.pPolygon = polygon;
+            return polygon;
         }
 
         public IPolygon4 JudgeAndSetPolygon()
@@ -157,9 +258,44 @@ namespace MorphingClass.CGeometry
             return _pPolygon;
         }
 
+        public void SetGeometricProperties()
+        {
+            this.FormCEdgeLt();
+            this.SetCEdgeLtLength();
+            this.SetCEdgeLtAxisAngle();
+            this.SetAngleDiffLt();
+        }
 
+        public void RemoveClosePoints()
+        {
+            var cpgSK = new Stack<CGeometry.CPolygon>();
+            cpgSK.Push(this);
 
+            do
+            {
+                var cpg = cpgSK.Pop();
+                cpg.CptLt = CGeoFunc.RemoveClosePointsForCptEb(cpg.CptLt, true).ToList();
 
+                if (cpg.HoleCpgLt != null)
+                {
+                    foreach (var holecpg in HoleCpgLt)
+                    {
+                        cpgSK.Push(holecpg);
+                    }
+                }
+            } while (cpgSK.Count > 0);
+        }
+
+        public IEnumerable<List<CPoint>> GetHoleCptLtEb()
+        {
+            if (this.HoleCpgLt != null)
+            {
+                foreach (var holecpg in this.HoleCpgLt)
+                {
+                    yield return holecpg.CptLt;
+                }
+            }
+        }
 
         public IEnumerable<CPoint> GetOuterCptEb(bool clockwise = true, bool blnIdentical = true)
         {
@@ -259,6 +395,19 @@ namespace MorphingClass.CGeometry
             return innercptltlt;
         }
 
+        public List<CPoint> GetOnlyInnerCptLt(bool clockwise = true, bool blnIdentical = true)
+        {
+            //var innercptltlt = new List<List<CPoint>>();
+            if (_cedgeLkInnerComponents != null && _cedgeLkInnerComponents.Count == 1)
+            {
+                return GetInnerCptEb(_cedgeLkInnerComponents.GetFirstT(), clockwise, blnIdentical).ToList();
+            }
+            else
+            {
+                throw new ArgumentException("This face has no or more than one inner components!");
+            }
+        }
+
 
         ///// <summary>
         ///// 
@@ -334,7 +483,7 @@ namespace MorphingClass.CGeometry
         {
             double dblSumX = 0;
             double dblSumY = 0;
-            var cptlt = this.CptLtLt[0];
+            var cptlt = this.CptLt;
             for (int i = 0; i < cptlt.Count - 1; i++)
             {
                 dblSumX += cptlt[i].X;
@@ -345,29 +494,25 @@ namespace MorphingClass.CGeometry
             return this.CentroidCptSimple;
         }
 
-        public void Clear()
-        {
-            _cedgeLkInnerComponents = null;
-            _CEdgeLt = null;
-            _cedgeOuterComponent = null;
-            _cedgeStartAtLeftMost = null;
-            _CorrCGeo = null;
-            _CorrCGeoLt = null;
-            this.CptLt = null;
-            _LeftMostCpt = null;
-            //_pGeo = null;
+        //public void Clear()
+        //{
+        //    _cedgeLkInnerComponents = null;
+        //    this.CEdgeLt = null;
+        //    _cedgeOuterComponent = null;
+        //    _cedgeStartAtLeftMost = null;
+        //    _CorrCGeo = null;
+        //    _CorrCGeoLt = null;
+        //    this.CptLt = null;
+        //    _LeftMostCpt = null;
+        //    //_pGeo = null;
 
 
 
 
 
-        }
+        //}
 
-        public double SetAreaSimple()
-        {
-            this.dblAreaSimple = CGeometricMethods.CalAreaForCptEb(this.CptLtLt[0]);
-            return this.dblAreaSimple;
-        }
+
 
         public CPoint LeftMostCpt
         {
@@ -411,7 +556,7 @@ namespace MorphingClass.CGeometry
         //{
         //    if (this .pPolygon ==null)
         //    {
-        //        IPointCollection4 pPntCtl = CHelperFunction.GetPointCollectionFromCptLt(cptlt);
+        //        IPointCollection4 pPntCtl = CHelpFunc.GetPointCollectionFromCptLt(cptlt);
         //        this.pPolygon = pPntCtl as IPolygon4;
         //        this.pPolygon.Close();
         //    }

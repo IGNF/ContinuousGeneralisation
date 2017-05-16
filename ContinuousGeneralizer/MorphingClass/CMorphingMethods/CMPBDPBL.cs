@@ -46,16 +46,16 @@ namespace MorphingClass.CMorphingMethods
         //    _ParameterInitialize = ParameterInitialize;
 
         //    //获取线数组
-        //    _InterLSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pBSFLayer);
-        //    _SSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSSFLayer);
+        //    _InterLSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pBSFLayer);
+        //    _SSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSSFLayer);
         //}
 
 
         //public void MPBDPBLMorphing()
         //{
         //    CParameterInitialize ParameterInitialize = _ParameterInitialize;
-        //    CGeometricMethods.SetCPInterLScaleEdgeLengthPtBelong(ref _InterLSCPlLt, CEnumScale.Larger);
-        //    CGeometricMethods.SetCPInterLScaleEdgeLengthPtBelong(ref _SSCPlLt, CEnumScale.Smaller);
+        //    CGeoFunc.SetCPInterLScaleEdgeLengthPtBelong(ref _InterLSCPlLt, CEnumScale.Larger);
+        //    CGeoFunc.SetCPInterLScaleEdgeLengthPtBelong(ref _SSCPlLt, CEnumScale.Smaller);
         //    CPolyline frcpl = _InterLSCPlLt[0];
         //    CPolyline tocpl = _SSCPlLt[0];
 
@@ -64,7 +64,7 @@ namespace MorphingClass.CMorphingMethods
         //    double dblY = tocpl.CptLt[0].Y - frcpl.CptLt[0].Y;
         //    CPoint StandardVectorCpt = new CPoint(0, dblX, dblY);
 
-        //    CGeometricMethods.CalDistanceParameters<CPolyline, CPolyline>(frcpl);
+        //    CGeoFunc.CalDistanceParameters<CPolyline, CPolyline>(frcpl);
             
 
         //    CAlgorithmsHelper pAlgorithmsHelper = new CAlgorithmsHelper();
@@ -122,9 +122,9 @@ namespace MorphingClass.CMorphingMethods
         //    ParameterInitialize.tsslTime.Text = "Running Time: " + Convert.ToString(lngTime) + "ms";  //显示运行时间
 
         //    //保存指标值及对应线
-        //    CHelperFunctionExcel.ExportDataltToExcel(dblTranslationLt, "translationlt0", ParameterInitialize.strSavePath);
-        //    //CHelperFunction.SaveCtrlLine(pCorrespondSegmentLk, "MPBDPBLControlLine", dblVerySmall, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
-        //    //CHelperFunction.SaveCorrespondLine(pResultPtLt, "MPBDPBLCorrLine", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+        //    CHelpFuncExcel.ExportDataltToExcel(dblTranslationLt, "translationlt0", ParameterInitialize.strSavePath);
+        //    //CHelpFunc.SaveCtrlLine(pCorrespondSegmentLk, "MPBDPBLControlLine", dblVerySmall, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+        //    //CHelpFunc.SaveCorrespondLine(pResultPtLt, "MPBDPBLCorrLine", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
         //    //获取结果，全部记录在_ParameterResult中
         //    CParameterResult ParameterResult = new CParameterResult();
@@ -185,7 +185,7 @@ namespace MorphingClass.CMorphingMethods
         //    //    }
         //    //}
 
-        //    ////CHelperFunctionExcel.ExportDataltToExcel(dblTranslationLt, "translationlt0", _ParameterInitialize.strSavePath);
+        //    ////CHelpFuncExcel.ExportDataltToExcel(dblTranslationLt, "translationlt0", _ParameterInitialize.strSavePath);
 
 
         //    //ParameterThreshold.dblDLengthBound = 1 * (1 - 0.02 * intIndex);
@@ -314,13 +314,13 @@ namespace MorphingClass.CMorphingMethods
         //    double dblFrDiffLLY = vfrcpl.CLeftPolyline.pBaseLine.ToCpt.Y - vfrcpl.CLeftPolyline.pBaseLine.FrCpt.Y;
         //    double dblToDiffLLX = vtocpl.CLeftPolyline.pBaseLine.ToCpt.X - vtocpl.CLeftPolyline.pBaseLine.FrCpt.X;
         //    double dblToDiffLLY = vtocpl.CLeftPolyline.pBaseLine.ToCpt.Y - vtocpl.CLeftPolyline.pBaseLine.FrCpt.Y;
-        //    double dblAngleDiffLL = CGeometricMethods.CalAngle(dblFrDiffLLX, dblFrDiffLLY, dblToDiffLLX, dblToDiffLLY);
+        //    double dblAngleDiffLL = CGeoFunc.CalAngle(dblFrDiffLLX, dblFrDiffLLY, dblToDiffLLX, dblToDiffLLY);
 
         //    double dblFrDiffRRX = vfrcpl.CRightPolyline.pBaseLine.ToCpt.X - vfrcpl.CRightPolyline.pBaseLine.FrCpt.X;
         //    double dblFrDiffRRY = vfrcpl.CRightPolyline.pBaseLine.ToCpt.Y - vfrcpl.CRightPolyline.pBaseLine.FrCpt.Y;
         //    double dblToDiffRRX = vtocpl.CRightPolyline.pBaseLine.ToCpt.X - vtocpl.CRightPolyline.pBaseLine.FrCpt.X;
         //    double dblToDiffRRY = vtocpl.CRightPolyline.pBaseLine.ToCpt.Y - vtocpl.CRightPolyline.pBaseLine.FrCpt.Y;
-        //    double dblAngleDiffRR = CGeometricMethods.CalAngle(dblFrDiffRRX, dblFrDiffRRY, dblToDiffRRX, dblToDiffRRY);
+        //    double dblAngleDiffRR = CGeoFunc.CalAngle(dblFrDiffRRX, dblFrDiffRRY, dblToDiffRRX, dblToDiffRRY);
 
         //    if ((dblRatioLL >= ParameterThreshold.dblDLengthBound) && (dblRatioLL <= ParameterThreshold.dblULengthBound) &&
         //        (dblRatioRR >= ParameterThreshold.dblDLengthBound) && (dblRatioRR <= ParameterThreshold.dblULengthBound) &&

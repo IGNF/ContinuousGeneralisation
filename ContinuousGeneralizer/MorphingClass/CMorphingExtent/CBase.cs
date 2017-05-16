@@ -62,7 +62,7 @@ namespace MorphingClass.CMorphingExtend
             IGraphicsContainer pGra = m_mapControl.Map as IGraphicsContainer;
             pGra.DeleteAllElements();
             m_mapControl.ActiveView.Refresh();
-            CHelperFunction.ViewPolyline(m_mapControl, cpl);  //显示生成的线段
+            CHelpFunc.ViewPolyline(m_mapControl, cpl);  //显示生成的线段
             return cpl;
         }
 
@@ -176,9 +176,9 @@ namespace MorphingClass.CMorphingExtend
             for (int i = 0; i < pCorrCptsLt.Count - 2; i++)
             {
                 //较大比例尺线状要素上的夹角
-                double dblfrAngle = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[i].FrCpt, pCorrCptsLt[i + 1].FrCpt, pCorrCptsLt[i + 2].FrCpt);
+                double dblfrAngle = CGeoFunc.CalAngle_Counterclockwise(pCorrCptsLt[i].FrCpt, pCorrCptsLt[i + 1].FrCpt, pCorrCptsLt[i + 2].FrCpt);
                 //较小比例尺线状要素上的夹角
-                double dbltoAngle = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[i].ToCpt, pCorrCptsLt[i + 1].ToCpt, pCorrCptsLt[i + 2].ToCpt);
+                double dbltoAngle = CGeoFunc.CalAngle_Counterclockwise(pCorrCptsLt[i].ToCpt, pCorrCptsLt[i + 1].ToCpt, pCorrCptsLt[i + 2].ToCpt);
 
                 //角度初始值
                 adblAngle0[i] = (1 - dblProportion) * dblfrAngle + dblProportion * dbltoAngle;
@@ -318,7 +318,7 @@ namespace MorphingClass.CMorphingExtend
                     }
                     else
                     {
-                        double dblNewAngle = CGeometricMethods.CalAngle_Counterclockwise(Xmix[2 * intSumCount + 0, 0], Xmix[2 * intSumCount + 1, 0],
+                        double dblNewAngle = CGeoFunc.CalAngle_Counterclockwise(Xmix[2 * intSumCount + 0, 0], Xmix[2 * intSumCount + 1, 0],
                                                                        Xmix[2 * intSumCount + 2, 0], Xmix[2 * intSumCount + 3, 0],
                                                                        Xmix[2 * intSumCount + 4, 0], Xmix[2 * intSumCount + 5, 0]);
                         matl[intUnKnownXYLength + j, 0] = dblNewAngle - adblAngle0[intSumCount];   //图方便，顺便计算matl
@@ -420,9 +420,9 @@ namespace MorphingClass.CMorphingExtend
                 ////计算新的近似值
                 //SaveFileDialog SFD = new SaveFileDialog();
                 //SFD.ShowDialog();
-                //     CHelperFunctionExcel.ExportDataToExcelA(A, "maxA", SFD.FileName);
-                //CHelperFunctionExcel.ExportDataToExcelP(P, "maxP", SFD.FileName);
-                //CHelperFunctionExcel.ExportDataToExcel2(matl, "maxmatl", SFD.FileName);
+                //     CHelpFuncExcel.ExportDataToExcelA(A, "maxA", SFD.FileName);
+                //CHelpFuncExcel.ExportDataToExcelP(P, "maxP", SFD.FileName);
+                //CHelpFuncExcel.ExportDataToExcel2(matl, "maxmatl", SFD.FileName);
 
 
 
@@ -556,7 +556,7 @@ namespace MorphingClass.CMorphingExtend
         ///// <param name="pDataRecords">数据记录</param>
         ///// <param name="dblProportion">差值参数</param>
         ///// <returns>在处理面状要素时，本程序将原面状要素的边界切开，按线状要素处理，处理完后再重新生成面状要素</returns>
-        //public CPolyline CGeometricMethods.GetTargetcpl(double dblProportion)
+        //public CPolyline CGeoFunc.GetTargetcpl(double dblProportion)
         //{
         //    CParameterResult pParameterResult = _DataRecords.ParameterResult;
 
@@ -714,9 +714,9 @@ namespace MorphingClass.CMorphingExtend
         //        //计算新的近似值
 
 
-        //        //CHelperFunctionExcel.ExportDataToExcelA(A, "maxA", _DataRecords.ParameterInitialize.strSavePath);
-        //        //CHelperFunctionExcel.ExportDataToExcelP(P, "maxP", _DataRecords.ParameterInitialize.strSavePath);
-        //        //CHelperFunctionExcel.ExportDataToExcel2(matl, "maxmatl", _DataRecords.ParameterInitialize.strSavePath);
+        //        //CHelpFuncExcel.ExportDataToExcelA(A, "maxA", _DataRecords.ParameterInitialize.strSavePath);
+        //        //CHelpFuncExcel.ExportDataToExcelP(P, "maxP", _DataRecords.ParameterInitialize.strSavePath);
+        //        //CHelpFuncExcel.ExportDataToExcel2(matl, "maxmatl", _DataRecords.ParameterInitialize.strSavePath);
 
 
 

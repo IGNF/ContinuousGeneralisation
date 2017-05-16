@@ -48,7 +48,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             SFD.ShowDialog();
             if (SFD.FileName == null || SFD.FileName == "") return;
             ParameterInitialize.strSavePath = SFD.FileName;
-            ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
             _pAL = new CAL(_DataRecords);
             //_pAL.intIterationNum = Convert.ToInt32(this.txtIterationNum.Text);     //the maximum itrative times
             //List<CCorrCpts> pCorrCptsLt = _DataRecords.ParameterResult.CCorrCptsLt;
@@ -238,7 +238,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
 
             //保存测试结果
             string strFileName = _dblProportion.ToString();
-            CHelperFunction.SaveCPlLt(testresultlt, strFileName + "test", _DataRecords.ParameterInitialize.pWorkspace, _DataRecords.ParameterInitialize.m_mapControl);
+            CHelpFunc.SaveCPlLt(testresultlt, strFileName + "test", _DataRecords.ParameterInitialize.pWorkspace, _DataRecords.ParameterInitialize.m_mapControl);
 
         }
 
@@ -248,10 +248,10 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
         //    List<CPolyline> cpllt = new List<CPolyline>();
         //    cpllt.Add(_RelativeInterpolationCpl);
         //    string strFileName = _dblProportion.ToString();
-        //    CHelperFunction.SaveCPlLt(cpllt, strFileName, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+        //    CHelpFunc.SaveCPlLt(cpllt, strFileName, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
         //    //保存控制点
-        //    CHelperFunction.SaveControlptlt(_RelativeInterpolationCpl.CptLt, "CtrlPt", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+        //    CHelpFunc.SaveControlptlt(_RelativeInterpolationCpl.CptLt, "CtrlPt", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
         //}
 

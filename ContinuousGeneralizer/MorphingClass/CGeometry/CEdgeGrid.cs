@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using MorphingClass.CUtility;
+using MorphingClass.CCorrepondObjects;
 
 namespace MorphingClass.CGeometry
 {
@@ -15,12 +16,12 @@ namespace MorphingClass.CGeometry
         private double _dblCellHeight;
         private int _intRowCount;
         private int _intColCount;
-        private List<CEdge>[,] _aCEdgeLtGrid;
+        private List<CEdge>[,] _aCEdgeLtCell;
 
 
         public CEdgeGrid(List<CEdge> CEdgeLt)
         {
-            CEnvelope pEnvelope = CGeometricMethods.GetEnvelope(CEdgeLt);
+            CEnvelope pEnvelope = CGeoFunc.GetEnvelope(CEdgeLt);
             CEdgeLt.ForEach(cedge => cedge.SetSlope());
             double dblCellSize = Math.Sqrt(pEnvelope.Width * pEnvelope.Height / Convert.ToDouble(CEdgeLt.Count));  //dblRowCount*dblColCount==n
 
@@ -36,76 +37,65 @@ namespace MorphingClass.CGeometry
 
         //public void SetSlope(ref List <CEdge > CEdgeLt)
         //{
-        //    CGeometricMethods.SetSlope(ref CEdgeLt);
+        //    CGeoFunc.SetSlope(ref CEdgeLt);
         //}
 
         private void FillCEdgeLtInGrid()
         {
-            _aCEdgeLtGrid = new List<CEdge>[_intRowCount, _intColCount];
+            _aCEdgeLtCell = new List<CEdge>[_intRowCount, _intColCount];
             for (int i = 0; i < _intRowCount; i++)
             {
                 for (int j = 0; j < _intColCount; j++)
                 {
-                    _aCEdgeLtGrid[i, j] = new List<CEdge>();
+                    _aCEdgeLtCell[i, j] = new List<CEdge>();
                 }
             }
 
             for (int i = 0; i < _CEdgeLt.Count; i++)
             {
-                _CEdgeLt[i].CEdgeCellLtLt = new List<List<CEdge>>();
-                FillCEdgeInGrid(_CEdgeLt[i], _dblCellWidth, _dblCellHeight, _pEnvelope, ref _aCEdgeLtGrid);
+                //_CEdgeLt[i].CEdgeCellLtLt = new List<List<CEdge>>();
+                _CEdgeLt[i].RowColVpLt = new List<CValPair<int, int>>();
+                FillCEdgeInGrid(_CEdgeLt[i], _dblCellWidth, _dblCellHeight, _pEnvelope, ref _aCEdgeLtCell);
             }
         }
 
         /// <summary>Fill the edges into cells of the grid</summary>
         /// <remarks>
-        /// Notice that the cells start from the left down corner of the grid.
+        /// Notice that the cells start from the lower left corner of the grid.
         /// If an edge intersects the top edge of a cell, then the edge will be recorded in this cell, and the cell above this cell
         /// If an edge intersects the right edge of a cell, then the edge will be recorded in this cell, and the cell to the right of this cell
         /// If an edge intersects the top-right vertex of a cell, then the edge will be recorded in this cell, the cell above this cell, and the cell to the top right of this cell</remarks>
-        private void FillCEdgeInGrid(CEdge cedge, double dblCellWidth, double dblCellHeight, CEnvelope pEnvelope, ref List<CEdge>[,] aCEdgeLtGrid)
+        private void FillCEdgeInGrid(CEdge cedge, double dblCellWidth, double dblCellHeight, CEnvelope pEnvelope, ref List<CEdge>[,] aCEdgeLtCell)
         {
             double dblXDiff = cedge.ToCpt.X - cedge.FrCpt.X;
             //double dblYDiff = cedge.ToCpt.Y - cedge.FrCpt.Y;
 
             if (dblXDiff == 0)
             {
-                HandleNoXDiff(cedge, dblCellWidth, dblCellHeight, pEnvelope, ref  aCEdgeLtGrid);
+                HandleNoXDiff(cedge, dblCellWidth, dblCellHeight, pEnvelope, ref  aCEdgeLtCell);
             }
             else if (dblXDiff > 0)
             {
-                HandleWithXDiff(cedge, cedge, dblCellWidth, dblCellHeight, pEnvelope, ref  aCEdgeLtGrid);
+                HandleWithXDiff(cedge, cedge, dblCellWidth, dblCellHeight, pEnvelope, ref  aCEdgeLtCell);
             }
             else
             {
                 CEdge auxcedge = new CEdge(cedge.ToCpt, cedge.FrCpt);
                 auxcedge.SetSlope();
-                HandleWithXDiff(cedge, auxcedge, dblCellWidth, dblCellHeight, pEnvelope, ref  aCEdgeLtGrid);
+                HandleWithXDiff(cedge, auxcedge, dblCellWidth, dblCellHeight, pEnvelope, ref  aCEdgeLtCell);
             }
         }
 
-        private void HandleNoXDiff(CEdge cedge, double dblCellWidth, double dblCellHeight, CEnvelope pEnvelope, ref List<CEdge>[,] aCEdgeLtGrid)
+        private void HandleNoXDiff(CEdge cedge, double dblCellWidth, double dblCellHeight, CEnvelope pEnvelope, ref List<CEdge>[,] aCEdgeLtCell)
         {
-            int intFrRow = ComputeRow(cedge.FrCpt.Y);
-            int intToRow = ComputeRow(cedge.ToCpt.Y);
-            int intCol = ComputeCol(cedge.FrCpt.X);
+            int intFrRow = GetRow(cedge.FrCpt.Y);
+            int intToRow = GetRow(cedge.ToCpt.Y);
+            int intCol = GetCol(cedge.FrCpt.X);
 
-            RecordIntoOneColumn(cedge, intCol, intFrRow, intToRow, ref aCEdgeLtGrid);
+            RecordIntoOneColumn(cedge, intCol, intFrRow, intToRow, ref aCEdgeLtCell);
         }
 
-        public int ComputeRow(double dblCoordinate)
-        {
-            int intRow = CGeometricMethods.ComputeRowOrCol(dblCoordinate, _pEnvelope.YMin, _dblCellHeight);
-            return intRow;
-        }
-
-        public int ComputeCol(double dblCoordinate)
-        {
-            int intCol = CGeometricMethods.ComputeRowOrCol(dblCoordinate, _pEnvelope.XMin, _dblCellWidth);
-            return intCol;
-        }
-
-        private void HandleWithXDiff(CEdge cedge, CEdge auxcedge, double dblCellWidth, double dblCellHeight, CEnvelope pEnvelope, ref List<CEdge>[,] aCEdgeLtGrid)
+        private void HandleWithXDiff(CEdge cedge, CEdge auxcedge, double dblCellWidth, double dblCellHeight, CEnvelope pEnvelope, ref List<CEdge>[,] aCEdgeLtCell)
         {
             int intFrRow = Convert.ToInt32(Math.Truncate((auxcedge.FrCpt.Y - pEnvelope.YMin) / dblCellHeight));
             int intFrCol = Convert.ToInt32(Math.Truncate((auxcedge.FrCpt.X - pEnvelope.XMin) / dblCellWidth));
@@ -122,17 +112,17 @@ namespace MorphingClass.CGeometry
             for (int i = intFrCol; i < intToCol; i++)
             {
                 int intRowIntersect = Convert.ToInt32(Math.Truncate((dblYIntersectVertical - pEnvelope.YMin) / dblCellHeight));
-                RecordIntoOneColumn(cedge, i, intLastRow, intRowIntersect, ref aCEdgeLtGrid);
+                RecordIntoOneColumn(cedge, i, intLastRow, intRowIntersect, ref aCEdgeLtCell);
 
                 dblYIntersectVertical += dblYIncrement;
                 intLastRow = intRowIntersect;
             }
 
             //the last column.
-            RecordIntoOneColumn(cedge, intToCol, intLastRow, intToRow, ref aCEdgeLtGrid);
+            RecordIntoOneColumn(cedge, intToCol, intLastRow, intToRow, ref aCEdgeLtCell);
         }
 
-        private void RecordIntoOneColumn(CEdge cedge, int intCol, int intFrRow, int intToRow, ref List<CEdge>[,] aCEdgeLtGrid)
+        private void RecordIntoOneColumn(CEdge cedge, int intCol, int intFrRow, int intToRow, ref List<CEdge>[,] aCEdgeLtCell)
         {
             int intRowIncrement = 0;  //intRowIncrement can be -1, 0, or 1
             if ((intToRow - intFrRow) != 0)
@@ -140,30 +130,40 @@ namespace MorphingClass.CGeometry
                 intRowIncrement = (intToRow - intFrRow) / Math.Abs(intToRow - intFrRow);
             }
 
-            aCEdgeLtGrid[intFrRow, intCol].Add(cedge);
-            cedge.CEdgeCellLtLt.Add(aCEdgeLtGrid[intFrRow, intCol]);
+            aCEdgeLtCell[intFrRow, intCol].Add(cedge);
+            //cedge.CEdgeCellLtLt.Add(aCEdgeLtCell[intFrRow, intCol]);
+            cedge.RowColVpLt.Add(new CValPair<int, int>(intFrRow, intCol));
             if (intRowIncrement != 0)
             {
                 int intCurrentRow = intFrRow;
                 do
                 {
                     intCurrentRow += intRowIncrement;
-                    aCEdgeLtGrid[intCurrentRow, intCol].Add(cedge);
-                    cedge.CEdgeCellLtLt.Add(aCEdgeLtGrid[intCurrentRow, intCol]);
+                    aCEdgeLtCell[intCurrentRow, intCol].Add(cedge);
+                    //cedge.CEdgeCellLtLt.Add(aCEdgeLtCell[intCurrentRow, intCol]);
+                    cedge.RowColVpLt.Add(new CValPair<int, int>(intCurrentRow, intCol));
                 } while (intCurrentRow != intToRow);
             }
         }
 
         public double GetCellXMin(int intCol)
         {
-            double dblX = pEnvelope.XMin + intCol * _dblCellWidth;
-            return dblX;
+            return pEnvelope.XMin + intCol * _dblCellWidth;
         }
 
         public double GetCellYMin(int intRow)
         {
-            double dblY = pEnvelope.YMin + intRow * _dblCellHeight;
-            return dblY;
+            return pEnvelope.YMin + intRow * _dblCellHeight;
+        }
+
+        public int GetRow(double dblY)
+        {
+            return Convert.ToInt32(Math.Floor((dblY - pEnvelope.YMin) / _dblCellHeight));
+        }
+
+        public int GetCol(double dblX)
+        {
+            return Convert.ToInt32(Math.Floor((dblX - pEnvelope.XMin) / _dblCellWidth));
         }
 
         public List<CEdge> CEdgeLt
@@ -202,10 +202,10 @@ namespace MorphingClass.CGeometry
             set { _intColCount = value; }
         }
 
-        public List<CEdge>[,] aCEdgeLtGrid
+        public List<CEdge>[,] aCEdgeLtCell
         {
-            get { return _aCEdgeLtGrid; }
-            set { _aCEdgeLtGrid = value; }
+            get { return _aCEdgeLtCell; }
+            set { _aCEdgeLtCell = value; }
         }
     }
 

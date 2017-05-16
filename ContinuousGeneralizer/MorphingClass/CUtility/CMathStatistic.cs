@@ -8,7 +8,7 @@ namespace MorphingClass.CUtility
     public class CMathStatistic
     {
         //private static  List<double> _dblDataLt;
-        //private static  CHelperFunctionExcel _pHelperFunctionExcel=new CHelperFunctionExcel ();
+        //private static  CHelpFuncExcel _pHelperFunctionExcel=new CHelpFuncExcel ();
 
 
         //public static  CMathStatistic(List<double> pdblDataLt)
@@ -89,7 +89,7 @@ namespace MorphingClass.CUtility
         ///// <returns>标准差</returns>
         //public static  double CalStdev(List<double> dblDataLt)
         //{
-        //    double dblStedv = CHelperFunctionExcel.ECalStdev(dblDataLt);
+        //    double dblStedv = CHelpFuncExcel.ECalStdev(dblDataLt);
         //    return dblStedv;
         //}
 
@@ -100,7 +100,7 @@ namespace MorphingClass.CUtility
         ///// <returns>标准差</returns>
         //public static  double CalStdevP(List<double> dblDataLt)
         //{
-        //    double dblStedvP = CHelperFunctionExcel.ECalStdevP(dblDataLt);
+        //    double dblStedvP = CHelpFuncExcel.ECalStdevP(dblDataLt);
         //    return dblStedvP;
         //}
     }

@@ -63,7 +63,8 @@ namespace ContinuousGeneralizer.FrmAid
             cptlt.Add(cptlt[0]);
             CPolygon cpg = new CPolygon(0, cptlt);
 
-            txtArea.Text = cpg.SetAreaSimple().ToString();
+            cpg.SetAreaSimple();
+            txtArea.Text = cpg.dblAreaSimple.ToString();
         }
 
         private void btnCentroid_Click(object sender, EventArgs e)

@@ -35,26 +35,50 @@ namespace MorphingClass.CCorrepondObjects
         {
             this.val1 = pVal1;
             this.val2 = pVal2;
-            this.cmp1 = pCmp1;
-            this.cmp2 = pCmp2;
+            this.cmp1 = CHelpFunc.SetOrDefaultCmp(pCmp1);
+            this.cmp2 = CHelpFunc.SetOrDefaultCmp(pCmp2);
         }
 
         public int CompareTo(CValPair<T1, T2> other)
         {
-            return CCompareMethods.CompareDual(this, other, valpair => valpair.val1, valpair => valpair.val2, this.cmp1, this.cmp2);
+            return CCmpMethods.CmpDual(this, other, valpair => valpair.val1, valpair => valpair.val2, this.cmp1, this.cmp2);
+        }
+
+
+    }
+
+
+    public class CPairValIncrease<T> : CValPair<T, T>
+        where T: IComparable<T>
+    {
+        public IComparer<T> cmp { get; set; }
+        public CPairValIncrease()
+        {
+
+        }
+
+
+        public CPairValIncrease(T pVal1, T pVal2, IComparer<T> pCmp = null)
+        {
+            this.val1 = pVal1;
+            this.val2 = pVal2;
+            this.cmp = CHelpFunc.SetOrDefaultCmp(pCmp);
+
+            //var 
+
+            if (this.cmp.Compare(pVal1, pVal2) == 1)
+            {
+                this.val1 = pVal2;
+                this.val2 = pVal1;
+            }
+        }
+
+        public int CompareTo(CPairValIncrease<T> other)
+        {
+            return CCmpMethods.CmpDual(this, other, valpair => valpair.val1, valpair => valpair.val2, this.cmp, this.cmp);
         }
     }
 
 
-    //public class CPairIntIncrease : CPairInt
-    //{
-    //    public CPairIntIncrease(int pT1, int pT2)
-    //    {
-    //        this.T1 = Math.Min(pT1, pT2);
-    //        this.T2 = Math.Max(pT1, pT2);
-    //    }
-    //}
 
-
-   
 }

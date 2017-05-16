@@ -58,13 +58,13 @@ namespace ContinuousGeneralizer
             //    throw;
             //}
 
-
+            //var frmCurrent = new FrmToIpe(_DataRecords);
             var frmCurrent = new FrmBuildingGrowing(_DataRecords);
             //var frmCurrent = new FrmCAMDijkstra(_DataRecords);
             //var frmCurrent = new FrmCGABM(_DataRecords);
             //var frmCurrent = new FrmExtractPossibleFiles();
             frmCurrent.Show();
-            frmCurrent.btnRun_Click(sender, e);
+            //frmCurrent.btnRun_Click(sender, e);
         }
 
         private object _Missing = Type.Missing;
@@ -171,7 +171,7 @@ namespace ContinuousGeneralizer
 
 
             openMapDoc.OnCreate(m_controlsSynchronizer.MapControl.Object);
-            openMapDoc.OnClickAutomatic(CHelperFunction.strPath + CHelperFunction.strDataFolderName + ".mxd");
+            openMapDoc.OnClickAutomatic(CHelpFunc.strPath + CHelpFunc.strDataFolderName + ".mxd");
 
 
 
@@ -620,7 +620,7 @@ namespace ContinuousGeneralizer
 
         private void mnuKillExcel_Click(object sender, EventArgs e)
         {
-            CHelperFunctionExcel.KillExcel();
+            CHelpFuncExcel.KillExcel();
         }
 
         private double ComputeWeight(double dblArea1, double dblPrmt1, double dblArea2, double dblPrmt2, double dblSumPrmt, double dblTotalArea)
@@ -666,7 +666,7 @@ namespace ContinuousGeneralizer
         {
             tspbMain.Value = 15;
 
-            //var cptlt= CHelperFunction .GetTestCptEb().ToList();
+            //var cptlt= CHelpFunc .GetTestCptEb().ToList();
 
             //CPolygon cpg = new CPolygon(1, cptlt);
             //cpg.CptLtLt.Add(cptlt);
@@ -677,7 +677,7 @@ namespace ContinuousGeneralizer
 
 
 
-            //CHelperFunction.testmemory();
+            //CHelpFunc.testmemory();
 
             ////IList<IList<double>> intltlt = new List<IList<double>>();
 
@@ -1234,19 +1234,6 @@ namespace ContinuousGeneralizer
             frmCompareExcel.Show();
         }
         #endregion
-
-
-        private void mnutestbase_Click(object sender, EventArgs e)
-        {
-            testbase frmtestbase = new testbase();
-            frmtestbase.Show();
-        }
-
-        private void mnutestinherit_Click(object sender, EventArgs e)
-        {
-            testinherit testinherit = new testinherit();
-            testinherit.Show();
-        }
 
         private void mnuExtractPossibleFiles_Click(object sender, EventArgs e)
         {

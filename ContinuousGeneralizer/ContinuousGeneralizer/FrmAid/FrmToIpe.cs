@@ -65,6 +65,10 @@ namespace ContinuousGeneralizer.FrmAid
             ParameterInitialize.cboLayerLt.Add(this.cboLayer);
             this.cboSize.SelectedIndex = 0;
 
+            tltCboSize.SetToolTip(this.cboSize, 
+                "0.05 Thin; 0.5 Normal; 0.8 Heavier; 1.2 Fat; 2 Ultrafat. 0.05 is too small for points!");
+
+
             //进行Load操作，初始化变量
             _FrmOperation = new CFrmOperation(ref ParameterInitialize);
         }
@@ -73,40 +77,37 @@ namespace ContinuousGeneralizer.FrmAid
         {
             //get parameters
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
-            IFeatureLayer pFLayer = (IFeatureLayer)ParameterInitialize.m_mapFeature.get_Layer(ParameterInitialize.cboLayerLt[0].SelectedIndex);
-            double dblIpeMinX = Convert.ToDouble(this.txtIpeMinX.Text);
-            double dblIpeMaxX = Convert.ToDouble(this.txtIpeMaxX.Text);
-            double dblIpeMinY = Convert.ToDouble(this.txtIpeMinY.Text);
-            double dblIpeMaxY = Convert.ToDouble(this.txtIpeMaxY.Text);
-            double dblIpeHeight = dblIpeMaxY - dblIpeMinY;
-            int intRed = Convert.ToInt16(this.txtRed.Text);
-            int intGreen = Convert.ToInt16(this.txtGreen.Text);
-            int intBlue = Convert.ToInt16(this.txtBlue.Text);
-            string strSize = this.cboSize.SelectedItem.ToString();
+            IFeatureLayer pFLayer = (IFeatureLayer)ParameterInitialize.m_mapFeature
+                .get_Layer(ParameterInitialize.cboLayerLt[0].SelectedIndex);
+            CEnvelope pEnvelopeIpe = new CEnvelope(
+                Convert.ToDouble(this.txtIpeMinX.Text), Convert.ToDouble(this.txtIpeMinY.Text),
+                Convert.ToDouble(this.txtIpeMaxX.Text), Convert.ToDouble(this.txtIpeMaxY.Text));
+
+            string strBoundWidth = this.cboSize.SelectedItem.ToString();
+            if (chkOverrideWidth.Checked == false)
+            {
+                strBoundWidth = "";
+            }
+
+
             bool blnSaveIntoSameFile = this.chkSaveIntoSameFile.Checked;
             bool blnGroup = this.chkGroup.Checked;
 
             //save path
-            CHelperFunction.SetSavePath(ParameterInitialize);
+            CHelpFunc.SetSavePath(ParameterInitialize);
 
             IMap m_mapFeature = ParameterInitialize.m_mapFeature;
-            IEnvelope pEnvelope = pFLayer.AreaOfInterest;
-            double dblMinX = pEnvelope.XMin;
-            double dblMinY = pEnvelope.YMin;
-            double dblMaxX = pEnvelope.XMax;
-            double dblMaxY = pEnvelope.YMax;
+            IEnvelope pEnvelopeLayer = pFLayer.AreaOfInterest;
 
-
-
-            //double dblFactor = pEnvelope.Width / (dblIpeMaxX - dblIpeMinX);
-            //LinkedList <string > strLkText=new LinkedList<string> ();
-            string strFileName = "Ipe";
+            double dblFactorIpeToLayer = pEnvelopeIpe.Height / pEnvelopeLayer.Height;
             int intCount = 0;
             string strHead = "";
             strHead += CIpeDraw.getIpePreamble();
             strHead += CIpeDraw.getIpeConf();
 
-            string strData = "";
+            //add legend (unit and a sample line)
+            string strData = CIpeDraw.writeIpeText(32 / dblFactorIpeToLayer + " " + m_mapFeature.MapUnits.ToString(), 320, 80) +
+                CIpeDraw.drawIpeEdge(320, 64, 352, 64);
 
             for (int i = 0; i < m_mapFeature.LayerCount; i++)
             {
@@ -122,40 +123,21 @@ namespace ContinuousGeneralizer.FrmAid
                     strData += "<group>\n";
                 }
 
-                //if (blnSaveIntoSameFile == false)
-                //{
-                //    strFileName = "Ipe" + pFeatureLayer.Name + "_" + i;
-                //}
-
-                double dblYIncrease = intCount * dblIpeHeight / 2;
-                //dblYIncrease = 0;
-                CEnvelope pEnvelopeIpe = new CEnvelope(dblIpeMinX, dblIpeMinY + dblYIncrease, dblIpeMaxX, dblIpeMaxY + dblYIncrease);
-                if ((pFeatureLayer.FeatureClass != null) && (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint))
-                {
-                    //List<CPoint> CptLt = CHelperFunction.GetCPtLtFromPointFeatureLayer(pFeatureLayer);
-                    //CHelperFunction.SaveToIpe(CptLt, strFileName, pEnvelope, pEnvelopeIpe, ParameterInitialize, intRed, intGreen, intBlue, strSize, blnGroup);
-                }
-                else if ((pFeatureLayer.FeatureClass != null) && (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline))
-                {
-                    strData += CHelperFunction.SaveToIpeIpl(pFeatureLayer, strFileName, pEnvelope, pEnvelopeIpe, ParameterInitialize);
-                }
-                else if ((pFeatureLayer.FeatureClass != null) && (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon))
-                {
-                    strData += CHelperFunction.SaveToIpeIpg(pFeatureLayer, strFileName, pEnvelope, pEnvelopeIpe, ParameterInitialize);
-                }
+                strData += SaveToIpe(pFeatureLayer, pEnvelopeLayer, pEnvelopeIpe, strBoundWidth);
 
                 if (blnGroup == true)
                 {
                     strData += "</group>\n";
                 }
 
-
+                pEnvelopeIpe.YMin += pEnvelopeIpe.Height;
+                pEnvelopeIpe.YMax += pEnvelopeIpe.Height;
                 intCount++;
             }
 
             string strEnd = CIpeDraw.getIpeEnd();
-
-            using (var writer = new System.IO.StreamWriter(ParameterInitialize.strSavePath + "\\" + strFileName + ".ipe", true))
+            string strFullName = ParameterInitialize.strSavePath + "\\" + CHelpFunc.GetTimeStamp() + ".ipe";
+            using (var writer = new System.IO.StreamWriter(strFullName, true))
             {
                 writer.Write(strHead);
                 writer.Write(strData);
@@ -163,8 +145,162 @@ namespace ContinuousGeneralizer.FrmAid
             }
 
 
-            string strsavedfilename=ParameterInitialize.strSavePath + "\\" + strFileName + ".ipe";
-            System.Diagnostics.Process.Start(@strsavedfilename);
+            //string strsavedfilename = ParameterInitialize.strSavePath + "\\" + strFileName + ".ipe";
+            System.Diagnostics.Process.Start(@strFullName);
         }
+
+
+        public static string SaveToIpe(IFeatureLayer pFeatureLayer, IEnvelope pEnvelopeLayer, CEnvelope pEnvelopeIpe, 
+            string strBoundWidth)
+        {
+            string str = "";
+            IFeatureClass pFeatureClass = pFeatureLayer.FeatureClass;
+            int intFeatureCount = pFeatureClass.FeatureCount(null);
+            IFeatureCursor pFeatureCursor = pFeatureClass.Search(null, false);    //注意此处的参数(****,false)！！！            
+            var pRenderer = (pFeatureLayer as IGeoFeatureLayer).Renderer;
+            for (int i = 0; i < intFeatureCount; i++)
+            {
+                //at the last round of this loop, pFeatureCursor.NextFeature() will return null
+                IFeature pFeature = pFeatureCursor.NextFeature();
+
+                switch (pFeatureClass.ShapeType)
+                {
+                    case esriGeometryType.esriGeometryPoint:
+                        str += TranIptToIpe(pFeature, pRenderer, pEnvelopeLayer, pEnvelopeIpe, strBoundWidth);
+                        break;
+                    case esriGeometryType.esriGeometryPolyline:
+                        str += TranIplToIpe(pFeature, pRenderer, pEnvelopeLayer, pEnvelopeIpe, strBoundWidth);
+                        break;
+                    case esriGeometryType.esriGeometryPolygon:
+                        str += TranIpgToIpe(pFeature, pRenderer, pEnvelopeLayer, pEnvelopeIpe, strBoundWidth);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return str;
+        }
+
+        /// <summary>
+        /// Save a feature layer of IPolyline to Ipe
+        /// </summary>
+        public static string TranIptToIpe(IFeature pFeature, IFeatureRenderer pRenderer, IEnvelope pEnvelopeLayer,
+            CEnvelope pEnvelopeIpe, string strBoundWidth)
+        {
+            var pMarkerSymbol = pRenderer.SymbolByFeature[pFeature] as IMarkerSymbol;
+            var pMarkerSymbolRgbColor = pMarkerSymbol.Color as IRgbColor;
+
+            if (strBoundWidth == "")
+            {
+                strBoundWidth = pMarkerSymbol.Size.ToString();
+            }
+
+            var ipt = pFeature.Shape as IPoint;
+            return CIpeDraw.DrawIpt(ipt, pEnvelopeLayer, pEnvelopeIpe, "disk", new CColor(pMarkerSymbolRgbColor), strBoundWidth);
+        }
+
+
+
+        /// <summary>
+        /// Save a feature layer of IPolyline to Ipe
+        /// </summary>
+        public static string TranIplToIpe(IFeature pFeature, IFeatureRenderer pRenderer, IEnvelope pEnvelopeLayer,
+            CEnvelope pEnvelopeIpe, string strBoundWidth)
+        {
+            var pLineSymbol = pRenderer.SymbolByFeature[pFeature] as ILineSymbol;
+            var pLineSymbolRgbColor = pLineSymbol.Color as IRgbColor;
+            if (strBoundWidth == "")
+            {
+                strBoundWidth = pLineSymbol.Width.ToString();
+            }
+
+            //get the feature
+            CPolyline cpl = new CPolyline(0, pFeature.Shape as IPolyline5);
+
+            //append the string
+            return CIpeDraw.DrawCpl(cpl, pEnvelopeLayer, pEnvelopeIpe,
+                new CColor(pLineSymbolRgbColor), strBoundWidth);
+        }
+
+        /// <summary>
+        /// Save a feature layer of IPolygon to Ipe
+        /// </summary>
+        public static string TranIpgToIpe(IFeature pFeature, IFeatureRenderer pRenderer, IEnvelope pEnvelopeLayer,
+    CEnvelope pEnvelopeIpe, string strBoundWidth)
+        {
+            var pFillSymbol = pRenderer.SymbolByFeature[pFeature] as IFillSymbol;
+
+            //get the color of the filled part
+            //we are not allowed to directly use "var pFillRgbColor = pFillSymbol.Color as IRgbColor;"
+            //Nor can we use "var pFillRgbColor = pFillSymbol.Color.RGB as IRgbColor;"
+            //pFillSymbol.Color.RGB has type 'int'
+            IColor pFillSymbolColor = new RgbColorClass();
+            pFillSymbolColor.RGB = pFillSymbol.Color.RGB;
+            var pFillSymbolRgbColor = pFillSymbolColor as IRgbColor;
+
+            //get the color of the out line                
+            var pOutlineRgbColor = pFillSymbol.Outline.Color as IRgbColor;
+            if (strBoundWidth == "")
+            {
+                strBoundWidth = pFillSymbol.Outline.Width.ToString();
+            }
+
+            //get the feature
+            CPolygon cpg = new CPolygon(0, pFeature.Shape as IPolygon4);
+
+            //append the string
+            return CIpeDraw.DrawCpg(cpg, pEnvelopeLayer, pEnvelopeIpe, new CColor(pOutlineRgbColor),
+new CColor(pFillSymbolRgbColor), strBoundWidth);
+        }
+
+
+
+        #region Obsolete: A case using IClassBreaksRenderer and ILookupSymbol
+        ///// <summary>
+        ///// SaveToIpe
+        ///// </summary>
+        ///// <param name="CPlLt"></param>
+        ///// <param name="strWidth">normal, heavier, fat, ultrafat</param>
+        //public static string SaveToIpeIpg(IFeatureLayer pFeatureLayer, string strFileName, IEnvelope pEnvelopeLayer, CEnvelope pEnvelopeIpe, CParameterInitialize pParameterInitialize)
+        //{
+        //    string str = "";
+        //    IFeatureClass pFeatureClass = pFeatureLayer.FeatureClass;
+        //    int intFeatureCount = pFeatureClass.FeatureCount(null);
+        //    IFeatureCursor pFeatureCursor = pFeatureClass.Search(null, false);    //注意此处的参数(****,false)！！！            
+
+        //    IGeoFeatureLayer pGeoFeaturelayer = pFeatureLayer as IGeoFeatureLayer;
+        //    IClassBreaksRenderer pClassBreaksRenderer = pGeoFeaturelayer.Renderer as IClassBreaksRenderer;
+
+        //    IFeature pFeature = pFeatureCursor.NextFeature();
+        //    ILookupSymbol pLookupSymbol = pClassBreaksRenderer as ILookupSymbol;
+        //    pLookupSymbol.LookupSymbol(true, pFeature);
+
+        //    for (int i = 0; i < intFeatureCount; i++)
+        //    {
+        //        //get the colors
+        //        ISimpleFillSymbol pSimpleFillSymbol = pLookupSymbol.LookupSymbol(true, pFeature) as ISimpleFillSymbol;
+        //        IRgbColor pOutlineRgbColor = pSimpleFillSymbol.Outline.Color as IRgbColor;
+        //        IColor pFillSymbolColor = new RgbColorClass();
+        //        pFillSymbolColor.RGB = pSimpleFillSymbol.Color.RGB;
+        //        IRgbColor pFillSymbolRgbColor = pFillSymbolColor as IRgbColor;
+
+        //        //get the feature
+        //        IPolygon4 ipg = pFeature.Shape as IPolygon4;
+        //        //SetZCoordinates(ipg as IPointCollection4);  //set the z coordinates, it may be used in Constructing TIN
+        //        CPolygon cpg = new CPolygon(i, ipg as IPolygon4);
+
+        //        //append the string
+        //        str += CIpeDraw.DrawCpg(cpg, pEnvelopeLayer, pEnvelopeIpe, new CColor(pOutlineRgbColor), new CColor(pFillSymbolRgbColor), pSimpleFillSymbol.Outline.Width.ToString());
+
+        //        pFeature = pFeatureCursor.NextFeature();  //at the last round of this loop, pFeatureCursor.NextFeature() will return null
+        //    }
+
+        //    return str;
+        //}
+        #endregion
+
+
+
     }
 }

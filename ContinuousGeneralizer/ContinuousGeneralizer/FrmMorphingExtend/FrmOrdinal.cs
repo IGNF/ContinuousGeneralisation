@@ -53,11 +53,11 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
             ////{
             ////    if (_CPolylineLt[i].CptLt [0].Z >_CPolylineLt[i].CptLt [_CPolylineLt[i].CptLt.Count -1].Z)
             ////    {
-            ////        CHelperFunction.ViewPolyline(_DataRecords.ParameterInitialize.m_mapControl, _CPolylineLt[i]);
+            ////        CHelpFunc.ViewPolyline(_DataRecords.ParameterInitialize.m_mapControl, _CPolylineLt[i]);
             ////    }   
             ////}
 
-            ////CHelperFunction.ViewPolyline(_DataRecords.ParameterInitialize.m_mapControl, _CPolylineLt[intCount]);
+            ////CHelpFunc.ViewPolyline(_DataRecords.ParameterInitialize.m_mapControl, _CPolylineLt[intCount]);
             ////intCount += 1;
             ////int kk = 5;
 
@@ -73,23 +73,23 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
             //}
 
             //CPolyline cpl = _CPolyline;
-            //CHelperFunction.ViewPolyline(_DataRecords.ParameterInitialize.m_mapControl, cpl);
+            //CHelpFunc.ViewPolyline(_DataRecords.ParameterInitialize.m_mapControl, cpl);
             //int intPtCount = cpl.CptLt.Count;
 
             ////计算长度初始值（全部计算）
             //_adblLength0 = new double[intPtCount - 1];
             //for (int i = 0; i < intPtCount - 1; i++)
             //{
-            //    _adblLength0[i] = CGeometricMethods.CalDis(cpl.CptLt[i], cpl.CptLt[i + 1]);
+            //    _adblLength0[i] = CGeoFunc.CalDis(cpl.CptLt[i], cpl.CptLt[i + 1]);
             //}
-            //_dblStandardAxisAngle = CGeometricMethods.CalAxisAngle(cpl.CptLt[cpl.CptLt.Count - 2], cpl.CptLt[cpl.CptLt.Count - 1]);
+            //_dblStandardAxisAngle = CGeoFunc.CalAxisAngle(cpl.CptLt[cpl.CptLt.Count - 2], cpl.CptLt[cpl.CptLt.Count - 1]);
 
             //////计算角度初始值
             ////_adblAngle0 = new double[intPtCount - 2];
             ////double dblAngleIntegral = 0;
             ////for (int i = 0; i < intPtCount - 2; i++)
             ////{
-            ////    _adblAngle0[i] = CGeometricMethods.CalAngle_Counterclockwise(cpl.CptLt[i], cpl.CptLt[i + 1], cpl.CptLt[i + 2]);
+            ////    _adblAngle0[i] = CGeoFunc.CalAngle_Counterclockwise(cpl.CptLt[i], cpl.CptLt[i + 1], cpl.CptLt[i + 2]);
             ////    dblAngleIntegral+=_adblAngle0[i];
             ////    _adblAngleIntegr0[i] = dblAngleIntegral;
             ////}
@@ -103,7 +103,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
             //double dblAngleIntegralAbs = 0;            
             //for (int i = intPtCount - 3; i >= 0; i--)
             //{
-            //    _adblAngle0[i] = CGeometricMethods.CalAngle_Counterclockwise(cpl.CptLt[i], cpl.CptLt[i + 1], cpl.CptLt[i + 2]);
+            //    _adblAngle0[i] = CGeoFunc.CalAngle_Counterclockwise(cpl.CptLt[i], cpl.CptLt[i + 1], cpl.CptLt[i + 2]);
             //    //夹角累计
             //    dblAngleIntegral += _adblAngle0[i] - Math.PI;
             //    _adblAngleIntegr0[i] = dblAngleIntegral;
@@ -127,7 +127,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
 
                 pbScale.Value = Convert.ToInt16(100 * _dblProportion);
                 CPolyline cpl0 = GetTargetcpl(_dblProportion);
-                CHelperFunction.ViewPolyline(_DataRecords.ParameterInitialize.m_mapControl, cpl0);
+                CHelpFunc.ViewPolyline(_DataRecords.ParameterInitialize.m_mapControl, cpl0);
                 return;
             }
             CPolyline cpl1 = GetTargetcpl(_dblProportion);
@@ -135,7 +135,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
 
 
 
-            CHelperFunction.ViewPolyline(m_mapControl, cpl1);
+            CHelpFunc.ViewPolyline(m_mapControl, cpl1);
         }
 
         public override void timerReduce_Tick(object sender, EventArgs e)
@@ -152,7 +152,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
 
                 pbScale.Value = Convert.ToInt16(100 * _dblProportion);
                 CPolyline cpl0 = GetTargetcpl(_dblProportion);
-                CHelperFunction.ViewPolyline(_DataRecords.ParameterInitialize.m_mapControl, cpl0);
+                CHelpFunc.ViewPolyline(_DataRecords.ParameterInitialize.m_mapControl, cpl0);
                 return;
             }
             CPolyline cpl1 = GetTargetcpl(_dblProportion);
@@ -160,7 +160,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
 
 
 
-            CHelperFunction.ViewPolyline(m_mapControl, cpl1);
+            CHelpFunc.ViewPolyline(m_mapControl, cpl1);
 
         }
 
@@ -226,7 +226,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
             //    dblTargetAngle = 2 * Math.PI - (_adblAngle0[intIndex] + dblResidual - _dblStandardAxisAngle);
             //}
 
-            //double dblOrinialAngle = CGeometricMethods.CalAxisAngle(cptlt[intIndex + 1], cptlt[intIndex]); //原始绝对角
+            //double dblOrinialAngle = CGeoFunc.CalAxisAngle(cptlt[intIndex + 1], cptlt[intIndex]); //原始绝对角
             //double dblCurrentAngle = _adblAngleIntegr0[intIndex + 1] + dblOrinialAngle;  //当前绝对夹角
             //double dblRotationAngle = dblTargetAngle - dblOrinialAngle;  //需旋转角度
             //pTransform2D.Rotate((IPoint)newcptlt[0], dblRotationAngle);

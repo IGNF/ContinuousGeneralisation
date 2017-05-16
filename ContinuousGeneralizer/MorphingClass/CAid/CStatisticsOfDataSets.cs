@@ -59,9 +59,9 @@ namespace MorphingClass.CAid
                 AllPtLt.AddRange(cptlt);
             }
 
-            C5.LinkedList<CCorrCpts> CorrCptsLt = CGeometricMethods.LookingForNeighboursByGrids(EndPtLt, CConstants.dblVerySmall);
-            int intIntersection = CGeometricMethods.GetNumofIntersections(CorrCptsLt);
-            int intAlonePt = CGeometricMethods.CountAlonePt(EndPtLt);
+            C5.LinkedList<CCorrCpts> CorrCptsLt = CGeoFunc.LookingForNeighboursByGrids(EndPtLt, CConstants.dblVerySmallCoord);
+            int intIntersection = CGeoFunc.GetNumofIntersections(CorrCptsLt);
+            int intAlonePt = CGeoFunc.CountAlonePt(EndPtLt);
             int intRealPtNum = intInnerPtNum + intIntersection + intAlonePt;
 
 
@@ -71,7 +71,7 @@ namespace MorphingClass.CAid
 
             int intEdgeCount = GetAllReadCEdgeLt<CPolyline>().Count;
 
-            var pCEnv = CGeometricMethods.GetEnvelope(pCPlLt);
+            var pCEnv = CGeoFunc.GetEnvelope(pCPlLt);
 
 
             long lngEndTime = System.Environment.TickCount;//记录结束时间

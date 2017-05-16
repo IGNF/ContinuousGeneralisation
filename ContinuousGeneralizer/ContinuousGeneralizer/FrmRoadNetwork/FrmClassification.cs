@@ -68,7 +68,7 @@ namespace ContinuousGeneralizer.RoadNetwork
             //SaveFileDialog SFD = new SaveFileDialog();
             //SFD.ShowDialog();
             //string strPath = SFD.FileName;
-            //ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(strPath);
+            //ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(strPath);
 
             ////获取当前选择的点要素图层
             ////大比例尺要素图层
@@ -82,12 +82,12 @@ namespace ContinuousGeneralizer.RoadNetwork
             //ParameterInitialize.pSSFLayer = pSSFLayer;
 
             ////获取线数组
-            //List<CPolyline> LSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pBSFLayer);
-            //List<CPolyline> SSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSSFLayer);
+            //List<CPolyline> LSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pBSFLayer);
+            //List<CPolyline> SSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSSFLayer);
 
             //CParameterThreshold ParameterThreshold = new CParameterThreshold();
-            //ParameterThreshold.dblBuffer = CGeometricMethods.CalMidLength(LSCPlLt);
-            //ParameterThreshold.dblVerySmall = CGeometricMethods.CalVerySmall(LSCPlLt);
+            //ParameterThreshold.dblBuffer = CGeoFunc.CalMidLength(LSCPlLt);
+            //ParameterThreshold.dblVerySmall = CGeoFunc.CalVerySmall(LSCPlLt);
             //double dblBound = 0.95;
             //ParameterThreshold.dblDLengthBound = dblBound;
             //ParameterThreshold.dblULengthBound = 1 / dblBound;
@@ -99,7 +99,7 @@ namespace ContinuousGeneralizer.RoadNetwork
 
 
             ////Save
-            //CHelperFunction.SaveCPlLt(SingleCPlLt, "SingleCPl", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCPlLt(SingleCPlLt, "SingleCPl", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
 
             ////List<CPolyline> SSCPlLt = new List<CPolyline>();
@@ -119,10 +119,10 @@ namespace ContinuousGeneralizer.RoadNetwork
             //    LSCPlLt1.Add(pCorrespondCPlLt[i].CFrPolyline);
             //    SSCPlLt1.Add(pCorrespondCPlLt[i].CToPolyline);
             //}
-            //CHelperFunction.SaveCPlLt(LSCPlLt1, "LSCPlLt1", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
-            //CHelperFunction.SaveCPlLt(SSCPlLt1, "SSCPlLt1", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
-            //CHelperFunction.SaveCPlLt(BSAttentionCPlLt, "BSAttentionCPl", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
-            //CHelperFunction.SaveCPlLt(SSAttentionCPlLt, "SSAttentionCPl", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCPlLt(LSCPlLt1, "LSCPlLt1", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCPlLt(SSCPlLt1, "SSCPlLt1", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCPlLt(BSAttentionCPlLt, "BSAttentionCPl", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCPlLt(SSAttentionCPlLt, "SSAttentionCPl", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
         }
 
         public List<CPolyline> MatchingPolyline(ref List<CPolyline> pLSCPlLt, ref List<CPolyline> pSSCPlLt, ref List<CPolyline> pSingleCPlLt, CParameterThreshold pParameterThreshold)
@@ -155,12 +155,12 @@ namespace ContinuousGeneralizer.RoadNetwork
                 //}
                 //else
                 //{
-                SortedList<double, CCorrCplInfo> pCorrCplInfoSLt = new SortedList<double, CCorrCplInfo>(new CCompareDbl());
+                SortedList<double, CCorrCplInfo> pCorrCplInfoSLt = new SortedList<double, CCorrCplInfo>(new CCmpDbl());
                 double dblBSBufferArea = pLSCPlLt[i].dblBufferArea;
 
                 for (int j = 0; j < pSSCPlLt.Count; j++)
                 {
-                    double dblOverlapArea = CGeometricMethods.CalOverlapArea(pLSCPlLt[i].pBufferGeo, pSSCPlLt[j].pBufferGeo);
+                    double dblOverlapArea = CGeoFunc.CalOverlapArea(pLSCPlLt[i].pBufferGeo, pSSCPlLt[j].pBufferGeo);
                     double dblOverlapRatio = dblOverlapArea / dblBSBufferArea;
                     CCorrCplInfo pCorrCplInfo = new CCorrCplInfo(pSSCPlLt[j], dblOverlapRatio, dblOverlapArea);
                     pCorrCplInfoSLt.Add(dblOverlapRatio, pCorrCplInfo);
@@ -226,12 +226,12 @@ namespace ContinuousGeneralizer.RoadNetwork
                 //}
                 //else
                 //{
-                SortedList<double, CCorrCplInfo> pCorrCplInfoSLt = new SortedList<double, CCorrCplInfo>(new CCompareDbl());
+                SortedList<double, CCorrCplInfo> pCorrCplInfoSLt = new SortedList<double, CCorrCplInfo>(new CCmpDbl());
                 double dblBSBufferArea = pLSCPlLt[i].dblBufferArea;
 
                 for (int j = 0; j < pSSCPlLt.Count; j++)
                 {
-                    double dblOverlapArea = CGeometricMethods.CalOverlapArea(pLSCPlLt[i].pBufferGeo, pSSCPlLt[j].pBufferGeo);
+                    double dblOverlapArea = CGeoFunc.CalOverlapArea(pLSCPlLt[i].pBufferGeo, pSSCPlLt[j].pBufferGeo);
                     double dblOverlapRatio = dblOverlapArea / dblBSBufferArea;
                     CCorrCplInfo pCorrCplInfo = new CCorrCplInfo(pSSCPlLt[j], dblOverlapRatio, dblOverlapArea);
                     pCorrCplInfoSLt.Add(dblOverlapRatio, pCorrCplInfo);

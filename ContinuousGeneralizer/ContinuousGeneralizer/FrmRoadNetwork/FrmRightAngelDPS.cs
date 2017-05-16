@@ -27,8 +27,8 @@ namespace ContinuousGeneralizer.RoadNetwork
 
         private CDataRecords _DataRecords;                    //数据记录
         private CFrmOperation _FrmOperation;
-        //private CHelperFunction _HelperFunction = new CHelperFunction();
-        //private CHelperFunctionExcel _HelperFunctionExcel = new CHelperFunctionExcel();
+        //private CHelpFunc _HelperFunction = new CHelpFunc();
+        //private CHelpFuncExcel _HelperFunctionExcel = new CHelpFuncExcel();
         //private CDPSimplification _pDPSimplification = new CDPSimplification();
 
 
@@ -65,12 +65,12 @@ namespace ContinuousGeneralizer.RoadNetwork
             //ParameterInitialize.pFeatureLayer = pFeatureLayer;
 
             ////获取线数组
-            //List<CPolyline> CPolylineLt = CHelperFunction.GetCPlLtByFeatureLayer(pFeatureLayer);
+            //List<CPolyline> CPolylineLt = CHelpFunc.GetCPlLtByFeatureLayer(pFeatureLayer);
 
             ////建立文件夹，保存之后生成的要素图层
 
             //ParameterInitialize.strSavePath = txtPath.Text;
-            //ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            //ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
 
             //double dblDistanceThreshold = Convert.ToDouble(this.TxtDistanceThreshold.Text);
             //double dblProportion = Convert.ToDouble(this.TxtProportion.Text);
@@ -84,7 +84,7 @@ namespace ContinuousGeneralizer.RoadNetwork
             //}
 
 
-            //double verysmall = CGeometricMethods.CalVerySmall(CPLLt);
+            //double verysmall = CGeoFunc.CalVerySmall(CPLLt);
             //this.Rebuild(ref CPLLt, verysmall);
             //List<CPolyline> CPLLT = new List<CPolyline>();
             //for (int i = 0; i < CPLLt.Count; i++)
@@ -191,14 +191,14 @@ namespace ContinuousGeneralizer.RoadNetwork
             {
                 List<CPoint> cptlt = new List<CPoint>();
                 // Step2 求各个特殊顶点包括扩展边在内的临边，主要是求扩展边  
-                if (Math.Abs(CGeometricMethods.CalAngle(cpl.CptLt[i - 1], cpl.CptLt[i], cpl.CptLt[i + 1]) - Math.PI / 2) <= dblAngelThreshold * Math.PI / 180)
+                if (Math.Abs(CGeoFunc.CalAngle(cpl.CptLt[i - 1], cpl.CptLt[i], cpl.CptLt[i + 1]) - Math.PI / 2) <= dblAngelThreshold * Math.PI / 180)
                 {
                     cptlt.Add((cpl.CptLt[i - 1]));
                     cptlt.Add((cpl.CptLt[i + 1]));
 
                     for (int j = i - 1; j > 0; j--)
                     {
-                        if (CGeometricMethods.CalAngle(cpl.CptLt[i - 1], cpl.CptLt[i], cpl.CptLt[j - 1], cpl.CptLt[j]) < dblAngelThreshold * Math.PI / 180)
+                        if (CGeoFunc.CalAngle(cpl.CptLt[i - 1], cpl.CptLt[i], cpl.CptLt[j - 1], cpl.CptLt[j]) < dblAngelThreshold * Math.PI / 180)
                         {
                             cptlt.Remove(cpl.CptLt[j]);
                             cptlt.Add(cpl.CptLt[j - 1]);
@@ -211,7 +211,7 @@ namespace ContinuousGeneralizer.RoadNetwork
                     }
                     for (int j = i + 1; j < cpl.CptLt.Count - 1; j++)
                     {
-                        if (CGeometricMethods.CalAngle(cpl.CptLt[i], cpl.CptLt[i + 1], cpl.CptLt[j], cpl.CptLt[j + 1]) < dblAngelThreshold * Math.PI / 180)
+                        if (CGeoFunc.CalAngle(cpl.CptLt[i], cpl.CptLt[i + 1], cpl.CptLt[j], cpl.CptLt[j + 1]) < dblAngelThreshold * Math.PI / 180)
                         {
                             cptlt.Remove(cpl.CptLt[j]);
                             cptlt.Add(cpl.CptLt[j + 1]);
@@ -227,7 +227,7 @@ namespace ContinuousGeneralizer.RoadNetwork
 
                 if (cptlt.Count == 2)
                 {
-                    if (CGeometricMethods.CalDis(cpl.CptLt[i], cptlt[0]) >= dblThreshold && CGeometricMethods.CalDis(cpl.CptLt[i], cptlt[1]) >= dblThreshold)
+                    if (CGeoFunc.CalDis(cpl.CptLt[i], cptlt[0]) >= dblThreshold && CGeoFunc.CalDis(cpl.CptLt[i], cptlt[1]) >= dblThreshold)
                     {
                         CptLt.AddRange(cptlt);
                         CptLt.Add(cpl.CptLt[i]);
@@ -324,7 +324,7 @@ namespace ContinuousGeneralizer.RoadNetwork
         {
             newcpt.X = newBaseLine.FrCpt.X + (newBaseLine.ToCpt.X - newBaseLine.FrCpt.X) * pVtPl.Ratio;
             newcpt.Y = newBaseLine.FrCpt.Y + (newBaseLine.ToCpt.Y - newBaseLine.FrCpt.Y) * pVtPl.Ratio;
-            double dblStartAngel = CGeometricMethods.CalAxisAngle(newcpt, newBaseLine.ToCpt);
+            double dblStartAngel = CGeoFunc.CalAxisAngle(newcpt, newBaseLine.ToCpt);
             double dblEndAngel = dblStartAngel + pVtPl.Angel;
             if (dblEndAngel < 0)
             {

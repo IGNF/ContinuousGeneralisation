@@ -85,7 +85,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             _pCGABM.IdentifyAddFaceNumber();
 
             _DataRecords.ParameterResult = _pCGABM.ParameterResult;
-            //CHelperFunctionExcel.KillExcel();
+            //CHelpFuncExcel.KillExcel();
             MessageBox.Show("Done!");
         }
 
@@ -98,7 +98,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             _pCGABM.Transform();
 
             _DataRecords.ParameterResult = _pCGABM.ParameterResult;
-            //CHelperFunctionExcel.KillExcel();
+            //CHelpFuncExcel.KillExcel();
             MessageBox.Show("Done!");
         }
 
@@ -120,7 +120,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.cboLayerLt.Insert(3, cboLayer3);
 
             _DataRecords.ParameterResult = _pCGABM.ParameterResult;
-            //CHelperFunctionExcel.KillExcel();
+            //CHelpFuncExcel.KillExcel();
             MessageBox.Show("Done!");
         }
 
@@ -134,7 +134,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             _pCGABM = new CCGABM(ParameterInitialize,4,2);
             _pCGABM.CGABM();
             _DataRecords.ParameterResult = _pCGABM.ParameterResult;
-            //CHelperFunctionExcel.KillExcel();
+            //CHelpFuncExcel.KillExcel();
             MessageBox.Show("Done!");
         }
 
@@ -266,9 +266,9 @@ namespace ContinuousGeneralizer.FrmMorphing
         {
             for (int i = 0; i < _DataRecords.ParameterResultToExcelLt.Count; i++)
             {
-                CHelperFunctionExcel.ExportEvaluationToExcel(_DataRecords.ParameterResultToExcelLt[i], _DataRecords.ParameterInitialize, i.ToString());
+                CHelpFuncExcel.ExportEvaluationToExcel(_DataRecords.ParameterResultToExcelLt[i], _DataRecords.ParameterInitialize, i.ToString());
             }
-            //CHelperFunctionExcel.KillExcel();
+            //CHelpFuncExcel.KillExcel();
         }
 
         private void btnOutputScale_Click(object sender, EventArgs e)

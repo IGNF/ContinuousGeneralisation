@@ -138,7 +138,12 @@ namespace MorphingClass.CGeometry
 
         public double DistanceTo(CPoint other)
         {
-            return CGeometricMethods.CalDis(this, other);
+            return CGeoFunc.CalDis(this, other);
+        }
+
+        public CptEdgeDis DistanceTo(CEdge cedge, bool blnHeight = false)
+        {
+            return CGeoFunc.CalDisBetweenCptCEdge(this, cedge, blnHeight);
         }
 
 
@@ -207,7 +212,7 @@ namespace MorphingClass.CGeometry
 
         public int Compare(CPoint other)
         {
-            return CCompareMethods.CompareCptYX(this, other);
+            return CCmpMethods.CmpCptYX(this, other);
         }
 
 
@@ -218,7 +223,7 @@ namespace MorphingClass.CGeometry
         /// <returns>True if X and Y values are the same</returns>
         public bool Equals2D(CPoint other)
         {
-            return CCompareMethods.ConvertCompareToBool(CCompareMethods.CompareCptYX(this, other));
+            return CCmpMethods.ConvertCmpToBool(CCmpMethods.CmpCptYX(this, other));
         }
 
 
@@ -229,7 +234,7 @@ namespace MorphingClass.CGeometry
         /// <returns>True if X and Y values are the same</returns>
         public bool Equals2D(CPoint other, double dblVerySmall)
         {
-            return CCompareMethods.ConvertCompareToBool(CCompareMethods.CompareCptYX(this, other));
+            return CCmpMethods.ConvertCmpToBool(CCmpMethods.CmpCptYX(this, other));
         }
 
 

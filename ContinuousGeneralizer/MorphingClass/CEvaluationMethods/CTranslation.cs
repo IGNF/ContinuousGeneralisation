@@ -93,7 +93,7 @@ namespace MorphingClass.CEvaluationMethods
             double dblSumLenth = 0;
             for (int i = 1; i < translationptlt.Count; i++)
             {
-                double dblLength = CGeometricMethods.CalDis(translationptlt[i - 1], translationptlt[i]);
+                double dblLength = CGeoFunc.CalDis(translationptlt[i - 1], translationptlt[i]);
                 dblTranslationLt.Add(dblLength);
                 dblSumLenth = dblSumLenth + dblLength;
                 dblSumTranslationLt.Add(dblSumLenth);
@@ -135,7 +135,7 @@ namespace MorphingClass.CEvaluationMethods
                 {
                     double dblX = resultptlt[i].CorrespondingPtLt[j].X - resultptlt[i].X;
                     double dblY = resultptlt[i].CorrespondingPtLt[j].Y - resultptlt[i].Y;
-                    dblSumLenth+=CGeometricMethods.CalDis(dblLastX, dblLastY, dblX, dblY);
+                    dblSumLenth+=CGeoFunc.CalDis(dblLastX, dblLastY, dblX, dblY);
                     dblLastX = dblX;
                     dblLastY = dblY;
                 }
@@ -268,7 +268,7 @@ namespace MorphingClass.CEvaluationMethods
                 double dblSumLenth = 0;
                 for (int i = 1; i < translationptlt.Count; i++)
                 {
-                    double dblLength = CGeometricMethods.CalDis(translationptlt[i - 1], translationptlt[i]);
+                    double dblLength = CGeoFunc.CalDis(translationptlt[i - 1], translationptlt[i]);
                     dblTranslationLt.Add(dblLength);
                     dblSumLenth = dblSumLenth + dblLength;
                     dblSumTranslationLt.Add(dblSumLenth);
@@ -337,8 +337,8 @@ namespace MorphingClass.CEvaluationMethods
                     CPoint cpt = new CPoint(intptnum, dblX, dblY);
                     translationptlt.Add(cpt);
 
-                    double dblLengthi = CGeometricMethods.CalDis(resultptlt[i], frlastcpt);//计算权重值长度
-                    double dblLengthj = CGeometricMethods.CalDis(resultptlt[i].CorrespondingPtLt[j], tolastcpt);//计算权重值长度
+                    double dblLengthi = CGeoFunc.CalDis(resultptlt[i], frlastcpt);//计算权重值长度
+                    double dblLengthj = CGeoFunc.CalDis(resultptlt[i].CorrespondingPtLt[j], tolastcpt);//计算权重值长度
                     double dblWeight = (dblLengthi + dblLengthj) / dblSumLength;
                     dblWeightlt.Add(dblWeight);
                     tolastcpt = resultptlt[i].CorrespondingPtLt[j];  //更新tolastcpt
@@ -359,7 +359,7 @@ namespace MorphingClass.CEvaluationMethods
             double dblSumTranslation = 0;
             for (int i = 1; i < translationptlt.Count; i++)
             {
-                double dblRatioLength = CGeometricMethods.CalDis(translationptlt[i - 1], translationptlt[i]) * dblWeightlt[i];
+                double dblRatioLength = CGeoFunc.CalDis(translationptlt[i - 1], translationptlt[i]) * dblWeightlt[i];
                 dblTranslationLt.Add(dblRatioLength);
                 dblSumTranslation = dblSumTranslation + dblRatioLength;
                 dblSumTranslationLt.Add(dblSumTranslation);
@@ -407,8 +407,8 @@ namespace MorphingClass.CEvaluationMethods
                     double dblY = resultptlt[i].CorrespondingPtLt[j].Y - resultptlt[i].Y;
                     CPoint cpt = new CPoint(intptnum, dblX, dblY);
 
-                    double dblLengthi = CGeometricMethods.CalDis(resultptlt[i], frlastcpt);//计算权重值长度
-                    double dblLengthj = CGeometricMethods.CalDis(resultptlt[i].CorrespondingPtLt[j], tolastcpt);//计算权重值长度
+                    double dblLengthi = CGeoFunc.CalDis(resultptlt[i], frlastcpt);//计算权重值长度
+                    double dblLengthj = CGeoFunc.CalDis(resultptlt[i].CorrespondingPtLt[j], tolastcpt);//计算权重值长度
                     double dblWeight = dblLengthi + dblLengthj;
                     dblWeightlt.Add(dblWeight);
                     tolastcpt = resultptlt[i].CorrespondingPtLt[j];  //更新tolastcpt
@@ -423,7 +423,7 @@ namespace MorphingClass.CEvaluationMethods
             double dblSumRatioTranslation = 0;
             for (int i = 1; i < translationptlt.Count; i++)
             {
-                double dblRatioLength = CGeometricMethods.CalDis(translationptlt[i - 1], translationptlt[i]) * dblWeightlt[i];
+                double dblRatioLength = CGeoFunc.CalDis(translationptlt[i - 1], translationptlt[i]) * dblWeightlt[i];
                 dblSumRatioTranslation += dblRatioLength;
 
                 //translationptlt[i - 1].SetEmpty();  //释放内存
@@ -470,8 +470,8 @@ namespace MorphingClass.CEvaluationMethods
             //            CPoint cpt = new CPoint(intptnum, dblX, dblY);
             //            translationptlt.Add(cpt);
 
-            //            double dblLengthi = CGeometricMethods.CalDis(resultptlt[i], frlastcpt);//计算权重值长度
-            //            double dblLengthj = CGeometricMethods.CalDis(resultptlt[i].CorrespondingPtLt[j], tolastcpt);//计算权重值长度
+            //            double dblLengthi = CGeoFunc.CalDis(resultptlt[i], frlastcpt);//计算权重值长度
+            //            double dblLengthj = CGeoFunc.CalDis(resultptlt[i].CorrespondingPtLt[j], tolastcpt);//计算权重值长度
             //            double dblWeight = (dblLengthi + dblLengthj) / dblSumLength;
             //            dblWeightlt.Add(dblWeight);
             //            tolastcpt = resultptlt[i].CorrespondingPtLt[j];  //更新tolastcpt
@@ -491,7 +491,7 @@ namespace MorphingClass.CEvaluationMethods
             //    double dblSumLenth = 0;
             //    for (int i = 1; i < translationptlt.Count; i++)
             //    {
-            //        double dblRatioLength = CGeometricMethods.CalDis(translationptlt[i - 1], translationptlt[i]) * dblWeightlt[i];
+            //        double dblRatioLength = CGeoFunc.CalDis(translationptlt[i - 1], translationptlt[i]) * dblWeightlt[i];
             //        dblTranslationLt.Add(dblRatioLength);
             //        dblSumTranslation = dblSumTranslation + dblRatioLength;
             //        dblSumTranslationLt.Add(dblSumTranslation);

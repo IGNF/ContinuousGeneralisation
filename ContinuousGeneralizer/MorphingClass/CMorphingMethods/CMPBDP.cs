@@ -49,8 +49,8 @@ namespace MorphingClass.CMorphingMethods
             _ParameterInitialize = ParameterInitialize;
 
             //获取线数组
-            _LSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pBSFLayer);
-            _SSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSSFLayer);
+            _LSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pBSFLayer);
+            _SSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSSFLayer);
         }
 
 
@@ -113,9 +113,9 @@ namespace MorphingClass.CMorphingMethods
 
 
             ////保存对应线
-            ////CHelperFunctionExcel.ExportDataltToExcel(dblTranslationLt, "translationlt0", _ParameterInitialize.strSavePath);
-            //CHelperFunction.SaveCtrlLine(pCorrespondSegmentLk, "MPBDPControlLine", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
-            //CHelperFunction.SaveCorrespondLine(pResultPtLt, "MPBDPCorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
+            ////CHelpFuncExcel.ExportDataltToExcel(dblTranslationLt, "translationlt0", _ParameterInitialize.strSavePath);
+            //CHelpFunc.SaveCtrlLine(pCorrespondSegmentLk, "MPBDPControlLine", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCorrespondLine(pResultPtLt, "MPBDPCorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
 
             ////获取结果，全部记录在_ParameterResult中
             //CParameterResult ParameterResult = new CParameterResult();

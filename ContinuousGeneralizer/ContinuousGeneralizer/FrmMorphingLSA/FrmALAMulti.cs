@@ -57,12 +57,16 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             SFD.ShowDialog();
             if (SFD.FileName == null || SFD.FileName == "") return;
             ParameterInitialize.strSavePath = SFD.FileName;
-            ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
             _pALAMulti = new CALAMulti(_DataRecords);
             _pALAMulti.ALAMultiMorphing();
 
-            CHelperFunction.SaveCPlLt(_DataRecords.ParameterResult.CResultPlLt, "ALAMulti", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            CHelpFunc.SaveCPlLt(_DataRecords.ParameterResult.CResultPlLt, "ALAMulti", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
         }
 
+        private void btnReadData_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -95,8 +95,8 @@ namespace ContinuousGeneralizer.FrmSimilarity
             long lngStartTime = System.Environment.TickCount; //记录开始时间
 
             //获取线数组
-            List <CPolyline > LSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pLargerFLayer);
-            List<CPolyline> SSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSmallerFLayer);
+            List <CPolyline > LSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pLargerFLayer);
+            List<CPolyline> SSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSmallerFLayer);
 
             ITopologicalOperator pTopBS = LSCPlLt[0].pPolyline as ITopologicalOperator;
             ITopologicalOperator pTopSS = SSCPlLt[0].pPolyline as ITopologicalOperator;

@@ -78,7 +78,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             if (SFD.FileName == null || SFD.FileName == "") return;
             ParameterInitialize.strSavePath = SFD.FileName;
             ParameterInitialize.strSaveFolderName = System.IO.Path.GetFileNameWithoutExtension(SFD.FileName);
-            ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
 
 
             //读取数据
@@ -89,7 +89,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             _pAtBdMorphing.AtBdMorphing();
 
             _DataRecords.ParameterResult = _pAtBdMorphing.ParameterResult;
-            //CHelperFunctionExcel.KillExcel();
+            //CHelpFuncExcel.KillExcel();
             MessageBox.Show("Done!");
         }
 
@@ -194,8 +194,8 @@ namespace ContinuousGeneralizer.FrmMorphing
             //CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
             //CParameterResult ParameterResult = _DataRecords.ParameterResult;
             //string strFileName = _dblProportion.ToString();
-            //CHelperFunction.SaveCPlLt(ParameterResult.DisplayCPlLt, strFileName+"_morphing", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
-            //CHelperFunction.SaveCPlLt(ParameterResult.FadedDisplayCPlLt, strFileName + "_DPFade", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCPlLt(ParameterResult.DisplayCPlLt, strFileName+"_morphing", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCPlLt(ParameterResult.FadedDisplayCPlLt, strFileName + "_DPFade", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
             
             
          
@@ -208,7 +208,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             //    cpllt.Add(_RelativeInterpolationCplLt[i]);
             //}
             //string strFileName = _dblProportion.ToString();
-            //CHelperFunction.SaveCPlLt(cpllt, strFileName, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCPlLt(cpllt, strFileName, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
         }
 
 
@@ -233,9 +233,9 @@ namespace ContinuousGeneralizer.FrmMorphing
         {
             for (int i = 0; i < _DataRecords.ParameterResultToExcelLt.Count; i++)
             {
-                CHelperFunctionExcel.ExportEvaluationToExcel(_DataRecords.ParameterResultToExcelLt[i], _DataRecords.ParameterInitialize, i.ToString());
+                CHelpFuncExcel.ExportEvaluationToExcel(_DataRecords.ParameterResultToExcelLt[i], _DataRecords.ParameterInitialize, i.ToString());
             }
-            //CHelperFunctionExcel.KillExcel();
+            //CHelpFuncExcel.KillExcel();
         }
 
         private void btntest_Click(object sender, EventArgs e)
@@ -249,7 +249,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             //if (SFD.FileName == null || SFD.FileName == "") return;
             //ParameterInitialize.strSavePath = SFD.FileName;
             //ParameterInitialize.strFolderName = System.IO.Path.GetFileNameWithoutExtension(SFD.FileName);
-            //ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            //ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
 
 
             ////读取数据
@@ -257,12 +257,12 @@ namespace ContinuousGeneralizer.FrmMorphing
             //_pAtBdMorphing = new CAtBdMorphing(ParameterInitialize);
 
             //CEnvelope pEnvelopeIpe = new CEnvelope(0, 0, 600, 600);
-            //CHelperFunction.SaveToIpe(_pAtBdMorphing._LSCPlLt, 0, 0, 0, "normal",true , "Ipe" + "_" + "0.5", ParameterInitialize.pBSFLayer.AreaOfInterest, pEnvelopeIpe, ParameterInitialize);
-            //CHelperFunction.SaveToIpe(_pAtBdMorphing._SgCPlLt, 100, 100, 100, "normal", true, "Ipe" + "_" + "0.5", ParameterInitialize.pBSFLayer.AreaOfInterest, pEnvelopeIpe, ParameterInitialize);
+            //CHelpFunc.SaveToIpe(_pAtBdMorphing._LSCPlLt, 0, 0, 0, "normal",true , "Ipe" + "_" + "0.5", ParameterInitialize.pBSFLayer.AreaOfInterest, pEnvelopeIpe, ParameterInitialize);
+            //CHelpFunc.SaveToIpe(_pAtBdMorphing._SgCPlLt, 100, 100, 100, "normal", true, "Ipe" + "_" + "0.5", ParameterInitialize.pBSFLayer.AreaOfInterest, pEnvelopeIpe, ParameterInitialize);
             ////_pAtBdMorphing.AtBdMorphing();
 
             ////_DataRecords.ParameterResult = _pAtBdMorphing.ParameterResult;
-            //////CHelperFunctionExcel.KillExcel();
+            //////CHelpFuncExcel.KillExcel();
             //MessageBox.Show("Done!");
         }
 

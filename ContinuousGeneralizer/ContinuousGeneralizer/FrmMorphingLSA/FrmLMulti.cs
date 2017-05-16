@@ -57,11 +57,11 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             SFD.ShowDialog();
             if (SFD.FileName == null || SFD.FileName == "") return;
             ParameterInitialize.strSavePath = SFD.FileName;
-            ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
             _pLMulti = new CIntervalALMulti(_DataRecords);
             _pLMulti.IntervalALMultiMorphing();
 
-            CHelperFunction.SaveCPlLt(_DataRecords.ParameterResult.CResultPlLt, "LMulti", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            CHelpFunc.SaveCPlLt(_DataRecords.ParameterResult.CResultPlLt, "LMulti", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
         }
     }
 }

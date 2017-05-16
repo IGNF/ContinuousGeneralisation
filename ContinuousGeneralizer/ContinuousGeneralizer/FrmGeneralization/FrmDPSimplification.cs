@@ -93,7 +93,7 @@ namespace ContinuousGeneralizer.FrmGeneralization
             //we are saving memory here, one can do better
             var CResultsPlLt = _pDPSimplification.ParameterResult.CResultPlLt;
             //_pDPSimplification = null;
-            CHelperFunction.SaveCPlLt(CResultsPlLt, "DPSimplification" + "_" + dblParameter.ToString(), ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            CHelpFunc.SaveCPlLt(CResultsPlLt, "DPSimplification" + "_" + dblParameter.ToString(), ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
             
 
             //_DataRecords.ParameterResult = _pDPSimplification.ParameterResult;
@@ -125,7 +125,7 @@ namespace ContinuousGeneralizer.FrmGeneralization
             }
 
             //_pDPSimplification.DPSimplification(-1, 0.8, -1);
-            CHelperFunction.SaveCPlLt(_pDPSimplification.ParameterResult.CResultPlLt, "DPMorph" + "_" + dblParameter.ToString() + "_" + dblProportion.ToString(), ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            CHelpFunc.SaveCPlLt(_pDPSimplification.ParameterResult.CResultPlLt, "DPMorph" + "_" + dblParameter.ToString() + "_" + dblProportion.ToString(), ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
 
             _DataRecords.ParameterResult = _pDPSimplification.ParameterResult;

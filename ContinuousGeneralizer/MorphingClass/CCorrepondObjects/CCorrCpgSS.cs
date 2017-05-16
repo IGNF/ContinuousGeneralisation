@@ -18,7 +18,7 @@ namespace MorphingClass.CCorrepondObjects
 
         public int CompareTo(CCorrCpgSS other)
         {
-            return CCompareMethods.CompareColConsideringCount(FrCpgSS, ToCpgSS, cpg => cpg.GID);
+            return CCmpMethods.CmpColConsideringCount(FrCpgSS, ToCpgSS, cpg => cpg.GID);
         }
     }
 }

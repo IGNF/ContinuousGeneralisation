@@ -60,11 +60,11 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             SFD.ShowDialog();
             if (SFD.FileName == null || SFD.FileName == "") return;
             ParameterInitialize.strSavePath = SFD.FileName;
-            ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
             _pALLMulti = new CALLMulti(_DataRecords);
             _pALLMulti.ALLMultiMorphing();
 
-            CHelperFunction.SaveCPlLt(_DataRecords.ParameterResult.CResultPlLt, "ALLMulti", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            CHelpFunc.SaveCPlLt(_DataRecords.ParameterResult.CResultPlLt, "ALLMulti", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
         }
 
         public override void btnReduce_Click(object sender, EventArgs e)

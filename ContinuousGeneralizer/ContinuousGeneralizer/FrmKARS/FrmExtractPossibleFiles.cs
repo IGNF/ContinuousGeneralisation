@@ -45,7 +45,7 @@ namespace ContinuousGeneralizer.FrmKARS
         /// <param name="e"></param>
         public void btnRun_Click(object sender, EventArgs e)
         {
-            var aObj_CheckingMethods = CHelperFunctionExcel.ReadDataFromExcel
+            var aObj_CheckingMethods = CHelpFuncExcel.ReadDataFromExcel
                 (@"C:\Study\MyWork\CodesChecking\fsvw_common_KARS_DM_Out\checkingmethods");
 
             List<List<object>> resultobjltlt = new List<List<object>>(aObj_CheckingMethods.GetLength(0));
@@ -130,8 +130,8 @@ namespace ContinuousGeneralizer.FrmKARS
                 strHeadLt.Add("End");
             }
 
-            CHelperFunctionExcel.ExportToExcel(resultobjltlt,
-                CHelperFunction.GetTimeStampWithPrefix() + "_methods_position",
+            CHelpFuncExcel.ExportToExcel(resultobjltlt,
+                CHelpFunc.GetTimeStampWithPrefix() + "_methods_position",
                 @"C:\Study\MyWork\CodesChecking\fsvw_common_KARS_DM_Out", strHeadLt);
 
             MessageBox.Show("done!");
@@ -144,9 +144,9 @@ namespace ContinuousGeneralizer.FrmKARS
         /// <param name="e"></param>
         private void btnRun2_Click(object sender, EventArgs e)
         {
-            var aObj_Out_kars = CHelperFunctionExcel.ReadDataFromExcel
+            var aObj_Out_kars = CHelpFuncExcel.ReadDataFromExcel
                 (@"C:\Study\MyWork\CodesChecking\fsvw_common_KARS_DM_Out\kars2");
-            var aObj_Met_pos = CHelperFunctionExcel.ReadDataFromExcel
+            var aObj_Met_pos = CHelpFuncExcel.ReadDataFromExcel
                 (@"C:\Study\MyWork\CodesChecking\fsvw_common_KARS_DM_Out\methods_position");
 
             //char[] charSeparators = new char[] { ' ', ';' };
@@ -172,7 +172,7 @@ namespace ContinuousGeneralizer.FrmKARS
             var astrPasteLt = new List<object[]>();
 
             //from 'possible_files', we know that whether a function is at top-level
-            var aObj_Pos_fil = CHelperFunctionExcel.ReadDataFromExcel
+            var aObj_Pos_fil = CHelpFuncExcel.ReadDataFromExcel
                 (@"C:\Study\MyWork\CodesChecking\fsvw_common_KARS_DM_Out\possible_files");
             var strMethodFilesSD = new SortedDictionary<string, object[]>();
             for (int i = 1; i < aObj_Pos_fil.GetLength(0); i++)
@@ -210,11 +210,11 @@ namespace ContinuousGeneralizer.FrmKARS
                 }
             }
 
-            //CHelperFunctionExcel.ExportToExcel(astrRemainLt,
-            //    CHelperFunction.GetTimeStamp() + "_out_kars_Extracted_" + astrRemainLt.Count,
+            //CHelpFuncExcel.ExportToExcel(astrRemainLt,
+            //    CHelpFunc.GetTimeStamp() + "_out_kars_Extracted_" + astrRemainLt.Count,
             //    @"C:\Study\MyWork\CodesChecking\fsvw_common_KARS_DM_Out");
-            CHelperFunctionExcel.ExportToExcel(astrPasteLt,
-                CHelperFunction.GetTimeStampWithPrefix() + "_out_kars_ExtractedProcessed_" + astrPasteLt.Count,
+            CHelpFuncExcel.ExportToExcel(astrPasteLt,
+                CHelpFunc.GetTimeStampWithPrefix() + "_out_kars_ExtractedProcessed_" + astrPasteLt.Count,
                 @"C:\Study\MyWork\CodesChecking\fsvw_common_KARS_DM_Out");
         }
 
@@ -278,7 +278,7 @@ namespace ContinuousGeneralizer.FrmKARS
         private void btnRun3_Click(object sender, EventArgs e)
         {
             string strFileNameCheckingMethods = @"C:\Study\MyWork\CodesChecking\fsvw_common_KARS_DM_Out\checkingmethods";
-            var aObj_CheckingMethods = CHelperFunctionExcel.ReadDataFromExcel(strFileNameCheckingMethods);
+            var aObj_CheckingMethods = CHelpFuncExcel.ReadDataFromExcel(strFileNameCheckingMethods);
 
             List<List<object>> resultobjltlt = new List<List<object>>(aObj_CheckingMethods.GetLength(0));
             int intMaxOccurency = 0;
@@ -335,8 +335,8 @@ namespace ContinuousGeneralizer.FrmKARS
                 strHeadLt.Add("End");
             }
 
-            CHelperFunctionExcel.ExportToExcel(resultobjltlt,
-                CHelperFunction.GetTimeStampWithPrefix() + "_methods_position",
+            CHelpFuncExcel.ExportToExcel(resultobjltlt,
+                CHelpFunc.GetTimeStampWithPrefix() + "_methods_position",
                 @"C:\Study\MyWork\CodesChecking\fsvw_common_KARS_DM_Out", strHeadLt);
 
             MessageBox.Show("done!");

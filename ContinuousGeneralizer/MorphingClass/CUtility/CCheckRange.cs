@@ -35,7 +35,7 @@ namespace MorphingClass.CUtility
 
         public int CompareTo(CCheckRange other)
         {
-           return  CCompareMethods.CompareDual(this, other, checkrange => checkrange.strFileName, checkrange => checkrange.intStartline);
+           return  CCmpMethods.CmpDual(this, other, checkrange => checkrange.strFileName, checkrange => checkrange.intStartline);
         }
 
     }

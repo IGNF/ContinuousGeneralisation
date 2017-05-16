@@ -77,7 +77,7 @@ namespace ContinuousGeneralizer.FrmSimilarity
             //SaveFileDialog SFD = new SaveFileDialog();
             //SFD.ShowDialog();
             //ParameterInitialize.strSavePath = SFD.FileName;
-            //ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            //ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
 
 
             //获取当前选择的点要素图层
@@ -93,8 +93,8 @@ namespace ContinuousGeneralizer.FrmSimilarity
 
 
             //获取线数组
-            List<CPolyline> _LSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pBSFLayer);
-            List<CPolyline> _SSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSSFLayer);
+            List<CPolyline> _LSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pBSFLayer);
+            List<CPolyline> _SSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSSFLayer);
             CPolyline frcpl = _LSCPlLt[0];
             CPolyline tocpl = _SSCPlLt[0];
 
@@ -108,7 +108,7 @@ namespace ContinuousGeneralizer.FrmSimilarity
         {
             CLinearInterpolationA pLinearInterpolationA = new CLinearInterpolationA();
             List<CPoint> pResultPtLt = pLinearInterpolationA.CLI(frcpl, tocpl);
-            List<CCorrCpts> pCorrCptsLt = CHelperFunction.TransferResultptltToCorrCptsLt(pResultPtLt);
+            List<CCorrCpts> pCorrCptsLt = CHelpFunc.TransferResultptltToCorrCptsLt(pResultPtLt);
 
             return pCorrCptsLt;
         }
@@ -120,7 +120,7 @@ namespace ContinuousGeneralizer.FrmSimilarity
             OFG.Filter = "xlsx files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
             OFG.ShowDialog();
             if (OFG.FileName == null || OFG.FileName == "") return;
-            _DataRecords.ParameterResult = CHelperFunctionExcel.InputDataResultPtLt(OFG.FileName);
+            _DataRecords.ParameterResult = CHelpFuncExcel.InputDataResultPtLt(OFG.FileName);
         }
 
         private void btnRunData_Click(object sender, EventArgs e)
@@ -158,12 +158,12 @@ namespace ContinuousGeneralizer.FrmSimilarity
             //各线段累积方位角（IAzimuth: Integral Azimuth）
             double[] adblFrIAzimuth = new double[pCorrCptsLt.Count - 1];
             double[] adblToIAzimuth = new double[pCorrCptsLt.Count - 1];
-            adblFrIAzimuth[0] = CGeometricMethods.CalAxisAngle(dblFrDiffX[0], dblFrDiffY[0]);
-            adblToIAzimuth[0] = CGeometricMethods.CalAxisAngle(dblToDiffX[0], dblToDiffY[0]);
+            adblFrIAzimuth[0] = CGeoFunc.CalAxisAngle(dblFrDiffX[0], dblFrDiffY[0]);
+            adblToIAzimuth[0] = CGeoFunc.CalAxisAngle(dblToDiffX[0], dblToDiffY[0]);
             for (int i = 1; i < pCorrCptsLt.Count - 1; i++)
             {
-                adblFrIAzimuth[i] = adblFrIAzimuth[i - 1] + CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[i - 1].FrCpt, pCorrCptsLt[i].FrCpt, pCorrCptsLt[i + 1].FrCpt) - Math.PI;
-                adblToIAzimuth[i] = adblToIAzimuth[i - 1] + CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[i - 1].ToCpt, pCorrCptsLt[i].ToCpt, pCorrCptsLt[i + 1].ToCpt) - Math.PI;
+                adblFrIAzimuth[i] = adblFrIAzimuth[i - 1] + CGeoFunc.CalAngle_Counterclockwise(pCorrCptsLt[i - 1].FrCpt, pCorrCptsLt[i].FrCpt, pCorrCptsLt[i + 1].FrCpt) - Math.PI;
+                adblToIAzimuth[i] = adblToIAzimuth[i - 1] + CGeoFunc.CalAngle_Counterclockwise(pCorrCptsLt[i - 1].ToCpt, pCorrCptsLt[i].ToCpt, pCorrCptsLt[i + 1].ToCpt) - Math.PI;
             }
             double dblAreaFr = 0;
             double dblAreaTo = 0;

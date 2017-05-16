@@ -59,7 +59,7 @@ namespace ContinuousGeneralizer.FrmAid
             //CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
 
             ////ReadDataFromExcel
-            //var aObj = CHelperFunctionExcel.ReadDataFromExcel();
+            //var aObj = CHelpFuncExcel.ReadDataFromExcel();
             //if (aObj == null) return;
 
             ////get distance

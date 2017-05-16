@@ -57,8 +57,8 @@ namespace MorphingClass.CMorphingMethods
             _ParameterInitialize = ParameterInitialize;
 
             //获取线数组
-            _LSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pBSFLayer);
-            _SSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSSFLayer);
+            _LSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pBSFLayer);
+            _SSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSSFLayer);
         }
 
         public void MRLMorphing()
@@ -69,9 +69,9 @@ namespace MorphingClass.CMorphingMethods
 
             //CParameterInitialize pParameterInitialize = _ParameterInitialize;
             //CParameterThreshold pParameterThreshold = new CParameterThreshold();
-            //pParameterThreshold.dblBuffer =CHelperFunction.CalBuffer(LSCPlLt, SSCPlLt);                      //计算缓冲区半径大小
+            //pParameterThreshold.dblBuffer =CHelpFunc.CalBuffer(LSCPlLt, SSCPlLt);                      //计算缓冲区半径大小
             //pParameterThreshold.dblVerySmall = pParameterThreshold.dblBuffer/200;
-            ////pParameterThreshold.dblVerySmall = CGeometricMethods.CalVerySmall(LSCPlLt);         //计算极小值
+            ////pParameterThreshold.dblVerySmall = CGeoFunc.CalVerySmall(LSCPlLt);         //计算极小值
             //pParameterThreshold.dblOverlapRatio = pParameterInitialize.dblOverlapRatio;
 
             //long lngTime1=0;
@@ -80,7 +80,7 @@ namespace MorphingClass.CMorphingMethods
             //List<CRiverNet> CBSRiverNetLt = BuildRiverNetLt(LSCPlLt, pParameterThreshold, ref lngTime1);     //依据线数据建立河网
             //List<CRiverNet> CSSRiverNetLt = BuildRiverNetLt(SSCPlLt, pParameterThreshold, ref lngTime2);     //依据线数据建立河网
 
-            //CHelperFunction.SaveBuffers(CBSRiverNetLt, CSSRiverNetLt, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);  //保存Buffer
+            //CHelpFunc.SaveBuffers(CBSRiverNetLt, CSSRiverNetLt, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);  //保存Buffer
 
 
             //List<CCorrespondRiverNet> pCorrespondRiverNetLt = FindCorrespondRiverNetLt(CBSRiverNetLt, CSSRiverNetLt, pParameterThreshold);  //找对应河网
@@ -98,7 +98,7 @@ namespace MorphingClass.CMorphingMethods
 
             
             ////保存对应线
-            //CHelperFunction.SaveCorrespondLine(CResultPtLtLt, "MRLCorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCorrespondLine(CResultPtLtLt, "MRLCorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
 
             ////获取结果，全部记录在_ParameterResult中
             //CParameterResult ParameterResult = new CParameterResult();
@@ -122,7 +122,7 @@ namespace MorphingClass.CMorphingMethods
         /// <returns>河网列</returns>
         public List<CRiverNet> BuildRiverNetLt(List<CPolyline> CPlLt, CParameterThreshold pParameterThreshold,ref long lngTime)
         {
-            double dblVerySmall = CConstants.dblVerySmall;
+            double dblVerySmall = CConstants.dblVerySmallCoord;
             double dblBuffer = pParameterThreshold.dblBuffer;
 
             //根据线数据生成河流数据
@@ -308,7 +308,7 @@ namespace MorphingClass.CMorphingMethods
                 //通过计算主干流是否重叠来判断两河网是否为同一河网的不同比例尺表达
                 for (int j = 0; j < pSSRiverNetLt.Count; j++)
                 {
-                    blnIsOverlap = CGeometricMethods.IsOverlap(pBSRiverNetLt[i].CMasterStream, pSSRiverNetLt[j].CMasterStream, pParameterThreshold.dblOverlapRatio);
+                    blnIsOverlap = CGeoFunc.IsOverlap(pBSRiverNetLt[i].CMasterStream, pSSRiverNetLt[j].CMasterStream, pParameterThreshold.dblOverlapRatio);
                     if (blnIsOverlap == true)
                     {
                         //建立河网对应关系
@@ -384,7 +384,7 @@ namespace MorphingClass.CMorphingMethods
                 bool blnIsOverlap = false;
                 for (int j = 0; j < pSSTributaryLt.Count; j++)
                 {
-                    blnIsOverlap = CGeometricMethods.IsOverlap(pBSTributaryLt[i], pSSTributaryLt[j], pParameterThreshold.dblOverlapRatio);  //判断两河流是否重叠
+                    blnIsOverlap = CGeoFunc.IsOverlap(pBSTributaryLt[i], pSSTributaryLt[j], pParameterThreshold.dblOverlapRatio);  //判断两河流是否重叠
                     if (blnIsOverlap == true)
                     {
                         pBSRiver.CCorrTriJunctionPtLt.Add(pBSTributaryLt[i].Tocpt2);
@@ -584,7 +584,7 @@ namespace MorphingClass.CMorphingMethods
         {
             CRiver pMainStream = pBSRiver.CMainStream;
             IPoint intersectipt = pBSRiver.pPolyline.ToPoint;
-            double dblFromStartLength = CGeometricMethods.CalDistanceFromStartPoint((IPolyline5)pMainStream, intersectipt, false);
+            double dblFromStartLength = CGeoFunc.CalDistanceFromStartPoint((IPolyline5)pMainStream, intersectipt, false);
             double dblCurrentReductionRatio = pMainStream.pPolyline.Length / dblFromStartLength;
             pBSRiver.dblReductionRatio = dblCurrentReductionRatio * dblMainReductionRatio;
             //pCorrespondRiverNet.CResultRiverLt.Add(pBSRiver);

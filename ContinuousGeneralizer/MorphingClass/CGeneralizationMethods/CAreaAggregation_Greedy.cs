@@ -102,13 +102,13 @@ namespace MorphingClass.CGeneralizationMethods
                 + "            Compactness: " + resultcrg.dblCostExactComp);
 
             //int intExploredRegionAll = CRegion._intStaticGID - CRegion._intStartStaticGIDLast;  //we don't need to +1 because +1 is already included in _intStaticGID
-            double dblConsumedMemoryInMB = CHelperFunction.GetConsumedMemoryInMB(false);
+            double dblConsumedMemoryInMB = CHelpFunc.GetConsumedMemoryInMB(false);
 
             StrObjLtSD.SetLastObj("#Edges", CRegion._intEdgeCount);
             StrObjLtSD.SetLastObj("TimeFirst(ms)", lngTime);
             StrObjLtSD.SetLastObj("TimeLast(ms)", lngTime);
             StrObjLtSD.SetLastObj("Time(ms)", lngTime);
-            StrObjLtSD.SetLastObj("Memory(MB)", CHelperFunction.GetConsumedMemoryInMB(false, lngStartMemory));
+            StrObjLtSD.SetLastObj("Memory(MB)", CHelpFunc.GetConsumedMemoryInMB(false, lngStartMemory));
 
             Console.WriteLine("We have visited " + 
                 CRegion._intNodeCount + " Nodes and " + CRegion._intEdgeCount + " Edges.");

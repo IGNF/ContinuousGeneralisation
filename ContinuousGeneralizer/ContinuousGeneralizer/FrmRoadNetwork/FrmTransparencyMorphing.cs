@@ -59,7 +59,7 @@ namespace ContinuousGeneralizer.RoadNetwork
             ////获取当前选择的点要素图层
             ////大比例尺要素图层
             //ParameterInitialize.strSavePath = txtPath.Text;
-            //ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            //ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
             //IFeatureLayer pBSFLayer = (IFeatureLayer)ParameterInitialize.m_mapPolyline.get_Layer(ParameterInitialize.cboLargerScaleLayer.Items.Count
             //                                                           - ParameterInitialize.cboLargerScaleLayer.SelectedIndex - 1);
             ////小比例尺要素图层
@@ -71,8 +71,8 @@ namespace ContinuousGeneralizer.RoadNetwork
             //double dblProportion = Convert.ToDouble(this.TxtProportion.Text);
 
             ////获取线数组
-            //List<CPolyline> LSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pBSFLayer);
-            //List<CPolyline> SSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSSFLayer);
+            //List<CPolyline> LSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pBSFLayer);
+            //List<CPolyline> SSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSSFLayer);
 
             //int intProportion = Convert.ToInt16(dblProportion * 255);
 

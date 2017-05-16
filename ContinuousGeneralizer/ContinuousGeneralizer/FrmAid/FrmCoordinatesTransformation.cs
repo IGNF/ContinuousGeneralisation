@@ -101,7 +101,7 @@ namespace ContinuousGeneralizer.FrmAid
             SFD.ShowDialog();
             string strPath = SFD.FileName;
             //string strName=SFD.
-            ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(strPath);
+            ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(strPath);
 
 
             long lngStartTime = System.Environment.TickCount; //记录开始时间
@@ -113,7 +113,7 @@ namespace ContinuousGeneralizer.FrmAid
             }
             else if ((pFeatureLayer.FeatureClass != null) && (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline))
             {
-                List<CPolyline> CPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pFeatureLayer);
+                List<CPolyline> CPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pFeatureLayer);
                 List<CPolyline> CPlLtNew = new List<CPolyline>(CPlLt.Count);
                 for (int i = 0; i < CPlLt.Count; i++)
                 {
@@ -129,7 +129,7 @@ namespace ContinuousGeneralizer.FrmAid
                     CPlLtNew.Add(newcpl);
                 }
 
-                CHelperFunction.SaveCPlLt(CPlLtNew, pFeatureLayer.Name + "_Transformed", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+                CHelpFunc.SaveCPlLt(CPlLtNew, pFeatureLayer.Name + "_Transformed", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
             }
             else if ((pFeatureLayer.FeatureClass != null) && (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon))
@@ -139,7 +139,7 @@ namespace ContinuousGeneralizer.FrmAid
                 //----------------------------------------------------------------------------------------------//
 
                 ////获取多边形数组
-                //List<CPolygon> CPolygonLt = CHelperFunction.GetCPolygonLtByFeatureLayer(pFeatureLayer);
+                //List<CPolygon> CPolygonLt = CHelpFunc.GetCPolygonLtByFeatureLayer(pFeatureLayer);
                 //List<CPolygon> CPolygonLtNew = new List<CPolygon>();
                 //for (int i = 0; i < CPolygonLt.Count; i++)
                 //{
@@ -156,7 +156,7 @@ namespace ContinuousGeneralizer.FrmAid
                 //    CPolygonLtNew.Add(newcpg);
                 //}
 
-                //CHelperFunction.SaveCPolygons(CPolygonLtNew, pFeatureLayer.Name + "_Transformed", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+                //CHelpFunc.SaveCPolygons(CPolygonLtNew, pFeatureLayer.Name + "_Transformed", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
             }
 
 

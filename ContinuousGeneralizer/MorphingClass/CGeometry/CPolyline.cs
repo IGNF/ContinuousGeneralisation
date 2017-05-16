@@ -28,7 +28,7 @@ namespace MorphingClass.CGeometry
         protected IPolyline5 _pPolyline;
 
 
-        //protected CHelperFunction _pHelperFunction=new CHelperFunction ();
+        //protected CHelpFunc _pHelperFunction=new CHelpFunc ();
         protected CPolyline _CorrCPl;
 
 
@@ -58,6 +58,7 @@ namespace MorphingClass.CGeometry
 
 
         public CPolyline()
+            : this(-2, CHelpFunc.MakeLt<CPoint>(0))
         {
 
         }
@@ -74,7 +75,7 @@ namespace MorphingClass.CGeometry
         }
 
         public CPolyline(int intID, IPolyline5 pPolyline)
-            : this(intID, CHelperFunction.GetCPtLtByIPl(pPolyline), false)
+            : this(intID, CHelpFunc.GetCPtLtByIPl(pPolyline), false)
         {
             this.pPolyline = pPolyline;
         }
@@ -92,13 +93,13 @@ namespace MorphingClass.CGeometry
         }
 
         public CPolyline(CPoint cpt, bool blnSetPolyline = false)
-            : this(cpt.ID, CHelperFunction.MakeLt<CPoint>(1, cpt, null, null), blnSetPolyline)
+            : this(cpt.ID, CHelpFunc.MakeLt<CPoint>(1, cpt, null, null), blnSetPolyline)
         {
 
         }
 
         public CPolyline(int intID, CPoint cpt, bool blnSetPolyline = false)
-            : this(intID, CHelperFunction.MakeLt<CPoint>(1, cpt, null, null), blnSetPolyline)
+            : this(intID, CHelpFunc.MakeLt<CPoint>(1, cpt, null, null), blnSetPolyline)
         {
 
         }
@@ -121,12 +122,12 @@ namespace MorphingClass.CGeometry
         }
 
         public CPolyline(CPoint cpt1, CPoint cpt2, bool blnSetPolyline = false)
-            : this(cpt1.ID, CHelperFunction.MakeLt<CPoint>(2, cpt1, cpt2, null), blnSetPolyline)
+            : this(cpt1.ID, CHelpFunc.MakeLt<CPoint>(2, cpt1, cpt2, null), blnSetPolyline)
         {
         }
 
         public CPolyline(int intID, CPoint cpt1, CPoint cpt2, bool blnSetPolyline = false)
-            : this(intID, CHelperFunction.MakeLt<CPoint>(2, cpt1, cpt2, null), blnSetPolyline)
+            : this(intID, CHelpFunc.MakeLt<CPoint>(2, cpt1, cpt2, null), blnSetPolyline)
         {
         }
 
@@ -138,6 +139,7 @@ namespace MorphingClass.CGeometry
         {
             this.GID = _intStaticGID++;
             _intID = intID;
+
             FormPolyBase(cptlt0);
 
             if (blnSetPolyline == true)
@@ -216,7 +218,7 @@ namespace MorphingClass.CGeometry
 
         public void SetCEdgeBelongedPolyline()
         {
-            foreach (CEdge cedge in _CEdgeLt)
+            foreach (CEdge cedge in this.CEdgeLt)
             {
                 cedge.BelongedCPolyline = this;
             }
@@ -224,7 +226,7 @@ namespace MorphingClass.CGeometry
 
         public void SetCEdgeTwinBelongedPolyline()
         {
-            foreach (CEdge cedge in _CEdgeLt)
+            foreach (CEdge cedge in this.CEdgeLt)
             {
                 cedge.cedgeTwin.BelongedCPolyline = this;
             }
@@ -237,7 +239,7 @@ namespace MorphingClass.CGeometry
         /// </summary>
         public void SetAbsLengthFromStart()
         {
-            CGeometricMethods.CalAbsLengthFromStart(this.CptLt);
+            CGeoFunc.CalAbsLengthFromStart(this.CptLt);
         }
 
         /// <summary>
@@ -245,7 +247,7 @@ namespace MorphingClass.CGeometry
         /// </summary>
         public void SetRatioLengthFromStart()
         {
-            CGeometricMethods.CalRatioLengthFromStart(this.CptLt);
+            CGeoFunc.CalRatioLengthFromStart(this.CptLt);
         }
 
         /// <summary>
@@ -282,36 +284,36 @@ namespace MorphingClass.CGeometry
             List<CPoint> ocptlt = other.CptLt;
             List<CPoint> newcptlt = new List<CPoint>();
 
-            if (CCompareMethods.CompareCptYX(fcptlt.GetLast_T(), ocptlt.GetFirstT()) == 0)
+            if (CCmpMethods.CmpCptYX(fcptlt.GetLastT(), ocptlt.GetFirstT()) == 0)
             {
                 newcptlt.AddRange(fcptlt);
-                newcptlt.RemoveLast_T();
+                newcptlt.RemoveLastT();
                 newcptlt.AddRange(ocptlt);
             }
-            else if (CCompareMethods.CompareCptYX(fcptlt.GetLast_T(), ocptlt.GetLast_T()) == 0)
+            else if (CCmpMethods.CmpCptYX(fcptlt.GetLastT(), ocptlt.GetLastT()) == 0)
             {
                 newcptlt.AddRange(fcptlt);
-                newcptlt.RemoveLast_T();
+                newcptlt.RemoveLastT();
 
-                var copiedreversedcptlt = CHelperFunction.CopyCptLt(ocptlt);
+                var copiedreversedcptlt = CHelpFunc.CopyCptLt(ocptlt);
                 copiedreversedcptlt.Reverse();
 
                 newcptlt.AddRange(copiedreversedcptlt);
             }
-            else if (CCompareMethods.CompareCptYX(fcptlt.GetFirstT(), ocptlt.GetFirstT()) == 0)
+            else if (CCmpMethods.CmpCptYX(fcptlt.GetFirstT(), ocptlt.GetFirstT()) == 0)
             {
-                var copiedreversedcptlt = CHelperFunction.CopyCptLt(ocptlt);
+                var copiedreversedcptlt = CHelpFunc.CopyCptLt(ocptlt);
                 copiedreversedcptlt.Reverse();
 
                 newcptlt.AddRange(copiedreversedcptlt);
-                newcptlt.RemoveLast_T();
+                newcptlt.RemoveLastT();
                 newcptlt.AddRange(fcptlt);
             }
-            else if (CCompareMethods.CompareCptYX(fcptlt.GetFirstT(), ocptlt.GetLast_T()) == 0)
+            else if (CCmpMethods.CmpCptYX(fcptlt.GetFirstT(), ocptlt.GetLastT()) == 0)
             {
                 //CPolyline cplCopyOther = other.CopyCpl();
                 newcptlt.AddRange(ocptlt);
-                newcptlt.RemoveLast_T();
+                newcptlt.RemoveLastT();
                 newcptlt.AddRange(fcptlt);
             }
             else
@@ -330,12 +332,12 @@ namespace MorphingClass.CGeometry
 
         public CPolyline CopyCpl()
         {
-            return new CPolyline(_intID, CHelperFunction.CopyCptLt(this.CptLt));
+            return new CPolyline(_intID, CHelpFunc.CopyCptLt(this.CptLt));
         }
 
         //public void CheckIsCircle()
         //{
-        //    int intResult = CCompareMethods.Compare(_CptLt[0], _CptLt[_CptLt.Count - 1]);
+        //    int intResult = CCmpMethods.Cmp(_CptLt[0], _CptLt[_CptLt.Count - 1]);
         //    if (intResult == 0)
         //    {
         //        _isCircle = true;
@@ -349,7 +351,7 @@ namespace MorphingClass.CGeometry
         public void ReverseCpl()
         {
             List<CPoint> fcptlt = this.CptLt;
-            CHelperFunction.ReverseCptLt(ref fcptlt);
+            CHelpFunc.ReverseCptLt(ref fcptlt);
             FormPolyBase(fcptlt);
         }
 
@@ -394,7 +396,8 @@ namespace MorphingClass.CGeometry
         //this method takes a lot of time, please do not use it if not necessary
         public IPolyline5 SetPolyline()
         {
-            this.pPolyline = CGeometricMethods.GetPolylineFromCptLt(this.CptLt);
+            this.pPolyline = CGeoFunc.GetIptColFromCptLt
+                (this.CptLt, esriGeometryType.esriGeometryPolyline) as IPolyline5;
             return this.pPolyline;
         }
 

@@ -59,7 +59,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             OFG.Filter = "xlsx files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
             OFG.ShowDialog();
             if (OFG.FileName == null || OFG.FileName == "") return;
-            _DataRecords.ParameterResult = CHelperFunctionExcel.InputDataResultPtLt(OFG.FileName);            
+            _DataRecords.ParameterResult = CHelpFuncExcel.InputDataResultPtLt(OFG.FileName);            
         }
 
         public override void btnRun_Click(object sender, EventArgs e)
@@ -69,7 +69,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             SFD.ShowDialog();
             if (SFD.FileName == null || SFD.FileName == "") return;
             ParameterInitialize.strSavePath = SFD.FileName;
-            ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
             _pCAL = new CPAL(_DataRecords);
         }
 
@@ -196,7 +196,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             List<CPolyline> cpllt = new List<CPolyline>();
             cpllt.Add(_RelativeInterpolationCpl);
             string strFileName = _dblProportion.ToString();
-            CHelperFunction.SaveCPlLt(cpllt, strFileName, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            CHelpFunc.SaveCPlLt(cpllt, strFileName, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
         }
 
         private void btnSaveTrajectory_Click(object sender, EventArgs e)
@@ -217,7 +217,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
                     ctjpllt.Add(ctjpl);
                 }
                 _DataRecords.ParameterResult.CTrajectoryPlLt = ctjpllt;
-                CHelperFunction.SaveCPlLt(ctjpllt, "Trajectories", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+                CHelpFunc.SaveCPlLt(ctjpllt, "Trajectories", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
             }
             catch

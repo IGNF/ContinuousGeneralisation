@@ -57,7 +57,7 @@ namespace ContinuousGeneralizer.FrmAid
             OFG.Filter = "xlsx files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
             OFG.ShowDialog();
             if (OFG.FileName == null || OFG.FileName == "") return;
-            _CPolylineLt = CHelperFunctionExcel.InputDataLtXYZT(OFG.FileName);
+            _CPolylineLt = CHelpFuncExcel.InputDataLtXYZT(OFG.FileName);
         }
 
         private void btnSave_Click(object sender, EventArgs e)

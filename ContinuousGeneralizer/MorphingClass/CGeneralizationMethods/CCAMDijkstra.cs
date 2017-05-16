@@ -102,7 +102,7 @@ namespace MorphingClass.CGeneralizationMethods
         #region ILP
         public CRegion ILP(CRegion LSCrg, CRegion SSCrg, CStrObjLtSD StrObjLtSD, double[,] adblTD, string strAreaAggregation)
         {
-            double dblMemoryInMB1 = CHelperFunction.GetConsumedMemoryInMB(true);
+            double dblMemoryInMB1 = CHelpFunc.GetConsumedMemoryInMB(true);
 
             LSCrg.SetInitialAdjacency();  //also count the number of edges
 
@@ -117,10 +117,10 @@ namespace MorphingClass.CGeneralizationMethods
             pStopwatch.Start();
             AddLineToStrObjLtSD(StrObjLtSD, LSCrg);
 
-            double dblMemoryInMB2 = CHelperFunction.GetConsumedMemoryInMB(true);
+            double dblMemoryInMB2 = CHelpFunc.GetConsumedMemoryInMB(true);
             Cplex cplex = new Cplex();
 
-            double dblMemoryInMB3 = CHelperFunction.GetConsumedMemoryInMB(true);
+            double dblMemoryInMB3 = CHelpFunc.GetConsumedMemoryInMB(true);
 
             CRegion crg = new CRegion(-1);
             bool blnSoloved = true;
@@ -134,7 +134,7 @@ namespace MorphingClass.CGeneralizationMethods
                 IRange[][] rng;
 
                 PopulateByRow(cplex, out var2, out var3, out var4, out rng, LSCrg, SSCrg, adblTD, strAreaAggregation);
-                double dblMemoryInMB4 = CHelperFunction.GetConsumedMemoryInMB(true);
+                double dblMemoryInMB4 = CHelpFunc.GetConsumedMemoryInMB(true);
                 // Step 11
                 //cplex.ExportModel("lpex1.lp");
 
@@ -326,7 +326,7 @@ namespace MorphingClass.CGeneralizationMethods
             }
             finally
             {
-                double dblMemoryInMB = CHelperFunction.GetConsumedMemoryInMB(false);
+                double dblMemoryInMB = CHelpFunc.GetConsumedMemoryInMB(false);
                 if (blnSoloved == false)
                 {
                     crg.ID = -2;
@@ -882,13 +882,13 @@ namespace MorphingClass.CGeneralizationMethods
                 + "            Compactness: " + resultcrg.dblCostExactComp);
 
             //int intExploredRegionAll = CRegion._intStaticGID - CRegion._intStartStaticGIDLast;  //we don't need to +1 because +1 is already included in _intStaticGID
-            double dblConsumedMemoryInMB = CHelperFunction.GetConsumedMemoryInMB(false);
+            double dblConsumedMemoryInMB = CHelpFunc.GetConsumedMemoryInMB(false);
 
             StrObjLtSD.SetLastObj("#Edges", CRegion._intEdgeCount);
             StrObjLtSD.SetLastObj("TimeFirst(ms)", lngTimeFirst);
             StrObjLtSD.SetLastObj("TimeLast(ms)", lngTimeLast);
             StrObjLtSD.SetLastObj("Time(ms)", lngTimeAll);
-            StrObjLtSD.SetLastObj("Memory(MB)", CHelperFunction.GetConsumedMemoryInMB(false, lngStartMemory));
+            StrObjLtSD.SetLastObj("Memory(MB)", CHelpFunc.GetConsumedMemoryInMB(false, lngStartMemory));
 
             Console.WriteLine("Factor:" + intFactor + "      We have visited " + 
                 CRegion._intNodeCount + " Nodes and " + CRegion._intEdgeCount + " Edges.");
@@ -909,20 +909,20 @@ namespace MorphingClass.CGeneralizationMethods
             var ExistingCphSDLt = new List<SortedDictionary<CPatch, CPatch>>(LSCrg.CphTypeIndexSD_Area_CphGID.Count + 1);  //we use this dictionary to make sure that if the two patches have the same cpgs, then they have the same GID
             for (int i = 0; i < ExistingCphSDLt.Capacity; i++)
             {
-                var Element = new SortedDictionary<CPatch, CPatch>(CPatch.pCompareCPatch_CpgGID);
+                var Element = new SortedDictionary<CPatch, CPatch>(CPatch.pCmpCPatch_CpgGID);
                 ExistingCphSDLt.Add(Element);
             }
 
             var ExistingCrgSDLt = new List<SortedDictionary<CRegion, CRegion>>(LSCrg.GetCphCount() + 1);
             for (int i = 0; i < ExistingCrgSDLt.Capacity; i++)
             {
-                var Element = new SortedDictionary<CRegion, CRegion>(CRegion.pCompareCRegion_CphGIDTypeIndex);  //we don't compare exact cost first because of there may be rounding problems 
+                var Element = new SortedDictionary<CRegion, CRegion>(CRegion.pCmpCRegion_CphGIDTypeIndex);  //we don't compare exact cost first because of there may be rounding problems 
                 ExistingCrgSDLt.Add(Element);
             }
             ExistingCrgSDLt[LSCrg.GetCphCount()].Add(LSCrg, LSCrg);
 
             var FinalOneCphCrg = new CRegion(intRegionID);
-            var Q = new SortedSet<CRegion>(CRegion.pCompareCRegion_Cost_CphGIDTypeIndex);
+            var Q = new SortedSet<CRegion>(CRegion.pCmpCRegion_Cost_CphGIDTypeIndex);
             int intCount = 0;
             CRegion._intNodeCount = 1;
             CRegion._intEdgeCount = 0;

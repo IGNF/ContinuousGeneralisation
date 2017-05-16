@@ -67,7 +67,7 @@ namespace MorphingClass.CGeneralizationMethods
         {
             int intRemainPoints = Convert.ToInt16(dblRemainPoints);
             List<CPolyline> cpllt = _CPlLt;
-            //CGeometricMethods.CalDistanceParameters<CPolyline, CPolyline>(cpllt);
+            //CGeoFunc.CalDistanceParameters<CPolyline, CPolyline>(cpllt);
 
 
             _pStopwatch.Start();
@@ -80,7 +80,7 @@ namespace MorphingClass.CGeneralizationMethods
                 Console.WriteLine("polyline number: " + i);
                 List<CPoint> cptlt = cpllt[i].CptLt;
                 var firstcpt = cptlt.GetFirstT();
-                var last_cpt = cptlt.GetLast_T();
+                var last_cpt = cptlt.GetLastT();
 
                 List<CPoint> newcptlt = new List<CPoint>(cptlt.Count);  // the capacity is not so good
                 newcptlt.Add(firstcpt);  //first point
@@ -143,9 +143,9 @@ namespace MorphingClass.CGeneralizationMethods
                     EndPtLt.Add(cptllt[i].CptLt[cptllt[i].CptLt.Count - 1]);
                 }
 
-                C5.LinkedList<CCorrCpts> CorrCptsLt = CGeometricMethods.LookingForNeighboursByGrids(EndPtLt, CConstants.dblVerySmall);
-                int intSgIntersection = CGeometricMethods.GetNumofIntersections(CorrCptsLt);
-                int intAloneEnds = CGeometricMethods.GetNumofAloneEnds(EndPtLt, CorrCptsLt);
+                C5.LinkedList<CCorrCpts> CorrCptsLt = CGeoFunc.LookingForNeighboursByGrids(EndPtLt, CConstants.dblVerySmallCoord);
+                int intSgIntersection = CGeoFunc.GetNumofIntersections(CorrCptsLt);
+                int intAloneEnds = CGeoFunc.GetNumofAloneEnds(EndPtLt, CorrCptsLt);
                 int intRealPtNum = intInnerPtNum + intSgIntersection + intAloneEnds;
 
                 int intDeletePtNum = -1;
@@ -389,7 +389,7 @@ namespace MorphingClass.CGeneralizationMethods
             double dblTDis = 0;
             if (intDeletePtNum >= dblMaxDisLt.Count)
             {
-                dblTDis = dblMaxDisLt.GetLast_T() + CConstants.dblVerySmall;
+                dblTDis = dblMaxDisLt.GetLastT() + CConstants.dblVerySmallCoord;
             }
             else
             {
@@ -407,7 +407,7 @@ namespace MorphingClass.CGeneralizationMethods
 
                 if (blnDefined == false)  //if dblMaxDisLt[intDeletePtNum-1] is the largest MaxDis
                 {
-                    dblTDis = dblMaxDisLt[intDeletePtNum - 1] + CConstants.dblVerySmall;
+                    dblTDis = dblMaxDisLt[intDeletePtNum - 1] + CConstants.dblVerySmallCoord;
                 }
             }
             return dblTDis;
@@ -418,7 +418,7 @@ namespace MorphingClass.CGeneralizationMethods
         {
             //int intRemainPoints = Convert.ToInt16(dblRemainPoints);
             //List<CPolyline> cptllt = _CPlLt;
-            //CGeometricMethods.CalDistanceParameters(cptllt);
+            //CGeoFunc.CalDistanceParameters(cptllt);
 
             ////get threshold
             //double dblTDis = CalThresholdDis(dblThresholdDis, dblRemainPointsRatio, dblRemainPoints, dblVerySmall);
@@ -491,10 +491,10 @@ namespace MorphingClass.CGeneralizationMethods
             //double dblTargetX = (1 - dblRatio) * frcpt.X + dblRatio * tocpt.X;
             //double dblTargetY = (1 - dblRatio) * frcpt.Y + dblRatio * tocpt.Y;
             //CPoint targetcpt = new CPoint(-1, dblTargetX,dblTargetY);
-            CPoint targetcpt = CGeometricMethods.GetInbetweenCpt(frcpt, tocpt, dblRatio, -1);
+            CPoint targetcpt = CGeoFunc.GetInbetweenCpt(frcpt, tocpt, dblRatio, -1);
             pVtPl.dblRatioforMovePt = dblRatio;
-            pVtPl.dblLengthforMovePt = CGeometricMethods.CalDis(targetcpt, cpt);
-            pVtPl.dblAngleDiffforMovePt = CGeometricMethods.CalAngle_Counterclockwise(cpt, targetcpt, tocpt);
+            pVtPl.dblLengthforMovePt = CGeoFunc.CalDis(targetcpt, cpt);
+            pVtPl.dblAngleDiffforMovePt = CGeoFunc.CalAngle_Counterclockwise(cpt, targetcpt, tocpt);
             //pVtPl.dblDifffromMovePtX = cpt.X - dblTargetX;
             //pVtPl.dblDifffromMovePtY = cpt.Y - dblTargetY;
 

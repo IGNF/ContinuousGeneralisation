@@ -148,7 +148,7 @@
 //            _CptLt = cptlt;
 
 //            _intID = intID;
-//            _CEdgeLt = CGeometricMethods.FormCEdgeLt(cptlt);
+//            _CEdgeLt = CGeoFunc.FormCEdgeLt(cptlt);
 //            //FormPolygon(cptlt);
 //        }
 
@@ -156,10 +156,10 @@
 //        {
 //            _intID = intID;
 //            this.pPolygon = pPolygon;
-//            List<CPoint> cptlt = CHelperFunction.GetCPtLtByIPG(pPolygon);
+//            List<CPoint> cptlt = CHelpFunc.GetCPtLtByIPG(pPolygon);
 //            _CptLt = cptlt;
 
-//            _CEdgeLt = CGeometricMethods.FormCEdgeLt(cptlt);
+//            _CEdgeLt = CGeoFunc.FormCEdgeLt(cptlt);
 //            //FormPolygon(cptlt);
 //        }
 
@@ -168,7 +168,7 @@
 //        {
 //            if (this .pPolygon ==null)
 //            {
-//                IPointCollection4 pPntCtl = CHelperFunction.GetPointCollectionFromCptLt(cptlt);
+//                IPointCollection4 pPntCtl = CHelpFunc.GetPointCollectionFromCptLt(cptlt);
 //                this.pPolygon = pPntCtl as IPolygon4;
 //                this.pPolygon.Close();
 //            }

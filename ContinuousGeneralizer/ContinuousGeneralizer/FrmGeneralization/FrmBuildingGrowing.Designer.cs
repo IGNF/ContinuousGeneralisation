@@ -31,6 +31,8 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.txtEvaluation = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
             this.txtOutput = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.txtSmallerScale = new System.Windows.Forms.TextBox();
@@ -76,8 +78,6 @@
             this.btn080 = new System.Windows.Forms.Button();
             this.btn070 = new System.Windows.Forms.Button();
             this.btn090 = new System.Windows.Forms.Button();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -135,13 +135,31 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parameters";
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(262, 283);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(13, 13);
+            this.label13.TabIndex = 118;
+            this.label13.Text = "k";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(262, 257);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(13, 13);
+            this.label11.TabIndex = 117;
+            this.label11.Text = "k";
+            // 
             // txtOutput
             // 
             this.txtOutput.Location = new System.Drawing.Point(168, 212);
             this.txtOutput.Name = "txtOutput";
             this.txtOutput.Size = new System.Drawing.Size(114, 20);
             this.txtOutput.TabIndex = 116;
-            this.txtOutput.Text = "4";
+            this.txtOutput.Text = "1";
             this.txtOutput.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label12
@@ -573,24 +591,6 @@
             this.btn090.TabIndex = 58;
             this.btn090.Text = "t=0.9";
             this.btn090.UseVisualStyleBackColor = true;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(262, 257);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(13, 13);
-            this.label11.TabIndex = 117;
-            this.label11.Text = "k";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(262, 283);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(13, 13);
-            this.label13.TabIndex = 118;
-            this.label13.Text = "k";
             // 
             // FrmBuildingGrowing
             // 

@@ -47,7 +47,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             SFD.ShowDialog();
             if (SFD.FileName == null || SFD.FileName == "") return;
             ParameterInitialize.strSavePath = SFD.FileName;
-            ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
             _pALm = new CALm(_DataRecords);
         }
 
@@ -158,7 +158,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             List<CPolyline> cpllt = new List<CPolyline>();
             cpllt.Add(_RelativeInterpolationCpl);
             string strFileName = _dblProportion.ToString();
-            CHelperFunction.SaveCPlLt(cpllt, strFileName, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            CHelpFunc.SaveCPlLt(cpllt, strFileName, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
         }
 
 

@@ -63,8 +63,8 @@ namespace MorphingClass.CMorphingMethods
             _ParameterInitialize = ParameterInitialize;
 
             //获取线数组
-            _LSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pBSFLayer);
-            _SSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSSFLayer);
+            _LSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pBSFLayer);
+            _SSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSSFLayer);
         }
 
         //基于弯曲的Morphing方法
@@ -106,7 +106,7 @@ namespace MorphingClass.CMorphingMethods
             //    pBLGCorrespondSegmentLk.AddRange(OptMPBDPBL.DWByDPLADefine(pComplexCorrespondSegmentLk[j].CFrPolyline, pComplexCorrespondSegmentLk[j].CToPolyline, ParameterThreshold));
             //}
 
-            //C5.LinkedList<CCorrespondSegment> pCorrespondSegmentLk = CHelperFunction.DetectCorrespondSegment(frcpl, tocpl, pBLGCorrespondSegmentLk);
+            //C5.LinkedList<CCorrespondSegment> pCorrespondSegmentLk = CHelpFunc.DetectCorrespondSegment(frcpl, tocpl, pBLGCorrespondSegmentLk);
 
             ////按指定方式对对应线段进行点匹配，提取对应点
             //CAlgorithmsHelper pAlgorithmsHelper = new CAlgorithmsHelper();
@@ -114,8 +114,8 @@ namespace MorphingClass.CMorphingMethods
             //pResultPtLt = pAlgorithmsHelper.BuildPointCorrespondence(pCorrespondSegmentLk, "Linear");
 
             ////保存对应线
-            //CHelperFunction.SaveCtrlLine(pCorrespondSegmentLk, "CRIBSBLGControlLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
-            //CHelperFunction.SaveCorrespondLine(pResultPtLt, "CRIBSBLGCorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCtrlLine(pCorrespondSegmentLk, "CRIBSBLGControlLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCorrespondLine(pResultPtLt, "CRIBSBLGCorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
 
             ////计算并显示运行时间
             //long lngEndTime = System.Environment.TickCount;

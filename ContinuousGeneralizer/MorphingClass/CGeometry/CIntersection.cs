@@ -39,7 +39,7 @@ namespace MorphingClass.CGeometry
 
         //public void SetSlope(ref List <CEdge > CEdgeLt)
         //{
-        //    CGeometricMethods.SetSlope(ref CEdgeLt);
+        //    CGeoFunc.SetSlope(ref CEdgeLt);
         //}
 
 
@@ -63,10 +63,10 @@ namespace MorphingClass.CGeometry
 
             if (cedge1.blnHasSlope == true && cedge2.blnHasSlope == true)   //this is the normal case
             {
-                //if (CCompareMethods.Compare(cedge1.dblSlope, cedge2.dblSlope)==0)  //parallel
-                if (CCompareMethods.CompareDbl_VerySmall(cedge1.dblSlope, cedge2.dblSlope) == 0)  //parallel
+                //if (CCmpMethods.Cmp(cedge1.dblSlope, cedge2.dblSlope)==0)  //parallel
+                if (CCmpMethods.CmpDbl_ConstVerySmall(cedge1.dblSlope, cedge2.dblSlope) == 0)  //parallel
                 {
-                    if (CCompareMethods.CompareDbl_VerySmall(cedge1.dblYIntercept, cedge2.dblYIntercept)==0)   //parallel and with the same YIntercept
+                    if (CCmpMethods.CmpCoordDbl_VerySmall(cedge1.dblYIntercept, cedge2.dblYIntercept)==0)   //parallel and with the same YIntercept
                     {
                         penumIntersectionType = DetectIntersectionParralel(cedge1, cedge2, out IntersectCpt, out overlapcedge);
                     }
@@ -91,7 +91,7 @@ namespace MorphingClass.CGeometry
             }
             else if (cedge1.blnHasSlope == false && cedge2.blnHasSlope == false)
             {
-                if (CCompareMethods.CompareDbl_VerySmall(cedge1.FrCpt.X, cedge2.FrCpt.X) == 0)   //parallel and with the same X Coordinate
+                if (CCmpMethods.CmpCoordDbl_VerySmall(cedge1.FrCpt.X, cedge2.FrCpt.X) == 0)   //parallel and with the same X Coordinate
                 {
                     penumIntersectionType = DetectIntersectionParralel(cedge1, cedge2, out IntersectCpt, out overlapcedge);
                 }
@@ -138,8 +138,8 @@ namespace MorphingClass.CGeometry
         /// <returns></returns>
         private CEnumIntersectionType DetermineIntersectCase(CEdge cedge1, CEdge cedge2, ref CPoint IntersectCpt)
         {
-            string strInCEdge1 = CGeometricMethods.InCEdge(IntersectCpt, cedge1);
-            string strInCEdge2 = CGeometricMethods.InCEdge(IntersectCpt, cedge2);
+            string strInCEdge1 = CGeoFunc.InCEdge(IntersectCpt, cedge1);
+            string strInCEdge2 = CGeoFunc.InCEdge(IntersectCpt, cedge2);
 
             //to save memory, we always use the original points if the intersection overlaps an original point
             //we set the intersection to null if there is no intersection
@@ -187,7 +187,7 @@ namespace MorphingClass.CGeometry
         {
             CEdge auxCEdge1 = cedge1;
             bool blnReversed1 = false;
-            if (CCompareMethods.CompareCptXY(cedge1.FrCpt, cedge1.ToCpt) == 1)
+            if (CCmpMethods.CmpCptXY(cedge1.FrCpt, cedge1.ToCpt) == 1)
             {
                 auxCEdge1 = new CEdge(cedge1.ToCpt, cedge1.FrCpt);
                 blnReversed1 = true;
@@ -195,7 +195,7 @@ namespace MorphingClass.CGeometry
 
             CEdge auxCEdge2 = cedge2;
             bool blnReversed2 = false;
-            if (CCompareMethods.CompareCptXY(cedge2.FrCpt, cedge2.ToCpt) == 1)
+            if (CCmpMethods.CmpCptXY(cedge2.FrCpt, cedge2.ToCpt) == 1)
             {
                 auxCEdge2 = new CEdge(cedge2.ToCpt, cedge2.FrCpt);
                 blnReversed2 = true;
@@ -241,7 +241,7 @@ namespace MorphingClass.CGeometry
 
         private CEnumIntersectionType DetectIntersectionParralelIncrease(CEdge cedge1, CEdge cedge2, out CPoint IntersectCpt, out CEdge overlapcedge)
         {
-            if (CCompareMethods.CompareCptXY(cedge1.ToCpt, cedge2.ToCpt) <= 0)   //we compare both x and y so that we can handle two edges which have no slope
+            if (CCmpMethods.CmpCptXY(cedge1.ToCpt, cedge2.ToCpt) <= 0)   //we compare both x and y so that we can handle two edges which have no slope
             {
                 return DetectIntersectionParralelIncreaseCEdge2Righter(cedge1, cedge2, out IntersectCpt, out overlapcedge);
             }
@@ -257,19 +257,19 @@ namespace MorphingClass.CGeometry
             IntersectCpt = null;
             overlapcedge = null;
 
-            if (CCompareMethods.CompareCptXY(cedge1.ToCpt, cedge2.FrCpt) == -1)   //we compare both x and y so that we can handle two edges haveing no slope
+            if (CCmpMethods.CmpCptXY(cedge1.ToCpt, cedge2.FrCpt) == -1)   //we compare both x and y so that we can handle two edges haveing no slope
             {
                 return CEnumIntersectionType.NoNo;
             }
-            else if (CCompareMethods.CompareCptXY(cedge1.ToCpt, cedge2.FrCpt) == 0)   //we compare both x and y so that we can handle two edges haveing no slope
+            else if (CCmpMethods.CmpCptXY(cedge1.ToCpt, cedge2.FrCpt) == 0)   //we compare both x and y so that we can handle two edges haveing no slope
             {
                 IntersectCpt = cedge1.ToCpt;
                 return CEnumIntersectionType.ToFr;
             }
-            else // if (CCompareMethods.CompareXY(cedge1.ToCpt, cedge2.FrCpt) == 1)   //we compare both x and y so that we can handle two edges haveing no slope
+            else // if (CCmpMethods.CmpXY(cedge1.ToCpt, cedge2.FrCpt) == 1)   //we compare both x and y so that we can handle two edges haveing no slope
             {
                 CPoint frcpt = null;
-                if (CCompareMethods.CompareCptXY(cedge1.FrCpt, cedge2.FrCpt) == 1)   //we compare both x and y so that we can handle two edges haveing no slope
+                if (CCmpMethods.CmpCptXY(cedge1.FrCpt, cedge2.FrCpt) == 1)   //we compare both x and y so that we can handle two edges haveing no slope
                 {
                     frcpt = cedge1.FrCpt;
                 }
@@ -281,6 +281,51 @@ namespace MorphingClass.CGeometry
                 IntersectCpt = cedge1.ToCpt;
                 return CEnumIntersectionType.Overlap;
             }
+        }
+
+        public bool JudgeIntersect(
+           bool blnTouchBothEnds = false, bool blnTouchEndEdge = false, bool blnOverlap = false)
+        {
+            bool blnIntersect = false;
+            switch (this.enumIntersectionType)
+            {
+                case CEnumIntersectionType.NoNo:
+                    blnIntersect = false;
+                    break;
+                case CEnumIntersectionType.FrFr:
+                    blnIntersect = blnTouchBothEnds;
+                    break;
+                case CEnumIntersectionType.FrIn:
+                    blnIntersect = blnTouchEndEdge;
+                    break;
+                case CEnumIntersectionType.FrTo:
+                    blnIntersect = blnTouchBothEnds;
+                    break;
+                case CEnumIntersectionType.InFr:
+                    blnIntersect = blnTouchEndEdge;
+                    break;
+                case CEnumIntersectionType.InIn:
+                    blnIntersect = true;
+                    break;
+                case CEnumIntersectionType.InTo:
+                    blnIntersect = blnTouchEndEdge;
+                    break;
+                case CEnumIntersectionType.ToFr:
+                    blnIntersect = blnTouchBothEnds;
+                    break;
+                case CEnumIntersectionType.ToIn:
+                    blnIntersect = blnTouchEndEdge;
+                    break;
+                case CEnumIntersectionType.ToTo:
+                    blnIntersect = blnTouchBothEnds;
+                    break;
+                case CEnumIntersectionType.Overlap:
+                    blnIntersect = blnOverlap;
+                    break;
+                default:
+                    break;
+            }
+            return blnIntersect;
         }
 
         public CEdge CEdge1

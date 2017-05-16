@@ -204,8 +204,8 @@ namespace MorphingClass.CEvaluationMethods
         /// <returns>the integral distance between the two line segments</returns>
         private static double CalDeflection(CCorrCpts LastCorrCpts, CCorrCpts CurrentCorrCpts, double dblFrTotalLength, double dblToTotalLength)
         {
-            double dblfrlength = CGeometricMethods.CalDis(LastCorrCpts.FrCpt, CurrentCorrCpts.FrCpt);
-            double dbltolength = CGeometricMethods.CalDis(LastCorrCpts.ToCpt, CurrentCorrCpts.ToCpt);
+            double dblfrlength = CGeoFunc.CalDis(LastCorrCpts.FrCpt, CurrentCorrCpts.FrCpt);
+            double dbltolength = CGeoFunc.CalDis(LastCorrCpts.ToCpt, CurrentCorrCpts.ToCpt);
 
             return CalDeflectionSub(LastCorrCpts, CurrentCorrCpts, dblfrlength, dbltolength);
         }
@@ -257,7 +257,7 @@ namespace MorphingClass.CEvaluationMethods
             double dblIntegral = 0;
 
             //we have a>=0
-            if (CCompareMethods.CompareSquare(a, 0) == 0) //then b==0
+            if (CCmpMethods.CmpSquare(a, 0) == 0) //then b==0
             {
                 dblIntegral = Math.Sqrt(c);
             }
@@ -279,7 +279,7 @@ namespace MorphingClass.CEvaluationMethods
                 double dblSecondPart = 0;
 
                 //two line segments are parallel to each other is a special case of Delta=0, notice that the distance between the two parallel segments is changing
-                if (CCompareMethods.ComparePower4(pQuadraticEquation.dblDelta, 0) != 0)
+                if (CCmpMethods.CmpPower4(pQuadraticEquation.dblDelta, 0) != 0)
                 {
                     double dblSqrtA = Math.Sqrt(a);
                     double dblTwoSqrtA = 2 * dblSqrtA;

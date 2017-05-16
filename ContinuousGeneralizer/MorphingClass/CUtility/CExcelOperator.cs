@@ -28,7 +28,7 @@ namespace MorphingClass.CUtility
             this.strEntireFileName = strEntireFileName;
             if (strEntireFileName == null || strEntireFileName == "")
             {
-                this.strEntireFileName = CHelperFunctionExcel.OpenAnExcel();
+                this.strEntireFileName = CHelpFuncExcel.OpenAnExcel();
             }
 
             this.pExcelAPP = new Excel.Application();
@@ -41,7 +41,7 @@ namespace MorphingClass.CUtility
         //{
         //    //if (strEntireFileName == null || strEntireFileName == "")
         //    //{
-        //    //    strEntireFileName = CHelperFunctionExcel.OpenAnExcel();
+        //    //    strEntireFileName = CHelpFuncExcel.OpenAnExcel();
         //    //}
 
         //    //this.pExcelAPP = new Excel.Application();
@@ -55,7 +55,7 @@ namespace MorphingClass.CUtility
         {
             //if (strSavePath == null || strSavePath == "")
             //{
-            //    strSavePath = CHelperFunctionExcel.OpenAnExcel();
+            //    strSavePath = CHelpFuncExcel.OpenAnExcel();
             //}
 
             Workbook pWorkBook = pExcelAPP.Workbooks.Add(true);

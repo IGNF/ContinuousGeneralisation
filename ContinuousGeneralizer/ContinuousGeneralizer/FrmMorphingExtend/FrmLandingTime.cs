@@ -77,7 +77,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
             SFD.ShowDialog();
             if (SFD.FileName == null || SFD.FileName == "") return;
             ParameterInitialize.strSavePath = SFD.FileName;
-            ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
 
 
 
@@ -165,9 +165,9 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
 
             IGraphicsContainer pGra = m_mapControl.Map as IGraphicsContainer;
             pGra.DeleteAllElements();
-            CHelperFunction.ViewPolyline(m_mapControl, cpl);
-            //CHelperFunction.ViewPolyline(m_mapControl, _DataRecords.ParameterResult.FromCpl);
-            //CHelperFunction.ViewPolyline(m_mapControl, _DataRecords.ParameterResult.ToCpl);
+            CHelpFunc.ViewPolyline(m_mapControl, cpl);
+            //CHelpFunc.ViewPolyline(m_mapControl, _DataRecords.ParameterResult.FromCpl);
+            //CHelpFunc.ViewPolyline(m_mapControl, _DataRecords.ParameterResult.ToCpl);
 
 
             return cpl;
@@ -187,16 +187,16 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
             //    timerAdd.Enabled = false;
             //    _dblProportion = 1;
             //    pbScale.Value = Convert.ToInt16(100 * _dblProportion);
-            //    CPolyline cpl0 =_pCAL.CGeometricMethods.GetTargetcpl(_dblProportion);
-            //    CHelperFunction.ViewPolyline(m_mapControl, cpl0);
+            //    CPolyline cpl0 =_pCAL.CGeoFunc.GetTargetcpl(_dblProportion);
+            //    CHelpFunc.ViewPolyline(m_mapControl, cpl0);
             //    return;
             //}
-            //CPolyline cpl1 = _pCAL.CGeometricMethods.GetTargetcpl(_dblProportion);
+            //CPolyline cpl1 = _pCAL.CGeoFunc.GetTargetcpl(_dblProportion);
             //pbScale.Value = Convert.ToInt16(100 * _dblProportion);
 
 
 
-            //CHelperFunction.ViewPolyline(m_mapControl, cpl1);
+            //CHelpFunc.ViewPolyline(m_mapControl, cpl1);
         }
 
         public override void timerReduce_Tick(object sender, EventArgs e)
@@ -212,16 +212,16 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
             //    _dblProportion = 0;
 
             //    pbScale.Value = Convert.ToInt16(100 * _dblProportion);
-            //    CPolyline cpl0 = _pCAL.CGeometricMethods.GetTargetcpl(_dblProportion);
-            //    CHelperFunction.ViewPolyline(m_mapControl, cpl0);
+            //    CPolyline cpl0 = _pCAL.CGeoFunc.GetTargetcpl(_dblProportion);
+            //    CHelpFunc.ViewPolyline(m_mapControl, cpl0);
             //    return;
             //}
-            //CPolyline cpl1 = _pCAL.CGeometricMethods.GetTargetcpl(_dblProportion);
+            //CPolyline cpl1 = _pCAL.CGeoFunc.GetTargetcpl(_dblProportion);
             //pbScale.Value = Convert.ToInt16(100 * _dblProportion);
 
 
 
-            //CHelperFunction.ViewPolyline(m_mapControl, cpl1);
+            //CHelpFunc.ViewPolyline(m_mapControl, cpl1);
 
         }
 

@@ -64,8 +64,8 @@ namespace MorphingClass.CMorphingMethods
             _ParameterInitialize = ParameterInitialize;
 
             //获取线数组
-            _LSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pBSFLayer);
-            _SSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSSFLayer);
+            _LSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pBSFLayer);
+            _SSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSSFLayer);
         }
 
         //基于弯曲的Morphing方法
@@ -96,8 +96,8 @@ namespace MorphingClass.CMorphingMethods
             ////添加约束数据生成图层，以便于利用AE中的功能(ct:constraint)
             //List<CPolyline> frctcpllt = new List<CPolyline>(); frctcpllt.Add(frcpl); frctcpllt.Add(frchcpl);
             //List<CPolyline> toctcpllt = new List<CPolyline>(); toctcpllt.Add(tocpl); toctcpllt.Add(tochcpl);
-            //IFeatureLayer pBSFLayer = CHelperFunction.SaveCPlLt(frctcpllt, "frctcpllt" + _dblCDTNum, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
-            //IFeatureLayer pSSFLayer = CHelperFunction.SaveCPlLt(toctcpllt, "toctcpllt" + _dblCDTNum, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //IFeatureLayer pBSFLayer = CHelpFunc.SaveCPlLt(frctcpllt, "frctcpllt" + _dblCDTNum, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //IFeatureLayer pSSFLayer = CHelpFunc.SaveCPlLt(toctcpllt, "toctcpllt" + _dblCDTNum, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
             ////建立CDT并获取弯曲森林
             //CBendForest FromLeftBendForest = new CBendForest();
@@ -136,7 +136,7 @@ namespace MorphingClass.CMorphingMethods
             //List<CCorrespondBend> CorrespondBendLt = BendMatch(IndependCorrespondBendLt, ParameterThreshold, ParameterInitialize);
 
             ////提取对应线段
-            //C5.LinkedList<CCorrespondSegment> pCorrespondSegmentLk = CHelperFunction.DetectCorrespondSegment(frcpl, tocpl, CorrespondBendLt);
+            //C5.LinkedList<CCorrespondSegment> pCorrespondSegmentLk = CHelpFunc.DetectCorrespondSegment(frcpl, tocpl, CorrespondBendLt);
 
             ////按指定方式对对应线段进行点匹配，提取对应点   
             //CAlgorithmsHelper pAlgorithmsHelper = new CAlgorithmsHelper(); 
@@ -149,8 +149,8 @@ namespace MorphingClass.CMorphingMethods
             //_ParameterInitialize.tsslTime.Text = "Running Time: " + Convert.ToString(lngTime) + "ms";  //显示运行时间
 
             ////保存对应线
-            //CHelperFunction.SaveCtrlLine(pCorrespondSegmentLk,"CRIBSControlLine" + dblBound, _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
-            //CHelperFunction.SaveCorrespondLine(pResultPtLt, "CRIBSCorrLine" + dblBound, _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCtrlLine(pCorrespondSegmentLk,"CRIBSControlLine" + dblBound, _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCorrespondLine(pResultPtLt, "CRIBSCorrLine" + dblBound, _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
 
             ////获取结果，全部记录在_ParameterResult中
             //CParameterResult ParameterResult = new CParameterResult();
@@ -185,8 +185,8 @@ namespace MorphingClass.CMorphingMethods
             ////添加约束数据生成图层，以便于利用AE中的功能(ct:constraint)
             //List<CPolyline> frctcpllt = new List<CPolyline>(); frctcpllt.Add(frcpl); frctcpllt.Add(frchcpl);
             //List<CPolyline> toctcpllt = new List<CPolyline>(); toctcpllt.Add(tocpl); toctcpllt.Add(tochcpl);
-            //IFeatureLayer pBSFLayer = CHelperFunction.SaveCPlLt(frctcpllt, "frctcpllt" + _dblCDTNum, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
-            //IFeatureLayer pSSFLayer = CHelperFunction.SaveCPlLt(toctcpllt, "toctcpllt" + _dblCDTNum, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //IFeatureLayer pBSFLayer = CHelpFunc.SaveCPlLt(frctcpllt, "frctcpllt" + _dblCDTNum, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //IFeatureLayer pSSFLayer = CHelpFunc.SaveCPlLt(toctcpllt, "toctcpllt" + _dblCDTNum, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
             ////建立CDT并获取弯曲森林
             //CBendForest FromLeftBendForest = new CBendForest();
@@ -212,7 +212,7 @@ namespace MorphingClass.CMorphingMethods
             //List<CCorrespondBend> CorrespondBendLt = BendMatch(IndependCorrespondBendLt, ParameterThreshold, ParameterInitialize);
 
             ////提取对应线段
-            //C5.LinkedList<CCorrespondSegment> pComplexCorrespondSegmentLk = CHelperFunction.DetectCorrespondSegment(frcpl, tocpl, CorrespondBendLt);
+            //C5.LinkedList<CCorrespondSegment> pComplexCorrespondSegmentLk = CHelpFunc.DetectCorrespondSegment(frcpl, tocpl, CorrespondBendLt);
 
             //return pComplexCorrespondSegmentLk;
             return null;
@@ -232,13 +232,13 @@ namespace MorphingClass.CMorphingMethods
         public List<CCorrespondBend> BendTreeMatch(CBendForest CFromBendForest, CBendForest CToBendForest, CParameterThreshold ParameterThreshold,CParameterInitialize pParameterInitialize)
         {
             //大比例尺独立弯曲
-            SortedDictionary<double, CBend> pFromIndependBendSlt = new SortedDictionary<double, CBend>(new CCompareDbl());
+            SortedDictionary<double, CBend> pFromIndependBendSlt = new SortedDictionary<double, CBend>(new CCmpDbl());
             for (int i = 0; i < CFromBendForest.Count; i++)
             {
                 pFromIndependBendSlt.Add(CFromBendForest.ElementAt(i).Value.dblStartRL, CFromBendForest.ElementAt(i).Value);
             }
             //小比例尺独立弯曲
-            SortedDictionary<double, CBend> pToIndependBendSlt = new SortedDictionary<double, CBend>(new CCompareDbl());
+            SortedDictionary<double, CBend> pToIndependBendSlt = new SortedDictionary<double, CBend>(new CCmpDbl());
             for (int i = 0; i < CToBendForest.Count; i++)
             {
                 pToIndependBendSlt.Add(CToBendForest.ElementAt(i).Value.dblStartRL, CToBendForest.ElementAt(i).Value);
@@ -409,20 +409,20 @@ namespace MorphingClass.CMorphingMethods
             CPolyline subfrcpl = new CPolyline(0,pCorrespondBend.CFromBend.CptLt);
             CPolyline subtocpl = new CPolyline(0,pCorrespondBend.CToBend.CptLt);
 
-            List<CPoint> subfrchcptlt = _Triangulator.CreateConvexHullEdgeLt2(subfrcpl, CConstants.dblVerySmall);
+            List<CPoint> subfrchcptlt = _Triangulator.CreateConvexHullEdgeLt2(subfrcpl, CConstants.dblVerySmallCoord);
             CPolyline subfrchcpl = new CPolyline(0, subfrchcptlt);    //大比例尺折线外包多边形线段
 
-            List<CPoint> subtochcptlt = _Triangulator.CreateConvexHullEdgeLt2(subtocpl, CConstants.dblVerySmall);
+            List<CPoint> subtochcptlt = _Triangulator.CreateConvexHullEdgeLt2(subtocpl, CConstants.dblVerySmallCoord);
             CPolyline subtochcpl = new CPolyline(0, subtochcptlt);    //小比例尺折线外包多边形线段
 
             //添加数据生成图层，以便于利用AE中的功能
             List<CPolyline> subfrcpllt = new List<CPolyline>(); subfrcpllt.Add(subfrcpl); subfrcpllt.Add(subfrchcpl);
             List<CPolyline> subtocpllt = new List<CPolyline>(); subtocpllt.Add(subtocpl); subtocpllt.Add(subtochcpl);
-            IFeatureLayer pBSFLayer = CHelperFunction.SaveCPlLt(subfrcpllt, "subfrcpl" + _dblCDTNum, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
-            IFeatureLayer pSSFLayer = CHelperFunction.SaveCPlLt(subtocpllt, "subtocpl" + _dblCDTNum, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
+            IFeatureLayer pBSFLayer = CHelpFunc.SaveCPlLt(subfrcpllt, "subfrcpl" + _dblCDTNum, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
+            IFeatureLayer pSSFLayer = CHelpFunc.SaveCPlLt(subtocpllt, "subtocpl" + _dblCDTNum, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
 
-            CParameterVariable pParameterVariableFrom = new CParameterVariable(subfrcpl, "subFromCDT" + _dblCDTNum, pBSFLayer, CConstants.dblVerySmall);
-            CParameterVariable pParameterVariableTo = new CParameterVariable(subtocpl, "subToCDT" + _dblCDTNum, pSSFLayer, CConstants.dblVerySmall);
+            CParameterVariable pParameterVariableFrom = new CParameterVariable(subfrcpl, "subFromCDT" + _dblCDTNum, pBSFLayer, CConstants.dblVerySmallCoord);
+            CParameterVariable pParameterVariableTo = new CParameterVariable(subtocpl, "subToCDT" + _dblCDTNum, pSSFLayer, CConstants.dblVerySmallCoord);
 
             _dblCDTNum = _dblCDTNum + 1;
 
@@ -487,7 +487,7 @@ namespace MorphingClass.CMorphingMethods
             //        CTriangleLt.Add(CDTLt[i]);
             //    }
             //}
-            //CHelperFunction.SaveTriangles(CTriangleLt, pParameterVariable.strName, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveTriangles(CTriangleLt, pParameterVariable.strName, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
         }
 
         /// <summary>属性：处理结果</summary>

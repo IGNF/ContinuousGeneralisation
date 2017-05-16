@@ -60,8 +60,8 @@ namespace MorphingClass.CMorphingMethods
             _ParameterInitialize = ParameterInitialize;
 
             //获取线数组
-            _LSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pBSFLayer);
-            _SSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSSFLayer);
+            _LSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pBSFLayer);
+            _SSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSSFLayer);
         }
 
         //基于弯曲的Morphing方法（删除小孩子弯曲）
@@ -72,7 +72,7 @@ namespace MorphingClass.CMorphingMethods
             //CPolyline tocpl = _SSCPlLt[0];
 
             ////计算极小值
-            //CGeometricMethods.CalDistanceParameters(_LSCPlLt, _SSCPlLt);
+            //CGeoFunc.CalDistanceParameters(_LSCPlLt, _SSCPlLt);
 
             //long lngStartTime = System.Environment.TickCount;  //开始时间
 
@@ -107,7 +107,7 @@ namespace MorphingClass.CMorphingMethods
             ////ParameterThreshold.dblToLength = tocpl.pPolyline.Length;
 
             ////List<double> dblTranslationLt = new List<double>();
-            ////SortedList<double, int> ResultsSlt = new SortedList<double, int>(new CCompareDbl());
+            ////SortedList<double, int> ResultsSlt = new SortedList<double, int>(new CCmpDbl());
 
             ////计算阈值参数
             //double dblBound = 0.98;
@@ -164,7 +164,7 @@ namespace MorphingClass.CMorphingMethods
 
 
             ////必须重新算一遍！！！！！！
-            ////理由：如果采用SortedList<double, CParameterResult> ResultsSlt = new SortedList<double, CParameterResult>(new CCompareDbl())记录结果，
+            ////理由：如果采用SortedList<double, CParameterResult> ResultsSlt = new SortedList<double, CParameterResult>(new CCmpDbl())记录结果，
             ////      则由于基本单位是CPoint，最后必然影响CParameterResult中的ResultPtLt值
             //int intIndex = ResultsSlt.Values[0];
             //ParameterThreshold.dblDLengthBound = 1 * (1 - 0.02 * intIndex);
@@ -191,9 +191,9 @@ namespace MorphingClass.CMorphingMethods
             //ParameterInitialize.tsslTime.Text = "Running Time: " + Convert.ToString(lngTime) + "ms";  //显示运行时间
 
             ////保存指标值及对应线            
-            //CHelperFunctionExcel.ExportDataltToExcel(dblTranslationLt, "translationlt0", _ParameterInitialize.strSavePath);
-            //CHelperFunction.SaveCtrlLine(pCorrespondSegmentLk, "MPBBSLControlLine", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
-            //CHelperFunction.SaveCorrespondLine(pResultPtLt, "MPBBSLCorrLine", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //CHelpFuncExcel.ExportDataltToExcel(dblTranslationLt, "translationlt0", _ParameterInitialize.strSavePath);
+            //CHelpFunc.SaveCtrlLine(pCorrespondSegmentLk, "MPBBSLControlLine", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCorrespondLine(pResultPtLt, "MPBBSLCorrLine", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
             ////获取结果，全部记录在ParameterResult中
             //CParameterResult ParameterResult = new CParameterResult();
@@ -360,7 +360,7 @@ namespace MorphingClass.CMorphingMethods
             //    }
             //}
 
-            //CHelperFunction.SaveTriangles(CTriangleLt, pParameterVariable.strName, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveTriangles(CTriangleLt, pParameterVariable.strName, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
         }
 
 

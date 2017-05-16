@@ -66,11 +66,11 @@ namespace MorphingClass.CMorphingMethods
             _ParameterInitialize = ParameterInitialize;
 
             //获取线数组
-            List <CPolyline> _LSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pBSFLayer);
-            List<CPolyline> _SSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSSFLayer);
+            List <CPolyline> _LSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pBSFLayer);
+            List<CPolyline> _SSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSSFLayer);
 
-            CGeometricMethods.SetCPlScaleEdgeLengthPtBelong(ref _LSCPlLt, CEnumScale.Larger);
-            CGeometricMethods.SetCPlScaleEdgeLengthPtBelong(ref _SSCPlLt, CEnumScale.Smaller);
+            CGeoFunc.SetCPlScaleEdgeLengthPtBelong(ref _LSCPlLt, CEnumScale.Larger);
+            CGeoFunc.SetCPlScaleEdgeLengthPtBelong(ref _SSCPlLt, CEnumScale.Smaller);
 
             _FromCpl = _LSCPlLt[0];
             _ToCpl = _SSCPlLt[0];
@@ -87,18 +87,18 @@ namespace MorphingClass.CMorphingMethods
             //int intMaxBackK = _ParameterInitialize.intMaxBackK;
 
 
-            //double dblSmallestDis=CGeometricMethods.CalSmallestDis(frcpl);
+            //double dblSmallestDis=CGeoFunc.CalSmallestDis(frcpl);
             //double dblSmallDis = dblSmallestDis / 4;
-            ////double dblError = (CGeometricMethods.CalMidLength(frcpl) +CGeometricMethods.CalMidLength(tocpl)) / 2;
+            ////double dblError = (CGeoFunc.CalMidLength(frcpl) +CGeoFunc.CalMidLength(tocpl)) / 2;
             //double dblFrError = dblSmallestDis;
-            //double dblToError = CGeometricMethods.CalSmallestDis(tocpl);
+            //double dblToError = CGeoFunc.CalSmallestDis(tocpl);
 
             //CBezierDetectPoint pBezierDetectPoint = new CBezierDetectPoint();
             //List<CPoint> FrBezierCptLt = pBezierDetectPoint.BezierDetectPoint(frcpl.CptLt, dblSmallDis, dblFrError);
             //List<CPoint> ToBezierCptLt = pBezierDetectPoint.BezierDetectPoint(tocpl.CptLt, dblSmallDis, dblToError);
 
-            //List<CPolyline> CFrBezierEdgeLt = CGeometricMethods.CreateCplLt(FrBezierCptLt);
-            //List<CPolyline> CToBezierEdgeLt = CGeometricMethods.CreateCplLt(ToBezierCptLt);
+            //List<CPolyline> CFrBezierEdgeLt = CGeoFunc.CreateCplLt(FrBezierCptLt);
+            //List<CPolyline> CToBezierEdgeLt = CGeoFunc.CreateCplLt(ToBezierCptLt);
 
             //long lngStartTime = System.Environment.TickCount;  //开始时间
             //List<CPolyline> frlastcpllt = new List<CPolyline>(CFrBezierEdgeLt.Count);
@@ -116,8 +116,8 @@ namespace MorphingClass.CMorphingMethods
             //_ParameterInitialize.tsslTime.Text = "Running Time: " + Convert.ToString(lngTime) + "ms";  //显示运行时间
 
             ////保存对应线
-            //CHelperFunction.SaveCtrlLine(pCorrespondSegmentLk, "OptCorBezierControlLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
-            //CHelperFunction.SaveCorrespondLine(pResultPtLt, "OptCorBezierCorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCtrlLine(pCorrespondSegmentLk, "OptCorBezierControlLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCorrespondLine(pResultPtLt, "OptCorBezierCorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
 
             ////获取结果，全部记录在_ParameterResult中
             //CParameterResult ParameterResult = new CParameterResult();
@@ -141,18 +141,18 @@ namespace MorphingClass.CMorphingMethods
 
             //int intMaxBackK = _ParameterInitialize.intMaxBackK;
 
-            //double dblSmallestDis = CGeometricMethods.CalSmallestDis(frcpl);
+            //double dblSmallestDis = CGeoFunc.CalSmallestDis(frcpl);
             //double dblSmallDis = dblSmallestDis / 4;
-            ////double dblError = (CGeometricMethods.CalMidLength(frcpl) +CGeometricMethods.CalMidLength(tocpl)) / 2;
+            ////double dblError = (CGeoFunc.CalMidLength(frcpl) +CGeoFunc.CalMidLength(tocpl)) / 2;
             //double dblFrError = dblSmallestDis;
-            //double dblToError = CGeometricMethods.CalSmallestDis(tocpl);
+            //double dblToError = CGeoFunc.CalSmallestDis(tocpl);
 
             //CBezierDetectPoint pBezierDetectPoint = new CBezierDetectPoint();
             //List<CPoint> FrBezierCptLt = pBezierDetectPoint.BezierDetectPoint(frcpl.CptLt, dblSmallDis, dblFrError);
             //List<CPoint> ToBezierCptLt = pBezierDetectPoint.BezierDetectPoint(tocpl.CptLt, dblSmallDis, dblToError);
 
-            //List<CPolyline> CFrBezierEdgeLt = CGeometricMethods.CreateCplLt(FrBezierCptLt);
-            //List<CPolyline> CToBezierEdgeLt = CGeometricMethods.CreateCplLt(ToBezierCptLt);
+            //List<CPolyline> CFrBezierEdgeLt = CGeoFunc.CreateCplLt(FrBezierCptLt);
+            //List<CPolyline> CToBezierEdgeLt = CGeoFunc.CreateCplLt(ToBezierCptLt);
 
 
             //List<CPolyline> frlastcpllt = new List<CPolyline>(CFrBezierEdgeLt.Count);
@@ -183,10 +183,10 @@ namespace MorphingClass.CMorphingMethods
             //    dblTimeLt.Add(lngTime);
 
             //    //保存对应线
-            //    CHelperFunctionExcel.ExportDataltToExcel(dblTimeLt, intMaxBackK + "Timelt0", _ParameterInitialize.strSavePath);
-            //    CHelperFunctionExcel.ExportDataltToExcel(dblDistanceLt, intMaxBackK + "Distancelt0", _ParameterInitialize.strSavePath);
-            //    CHelperFunction.SaveCtrlLine(pCorrespondSegmentLk, intMaxBackK + "OptCorBezierControlLine", dblVerySmall, _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
-            //    CHelperFunction.SaveCorrespondLine(pResultPtLt, intMaxBackK + "OptCorBezierCorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
+            //    CHelpFuncExcel.ExportDataltToExcel(dblTimeLt, intMaxBackK + "Timelt0", _ParameterInitialize.strSavePath);
+            //    CHelpFuncExcel.ExportDataltToExcel(dblDistanceLt, intMaxBackK + "Distancelt0", _ParameterInitialize.strSavePath);
+            //    CHelpFunc.SaveCtrlLine(pCorrespondSegmentLk, intMaxBackK + "OptCorBezierControlLine", dblVerySmall, _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
+            //    CHelpFunc.SaveCorrespondLine(pResultPtLt, intMaxBackK + "OptCorBezierCorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
 
             //    intMaxBackK = intMaxBackK + 1;
             //}
@@ -283,7 +283,7 @@ namespace MorphingClass.CMorphingMethods
             //{
             //    for (int j = 1; j <= CToBezierEdgeLt.Count; j++)
             //    {
-            //        SortedDictionary<double, CTable> dblCTableSlt = new SortedDictionary<double, CTable>(new CCompareDbl());
+            //        SortedDictionary<double, CTable> dblCTableSlt = new SortedDictionary<double, CTable>(new CCmpDbl());
             //        CPolyline subfrcpl1 = frcpl.GetSubPolyline(CFrBezierEdgeLt[i - 1].CptLt[0], CFrBezierEdgeLt[i - 1].CptLt[CFrBezierEdgeLt[i - 1].CptLt.Count - 1]);
             //        CPolyline subtocpl1 = tocpl.GetSubPolyline(CToBezierEdgeLt[j - 1].CptLt[0], CToBezierEdgeLt[j - 1].CptLt[CToBezierEdgeLt[j - 1].CptLt.Count - 1]);
 

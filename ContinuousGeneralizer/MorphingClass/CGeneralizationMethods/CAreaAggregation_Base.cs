@@ -61,7 +61,7 @@ namespace MorphingClass.CGeneralizationMethods
         public double dblCost { set; get; }
         public CStrObjLtSD StrObjLtSD { set; get; }
 
-        //if we change the list, we may need to change the comparer named CAACCompare
+        //if we change the list, we may need to change the comparer named CAACCmp
         public static IList<string> strKeyLt = new List<string>
         {
             "ID",
@@ -111,7 +111,7 @@ namespace MorphingClass.CGeneralizationMethods
             }
 
             //read type distance
-            var aObj = CHelperFunctionExcel.ReadDataFromExcel(ParameterInitialize.strMxdPathBackSlash + "TypeDistance.xlsx");
+            var aObj = CHelpFuncExcel.ReadDataFromExcel(ParameterInitialize.strMxdPathBackSlash + "TypeDistance.xlsx");
             if (aObj == null) throw new ArgumentNullException("Failed to read TypeDistance.xlsx");
 
             int intDataRow = aObj.GetUpperBound(0);
@@ -156,13 +156,14 @@ namespace MorphingClass.CGeneralizationMethods
 
             foreach (var cpg in pLSCPgLt)
             {
-                cpg.FormCEdgeLtLt();
-                cpg.SetCEdgeLtLtLength();
+
+                cpg.FormCEdgeLt();
+                cpg.SetCEdgeLtLength();
             }
 
             foreach (var cpg in pSSCPgLt)
             {
-                cpg.FormCEdgeLtLt();
+                cpg.FormCEdgeLt();
             }
 
             //get region number for each polygon
@@ -173,8 +174,8 @@ namespace MorphingClass.CGeneralizationMethods
             var intLSTypeATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[0], "OBJART");  //RegionNumATIndex: the index of RegionNum in the attribute table 
             var intSSTypeATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[1], "OBJART");
             //var CgbEb=pLSCPgLk.AsExpectedClass<CGeometricBase<CPolygon>, CGeometricBase<CPolygon>>();
-            CHelperFunction.GetCgbTypeAndTypeIndex(pLSCPgLt.AsExpectedClass<CPolygon, CPolygon>(), _ObjValueLtLtLt[0], 0, _TypePVSD);
-            CHelperFunction.GetCgbTypeAndTypeIndex(pSSCPgLt.AsExpectedClass<CPolygon, CPolygon>(), _ObjValueLtLtLt[1], 0, _TypePVSD);
+            CHelpFunc.GetCgbTypeAndTypeIndex(pLSCPgLt.AsExpectedClass<CPolygon, CPolygon>(), _ObjValueLtLtLt[0], 0, _TypePVSD);
+            CHelpFunc.GetCgbTypeAndTypeIndex(pSSCPgLt.AsExpectedClass<CPolygon, CPolygon>(), _ObjValueLtLtLt[1], 0, _TypePVSD);
 
 
             var intLSRegionNumATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[0], "RegionNum");  //RegionNumATIndex: the index of RegionNum in the attribute table 
@@ -195,7 +196,7 @@ namespace MorphingClass.CGeneralizationMethods
             this.LSCrgLt = GenerateCrgLt(pLSCPgLt, pSSCPgLt.Count, pObjValueLtLtLt[0], intLSTypeATIndex, intLSRegionNumATIndex, _TypePVSD, pRegionPVSD);
             this.SSCrgLt = GenerateCrgLt(pSSCPgLt, pSSCPgLt.Count, pObjValueLtLtLt[1], intSSTypeATIndex, intSSRegionNumATIndex, _TypePVSD, pRegionPVSD);
 
-            using (var writer = new System.IO.StreamWriter(_ParameterInitialize.strSavePathBackSlash + CHelperFunction.GetTimeStampWithPrefix()
+            using (var writer = new System.IO.StreamWriter(_ParameterInitialize.strSavePathBackSlash + CHelpFunc.GetTimeStampWithPrefix()
                 + "_" + "AreaAggregation.txt", false))
             {
                 writer.Write(_ParameterInitialize.strAreaAggregation);
@@ -378,11 +379,11 @@ namespace MorphingClass.CGeneralizationMethods
 
             if (pParameterInitialize.strAreaAggregation == "Smallest")
             {
-                CrgSS = new SortedSet<CRegion>(this.InitialCrgLt, CRegion.pCompareCRegion_MinArea_CphGIDTypeIndex);
+                CrgSS = new SortedSet<CRegion>(this.InitialCrgLt, CRegion.pCmpCRegion_MinArea_CphGIDTypeIndex);
             }
             else
             {
-                CrgSS = new SortedSet<CRegion>(this.InitialCrgLt, CRegion.pCompareCRegion_CostExact_CphGIDTypeIndex);  //*******************we may need to change comparator here to smallest area**********//
+                CrgSS = new SortedSet<CRegion>(this.InitialCrgLt, CRegion.pCmpCRegion_CostExact_CphGIDTypeIndex);  //*******************we may need to change comparator here to smallest area**********//
             }
 
 
@@ -439,7 +440,7 @@ namespace MorphingClass.CGeneralizationMethods
             }
 
             CSaveFeature.SaveIGeoEb(IpgLt, esriGeometryType.esriGeometryPolygon, 
-                dblProportion.ToString() + "_#" + IpgLt.Count + "_Step" + intTime.ToString() + "_" + CHelperFunction.GetTimeStampWithPrefix(),
+                dblProportion.ToString() + "_#" + IpgLt.Count + "_Step" + intTime.ToString() + "_" + CHelpFunc.GetTimeStampWithPrefix(),
                 pParameterInitialize, pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt, strSymbolLayerPath: pParameterInitialize.strMxdPathBackSlash + "complete.lyr");
         }
 
@@ -472,10 +473,10 @@ namespace MorphingClass.CGeneralizationMethods
                 pobjDataLtLt.Add(pobjDataLt);
             }
 
-            SortedSet<IList<object>> objDataLtSS = new SortedSet<IList<object>>(pobjDataLtLt, new CAACCompare());
+            SortedSet<IList<object>> objDataLtSS = new SortedSet<IList<object>>(pobjDataLtLt, new CAACCmp());
 
-            CHelperFunctionExcel.ExportToExcel(objDataLtSS,
-                CHelperFunction.GetTimeStampWithPrefix() + "_" + strMethod + "_" + pParameterInitialize.strAreaAggregation + "_" +
+            CHelpFuncExcel.ExportToExcel(objDataLtSS,
+                CHelpFunc.GetTimeStampWithPrefix() + "_" + strMethod + "_" + pParameterInitialize.strAreaAggregation + "_" +
                 CConstants.strShapeConstraint + "_" + intQuitCount, pParameterInitialize.strSavePath, CCAMDijkstra.strKeyLt);
             ExportForLatex(objDataLtSS, CCAMDijkstra.strKeyLt, pParameterInitialize.strSavePath);
             ExportIDOverEstimation(objDataLtSS, pParameterInitialize.strSavePath);
@@ -521,7 +522,7 @@ namespace MorphingClass.CGeneralizationMethods
                 strData += "\n(" + i + "," + intFactorCountlt[i] + ")";
             }
 
-            using (var writer = new StreamWriter(strSavePath + "\\" + CHelperFunction.GetTimeStamp() + "_" + "StatisticsForLatex" + ".txt", true))
+            using (var writer = new StreamWriter(strSavePath + "\\" + CHelpFunc.GetTimeStamp() + "_" + "StatisticsForLatex" + ".txt", true))
             {
                 writer.Write(strData);
             }
@@ -626,11 +627,11 @@ namespace MorphingClass.CGeneralizationMethods
                         strData += (" & " + string.Format("{0,5}", Convert.ToDouble(objDataLt[intIndex]).ToString("0.000")));
                     }
                 }
-                strData += (" & " + string.Format("{0,5}", (Convert.ToDouble(objDataLt[intIndexLt.GetLast_T()]) / 1000).ToString("0.0")));
+                strData += (" & " + string.Format("{0,5}", (Convert.ToDouble(objDataLt[intIndexLt.GetLastT()]) / 1000).ToString("0.0")));
                 strData += ("\\" + "\\" + "\n");
             }
 
-            using (var writer = new StreamWriter(strSavePath + "\\" + CHelperFunction.GetTimeStamp() + "_" + "DetailsForLatex" + ".txt", true))
+            using (var writer = new StreamWriter(strSavePath + "\\" + CHelpFunc.GetTimeStamp() + "_" + "DetailsForLatex" + ".txt", true))
             {
                 writer.Write(strData);
             }
@@ -650,7 +651,7 @@ namespace MorphingClass.CGeneralizationMethods
                     break;
                 }
             }
-            using (var writer = new StreamWriter(strSavePath + "\\" + CHelperFunction.GetTimeStamp() + "_" + "FormalizedOverEstimationID" + ".txt", true))
+            using (var writer = new StreamWriter(strSavePath + "\\" + CHelpFunc.GetTimeStamp() + "_" + "FormalizedOverEstimationID" + ".txt", true))
             {
                 writer.Write(strData);
             }

@@ -81,7 +81,7 @@ namespace MorphingClass.CUtility
         {
             if (pCGeoEb != null)
             {
-                CommitFeatures(CHelperFunction.JudgeAndSetAEGeometry(pCGeoEb), pstrFieldNameLt, pobjectValueLtLt);
+                CommitFeatures(CHelpFunc.JudgeAndSetAEGeometry(pCGeoEb), pstrFieldNameLt, pobjectValueLtLt);
             }
 
             return this.pFeatureLayer;
@@ -104,7 +104,7 @@ namespace MorphingClass.CUtility
 
         public IFeatureLayer SaveIGeosToLayer(IGeometryCollection pGeoCol, List<string> pstrFieldNameLt = null, List<List<object>> pobjectValueLtLt = null)
         {
-            var objshapeEb = CHelperFunction.GetTEbFromIGeoCol<object>(pGeoCol);
+            var objshapeEb = CHelpFunc.GetTEbFromIGeoCol<object>(pGeoCol);
             CommitFeatures(objshapeEb, pstrFieldNameLt, pobjectValueLtLt);
             return this.pFeatureLayer;
         }
@@ -465,6 +465,8 @@ namespace MorphingClass.CUtility
         }
 
 
+        
+
 
         public static IFeatureLayer SaveIGeoEb<T>(IEnumerable<T> IGeoEb, esriGeometryType pesriGeometryType, string strFileName,
             CParameterInitialize pParameterInitialize, List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null,
@@ -490,6 +492,12 @@ namespace MorphingClass.CUtility
             IFeatureLayer pFLayer = pSaveFeature.SaveIGeosToLayer(IGeoEb, pstrFieldNameLt, pobjectValueLtLt);
 
             return pFLayer;
+        }
+
+
+        public static IFeatureLayer SaveCEdgeEb(IEnumerable<CEdge> CGeoEb, string strFileName, CParameterInitialize pParameterInitialize)
+        {
+            return SaveCGeoEb(CGeoEb, esriGeometryType.esriGeometryPolyline, strFileName, pParameterInitialize);
         }
     }
 }

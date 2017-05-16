@@ -88,7 +88,7 @@ namespace ContinuousGeneralizer.FrmAid
 
         private SortedDictionary<int, object[]> GetDataSD(string strFileName)
         {
-            var aObj = CHelperFunctionExcel.ReadDataFromExcel(strFileName);
+            var aObj = CHelpFuncExcel.ReadDataFromExcel(strFileName);
             var DataSD = new SortedDictionary<int, object[]>();  //the elements will be sorted according to ID
 
             for (int i = 1; i < aObj.GetUpperBound(0); i++)

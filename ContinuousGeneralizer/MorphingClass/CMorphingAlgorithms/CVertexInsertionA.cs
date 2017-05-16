@@ -104,10 +104,10 @@ namespace MorphingClass.CMorphingAlgorithms
         private void InsertVertex(List<CPoint> cptlt, int intInsertNum)
         {
             //将每个点及与其之前点的距离存入按距离从小到大存入数组
-            SortedList<double, CPoint> dblDisLt = new SortedList<double, CPoint>(new CCompareDbl());
+            SortedList<double, CPoint> dblDisLt = new SortedList<double, CPoint>(new CCmpDbl());
             for (int i = 1; i < cptlt.Count; i++)
             {
-                double dblDis = CGeometricMethods.CalDis(cptlt[i - 1], cptlt[i]);
+                double dblDis = CGeoFunc.CalDis(cptlt[i - 1], cptlt[i]);
                 dblDisLt.Add(dblDis, cptlt[i]);
             }
 

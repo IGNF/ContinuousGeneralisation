@@ -73,7 +73,7 @@ namespace MorphingClass.CMorphingMethodsLSA
             //IMapControl4 m_mapControl = _DataRecords.ParameterInitialize.m_mapControl;
             //IGraphicsContainer pGra = m_mapControl.Map as IGraphicsContainer;
             //pGra.DeleteAllElements();
-            //CHelperFunction.ViewPolyline(m_mapControl, cpl);  //显示生成的线段
+            //CHelpFunc.ViewPolyline(m_mapControl, cpl);  //显示生成的线段
             //return cpl;
         }
 
@@ -103,9 +103,9 @@ namespace MorphingClass.CMorphingMethodsLSA
             double[] adblToLength0 = new double[intPtNum - 1];
             for (int j = 0; j < pCorrCptsLt.Count - 1; j++)
             {
-                double dblfrsublength = CGeometricMethods.CalDis(pCorrCptsLt[j + 1].FrCpt, pCorrCptsLt[j].FrCpt);
+                double dblfrsublength = CGeoFunc.CalDis(pCorrCptsLt[j + 1].FrCpt, pCorrCptsLt[j].FrCpt);
                 adblFrLength0[j] = dblfrsublength;
-                double dbltosublength = CGeometricMethods.CalDis(pCorrCptsLt[j + 1].ToCpt, pCorrCptsLt[j].ToCpt);
+                double dbltosublength = CGeoFunc.CalDis(pCorrCptsLt[j + 1].ToCpt, pCorrCptsLt[j].ToCpt);
                 adblToLength0[j] = dbltosublength;
                 for (int i = 0; i < intInterNum; i++)
                 {
@@ -121,9 +121,9 @@ namespace MorphingClass.CMorphingMethodsLSA
             for (int j = 0; j < pCorrCptsLt.Count - 2; j++)
             {
                 //较大比例尺线状要素上的夹角
-                double dblfrAngle = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[j].FrCpt, pCorrCptsLt[j + 1].FrCpt, pCorrCptsLt[j + 2].FrCpt);
+                double dblfrAngle = CGeoFunc.CalAngle_Counterclockwise(pCorrCptsLt[j].FrCpt, pCorrCptsLt[j + 1].FrCpt, pCorrCptsLt[j + 2].FrCpt);
                 //较小比例尺线状要素上的夹角
-                double dbltoAngle = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[j].ToCpt, pCorrCptsLt[j + 1].ToCpt, pCorrCptsLt[j + 2].ToCpt);
+                double dbltoAngle = CGeoFunc.CalAngle_Counterclockwise(pCorrCptsLt[j].ToCpt, pCorrCptsLt[j + 1].ToCpt, pCorrCptsLt[j + 2].ToCpt);
 
                 //角度初始值
                 for (int i = 0; i < intInterNum; i++)
@@ -175,7 +175,7 @@ namespace MorphingClass.CMorphingMethodsLSA
                 double dblnewY0 = (1 - dblProportion) * pCorrCptsLt[0].FrCpt.Y + dblProportion * pCorrCptsLt[0].ToCpt.Y;
                 double dblnewX1 = (1 - dblProportion) * pCorrCptsLt[1].FrCpt.X + dblProportion * pCorrCptsLt[1].ToCpt.X;
                 double dblnewY1 = (1 - dblProportion) * pCorrCptsLt[1].FrCpt.Y + dblProportion * pCorrCptsLt[1].ToCpt.Y;
-                adblAzimuth[i, 0] = CGeometricMethods.CalAxisAngle(dblnewX0, dblnewY0, dblnewX1, dblnewY1);
+                adblAzimuth[i, 0] = CGeoFunc.CalAxisAngle(dblnewX0, dblnewY0, dblnewX1, dblnewY1);
 
                 int intBasicIndex = i * intXYNum;
                 X0[intBasicIndex + 0, 0] = dblnewX0;
@@ -197,7 +197,7 @@ namespace MorphingClass.CMorphingMethodsLSA
                     double dblProportion = (i + 1) * dblInterval;
                     X0[intBasicIndexIJ + 0, 0] = (1 - dblProportion) * pCorrCptsLt[j].FrCpt.X + dblProportion * pCorrCptsLt[j].ToCpt.X;
                     X0[intBasicIndexIJ + 1, 0] = (1 - dblProportion) * pCorrCptsLt[j].FrCpt.Y + dblProportion * pCorrCptsLt[j].ToCpt.Y;
-                    double dblAngle = CGeometricMethods.CalAngle_Counterclockwise(X0[intBasicIndexIJ - 4, 0], X0[intBasicIndexIJ - 3, 0], X0[intBasicIndexIJ - 2, 0], X0[intBasicIndexIJ - 1, 0], X0[intBasicIndexIJ - 0, 0], X0[intBasicIndexIJ + 1, 0]);  //计算实际夹角 
+                    double dblAngle = CGeoFunc.CalAngle_Counterclockwise(X0[intBasicIndexIJ - 4, 0], X0[intBasicIndexIJ - 3, 0], X0[intBasicIndexIJ - 2, 0], X0[intBasicIndexIJ - 1, 0], X0[intBasicIndexIJ - 0, 0], X0[intBasicIndexIJ + 1, 0]);  //计算实际夹角 
                     adblAzimuth[i, j - 1] = adblAzimuth[i, j - 2] + dblAngle - Math.PI;
                 }
             }
@@ -224,7 +224,7 @@ namespace MorphingClass.CMorphingMethodsLSA
             //            double dblProportion = (i + 1) * dblInterval;
             //            X0[intBasicIndexIJ + 0, 0] = (1 - dblProportion) * pCorrCptsLt[j].FrCpt.X + dblProportion * pCorrCptsLt[j].ToCpt.X;
             //            X0[intBasicIndexIJ + 1, 0] = (1 - dblProportion) * pCorrCptsLt[j].FrCpt.Y + dblProportion * pCorrCptsLt[j].ToCpt.Y;
-            //            double dblAngle = CGeometricMethods.CalAngle_Counterclockwise(X0[intBasicIndexIJ - 4, 0], X0[intBasicIndexIJ - 3, 0], X0[intBasicIndexIJ - 2, 0], X0[intBasicIndexIJ - 1, 0], X0[intBasicIndexIJ - 0, 0], X0[intBasicIndexIJ + 1, 0]);  //计算实际夹角 
+            //            double dblAngle = CGeoFunc.CalAngle_Counterclockwise(X0[intBasicIndexIJ - 4, 0], X0[intBasicIndexIJ - 3, 0], X0[intBasicIndexIJ - 2, 0], X0[intBasicIndexIJ - 1, 0], X0[intBasicIndexIJ - 0, 0], X0[intBasicIndexIJ + 1, 0]);  //计算实际夹角 
             //            adblAzimuth[i, j - 1] = adblAzimuth[i, j - 2] + dblAngle - Math.PI;
             //        }
             //    }
@@ -445,7 +445,7 @@ namespace MorphingClass.CMorphingMethodsLSA
                         for (int j = 0; j < intPtNum - 2; j++)
                         {
                             int intBasicIndexIJA1 = i * intXYNum + 2 * j;
-                            adblAngle[i, j] = CGeometricMethods.CalAngle_Counterclockwise(Xmix[intBasicIndexIJA1 + 0, 0], Xmix[intBasicIndexIJA1 + 1, 0],
+                            adblAngle[i, j] = CGeoFunc.CalAngle_Counterclockwise(Xmix[intBasicIndexIJA1 + 0, 0], Xmix[intBasicIndexIJA1 + 1, 0],
                                                                         Xmix[intBasicIndexIJA1 + 2, 0], Xmix[intBasicIndexIJA1 + 3, 0],
                                                                         Xmix[intBasicIndexIJA1 + 4, 0], Xmix[intBasicIndexIJA1 + 5, 0]);
                         }
@@ -456,7 +456,7 @@ namespace MorphingClass.CMorphingMethodsLSA
                     {
                         int intBasicIndexA1 = i * intXYNum;
                         //第一条线段的方位角
-                        adblAzimuth[i, 0] = CGeometricMethods.CalAxisAngle(Xmix[intBasicIndexA1 + 0, 0], Xmix[intBasicIndexA1 + 1, 0], Xmix[intBasicIndexA1 + 2, 0], Xmix[intBasicIndexA1 + 3, 0]);
+                        adblAzimuth[i, 0] = CGeoFunc.CalAxisAngle(Xmix[intBasicIndexA1 + 0, 0], Xmix[intBasicIndexA1 + 1, 0], Xmix[intBasicIndexA1 + 2, 0], Xmix[intBasicIndexA1 + 3, 0]);
                         //后面线段的方位角
                         for (int j = 1; j < intPtNum - 1; j++)
                         {
@@ -488,20 +488,20 @@ namespace MorphingClass.CMorphingMethodsLSA
                         int int2J = 2 * j;
                         //源线段、第一生成线段、第二生成线段间对应点夹角
                         int l = 0;
-                        adblIntervalAngle[l, j] = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[j].FrCpt.X, pCorrCptsLt[j].FrCpt.Y,
+                        adblIntervalAngle[l, j] = CGeoFunc.CalAngle_Counterclockwise(pCorrCptsLt[j].FrCpt.X, pCorrCptsLt[j].FrCpt.Y,
                                                                             Xmix[(l - 0) * intXYNum + int2J + 0, 0], Xmix[(l - 0) * intXYNum + int2J + 1, 0],
                                                                             Xmix[(l + 1) * intXYNum + int2J + 0, 0], Xmix[(l + 1) * intXYNum + int2J + 1, 0]);
 
                         //倒数第二生成线段、倒数第一生成线段、目标线段间对应点夹角
                         l = intInterNum - 1;
-                        adblIntervalAngle[l, j] = CGeometricMethods.CalAngle_Counterclockwise(Xmix[(l - 1) * intXYNum + int2J + 0, 0], Xmix[(l - 1) * intXYNum + int2J + 1, 0],
+                        adblIntervalAngle[l, j] = CGeoFunc.CalAngle_Counterclockwise(Xmix[(l - 1) * intXYNum + int2J + 0, 0], Xmix[(l - 1) * intXYNum + int2J + 1, 0],
                                                                             Xmix[(l - 0) * intXYNum + int2J + 0, 0], Xmix[(l - 0) * intXYNum + int2J + 1, 0],
                                                                             pCorrCptsLt[j].ToCpt.X, pCorrCptsLt[j].ToCpt.Y);
 
                         //各生成线段间对应点距离
                         for (int i = 1; i < intInterNum - 1; i++)
                         {
-                            adblIntervalAngle[i, j] = CGeometricMethods.CalAngle_Counterclockwise(Xmix[(i - 1) * intXYNum + int2J + 0, 0], Xmix[(i - 1) * intXYNum + int2J + 1, 0],
+                            adblIntervalAngle[i, j] = CGeoFunc.CalAngle_Counterclockwise(Xmix[(i - 1) * intXYNum + int2J + 0, 0], Xmix[(i - 1) * intXYNum + int2J + 1, 0],
                                                                                 Xmix[(i - 0) * intXYNum + int2J + 0, 0], Xmix[(i - 0) * intXYNum + int2J + 1, 0],
                                                                                 Xmix[(i + 1) * intXYNum + int2J + 0, 0], Xmix[(i + 1) * intXYNum + int2J + 1, 0]);
                         }
@@ -700,30 +700,30 @@ namespace MorphingClass.CMorphingMethodsLSA
                             //源线段、第一生成线段、第二生成线段间对应点向量夹角的导数
                             //第二个点
                             l = 0;
-                            A[intMultiUnknownLAL + l * intUnknownPt + j, (l - 0) * intUnknownXY + intBasicIndexL5 + 0] = +CGeometricMethods.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
+                            A[intMultiUnknownLAL + l * intUnknownPt + j, (l - 0) * intUnknownXY + intBasicIndexL5 + 0] = +CGeoFunc.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                     Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 1, 0],
                                                                                                                                                     Xmix[(l + 1) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                     Xmix[(l + 1) * intXYNum + 2 * intSumCount5 + 1, 0], adblIntervalDis[l + 1, intSumCount5], "x1")
-                                                                                                                        - CGeometricMethods.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
+                                                                                                                        - CGeoFunc.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                     Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 1, 0],
                                                                                                                                                     pCorrCptsLt[intSumCount5].FrCpt.X,
                                                                                                                                                     pCorrCptsLt[intSumCount5].FrCpt.Y, adblIntervalDis[l + 0, intSumCount5], "x1");
 
-                            A[intMultiUnknownLAL + l * intUnknownPt + j, (l - 0) * intUnknownXY + intBasicIndexL5 + 1] = +CGeometricMethods.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
+                            A[intMultiUnknownLAL + l * intUnknownPt + j, (l - 0) * intUnknownXY + intBasicIndexL5 + 1] = +CGeoFunc.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                     Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 1, 0],
                                                                                                                                                     Xmix[(l + 1) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                     Xmix[(l + 1) * intXYNum + 2 * intSumCount5 + 1, 0], adblIntervalDis[l + 1, intSumCount5], "y1")
-                                                                                                                        - CGeometricMethods.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
+                                                                                                                        - CGeoFunc.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                     Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 1, 0],
                                                                                                                                                     pCorrCptsLt[intSumCount5].FrCpt.X,
                                                                                                                                                     pCorrCptsLt[intSumCount5].FrCpt.Y, adblIntervalDis[l + 0, intSumCount5], "y1");
                             //第三个点
-                            A[intMultiUnknownLAL + l * intUnknownPt + j, (l + 1) * intUnknownXY + intBasicIndexL5 + 0] = +CGeometricMethods.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
+                            A[intMultiUnknownLAL + l * intUnknownPt + j, (l + 1) * intUnknownXY + intBasicIndexL5 + 0] = +CGeoFunc.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                     Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 1, 0],
                                                                                                                                                     Xmix[(l + 1) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                     Xmix[(l + 1) * intXYNum + 2 * intSumCount5 + 1, 0], adblIntervalDis[l + 1, intSumCount5], "x2");
 
-                            A[intMultiUnknownLAL + l * intUnknownPt + j, (l + 1) * intUnknownXY + intBasicIndexL5 + 1] = +CGeometricMethods.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
+                            A[intMultiUnknownLAL + l * intUnknownPt + j, (l + 1) * intUnknownXY + intBasicIndexL5 + 1] = +CGeoFunc.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                     Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 1, 0],
                                                                                                                                                     Xmix[(l + 1) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                     Xmix[(l + 1) * intXYNum + 2 * intSumCount5 + 1, 0], adblIntervalDis[l + 1, intSumCount5], "y2");
@@ -732,31 +732,31 @@ namespace MorphingClass.CMorphingMethodsLSA
                             //倒数第二生成线段、倒数第一生成线段、目标线段间对应点夹角导数
                             //第一个点
                             l = intInterNum - 1;
-                            A[intMultiUnknownLAL + l * intUnknownPt + j, (l - 1) * intUnknownXY + intBasicIndexL5 + 0] = -CGeometricMethods.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
+                            A[intMultiUnknownLAL + l * intUnknownPt + j, (l - 1) * intUnknownXY + intBasicIndexL5 + 0] = -CGeoFunc.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                     Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 1, 0],
                                                                                                                                                     Xmix[(l - 1) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                     Xmix[(l - 1) * intXYNum + 2 * intSumCount5 + 1, 0], adblIntervalDis[l + 0, intSumCount5], "x2");
 
-                            A[intMultiUnknownLAL + l * intUnknownPt + j, (l - 1) * intUnknownXY + intBasicIndexL5 + 1] = -CGeometricMethods.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
+                            A[intMultiUnknownLAL + l * intUnknownPt + j, (l - 1) * intUnknownXY + intBasicIndexL5 + 1] = -CGeoFunc.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                     Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 1, 0],
                                                                                                                                                     Xmix[(l - 1) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                     Xmix[(l - 1) * intXYNum + 2 * intSumCount5 + 1, 0], adblIntervalDis[l + 0, intSumCount5], "y2");
 
                             //第二个点
-                            A[intMultiUnknownLAL + l * intUnknownPt + j, (l - 0) * intUnknownXY + intBasicIndexL5 + 0] = +CGeometricMethods.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
+                            A[intMultiUnknownLAL + l * intUnknownPt + j, (l - 0) * intUnknownXY + intBasicIndexL5 + 0] = +CGeoFunc.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                     Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 1, 0],
                                                                                                                                                     pCorrCptsLt[intSumCount5].ToCpt.X,
                                                                                                                                                     pCorrCptsLt[intSumCount5].ToCpt.Y, adblIntervalDis[l + 1, intSumCount5], "x1")
-                                                                                                                        - CGeometricMethods.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
+                                                                                                                        - CGeoFunc.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                     Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 1, 0],
                                                                                                                                                     Xmix[(l - 1) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                     Xmix[(l - 1) * intXYNum + 2 * intSumCount5 + 1, 0], adblIntervalDis[l + 0, intSumCount5], "x1");
 
-                            A[intMultiUnknownLAL + l * intUnknownPt + j, (l - 0) * intUnknownXY + intBasicIndexL5 + 1] = +CGeometricMethods.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
+                            A[intMultiUnknownLAL + l * intUnknownPt + j, (l - 0) * intUnknownXY + intBasicIndexL5 + 1] = +CGeoFunc.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                     Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 1, 0],
                                                                                                                                                     pCorrCptsLt[intSumCount5].ToCpt.X,
                                                                                                                                                     pCorrCptsLt[intSumCount5].ToCpt.Y, adblIntervalDis[l + 1, intSumCount5], "y1")
-                                                                                                                        - CGeometricMethods.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
+                                                                                                                        - CGeoFunc.DerArctan(Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                     Xmix[(l - 0) * intXYNum + 2 * intSumCount5 + 1, 0],
                                                                                                                                                     Xmix[(l - 1) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                     Xmix[(l - 1) * intXYNum + 2 * intSumCount5 + 1, 0], adblIntervalDis[l + 0, intSumCount5], "y1");
@@ -765,41 +765,41 @@ namespace MorphingClass.CMorphingMethodsLSA
                             for (int i = 1; i < intInterNum - 1; i++)
                             {
                                 //第一个点
-                                A[intMultiUnknownLAL + i * intUnknownPt + j, (i - 1) * intUnknownXY + intBasicIndexL5 + 0] = -CGeometricMethods.DerArctan(Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
+                                A[intMultiUnknownLAL + i * intUnknownPt + j, (i - 1) * intUnknownXY + intBasicIndexL5 + 0] = -CGeoFunc.DerArctan(Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                         Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 1, 0],
                                                                                                                                                         Xmix[(i - 1) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                         Xmix[(i - 1) * intXYNum + 2 * intSumCount5 + 1, 0], adblIntervalDis[i + 0, intSumCount5], "x2");
 
-                                A[intMultiUnknownLAL + i * intUnknownPt + j, (i - 1) * intUnknownXY + intBasicIndexL5 + 1] = -CGeometricMethods.DerArctan(Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
+                                A[intMultiUnknownLAL + i * intUnknownPt + j, (i - 1) * intUnknownXY + intBasicIndexL5 + 1] = -CGeoFunc.DerArctan(Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                         Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 1, 0],
                                                                                                                                                         Xmix[(i - 1) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                         Xmix[(i - 1) * intXYNum + 2 * intSumCount5 + 1, 0], adblIntervalDis[i + 0, intSumCount5], "y2");
 
                                 //第二个点
-                                A[intMultiUnknownLAL + i * intUnknownPt + j, (i - 0) * intUnknownXY + intBasicIndexL5 + 0] = +CGeometricMethods.DerArctan(Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
+                                A[intMultiUnknownLAL + i * intUnknownPt + j, (i - 0) * intUnknownXY + intBasicIndexL5 + 0] = +CGeoFunc.DerArctan(Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                         Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 1, 0],
                                                                                                                                                         Xmix[(i + 1) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                         Xmix[(i + 1) * intXYNum + 2 * intSumCount5 + 1, 0], adblIntervalDis[i + 1, intSumCount5], "x1")
-                                                                                                                            - CGeometricMethods.DerArctan(Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
+                                                                                                                            - CGeoFunc.DerArctan(Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                         Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 1, 0],
                                                                                                                                                         Xmix[(i - 1) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                         Xmix[(i - 1) * intXYNum + 2 * intSumCount5 + 1, 0], adblIntervalDis[i + 0, intSumCount5], "x1");
 
-                                A[intMultiUnknownLAL + i * intUnknownPt + j, (i - 0) * intUnknownXY + intBasicIndexL5 + 1] = +CGeometricMethods.DerArctan(Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
+                                A[intMultiUnknownLAL + i * intUnknownPt + j, (i - 0) * intUnknownXY + intBasicIndexL5 + 1] = +CGeoFunc.DerArctan(Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                         Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 1, 0],
                                                                                                                                                         Xmix[(i + 1) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                         Xmix[(i + 1) * intXYNum + 2 * intSumCount5 + 1, 0], adblIntervalDis[i + 1, intSumCount5], "y1")
-                                                                                                                            - CGeometricMethods.DerArctan(Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
+                                                                                                                            - CGeoFunc.DerArctan(Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                         Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 1, 0],
                                                                                                                                                         Xmix[(i - 1) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                         Xmix[(i - 1) * intXYNum + 2 * intSumCount5 + 1, 0], adblIntervalDis[i + 0, intSumCount5], "y1");
 
                                 //第三个点
-                                A[intMultiUnknownLAL + i * intUnknownPt + j, (i + 1) * intUnknownXY + intBasicIndexL5 + 0] = +CGeometricMethods.DerArctan(Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
+                                A[intMultiUnknownLAL + i * intUnknownPt + j, (i + 1) * intUnknownXY + intBasicIndexL5 + 0] = +CGeoFunc.DerArctan(Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                         Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 1, 0],
                                                                                                                                                         Xmix[(i + 1) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                         Xmix[(i + 1) * intXYNum + 2 * intSumCount5 + 1, 0], adblIntervalDis[i + 1, intSumCount5], "x2");
-                                A[intMultiUnknownLAL + i * intUnknownPt + j, (i + 1) * intUnknownXY + intBasicIndexL5 + 1] = +CGeometricMethods.DerArctan(Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
+                                A[intMultiUnknownLAL + i * intUnknownPt + j, (i + 1) * intUnknownXY + intBasicIndexL5 + 1] = +CGeoFunc.DerArctan(Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                         Xmix[(i - 0) * intXYNum + 2 * intSumCount5 + 1, 0],
                                                                                                                                                         Xmix[(i + 1) * intXYNum + 2 * intSumCount5 + 0, 0],
                                                                                                                                                         Xmix[(i + 1) * intXYNum + 2 * intSumCount5 + 1, 0], adblIntervalDis[i + 1, intSumCount5], "y2");
@@ -818,9 +818,9 @@ namespace MorphingClass.CMorphingMethodsLSA
 
                     int tt = 5;
 
-                    //CHelperFunctionExcel.ExportDataToExcel2(A, "matA", _DataRecords.ParameterInitialize.strSavePath);
-                    //CHelperFunctionExcel.ExportDataToExcelP(P, "matP", _DataRecords.ParameterInitialize.strSavePath);
-                    //CHelperFunctionExcel.ExportDataToExcel2(matl, "matmatl", _DataRecords.ParameterInitialize.strSavePath);
+                    //CHelpFuncExcel.ExportDataToExcel2(A, "matA", _DataRecords.ParameterInitialize.strSavePath);
+                    //CHelpFuncExcel.ExportDataToExcelP(P, "matP", _DataRecords.ParameterInitialize.strSavePath);
+                    //CHelpFuncExcel.ExportDataToExcel2(matl, "matmatl", _DataRecords.ParameterInitialize.strSavePath);
 
 
 
@@ -832,7 +832,7 @@ namespace MorphingClass.CMorphingMethodsLSA
                     XA += x;
 
 
-                    //CHelperFunctionExcel.ExportDataToExcel2(XA, "matXA", _DataRecords.ParameterInitialize.strSavePath);
+                    //CHelpFuncExcel.ExportDataToExcel2(XA, "matXA", _DataRecords.ParameterInitialize.strSavePath);
 
                     //记录各平差成果
                     //坐标改正值
@@ -870,8 +870,8 @@ namespace MorphingClass.CMorphingMethodsLSA
                     //VBMatrix LPlusV = L + V;
                     //VBMatrix AX = A * XA;
 
-                    //CHelperFunctionExcel.ExportDataToExcel2(LPlusV, "matLPlusV", _DataRecords.ParameterInitialize.strSavePath);
-                    //CHelperFunctionExcel.ExportDataToExcel2(AX, "matAX", _DataRecords.ParameterInitialize.strSavePath);
+                    //CHelpFuncExcel.ExportDataToExcel2(LPlusV, "matLPlusV", _DataRecords.ParameterInitialize.strSavePath);
+                    //CHelpFuncExcel.ExportDataToExcel2(AX, "matAX", _DataRecords.ParameterInitialize.strSavePath);
 
 
 

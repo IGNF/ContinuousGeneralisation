@@ -61,8 +61,8 @@ namespace MorphingClass.CMorphingMethods
             _ParameterInitialize = ParameterInitialize;
 
             //获取线数组
-            _LSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pBSFLayer);
-            _SSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSSFLayer);
+            _LSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pBSFLayer);
+            _SSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSSFLayer);
         }
 
         //基于弯曲的Morphing方法
@@ -76,8 +76,8 @@ namespace MorphingClass.CMorphingMethods
             ////计算极小值
             //
             //long lngStartTime = System.Environment.TickCount;  //开始时间
-            //CHelperFunction.PreviousWorkCpl(ref frcpl, CEnumScale.Larger);
-            //CHelperFunction.PreviousWorkCpl(ref frcpl, CEnumScale.Smaller);
+            //CHelpFunc.PreviousWorkCpl(ref frcpl, CEnumScale.Larger);
+            //CHelpFunc.PreviousWorkCpl(ref frcpl, CEnumScale.Smaller);
 
             //////建立CDT并获取弯曲森林
             ////CBendForest FromLeftBendForest = new CBendForest();
@@ -146,8 +146,8 @@ namespace MorphingClass.CMorphingMethods
             //C5.LinkedList<CCorrespondSegment> pOptCorCorrespondSegmentLk = new C5.LinkedList<CCorrespondSegment>();
             //for (int j = 0; j < pBLGCorrespondSegmentLk.Count; j++)
             //{
-            //    List<CPolyline> CFrEdgeLt = CGeometricMethods.CreateCplLt(pOptCorCorrespondSegmentLk[j].CFrPolyline.CptLt);
-            //    List<CPolyline> CToEdgeLt = CGeometricMethods.CreateCplLt(pOptCorCorrespondSegmentLk[j].CToPolyline.CptLt);
+            //    List<CPolyline> CFrEdgeLt = CGeoFunc.CreateCplLt(pOptCorCorrespondSegmentLk[j].CFrPolyline.CptLt);
+            //    List<CPolyline> CToEdgeLt = CGeoFunc.CreateCplLt(pOptCorCorrespondSegmentLk[j].CToPolyline.CptLt);
 
             //    pOptCorCorrespondSegmentLk.AddRange(OptOptCor.DWByOptCor(frcpl, tocpl, CFrEdgeLt, CToEdgeLt, ParameterInitialize.intMaxBackK));
             //}
@@ -168,8 +168,8 @@ namespace MorphingClass.CMorphingMethods
             //List<CPoint> pResultPtLt = pAlgorithmsHelper.BuildPointCorrespondence(pOptCorCorrespondSegmentLk, "Linear");
 
             ////保存对应线
-            //CHelperFunction.SaveCtrlLine(pOptCorCorrespondSegmentLk, "BSBLGOptCorControlLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
-            //CHelperFunction.SaveCorrespondLine(pResultPtLt, "BSBLGOptCorCorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCtrlLine(pOptCorCorrespondSegmentLk, "BSBLGOptCorControlLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCorrespondLine(pResultPtLt, "BSBLGOptCorCorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
 
             ////计算并显示运行时间
             //long lngEndTime = System.Environment.TickCount;

@@ -108,7 +108,7 @@ namespace MorphingClass.CCorrepondObjects
             ctgl.SaveCEdgeLt(_pParameterInitialize, enumScale.ToString() + "RealCDT" + _intID);
 
 
-            var rglcpg = CGeometricMethods.CreateRegularCpg(pEnv, ctgl.pTinAdvanced2.DataNodeCount);
+            var rglcpg = CGeoFunc.CreateRegularCpg(pEnv, ctgl.pTinAdvanced2.DataNodeCount);
 
             //rglcpg.CEdgeLt[0].PrintMySelf();
             //rglcpg.CptLt [0].PrintMySelf();
@@ -203,7 +203,7 @@ namespace MorphingClass.CCorrepondObjects
 
 
                 //var SmallerAxisAngleCEdge = FrLastCEdge;  //this is prepare for that ToIncidentCEdge.dblAxisAngle < FrIncidentCEdge.dblAxisAngle
-                //var intCompare = CCompareMethods.Compare(ToCurrentCEdge.dblAxisAngle, FrCurrentCEdge.dblAxisAngle);
+                //var intCompare = CCmpMethods.Cmp(ToCurrentCEdge.dblAxisAngle, FrCurrentCEdge.dblAxisAngle);
                 //if (intCompare == -1)
 
                 //take care of the first ToIncidentCEdge
@@ -245,7 +245,7 @@ namespace MorphingClass.CCorrepondObjects
                     //var FrCptIndexIDToCurrentCEdge = ToCurrentCEdge.FrCpt.indexID;      //FrCpt IndexID
                     //var ToCptIndexIDToCurrentCEdge = ToCurrentCEdge.ToCpt.indexID;      //ToCpt IndexID
 
-                    //intCompare = CCompareMethods.Compare(ToCurrentCEdge.dblAxisAngle, FrCurrentCEdge.dblAxisAngle);
+                    //intCompare = CCmpMethods.Cmp(ToCurrentCEdge.dblAxisAngle, FrCurrentCEdge.dblAxisAngle);
 
                     //if (intCompare == -1)
                     if (ToCurrentCEdge.dblAxisAngle < FrCurrentCEdge.dblAxisAngle)  // we can compare directly because the two regular polygons have the same coordiantes
@@ -281,7 +281,7 @@ namespace MorphingClass.CCorrepondObjects
 
                 } while (((FrCurrentCEdge.dblAxisAngle == FrStopCEdge.dblAxisAngle && blnFrCurrentCEdgeChanged == true)  //if ToCurrentCEdge or FrCurrentCEdge reaches the StopCEdge, then the do-while loop is done.   we can use "==" directly because we didn't recompute the axis angle, instead we assign it
                        || (ToCurrentCEdge.dblAxisAngle == ToStopCEdge.dblAxisAngle && blnToCurrentCEdgeChanged == true))
-                       == false);  //at the beginning, if ToCurrentCEdge.dblAxisAngle > FrCurrentCEdge.dblAxisAngle, then ToCurrentCEdge is still the ToIncidentCEdge, so CCompareMethods.Compare(ToIncidentCEdge.dblAxisAngle, ToCurrentCEdge.dblAxisAngle) == 0
+                       == false);  //at the beginning, if ToCurrentCEdge.dblAxisAngle > FrCurrentCEdge.dblAxisAngle, then ToCurrentCEdge is still the ToIncidentCEdge, so CCmpMethods.Cmp(ToIncidentCEdge.dblAxisAngle, ToCurrentCEdge.dblAxisAngle) == 0
 
                 //insert the residual to-edges. the residual to-edges are thoses edges have axis angles larger than all the from-edges
                 if (ToCurrentCEdge.dblAxisAngle != ToStopCEdge.dblAxisAngle)   //we have to consider that ToCurrentCEdge may not be ToIncidentCEdge
@@ -622,8 +622,8 @@ namespace MorphingClass.CCorrepondObjects
                         dblCurrentLenght += realcedge.CorrRglSubCEdgeLt[i].dblLength;
                         double dblProportion = dblCurrentLenght / dblRglLength;
 
-                        ctgl.CptLt[realcedge.CorrRglSubCEdgeLt[i].ToCpt.indexID].X = CGeometricMethods.GetInbetweenDbl(realcedge.FrCpt.X, realcedge.ToCpt.X, dblProportion);
-                        ctgl.CptLt[realcedge.CorrRglSubCEdgeLt[i].ToCpt.indexID].Y = CGeometricMethods.GetInbetweenDbl(realcedge.FrCpt.Y, realcedge.ToCpt.Y, dblProportion);
+                        ctgl.CptLt[realcedge.CorrRglSubCEdgeLt[i].ToCpt.indexID].X = CGeoFunc.GetInbetweenDbl(realcedge.FrCpt.X, realcedge.ToCpt.X, dblProportion);
+                        ctgl.CptLt[realcedge.CorrRglSubCEdgeLt[i].ToCpt.indexID].Y = CGeoFunc.GetInbetweenDbl(realcedge.FrCpt.Y, realcedge.ToCpt.Y, dblProportion);
                     }
                 }
             }

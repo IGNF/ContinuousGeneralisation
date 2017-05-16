@@ -73,7 +73,7 @@ namespace ContinuousGeneralizer.FrmAid
             SaveFileDialog SFD = new SaveFileDialog();
             SFD.ShowDialog();
             string strPath = SFD.FileName;
-            ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(strPath);
+            ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(strPath);
 
 
             long lngStartTime = System.Environment.TickCount; //记录开始时间

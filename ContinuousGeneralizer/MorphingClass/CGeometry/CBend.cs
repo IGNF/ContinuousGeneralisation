@@ -19,7 +19,7 @@ namespace MorphingClass.CGeometry
         private List<CBend> _pBendLt;             //所有弯曲的列表（包括重合弯曲）
         private List<int> _intTIDLt=new List<int> ();
         private List<CTriangle> _CTriangleLt = new List<CTriangle>();  //属于本弯曲的三角形
-        private SortedList<double, CBend> _pCorrespondBendLt = new SortedList<double, CBend>(new CCompareDbl());  //对应弯曲列表
+        private SortedList<double, CBend> _pCorrespondBendLt = new SortedList<double, CBend>(new CCmpDbl());  //对应弯曲列表
         private int _intPathCount;
 
         private int _ID;

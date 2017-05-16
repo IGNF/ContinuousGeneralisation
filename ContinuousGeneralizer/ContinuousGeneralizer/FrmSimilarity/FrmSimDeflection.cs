@@ -55,7 +55,7 @@ namespace ContinuousGeneralizer.FrmSimilarity
             OFG.Filter = "xlsx files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
             OFG.ShowDialog();
             if (OFG.FileName == null || OFG.FileName == "") return;
-            _DataRecords.ParameterResult = CHelperFunctionExcel.InputDataResultPtLt(OFG.FileName);
+            _DataRecords.ParameterResult = CHelpFuncExcel.InputDataResultPtLt(OFG.FileName);
         }
 
         public void btnRun_Click(object sender, EventArgs e)
@@ -65,7 +65,7 @@ namespace ContinuousGeneralizer.FrmSimilarity
             //SFD.ShowDialog();
             //if (SFD.FileName == null || SFD.FileName == "") return;
             //ParameterInitialize.strSavePath = SFD.FileName;
-            //ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            //ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
 
             //List<CCorrCpts> pCorrCptsLt = _DataRecords.ParameterResult.CCorrCptsLt;
             //double dblStandardX = pCorrCptsLt[0].ToCpt.X - pCorrCptsLt[0].FrCpt.X;

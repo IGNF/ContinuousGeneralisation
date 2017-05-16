@@ -81,13 +81,13 @@ namespace ContinuousGeneralizer.FrmAid
             SaveFileDialog SFD = new SaveFileDialog();
             SFD.ShowDialog();
             string strPath = SFD.FileName;
-            ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(strPath);
+            ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(strPath);
             double dblError = Convert.ToDouble(ParameterInitialize.txtError.Text);
 
             long lngStartTime = System.Environment.TickCount; //记录开始时间
 
             //读取线数据
-            List<CPolyline> CPolylineLt = CHelperFunction.GetCPlLtByFeatureLayer(pFeatureLayer);
+            List<CPolyline> CPolylineLt = CHelpFunc.GetCPlLtByFeatureLayer(pFeatureLayer);
             List<CPolyline> crtpllt = new List<CPolyline>();     
             for (int i = 0; i < CPolylineLt.Count ; i++)
             {
@@ -96,7 +96,7 @@ namespace ContinuousGeneralizer.FrmAid
                 crtpllt.Add(crtpl);
             }
 
-            CHelperFunction.SaveCPlLt(crtpllt, "BezierDetectedPl", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            CHelpFunc.SaveCPlLt(crtpllt, "BezierDetectedPl", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
 
             long lngEndTime = System.Environment.TickCount;//记录结束时间
@@ -120,7 +120,7 @@ namespace ContinuousGeneralizer.FrmAid
             double dblMinDis = double.MaxValue;
             for (int i = 0; i < cptlt.Count - 1; i++)
             {
-                double dblDis = CGeometricMethods.CalDis(cptlt[i], cptlt[i + 1]);
+                double dblDis = CGeoFunc.CalDis(cptlt[i], cptlt[i + 1]);
                 if (dblDis < dblMinDis)
                 {
                     dblMinDis = dblDis;

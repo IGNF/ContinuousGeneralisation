@@ -60,7 +60,7 @@ namespace ContinuousGeneralizer.FrmAid
             //SFD.ShowDialog();
             //if (SFD.FileName == null || SFD.FileName == "") return;
             //ParameterInitialize.strSavePath = SFD.FileName;
-            //ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            //ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
 
             CTopologyChecker pTopologyChecker = new CTopologyChecker(ParameterInitialize, Convert.ToInt16(this.txtLayerCount.Text));
             pTopologyChecker.TopologyCheck();

@@ -93,7 +93,7 @@ namespace ContinuousGeneralizer.FrmAid
             //SFD.ShowDialog();
             //string strPath = SFD.FileName;
             //ParameterInitialize.strSavePath = strPath;
-            //ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(strPath);
+            //ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(strPath);
 
 
             //long lngStartTime = System.Environment.TickCount; //记录开始时间
@@ -146,8 +146,8 @@ namespace ContinuousGeneralizer.FrmAid
             //        dbldetailedltlt.Add(dbldetailedlt);
             //    }
             //}
-            //CHelperFunctionExcel.ExportDataltltToExcelSW(dbldetailedltlt, CptLt.Count.ToString() + "_" + dblThreshold.ToString() + "Links", ParameterInitialize.strSavePath);
-            //CHelperFunction.SaveESRIObjltfast(iplobjlt, esriGeometryType.esriGeometryPolyline, CptLt.Count.ToString() + "_" + dblThreshold.ToString() + "Links", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //CHelpFuncExcel.ExportDataltltToExcelSW(dbldetailedltlt, CptLt.Count.ToString() + "_" + dblThreshold.ToString() + "Links", ParameterInitialize.strSavePath);
+            //CHelpFunc.SaveESRIObjltfast(iplobjlt, esriGeometryType.esriGeometryPolyline, CptLt.Count.ToString() + "_" + dblThreshold.ToString() + "Links", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
             ////Dispose&SetEmpty
             //for (int j = 0; j < CptLt.Count; j++)
@@ -170,7 +170,7 @@ namespace ContinuousGeneralizer.FrmAid
             SFD.ShowDialog();
             string strPath = SFD.FileName;
             ParameterInitialize.strSavePath = strPath;
-            ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(strPath);
+            ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(strPath);
             string strTINPath = strPath + "\\TIN";
             string strTINPath2 = strPath + "\\TIN2";
             System.IO.Directory.CreateDirectory(strTINPath);
@@ -180,7 +180,7 @@ namespace ContinuousGeneralizer.FrmAid
 
             //some stupid codes  :-)
             IFeatureLayer pFeatureLayerLast = (IFeatureLayer)ParameterInitialize.m_mapFeature.get_Layer(intLayerCount - 1);
-            List<CPoint> CptLtLast = CHelperFunction.GetCPtLtFromPointFeatureLayer(pFeatureLayerLast);
+            List<CPoint> CptLtLast = CHelpFunc.GetCPtLtFromPointFeatureLayer(pFeatureLayerLast);
             int intPtNumLast = CptLtLast.Count;
 
             long lngMemory = 0;
@@ -237,14 +237,14 @@ namespace ContinuousGeneralizer.FrmAid
 
 
                 OutPutLtLt.Add(OutPutLt);
-                CHelperFunction.Displaytspb(i + 1, intLayerCount, ParameterInitialize.tspbMain);
+                CHelpFunc.Displaytspb(i + 1, intLayerCount, ParameterInitialize.tspbMain);
                 pFeatureLayer = null;
                 CptLt = null;
                 OutPutLt = null;
             }
 
 
-            CHelperFunctionExcel.ExportDataltltToExcel(OutPutLtLt, "Time&Output_ChangeThreshold", ParameterInitialize.strSavePath);
+            CHelpFuncExcel.ExportDataltltToExcel(OutPutLtLt, "Time&Output_ChangeThreshold", ParameterInitialize.strSavePath);
 
 
             MessageBox.Show("Done!");
@@ -341,7 +341,7 @@ namespace ContinuousGeneralizer.FrmAid
             lngTimeForSearching = System.Environment.TickCount - lngTimeForSearching;  //the result time
             lngMemory = GC.GetTotalMemory(true) - lngMemory;
             pTinEdit.SaveAs(strTINPath +"\\" +pFeatureLayer.Name, true);
-            long lngFileSize = CHelperFunction.GetDirectoryLength(strTINPath + "\\" + pFeatureLayer.Name);
+            long lngFileSize = CHelpFunc.GetDirectoryLength(strTINPath + "\\" + pFeatureLayer.Name);
             lngMemory += lngFileSize;
             lngMemoryDT = lngFileSize;
 

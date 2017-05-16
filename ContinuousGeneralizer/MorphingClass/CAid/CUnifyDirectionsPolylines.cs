@@ -44,7 +44,7 @@ namespace MorphingClass.CAid
 
             for (int i = 0; i < LSCPlLt.Count; i++)
             {
-                double dblAngleDiff = CGeometricMethods.CalAngle_Counterclockwise(LSCPlLt[i].FrCpt, LSCPlLt[i].ToCpt, SSCPlLt[i].FrCpt, SSCPlLt[i].ToCpt);
+                double dblAngleDiff = CGeoFunc.CalAngle_Counterclockwise(LSCPlLt[i].FrCpt, LSCPlLt[i].ToCpt, SSCPlLt[i].FrCpt, SSCPlLt[i].ToCpt);
 
                 if ((Math.Abs(dblAngleDiff) > (Math.PI / 2) && Math.Abs(dblAngleDiff) < (3 * Math.PI / 2)))
                 {

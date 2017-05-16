@@ -57,7 +57,7 @@ namespace MorphingClass.CGeneralizationMethods
             double dblMinDis = double.MaxValue;
             for (int i = 0; i < cptlt.Count - 1; i++)
             {
-                double dblDis = CGeometricMethods.CalDis(cptlt[i], cptlt[i + 1]);
+                double dblDis = CGeoFunc.CalDis(cptlt[i], cptlt[i + 1]);
                 if (dblDis < dblMinDis)
                 {
                     dblMinDis = dblDis;
@@ -138,7 +138,7 @@ namespace MorphingClass.CGeneralizationMethods
                     IPoint bezierpt = new PointClass();
                     pBezierCurve.QueryPoint(esriSegmentExtension.esriNoExtension, j / dblQueryNum, true, bezierpt);
 
-                    double dblDis = CGeometricMethods.CalDis(originalpt, bezierpt);
+                    double dblDis = CGeoFunc.CalDis(originalpt, bezierpt);
                     if (dblDis > dblErrorDis)
                     {
                         blnNew = true;

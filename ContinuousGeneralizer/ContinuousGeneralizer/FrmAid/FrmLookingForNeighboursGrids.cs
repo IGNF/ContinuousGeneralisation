@@ -91,8 +91,8 @@ namespace ContinuousGeneralizer.FrmAid
             //SFD.ShowDialog();
             //string strPath = SFD.FileName;
             //ParameterInitialize.strSavePath = strPath;
-            //ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(strPath);
-            //List<CPoint> CptLt = CHelperFunction.GetCPtLtByFeatureLayer(pFeatureLayer);
+            //ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(strPath);
+            //List<CPoint> CptLt = CHelpFunc.GetCPtLtByFeatureLayer(pFeatureLayer);
             //for (int i = 0; i < CptLt.Count; i++)
             //{
             //    CptLt[i].GID = i;
@@ -140,8 +140,8 @@ namespace ContinuousGeneralizer.FrmAid
             //        //dbldetailedltlt.Add(dbldetailedlt);
             //    }
             //}
-            //CHelperFunctionExcel.ExportDataltltToExcelSW(dbldetailedltlt, CptLt.Count.ToString() + "_" + dblThreshold.ToString() + "Links", ParameterInitialize.strSavePath);
-            //CHelperFunction.SaveESRIObjltfast(iplobjlt, esriGeometryType.esriGeometryPolyline, CptLt.Count.ToString() + "_" + dblThreshold.ToString() + "Links", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //CHelpFuncExcel.ExportDataltltToExcelSW(dbldetailedltlt, CptLt.Count.ToString() + "_" + dblThreshold.ToString() + "Links", ParameterInitialize.strSavePath);
+            //CHelpFunc.SaveESRIObjltfast(iplobjlt, esriGeometryType.esriGeometryPolyline, CptLt.Count.ToString() + "_" + dblThreshold.ToString() + "Links", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
         }
 
 
@@ -158,14 +158,14 @@ namespace ContinuousGeneralizer.FrmAid
             SFD.ShowDialog();
             string strPath = SFD.FileName;
             ParameterInitialize.strSavePath = strPath;
-            ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(strPath);
+            ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(strPath);
 
             int intLayerCount = ParameterInitialize.m_mapFeature.LayerCount;
             List<List<double>> OutPutLtLt = new List<List<double>>(intLayerCount);
 
             //some stupid codes  :-)
             IFeatureLayer pFeatureLayerLast = (IFeatureLayer)ParameterInitialize.m_mapFeature.get_Layer(intLayerCount - 1);
-            List<CPoint> CptLtLast = CHelperFunction.GetCPtLtFromPointFeatureLayer(pFeatureLayerLast);
+            List<CPoint> CptLtLast = CHelpFunc.GetCPtLtFromPointFeatureLayer(pFeatureLayerLast);
             int intPtNumLast = CptLtLast.Count;
 
             long lngTime = 0;
@@ -179,7 +179,7 @@ namespace ContinuousGeneralizer.FrmAid
                 lngStartMemory = GC.GetTotalMemory(true);
                 //long lngMemory1 = GC.GetTotalMemory(true);    
                 pFeatureLayer = (IFeatureLayer)ParameterInitialize.m_mapFeature.get_Layer(i);
-                List<CPoint> CptLt = CHelperFunction.GetCPtLtFromPointFeatureLayer(pFeatureLayer);
+                List<CPoint> CptLt = CHelpFunc.GetCPtLtFromPointFeatureLayer(pFeatureLayer);
                 //GC.GetTotalMemory(true);
                 //long lngMemory2 = GC.GetTotalMemory(true);   
                 //for (int j = 0; j < CptLt.Count; j++)
@@ -227,7 +227,7 @@ namespace ContinuousGeneralizer.FrmAid
                 OutPutLt = null;
             }
 
-            CHelperFunctionExcel.ExportDataltltToExcel(OutPutLtLt, "Time&Memory&Output", ParameterInitialize.strSavePath);
+            CHelpFuncExcel.ExportDataltltToExcel(OutPutLtLt, "Time&Memory&Output", ParameterInitialize.strSavePath);
 
           
 
@@ -242,7 +242,7 @@ namespace ContinuousGeneralizer.FrmAid
         private void Grids(ref List<CPoint> cptlt, double dblThreshold, double dblGridSize, ref long lngTime, ref long lngMemory, ref int intOutPut)
         {
             lngTime = System.Environment.TickCount;
-            CEnvelope pEnvelope =CGeometricMethods . GetEnvelope(cptlt);
+            CEnvelope pEnvelope =CGeoFunc . GetEnvelope(cptlt);
             
             dblGridSize = Math.Max(dblGridSize, dblThreshold);
             int intRow = Convert.ToInt32(Math.Truncate(pEnvelope.Height / dblGridSize)) + 1;  //+1, so that the bordered point can be covered

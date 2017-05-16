@@ -104,12 +104,12 @@ namespace MorphingClass.CAid
             var ResultCPgLt = new List<CPolygon>(pSSCPgLt.Count);
             foreach (var pSSCPg in pSSCPgLt)
             {
-                ResultCPgLt.Add(CGeometricMethods.MergeCpgLtDCEL(pSSCPg.CorrCGeoLt));
+                ResultCPgLt.Add(CGeoFunc.MergeCpgLtDCEL(pSSCPg.CorrCGeoLt));
 
-                for (int j = 0; j < pSSCPg.CorrCGeoLt.Count; j++)
-                {
-                    pSSCPg.CorrCGeoLt[j].Clear();
-                }
+                //for (int j = 0; j < pSSCPg.CorrCGeoLt.Count; j++)
+                //{
+                //    pSSCPg.CorrCGeoLt[j].Clear();
+                //}
             }
 
             return ResultCPgLt;

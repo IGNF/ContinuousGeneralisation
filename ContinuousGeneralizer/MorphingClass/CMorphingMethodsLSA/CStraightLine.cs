@@ -47,14 +47,14 @@ namespace MorphingClass.CMorphingMethodsLSA
         /// <returns></returns>
         public CPolyline DisplayInterpolation(double dblProportion)
         {
-            //CPolyline cpl = CGeometricMethods.GetTargetcpl(dblProportion);
+            //CPolyline cpl = CGeoFunc.GetTargetcpl(dblProportion);
             //_DataRecords.ParameterInitialize.txtT.Text = "   t = " + dblProportion.ToString();
 
             //// 清除绘画痕迹
             //IMapControl4 m_mapControl = _DataRecords.ParameterInitialize.m_mapControl;
             //IGraphicsContainer pGra = m_mapControl.Map as IGraphicsContainer;
             //pGra.DeleteAllElements();
-            //CHelperFunction.ViewPolyline(m_mapControl, cpl);  //显示生成的线段
+            //CHelpFunc.ViewPolyline(m_mapControl, cpl);  //显示生成的线段
             //return cpl;
             return null;
         }

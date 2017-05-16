@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using MorphingClass.CUtility;
+
 namespace MorphingClass.CGeometry.CGeometryBase
 {
     public class CLineBase<CGeo> : CGeometricBase<CGeo>
@@ -10,7 +12,13 @@ namespace MorphingClass.CGeometry.CGeometryBase
     {
         protected CPoint _FrCpt;    //start
         protected CPoint _ToCpt;      //end
-        
+
+        public CEnvelope CEnv { set; get; }
+
+        public virtual void SetEnvelope()
+        {
+
+        }
 
 
         /// <summary>

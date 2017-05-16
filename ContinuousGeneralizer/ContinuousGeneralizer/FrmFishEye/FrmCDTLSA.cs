@@ -80,7 +80,7 @@ namespace ContinuousGeneralizer.FrmFishEye
             //ParameterInitialize.pFeatureLayer = pFeatureLayer;
 
             ////获取多边形数组
-            //List<CPolygon> CPolygonLt = CHelperFunction.GetCPolygonLtByFeatureLayer(pFeatureLayer);
+            //List<CPolygon> CPolygonLt = CHelpFunc.GetCPolygonLtByFeatureLayer(pFeatureLayer);
 
             ////将所有顶点到处到cptlt
             //List <CPoint > cptlt=new List<CPoint> ();
@@ -93,7 +93,7 @@ namespace ContinuousGeneralizer.FrmFishEye
             //SaveFileDialog SFD = new SaveFileDialog();
             //SFD.ShowDialog();
             //ParameterInitialize.strSavePath = SFD.FileName;
-            //ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            //ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
 
             ////创建约束三角网
             //double dblVerySmall=0.000001;
@@ -109,7 +109,7 @@ namespace ContinuousGeneralizer.FrmFishEye
             //        CTriangleLt.Add(CDTLt[i]);
             //    }
             //}
-            //CHelperFunction.SaveTriangles(CDTLt, "CDT", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveTriangles(CDTLt, "CDT", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
 
 

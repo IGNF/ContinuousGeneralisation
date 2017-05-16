@@ -48,7 +48,7 @@ namespace MorphingClass.CUtility
             {
                 throw new ArgumentOutOfRangeException("Specified key doesn't exist!");
             }
-            objlt.SetLast_T(obj);
+            objlt.SetLastT(obj);
         }
 
         public void Merge(CStrObjLtSD StrObjLtSD)

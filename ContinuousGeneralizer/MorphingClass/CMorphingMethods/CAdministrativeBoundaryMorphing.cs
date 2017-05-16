@@ -61,9 +61,9 @@ namespace MorphingClass.CMorphingMethods
             _ParameterInitialize = ParameterInitialize;
 
             //获取线数组
-            _LSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pBSFLayer);
-            _SSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSSFLayer);
-            _SgCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSgFLayer);
+            _LSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pBSFLayer);
+            _SSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSSFLayer);
+            _SgCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSgFLayer);
         }
 
 
@@ -77,14 +77,14 @@ namespace MorphingClass.CMorphingMethods
             //List<CPolyline> SgCPlLt = _SgCPlLt;
 
             
-            ////int intBSNum = CHelperFunction.GetPtNumFromCplLt(LSCPlLt);
-            ////int intSSNum = CHelperFunction.GetPtNumFromCplLt(SSCPlLt);
-            ////int intSgNum = CHelperFunction.GetPtNumFromCplLt(SgCPlLt);
+            ////int intBSNum = CHelpFunc.GetPtNumFromCplLt(LSCPlLt);
+            ////int intSSNum = CHelpFunc.GetPtNumFromCplLt(SSCPlLt);
+            ////int intSgNum = CHelpFunc.GetPtNumFromCplLt(SgCPlLt);
 
             //CParameterInitialize pParameterInitialize = _ParameterInitialize;
             //CParameterThreshold pParameterThreshold = new CParameterThreshold();
-            //pParameterThreshold.dblBuffer =CGeometricMethods.CalMidLength(LSCPlLt);
-            //pParameterThreshold.dblVerySmall = CGeometricMethods.CalVerySmall(LSCPlLt);
+            //pParameterThreshold.dblBuffer =CGeoFunc.CalMidLength(LSCPlLt);
+            //pParameterThreshold.dblVerySmall = CGeoFunc.CalVerySmall(LSCPlLt);
             //pParameterThreshold.dblOverlapRatio = pParameterInitialize.dblOverlapRatio;
             //pParameterThreshold.dblAngleBound = 0.262;
             //double dblBound = 0.98;
@@ -142,7 +142,7 @@ namespace MorphingClass.CMorphingMethods
             {
                 CPolyline frcpl=pBSAtBdLt[i] as CPolyline;
                 CPolyline tocpl=pSSAtBdLt[i] as CPolyline;
-                //CHelperFunction.PreviousWork(ref frcpl, ref tocpl);
+                //CHelpFunc.PreviousWork(ref frcpl, ref tocpl);
 
                 pBSAtBdLt[i].CResultPtLt = pLinearInterpolation.CLI(frcpl, tocpl);
 
@@ -199,7 +199,7 @@ namespace MorphingClass.CMorphingMethods
             }
 
             //LookingForNeighboursByGrids
-            C5.LinkedList<CCorrCpts> CorrCptsLt = CGeometricMethods.LookingForNeighboursByGrids(SgCptLt, BSCptLt, CConstants.dblVerySmall);
+            C5.LinkedList<CCorrCpts> CorrCptsLt = CGeoFunc.LookingForNeighboursByGrids(SgCptLt, BSCptLt, CConstants.dblVerySmallCoord);
 
             //FindFrcpt2AndTocpt2
             foreach (CCorrCpts CorrCpt in CorrCptsLt)
@@ -322,11 +322,11 @@ namespace MorphingClass.CMorphingMethods
 
         //private void FindFrcpt2AndTocpt2Grid(List<CAtBd> pSgAtBdLt, List<CAtBd> pBSAtBdLt, CParameterThreshold ParameterThreshold)
         //{
-        //    List<CPolyline> SgCPlLt = CHelperFunction.GetCplLtFromAtBdLt(pSgAtBdLt);
-        //    List<CPolyline> BScpllt = CHelperFunction.GetCplLtFromAtBdLt(pBSAtBdLt);
+        //    List<CPolyline> SgCPlLt = CHelpFunc.GetCplLtFromAtBdLt(pSgAtBdLt);
+        //    List<CPolyline> BScpllt = CHelpFunc.GetCplLtFromAtBdLt(pBSAtBdLt);
 
-        //    IEnvelope pSgEnvelope = CHelperFunction.GetEnvelope(SgCPlLt);
-        //    IEnvelope pBSEnvelope = CHelperFunction.GetEnvelope(BScpllt);
+        //    IEnvelope pSgEnvelope = CHelpFunc.GetEnvelope(SgCPlLt);
+        //    IEnvelope pBSEnvelope = CHelpFunc.GetEnvelope(BScpllt);
 
         //    IEnvelope pUnionEnvelope = new EnvelopeClass();
         //    pUnionEnvelope.XMin = Math.Min(pSgEnvelope.XMin, pBSEnvelope.XMin);
@@ -335,7 +335,7 @@ namespace MorphingClass.CMorphingMethods
         //    pUnionEnvelope.YMax = Math.Max(pSgEnvelope.YMax, pBSEnvelope.YMax);
 
         //    int intSgPtNum = SgCPlLt.Count * 2;
-        //    int intBSPtNum = CHelperFunction.SumPointsNumber(BScpllt);
+        //    int intBSPtNum = CHelpFunc.SumPointsNumber(BScpllt);
 
         //    int intMaxPtNum = Math.Max(intSgPtNum, intBSPtNum);
         //    int intRowColCount = Convert.ToInt32(Math.Sqrt(Convert.ToDouble(intMaxPtNum)));
@@ -361,8 +361,8 @@ namespace MorphingClass.CMorphingMethods
         //        List<CPoint> cptlt = pSgAtBdLt[i].CptLt;
         //        cptlt[0].BelongedCPolyline = pSgAtBdLt[i] as CPolyline;
         //        cptlt[cptlt.Count - 1].BelongedCPolyline = pSgAtBdLt[i] as CPolyline;
-        //        CHelperFunction.FillCptinGrid(cptlt[0], dblWidth, dblHeight, pUnionEnvelope, aSgCptLkGrid);
-        //        CHelperFunction.FillCptinGrid(cptlt[cptlt.Count - 1], dblWidth, dblHeight, pUnionEnvelope, aSgCptLkGrid);
+        //        CHelpFunc.FillCptinGrid(cptlt[0], dblWidth, dblHeight, pUnionEnvelope, aSgCptLkGrid);
+        //        CHelpFunc.FillCptinGrid(cptlt[cptlt.Count - 1], dblWidth, dblHeight, pUnionEnvelope, aSgCptLkGrid);
         //    }
         //    for (int i = 0; i < pBSAtBdLt.Count; i++)
         //    {
@@ -370,7 +370,7 @@ namespace MorphingClass.CMorphingMethods
         //        foreach (CPoint cpt in cptlt)
         //        {
         //            cpt.LID = i;
-        //            CHelperFunction.FillCptinGrid(cpt, dblWidth, dblHeight, pUnionEnvelope, aBSCptLkGrid);
+        //            CHelpFunc.FillCptinGrid(cpt, dblWidth, dblHeight, pUnionEnvelope, aBSCptLkGrid);
         //        }
         //    }
 
@@ -486,11 +486,11 @@ namespace MorphingClass.CMorphingMethods
                 BSEndPtLt.Add(pBSAtBdLt[i].CptLt[pBSAtBdLt[i].CptLt.Count - 1]);
             }
 
-            C5.LinkedList<CCorrCpts> CorrCptsLt = CGeometricMethods.LookingForNeighboursByGrids(BSEndPtLt, CConstants.dblVerySmall);
-            int intIntersection = CGeometricMethods.GetNumofIntersections(CorrCptsLt);
+            C5.LinkedList<CCorrCpts> CorrCptsLt = CGeoFunc.LookingForNeighboursByGrids(BSEndPtLt, CConstants.dblVerySmallCoord);
+            int intIntersection = CGeoFunc.GetNumofIntersections(CorrCptsLt);
 
             //do we need this?*******************************************************************************
-            //int intAloneEnds = CGeometricMethods.GetNumofAloneEnds(EndPtLt, CorrCptsLt);
+            //int intAloneEnds = CGeoFunc.GetNumofAloneEnds(EndPtLt, CorrCptsLt);
             //int intRealPtNum = intInnerPtNum + intSgIntersection + intAloneEnds;
 
             //notice that there are the same intersections of the larger-scale polylines and the smaller-scale polylines
@@ -520,11 +520,11 @@ namespace MorphingClass.CMorphingMethods
             //    } 
             //}
 
-            //C5.LinkedList<CCorrCpts> CorrCptsLt = CGeometricMethods.LookingForNeighboursByGrids(SgEndPtLt, CConstants.dblVerySmall);
-            //int intSgIntersection = CGeometricMethods.GetNumofIntersections(CorrCptsLt);
+            //C5.LinkedList<CCorrCpts> CorrCptsLt = CGeoFunc.LookingForNeighboursByGrids(SgEndPtLt, CConstants.dblVerySmall);
+            //int intSgIntersection = CGeoFunc.GetNumofIntersections(CorrCptsLt);
 
             ////do we need this?*******************************************************************************
-            ////int intAloneEnds = CGeometricMethods.GetNumofAloneEnds(EndPtLt, CorrCptsLt);
+            ////int intAloneEnds = CGeoFunc.GetNumofAloneEnds(EndPtLt, CorrCptsLt);
             ////int intRealPtNum = intInnerPtNum + intSgIntersection + intAloneEnds;
 
             //int intSgRealPtNum = intSgInnerPtNum + intSgIntersection;   //intSgRealPtNum doesn't count the points on the BSCpls
@@ -581,13 +581,13 @@ namespace MorphingClass.CMorphingMethods
         //    double dblFrDiffLLY = frcptlt[CFrVtPl.CLeftPolyline.intToID].Y - frcptlt[CFrVtPl.CLeftPolyline.intFrID].Y;
         //    double dblToDiffLLX = tocptlt[CToVtPl.CLeftPolyline.intToID].X - tocptlt[CToVtPl.CLeftPolyline.intFrID].X;
         //    double dblToDiffLLY = tocptlt[CToVtPl.CLeftPolyline.intToID].Y - tocptlt[CToVtPl.CLeftPolyline.intFrID].Y;
-        //    double dblAngleDiffLL = CGeometricMethods.CalAngle_Counterclockwise(dblFrDiffLLX, dblFrDiffLLY, dblToDiffLLX, dblToDiffLLY);
+        //    double dblAngleDiffLL = CGeoFunc.CalAngle_Counterclockwise(dblFrDiffLLX, dblFrDiffLLY, dblToDiffLLX, dblToDiffLLY);
 
         //    double dblFrDiffRRX = frcptlt[CFrVtPl.CRightPolyline.intToID].X - frcptlt[CFrVtPl.CRightPolyline.intFrID].X;
         //    double dblFrDiffRRY = frcptlt[CFrVtPl.CRightPolyline.intToID].Y - frcptlt[CFrVtPl.CRightPolyline.intFrID].Y;
         //    double dblToDiffRRX = tocptlt[CToVtPl.CRightPolyline.intToID].X - tocptlt[CToVtPl.CRightPolyline.intFrID].X;
         //    double dblToDiffRRY = tocptlt[CToVtPl.CRightPolyline.intToID].Y - tocptlt[CToVtPl.CRightPolyline.intFrID].Y;
-        //    double dblAngleDiffRR = CGeometricMethods.CalAngle_Counterclockwise(dblFrDiffRRX, dblFrDiffRRY, dblToDiffRRX, dblToDiffRRY);
+        //    double dblAngleDiffRR = CGeoFunc.CalAngle_Counterclockwise(dblFrDiffRRX, dblFrDiffRRY, dblToDiffRRX, dblToDiffRRY);
 
         //    if ((dblRatioLL >= ParameterThreshold.dblDLengthBound) && (dblRatioLL <= ParameterThreshold.dblULengthBound) &&
         //        (dblRatioRR >= ParameterThreshold.dblDLengthBound) && (dblRatioRR <= ParameterThreshold.dblULengthBound) &&
@@ -641,7 +641,7 @@ namespace MorphingClass.CMorphingMethods
             List<CPolyline> normaldisplaycpllt = new List<CPolyline>(pParameterResult.CBSAtBdLt.Count);
             for (int i = 0; i < pParameterResult.CBSAtBdLt.Count; i++)
             { 
-                CPolyline cpl = CGeometricMethods.GetTargetcpl(i, pParameterResult.CBSAtBdLt[i].CResultPtLt, dblProportion);
+                CPolyline cpl = CGeoFunc.GetTargetcpl(i, pParameterResult.CBSAtBdLt[i].CResultPtLt, dblProportion);
                 normaldisplaycpllt.Add(cpl);
             }
             pParameterResult.DisplayCPlLt = normaldisplaycpllt;
@@ -662,7 +662,7 @@ namespace MorphingClass.CMorphingMethods
                 }
                 else
                 {
-                    newcptlt[0] = CGeometricMethods.GetInbetweenCpt(pAtBd.Frcpt2, pAtBd.Frcpt2.CorrespondingPtLt[0], dblProportion, 0);
+                    newcptlt[0] = CGeoFunc.GetInbetweenCpt(pAtBd.Frcpt2, pAtBd.Frcpt2.CorrespondingPtLt[0], dblProportion, 0);
                     int dblBSCplID = pAtBd.Frcpt2.BelongedCPolyline.ID;
                     DWIntersect(normaldisplaycpllt[dblBSCplID], ref newcptlt, dblIgnorableDis);
                 }
@@ -674,12 +674,12 @@ namespace MorphingClass.CMorphingMethods
                 }
                 else
                 {
-                    CPoint cptlast = CGeometricMethods.GetInbetweenCpt(pAtBd.Tocpt2, pAtBd.Tocpt2.CorrespondingPtLt[0], dblProportion, pAtBd.CptLt.Count - 1);
+                    CPoint cptlast = CGeoFunc.GetInbetweenCpt(pAtBd.Tocpt2, pAtBd.Tocpt2.CorrespondingPtLt[0], dblProportion, pAtBd.CptLt.Count - 1);
                     newcptlt[newcptlt.Count - 1] = cptlast;
-                    CHelperFunction.ReverseCptLt(ref newcptlt);
+                    CHelpFunc.ReverseCptLt(ref newcptlt);
                     int dblBSCplID = pAtBd.Tocpt2.BelongedCPolyline.ID;
                     DWIntersect(normaldisplaycpllt[dblBSCplID], ref newcptlt, dblIgnorableDis);
-                    CHelperFunction.ReverseCptLt(ref newcptlt);
+                    CHelpFunc.ReverseCptLt(ref newcptlt);
                 }
 
                 CPolyline newcpl = new CPolyline(i, newcptlt);
@@ -706,16 +706,16 @@ namespace MorphingClass.CMorphingMethods
             //TopCheckCpllt.AddRange(fadeddisplaycpllt);
             //SCG.LinkedList<CCorrespondSegment> pCorrespondCplLk;
             //SCG.LinkedList<CPolyline> pSelfIntersectCplLk;
-            //bool isCross = CGeometricMethods.CheckCross(TopCheckCpllt, out pCorrespondCplLk);
-            //bool isSelfIntersect = CGeometricMethods.CheckSelfIntersect(TopCheckCpllt, out pSelfIntersectCplLk);
+            //bool isCross = CGeoFunc.CheckCross(TopCheckCpllt, out pCorrespondCplLk);
+            //bool isSelfIntersect = CGeoFunc.CheckSelfIntersect(TopCheckCpllt, out pSelfIntersectCplLk);
 
-            //CHelperFunction.SaveCPlLt(normaldisplaycpllt, "City" + pParameterInitialize.strSaveFolder + "_" + dblProportion.ToString(), pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCPlLt(normaldisplaycpllt, "City" + pParameterInitialize.strSaveFolder + "_" + dblProportion.ToString(), pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
             //int intColor = Convert.ToInt16(dblProportion * 255);
-            //CHelperFunction.SaveCPlLt(fadeddisplaycpllt, CEnumScale.Single + pParameterInitialize.strSaveFolder + "_" + dblProportion.ToString(), pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl, intColor, intColor, intColor, 1);
+            //CHelpFunc.SaveCPlLt(fadeddisplaycpllt, CEnumScale.Single + pParameterInitialize.strSaveFolder + "_" + dblProportion.ToString(), pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl, intColor, intColor, intColor, 1);
 
             //CEnvelope pEnvelopeIpe = new CEnvelope(0, 0, 600, 600);
-            //CHelperFunction.SaveToIpe(normaldisplaycpllt,  "Ipe" + "_" + dblProportion.ToString(), pParameterInitialize.pBSFLayer.AreaOfInterest, pEnvelopeIpe, pParameterInitialize, 0, 0, 0, "normal", true);
-            //CHelperFunction.SaveToIpe(fadeddisplaycpllt, "Ipe" + "_" + dblProportion.ToString(), pParameterInitialize.pBSFLayer.AreaOfInterest, pEnvelopeIpe, pParameterInitialize, intColor, intColor, intColor, "normal", true);
+            //CHelpFunc.SaveToIpe(normaldisplaycpllt,  "Ipe" + "_" + dblProportion.ToString(), pParameterInitialize.pBSFLayer.AreaOfInterest, pEnvelopeIpe, pParameterInitialize, 0, 0, 0, "normal", true);
+            //CHelpFunc.SaveToIpe(fadeddisplaycpllt, "Ipe" + "_" + dblProportion.ToString(), pParameterInitialize.pBSFLayer.AreaOfInterest, pEnvelopeIpe, pParameterInitialize, intColor, intColor, intColor, "normal", true);
 
 
 
@@ -727,13 +727,13 @@ namespace MorphingClass.CMorphingMethods
 
             //for (int i = 0; i < normaldisplaycpllt.Count; i++)
             //{
-            //    CHelperFunction.ViewPolylineByRGB(m_mapControl, normaldisplaycpllt[i], 0, 0, 0, 1);
+            //    CHelpFunc.ViewPolylineByRGB(m_mapControl, normaldisplaycpllt[i], 0, 0, 0, 1);
             //}
 
             //
             //for (int i = 0; i < fadeddisplaycpllt.Count; i++)
             //{
-            //    CHelperFunction.ViewPolylineByRGB(m_mapControl, fadeddisplaycpllt[i], intColor, intColor, intColor, 1);
+            //    CHelpFunc.ViewPolylineByRGB(m_mapControl, fadeddisplaycpllt[i], intColor, intColor, intColor, 1);
             //}
             //m_mapControl.ActiveView.Refresh();   //由于在下一步“ViewPolyline”中有刷新的命令，此语句可省略
 
@@ -761,7 +761,7 @@ namespace MorphingClass.CMorphingMethods
                 double dblMaxDis = 0;
                 for (int j = 0; j < pColIntersect.PointCount; j++)
                 {                   
-                    double dblDis = CGeometricMethods.CalDistanceFromStartPoint(ipl, pColIntersect.get_Point(j), false);
+                    double dblDis = CGeoFunc.CalDistanceFromStartPoint(ipl, pColIntersect.get_Point(j), false);
                     if (dblDis > dblMaxDis)
                     {
                         dblMaxDis = dblDis;
@@ -794,14 +794,14 @@ namespace MorphingClass.CMorphingMethods
                     }
                     if (seg.Length >= dblIgnorableDis)
                     {
-                        double dblOriginalIntersectionDis = CGeometricMethods.CalDistanceFromStartPoint(pBSCpl.pPolyline, pCol.get_Point (0), false);
-                        double dblRealisticIntersectionDis = CGeometricMethods.CalDistanceFromStartPoint(pBSCpl.pPolyline, iplCutCol.get_Point(0), false);
+                        double dblOriginalIntersectionDis = CGeoFunc.CalDistanceFromStartPoint(pBSCpl.pPolyline, pCol.get_Point (0), false);
+                        double dblRealisticIntersectionDis = CGeoFunc.CalDistanceFromStartPoint(pBSCpl.pPolyline, iplCutCol.get_Point(0), false);
 
                         IPointCollection4 pColBSCpl = pBSCpl.pPolyline as IPointCollection4;
                         double dblSumDis = 0;
                         for (int i = 0; i < pColBSCpl.PointCount-1; i++)
                         {
-                            double dblDis=CGeometricMethods.CalDis(pColBSCpl.get_Point(i), pColBSCpl.get_Point(i + 1));
+                            double dblDis=CGeoFunc.CalDis(pColBSCpl.get_Point(i), pColBSCpl.get_Point(i + 1));
                             dblSumDis += dblDis;
                             if (dblSumDis>=dblRealisticIntersectionDis)
                             {
@@ -823,7 +823,7 @@ namespace MorphingClass.CMorphingMethods
                         break;
                     }
                 }
-                cptlt = CHelperFunction.GetCptEbByICol(iplCutCol).ToList();
+                cptlt = CHelpFunc.GetCptEbByICol(iplCutCol).ToList();
             }
         }
         #endregion

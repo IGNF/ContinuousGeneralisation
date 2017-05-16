@@ -29,7 +29,7 @@ namespace MorphingClass.CMorphingMethods
             _ParameterInitialize = ParameterInitialize;
 
             //获取线数组
-            List<CPolyline> CPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pFeatureLayer);
+            List<CPolyline> CPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pFeatureLayer);
 
             //线段长较长的为大比例尺地图上的线段
             if (CPlLt[0].pPolyline.Length >= CPlLt[1].pPolyline.Length)
@@ -51,7 +51,7 @@ namespace MorphingClass.CMorphingMethods
 
             //CVertexInsertionA pVertexInsertionA = new CVertexInsertionA();
             //List<CPoint> ResultPtLt = pVertexInsertionA.CVI(frcpl, tocpl);
-            //CHelperFunction.SaveCorrespondLine(ResultPtLt, "VICorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCorrespondLine(ResultPtLt, "VICorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
 
             ////获取结果，全部记录在_DataRecords中
             //CParameterResult ParameterResult = new CParameterResult();

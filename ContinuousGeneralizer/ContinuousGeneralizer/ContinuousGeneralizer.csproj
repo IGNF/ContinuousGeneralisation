@@ -520,24 +520,6 @@
     <Compile Include="FrmMorphingLSA\FrmStraightLine.Designer.cs">
       <DependentUpon>FrmStraightLine.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmMorphingLSA\test.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmMorphingLSA\test.Designer.cs">
-      <DependentUpon>test.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FrmMorphingLSA\testbase.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmMorphingLSA\testbase.Designer.cs">
-      <DependentUpon>testbase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FrmMorphingLSA\testinherit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmMorphingLSA\testinherit.Designer.cs">
-      <DependentUpon>testinherit.cs</DependentUpon>
-    </Compile>
     <Compile Include="FrmMorphing\FrmAdministrativeBoundaryMorphing.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -846,6 +828,9 @@
     <EmbeddedResource Include="FrmMorphingLSA\FrmAL.resx">
       <DependentUpon>FrmAL.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FrmMorphingLSA\FrmALALMulti.resx">
+      <DependentUpon>FrmALALMulti.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmMorphingLSA\FrmALAMulti.resx">
       <DependentUpon>FrmALAMulti.cs</DependentUpon>
     </EmbeddedResource>
@@ -868,9 +853,6 @@
       <DependentUpon>FrmPAL.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMorphingLSA\FrmStraightLine.resx" />
-    <EmbeddedResource Include="FrmMorphingLSA\testbase.resx">
-      <DependentUpon>testbase.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="FrmMorphing\FrmAdministrativeBoundaryMorphing.resx">
       <DependentUpon>FrmAdministrativeBoundaryMorphing.cs</DependentUpon>
     </EmbeddedResource>
@@ -1012,6 +994,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CPlusClass\CPlusClass.vcxproj">
+      <Project>{fbbf5c0b-9ca4-4078-8676-c0decd9a42ba}</Project>
+      <Name>CPlusClass</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MorphingClass\MorphingClass.csproj">
       <Project>{456FD3DF-B3F9-41F9-B359-AA1498B57826}</Project>
       <Name>MorphingClass</Name>

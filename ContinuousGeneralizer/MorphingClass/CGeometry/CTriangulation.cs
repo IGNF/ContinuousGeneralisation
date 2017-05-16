@@ -34,7 +34,7 @@ namespace MorphingClass.CGeometry
             _CPg = cpg;
             var cptlt = new List<CPoint>();
             cptlt.AddRange(cpg.CptLt);  //_CptLt might change in future by, e.g., constructing compatible triangulations
-            cptlt.RemoveLast_T();  // the last one has the same coordinates with the first one
+            cptlt.RemoveLastT();  // the last one has the same coordinates with the first one
             this.cptSD = TestCloseCpts(cptlt);
 
 
@@ -44,7 +44,7 @@ namespace MorphingClass.CGeometry
 
         private SortedDictionary<CPoint, CPoint> TestCloseCpts(List<CPoint> cptlt)
         {
-           var cptSD = cptlt.ToSD(cpt => cpt, CCompareCptYX_VerySmall.pCompareCptYX_VerySmall);
+           var cptSD = cptlt.ToSD(cpt => cpt, CCmpCptYX_VerySmall.pCmpCptYX_VerySmall);
 
            if (cptSD.Count == cptlt.Count)
            {
@@ -210,7 +210,7 @@ namespace MorphingClass.CGeometry
 
             var ITinEdgeLt = GenerateITinEdgeLt();
 
-            var tincedgeSS = new SortedSet<CEdge>(new CCompareEdge_CptIndexIDDiff());   //we use the difference of the TagValue, so that we know the boundary edges form the difference is 1
+            var tincedgeSS = new SortedSet<CEdge>(new CCmpEdge_CptIndexIDDiff());   //we use the difference of the TagValue, so that we know the boundary edges form the difference is 1
 
             foreach (var tinedge in ITinEdgeLt)
             {
@@ -235,12 +235,12 @@ namespace MorphingClass.CGeometry
 
             //the boundary edges are stored in the front of the returned list
             //remove the last boundary cedge (with the largest difference of IndexID) and insert it into the correct position
-            var lastcedge = tincedgelt.GetLast_T();
+            var lastcedge = tincedgelt.GetLastT();
             var newlastcedge = new CEdge(lastcedge.ToCpt, lastcedge.FrCpt);
             tincedgelt.Insert(_intN - 1, newlastcedge);
-            tincedgelt.RemoveLast_T();
+            tincedgelt.RemoveLastT();
 
-            _CEdgeLt = tincedgelt;
+            this.CEdgeLt = tincedgelt;
             return tincedgelt;
         }
 
@@ -254,14 +254,14 @@ namespace MorphingClass.CGeometry
             if (isFound == false)
             {
                 Console.WriteLine("cannot find a point" + tincpt.X + "  " + tincpt.Y + "   " + " of a TinNode in: " + this.ToString() + ".cs   ");
-                double dblOriginaldblVerySmall = CConstants.dblVerySmall;
+                double dblOriginaldblVerySmall = CConstants.dblVerySmallCoord;
 
                 do
                 {
-                    CConstants.dblVerySmall = CConstants.dblVerySmall * 10;
+                    CConstants.dblVerySmallCoord = CConstants.dblVerySmallCoord * 10;
                     isFound = CptSD.TryGetValue(tincpt, out outcpt);
                 } while (isFound == false);
-                CConstants.dblVerySmall = dblOriginaldblVerySmall;
+                CConstants.dblVerySmallCoord = dblOriginaldblVerySmall;
             }
 
             return isFound;
@@ -330,7 +330,7 @@ namespace MorphingClass.CGeometry
         public void CompareCptltAndNode()
         {
             var cptlt = this.CptLt;
-            //var cptSD = cptlt.ToSD(cpt => cpt, new CCompareCptYX());
+            //var cptSD = cptlt.ToSD(cpt => cpt, new CCmpCptYX());
 
             ITinAdvanced2 ptinadvanced2 = _pTinAdvanced2;
             var cptNodeDataAreaLt = new List<CPoint>(ptinadvanced2.DataNodeCount); 
@@ -355,7 +355,7 @@ namespace MorphingClass.CGeometry
 
         private int CompareCptltAndNode(List <CPoint > cptlt1, List <CPoint > cptlt2)
         {
-            var cptSD = cptlt1.ToSD(cpt => cpt, new CCompareCptYX_VerySmall());
+            var cptSD = cptlt1.ToSD(cpt => cpt, new CCmpCptYX_VerySmall());
             foreach (var cpt2 in cptlt2)
             {
                 cptSD.Remove(cpt2);

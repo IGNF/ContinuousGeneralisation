@@ -65,8 +65,8 @@ namespace MorphingClass.CMorphingMethods
             _ParameterInitialize = ParameterInitialize;
 
             //获取线数组
-            _LSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pBSFLayer);
-            _SSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSSFLayer);
+            _LSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pBSFLayer);
+            _SSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSSFLayer);
         }
 
         //基于弯曲的Morphing方法
@@ -109,15 +109,15 @@ namespace MorphingClass.CMorphingMethods
             //}
 
             ////获取基于结构分割后的对应线段
-            //C5.LinkedList<CCorrespondSegment> pCorrespondSegmentLk = CHelperFunction.DetectCorrespondSegment(frcpl, tocpl, pBLGCorrespondSegmentLk);
+            //C5.LinkedList<CCorrespondSegment> pCorrespondSegmentLk = CHelpFunc.DetectCorrespondSegment(frcpl, tocpl, pBLGCorrespondSegmentLk);
 
             ////**************OptCor处理过程**************//
             //COptCor OptOptCor = new COptCor();
             //C5.LinkedList<CCorrespondSegment> pOptCorCorrespondSegmentLk = new C5.LinkedList<CCorrespondSegment>();
             //for (int j = 0; j < pCorrespondSegmentLk.Count; j++)
             //{
-            //    List<CPolyline> CFrEdgeLt = CGeometricMethods.CreateCplLt(pCorrespondSegmentLk[j].CFrPolyline.CptLt);
-            //    List<CPolyline> CToEdgeLt = CGeometricMethods.CreateCplLt(pCorrespondSegmentLk[j].CToPolyline.CptLt);
+            //    List<CPolyline> CFrEdgeLt = CGeoFunc.CreateCplLt(pCorrespondSegmentLk[j].CFrPolyline.CptLt);
+            //    List<CPolyline> CToEdgeLt = CGeoFunc.CreateCplLt(pCorrespondSegmentLk[j].CToPolyline.CptLt);
 
             //    pOptCorCorrespondSegmentLk.AddRange(OptOptCor.DWByOptCor(frcpl, tocpl, CFrEdgeLt, CToEdgeLt, ParameterInitialize.intMaxBackK));
             //}
@@ -131,8 +131,8 @@ namespace MorphingClass.CMorphingMethods
             //pResultPtLt = pAlgorithmsHelper.BuildPointCorrespondence(pCorrespondSegmentLk, "Linear");
 
             ////保存对应线
-            //CHelperFunction.SaveCtrlLine(pCorrespondSegmentLk, "CRIBSBLGOptCorControlLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
-            //CHelperFunction.SaveCorrespondLine(pResultPtLt, "CRIBSBLGOptCorCorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCtrlLine(pCorrespondSegmentLk, "CRIBSBLGOptCorControlLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCorrespondLine(pResultPtLt, "CRIBSBLGOptCorCorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
 
             ////计算并显示运行时间
             //long lngEndTime = System.Environment.TickCount;

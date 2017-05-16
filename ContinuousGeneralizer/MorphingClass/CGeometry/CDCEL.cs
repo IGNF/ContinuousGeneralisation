@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
+using ESRI.ArcGIS.Geometry;
+
 using MorphingClass.CUtility;
 using MorphingClass.CCorrepondObjects;
 using MorphingClass.CGeometry.CGeometryBase;
@@ -15,12 +17,14 @@ namespace MorphingClass.CGeometry
     /// 
     /// </summary>
     /// <remarks>Doubly-Connected Edge List</remarks>
-    public class CDCEL : CPolyBase<CPolyline>
+    public class CDCEL/* : CPolyBase<CPolyline>*/
     {
         
         private List<CEdge> _HalfEdgeLt;  //output, we always store one edge and then imediately its twin edge; in the construction of compatible triangulations we always store the outer edges in the front of this list
         private List<CPolygon> _FaceCpgLt;      //output; superface is the first element in this list,i.e., _FaceCpgLt[0]. if a face has cedgeOuterComponent == null, then this face is super face
         private CEdgeGrid _pEdgeGrid;
+        public List<CEdge> CEdgeLt { get; set; }
+        public List<CPoint> CptLt { get; set; }
 
         //private List<CPolyline> _CplLt;   //could be input
         //public List<CEdge> OriginalCEdgeLt { get; set; }
@@ -32,14 +36,14 @@ namespace MorphingClass.CGeometry
         }
 
         public CDCEL(List<CPolyline> fcpllt)
-        {
-            _CEdgeLt = CGeometricMethods.GetCEdgeLtFromCpbLt<CPolyline, CPolyline>(fcpllt);
+            :this(CGeoFunc.GetCEdgeLtFromCpbLt<CPolyline, CPolyline>(fcpllt))
+        {           
         }
 
         public CDCEL(List<CEdge> cedgelt)
         {
-            _CEdgeLt = new List<CEdge>();
-            _CEdgeLt.AddRange(cedgelt);
+            this.CEdgeLt = new List<CEdge>();
+            this.CEdgeLt.AddRange(cedgelt);
         }
 
         ///// <summary>Update the two ends of all the polylines</summary>
@@ -59,21 +63,14 @@ namespace MorphingClass.CGeometry
 
         public void ConstructDCEL()
         {
-            List<CEdge> cedgelt = _CEdgeLt;
-            _CEdgeLt = _CEdgeLt.RemoveLaterDuplicate(new CCompareCEdgeCoordinates()).ToList();
-
-            if (cedgelt.Count< _CEdgeLt.Count)
-            {
-                throw new ArgumentException("Please remove before using construct DCEL!");
-            }
-
+            var cedgelt = this.CEdgeLt;
+            
             //report if there is a short edge
             //short edges may cause problems. Take a polygon as an example, an edge and its twin edge may refer to the same face
-            CGeometricMethods.CheckShortEdges(_CEdgeLt);
-            
+            CGeoFunc.CheckShortEdges(cedgelt);
+            CGeoFunc.RemoveLaterDuplicate(cedgelt, new CCmpCEdgeCoordinates());
 
-            double dblsmall = CConstants.dblVerySmall;
-            _HalfEdgeLt = ConstructHalfEdgeLt(_CEdgeLt);  //already set indexID
+            _HalfEdgeLt = ConstructHalfEdgeLt(cedgelt);  //already set indexID
             this.CptLt = ConstructVertexLt(_HalfEdgeLt);         //already set indexID
 
             //ShowEdgeRelationshipAroundAllCpt();
@@ -106,7 +103,7 @@ namespace MorphingClass.CGeometry
 
         private SortedDictionary<CPoint, List<CEdge>> IdentifyCoStartCEdge(List<CEdge> fHalfEdgeLt)
         {
-            SortedDictionary<CPoint, List<CEdge>> CoStartCEdgeSD = new SortedDictionary<CPoint, List<CEdge>>(CCompareCptYX_VerySmall.pCompareCptYX_VerySmall);
+            SortedDictionary<CPoint, List<CEdge>> CoStartCEdgeSD = new SortedDictionary<CPoint, List<CEdge>>(CCmpCptYX_VerySmall.pCmpCptYX_VerySmall);
             foreach (CEdge cedge in fHalfEdgeLt)
             {
                 List<CEdge> cedgeLt;
@@ -212,7 +209,7 @@ namespace MorphingClass.CGeometry
         /// <remarks>this mehtod will not change the order of vertices of regular polygon in the construction of compatible triangulations</remarks>
         private List<CPoint> ConstructVertexLt(List<CEdge> halfcedgelt)
         {
-            List<CPoint> fcptlt = new List<CPoint>();
+            var fcptlt = new List<CPoint>();
             foreach (CEdge halfcedge in halfcedgelt)
             {
                 halfcedge.FrCpt.isAdded = false;
@@ -235,14 +232,14 @@ namespace MorphingClass.CGeometry
 
         public List<CPolygon> ConstructFaceLt()
         {
-            List<CEdge> cedgelt = _CEdgeLt;
-            var rawfaceLt = InitializeFaceForEdgeLt(ref cedgelt);   //initialize a face for each edge loop
-            FindTheLeftMostVertexForFace(ref cedgelt);                      //find the left most vertex for each face, record it in "face.LeftMostCpt"
+            var halfcedgelt = _HalfEdgeLt;
+            var rawfaceLt = InitializeFaceForEdgeLt(halfcedgelt).ToList();   //initialize a face for each edge loop
+            FindTheLeftMostVertexForFace(ref halfcedgelt);                      //find the left most vertex for each face, record it in "face.LeftMostCpt"
 
             DetermineOuterOrHole(rawfaceLt);                            //determine whether a face is a hole or an outer component by the angle of the left most vertex
             GetOuterOrInnerComponents(ref rawfaceLt);             //record this face into outer component or inner components
 
-            List<CPolygon> FaceCpgLt = MergeFaces(cedgelt, ref rawfaceLt);
+            List<CPolygon> FaceCpgLt = MergeFaces(this.CEdgeLt, ref rawfaceLt);
             FaceCpgLt.SetIndexID();
             _FaceCpgLt = FaceCpgLt;
             return FaceCpgLt;
@@ -254,77 +251,51 @@ namespace MorphingClass.CGeometry
         /// </summary>
         /// <param name="cedgelt"></param>
         /// <remarks>we generate some empty faces</remarks>
-        private List<CPolygon> InitializeFaceForEdgeLt(ref List<CEdge> cedgelt)
+        private IEnumerable<CPolygon> InitializeFaceForEdgeLt(List<CEdge> halfcedgelt)
         {
-            var cgpLt = new List<CPolygon>();
-
-            foreach (CEdge cedge in cedgelt)
-            {
-                cedge.cpgIncidentFace = null;
-            }
-
+            halfcedgelt.ForEach(cedge => cedge.isTraversed = false);
+          
             int intID = 0;
-            foreach (CEdge cedge in cedgelt)
+            foreach (var cedge in halfcedgelt)
             {
-                InitializeFaceForEdge(cedge, ref cgpLt, ref intID);
-                InitializeFaceForEdge(cedge.cedgeTwin, ref cgpLt, ref intID);
-            }
-            return cgpLt;
-        }
+                if (cedge.isTraversed == true) continue;
 
-
-        private void InitializeFaceForEdge(CEdge cedge, ref List<CPolygon> cgpLt, ref int intID)
-        {
-            if (cedge.cpgIncidentFace == null)
-            {
-                CPolygon cpgIncidentFace = new CPolygon(intID++);
-                cgpLt.Add(cpgIncidentFace);
+                var currentcedge = cedge;
+                var cpgIncidentFace = new CPolygon(intID++);
                 do
                 {
-                    cedge.cpgIncidentFace = cpgIncidentFace;
-                    cedge = cedge.cedgeNext;
-                } while (cedge.cpgIncidentFace == null);
+                    currentcedge.cpgIncidentFace = cpgIncidentFace;
+                    currentcedge.isTraversed = true;
+                    currentcedge = currentcedge.cedgeNext;
+                } while (currentcedge.isTraversed == false);
+
+                yield return cpgIncidentFace;
             }
         }
         #endregion
 
         #region FindTheLeftMostVertex
-        private void FindTheLeftMostVertexForFace(ref List<CEdge> cedgelt)
+        private void FindTheLeftMostVertexForFace(ref List<CEdge> halfcedgelt)
         {
-            foreach (CEdge cedge in cedgelt)
-            {
-                cedge.isTraversed = false;
-                cedge.cedgeTwin.isTraversed = false;
-            }
+            halfcedgelt.ForEach(cedge => cedge.isTraversed = false);
 
-            foreach (CEdge cedge in cedgelt)
+            foreach (var cedge in halfcedgelt)
             {
-                FindTheLeftMostVertex(cedge);
-                FindTheLeftMostVertex(cedge.cedgeTwin);
-            }
-        }
+                if (cedge.isTraversed == true) continue;
 
-        private void FindTheLeftMostVertex(CEdge cedge)
-        {
-            if (cedge.isTraversed == false)
-            {
-                CPoint lowestleftmostcpt = cedge.FrCpt;
-                cedge.cpgIncidentFace.cedgeStartAtLeftMost = cedge;
-                cedge.cpgIncidentFace.LeftMostCpt = lowestleftmostcpt;
+                var currentcedge = cedge;
+                var cpgIncidentFace = cedge.cpgIncidentFace;
+                cpgIncidentFace.LeftMostCpt = new CPoint(-1, double.MaxValue, double.MaxValue);
                 do
                 {
-                    cedge.isTraversed = true;
-                    cedge = cedge.cedgeNext;
-                    int intResult = CCompareMethods.CompareCptXY(lowestleftmostcpt, cedge.FrCpt);
-                    if (intResult == 1)
+                    if (CCmpMethods.CmpCptXY(currentcedge.FrCpt, cpgIncidentFace.LeftMostCpt) == -1)
                     {
-                        lowestleftmostcpt = cedge.FrCpt;
-                        cedge.cpgIncidentFace.cedgeStartAtLeftMost = cedge;
-                        cedge.cpgIncidentFace.LeftMostCpt = lowestleftmostcpt;
+                        cpgIncidentFace.LeftMostCpt = currentcedge.FrCpt;
+                        cpgIncidentFace.cedgeStartAtLeftMost = currentcedge;
                     }
-                } while (cedge.isTraversed == false);
-
-                //cedge.cpgIncidentFace.LeftMostCpt = lowestleftmostcpt;
+                    currentcedge.isTraversed = true;
+                    currentcedge = currentcedge.cedgeNext;
+                } while (currentcedge.isTraversed == false);
             }
         }
 
@@ -335,22 +306,9 @@ namespace MorphingClass.CGeometry
             foreach (CPolygon cpg in rawfaceLt)
             {
                 CEdge cedgeStartAtLeftMost = cpg.cedgeStartAtLeftMost;
-                double dblAngle = CGeometricMethods.CalAngle_Counterclockwise
-                    (cedgeStartAtLeftMost, cedgeStartAtLeftMost.cedgePrev.cedgeTwin);
-                if (dblAngle < Math.PI)
-                {
-                    cpg.IsHole = false;
-                }
-                else if (dblAngle > Math.PI)
-                {
-                    cpg.IsHole = true;
-                }
-                else
-                {
-                    throw new ArgumentException("what happened about the angle?");
-                }
+                cpg.IsHole = CGeoFunc.IsClockwise(cedgeStartAtLeftMost.cedgePrev.FrCpt, 
+                    cedgeStartAtLeftMost.FrCpt, cedgeStartAtLeftMost.ToCpt);                
             }
-
         }
 
         /// <summary>
@@ -397,7 +355,7 @@ namespace MorphingClass.CGeometry
             }
 
             //CEdgeGrid pEdgeGrid = new CEdgeGrid(cedgelt);  //put edges in the cells of a grid
-            //_pEdgeGrid = CGeometricMethods.DetectCloestLeftCorrectCEdge(cedgelt, ref holeleftcptlt);
+            //_pEdgeGrid = CGeoFunc.DetectCloestLeftCorrectCEdge(cedgelt, ref holeleftcptlt);
 
             _pEdgeGrid = new CEdgeGrid(cedgelt);  //put edges in the cells of a grid
             DetectCloestLeftCorrectCEdge(holeleftcptlt);
@@ -480,7 +438,6 @@ namespace MorphingClass.CGeometry
 
         private void UpdateEdgeIncidentFace(IEnumerable<CPolygon> faceeb)
         {
-
             foreach (var face in faceeb)
             {
                 if (face.cedgeLkInnerComponents != null)
@@ -490,12 +447,7 @@ namespace MorphingClass.CGeometry
                         //cedgeInnerComponent has already indicated to the face, we need to update other edges
                         var currentcedge = cedgeInnerComponent.cedgeNext;
                         do
-                        {
-                            if (currentcedge.cedgeTwin.cpgIncidentFace.GID== face.GID)
-                            {
-                                throw new ArgumentOutOfRangeException("Impossible case!");
-                            }
-                                                        
+                        {                        
                             currentcedge.cpgIncidentFace = face;
                             currentcedge = currentcedge.cedgeNext;
                         } while (currentcedge.GID != cedgeInnerComponent.GID);
@@ -620,8 +572,8 @@ namespace MorphingClass.CGeometry
 
         public CEdge DetectCloestLeftCorrectCEdge(CPoint cpt)
         {
-            CGeometricMethods.DetectCloestLeftCEdge(cpt, _pEdgeGrid);
-            return CGeometricMethods.GetCorrectEdge(cpt);
+            CGeoFunc.DetectCloestLeftCEdge(cpt, _pEdgeGrid);
+            return CGeoFunc.GetCorrectEdge(cpt);
         }
 
         /// <summary>
@@ -653,7 +605,7 @@ namespace MorphingClass.CGeometry
             //test other edges (IncidentCEdge)
             do
             {
-                //int intCompare = CCompareMethods.Compare(CurrentCEdge.dblAxisAngle, cedge.dblAxisAngle);
+                //int intCompare = CCmpMethods.Cmp(CurrentCEdge.dblAxisAngle, cedge.dblAxisAngle);
                 //if (intCompare == 1)
                 if (CurrentCEdge.dblAxisAngle > cedge.dblAxisAngle)
                 {
@@ -685,7 +637,7 @@ namespace MorphingClass.CGeometry
                 cedgelt.Add(halfcedgelt[intI]);
                 intI += 2;
             }
-            _CEdgeLt = cedgelt;
+            this.CEdgeLt = cedgelt;
             return cedgelt;
         }
 
@@ -746,7 +698,15 @@ namespace MorphingClass.CGeometry
         }
 
 
-        
+        /// <summary>
+        /// we have to run GenerateDataAreaCEdgeLt first
+        /// </summary>
+        /// <param name="pParameterInitialize"></param>
+        /// <param name="str"></param>
+        public void SaveCEdgeLt(CParameterInitialize pParameterInitialize, string str)
+        {
+            CSaveFeature.SaveCGeoEb(this.CEdgeLt, esriGeometryType.esriGeometryPolyline, str, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
+        }
 
 
         /// <summary></summary>

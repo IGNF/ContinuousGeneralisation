@@ -52,8 +52,8 @@ namespace MorphingClass.CMorphingMethods
             _ParameterInitialize = ParameterInitialize;
 
             //获取线数组
-            _LSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pBSFLayer);
-            _SSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSSFLayer);
+            _LSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pBSFLayer);
+            _SSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSSFLayer);
         }
 
 
@@ -69,11 +69,11 @@ namespace MorphingClass.CMorphingMethods
             //CParameterThreshold pParameterThreshold = new CParameterThreshold();
 
             //lngStartTime1 = System.Environment.TickCount;
-            //pParameterThreshold.dblBuffer = CHelperFunction.CalBuffer(LSCPlLt, SSCPlLt);      //计算缓冲区半径大小
+            //pParameterThreshold.dblBuffer = CHelpFunc.CalBuffer(LSCPlLt, SSCPlLt);      //计算缓冲区半径大小
             //lngEndTime1 = System.Environment.TickCount;
             //long lngTime1 = lngEndTime1 - lngStartTime1;
 
-            //pParameterThreshold.dblVerySmall = CGeometricMethods.CalVerySmall(LSCPlLt[0]);         //计算极小值
+            //pParameterThreshold.dblVerySmall = CGeoFunc.CalVerySmall(LSCPlLt[0]);         //计算极小值
             //pParameterThreshold.dblOverlapRatio = pParameterInitialize.dblOverlapRatio;
 
             //long lngTime2=0;
@@ -86,7 +86,7 @@ namespace MorphingClass.CMorphingMethods
             //CalLengthSum(CBSRiverNetLt);   //计算河网中每一条河流的长度总和
             //CalLengthSum(CSSRiverNetLt);   //计算河网中每一条河流的长度总和
 
-            ////CHelperFunction.SaveBuffers(CBSRiverNetLt, CSSRiverNetLt, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);  //保存Buffer
+            ////CHelpFunc.SaveBuffers(CBSRiverNetLt, CSSRiverNetLt, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);  //保存Buffer
 
 
             //List<CCorrespondRiverNet> pCorrespondRiverNetLt =_OptMRL.FindCorrespondRiverNetLt(CBSRiverNetLt, CSSRiverNetLt, pParameterThreshold);  //找对应河网
@@ -109,7 +109,7 @@ namespace MorphingClass.CMorphingMethods
             //_ParameterInitialize.tsslTime.Text = "Running Time: " + Convert.ToString(lngTimeSum) + "ms";  //显示运行时间
 
             ////保存对应线
-            //CHelperFunction.SaveCorrespondLine(CResultPtLtLt, "MRLCorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCorrespondLine(CResultPtLtLt, "MRLCorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
 
             ////获取结果，全部记录在_ParameterResult中
             //CParameterResult ParameterResult = new CParameterResult();
@@ -189,7 +189,7 @@ namespace MorphingClass.CMorphingMethods
         /// <remarks></remarks>
         private void CalCutTime(List<CRiverNet> CBSRiverNetLt)
         {
-            SortedList<double, CRiver> dblDataSLt = new SortedList<double, CRiver>(new CCompareDbl());
+            SortedList<double, CRiver> dblDataSLt = new SortedList<double, CRiver>(new CCmpDbl());
             //添加大比例尺表达图层中(包括各河网)的所有没有对应河流的河流
             for (int i = 0; i < CBSRiverNetLt.Count; i++)
             {

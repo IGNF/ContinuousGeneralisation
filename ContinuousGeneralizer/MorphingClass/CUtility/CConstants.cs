@@ -7,25 +7,32 @@ namespace MorphingClass.CUtility
 {
     public static class CConstants
     {
-        
 
-        private static double _dblVerySmall = 0.0000000000000000001;  //please notice that the default value of _dblVerySmall is 0.000000000001, but we usually set a new _dblVerySmall with respect to the data
+        private static double _dblVerySmallCoord = 0.0000000000000000001;
+        //private static double _dblVerySmall = 0.0000000000000000001;  //please notice that the default value of _dblVerySmall is 0.000000000001, but we usually set a new _dblVerySmall with respect to the data
         private static double _dblVerySmallSquare = 0.0000000000000000001;  //please notice that the default value of _dblVerySmall is 0.000000000001, but we usually set a new _dblVerySmall with respect to the data
         private static double _dblVerySmallPower3 = 0.0000000000000000001;  //please notice that the default value of _dblVerySmall is 0.000000000001, but we usually set a new _dblVerySmall with respect to the data
         private static double _dblVerySmallPower4 = 0.0000000000000000001;  //please notice that the default value of _dblVerySmall is 0.000000000001, but we usually set a new _dblVerySmall with respect to the data
         
-        private static double _dblVerySmallSpecial = 0.0000000000000000001;  //can be changed when we check topological relationship
+        private static double _dblVerySmallCoordFixed = 0.0000000000000000001;  //can be changed when we check topological relationship
         private static double _dblMidLength = 1;
-        private static double _dblSmallDis = 0.1;
-        private static double _dblVerySmallSlope = 0.00000001;  //we should consider slope somehow different
+        //private static double _dblSmallDis = 0.1;
+        //private static double _dblVerySmallSlope = 0.00000001;  //we should consider slope somehow different
 
         //10 X e6 is not good for calculate integral
         //10 X e4 and 10 X e5 is not good for constructing compatible triangulations of data Jiangxionecounty, because there are some intersections too close each other and we may identify a InIn relationship to InFr relationship
         //10 X e6 is not good for constructing compatible triangulations of data MainlandChina, because there are some intersections too close each other and we may identify a InIn relationship to InFr relationship; 10 X e7 works well
         public static double _dblVerySmallDenominator = 1000000; //I test it many times. it seems 10 X e6 is appropriate value. This value may need change when we have different data sets
         private static double _dblSmallDisDenominator = 1000;
-        private static double _dblSpecialValue = -Math.Pow(Math.PI, 10);  //we use the special value to initial some number
-        private static double _dblTwoPI = 2 * Math.PI;
+        public static double dblSpecialValue { set; get; } = -Math.Pow(Math.PI, 3);  //we use the special value to initial some number
+
+        
+        public static double dblVerySmallConst { set; get; } = 0.00000001;
+        public static double dblTwoPI { set; get; } = 2 * Math.PI;
+        public static double dblHalfPI { set; get; } = Math.PI/2;
+        public static double dblThreeSecondPI { set; get; } = 3*Math.PI / 2;
+        public static double dblFiveDegreeRad { set; get; } = Math.PI / 36;
+
         private static double _dblTwoSqrtPI = 2 * Math .Sqrt ( Math.PI);
         private static double _dblHalfDoubleMax = double.MaxValue / 2;
 
@@ -54,6 +61,7 @@ namespace MorphingClass.CUtility
         //private static int _intCpgGID = 0;
 
         public static double dblVeryLarge { set; get; } = double.MaxValue / 3;
+        public static bool blnStop { set; get; } 
 
         public static int intMaxTypeChange
         {
@@ -68,10 +76,32 @@ namespace MorphingClass.CUtility
             set { _strFmtIDs6 = value; }
         }
 
-        /// <summary>属性：</summary>
-        public static double dblVerySmall
+        ///// <summary>属性：</summary>
+        //public static double dblVerySmall
+        //{
+        //    get { return _dblVerySmall; }
+        //    set
+        //    {
+        //        double X = _dblMidLength;
+        //        double y = value;
+
+        //        double XX = X * X;
+        //        double XXX = XX * X;
+        //        double XXXX = XX * XX;
+        //        double yy = y * y;
+        //        double yyy = yy * y;
+        //        double yyyy = yy * yy;
+
+        //        _dblVerySmall = y;
+        //        _dblVerySmallSquare = 2 * X * y + yy;
+        //        _dblVerySmallPower3 = 3 * XX * y + 3 * X * yy + yyy;
+        //        _dblVerySmallPower4 = 4 * XXX * y + 6 * XX * yy + 4 * X * yyy + yyyy;
+        //    }
+        //}
+
+        public static double dblVerySmallCoord
         {
-            get { return _dblVerySmall; }
+            get { return _dblVerySmallCoord; }
             set
             {
                 double X = _dblMidLength;
@@ -84,12 +114,14 @@ namespace MorphingClass.CUtility
                 double yyy = yy * y;
                 double yyyy = yy * yy;
 
-                _dblVerySmall = y;
+                _dblVerySmallCoord = y;
                 _dblVerySmallSquare = 2 * X * y + yy;
                 _dblVerySmallPower3 = 3 * XX * y + 3 * X * yy + yyy;
                 _dblVerySmallPower4 = 4 * XXX * y + 6 * XX * yy + 4 * X * yyy + yyyy;
             }
         }
+
+        //public static double dblVerySmallCoord { set; get; } = 0.00000001;
 
         /// <summary>属性：</summary>
         public static double dblVerySmallSquare
@@ -111,10 +143,10 @@ namespace MorphingClass.CUtility
         }
 
         /// <summary>属性：</summary>
-        public static double dblVerySmallSpecial
+        public static double dblVerySmallCoordFixed
         {
-            get { return _dblVerySmallSpecial; }
-            set { _dblVerySmallSpecial = value; }
+            get { return _dblVerySmallCoordFixed; }
+            set { _dblVerySmallCoordFixed = value; }
         }
 
         public static double dblVerySmallDenominator
@@ -136,30 +168,17 @@ namespace MorphingClass.CUtility
             set { _dblMidLength = value; }
         }
 
-        /// <summary>属性：</summary>
-        public static double dblSmallDis
-        {
-            get { return _dblSmallDis; }
-            set { _dblSmallDis = value; }
-        }
+        ///// <summary>属性：</summary>
+        //public static double dblSmallDis
+        //{
+        //    get { return _dblSmallDis; }
+        //    set { _dblSmallDis = value; }
+        //}
 
         public static double dblTwoSqrtPI
         {
             get { return _dblTwoSqrtPI; }
             set { _dblTwoSqrtPI = value; }
-        }
-
-        
-        public static double dblTwoPI
-        {
-            get { return _dblTwoPI; }
-            set { _dblTwoPI = value; }
-        }
-
-        public static double dblSpecialValue
-        {
-            get { return _dblSpecialValue; }
-            set { _dblSpecialValue = value; }
         }
 
         public static double dblHalfDoubleMax
@@ -192,11 +211,11 @@ namespace MorphingClass.CUtility
             set { _dblUpperBoundLoose = value; }
         }
 
-        public static double dblVerySmallSlope
-        {
-            get { return _dblVerySmallSlope; }
-            set { _dblVerySmallSlope = value; }
-        }
+        //public static double dblVerySmallSlope
+        //{
+        //    get { return _dblVerySmallSlope; }
+        //    set { _dblVerySmallSlope = value; }
+        //}
 
         
 

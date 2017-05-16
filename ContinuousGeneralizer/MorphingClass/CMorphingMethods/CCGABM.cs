@@ -86,7 +86,7 @@ namespace MorphingClass.CMorphingMethods
 
                 int intSmallerindexID;
                 int intLargerindexID;
-                CHelperFunction.CompareAndOrder(indexID1, indexID2, ID => ID, out intSmallerindexID, out intLargerindexID);  //we store the smaller index at "FaceNum_1", and store the larger index at "FaceNum_2"
+                CHelpFunc.CompareAndOrder(indexID1, indexID2, ID => ID, out intSmallerindexID, out intLargerindexID);  //we store the smaller index at "FaceNum_1", and store the larger index at "FaceNum_2"
 
                 InterLSobjlt1.Add(intSmallerindexID);
                 InterLSobjlt2.Add(intLargerindexID);
@@ -176,7 +176,7 @@ namespace MorphingClass.CMorphingMethods
             var dlgTransform = SetDlgTransform(pParameterInitialize.cboTransform.Text);
             var TransSgIGeoLt = new List<IGeometry>(SgIplLt.Count);
             TransSgIGeoLt.EveryElementValue(null);
-            CHelperFunction.Displaytspb(0.5, intInterLSFaceCount, pParameterInitialize.tspbMain);
+            CHelpFunc.Displaytspb(0.5, intInterLSFaceCount, pParameterInitialize.tspbMain);
             for (int i = 0; i < intInterLSFaceCount; i++)
             {
                 Console.WriteLine("Face Num: " + i);
@@ -190,7 +190,7 @@ namespace MorphingClass.CMorphingMethods
                         TransSgIGeoLt[intSgIndexLtLt[i][intCount++]] = TransSgCpl.JudgeAndSetAEGeometry();
                     }
                 }
-                CHelperFunction.Displaytspb(i + 1, intInterLSFaceCount, pParameterInitialize.tspbMain);
+                CHelpFunc.Displaytspb(i + 1, intInterLSFaceCount, pParameterInitialize.tspbMain);
             }
 
             pStopwatch.Stop();
@@ -205,11 +205,11 @@ namespace MorphingClass.CMorphingMethods
         #region CTTransform (compatible triangulation)
         private IEnumerable<CPolyline> CTTransform(CParameterInitialize pParameterInitialize, List<IPolyline5> InterLSIplLt, List<IPolyline5> InterSSIplLt, List<IPolyline5> SgIplLt)
         {
-            CConstants.dblVerySmall /= 10;  //this assignment should equal to _dblVerySmallDenominator = 10000000
+            CConstants.dblVerySmallCoord /= 10;  //this assignment should equal to _dblVerySmallDenominator = 10000000
 
-            var InterLSCplLt = CHelperFunction.GenerateCGeoEbAccordingToGeoEb<CPolyline>(InterLSIplLt).ToList();
-            var InterSSCplLt = CHelperFunction.GenerateCGeoEbAccordingToGeoEb<CPolyline>(InterSSIplLt).ToList();
-            var SgCplEb = CHelperFunction.GenerateCGeoEbAccordingToGeoEb<CPolyline>(SgIplLt);
+            var InterLSCplLt = CHelpFunc.GenerateCGeoEbAccordingToGeoEb<CPolyline>(InterLSIplLt).ToList();
+            var InterSSCplLt = CHelpFunc.GenerateCGeoEbAccordingToGeoEb<CPolyline>(InterSSIplLt).ToList();
+            var SgCplEb = CHelpFunc.GenerateCGeoEbAccordingToGeoEb<CPolyline>(SgIplLt);
 
 
             CDCEL pInterLSDCEL = new CDCEL(InterLSCplLt);
@@ -224,7 +224,7 @@ namespace MorphingClass.CMorphingMethods
             //I need to check if we realy need a counter clockwise direction
             pInterSSDCEL.FaceCpgLt[1].GetOuterCptEb(false).ToList();  //there are only two faces: the super face and a normal face
 
-            var pInterLSCptSD = pInterLSCptLt.ToSD(cpt => cpt, new CCompareCptYX_VerySmall()); //we maintaine this SD so that for a point from single polyline, we can know whether this single point overlaps a point of a larger-scale polyline
+            var pInterLSCptSD = pInterLSCptLt.ToSD(cpt => cpt, new CCmpCptYX_VerySmall()); //we maintaine this SD so that for a point from single polyline, we can know whether this single point overlaps a point of a larger-scale polyline
 
             CCptbCtgl pCptbCtgl = new CCptbCtgl(pInterLSDCEL.FaceCpgLt[1], pInterSSDCEL.FaceCpgLt[1], pParameterInitialize);
             pCptbCtgl.ConstructCcptbCtgl();
@@ -234,7 +234,7 @@ namespace MorphingClass.CMorphingMethods
                 yield return GenerateCorrSgCpl(pCptbCtgl, SgCpl, pInterLSCptSD);
             }
 
-            CConstants.dblVerySmall *= 10;
+            CConstants.dblVerySmallCoord *= 10;
         }
 
 
@@ -261,7 +261,7 @@ namespace MorphingClass.CMorphingMethods
 
         private CPolygon DetectFaceForSg(CPolyline SgCpl, CDCEL pInterLSDCEL)
         {
-            var identitycpt = CGeometricMethods.GetInbetweenCpt(SgCpl.CptLt[0], SgCpl.CptLt[1], 0.5);
+            var identitycpt = CGeoFunc.GetInbetweenCpt(SgCpl.CptLt[0], SgCpl.CptLt[1], 0.5);
             return pInterLSDCEL.DetectCloestLeftCorrectCEdge(identitycpt).cpgIncidentFace;   //comparing to the method which traverses along DCEL, this method only needs to detect the face once 
         }
 
@@ -436,8 +436,8 @@ namespace MorphingClass.CMorphingMethods
             }
 
             double dblLamda1, dblLamda2, dblLamda3;
-            CGeometricMethods.CalBarycentricCoordinates(SgCpt, trianglecpt[0], trianglecpt[1], trianglecpt[2], out dblLamda1, out dblLamda2, out dblLamda3);
-            CPoint AffineCpt = CGeometricMethods.CalCartesianCoordinates(pToCtgl.CptLt[trianglecpt[0].indexID], pToCtgl.CptLt[trianglecpt[1].indexID],
+            CGeoFunc.CalBarycentricCoordinates(SgCpt, trianglecpt[0], trianglecpt[1], trianglecpt[2], out dblLamda1, out dblLamda2, out dblLamda3);
+            CPoint AffineCpt = CGeoFunc.CalCartesianCoordinates(pToCtgl.CptLt[trianglecpt[0].indexID], pToCtgl.CptLt[trianglecpt[1].indexID],
                                                                          pToCtgl.CptLt[trianglecpt[2].indexID], dblLamda1, dblLamda2, dblLamda3, SgCpt.ID);
             return AffineCpt;
         }
@@ -582,10 +582,10 @@ namespace MorphingClass.CMorphingMethods
             //            TransSgIGeoLt[intSgIndexLtLt[i][intCount++]] = TransSgCpl.JudgeAndSetAEGeometry();
             //        }
             //    }
-            //    CHelperFunction.Displaytspb(i + 1, intInterLSFaceCount, pParameterInitialize.tspbMain);
+            //    CHelpFunc.Displaytspb(i + 1, intInterLSFaceCount, pParameterInitialize.tspbMain);
             //}
 
-            //CHelperFunction.SaveIGeoLt(TransSgIGeoLt, esriGeometryType.esriGeometryPolyline, "TransSgCPlLt" + pParameterInitialize.strSaveFolder, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl, this.strFieldNameLtLt[_intSg], this.esriFieldTypeLtLt[_intSg], _ObjValueLtLtLt[_intSg]);
+            //CHelpFunc.SaveIGeoLt(TransSgIGeoLt, esriGeometryType.esriGeometryPolyline, "TransSgCPlLt" + pParameterInitialize.strSaveFolder, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl, this.strFieldNameLtLt[_intSg], this.esriFieldTypeLtLt[_intSg], _ObjValueLtLtLt[_intSg]);
 
 
 
@@ -612,14 +612,14 @@ namespace MorphingClass.CMorphingMethods
 
         private IEnumerable<CPolyline> RSTransform(CParameterInitialize pParameterInitialize, List<IPolyline5> InterLSIplLt, List<IPolyline5> InterSSIplLt, List<IPolyline5> SgIplLt)
         {
-            var pInterLSCplLt = CHelperFunction.GenerateCGeoEbAccordingToGeoEb<CPolyline>(InterLSIplLt).ToList();
-            var pInterSSCplLt = CHelperFunction.GenerateCGeoEbAccordingToGeoEb<CPolyline>(InterSSIplLt).ToList();
-            var SgCplEb = CHelperFunction.GenerateCGeoEbAccordingToGeoEb<CPolyline>(SgIplLt);
+            var pInterLSCplLt = CHelpFunc.GenerateCGeoEbAccordingToGeoEb<CPolyline>(InterLSIplLt).ToList();
+            var pInterSSCplLt = CHelpFunc.GenerateCGeoEbAccordingToGeoEb<CPolyline>(InterSSIplLt).ToList();
+            var SgCplEb = CHelpFunc.GenerateCGeoEbAccordingToGeoEb<CPolyline>(SgIplLt);
 
-            var pCorrCptsLtLt = CGeometricMethods.GetCorrCptsLtLt(pInterLSCplLt, pInterSSCplLt);
-            CHelperFunction.SetMoveVectorForCorrCptsLtLt(pCorrCptsLtLt);
+            var pCorrCptsLtLt = CGeoFunc.GetCorrCptsLtLt(pInterLSCplLt, pInterSSCplLt);
+            CHelpFunc.SetMoveVectorForCorrCptsLtLt(pCorrCptsLtLt);
 
-            var pInterLSCptSD = pInterLSCplLt.GetAllCptEb<CPolyline, CPolyline>().ToSD(cpt => cpt, new CCompareCptYX_VerySmall());
+            var pInterLSCptSD = pInterLSCplLt.GetAllCptEb<CPolyline, CPolyline>().ToSD(cpt => cpt, new CCmpCptYX_VerySmall());
             foreach (var SgCpl in SgCplEb)
             {
                 yield return RSGenerateCorrSgCpl(SgCpl, pInterLSCptSD);
@@ -636,7 +636,7 @@ namespace MorphingClass.CMorphingMethods
             {
                 cptlt.Add(RSComputeCpt(sgcptlt[i], pInterLSCptSD));
             }
-            cptlt.Add(RSComputeEndCpt(sgcptlt.GetLast_T(), pInterLSCptSD));  //the last point
+            cptlt.Add(RSComputeEndCpt(sgcptlt.GetLastT(), pInterLSCptSD));  //the last point
 
             return new CPolyline(SgCpl.ID, cptlt);
         }
@@ -669,7 +669,7 @@ namespace MorphingClass.CMorphingMethods
 
             foreach (var cptkvp in CptSD)
             {
-                var dblDisSquare = CGeometricMethods.CalDisSquare(cpt, cptkvp.Key);
+                var dblDisSquare = CGeoFunc.CalDisSquare(cpt, cptkvp.Key);
                 var dblWeight = 1 / (dblDisSquare);
                 var pMoveVector = cptkvp.Key.PairCorrCpt.pMoveVector;
                 dblIntegralWeightedMoveX += dblWeight * pMoveVector.X;
@@ -746,7 +746,7 @@ namespace MorphingClass.CMorphingMethods
 
             //generate transformed single polylines
             List<CPolyline> TransSgCPlLt = new List<CPolyline>(SgCPlLt.Count);
-            return CGeometricMethods.GenerateCplLtByCorrCpt(SgCPlLt);
+            return CGeoFunc.GenerateCplLtByCorrCpt(SgCPlLt);
         }
 
         private List<List<CPoint>> FindCptOfSingleInLSFace(List<CEdge> LSMixSgHalfEdgeLt, List<CPolygon> LSFaceLt, out List<List<CEdge>> InsideSameFaceHalfCEdgeLtLt)
@@ -878,7 +878,7 @@ namespace MorphingClass.CMorphingMethods
 
         private void CalSgMoveVectorIDW(CPoint cpt, CEdge cedge, ref double dblIntegralWeightedMoveX, ref double dblIntegralWeightedMoveY, ref double dblIntegralWeight)
         {
-            double dblDisSquare = CGeometricMethods.CalDisSquare(cpt, cedge.FrCpt);
+            double dblDisSquare = CGeoFunc.CalDisSquare(cpt, cedge.FrCpt);
             double dblWeight = 1 / (dblDisSquare);
 
             CMoveVector pMoveVector = cedge.FrCpt.PairCorrCpt.pMoveVector;
@@ -930,8 +930,8 @@ namespace MorphingClass.CMorphingMethods
         //    pSgCPlLt.ForEach(cpl => cpl.SetCptBelongedPolyline());
         //    pInterLSCPlLt.ForEach(cpl => cpl.enumScale = CEnumScale.Larger);
         //    pInterLSCPlLt.ForEach(cpl => cpl.SetCptBelongedPolyline());   //we also use a little trick here. we first do "SetCptBelongedCpl" for "SgCPlLt", then do it for "InterLSCPlLt", so that the shared point will use a BSCPl as its Belonged CPl
-        //    CHelperFunction.SetCEdgeCEdgeTwinBelongedCpl(ref pInterLSCPlLt);
-        //    CHelperFunction.SetCEdgeCEdgeTwinBelongedCpl(ref pSgCPlLt);
+        //    CHelpFunc.SetCEdgeCEdgeTwinBelongedCpl(ref pInterLSCPlLt);
+        //    CHelpFunc.SetCEdgeCEdgeTwinBelongedCpl(ref pSgCPlLt);
         //}
 
 
@@ -952,7 +952,7 @@ namespace MorphingClass.CMorphingMethods
 
             double dblLSToSSRatio = CalRatioofPtNum(pLSCPlLt, pSSCPlLt);
 
-            var LScptSS = new SortedSet<CPoint>(new CCompareCptYX_VerySmall());
+            var LScptSS = new SortedSet<CPoint>(new CCmpCptYX_VerySmall());
             foreach (var LSCPl in pLSCPlLt)
             {
                 foreach (var cpt in LSCPl.CptLt)
@@ -974,17 +974,17 @@ namespace MorphingClass.CMorphingMethods
                     SgEndPtLt.Add(FrCpt);
                 }
 
-                var ToCpt = cpl.CptLt.GetLast_T();
+                var ToCpt = cpl.CptLt.GetLastT();
                 if (LScptSS.Contains(ToCpt) == false)
                 {
                     SgEndPtLt.Add(ToCpt);
                 }
             }
-            C5.LinkedList<CCorrCpts> CorrCptsLt = CGeometricMethods.LookingForNeighboursByGrids(SgEndPtLt, CConstants.dblVerySmall);
-            int intSgIntersection = CGeometricMethods.GetNumofIntersections(CorrCptsLt);
+            C5.LinkedList<CCorrCpts> CorrCptsLt = CGeoFunc.LookingForNeighboursByGrids(SgEndPtLt, CConstants.dblVerySmallCoord);
+            int intSgIntersection = CGeoFunc.GetNumofIntersections(CorrCptsLt);
 
             //do we need this?*******************************************************************************
-            //int intAloneEnds = CGeometricMethods.GetNumofAloneEnds(EndPtLt, CorrCptsLt);
+            //int intAloneEnds = CGeoFunc.GetNumofAloneEnds(EndPtLt, CorrCptsLt);
             //int intRealPtNum = intInnerPtNum + intSgIntersection + intAloneEnds;
 
 
@@ -1025,11 +1025,11 @@ namespace MorphingClass.CMorphingMethods
                 BSEndPtLt.Add(pLSCPlLt[i].CptLt[pLSCPlLt[i].CptLt.Count - 1]);
             }
 
-            C5.LinkedList<CCorrCpts> CorrCptsLt = CGeometricMethods.LookingForNeighboursByGrids(BSEndPtLt, CConstants.dblVerySmall);
-            int intIntersection = CGeometricMethods.GetNumofIntersections(CorrCptsLt);
+            C5.LinkedList<CCorrCpts> CorrCptsLt = CGeoFunc.LookingForNeighboursByGrids(BSEndPtLt, CConstants.dblVerySmallCoord);
+            int intIntersection = CGeoFunc.GetNumofIntersections(CorrCptsLt);
 
             //do we need this?*******************************************************************************
-            //int intAloneEnds = CGeometricMethods.GetNumofAloneEnds(EndPtLt, CorrCptsLt);
+            //int intAloneEnds = CGeoFunc.GetNumofAloneEnds(EndPtLt, CorrCptsLt);
             //int intRealPtNum = intInnerPtNum + intSgIntersection + intAloneEnds;
 
             //notice that there are the same intersections of the larger-scale polylines and the smaller-scale polylines
@@ -1053,11 +1053,11 @@ namespace MorphingClass.CMorphingMethods
             List<CPolyline> pInterSSCPlLt = this.ObjCGeoLtLt[1].AsExpectedClass<CPolyline, object>().ToList();
             List<CPolyline> pInterLSSgCPlLt = this.ObjCGeoLtLt[2].AsExpectedClass<CPolyline, object>().ToList();
             List<CPolyline> pInterSSSgCPlLt = this.ObjCGeoLtLt[3].AsExpectedClass<CPolyline, object>().ToList();
-            _CorrCptsLtLt = CGeometricMethods.GetCorrCptsLtLt(pInterLSCPlLt, pInterSSCPlLt);
-            _SgCorrCptsLtLt = CGeometricMethods.GetCorrCptsLtLt(pInterLSSgCPlLt, pInterSSSgCPlLt);
+            _CorrCptsLtLt = CGeoFunc.GetCorrCptsLtLt(pInterLSCPlLt, pInterSSCPlLt);
+            _SgCorrCptsLtLt = CGeoFunc.GetCorrCptsLtLt(pInterLSSgCPlLt, pInterSSSgCPlLt);
 
-            CHelperFunction.SetMoveVectorForCorrCptsLtLt(_CorrCptsLtLt);
-            CHelperFunction.SetMoveVectorForCorrCptsLtLt(_SgCorrCptsLtLt);
+            CHelpFunc.SetMoveVectorForCorrCptsLtLt(_CorrCptsLtLt);
+            CHelpFunc.SetMoveVectorForCorrCptsLtLt(_SgCorrCptsLtLt);
 
             //to save memory
             this.ObjCGeoLtLt[0] = null;

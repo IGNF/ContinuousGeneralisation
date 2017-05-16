@@ -23,27 +23,27 @@ namespace MorphingClass.CGeometry
         public static int _intStaticTest;
 
         //public LinkedList<int> _IDLk;  //ID of the Region, where the ID is a LinkedList
-        public static CCompareCRegion_Cost_CphGIDTypeIndex pCompareCRegion_Cost_CphGIDTypeIndex = new CCompareCRegion_Cost_CphGIDTypeIndex();  //this variable should be used for the queue Q
+        public static CCmpCRegion_Cost_CphGIDTypeIndex pCmpCRegion_Cost_CphGIDTypeIndex = new CCmpCRegion_Cost_CphGIDTypeIndex();  //this variable should be used for the queue Q
 
         //this comparer should be used for integrate the sequences for output 
-        public static CCompareCRegion_MinArea_CphGIDTypeIndex pCompareCRegion_MinArea_CphGIDTypeIndex = new CCompareCRegion_MinArea_CphGIDTypeIndex();
+        public static CCmpCRegion_MinArea_CphGIDTypeIndex pCmpCRegion_MinArea_CphGIDTypeIndex = new CCmpCRegion_MinArea_CphGIDTypeIndex();
 
         //this comparer should be used for integrate the sequences for output 
-        public static CCompareCRegion_CostExact_CphGIDTypeIndex pCompareCRegion_CostExact_CphGIDTypeIndex = new CCompareCRegion_CostExact_CphGIDTypeIndex();
+        public static CCmpCRegion_CostExact_CphGIDTypeIndex pCmpCRegion_CostExact_CphGIDTypeIndex = new CCmpCRegion_CostExact_CphGIDTypeIndex();
 
         //this comparer should be used for checking existing Crgs
-        public static CCompareCRegion_CphGIDTypeIndex pCompareCRegion_CphGIDTypeIndex = new CCompareCRegion_CphGIDTypeIndex();
+        public static CCmpCRegion_CphGIDTypeIndex pCmpCRegion_CphGIDTypeIndex = new CCmpCRegion_CphGIDTypeIndex();
 
         //this comparer should be used for counting uncolored Crgs
-        public static CCompareCRegion_CphGID pCompareCRegion_CphGID = new CCompareCRegion_CphGID();  //this variable should be used for CRegion itself
+        public static CCmpCRegion_CphGID pCmpCRegion_CphGID = new CCmpCRegion_CphGID();  //this variable should be used for CRegion itself
         
-        //public static CCompareCRegion_CompareDblPreLocateEqual pCompareCRegion_CompareDblPreLocateEqual = new CCompareCRegion_CompareDblPreLocateEqual();
+        //public static CCmpCRegion_CompareDblPreLocateEqual pCmpCRegion_CompareDblPreLocateEqual = new CCmpCRegion_CompareDblPreLocateEqual();
         //public static 
 
         public SortedDictionary<CCorrCphs, CCorrCphs> AdjCorrCphsSD { get; set; }  //compare GID of CorrCphs
 
-        public SortedDictionary<CPatch, int> CphTypeIndexSD_Area_CphGID { get; set; }  //Why did I use SortedDictionary? We use this comparator CPatch .pCompareCPatch_Area_CphGID
-        //public SortedSet<CPatch> CphSS_Compactness_CphGID { get; set; }  //Why did I use SortedDictionary? We use this comparator CPatch .pCompareCPatch_Area_CphGID
+        public SortedDictionary<CPatch, int> CphTypeIndexSD_Area_CphGID { get; set; }  //Why did I use SortedDictionary? We use this comparator CPatch .pCmpCPatch_Area_CphGID
+        //public SortedSet<CPatch> CphSS_Compactness_CphGID { get; set; }  //Why did I use SortedDictionary? We use this comparator CPatch .pCmpCPatch_Area_CphGID
 
         public static long _lngEstCountEdgeNumber;
         public static long _lngEstCountEdgeLength;
@@ -88,7 +88,7 @@ namespace MorphingClass.CGeometry
             get { return _dblCostEstType; }
             set
             {
-                CHelperFunction.InBoundOrReport(value, 0, CConstants.dblVeryLarge,CCompareDbl_VerySmall.pCompareDbl_VerySmall);
+                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge,CCmpCoordDbl_VerySmall.pCmpCoordDbl_VerySmall);
                 _dblCostEstType = value;
             }
         }
@@ -99,7 +99,7 @@ namespace MorphingClass.CGeometry
             get { return _dblCostEstComp; }
             set
             {
-                CHelperFunction.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCompareDbl_VerySmall.pCompareDbl_VerySmall);
+                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.pCmpCoordDbl_VerySmall);
                 _dblCostEstComp = value;
             }
         }
@@ -110,7 +110,7 @@ namespace MorphingClass.CGeometry
             get { return _dblCostExactType; }
             set
             {
-                CHelperFunction.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCompareDbl_VerySmall.pCompareDbl_VerySmall);
+                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.pCmpCoordDbl_VerySmall);
                 _dblCostExactType = value;
             }
         }
@@ -121,7 +121,7 @@ namespace MorphingClass.CGeometry
             get { return _dblCostExactComp; }
             set
             {
-                CHelperFunction.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCompareDbl_VerySmall.pCompareDbl_VerySmall);
+                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.pCmpCoordDbl_VerySmall);
                 _dblCostExactComp = value;
             }
         }
@@ -132,7 +132,7 @@ namespace MorphingClass.CGeometry
             get { return _dblCostExact; }
             set
             {
-                CHelperFunction.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCompareDbl_VerySmall.pCompareDbl_VerySmall);
+                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.pCmpCoordDbl_VerySmall);
                 _dblCostExact = value;
             }
         }
@@ -143,7 +143,7 @@ namespace MorphingClass.CGeometry
             get { return _dblCostEst; }
             set
             {
-                CHelperFunction.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCompareDbl_VerySmall.pCompareDbl_VerySmall);
+                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.pCmpCoordDbl_VerySmall);
                 _dblCostEst = value;
             }
         }
@@ -170,7 +170,7 @@ namespace MorphingClass.CGeometry
         }
 
         //public CRegion(int intID)
-        //    : this(intID, new SortedDictionary<CPatch, int>(CPatch.pCompareCPatch_CpgGID))
+        //    : this(intID, new SortedDictionary<CPatch, int>(CPatch.pCmpCPatch_CpgGID))
         //{
         //}
 
@@ -178,7 +178,7 @@ namespace MorphingClass.CGeometry
         //public CRegion(int intID, SortedDictionary<CPatch, int> pCphTypeIndexSD)
         //{
         //    this.ID = intID;
-        //    this.CphTypeIndexSD = new SortedDictionary<CPatch, int>(pCphTypeIndexSD, CPatch.pCompareCPatch_CpgGID);
+        //    this.CphTypeIndexSD = new SortedDictionary<CPatch, int>(pCphTypeIndexSD, CPatch.pCmpCPatch_CpgGID);
         //    this.d = double.MaxValue;
         //    this.parent = null;
         //    this.cenumColor = CEnumColor.white;
@@ -189,7 +189,7 @@ namespace MorphingClass.CGeometry
         {
             this.ID = intID;
             this.GID = _intStaticGID++;
-            this.CphTypeIndexSD_Area_CphGID = new SortedDictionary<CPatch, int>(CPatch.pCompareCPatch_Area_CphGID);
+            this.CphTypeIndexSD_Area_CphGID = new SortedDictionary<CPatch, int>(CPatch.pCmpCPatch_Area_CphGID);
 
 
             ////intID==-2 is for a temporary Crg, and thus should not be counted
@@ -315,17 +315,21 @@ namespace MorphingClass.CGeometry
         /// <param name="cphlt"></param>
         public SortedDictionary<CCorrCphs, CCorrCphs> SetInitialAdjacency()
         {
-            var ExistingCorrCphsSD0 = new SortedDictionary<CCorrCphs, CCorrCphs>(CCorrCphs.pCompareCCorrCphs_CphsGID); // we need this variable here, because it has different comparator with pAdjCorrCphsSD
-            SortedDictionary<CEdge, CPatch> cedgeSD = new SortedDictionary<CEdge, CPatch>(new CCompareCEdgeCoordinates());  //why SortedDictionary? Because we want to get the value of an element. The element may have the same key with another element.
+            var ExistingCorrCphsSD0 = new SortedDictionary<CCorrCphs, CCorrCphs>(CCorrCphs.pCmpCCorrCphs_CphsGID); // we need this variable here, because it has different comparator with pAdjCorrCphsSD
+            SortedDictionary<CEdge, CPatch> cedgeSD = new SortedDictionary<CEdge, CPatch>(new CCmpCEdgeCoordinates());  //why SortedDictionary? Because we want to get the value of an element. The element may have the same key with another element.
             var pAdjCorrCphsSD = new SortedDictionary<CCorrCphs, CCorrCphs>();
 
-            if (this .GetCphCount() > 1)
+            if (this.GetCphCount() > 1)
             {
                 foreach (var cph in this.GetCphCol())
                 {
-                    foreach (var cedgelt in cph.GetSoloCpg().CEdgeLtLt)
+                    var cpgSK = new Stack<CPolygon>();
+                    cpgSK.Push(cph.GetSoloCpg());
+
+                    do
                     {
-                        foreach (CEdge cedge in cedgelt)  //Note that there is only one element in cph.CpgSS
+                        var cpg = cpgSK.Pop();
+                        foreach (CEdge cedge in cpg.CEdgeLt)  //Note that there is only one element in cph.CpgSS
                         {
                             //cedge.PrintMySelf();
 
@@ -364,8 +368,16 @@ namespace MorphingClass.CGeometry
                                 cedgeSD.Add(cedge, cph);
                                 //this.intEdgeCount++;
                             }
-                        } 
-                    }
+                        }
+
+                        if (cpg.HoleCpgLt != null)
+                        {
+                            foreach (var holecpg in cpg.HoleCpgLt)
+                            {
+                                cpgSK.Push(holecpg);
+                            }
+                        }
+                    } while (cpgSK.Count > 0);
                 }
             }
 
@@ -580,7 +592,7 @@ namespace MorphingClass.CGeometry
         private static SortedDictionary<CCorrCphs, CCorrCphs> ComputeIncrementalAdjCorrCphsSD(List<CCorrCphs> AddKeyLt,
             SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD)
         {
-            var incrementalAdjCorrCphsSD = new SortedDictionary<CCorrCphs, CCorrCphs>(CCorrCphs.pCompareCCorrCphs_CphsGID);
+            var incrementalAdjCorrCphsSD = new SortedDictionary<CCorrCphs, CCorrCphs>(CCorrCphs.pCmpCCorrCphs_CphsGID);
 
             foreach (var AddKey in AddKeyLt)
             {
@@ -690,12 +702,12 @@ namespace MorphingClass.CGeometry
             if (ExistingCrgSDLt[newcrg.GetCphCount()].TryGetValue(newcrg, out outcrg))
             {
                 int intResult = newcrg.dblCostExact.CompareTo(outcrg.dblCostExact);
-                //int intResult = CCompareMethods.CompareDbl_VerySmall(newcrg.dblCostExact, outcrg.dblCostExact);
-                double dblverysmall = CConstants.dblVerySmall;
+                //int intResult = CCmpMethods.CmpCoordDbl_VerySmall(newcrg.dblCostExact, outcrg.dblCostExact);
+
                 if (intResult == -1)
                 {
                     //from the idea of A* algorithm, we know that outcrg must be in Q
-                    //var Q = new SortedSet<CRegion>(CRegion.pCompareCRegion_Cost_CphGIDTypeIndex);
+                    //var Q = new SortedSet<CRegion>(CRegion.pCmpCRegion_Cost_CphGIDTypeIndex);
                     if (Q.Remove(outcrg) == true) //there is no decrease key function for SortedSet, so we have to remove it and later add it again
                     {
                         outcrg.cenumColor = newcrg.cenumColor;
@@ -742,7 +754,7 @@ namespace MorphingClass.CGeometry
         public CRegion GenerateCrgChildAndComputeCost(CRegion lscrg, SortedDictionary<CCorrCphs, CCorrCphs> newAdjCorrCphsSD, 
             CPatch activecph, CPatch passivecph, CPatch unitedcph, CCorrCphs unitingCorrCphs, int intactiveTypeIndex, int intpassiveTypeIndex,  double[,] padblTD)
         {
-            var newCphTypeIndexSD = new SortedDictionary<CPatch, int>(this.CphTypeIndexSD_Area_CphGID, CPatch.pCompareCPatch_Area_CphGID);
+            var newCphTypeIndexSD = new SortedDictionary<CPatch, int>(this.CphTypeIndexSD_Area_CphGID, CPatch.pCmpCPatch_Area_CphGID);
             newCphTypeIndexSD.Remove(activecph);
             newCphTypeIndexSD.Remove(passivecph);
             newCphTypeIndexSD.Add(unitedcph, intactiveTypeIndex);
@@ -1100,7 +1112,7 @@ namespace MorphingClass.CGeometry
 
                 intEdgeCountSSEt.MoveNext();
                 intEdgeCountAtmost -= intEdgeCountSSEt.Current;
-                dblCompRegularPolygon = CGeometricMethods.CalCompRegularPolygon(intEdgeCountAtmost);
+                dblCompRegularPolygon = CGeoFunc.CalCompRegularPolygon(intEdgeCountAtmost);
 
                 dblCompSS.Add(new CValPair<double, int>(dblCompRegularPolygon, intCompCount++));
                 dblSumComp += dblCompRegularPolygon;
@@ -1171,7 +1183,7 @@ namespace MorphingClass.CGeometry
                 if (intEstCount < lscrg.GetCphCount())
                 {
                     int intAverageEdgeCount = Convert.ToInt32(Math.Floor(Convert.ToDouble(intEdgeCountAtmost) / Convert.ToDouble(intEstCount)));
-                    yield return CGeometricMethods.CalCompRegularPolygon(intAverageEdgeCount);
+                    yield return CGeoFunc.CalCompRegularPolygon(intAverageEdgeCount);
                 }                
 
                 intEdgeCountAtmost -= (2 * intEdgeCountSSEt.Current);
@@ -1248,7 +1260,7 @@ namespace MorphingClass.CGeometry
         /// <remarks>from time t to n-1</remarks>
         private List<double> EstimateInteriorLength(CRegion crg, CRegion lscrg)
         {
-            var dblSegLengthSS = new SortedSet<double>(new CCompareDbl());  //items in dblEdgeLengthSS is ordered from largest to smallest
+            var dblSegLengthSS = new SortedSet<double>(new CCmpDbl());  //items in dblEdgeLengthSS is ordered from largest to smallest
             foreach (var pCorrCphs in crg.AdjCorrCphsSD.Keys)
             {
                 dblSegLengthSS.Add(pCorrCphs.dblSharedSegLength);
@@ -1414,7 +1426,7 @@ namespace MorphingClass.CGeometry
         //public double EstimateSumMinArea(CRegion pCrg)
         //{
         //    pCrg.SetInitialAdjacencyForCph();
-        //    SortedSet<CPatch> tempCphAreaSS = new SortedSet<CPatch>(pCrg.CphTypeIndexSD.Keys, CPatch.pCompareCPatch_Area_CphGID);
+        //    SortedSet<CPatch> tempCphAreaSS = new SortedSet<CPatch>(pCrg.CphTypeIndexSD.Keys, CPatch.pCmpCPatch_Area_CphGID);
 
 
         //    double dblEstimateSumMinArea = 0;
@@ -1426,7 +1438,7 @@ namespace MorphingClass.CGeometry
         //        tempCphAreaSS.Remove(min2);
 
         //        var unitedcph = min1.Unite(min2);
-        //        unitedcph.Adjacent_CphsCEdgeLtSD = new SortedDictionary<CPatch, List<CEdge>>(CPatch.pCompareCPatch_Area_CphGID);
+        //        unitedcph.Adjacent_CphsCEdgeLtSD = new SortedDictionary<CPatch, List<CEdge>>(CPatch.pCmpCPatch_Area_CphGID);
         //        tempCphAreaSS.Add(unitedcph);
 
         //        dblEstimateSumMinArea += min1.dblArea * ComputeCostArea(tempCphAreaSS, pCrg.dblArea);
@@ -1480,7 +1492,7 @@ namespace MorphingClass.CGeometry
         //{
         //    foreach (var cph in this.CphTypeIndexSD.Keys)
         //    {
-        //        cph.Adjacent_CphsCEdgeLtSD = new SortedDictionary<CPatch, List<CEdge>>(CPatch.pCompareCPatch_Area_CphGID);
+        //        cph.Adjacent_CphsCEdgeLtSD = new SortedDictionary<CPatch, List<CEdge>>(CPatch.pCmpCPatch_Area_CphGID);
         //    }
 
         //    foreach (var kvp in this.AdjCorrCphsSD)

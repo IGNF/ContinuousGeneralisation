@@ -144,8 +144,6 @@ namespace ContinuousGeneralizer
             this.mnuApLL = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuALm = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuLMulti = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnutestbase = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnutestinherit = new System.Windows.Forms.ToolStripMenuItem();
             this.roadnetworkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuClassification = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuRightAngelDPS = new System.Windows.Forms.ToolStripMenuItem();
@@ -1091,9 +1089,7 @@ namespace ContinuousGeneralizer
             this.mnuALALMulti,
             this.mnuPAL,
             this.mnuLinear_AL,
-            this.mnuApLALMulti,
-            this.mnutestbase,
-            this.mnutestinherit});
+            this.mnuApLALMulti});
             this.MorphingLSAToolStripMenuItem.Name = "MorphingLSAToolStripMenuItem";
             this.MorphingLSAToolStripMenuItem.Size = new System.Drawing.Size(92, 20);
             this.MorphingLSAToolStripMenuItem.Text = "MorphingLSA";
@@ -1146,20 +1142,6 @@ namespace ContinuousGeneralizer
             this.mnuLMulti.Size = new System.Drawing.Size(137, 22);
             this.mnuLMulti.Text = "LMulti";
             this.mnuLMulti.Click += new System.EventHandler(this.mnuLMulti_Click);
-            // 
-            // mnutestbase
-            // 
-            this.mnutestbase.Name = "mnutestbase";
-            this.mnutestbase.Size = new System.Drawing.Size(137, 22);
-            this.mnutestbase.Text = "testbase";
-            this.mnutestbase.Click += new System.EventHandler(this.mnutestbase_Click);
-            // 
-            // mnutestinherit
-            // 
-            this.mnutestinherit.Name = "mnutestinherit";
-            this.mnutestinherit.Size = new System.Drawing.Size(137, 22);
-            this.mnutestinherit.Text = "testinherit";
-            this.mnutestinherit.Click += new System.EventHandler(this.mnutestinherit_Click);
             // 
             // roadnetworkToolStripMenuItem
             // 
@@ -1463,8 +1445,6 @@ namespace ContinuousGeneralizer
         private System.Windows.Forms.ToolStripMenuItem mnuCAMDijkstra;
         private System.Windows.Forms.ToolStripMenuItem mnuCalGeo_Ipe;
         private System.Windows.Forms.ToolStripMenuItem mnuBuildingGrowing;
-        private System.Windows.Forms.ToolStripMenuItem mnutestbase;
-        private System.Windows.Forms.ToolStripMenuItem mnutestinherit;
         private System.Windows.Forms.ToolStripMenuItem mnuCompareExcel;
         private System.Windows.Forms.ToolStripMenuItem otherToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mnuKillExcel;

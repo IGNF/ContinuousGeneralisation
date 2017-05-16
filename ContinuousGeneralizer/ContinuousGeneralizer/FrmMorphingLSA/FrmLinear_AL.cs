@@ -75,7 +75,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             OFG.Filter = "xlsx files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
             OFG.ShowDialog();
             if (OFG.FileName == null || OFG.FileName == "") return;
-            _DataRecords.ParameterResult = CHelperFunctionExcel.InputDataResultPtLt(OFG.FileName);
+            _DataRecords.ParameterResult = CHelpFuncExcel.InputDataResultPtLt(OFG.FileName);
 
         }
 
@@ -97,11 +97,11 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             //for (int j = 0; j < intPtNum - 2; j++)
             //{
             //    //由于最后两个点直接由插值得出，故此处未计算最后两个点之间的长度值
-            //    _adblFrLength[j] = CGeometricMethods.CalDis(FrCpl.CptLt[j], FrCpl.CptLt[j + 1]);
-            //    _adblToLength[j] = CGeometricMethods.CalDis(ToCpl.CptLt[j], ToCpl.CptLt[j + 1]);
+            //    _adblFrLength[j] = CGeoFunc.CalDis(FrCpl.CptLt[j], FrCpl.CptLt[j + 1]);
+            //    _adblToLength[j] = CGeoFunc.CalDis(ToCpl.CptLt[j], ToCpl.CptLt[j + 1]);
 
-            //    _adblFrAngle[j] = CGeometricMethods.CalAngle_Counterclockwise(FrCpl.CptLt[j], FrCpl.CptLt[j + 1], FrCpl.CptLt[j + 2]);
-            //    _adblToAngle[j] = CGeometricMethods.CalAngle_Counterclockwise(ToCpl.CptLt[j], ToCpl.CptLt[j + 1], ToCpl.CptLt[j + 2]);
+            //    _adblFrAngle[j] = CGeoFunc.CalAngle_Counterclockwise(FrCpl.CptLt[j], FrCpl.CptLt[j + 1], FrCpl.CptLt[j + 2]);
+            //    _adblToAngle[j] = CGeoFunc.CalAngle_Counterclockwise(ToCpl.CptLt[j], ToCpl.CptLt[j + 1], ToCpl.CptLt[j + 2]);
             //}
 
             //CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
@@ -109,7 +109,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             //SFD.ShowDialog();
             //if (SFD.FileName == null || SFD.FileName == "") return;
             //ParameterInitialize.strSavePath = SFD.FileName;
-            //ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            //ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
 
         }
 
@@ -214,7 +214,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             List<CPolyline> cpllt = new List<CPolyline>();
             cpllt.Add(_RelativeInterpolationCpl);
             string strFileName = _dblProportion.ToString();
-            CHelperFunction.SaveCPlLt(cpllt, strFileName, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            CHelpFunc.SaveCPlLt(cpllt, strFileName, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
         }
 
         private CPolyline DisplayInterpolation(double dblProportion, IMapControl4 m_mapControl)
@@ -233,7 +233,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             newcptlt.Insert(0, newlastcpt);
             newcptlt.Insert(0, newlast1cpt);
 
-            double dblPreAxisAngle = CGeometricMethods.CalAxisAngle(newlast1cpt, newlastcpt);   //前一个线段的绝对角
+            double dblPreAxisAngle = CGeoFunc.CalAxisAngle(newlast1cpt, newlastcpt);   //前一个线段的绝对角
             for (int i = pCorrCptsLt.Count - 3; i >= 0; i--)
             {
                 //目标夹角大小
@@ -270,7 +270,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
 
             IGraphicsContainer pGra = m_mapControl.Map as IGraphicsContainer;
             pGra.DeleteAllElements();
-            CHelperFunction.ViewPolyline(m_mapControl, newcpl);
+            CHelpFunc.ViewPolyline(m_mapControl, newcpl);
             return newcpl;
         }
 

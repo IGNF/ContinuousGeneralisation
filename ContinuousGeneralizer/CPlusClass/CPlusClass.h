@@ -2,6 +2,7 @@
 
 #pragma once
 
+
 using namespace System;
 
 #include <vector>
@@ -86,188 +87,189 @@ namespace CPlusClass {
 	{
 	public:
 
-	int add(int a, int b)
-			 {
-				 int c=a+b;
-				 return c;
-	}
-
-	static int leastSquaresAdjust( int numPoints,
-									array<double> ^x,
-									array<double> ^y,
-									array<bool> ^isFixed,
-									array<double> ^length,
-									array<double> ^angle,
-									array<double> ^weight,
-									double threshold,
-									int nummaxiterative,
-									array<double> ^xout,
-									array<double> ^yout
-									) {
-		typedef Triplet<double> Trip;
-
-		
-		int *variableIndex = new int[numPoints];
-		vector<int> lengthConstraints;
-		vector<int> angleConstraints;
-		int numUnknownPoints = 0;
-		int currentIndex = 0;
-		for( int i=0; i<numPoints; ++i ) {
-			xout[i] = x[i];
-			yout[i] = y[i];
-			if(isFixed[i]) {
-				variableIndex[i] = -1; // this variable doesn't have an index in the matrix
-			} else {
-				numUnknownPoints++;
-				variableIndex[i] = currentIndex;
-				currentIndex += 1;
-			}
-		}
-		for( int i=0; i<numPoints-1; ++i ) {
-			if( !isFixed[i] || !isFixed[i+1] ) lengthConstraints.push_back( i );
-		}
-		for( int i=0; i<numPoints-2; ++i ) {
-			if( !isFixed[i] || !isFixed[i+1] || !isFixed[i+2] ) angleConstraints.push_back( i );
-		}
-		
-		int numUnknownLengths = lengthConstraints.size();
-		int numUnknownAngles = angleConstraints.size();
-		int numConstraints = numUnknownLengths+numUnknownAngles;
-
-		vector<Trip> tripsweight;
-		for( int i=0; i<numConstraints; ++i ) {
-			double value=weight[i];
-			tripsweight.push_back (Trip(i,i,value));
+		int add(int a, int b)
+		{
+			int c = a + b;
+			return c;
 		}
 
-		SparseMatrix<double> P( numConstraints, numConstraints); // construct matrix of correct size
-		P.setFromTriplets( tripsweight.begin(), tripsweight.end() ); // put the correct values in the matrix
+		static int leastSquaresAdjust(int numPoints,
+			cli::array<double> ^x,
+			cli::array<double> ^y,
+			cli::array<bool> ^isFixed,
+			cli::array<double> ^length,
+			cli::array<double> ^angle,
+			cli::array<double> ^weight,
+			double threshold,
+			int nummaxiterative,
+			cli::array<double> ^xout,
+			cli::array<double> ^yout
+		) {
+			typedef Triplet<double> Trip;
+			//array<double> st;
 
-		bool done = false;
-		int intInterativeNum=0;
-		do {
-			vector<Trip> trips;
-
-			int numCols = 2*numUnknownPoints;
-			int numRows = numUnknownAngles + numUnknownLengths;
-
-			VectorXd rhs( numRows ); // right-hand-side vector
-
-			int currentRow = 0;
-			// Length constraints
-			for( vector<int>::iterator index=lengthConstraints.begin(); index!=lengthConstraints.end(); ++index ) {
-				int i = *index;
-
-				double xdiff = xout[i+1] - xout[i];
-				double ydiff = yout[i+1] - yout[i];
-				double s = sqrt( xdiff*xdiff + ydiff*ydiff );
-				
-				if( !isFixed[i] ) {
-					double value = -(xout[i+1]-xout[i]) / s;
-					trips.push_back(Trip( currentRow, xid(variableIndex[i]), value ));
-					value = -(yout[i+1]-yout[i]) / s;
-					trips.push_back(Trip( currentRow, yid(variableIndex[i]), value ));
+			int *variableIndex = new int[numPoints];
+			vector<int> lengthConstraints;
+			vector<int> angleConstraints;
+			int numUnknownPoints = 0;
+			int currentIndex = 0;
+			for (int i = 0; i < numPoints; ++i) {
+				xout[i] = x[i];
+				yout[i] = y[i];
+				if (isFixed[i]) {
+					variableIndex[i] = -1; // this variable doesn't have an index in the matrix
 				}
-				if( !isFixed[i+1] ) {
-					double value = (xout[i+1]-xout[i]) / s;
-					trips.push_back(Trip( currentRow, xid(variableIndex[i+1]), value ));
-					value = (yout[i+1]-yout[i]) / s;
-					trips.push_back(Trip( currentRow, yid(variableIndex[i+1]), value ));
-				}
-				rhs[currentRow] = length[i] - s;
-				currentRow++;
-			}
-
-
-
-
-			// Angle constraint
-			for( vector<int>::iterator index=angleConstraints.begin(); index!=angleConstraints.end(); ++index ) {
-				int i = *index;
-
-				double xdiff1 = xout[i+1] - xout[i];
-				double ydiff1 = yout[i+1] - yout[i];
-				double s1Squared = xdiff1*xdiff1 + ydiff1*ydiff1;
-				double xdiff2 = xout[i+2] - xout[i+1];
-				double ydiff2 = yout[i+2] - yout[i+1];
-				double s2Squared = xdiff2*xdiff2 + ydiff2*ydiff2;
-
-				if( !isFixed[i] ) {
-					double value = -(yout[i+1]-yout[i]) / s1Squared;
-					trips.push_back(Trip( currentRow, xid(variableIndex[i]), value ));
-					value = (xout[i+1]-xout[i]) / s1Squared;
-					trips.push_back(Trip( currentRow, yid(variableIndex[i]), value ));
-				}
-				if( !isFixed[i+1] ) {
-					double value = (yout[i+2]-yout[i+1])/s2Squared + (yout[i+1]-yout[i])/s1Squared;
-					trips.push_back(Trip( currentRow, xid(variableIndex[i+1]), value ));
-					value = -(xout[i+2]-xout[i+1])/s2Squared - (xout[i+1]-xout[i])/s1Squared;
-					trips.push_back(Trip( currentRow, yid(variableIndex[i+1]), value ));
-				}
-				if( !isFixed[i+2] ) {
-					double value = -(yout[i+2]-yout[i+1]) / s2Squared;
-					trips.push_back(Trip( currentRow, xid(variableIndex[i+2]), value ));
-					value = (xout[i+2]-xout[i+1]) / s2Squared;
-					trips.push_back(Trip( currentRow, yid(variableIndex[i+2]), value ));
-				}
-				double newAngle = CalAngle_Counterclockwise( xout[i], yout[i], xout[i+1], yout[i+1], xout[i+2], yout[i+2] );
-				rhs[currentRow] = angle[i] - newAngle;
-				currentRow++;
-
-			}
-
-			SparseMatrix<double> A( numRows, numCols ); // construct matrix of correct size
-			A.setFromTriplets( trips.begin(), trips.end() ); // put the correct values in the matrix
-
-			SparseMatrix<double> AtPA = A.transpose() *P* A; // compute A^T A
-			
-			VectorXd AtPl = A.transpose() *P* rhs; // compute A^T l
-			
-			// solve for x
-			SimplicialLDLT<SparseMatrix<double> > solver(AtPA);
-			ComputationInfo info = solver.info();
-			VectorXd solution = solver.solve( AtPl );
-
-			double ax[1000];
-			int intXCount=0;
-
-			// update xout and yout
-			for( int i=0; i<numPoints; ++i ) {
-				if( !isFixed[i] ) {
-					double xChange = solution[ xid(variableIndex[i]) ];
-					xout[i] += xChange;
-					double yChange = solution[ yid(variableIndex[i]) ];
-					yout[i] += yChange;
+				else {
+					numUnknownPoints++;
+					variableIndex[i] = currentIndex;
+					currentIndex += 1;
 				}
 			}
-
-			// done if change is small
-			double dblnorm=solution.norm();
-			done = solution.norm() <= threshold;
-			//done=true;
-			if (done==true)
-			{
-				int kk=5;
+			for (int i = 0; i < numPoints - 1; ++i) {
+				if (!isFixed[i] || !isFixed[i + 1]) lengthConstraints.push_back(i);
 			}
-			intInterativeNum+=1;
-			if(intInterativeNum>=nummaxiterative)
-			{
-				break;
+			for (int i = 0; i < numPoints - 2; ++i) {
+				if (!isFixed[i] || !isFixed[i + 1] || !isFixed[i + 2]) angleConstraints.push_back(i);
 			}
-		} while( !done );
 
-		delete[] variableIndex;
-		return 42;
+			int numUnknownLengths = lengthConstraints.size();
+			int numUnknownAngles = angleConstraints.size();
+			int numConstraints = numUnknownLengths + numUnknownAngles;
+
+			vector<Trip> tripsweight;
+			for (int i = 0; i < numConstraints; ++i) {
+				double value = weight[i];
+				tripsweight.push_back(Trip(i, i, value));
+			}
+
+			SparseMatrix<double> P(numConstraints, numConstraints); // construct matrix of correct size
+			P.setFromTriplets(tripsweight.begin(), tripsweight.end()); // put the correct values in the matrix
+
+			bool done = false;
+			int intInterativeNum = 0;
+			do {
+				vector<Trip> trips;
+
+				int numCols = 2 * numUnknownPoints;
+				int numRows = numUnknownAngles + numUnknownLengths;
+
+				VectorXd rhs(numRows); // right-hand-side vector
+
+				int currentRow = 0;
+				// Length constraints
+				for (vector<int>::iterator index = lengthConstraints.begin(); index != lengthConstraints.end(); ++index) {
+					int i = *index;
+
+					double xdiff = xout[i + 1] - xout[i];
+					double ydiff = yout[i + 1] - yout[i];
+					double s = sqrt(xdiff*xdiff + ydiff*ydiff);
+
+					if (!isFixed[i]) {
+						double value = -(xout[i + 1] - xout[i]) / s;
+						trips.push_back(Trip(currentRow, xid(variableIndex[i]), value));
+						value = -(yout[i + 1] - yout[i]) / s;
+						trips.push_back(Trip(currentRow, yid(variableIndex[i]), value));
+					}
+					if (!isFixed[i + 1]) {
+						double value = (xout[i + 1] - xout[i]) / s;
+						trips.push_back(Trip(currentRow, xid(variableIndex[i + 1]), value));
+						value = (yout[i + 1] - yout[i]) / s;
+						trips.push_back(Trip(currentRow, yid(variableIndex[i + 1]), value));
+					}
+					rhs[currentRow] = length[i] - s;
+					currentRow++;
+				}
 
 
 
 
-	}
+				// Angle constraint
+				for (vector<int>::iterator index = angleConstraints.begin(); index != angleConstraints.end(); ++index) {
+					int i = *index;
+
+					double xdiff1 = xout[i + 1] - xout[i];
+					double ydiff1 = yout[i + 1] - yout[i];
+					double s1Squared = xdiff1*xdiff1 + ydiff1*ydiff1;
+					double xdiff2 = xout[i + 2] - xout[i + 1];
+					double ydiff2 = yout[i + 2] - yout[i + 1];
+					double s2Squared = xdiff2*xdiff2 + ydiff2*ydiff2;
+
+					if (!isFixed[i]) {
+						double value = -(yout[i + 1] - yout[i]) / s1Squared;
+						trips.push_back(Trip(currentRow, xid(variableIndex[i]), value));
+						value = (xout[i + 1] - xout[i]) / s1Squared;
+						trips.push_back(Trip(currentRow, yid(variableIndex[i]), value));
+					}
+					if (!isFixed[i + 1]) {
+						double value = (yout[i + 2] - yout[i + 1]) / s2Squared + (yout[i + 1] - yout[i]) / s1Squared;
+						trips.push_back(Trip(currentRow, xid(variableIndex[i + 1]), value));
+						value = -(xout[i + 2] - xout[i + 1]) / s2Squared - (xout[i + 1] - xout[i]) / s1Squared;
+						trips.push_back(Trip(currentRow, yid(variableIndex[i + 1]), value));
+					}
+					if (!isFixed[i + 2]) {
+						double value = -(yout[i + 2] - yout[i + 1]) / s2Squared;
+						trips.push_back(Trip(currentRow, xid(variableIndex[i + 2]), value));
+						value = (xout[i + 2] - xout[i + 1]) / s2Squared;
+						trips.push_back(Trip(currentRow, yid(variableIndex[i + 2]), value));
+					}
+					double newAngle = CalAngle_Counterclockwise(xout[i], yout[i], xout[i + 1], yout[i + 1], xout[i + 2], yout[i + 2]);
+					rhs[currentRow] = angle[i] - newAngle;
+					currentRow++;
+
+				}
+
+				SparseMatrix<double> A(numRows, numCols); // construct matrix of correct size
+				A.setFromTriplets(trips.begin(), trips.end()); // put the correct values in the matrix
+
+				SparseMatrix<double> AtPA = A.transpose() *P* A; // compute A^T A
+
+				VectorXd AtPl = A.transpose() *P* rhs; // compute A^T l
+
+				// solve for x
+				SimplicialLDLT<SparseMatrix<double> > solver(AtPA);
+				ComputationInfo info = solver.info();
+				VectorXd solution = solver.solve(AtPl);
+
+				double ax[1000];
+				int intXCount = 0;
+
+				// update xout and yout
+				for (int i = 0; i < numPoints; ++i) {
+					if (!isFixed[i]) {
+						double xChange = solution[xid(variableIndex[i])];
+						xout[i] += xChange;
+						double yChange = solution[yid(variableIndex[i])];
+						yout[i] += yChange;
+					}
+				}
+
+				// done if change is small
+				double dblnorm = solution.norm();
+				done = solution.norm() <= threshold;
+				//done=true;
+				if (done == true)
+				{
+					int kk = 5;
+				}
+				intInterativeNum += 1;
+				if (intInterativeNum >= nummaxiterative)
+				{
+					break;
+				}
+			} while (!done);
+
+			delete[] variableIndex;
+			return 42;
+
+
+
+
+		}
 
 
 
 
 
-			 // TODO: 在此处添加此类的方法。
+		// TODO: 在此处添加此类的方法。
 	};
 }

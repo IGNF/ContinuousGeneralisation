@@ -34,7 +34,21 @@ namespace MorphingClass.CUtility
         ToFr,
         ToIn,
         ToTo,
-        Overlap,   //In many cases, we can just ignore overlap, because if there is overlap, then there is also other cases
+        Overlap,   //In many cases, we can just ignore overlap, because if there is overlap, then there are also other cases
+    }
+
+    public enum CEnumDisMode
+    {
+        FrFr,
+        FrIn,
+        FrTo,
+        InFr,
+        InIn,
+        InTo,
+        ToFr,
+        ToIn,
+        ToTo,
+        Overlap,
     }
 
 
@@ -44,6 +58,4 @@ namespace MorphingClass.CUtility
 
 
 
-
-    
 }

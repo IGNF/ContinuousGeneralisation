@@ -39,10 +39,10 @@ namespace ContinuousGeneralizer.FrmEvaluate
             //List<CPoint> frptlt = ParameterResult.FromPtLt;
             //List<CPoint> resultptlt = ParameterResult.CResultPtLt;
 
-            //double dblMinDis = CGeometricMethods.CalDis(frptlt[0], frptlt[1]);
+            //double dblMinDis = CGeoFunc.CalDis(frptlt[0], frptlt[1]);
             //for (int i = 1; i < frptlt.Count - 1; i++)
             //{
-            //    double dblDis = CGeometricMethods.CalDis(frptlt[i], frptlt[i + 1]);
+            //    double dblDis = CGeoFunc.CalDis(frptlt[i], frptlt[i + 1]);
             //    if (dblDis < dblMinDis) dblMinDis = dblDis;
             //}
             //double dblSmallDis = dblMinDis / 10;

@@ -79,7 +79,7 @@ namespace ContinuousGeneralizer.FrmSimilarity
             //SaveFileDialog SFD = new SaveFileDialog();
             //SFD.ShowDialog();
             //ParameterInitialize.strSavePath = SFD.FileName;
-            //ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            //ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
 
 
             //获取当前选择的点要素图层
@@ -95,8 +95,8 @@ namespace ContinuousGeneralizer.FrmSimilarity
 
 
             //获取线数组
-            List<CPolyline> _LSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pBSFLayer);
-            List<CPolyline> _SSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSSFLayer);
+            List<CPolyline> _LSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pBSFLayer);
+            List<CPolyline> _SSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSSFLayer);
             CPolyline frcpl = _LSCPlLt[0];
             CPolyline tocpl = _SSCPlLt[0];
             //tocpl.
@@ -122,7 +122,7 @@ namespace ContinuousGeneralizer.FrmSimilarity
                 ////保存线
                 //List <CPolyline > cpllt=new List<CPolyline> ();
                 //cpllt.Add (tocpl2);
-                //CHelperFunction.SaveCPlLt(cpllt, "sss", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+                //CHelpFunc.SaveCPlLt(cpllt, "sss", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
                 List<CCorrCpts> pCorrCptsLt = BuildCorrespondences(frcpl, tocpl2);
                 double dblSimilarity = CalSimilarity(pCorrCptsLt);
@@ -170,7 +170,7 @@ namespace ContinuousGeneralizer.FrmSimilarity
             IPolyline5 newpolyline = pCol as IPolyline5;
             ITransform2D pTransform2D = newpolyline as ITransform2D;
 
-            SortedList<double, int> dblSimilaritySLt = new SortedList<double, int>(new CCompareDbl());
+            SortedList<double, int> dblSimilaritySLt = new SortedList<double, int>(new CCmpDbl());
             double dblRotateAngle = 2 * Math.PI / 360;
             for (int i = 0; i < 360; i++)
             {
@@ -198,7 +198,7 @@ namespace ContinuousGeneralizer.FrmSimilarity
             //C5.LinkedList<CCorrespondSegment> pBLGCorrespondSegmentLk = pMPBDPBL.DWByDPLDefine(frcpl, tocpl2, ParameterThreshold);
             //CAlgorithmsHelper pAlgorithmsHelper = new CAlgorithmsHelper();//作用调用对象的函数
             //List<CPoint> pResultPtLt = pAlgorithmsHelper.BuildPointCorrespondence(pBLGCorrespondSegmentLk, "Linear");
-            //List<CCorrCpts> pCorrCptsLt = CHelperFunction.TransferResultptltToCorrCptsLt(pResultPtLt);
+            //List<CCorrCpts> pCorrCptsLt = CHelpFunc.TransferResultptltToCorrCptsLt(pResultPtLt);
 
             //return pCorrCptsLt;
             return null;
@@ -213,7 +213,7 @@ namespace ContinuousGeneralizer.FrmSimilarity
             OFG.Filter = "xlsx files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
             OFG.ShowDialog();
             if (OFG.FileName == null || OFG.FileName == "") return;
-            _DataRecords.ParameterResult = CHelperFunctionExcel.InputDataResultPtLt(OFG.FileName);
+            _DataRecords.ParameterResult = CHelpFuncExcel.InputDataResultPtLt(OFG.FileName);
         }
 
         private void btnRunData_Click(object sender, EventArgs e)
@@ -251,7 +251,7 @@ namespace ContinuousGeneralizer.FrmSimilarity
             double[] dblDiffAngle = new double[pCorrCptsLt.Count - 1];
             for (int i = 0; i < pCorrCptsLt.Count - 1; i++)
             {
-                dblDiffAngle[i] = CGeometricMethods.CalAngle(dblFrDiffX[i], dblFrDiffY[i], dblToDiffX[i], dblToDiffY[i]);
+                dblDiffAngle[i] = CGeoFunc.CalAngle(dblFrDiffX[i], dblFrDiffY[i], dblToDiffX[i], dblToDiffY[i]);
             }
 
             //计算最终的值
@@ -297,7 +297,7 @@ namespace ContinuousGeneralizer.FrmSimilarity
                 return;
             }
             //读取线数据
-            List<CPolyline> CPolylineLt = CHelperFunction.GetCPlLtByFeatureLayer(pFeatureLayer);
+            List<CPolyline> CPolylineLt = CHelpFunc.GetCPlLtByFeatureLayer(pFeatureLayer);
             CPolyline cpl = CPolylineLt[0];
 
             //将线状要素分成3600份（得到3601个坐标点）
@@ -325,14 +325,14 @@ namespace ContinuousGeneralizer.FrmSimilarity
             }
             
             //由于物体是均匀的，各长度一致，因此不需定义数组
-            double dblFrDis = CGeometricMethods.CalDis(CircleCptLt[0], CircleCptLt[1]);
-            double dblToDis = CGeometricMethods.CalDis(cptlt[0], cptlt[1]);
+            double dblFrDis = CGeoFunc.CalDis(CircleCptLt[0], CircleCptLt[1]);
+            double dblToDis = CGeoFunc.CalDis(cptlt[0], cptlt[1]);
 
             //Fr线段和To线段之间的角度差（设定为必然小于180度，用余弦求）
             double[] dblDiffAngle = new double[3600];
             for (int i = 0; i <3600; i++)
             {
-                dblDiffAngle[i] = CGeometricMethods.CalAngle(CircleCptLt[i], CircleCptLt[i+1], cptlt[i], cptlt[i+1]);
+                dblDiffAngle[i] = CGeoFunc.CalAngle(CircleCptLt[i], CircleCptLt[i+1], cptlt[i], cptlt[i+1]);
             }
 
             //计算最终的值

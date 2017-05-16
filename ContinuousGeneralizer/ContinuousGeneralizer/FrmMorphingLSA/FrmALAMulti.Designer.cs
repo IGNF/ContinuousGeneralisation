@@ -31,93 +31,9 @@
             this.gpbDisplay.SuspendLayout();
             this.SuspendLayout();
             // 
-            // btnStop
+            // btnReadData
             // 
-            this.btnStop.Visible = false;
-            // 
-            // txtProportion
-            // 
-            this.txtProportion.Visible = false;
-            // 
-            // btnSaveInterpolation
-            // 
-            this.btnSaveInterpolation.Visible = false;
-            // 
-            // btnInputedScale
-            // 
-            this.btnInputedScale.Visible = false;
-            // 
-            // btn050
-            // 
-            this.btn050.Visible = false;
-            // 
-            // btn025
-            // 
-            this.btn025.Visible = false;
-            // 
-            // btn010
-            // 
-            this.btn010.Visible = false;
-            // 
-            // btn020
-            // 
-            this.btn020.Visible = false;
-            // 
-            // btn100
-            // 
-            this.btn100.Visible = false;
-            // 
-            // btn030
-            // 
-            this.btn030.Visible = false;
-            // 
-            // btn075
-            // 
-            this.btn075.Visible = false;
-            // 
-            // btn040
-            // 
-            this.btn040.Visible = false;
-            // 
-            // btn000
-            // 
-            this.btn000.Visible = false;
-            // 
-            // btn060
-            // 
-            this.btn060.Visible = false;
-            // 
-            // btn080
-            // 
-            this.btn080.Visible = false;
-            // 
-            // btn070
-            // 
-            this.btn070.Visible = false;
-            // 
-            // btn090
-            // 
-            this.btn090.Visible = false;
-            // 
-            // cboLayer
-            // 
-            this.cboLayer.Visible = true;
-            // 
-            // txtInterpolatedNum
-            // 
-            this.txtInterpolatedNum.Visible = true;
-            // 
-            // btnInputResults
-            // 
-            this.btnInputResults.Visible = true;
-            // 
-            // label2
-            // 
-            this.label2.Visible = true;
-            // 
-            // label1
-            // 
-            this.label1.Visible = true;
+            this.btnReadData.Click += new System.EventHandler(this.btnReadData_Click);
             // 
             // FrmALAMulti
             // 

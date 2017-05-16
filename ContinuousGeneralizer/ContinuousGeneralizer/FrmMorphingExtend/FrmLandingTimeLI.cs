@@ -58,7 +58,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
             //SaveFileDialog SFD = new SaveFileDialog();
             //SFD.ShowDialog();
             //ParameterInitialize.strSavePath = SFD.FileName;
-            //ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            //ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
 
             //CLandingTimeLI pLandingTimeLI = new CLandingTimeLI(ParameterInitialize);
             //_FrCpl = pLandingTimeLI._LSCPlLt[0];
@@ -66,7 +66,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
 
             //CLinearInterpolationA pLinearInterpolationA = new CLinearInterpolationA();
             //List<CPoint> Resultcptlt = pLinearInterpolationA.CLI(_FrCpl, _ToCpl);
-            //List<CCorrCpts> pCorrCptsLt = CHelperFunction.TransferResultptltToCorrCptsLt(Resultcptlt);
+            //List<CCorrCpts> pCorrCptsLt = CHelpFunc.TransferResultptltToCorrCptsLt(Resultcptlt);
             //_DataRecords.ParameterResult.CCorrCptsLt = pCorrCptsLt;
 
             //int intPtNum = pCorrCptsLt.Count;
@@ -79,11 +79,11 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
 
             //for (int j = 0; j < intPtNum - 2; j++)
             //{
-            //    _adblFrLength[j] = CGeometricMethods.CalDis(pCorrCptsLt[j].FrCpt, pCorrCptsLt[j + 1].FrCpt);
-            //    _adblToLength[j] = CGeometricMethods.CalDis(pCorrCptsLt[j].ToCpt, pCorrCptsLt[j + 1].ToCpt);
+            //    _adblFrLength[j] = CGeoFunc.CalDis(pCorrCptsLt[j].FrCpt, pCorrCptsLt[j + 1].FrCpt);
+            //    _adblToLength[j] = CGeoFunc.CalDis(pCorrCptsLt[j].ToCpt, pCorrCptsLt[j + 1].ToCpt);
 
-            //    _adblFrAngle[j] = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[j].FrCpt, pCorrCptsLt[j + 1].FrCpt, pCorrCptsLt[j + 2].FrCpt);
-            //    _adblToAngle[j] = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[j].ToCpt, pCorrCptsLt[j + 1].ToCpt, pCorrCptsLt[j + 2].ToCpt);
+            //    _adblFrAngle[j] = CGeoFunc.CalAngle_Counterclockwise(pCorrCptsLt[j].FrCpt, pCorrCptsLt[j + 1].FrCpt, pCorrCptsLt[j + 2].FrCpt);
+            //    _adblToAngle[j] = CGeoFunc.CalAngle_Counterclockwise(pCorrCptsLt[j].ToCpt, pCorrCptsLt[j + 1].ToCpt, pCorrCptsLt[j + 2].ToCpt);
             //}
 
 
@@ -127,11 +127,11 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
 
             //        for (int j = 0; j < intPtNum - 2; j++)
             //        {
-            //            _adblFrLength[j] = CGeometricMethods.CalDis(FrCpl.CptLt[j], FrCpl.CptLt[j + 1]);
-            //            _adblToLength[j] = CGeometricMethods.CalDis(ToCpl.CptLt[j], ToCpl.CptLt[j + 1]);
+            //            _adblFrLength[j] = CGeoFunc.CalDis(FrCpl.CptLt[j], FrCpl.CptLt[j + 1]);
+            //            _adblToLength[j] = CGeoFunc.CalDis(ToCpl.CptLt[j], ToCpl.CptLt[j + 1]);
 
-            //            _adblFrAngle[j] = CGeometricMethods.CalAngle_Counterclockwise(FrCpl.CptLt[j], FrCpl.CptLt[j + 1], FrCpl.CptLt[j + 2]);
-            //            _adblToAngle[j] = CGeometricMethods.CalAngle_Counterclockwise(ToCpl.CptLt[j], ToCpl.CptLt[j + 1], ToCpl.CptLt[j + 2]);
+            //            _adblFrAngle[j] = CGeoFunc.CalAngle_Counterclockwise(FrCpl.CptLt[j], FrCpl.CptLt[j + 1], FrCpl.CptLt[j + 2]);
+            //            _adblToAngle[j] = CGeoFunc.CalAngle_Counterclockwise(ToCpl.CptLt[j], ToCpl.CptLt[j + 1], ToCpl.CptLt[j + 2]);
             //        }
 
             //        break;
@@ -144,7 +144,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
             //SFD.ShowDialog();
             //if (SFD.FileName == null || SFD.FileName == "") return;
             //ParameterInitialize.strSavePath = SFD.FileName;
-            //ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            //ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
 
 
 
@@ -285,7 +285,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
             //newcptlt.Insert(0, newlastcpt);
             //newcptlt.Insert(0, newlast1cpt);
 
-            //double dblPreAxisAngle = CGeometricMethods.CalAxisAngle(newlast1cpt, newlastcpt);   //前一个线段的绝对角
+            //double dblPreAxisAngle = CGeoFunc.CalAxisAngle(newlast1cpt, newlastcpt);   //前一个线段的绝对角
             //for (int i = pCorrCptsLt.Count - 3; i >= 0; i--)
             //{
             //    //目标夹角大小
@@ -322,7 +322,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
 
             //IGraphicsContainer pGra = m_mapControl.Map as IGraphicsContainer;
             //pGra.DeleteAllElements();
-            //CHelperFunction.ViewPolyline(m_mapControl, newcpl);
+            //CHelpFunc.ViewPolyline(m_mapControl, newcpl);
             //return newcpl;
             return null;
         }

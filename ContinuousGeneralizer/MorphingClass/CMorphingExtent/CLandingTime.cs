@@ -49,8 +49,8 @@ namespace MorphingClass.CMorphingExtend
             _ParameterInitialize = ParameterInitialize;
 
             //获取线数组
-            _LSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pBSFLayer);
-            _SSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSSFLayer);
+            _LSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pBSFLayer);
+            _SSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSSFLayer);
         }
 
         public CLandingTime(CDataRecords pDataRecords)
@@ -82,13 +82,13 @@ namespace MorphingClass.CMorphingExtend
             //_DataRecords.ParameterResult.pc = THcpllt;
 
 
-            //CPolyline cpl = CGeometricMethods.GetTargetcpl(dblProportion);
+            //CPolyline cpl = CGeoFunc.GetTargetcpl(dblProportion);
 
             //// 清除绘画痕迹
             //IMapControl4 m_mapControl = _DataRecords.ParameterInitialize.m_mapControl;
             //IGraphicsContainer pGra = m_mapControl.Map as IGraphicsContainer;
             //pGra.DeleteAllElements();
-            //CHelperFunction.ViewPolylines(m_mapControl, THcpllt);  //显示生成的线段
+            //CHelpFunc.ViewPolylines(m_mapControl, THcpllt);  //显示生成的线段
             _DataRecords.ParameterResult.CResultPlLt = THcpllt;
             return THcpllt;
         }

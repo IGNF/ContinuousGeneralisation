@@ -89,7 +89,7 @@ namespace MorphingClass.CEvaluationMethods
             //double dblSumLenth = 0;
             //for (int i = 1; i < LengthDiffptlt.Count; i++)
             //{
-            //    double dblLength = CGeometricMethods.CalDis(LengthDiffptlt[i - 1], LengthDiffptlt[i]);
+            //    double dblLength = CGeoFunc.CalDis(LengthDiffptlt[i - 1], LengthDiffptlt[i]);
             //    dblLengthDiffLt.Add(dblLength);
             //    dblSumLenth = dblSumLenth + dblLength;
             //    dblSumLengthDiffLt.Add(dblSumLenth);
@@ -136,7 +136,7 @@ namespace MorphingClass.CEvaluationMethods
             //        //fromcpl中的一个点对应tocpl中多个点的情形，直接计算各三角形面积
             //        for (int j = 0; j < resultptlt[i].CorrespondingPtLt.Count - 1; j++)
             //        {
-            //            double dblLengthDiff = CGeometricMethods.CalDis(resultptlt[i].CorrespondingPtLt[j], resultptlt[i].CorrespondingPtLt[j + 1]);
+            //            double dblLengthDiff = CGeoFunc.CalDis(resultptlt[i].CorrespondingPtLt[j], resultptlt[i].CorrespondingPtLt[j + 1]);
             //            dblSumLengthDiff += dblLengthDiff;
             //        }
             //        //将resultptlt[i]及其对应点序列中的最后一个对应点作为下一个四边形的两个顶点
@@ -151,8 +151,8 @@ namespace MorphingClass.CEvaluationMethods
             //        cpt2 = resultptlt[i].CorrespondingPtLt[0];
             //    }
 
-            //    double dblLength1 = CGeometricMethods.CalDis(cpt0, resultptlt[i + 1]);
-            //    double dblLength2 = CGeometricMethods.CalDis(cpt2, resultptlt[i + 1].CorrespondingPtLt[0]);
+            //    double dblLength1 = CGeoFunc.CalDis(cpt0, resultptlt[i + 1]);
+            //    double dblLength2 = CGeoFunc.CalDis(cpt2, resultptlt[i + 1].CorrespondingPtLt[0]);
             //    double dblLengthDiff2 = Math.Abs(dblLength1 - dblLength2);
 
             //    dblSumLengthDiff += dblLengthDiff2;
@@ -174,10 +174,10 @@ namespace MorphingClass.CEvaluationMethods
             CPoint tolastcpt = resultptlt[0].CorrespondingPtLt[0];
             for (int i = 0; i < resultptlt.Count; i++)
             {
-                double dblfrlength = CGeometricMethods.CalDis(resultptlt[i], frlastcpt);//计算权重值长度
+                double dblfrlength = CGeoFunc.CalDis(resultptlt[i], frlastcpt);//计算权重值长度
                 for (int j = 0; j < resultptlt[i].CorrespondingPtLt.Count; j++)
                 {
-                    double dbltolength = CGeometricMethods.CalDis(resultptlt[i].CorrespondingPtLt[j], tolastcpt);//计算权重值长度
+                    double dbltolength = CGeoFunc.CalDis(resultptlt[i].CorrespondingPtLt[j], tolastcpt);//计算权重值长度
                     dblSumRatioLengthDiff = Math.Abs(dblfrlength - dbltolength) * (dblfrlength + dbltolength);
 
                     tolastcpt = resultptlt[i].CorrespondingPtLt[j];  //更新tolastcpt

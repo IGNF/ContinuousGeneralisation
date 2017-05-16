@@ -222,6 +222,7 @@
     <Compile Include="CCorrepondObjects\CCptbCtgl.cs" />
     <Compile Include="CCorrepondObjects\CCorrCphs.cs" />
     <Compile Include="CCorrepondObjects\CPairInt.cs" />
+    <Compile Include="CCorrepondObjects\CValFour.cs" />
     <Compile Include="CCorrepondObjects\CValPair.cs" />
     <Compile Include="CCorrepondObjects\CValMap_SD.cs" />
     <Compile Include="CEntity\CAtBd.cs" />
@@ -240,7 +241,6 @@
     <Compile Include="CGeneralizationMethods\CAreaAggregation_ILP.cs" />
     <Compile Include="CGeneralizationMethods\CBezierDetectPoint.cs" />
     <Compile Include="CGeneralizationMethods\CCAMDijkstra.cs" />
-    <Compile Include="CGeneralizationMethods\CDP.cs" />
     <Compile Include="CGeneralizationMethods\CDPSimplification.cs" />
     <Compile Include="CGeneralizationMethods\CGDNWDD.cs" />
     <Compile Include="CGeneralizationMethods\CHWPGRN.cs" />
@@ -248,6 +248,7 @@
     <Compile Include="CGeneralizationMethods\CplexServer.cs" />
     <Compile Include="CGeneralizationMethods\CVetexCover.cs" />
     <Compile Include="CGeometry\CCphRecord.cs" />
+    <Compile Include="CGeometry\CEdgeRelation.cs" />
     <Compile Include="CGeometry\CGeometryBase\CBasicBase.cs" />
     <Compile Include="CGeometry\CGeometryBase\CLandCoverBase.cs" />
     <Compile Include="CGeometry\CGeometryBase\CLineBase.cs" />
@@ -267,6 +268,7 @@
     <Compile Include="CGeometry\CMBR\Geometry\Vector2d.cs" />
     <Compile Include="CGeometry\CMBR\MinimalBoundingBox.cs" />
     <Compile Include="CGeometry\CMoveVector.cs" />
+    <Compile Include="CGeometry\CPtEdgeDis.cs" />
     <Compile Include="CGeometry\CTriangulation.cs" />
     <Compile Include="CGeometry\CPatch.cs" />
     <Compile Include="CGeometry\CPoint.cs" />
@@ -325,22 +327,23 @@
     <Compile Include="CUtility\CConstants.cs" />
     <Compile Include="CUtility\CDataRecords.cs" />
     <Compile Include="CUtility\CCompareClasses.cs" />
+    <Compile Include="CUtility\CPointer.cs" />
     <Compile Include="CUtility\clipper.cs" />
     <Compile Include="CUtility\CStrObjLtSD.cs" />
     <Compile Include="CUtility\CDelegate.cs" />
     <Compile Include="CUtility\CEnvelope.cs" />
     <Compile Include="CUtility\CExcelOperator.cs" />
     <Compile Include="CUtility\CFrmOperation.cs" />
-    <Compile Include="CUtility\CGeometricMethods.cs" />
-    <Compile Include="CUtility\CHelperFunction.cs" />
-    <Compile Include="CUtility\CHelperFunctionExcel.cs" />
+    <Compile Include="CUtility\CGeoFunc.cs" />
+    <Compile Include="CUtility\CHelpFunc.cs" />
+    <Compile Include="CUtility\CHelpFuncExcel.cs" />
     <Compile Include="CUtility\CIEnumerableExtensions.cs" />
     <Compile Include="CUtility\CIpeDraw.cs" />
     <Compile Include="CUtility\CMath.cs" />
     <Compile Include="CUtility\CMathStatistic.cs" />
     <Compile Include="CUtility\CMatrix.cs" />
     <Compile Include="CUtility\CMoveInformation.cs" />
-    <Compile Include="CUtility\CCompareMethods.cs" />
+    <Compile Include="CUtility\CCmpMethods.cs" />
     <Compile Include="CUtility\CEnum.cs" />
     <Compile Include="CUtility\CExcelStreamWriter.cs" />
     <Compile Include="CUtility\CQuadraticEquation.cs" />
@@ -355,6 +358,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CPlusClass\CPlusClass.vcxproj">
+      <Project>{fbbf5c0b-9ca4-4078-8676-c0decd9a42ba}</Project>
+      <Name>CPlusClass</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VBClass\VBClass.vbproj">
       <Project>{37C13D51-20CC-4F15-B16F-20A219F2F3FC}</Project>
       <Name>VBClass</Name>

@@ -75,7 +75,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             SFD.ShowDialog();
             if (SFD.FileName == null || SFD.FileName == "") return;
             ParameterInitialize.strSavePath = SFD.FileName;
-            ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
 
 
             //读取数据
@@ -102,7 +102,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             SFD.ShowDialog();
             if (SFD.FileName == null || SFD.FileName == "") return;
             ParameterInitialize.strSavePath = SFD.FileName;
-            ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(ParameterInitialize.strSavePath);
+            ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
 
 
             //读取数据
@@ -125,73 +125,73 @@ namespace ContinuousGeneralizer.FrmMorphing
         private void btn010_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.1;
-            _RelativeInterpolationCpl = CHelperFunction.DisplayInterpolation(_DataRecords, _dblProportion);
+            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProportion);
         }
         private void btn020_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.2;
-            _RelativeInterpolationCpl = CHelperFunction.DisplayInterpolation(_DataRecords, _dblProportion);
+            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProportion);
         }
         private void btn030_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.3;
-            _RelativeInterpolationCpl = CHelperFunction.DisplayInterpolation(_DataRecords, _dblProportion);
+            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProportion);
         }
         private void btn040_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.4;
-            _RelativeInterpolationCpl = CHelperFunction.DisplayInterpolation(_DataRecords, _dblProportion);
+            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProportion);
         }
         private void btn050_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.5;
-            _RelativeInterpolationCpl = CHelperFunction.DisplayInterpolation(_DataRecords, _dblProportion);
+            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProportion);
         }
         private void btn060_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.6;
-            _RelativeInterpolationCpl = CHelperFunction.DisplayInterpolation(_DataRecords, _dblProportion);
+            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProportion);
         }
         private void btn070_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.7;
-            _RelativeInterpolationCpl = CHelperFunction.DisplayInterpolation(_DataRecords, _dblProportion);
+            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProportion);
         }
         private void btn080_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.8;
-            _RelativeInterpolationCpl = CHelperFunction.DisplayInterpolation(_DataRecords, _dblProportion);
+            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProportion);
         }
         private void btn090_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.9;
-            _RelativeInterpolationCpl = CHelperFunction.DisplayInterpolation(_DataRecords, _dblProportion);
+            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProportion);
         }
         private void btn000_Click(object sender, EventArgs e)
         {
             _dblProportion = 0;
-            _RelativeInterpolationCpl = CHelperFunction.DisplayInterpolation(_DataRecords, _dblProportion);
+            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProportion);
         }
         private void btn025_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.25;
-            _RelativeInterpolationCpl = CHelperFunction.DisplayInterpolation(_DataRecords, _dblProportion);
+            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProportion);
         }
         private void btn075_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.75;
-            _RelativeInterpolationCpl = CHelperFunction.DisplayInterpolation(_DataRecords, _dblProportion);
+            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProportion);
         }
         private void btn100_Click(object sender, EventArgs e)
         {
             _dblProportion = 1;
-            _RelativeInterpolationCpl = CHelperFunction.DisplayInterpolation(_DataRecords, _dblProportion);
+            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProportion);
         }
 
         private void btnInputedScale_Click(object sender, EventArgs e)
         {
             _dblProportion = Convert.ToDouble(this.txtProportion.Text);
-            _RelativeInterpolationCpl = CHelperFunction.DisplayInterpolation(_DataRecords, _dblProportion);
+            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProportion);
 
         }
 
@@ -201,7 +201,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             {
                 _dblProportion = _dblProportion - 0.02;
                 pbScale.Value = Convert.ToInt16(100 * _dblProportion);
-                _RelativeInterpolationCpl = CHelperFunction.DisplayInterpolation(_DataRecords, _dblProportion);
+                _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProportion);
             }
             catch (Exception)
             {
@@ -214,7 +214,7 @@ namespace ContinuousGeneralizer.FrmMorphing
         {
             _dblProportion = _dblProportion + 0.02;
             pbScale.Value = Convert.ToInt16(100 * _dblProportion);
-            _RelativeInterpolationCpl = CHelperFunction.DisplayInterpolation(_DataRecords, _dblProportion);
+            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProportion);
         }
 
         private void btnSaveInterpolation_Click(object sender, EventArgs e)
@@ -223,7 +223,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             List<CPolyline> cpllt = new List<CPolyline>();
             cpllt.Add(_RelativeInterpolationCpl);
             string strFileName = _dblProportion.ToString();
-            CHelperFunction.SaveCPlLt(cpllt, strFileName, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            CHelpFunc.SaveCPlLt(cpllt, strFileName, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
         }
 
 
@@ -250,8 +250,8 @@ namespace ContinuousGeneralizer.FrmMorphing
 
         private void btnExportToExcel_Click(object sender, EventArgs e)
         {
-            CHelperFunctionExcel.ExportEvaluationToExcel(_DataRecords.ParameterResultToExcel, _DataRecords.ParameterInitialize, "0");
-            //CHelperFunctionExcel.KillExcel();
+            CHelpFuncExcel.ExportEvaluationToExcel(_DataRecords.ParameterResultToExcel, _DataRecords.ParameterInitialize, "0");
+            //CHelpFuncExcel.KillExcel();
         }
 
         private void btnStatistic_Click(object sender, EventArgs e)
@@ -261,12 +261,12 @@ namespace ContinuousGeneralizer.FrmMorphing
             List<CPoint> CResultPtLt = _DataRecords.ParameterResult.CResultPtLt;
             for (int i = 0; i <= 100; i++)
             {
-                CPolyline cpl = CGeometricMethods.GetTargetcpl(CResultPtLt, dblProportion);
+                CPolyline cpl = CGeoFunc.GetTargetcpl(CResultPtLt, dblProportion);
                 dbllt.Add(cpl.pPolyline.Length);
                 dblProportion = dblProportion + 0.01;
             }
 
-            CHelperFunctionExcel.ExportDataltToExcel(dbllt, "Length", _DataRecords.ParameterInitialize.strSavePath);
+            CHelpFuncExcel.ExportDataltToExcel(dbllt, "Length", _DataRecords.ParameterInitialize.strSavePath);
         }
 
         private void btnstatisticEX_Click(object sender, EventArgs e)
@@ -276,12 +276,12 @@ namespace ContinuousGeneralizer.FrmMorphing
             List<CPoint> CResultPtLt = _DataRecords.ParameterResult.CResultPtLt;
             for (int i = 0; i <= 300; i++)
             {
-                CPolyline cpl = CGeometricMethods.GetTargetcpl(CResultPtLt, dblProportion);
+                CPolyline cpl = CGeoFunc.GetTargetcpl(CResultPtLt, dblProportion);
                 dbllt.Add(cpl.pPolyline.Length);
                 dblProportion = dblProportion + 0.01;
             }
 
-            CHelperFunctionExcel.ExportDataltToExcel(dbllt, "Length", _DataRecords.ParameterInitialize.strSavePath);
+            CHelpFuncExcel.ExportDataltToExcel(dbllt, "Length", _DataRecords.ParameterInitialize.strSavePath);
         }
 
 

@@ -85,8 +85,8 @@ namespace MorphingClass.CMorphingAlgorithms
             }
             else
             {
-                CHelperFunction.SetAbsAndRatioLength(ref CFrPolyline, CEnumScale.Larger);
-                CHelperFunction.SetAbsAndRatioLength(ref CToPolyline, CEnumScale.Smaller);
+                CHelpFunc.SetAbsAndRatioLength(ref CFrPolyline, CEnumScale.Larger);
+                CHelpFunc.SetAbsAndRatioLength(ref CToPolyline, CEnumScale.Smaller);
 
                 int intFrCount = 1;
                 int intToCount = 1;
@@ -123,13 +123,13 @@ namespace MorphingClass.CMorphingAlgorithms
                     if (comcpt.BelongedCPolyline.enumScale == CEnumScale.Larger)
                     {
                         //CPoint 
-                        CPoint cpt = CGeometricMethods.QueryCPointByLength(comcpt, toptlt, ref intToKnownIndex);
+                        CPoint cpt = CGeoFunc.QueryCPointByLength(comcpt, toptlt, ref intToKnownIndex);
                         comcpt.CorrespondingPtLt.Add(cpt);
                         ResultPtLt.Add(comcpt);
                     }
                     else if (comcpt.BelongedCPolyline.enumScale == CEnumScale.Smaller)
                     {
-                        CPoint cpt = CGeometricMethods.QueryCPointByLength(comcpt, frptlt, ref intFrKnownIndex);
+                        CPoint cpt = CGeoFunc.QueryCPointByLength(comcpt, frptlt, ref intFrKnownIndex);
                         cpt.CorrespondingPtLt = new List<CPoint>(1);
                         cpt.CorrespondingPtLt.Add(comcpt);
                         ResultPtLt.Add(cpt);
@@ -184,7 +184,7 @@ namespace MorphingClass.CMorphingAlgorithms
         //        pcpt.MoveVectorPtLt = new List<CPoint>(pcpt.CorrespondingPtLt .Count );
         //        foreach (CPoint  CorrCpt in pcpt .CorrespondingPtLt )
         //        {
-        //            CPoint MoveVector = CGeometricMethods.CalMoveVector(pcpt, CorrCpt); ;
+        //            CPoint MoveVector = CGeoFunc.CalMoveVector(pcpt, CorrCpt); ;
         //            pcpt.MoveVectorPtLt.Add(MoveVector);
         //        }
         //    }

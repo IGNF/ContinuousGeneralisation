@@ -47,11 +47,13 @@ namespace MorphingClass.CAid
 
             long lngStartTime = System.Environment.TickCount;
 
-            double dblVerySmall = CConstants.dblVerySmall;
+            double dblVerySmall = CConstants.dblVerySmallCoord;
+
+            throw new ArgumentException("consider setting of dblverysmall!");
             for (int i = 0; i < 10; i++)
             {
-                CConstants.dblVerySmall = dblVerySmall / Math.Pow(10, i - 5);
-                List<CIntersection> IntersectionLt = CGeometricMethods.DetectIntersections(pAllReadCEdgeLt, true, true, true);
+                CConstants.dblVerySmallCoord = dblVerySmall / Math.Pow(10, i - 5);
+                List<CIntersection> IntersectionLt = CGeoFunc.DetectIntersections(pAllReadCEdgeLt, true, true, true);
 
                 foreach (var cedge in pAllReadCEdgeLt)
                 {
@@ -116,7 +118,7 @@ namespace MorphingClass.CAid
                             break;
                     }
                 }
-                CConstants.dblVerySmall = dblVerySmall;
+                CConstants.dblVerySmallCoord = dblVerySmall;
 
                 List<CPoint> UnLinkedCptLt = new List<CPoint>();
                 foreach (var cedge in pAllReadCEdgeLt)
@@ -141,13 +143,13 @@ namespace MorphingClass.CAid
                 IntersectionLt = null;
 
                 CSaveFeature.SaveCGeoEb(UnLinkedCptLt, esriGeometryType.esriGeometryPoint, "UnLinkedCpt_" + i.ToString() + "__" + UnLinkedCptLt.Count, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl, blnVisible :false  );
-                CHelperFunction.SetAEGeometryNull(UnLinkedCptLt);
+                CHelpFunc.SetAEGeometryNull(UnLinkedCptLt);
                 
                 CSaveFeature.SaveCGeoEb(CrossCptLt, esriGeometryType.esriGeometryPoint, "Crosses_" + i.ToString() + "__" + CrossCptLt.Count, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl, blnVisible: false);
-                CHelperFunction.SetAEGeometryNull(CrossCptLt);
+                CHelpFunc.SetAEGeometryNull(CrossCptLt);
                 
                 CSaveFeature.SaveCGeoEb(OverlapCptLt, esriGeometryType.esriGeometryPoint, "OverlapCpt_" + i.ToString() + "__" + OverlapCptLt.Count, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl, blnVisible: false);
-                CHelperFunction.SetAEGeometryNull(OverlapCptLt);
+                CHelpFunc.SetAEGeometryNull(OverlapCptLt);
 
 
 

@@ -56,8 +56,8 @@ namespace MorphingClass.CMorphingMethods
             _ParameterInitialize = ParameterInitialize;
 
             //获取线数组
-            _LSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pBSFLayer);
-            _SSCPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pSSFLayer);
+            _LSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pBSFLayer);
+            _SSCPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pSSFLayer);
         }
 
         public void LinearMultiMorphing()
@@ -68,7 +68,7 @@ namespace MorphingClass.CMorphingMethods
 
             //CParameterInitialize pParameterInitialize = _ParameterInitialize;
             //CParameterThreshold pParameterThreshold = new CParameterThreshold();
-            //pParameterThreshold.dblBuffer = CHelperFunction.CalBuffer(LSCPlLt, SSCPlLt);                      //计算缓冲区半径大小
+            //pParameterThreshold.dblBuffer = CHelpFunc.CalBuffer(LSCPlLt, SSCPlLt);                      //计算缓冲区半径大小
             //pParameterThreshold.dblVerySmall = pParameterThreshold.dblBuffer / 200;
             //pParameterThreshold.dblOverlapRatio = pParameterInitialize.dblOverlapRatio;
 
@@ -101,7 +101,7 @@ namespace MorphingClass.CMorphingMethods
             //    CResultPtLtLt.Add(ResultPtLt);
             //}
 
-            //CHelperFunction.SaveCorrespondLine(CResultPtLtLt, "LinearCorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
+            //CHelpFunc.SaveCorrespondLine(CResultPtLtLt, "LinearCorrLine", _ParameterInitialize.pWorkspace, _ParameterInitialize.m_mapControl);
 
 
             ////获取结果，全部记录在_ParameterResult中
@@ -125,7 +125,7 @@ namespace MorphingClass.CMorphingMethods
             {
                 for (int j = 0; j < CSSRiverLt.Count; j++)
                 {
-                    bool blnIsOverlap = CGeometricMethods.IsOverlap(CBSRiverLt[i], CSSRiverLt[j], pParameterThreshold.dblOverlapRatio);
+                    bool blnIsOverlap = CGeoFunc.IsOverlap(CBSRiverLt[i], CSSRiverLt[j], pParameterThreshold.dblOverlapRatio);
                     if (blnIsOverlap == true)
                     {
                         CBSRiverLt[i].CCorrRiver = CSSRiverLt[j];

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.txtIpeMaxY = new System.Windows.Forms.TextBox();
             this.txtIpeMinY = new System.Windows.Forms.TextBox();
             this.txtIpeMinX = new System.Windows.Forms.TextBox();
@@ -38,20 +39,16 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.chkOverrideWidth = new System.Windows.Forms.CheckBox();
             this.chkGroup = new System.Windows.Forms.CheckBox();
             this.chkSaveIntoSameFile = new System.Windows.Forms.CheckBox();
             this.cboSize = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.txtBlue = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.txtGreen = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.txtRed = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.lblLayer = new System.Windows.Forms.Label();
             this.cboLayer = new System.Windows.Forms.ComboBox();
             this.btnRun = new System.Windows.Forms.Button();
+            this.label11 = new System.Windows.Forms.Label();
+            this.tltCboSize = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -139,17 +136,11 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.chkOverrideWidth);
             this.groupBox1.Controls.Add(this.chkGroup);
             this.groupBox1.Controls.Add(this.chkSaveIntoSameFile);
             this.groupBox1.Controls.Add(this.cboSize);
             this.groupBox1.Controls.Add(this.label10);
-            this.groupBox1.Controls.Add(this.txtBlue);
-            this.groupBox1.Controls.Add(this.label9);
-            this.groupBox1.Controls.Add(this.txtGreen);
-            this.groupBox1.Controls.Add(this.label8);
-            this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Controls.Add(this.txtRed);
-            this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.lblLayer);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.cboLayer);
@@ -167,6 +158,18 @@
             this.groupBox1.TabIndex = 112;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parameter";
+            // 
+            // chkOverrideWidth
+            // 
+            this.chkOverrideWidth.AutoSize = true;
+            this.chkOverrideWidth.Checked = true;
+            this.chkOverrideWidth.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkOverrideWidth.Location = new System.Drawing.Point(9, 173);
+            this.chkOverrideWidth.Name = "chkOverrideWidth";
+            this.chkOverrideWidth.Size = new System.Drawing.Size(147, 17);
+            this.chkOverrideWidth.TabIndex = 128;
+            this.chkOverrideWidth.Text = "Override boundary width?";
+            this.chkOverrideWidth.UseVisualStyleBackColor = true;
             // 
             // chkGroup
             // 
@@ -197,10 +200,11 @@
             this.cboSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboSize.FormattingEnabled = true;
             this.cboSize.Items.AddRange(new object[] {
-            "normal",
-            "heavier",
-            "fat",
-            "ultrafat"});
+            "0.05",
+            "0.5",
+            "0.8",
+            "1.2",
+            "2"});
             this.cboSize.Location = new System.Drawing.Point(42, 196);
             this.cboSize.Name = "cboSize";
             this.cboSize.Size = new System.Drawing.Size(160, 21);
@@ -214,69 +218,6 @@
             this.label10.Size = new System.Drawing.Size(30, 13);
             this.label10.TabIndex = 124;
             this.label10.Text = "Size:";
-            // 
-            // txtBlue
-            // 
-            this.txtBlue.Location = new System.Drawing.Point(230, 160);
-            this.txtBlue.Name = "txtBlue";
-            this.txtBlue.Size = new System.Drawing.Size(47, 20);
-            this.txtBlue.TabIndex = 121;
-            this.txtBlue.Text = "0";
-            this.txtBlue.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(193, 163);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(31, 13);
-            this.label9.TabIndex = 122;
-            this.label9.Text = "Blue:";
-            // 
-            // txtGreen
-            // 
-            this.txtGreen.Location = new System.Drawing.Point(140, 160);
-            this.txtGreen.Name = "txtGreen";
-            this.txtGreen.Size = new System.Drawing.Size(47, 20);
-            this.txtGreen.TabIndex = 119;
-            this.txtGreen.Text = "0";
-            this.txtGreen.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(95, 163);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(39, 13);
-            this.label8.TabIndex = 120;
-            this.label8.Text = "Green:";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 141);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(31, 13);
-            this.label7.TabIndex = 118;
-            this.label7.Text = "Color";
-            // 
-            // txtRed
-            // 
-            this.txtRed.Location = new System.Drawing.Point(42, 160);
-            this.txtRed.Name = "txtRed";
-            this.txtRed.Size = new System.Drawing.Size(47, 20);
-            this.txtRed.TabIndex = 116;
-            this.txtRed.Text = "0";
-            this.txtRed.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 163);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(30, 13);
-            this.label6.TabIndex = 117;
-            this.label6.Text = "Red:";
             // 
             // lblLayer
             // 
@@ -306,11 +247,28 @@
             this.btnRun.UseVisualStyleBackColor = true;
             this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Location = new System.Drawing.Point(116, 346);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(179, 16);
+            this.label11.TabIndex = 128;
+            this.label11.Text = "Only Export Visuable Layers!";
+            // 
+            // tltCboSize
+            // 
+            this.tltCboSize.AutoPopDelay = 20000;
+            this.tltCboSize.InitialDelay = 500;
+            this.tltCboSize.ReshowDelay = 100;
+            // 
             // FrmToIpe
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(310, 379);
+            this.Controls.Add(this.label11);
             this.Controls.Add(this.btnRun);
             this.Controls.Add(this.groupBox1);
             this.Name = "FrmToIpe";
@@ -319,6 +277,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -340,13 +299,9 @@
         private System.Windows.Forms.CheckBox chkSaveIntoSameFile;
         private System.Windows.Forms.ComboBox cboSize;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TextBox txtBlue;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox txtGreen;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox txtRed;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.CheckBox chkGroup;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.CheckBox chkOverrideWidth;
+        private System.Windows.Forms.ToolTip tltCboSize;
     }
 }

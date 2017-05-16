@@ -136,11 +136,6 @@ namespace MorphingClass.CUtility
             return total;
         }
 
-        public static T GetLastT<T>(this List<T> items)
-        {
-            return items[items.Count - 1];
-        }
-
 
         public static void SetFirstT<T>(this List<T> items, T item)
         {
@@ -168,12 +163,12 @@ namespace MorphingClass.CUtility
         }
 
 
-        public static void SetLast_T<T>(this List<T> items, T item)  //we add T at last to make it has the same number of characters as GetFirstElement
+        public static void SetLastT<T>(this List<T> items, T item)  //we add T at last to make it has the same number of characters as GetFirstElement
         {
             items[items.Count - 1] = item;
         }
 
-        public static T GetLast_T<T>(this List<T> items)  //we add T at last to make it has the same number of characters as GetFirstElement
+        public static T GetLastT<T>(this List<T> items)  //we add T at last to make it has the same number of characters as GetFirstElement
         {
             return items[items.Count - 1];
         }
@@ -183,11 +178,41 @@ namespace MorphingClass.CUtility
         //    items.RemoveAt(0);
         //}
 
-        public static T RemoveLast_T<T>(this List<T> items)
+        public static T RemoveLastT<T>(this List<T> items)
         {
             T lastT = items[items.Count - 1];
             items.RemoveAt(items.Count - 1);
             return lastT;
+        }
+
+        public static IEnumerable<T> CopyEbWithoutFirstLastT<T>(this IEnumerable<T> itmes, bool blnRemainFirst, bool blnRemainLast)
+        {
+            if (blnRemainFirst==true && blnRemainLast == true)
+            {
+                throw new ArgumentException("There is no need to use this function.");
+            }
+
+            IEnumerator<T> selfEnumerator = itmes.GetEnumerator();
+            if (!selfEnumerator.MoveNext()) throw new ArgumentException("List is empty.", "self");
+
+            if (blnRemainFirst == true)
+            {
+                yield return selfEnumerator.Current;
+            }
+
+            selfEnumerator.MoveNext();
+            var lastelement = selfEnumerator.Current;
+
+            while (selfEnumerator.MoveNext())
+            {
+                yield return lastelement;
+                lastelement = selfEnumerator.Current;
+            }
+
+            if (blnRemainLast==true )
+            {
+                yield return lastelement;
+            }
         }
 
         ///// <summary>
@@ -219,36 +244,7 @@ namespace MorphingClass.CUtility
         //    }
         //}
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="TEnumerable"></param>
-        /// <param name="cmp"></param>
-        /// <returns></returns>
-        public static IEnumerable<T> RemoveLaterDuplicate<T>(this IEnumerable<T> TEnumerable, IComparer<T> cmp = null)
-        {
-            IEnumerator<T> selfEnumerator = TEnumerable.GetEnumerator();
-            if (!selfEnumerator.MoveNext()) throw new ArgumentException("List is empty.", "self");
-
-            if (cmp == null) { cmp = Comparer<T>.Default; }
-
-
-            SortedSet<T> ExistingSS = new SortedSet<T>(cmp);
-            do
-            {
-                if (ExistingSS.Add(selfEnumerator.Current))
-                {
-                    yield return selfEnumerator.Current;
-                }
-            } while (selfEnumerator.MoveNext());
-
-
-            //ss.
-
-            //return new SortedSet<T>(TEnumerable, cmp);
-
-        }
+       
 
         public static void SetIndexID<T>(this IEnumerable<T> TEnumerable)
             where T : CGeometricBase<T>
@@ -399,10 +395,10 @@ namespace MorphingClass.CUtility
         //}
 
 
-        public static SortedDictionary<T_key, T_value> ToSD<T_key, T_value>(this IEnumerable<T_value> self, Func<T_value, T_key> orderFunc, IComparer<T_key> pCompare)
+        public static SortedDictionary<T_key, T_value> ToSD<T_key, T_value>(this IEnumerable<T_value> self, Func<T_value, T_key> orderFunc, IComparer<T_key> pCmp)
         {
             if (self == null) throw new ArgumentNullException("self");
-            SortedDictionary<T_key, T_value> resultsd = new SortedDictionary<T_key, T_value>(pCompare);
+            SortedDictionary<T_key, T_value> resultsd = new SortedDictionary<T_key, T_value>(pCmp);
 
             IEnumerator<T_value> selfEnumerator = self.GetEnumerator();
 

@@ -15,7 +15,7 @@ using MorphingClass.CGeometry;
 using MorphingClass.CMorphingAlgorithms;
 
 using VBClass;
-//using CPlusClass;
+using CPlusClass;
 
 
 namespace MorphingClass.CMorphingMethodsLSA
@@ -201,7 +201,7 @@ namespace MorphingClass.CMorphingMethodsLSA
             //for (int i = 0; i < cpl.SubCPlLt.Count; i++)
             //{
             //    CPolyline subcpl = cpl.SubCPlLt[i];
-            //    CHelperFunction.ViewPolylineByRGB(m_mapControl, subcpl, subcpl.intRed, subcpl.intGreen, subcpl.intBlue);  //显示生成的线段
+            //    CHelpFunc.ViewPolylineByRGB(m_mapControl, subcpl, subcpl.intRed, subcpl.intGreen, subcpl.intBlue);  //显示生成的线段
             //}
 
             ////对缓冲区进行染色
@@ -247,7 +247,7 @@ namespace MorphingClass.CMorphingMethodsLSA
             //for (int i = 1; i < cpl.CptLt.Count-1; i++)
             //{
             //    CPoint cpt=cpl.CptLt[i];
-            //    CHelperFunction.ViewPolygonGeometryByRGB(m_mapControl, cpt.Buffer(5), cpt.intRed, cpt.intGreen, cpt.intBlue);  //显示缓冲区多边形
+            //    CHelpFunc.ViewPolygonGeometryByRGB(m_mapControl, cpt.Buffer(5), cpt.intRed, cpt.intGreen, cpt.intBlue);  //显示缓冲区多边形
             //}
 
             ////显示线段
@@ -260,7 +260,7 @@ namespace MorphingClass.CMorphingMethodsLSA
             IMapControl4 m_mapControl = _DataRecords.ParameterInitialize.m_mapControl;
             IGraphicsContainer pGra = m_mapControl.Map as IGraphicsContainer;
             pGra.DeleteAllElements();
-            CHelperFunction.ViewPolyline(m_mapControl, cpl);  //显示生成的线段
+            CHelpFunc.ViewPolyline(m_mapControl, cpl);  //显示生成的线段
 
 
             return cpl;
@@ -305,8 +305,8 @@ namespace MorphingClass.CMorphingMethodsLSA
             double dblSumToLength0 = 0;
             for (int i = 0; i < pCorrCptsLt.Count - 1; i++)
             {
-                double dblfrsublength = CGeometricMethods.CalDis(pCorrCptsLt[i + 1].FrCpt, pCorrCptsLt[i].FrCpt);
-                double dbltosublength = CGeometricMethods.CalDis(pCorrCptsLt[i + 1].ToCpt, pCorrCptsLt[i].ToCpt);
+                double dblfrsublength = CGeoFunc.CalDis(pCorrCptsLt[i + 1].FrCpt, pCorrCptsLt[i].FrCpt);
+                double dbltosublength = CGeoFunc.CalDis(pCorrCptsLt[i + 1].ToCpt, pCorrCptsLt[i].ToCpt);
 
                 //double dble=Math .E;
                 //double dbla = (dblfrsublength - dbltosublength) * dble / (dble - 1);
@@ -325,8 +325,8 @@ namespace MorphingClass.CMorphingMethodsLSA
                 //pCorrCptsLt[i].FrCpt.isCtrl = false;  //仅以最开始两对和最终两队对应点为固定点，故此先设置为false
             }
 
-            //double dblFrRealSumLength = dblSumFrLength0 - CGeometricMethods.CalDis(pCorrCptsLt[0].FrCpt, pCorrCptsLt[1].FrCpt) - CGeometricMethods.CalDis(pCorrCptsLt[intPtNum - 2].FrCpt, pCorrCptsLt[intPtNum - 1].FrCpt);
-            //double dblToRealSumLength = dblSumToLength0 - CGeometricMethods.CalDis(pCorrCptsLt[0].ToCpt, pCorrCptsLt[1].ToCpt) - CGeometricMethods.CalDis(pCorrCptsLt[intPtNum - 2].ToCpt, pCorrCptsLt[intPtNum - 1].ToCpt);
+            //double dblFrRealSumLength = dblSumFrLength0 - CGeoFunc.CalDis(pCorrCptsLt[0].FrCpt, pCorrCptsLt[1].FrCpt) - CGeoFunc.CalDis(pCorrCptsLt[intPtNum - 2].FrCpt, pCorrCptsLt[intPtNum - 1].FrCpt);
+            //double dblToRealSumLength = dblSumToLength0 - CGeoFunc.CalDis(pCorrCptsLt[0].ToCpt, pCorrCptsLt[1].ToCpt) - CGeoFunc.CalDis(pCorrCptsLt[intPtNum - 2].ToCpt, pCorrCptsLt[intPtNum - 1].ToCpt);
 
             //计算角度初始值（全部计算）
             double[] adblAngle0 = new double[intPtNum - 2];
@@ -335,9 +335,9 @@ namespace MorphingClass.CMorphingMethodsLSA
             for (int i = 0; i < pCorrCptsLt.Count - 2; i++)
             {
                 //较大比例尺线状要素上的夹角
-                double dblfrAngle = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[i].FrCpt, pCorrCptsLt[i + 1].FrCpt, pCorrCptsLt[i + 2].FrCpt);
+                double dblfrAngle = CGeoFunc.CalAngle_Counterclockwise(pCorrCptsLt[i].FrCpt, pCorrCptsLt[i + 1].FrCpt, pCorrCptsLt[i + 2].FrCpt);
                 //较小比例尺线状要素上的夹角
-                double dbltoAngle = CGeometricMethods.CalAngle_Counterclockwise(pCorrCptsLt[i].ToCpt, pCorrCptsLt[i + 1].ToCpt, pCorrCptsLt[i + 2].ToCpt);
+                double dbltoAngle = CGeoFunc.CalAngle_Counterclockwise(pCorrCptsLt[i].ToCpt, pCorrCptsLt[i + 1].ToCpt, pCorrCptsLt[i + 2].ToCpt);
 
                 //double dble = Math.E;
                 //double dbla = (dbltoAngle - dblfrAngle) * dble / (dble - 1);
@@ -357,7 +357,7 @@ namespace MorphingClass.CMorphingMethodsLSA
 
             //for (int i = 0; i < pCorrCptsLt.Count - 2; i++)
             //{
-            //    adblAngle0[i] = CGeometricMethods.CalAngle_Counterclockwise(newcptlt[i], newcptlt[i + 1], newcptlt[i + 2]);
+            //    adblAngle0[i] = CGeoFunc.CalAngle_Counterclockwise(newcptlt[i], newcptlt[i + 1], newcptlt[i + 2]);
             //}
 
 
@@ -577,10 +577,10 @@ namespace MorphingClass.CMorphingMethodsLSA
             //        adblSubDis[i] = Math.Pow((Xmix[2 * i, 0] - Xmix[2 * i + 2, 0]) * (Xmix[2 * i, 0] - Xmix[2 * i + 2, 0]) + (Xmix[2 * i + 1, 0] - Xmix[2 * i + 3, 0]) * (Xmix[2 * i + 1, 0] - Xmix[2 * i + 3, 0]), 0.5);
             //    }
             //    //计算新的方位角
-            //    adblAzimuth[0] = CGeometricMethods.CalAxisAngle(Xmix[0, 0], Xmix[1, 0], Xmix[2, 0], Xmix[3, 0]);
+            //    adblAzimuth[0] = CGeoFunc.CalAxisAngle(Xmix[0, 0], Xmix[1, 0], Xmix[2, 0], Xmix[3, 0]);
             //    for (int i = 1; i < intPtNum - 1; i++)
             //    {
-            //        adblAngle[i - 1] = CGeometricMethods.CalAngle_Counterclockwise(Xmix[i * 2 - 2, 0], Xmix[i * 2 - 1, 0], Xmix[i * 2, 0], Xmix[i * 2 + 1, 0], Xmix[i * 2 + 2, 0], Xmix[i * 2 + 3, 0]);
+            //        adblAngle[i - 1] = CGeoFunc.CalAngle_Counterclockwise(Xmix[i * 2 - 2, 0], Xmix[i * 2 - 1, 0], Xmix[i * 2, 0], Xmix[i * 2 + 1, 0], Xmix[i * 2 + 2, 0], Xmix[i * 2 + 3, 0]);
             //        adblAzimuth[i] = adblAzimuth[i - 1] + adblAngle[i - 1] - Math.PI;
             //    }
 
@@ -594,9 +594,9 @@ namespace MorphingClass.CMorphingMethodsLSA
 
 
 
-            //    //CHelperFunctionExcel.ExportDataToExcel2(A, "maxA", _DataRecords.ParameterInitialize.strSavePath);
-            //    //CHelperFunctionExcel.ExportDataToExcelP(P, "maxP", _DataRecords.ParameterInitialize.strSavePath);
-            //    //CHelperFunctionExcel.ExportDataToExcel2(matl, "maxmatl", _DataRecords.ParameterInitialize.strSavePath);
+            //    //CHelpFuncExcel.ExportDataToExcel2(A, "maxA", _DataRecords.ParameterInitialize.strSavePath);
+            //    //CHelpFuncExcel.ExportDataToExcelP(P, "maxP", _DataRecords.ParameterInitialize.strSavePath);
+            //    //CHelpFuncExcel.ExportDataToExcel2(matl, "maxmatl", _DataRecords.ParameterInitialize.strSavePath);
 
 
             //    //平差
@@ -604,12 +604,12 @@ namespace MorphingClass.CMorphingMethodsLSA
             //    VBMatrix InvTemp = Temp.Inv(Temp);
             //    VBMatrix x = InvTemp * A.Trans() * P * matl;
 
-            //    //CHelperFunctionExcel.ExportDataToExcel2(x, "maxX", _DataRecords.ParameterInitialize.strSavePath);
+            //    //CHelpFuncExcel.ExportDataToExcel2(x, "maxX", _DataRecords.ParameterInitialize.strSavePath);
 
             //    XA += x;
 
-            //    //CHelperFunctionExcel.ExportDataToExcel2(x, "maxX", _DataRecords.ParameterInitialize.strSavePath);
-            //    //CHelperFunctionExcel.ExportDataToExcel2(XA, "maxXA", _DataRecords.ParameterInitialize.strSavePath);
+            //    //CHelpFuncExcel.ExportDataToExcel2(x, "maxX", _DataRecords.ParameterInitialize.strSavePath);
+            //    //CHelpFuncExcel.ExportDataToExcel2(XA, "maxXA", _DataRecords.ParameterInitialize.strSavePath);
 
 
             //    V = A * x - matl;
@@ -657,16 +657,16 @@ namespace MorphingClass.CMorphingMethodsLSA
             //    //    L[i,0] = Math.Pow((Xmix[2 * i, 0] - Xmix[2 * i + 2, 0]) * (Xmix[2 * i, 0] - Xmix[2 * i + 2, 0]) + (Xmix[2 * i + 1, 0] - Xmix[2 * i + 3, 0]) * (Xmix[2 * i + 1, 0] - Xmix[2 * i + 3, 0]), 0.5);
             //    //}
             //    ////计算新的方位角
-            //    //adblAzimuth[0] = CGeometricMethods.CalAxisAngle(Xmix[0, 0], Xmix[1, 0], Xmix[2, 0], Xmix[3, 0]);
+            //    //adblAzimuth[0] = CGeoFunc.CalAxisAngle(Xmix[0, 0], Xmix[1, 0], Xmix[2, 0], Xmix[3, 0]);
             //    //for (int i = 1; i < intPtNum - 1; i++)
             //    //{
-            //    //    L[intUnknownLength + i -1, 0] = CGeometricMethods.CalAngle_Counterclockwise(Xmix[i * 2 - 2, 0], Xmix[i * 2 - 1, 0], Xmix[i * 2, 0], Xmix[i * 2 + 1, 0], Xmix[i * 2 + 2, 0], Xmix[i * 2 + 3, 0]);
+            //    //    L[intUnknownLength + i -1, 0] = CGeoFunc.CalAngle_Counterclockwise(Xmix[i * 2 - 2, 0], Xmix[i * 2 - 1, 0], Xmix[i * 2, 0], Xmix[i * 2 + 1, 0], Xmix[i * 2 + 2, 0], Xmix[i * 2 + 3, 0]);
             //    //}
 
 
 
-            //    //CHelperFunctionExcel.ExportDataToExcel2(LPlusV, "matLPlusV", _DataRecords.ParameterInitialize.strSavePath);
-            //    //CHelperFunctionExcel.ExportDataToExcel2(L, "matL", _DataRecords.ParameterInitialize.strSavePath);
+            //    //CHelpFuncExcel.ExportDataToExcel2(LPlusV, "matLPlusV", _DataRecords.ParameterInitialize.strSavePath);
+            //    //CHelpFuncExcel.ExportDataToExcel2(L, "matL", _DataRecords.ParameterInitialize.strSavePath);
 
 
 
@@ -684,7 +684,7 @@ namespace MorphingClass.CMorphingMethodsLSA
             //    }
 
             //    //这里只是随便取两个中间值以观测是否收敛
-            //    double dblLength0 = CGeometricMethods.CalLengthofVector(x);
+            //    double dblLength0 = CGeoFunc.CalLengthofVector(x);
             //    if (dblLength0 <= dblTX)
             //    {
             //        break;
@@ -776,9 +776,9 @@ namespace MorphingClass.CMorphingMethodsLSA
             //{
             //    if (pCorrCptsLt[i].FrCpt.isCtrl == false || pCorrCptsLt[i + 1].FrCpt.isCtrl == false || pCorrCptsLt[i + 2].FrCpt.isCtrl == false)
             //    {
-            //        double dblAngle = CGeometricMethods.CalAngle_Counterclockwise(cpl.CptLt[i], cpl.CptLt[i + 1], cpl.CptLt[i + 2]);
+            //        double dblAngle = CGeoFunc.CalAngle_Counterclockwise(cpl.CptLt[i], cpl.CptLt[i + 1], cpl.CptLt[i + 2]);
             //        cpl.CptLt[i + 1].dblAngleV = dblAngle - adblAngle0[i];
-            //        //double dblAngle = CGeometricMethods.CalAngle_Counterclockwise(cpl.CptLt[i], cpl.CptLt[i + 1], cpl.CptLt[i + 2]);
+            //        //double dblAngle = CGeoFunc.CalAngle_Counterclockwise(cpl.CptLt[i], cpl.CptLt[i + 1], cpl.CptLt[i + 2]);
             //        //cpl.CptLt[i + 1].dblAngleV = V[intUnknownLength + intUnKnownCountA6, 0];
             //        intUnKnownCountA6 += 1;
             //    }

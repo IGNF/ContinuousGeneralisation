@@ -93,7 +93,7 @@ namespace ContinuousGeneralizer.FrmAid
             SFD.ShowDialog();
             string strPath = SFD.FileName;
             //string strName=SFD.
-            ParameterInitialize.pWorkspace = CHelperFunction.OpenWorkspace(strPath);
+            ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(strPath);
 
 
             long lngStartTime = System.Environment.TickCount; //记录开始时间
@@ -101,10 +101,10 @@ namespace ContinuousGeneralizer.FrmAid
 
             if ((pFeatureLayer.FeatureClass != null) && (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint))
             {
-                List<CPoint> cptlt = CHelperFunction.GetCPtLtFromPointFeatureLayer(pFeatureLayer);
+                List<CPoint> cptlt = CHelpFunc.GetCPtLtFromPointFeatureLayer(pFeatureLayer);
                 if (dblFactor == -1)
                 {
-                    CEnvelope pEnvelope = CGeometricMethods.GetEnvelope(cptlt);
+                    CEnvelope pEnvelope = CGeoFunc.GetEnvelope(cptlt);
                     dblFactor = Math.Sqrt(pEnvelope.Width * pEnvelope.Height / Convert.ToDouble(cptlt.Count)); //Average Distance
                     this.txtAverageDis.Text = dblFactor.ToString();
                 }
@@ -131,7 +131,7 @@ namespace ContinuousGeneralizer.FrmAid
                     CreateSubSet(cptlt, GPcptlt, dblProbalibity, rand, out subcptlt, out gpsubcptlt);
 
                     subcptlt.AddRange(gpsubcptlt);
-                    //CHelperFunction.SaveESRIObjltfast(subcptlt, esriGeometryType.esriGeometryPoint, "MixedPoint" + i.ToString(), ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+                    //CHelpFunc.SaveESRIObjltfast(subcptlt, esriGeometryType.esriGeometryPoint, "MixedPoint" + i.ToString(), ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
                     //CSaveFeature.SaveCGeoEb(subcptlt, esriGeometryType.esriGeometryPoint, "MixedPoint" + i.ToString() + "_" + subcptlt.Count.ToString(), ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
                 }
@@ -152,7 +152,7 @@ namespace ContinuousGeneralizer.FrmAid
 
                 //if (dblFactor ==-1)
                 //{                    
-                //    C5.LinkedList<CCorrCpts> CCorrCptsLk = CGeometricMethods.LookingForNeighboursByGrids(cptlt, 0.00003);
+                //    C5.LinkedList<CCorrCpts> CCorrCptsLk = CGeoFunc.LookingForNeighboursByGrids(cptlt, 0.00003);
                 //    double dblMinDis = cptlt[0].DistanceTo(cptlt[1]);
                 //    foreach (CCorrCpts pCorrCpts in CCorrCptsLk)
                 //    {
@@ -177,7 +177,7 @@ namespace ContinuousGeneralizer.FrmAid
             }
             else if ((pFeatureLayer.FeatureClass != null) && (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline))
             {
-                //List<CPolyline> CPlLt = CHelperFunction.GetCPlLtByFeatureLayer(pFeatureLayer);
+                //List<CPolyline> CPlLt = CHelpFunc.GetCPlLtByFeatureLayer(pFeatureLayer);
                 //List<CPolyline> CPlLtNew = new List<CPolyline>(CPlLt.Count);
                 //for (int i = 0; i < CPlLt.Count; i++)
                 //{
@@ -193,7 +193,7 @@ namespace ContinuousGeneralizer.FrmAid
                 //    CPlLtNew.Add(newcpl);
                 //}
 
-                //CHelperFunction.SaveCPlLt(CPlLtNew, pFeatureLayer.Name + "_Transformed", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+                //CHelpFunc.SaveCPlLt(CPlLtNew, pFeatureLayer.Name + "_Transformed", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
             }
             else if ((pFeatureLayer.FeatureClass != null) && (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolygon))
@@ -203,7 +203,7 @@ namespace ContinuousGeneralizer.FrmAid
                 //----------------------------------------------------------------------------------------------//
 
                 ////获取多边形数组
-                //List<CPolygon> CPolygonLt = CHelperFunction.GetCPolygonLtByFeatureLayer(pFeatureLayer);
+                //List<CPolygon> CPolygonLt = CHelpFunc.GetCPolygonLtByFeatureLayer(pFeatureLayer);
                 //List<CPolygon> CPolygonLtNew = new List<CPolygon>();
                 //for (int i = 0; i < CPolygonLt.Count; i++)
                 //{
@@ -219,7 +219,7 @@ namespace ContinuousGeneralizer.FrmAid
                 //    CPolygonLtNew.Add(newcpg);
                 //}
 
-                //CHelperFunction.SaveCPolygons(CPolygonLtNew, pFeatureLayer.Name + "_Transformed", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+                //CHelpFunc.SaveCPolygons(CPolygonLtNew, pFeatureLayer.Name + "_Transformed", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
             }
 
 

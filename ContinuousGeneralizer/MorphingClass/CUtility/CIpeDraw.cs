@@ -40,8 +40,14 @@ namespace MorphingClass.CUtility
          */
         public static String drawIpeMark(int x, int y, String shape, String color, String size)
         {
-            return "<use name=\"mark/" + shape + "(sx)\" pos=\"" + x + " " + y
+            return "<use name=\"mark/" + shape + "(sx)\" pos=\"" + AddXY(x, y)
                     + "\" size=\"" + size + "\" stroke=\"" + color + "\"/>\n";
+        }
+
+        public static String drawIpeMark(double x, double y, String shape, CColor StrokeColor, String size)
+        {
+            return "<use name=\"mark/" + shape + "(sx)\" pos=\"" + AddXY(x, y)
+                    + "\" size=\"" + size + "\" stroke=\"" + AddColor(StrokeColor) + "\"/>\n";
         }
 
         /**
@@ -212,13 +218,24 @@ namespace MorphingClass.CUtility
         }
 
 
-
-
-
-
-        public static string DrawCpl(CPolyline cpl, IEnvelope pEnvelopeLayer, CEnvelope pEnvelopeIpe, CColor StrokeColor, string strWidth = "normal")
+        public static string DrawIpt(IPoint ipt, IEnvelope pEnvelopeLayer, CEnvelope pEnvelopeIpe, string strShape,
+    CColor StrokeColor, string strWidth = "normal")
         {
-            double dblFactor = (pEnvelopeIpe.XMax - pEnvelopeIpe.XMin) / pEnvelopeLayer.Width;
+            double dblFactor = pEnvelopeIpe.Height / pEnvelopeLayer.Height;
+            double dblx= CGeoFunc.CoordinateTransform(
+                    ipt.X, pEnvelopeLayer.XMin, pEnvelopeIpe.XMin, dblFactor);
+            double dbly = CGeoFunc.CoordinateTransform(
+                    ipt.Y, pEnvelopeLayer.YMin, pEnvelopeIpe.YMin, dblFactor);
+
+            return drawIpeMark(dblx, dbly, strShape, StrokeColor, strWidth);
+        }
+
+
+
+        public static string DrawCpl(CPolyline cpl, IEnvelope pEnvelopeLayer, CEnvelope pEnvelopeIpe, 
+            CColor StrokeColor, string strWidth = "normal")
+        {
+            double dblFactor = pEnvelopeIpe.Height / pEnvelopeLayer.Height;
 
             var cptlt = cpl.CptLt;
 
@@ -229,15 +246,24 @@ namespace MorphingClass.CUtility
             return str;
         }
 
-        public static string DrawCpg(CPolygon cpg, IEnvelope pEnvelopeLayer, CEnvelope pEnvelopeIpe, CColor StrokeColor, CColor FillColor, string strWidth = "normal")
+        public static string DrawCpg(CPolygon cpg, IEnvelope pEnvelopeLayer, CEnvelope pEnvelopeIpe,
+            CColor StrokeColor, CColor FillColor, string strWidth = "normal")
         {
-            double dblFactor = (pEnvelopeIpe.XMax - pEnvelopeIpe.XMin) / pEnvelopeLayer.Width;
-
+            double dblFactor = pEnvelopeIpe.Height / pEnvelopeLayer.Height;
             string str = GetStrokeStarting(StrokeColor, strWidth, FillColor);
-            foreach (var cptlt in cpg.CptLtLt)
+            str += AddPolygonCoordinates(cpg.CptLt, pEnvelopeLayer, pEnvelopeIpe, dblFactor);
+
+            //draw holes and fill wholes with white
+            if (cpg.HoleCpgLt != null && cpg.HoleCpgLt.Count > 0)
             {
-                str += AddCoordinates(cptlt, pEnvelopeLayer, pEnvelopeIpe, dblFactor, 1);
-                str += "h\n";
+                foreach (var holecpg in cpg.HoleCpgLt)
+                {
+                    str += AddPolygonCoordinates(holecpg.CptLt, pEnvelopeLayer, pEnvelopeIpe, dblFactor);
+                    if (cpg.HoleCpgLt != null && cpg.HoleCpgLt.Count > 0)
+                    {
+                        throw new ArgumentOutOfRangeException("We didn't consider this case!");
+                    }
+                }
             }
 
             str += "</path>\n";
@@ -246,13 +272,19 @@ namespace MorphingClass.CUtility
 
         public static string GetStrokeStarting(CColor StrokeColor, string strWidth = "normal", CColor FillColor = null)
         {
-            string str = "<path stroke=" + AddColor(StrokeColor) + " ";
+            string str = "<path stroke=\"" + AddColor(StrokeColor) + "\" ";
             if (FillColor != null)
             {
-                str += "fill=" + AddColor(FillColor) + " ";
+                str += "fill=\"" + AddColor(FillColor) + "\" ";
             }
             str += "pen=\"" + strWidth + "\">\n";
             return str;
+        }
+
+        private static string AddPolygonCoordinates(List<CPoint> cptlt, IEnvelope pEnvelopeLayer,
+            CEnvelope pEnvelopeIpe, double dblFactor)
+        {
+            return AddCoordinates(cptlt, pEnvelopeLayer, pEnvelopeIpe, dblFactor, 1) + "h\n";
         }
 
         /// <summary>
@@ -262,7 +294,8 @@ namespace MorphingClass.CUtility
         /// <param name="pEnvelopeLayer"></param>
         /// <param name="pEnvelopeIpe"></param>
         /// <param name="dblFactor"></param>
-        /// <param name="intSubtract">0 if shape is polyline, 1 if shape is polygon</param>
+        /// <param name="intSubtract">In ipe, the first vertex and the last vertex are not identical.
+        /// Therefore, 0 if shape is polyline, 1 if shape is polygon</param>
         /// <returns></returns>
         /// <remarks>
         ///*********************polyline*****************************
@@ -307,7 +340,8 @@ namespace MorphingClass.CUtility
         ///h
         ///</path>
         /// </remarks> 
-        public static string AddCoordinates(List<CPoint> cptlt, IEnvelope pEnvelopeLayer, CEnvelope pEnvelopeIpe, double dblFactor, int intSubtract=0)
+        public static string AddCoordinates(List<CPoint> cptlt, IEnvelope pEnvelopeLayer, 
+            CEnvelope pEnvelopeIpe, double dblFactor, int intSubtract=0)
         {
             int intRealCount = cptlt.Count - intSubtract;
 
@@ -316,27 +350,33 @@ namespace MorphingClass.CUtility
 
             for (int i = 0; i < intRealCount; i++)
             {
-                dblx[i] = CGeometricMethods.CoordinateTransform(cptlt[i].X, pEnvelopeLayer.XMin, pEnvelopeIpe.XMin, dblFactor);
-                dbly[i] = CGeometricMethods.CoordinateTransform(cptlt[i].Y, pEnvelopeLayer.YMin, pEnvelopeIpe.YMin, dblFactor);
+                dblx[i] = CGeoFunc.CoordinateTransform(
+                    cptlt[i].X, pEnvelopeLayer.XMin, pEnvelopeIpe.XMin, dblFactor);
+                dbly[i] = CGeoFunc.CoordinateTransform(
+                    cptlt[i].Y, pEnvelopeLayer.YMin, pEnvelopeIpe.YMin, dblFactor);
             }
 
-            string str = dblx[0] + " " + dbly[0] + " m\n";
+            string str = AddXY(dblx[0], dbly[0]) + " m\n";
             for (int j = 1; j < dblx.Length; j++)
             {
-                str += dblx[j] + " " + dbly[j] + " l\n";
+                str += AddXY(dblx[j], dbly[j]) + " l\n";
             }
 
             return str;
         }
 
+        public static string AddXY(double dblX, double dblY)
+        {
+            return dblX + " " + dblY;
+        }
+
         public static string AddColor(CColor ccolor)
         {
-
             double dblIpeRed = Convert.ToDouble(ccolor.intRed) / 255;
             double dblIpeGreen = Convert.ToDouble(ccolor.intGreen) / 255;
             double dblIpeBlue = Convert.ToDouble(ccolor.intBlue) / 255;
 
-            return ("\"" + dblIpeRed + " " + dblIpeGreen + " " + dblIpeBlue + "\"");
+            return (dblIpeRed + " " + dblIpeGreen + " " + dblIpeBlue);
         }
 
 
