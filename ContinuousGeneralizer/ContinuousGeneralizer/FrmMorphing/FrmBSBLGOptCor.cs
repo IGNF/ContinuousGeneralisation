@@ -55,16 +55,16 @@ namespace ContinuousGeneralizer.FrmMorphing
         private void FrmBSBLGOptCor_Load(object sender, EventArgs e)
         {
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
-            ParameterInitialize.pMap = ParameterInitialize.m_mapControl.Map;
-            ParameterInitialize.m_mapFeature = new MapClass();
-            ParameterInitialize.m_mapAll = new MapClass();
+            
+            
+            
             ParameterInitialize.cboLargerScaleLayer = this.cboLargerScaleLayer;
             ParameterInitialize.cboSmallerScaleLayer = this.cboSmallerScaleLayer;
             ParameterInitialize.txtMaxBackK = this.txtMaxBackK;
             CConstants.strMethod = "BSBLGOptCor";
             //进行Load操作，初始化变量
             _FrmOperation = new CFrmOperation(ref ParameterInitialize);
-            _FrmOperation.FrmLoadMulticbo();
+            throw new ArgumentException("improve loading layesr!");
         }
 
         public void btnRun_Click(object sender, EventArgs e)

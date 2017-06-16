@@ -59,8 +59,8 @@ namespace ContinuousGeneralizer
             //}
 
             //var frmCurrent = new FrmToIpe(_DataRecords);
-            var frmCurrent = new FrmBuildingGrowing(_DataRecords);
-            //var frmCurrent = new FrmCAMDijkstra(_DataRecords);
+            var frmCurrent = new FrmBldgGrow(_DataRecords);
+            //var frmCurrent = new FrmAreaAgg(_DataRecords);
             //var frmCurrent = new FrmCGABM(_DataRecords);
             //var frmCurrent = new FrmExtractPossibleFiles();
             frmCurrent.Show();
@@ -1210,10 +1210,10 @@ namespace ContinuousGeneralizer
             frmIdentifyCorrCpgAddRegionNum.Show();
         }
 
-        private void mnuCAMDijkstra_Click(object sender, EventArgs e)
+        private void mnuAreaAgg_AStar_Click(object sender, EventArgs e)
         {
-            FrmCAMDijkstra frmCAMDijkstra = new FrmCAMDijkstra(_DataRecords);
-            frmCAMDijkstra.Show();
+            FrmAreaAgg frmAreaAgg_AStar = new FrmAreaAgg(_DataRecords);
+            frmAreaAgg_AStar.Show();
         }
 
         private void mnuCalGeo_Ipe_Click(object sender, EventArgs e)
@@ -1222,10 +1222,10 @@ namespace ContinuousGeneralizer
             frmCalGeo_Ipe.Show();
         }
 
-        private void mnuBuildingGrowing_Click(object sender, EventArgs e)
+        private void mnuBldgGrow_Click(object sender, EventArgs e)
         {
-            FrmBuildingGrowing frmBuildingGrowing = new FrmBuildingGrowing(_DataRecords);
-            frmBuildingGrowing.Show();
+            FrmBldgGrow frmBldgGrow = new FrmBldgGrow(_DataRecords);
+            frmBldgGrow.Show();
         }
 
         private void mnuCompareExcel_Click(object sender, EventArgs e)

@@ -68,6 +68,8 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "AreaAggregation-Simulation";
         //private static string _strDataFolderName = "AreaAggregation-531";
         //private static string _strDataFolderName = "AreaAggregation-664-easy";
+        //private static string _strDataFolderName = "AreaAggregation_Problematic";
+        //private static string _strDataFolderName = "AreaAggregation_Some";
         //private static string _strDataFolderName = "AreaAggregation-590";
         //private static string _strDataFolderName = "AreaAggregation-Simplest";
         //private static string _strDataFolderName = "AreaAggregation_SmallInstances";
@@ -89,6 +91,9 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "France_TwoSquares_Overlap";
         private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\BuildingGrowing\\" + _strDataFolderName + "\\";
 
+        //private static string _strDataFolderName = "An Approximate Morphing between Polylines";
+        //private static string _strPath = 
+        //    "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\" + _strDataFolderName + "\\";
 
         public static IEnumerable<CPoint> GetTestCptEb()
         {
@@ -250,6 +255,7 @@ namespace MorphingClass.CUtility
             int intFieldCount = pFeatureClass.Fields.FieldCount;
             pobjectValueLtLt = new List<List<object>>(intFeatureCount);
 
+
             int intSpecifiedFieldIndex = -1;
             if (strSpecifiedFieldName!=null )
             {
@@ -307,28 +313,6 @@ namespace MorphingClass.CUtility
         {
             switch (pGeo.GeometryType)
             {
-                case esriGeometryType.esriGeometryAny:
-                    break;
-                case esriGeometryType.esriGeometryBag:
-                    break;
-                case esriGeometryType.esriGeometryBezier3Curve:
-                    break;
-                case esriGeometryType.esriGeometryCircularArc:
-                    break;
-                case esriGeometryType.esriGeometryEllipticArc:
-                    break;
-                case esriGeometryType.esriGeometryEnvelope:
-                    break;
-                case esriGeometryType.esriGeometryLine:
-                    break;
-                case esriGeometryType.esriGeometryMultiPatch:
-                    break;
-                case esriGeometryType.esriGeometryMultipoint:
-                    break;
-                case esriGeometryType.esriGeometryNull:
-                    break;
-                case esriGeometryType.esriGeometryPath:
-                    break;
                 case esriGeometryType.esriGeometryPoint:               //point******************
                     break;
                 case esriGeometryType.esriGeometryPolygon:             //polygon******************
@@ -351,18 +335,6 @@ namespace MorphingClass.CUtility
                         throw new ArgumentNullException("Polyline " + intIndex + " has length 0!");
                     }
                     break;
-                case esriGeometryType.esriGeometryRay:
-                    break;
-                case esriGeometryType.esriGeometryRing:
-                    break;
-                case esriGeometryType.esriGeometrySphere:
-                    break;
-                case esriGeometryType.esriGeometryTriangleFan:
-                    break;
-                case esriGeometryType.esriGeometryTriangleStrip:
-                    break;
-                case esriGeometryType.esriGeometryTriangles:
-                    break;
                 default:
                     break;
             }
@@ -373,28 +345,6 @@ namespace MorphingClass.CUtility
             object obj = null;
             switch (pGeo.GeometryType)
             {
-                case esriGeometryType.esriGeometryAny:
-                    break;
-                case esriGeometryType.esriGeometryBag:
-                    break;
-                case esriGeometryType.esriGeometryBezier3Curve:
-                    break;
-                case esriGeometryType.esriGeometryCircularArc:
-                    break;
-                case esriGeometryType.esriGeometryEllipticArc:
-                    break;
-                case esriGeometryType.esriGeometryEnvelope:
-                    break;
-                case esriGeometryType.esriGeometryLine:
-                    break;
-                case esriGeometryType.esriGeometryMultiPatch:
-                    break;
-                case esriGeometryType.esriGeometryMultipoint:
-                    break;
-                case esriGeometryType.esriGeometryNull:
-                    break;
-                case esriGeometryType.esriGeometryPath:
-                    break;
                 case esriGeometryType.esriGeometryPoint:               //point******************
                     obj = new CPoint(intIndex, (IPoint)pGeo);
                     break;
@@ -403,19 +353,7 @@ namespace MorphingClass.CUtility
                     break;
                 case esriGeometryType.esriGeometryPolyline:            //polyline******************
                     obj = new CPolyline(intIndex, (IPolyline5)pGeo);
-                    break;
-                case esriGeometryType.esriGeometryRay:
-                    break;
-                case esriGeometryType.esriGeometryRing:
-                    break;
-                case esriGeometryType.esriGeometrySphere:
-                    break;
-                case esriGeometryType.esriGeometryTriangleFan:
-                    break;
-                case esriGeometryType.esriGeometryTriangleStrip:
-                    break;
-                case esriGeometryType.esriGeometryTriangles:
-                    break;
+                    break;               
                 default:
                     break;
             }
@@ -692,6 +630,52 @@ namespace MorphingClass.CUtility
             return copiedcptlt;
         }
 
+        public static IMap GetAllLayers(IMapControl4 m_mapControl, List<bool> blnVisibleLt = null)
+        {
+            var pMap = m_mapControl.Map;
+            IMap mapFeature = new MapClass();
+            if (blnVisibleLt == null)
+            {
+                blnVisibleLt = new List<bool>(pMap.LayerCount);
+            }
+
+            for (int i = pMap.LayerCount - 1; i >= 0; i--) //获取所有的要素图层（由于之后的“AddLayer”方法总是将新的图层放在第一个位置，所以这里从后面开始遍历）
+            {
+                ILayer pLayer = pMap.get_Layer(i);
+                RecursivelyGetLayers(pLayer, ref mapFeature, blnVisibleLt, true);
+            }
+            blnVisibleLt.Reverse(); //由于之后的“AddLayer”方法总是将新的图层放在第一个位置，so we reverse
+            return mapFeature;
+        }
+
+        private static void RecursivelyGetLayers(ILayer pLayer, ref IMap mapFeature, 
+            List<bool> blnVisibleLt, bool blnVisible)
+        {
+            if (pLayer is IGroupLayer || pLayer is ICompositeLayer)
+            {
+                ICompositeLayer pComLayer = pLayer as ICompositeLayer;
+                for (int j = pComLayer.Count - 1; j >= 0; j--)
+                {
+                    ILayer psubLayer = pComLayer.get_Layer(j);
+                    if (pLayer.Visible==false) //if any level is invisible, the lower levels are invisible
+                    {
+                        blnVisible = false;
+                    }
+                    RecursivelyGetLayers(psubLayer, ref mapFeature, blnVisibleLt, blnVisible);
+                }
+            }
+            else
+            {
+                if (pLayer is IFeatureLayer)  //是否为要素图层
+                {
+                    mapFeature.AddLayer(pLayer);
+                    blnVisibleLt.Add(blnVisible && pLayer.Visible);    //we do this because it's helpful for exporting data to Ipe
+
+                }
+            }
+        }
+
+
 
         //红色线 
         public static void ViewPolyline(IMapControl4 pMapControl, CPolyline cpl)
@@ -759,7 +743,8 @@ namespace MorphingClass.CUtility
         /// <param name="objltlt"></param>
         /// <param name="intValueIndex"></param>
         /// <param name="intTypeIndexSD"></param>
-        public static void GetCgbTypeAndTypeIndex(IEnumerable<CPolygon> TEb, List<List<object>> objltlt, int intValueIndex, CValMap_SD<int, int> TypePVSD)
+        public static void GetCgbTypeAndTypeIndex(IEnumerable<CPolygon> TEb, List<List<object>> objltlt, 
+            int intValueIndex, CValMap_SD<int, int> TypePVSD)
             //where CGeo : class
         {
             IEnumerator<CPolygon> TEt = TEb.GetEnumerator();

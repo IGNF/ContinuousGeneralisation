@@ -6,7 +6,9 @@ using System.Text;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.Geodatabase;
+using ESRI.ArcGIS.Display;
 
+using MorphingClass.CAid;
 using MorphingClass.CUtility;
 using MorphingClass.CGeometry;
 using MorphingClass.CGeometry.CGeometryBase;
@@ -33,7 +35,8 @@ namespace MorphingClass.CMorphingMethods.CMorphingMethodsBase
 
         protected List<List<CCorrCpts>> _CorrCptsLtLt;
         protected List<List<CCorrCpts>> _SgCorrCptsLtLt;
-        
+
+        //protected SortedDictionary<int, ISymbol> _intTypeFillSymbolSD;
 
         protected CParameterResult _ParameterResult;
         protected CParameterInitialize _ParameterInitialize;
@@ -106,7 +109,9 @@ namespace MorphingClass.CMorphingMethods.CMorphingMethodsBase
 
             //we compute the parameters of distance according to the features in the first layer
             CGeoFunc.CalDistanceParameters<T, CGeo>(pFirstLayerObjCGeoLt.AsExpectedClass<T, object>().ToList());
-            
+
+
+
             //_CPlLt = pObjCGeoLtLt[0];
             this.strFieldNameLtLt = pstrFieldNameLtLt;
             this.esriFieldTypeLtLt = pesriFieldTypeLtLt;

@@ -185,12 +185,12 @@ namespace MorphingClass.CUtility
         //}
 
 
-        /// <summary>属性：地图文档</summary>
-        public IMap pMap
-        {
-            get { return _pMap; }
-            set { _pMap = value; }
-        }
+        ///// <summary>属性：地图文档</summary>
+        //public IMap pMap
+        //{
+        //    get { return _pMap; }
+        //    set { _pMap = value; }
+        //}
 
         /// <summary>属性：线图层集</summary>
         public IMap m_mapPolyline
@@ -211,12 +211,12 @@ namespace MorphingClass.CUtility
             set { _m_mapFeature = value; }
         }
 
-        /// <summary>属性：所有图层集</summary>
-        public IMap m_mapAll
-        {
-            get { return _m_mapAll; }
-            set { _m_mapAll = value; }
-        }
+        ///// <summary>属性：所有图层集</summary>
+        //public IMap m_mapAll
+        //{
+        //    get { return _m_mapAll; }
+        //    set { _m_mapAll = value; }
+        //}
 
         /// <summary>属性：地图控件</summary>
         public IMapControl4 m_mapControl

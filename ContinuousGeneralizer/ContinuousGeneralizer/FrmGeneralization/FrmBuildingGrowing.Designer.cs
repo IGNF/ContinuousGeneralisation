@@ -1,6 +1,6 @@
 ﻿namespace ContinuousGeneralizer.FrmGeneralization
 {
-    partial class FrmBuildingGrowing
+    partial class FrmBldgGrow
     {
         /// <summary>
         /// Required designer variable.
@@ -592,7 +592,7 @@
             this.btn090.Text = "t=0.9";
             this.btn090.UseVisualStyleBackColor = true;
             // 
-            // FrmBuildingGrowing
+            // FrmBldgGrow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -602,10 +602,10 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.btnRun);
             this.Location = new System.Drawing.Point(50, 100);
-            this.Name = "FrmBuildingGrowing";
+            this.Name = "FrmBldgGrow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "FrmBuildingGrowing";
-            this.Load += new System.EventHandler(this.FrmBuildingGrowing_Load);
+            this.Text = "FrmBldgGrow";
+            this.Load += new System.EventHandler(this.FrmBldgGrow_Load);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox1.ResumeLayout(false);

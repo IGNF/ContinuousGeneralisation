@@ -36,7 +36,7 @@ namespace MorphingClass.CGeometry
 
         //this comparer should be used for counting uncolored Crgs
         public static CCmpCRegion_CphGID pCmpCRegion_CphGID = new CCmpCRegion_CphGID();  //this variable should be used for CRegion itself
-        
+
         //public static CCmpCRegion_CompareDblPreLocateEqual pCmpCRegion_CompareDblPreLocateEqual = new CCmpCRegion_CompareDblPreLocateEqual();
         //public static 
 
@@ -55,19 +55,20 @@ namespace MorphingClass.CGeometry
         //public int intEdgeCount { get; set; }
         public int intInteriorEdgeCount { get; set; }
         public int intExteriorEdgeCount { get; set; }
-        public double  dblInteriorSegLength { get; set; }
+        public double dblInteriorSegLength { get; set; }
         public double dblExteriorSegLength { get; set; }
 
         /// <summary>this is the real compactness 2*Sqrt(pi*A)/L.</summary>
         public double dblMinComp { get; set; }
-        public double dblAvgComp { get; set; } 
+        public double dblAvgComp { get; set; }
 
         //private double _dbld = double.MaxValue;
-        public double d{ get; set; }
+        public double d { get; set; }
 
         public CRegion parent { get; set; }
         public CRegion child { get; set; }
         public CEnumColor cenumColor { get; set; }
+        public CPatch newCph { get; set; }
 
         public double dblArea { get; set; }
         public double dblSumComp { get; set; }
@@ -88,7 +89,7 @@ namespace MorphingClass.CGeometry
             get { return _dblCostEstType; }
             set
             {
-                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge,CCmpCoordDbl_VerySmall.pCmpCoordDbl_VerySmall);
+                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.pCmpCoordDbl_VerySmall);
                 _dblCostEstType = value;
             }
         }
@@ -127,7 +128,7 @@ namespace MorphingClass.CGeometry
         }
 
         private double _dblCostExact = 0;
-        public double dblCostExact 
+        public double dblCostExact
         {
             get { return _dblCostExact; }
             set
@@ -148,7 +149,7 @@ namespace MorphingClass.CGeometry
             }
         }
 
-        
+
 
         //public double dblCostEstType
         //{
@@ -165,7 +166,7 @@ namespace MorphingClass.CGeometry
         //}
 
         public CRegion()
-            :this(-1)
+            : this(-1)
         {
         }
 
@@ -240,7 +241,7 @@ namespace MorphingClass.CGeometry
 
         public int GetSoloCphTypeIndex()
         {
-            if (this.CphTypeIndexSD_Area_CphGID.Count>1)
+            if (this.CphTypeIndexSD_Area_CphGID.Count > 1)
             {
                 throw new ArgumentOutOfRangeException("There are more than one elements!");
             }
@@ -265,7 +266,7 @@ namespace MorphingClass.CGeometry
         public void AddCph(CPatch Cph, int pintTypeIndex)
         {
             this.CphTypeIndexSD_Area_CphGID.Add(Cph, pintTypeIndex);
-            
+
             this.intSumCphGID += Cph.GID;
             this.intSumTypeIndex += pintTypeIndex;
             this.dblArea += Cph.dblArea;
@@ -279,7 +280,7 @@ namespace MorphingClass.CGeometry
             return this.dblMinComp;
         }
 
-        
+
 
         public void SetCoreCph(int intTypeIndex)
         {
@@ -307,7 +308,7 @@ namespace MorphingClass.CGeometry
         //    }
         //}
 
-        
+
 
         /// <summary>
         /// Get the adjacnet relationships between CPatches
@@ -421,13 +422,13 @@ namespace MorphingClass.CGeometry
             return ExistingCorrCphsSD0;
         }
 
-        public IEnumerable<CRegion> AggregateAndUpdateQ(CRegion lscrg, CRegion sscrg, SortedSet<CRegion> Q, string strAreaAggregation, 
-            List<SortedDictionary<CRegion, CRegion>> ExistingCrgSDLt, List<SortedDictionary<CPatch, CPatch>> ExistingCphSDLt, 
+        public IEnumerable<CRegion> AggregateAndUpdateQ(CRegion lscrg, CRegion sscrg, SortedSet<CRegion> Q, string strAreaAggregation,
+            List<SortedDictionary<CRegion, CRegion>> ExistingCrgSDLt, List<SortedDictionary<CPatch, CPatch>> ExistingCphSDLt,
             SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, int intFinalTypeIndex, double[,] padblTD, int intFactor)
         {
             if (strAreaAggregation == "Smallest")
             {
-                foreach (var item in AggregateSmallestAndUpdateQ(lscrg, sscrg,Q, ExistingCrgSDLt, ExistingCphSDLt, ExistingCorrCphsSD, 
+                foreach (var item in AggregateSmallestAndUpdateQ(lscrg, sscrg, Q, ExistingCrgSDLt, ExistingCphSDLt, ExistingCorrCphsSD,
                     intFinalTypeIndex, padblTD, intFactor))
                 {
                     yield return item;
@@ -435,7 +436,7 @@ namespace MorphingClass.CGeometry
             }
             else
             {
-                foreach (var item in AggregateAllAndUpdateQ(lscrg, sscrg, Q, ExistingCrgSDLt, ExistingCphSDLt, ExistingCorrCphsSD, 
+                foreach (var item in AggregateAllAndUpdateQ(lscrg, sscrg, Q, ExistingCrgSDLt, ExistingCphSDLt, ExistingCorrCphsSD,
                     intFinalTypeIndex, padblTD, intFactor))
                 {
                     yield return item;
@@ -444,8 +445,8 @@ namespace MorphingClass.CGeometry
         }
 
 
-        public IEnumerable<CRegion> AggregateSmallestAndUpdateQ(CRegion lscrg, CRegion sscrg, SortedSet<CRegion> Q, 
-            List<SortedDictionary<CRegion, CRegion>> ExistingCrgSDLt, List<SortedDictionary<CPatch, CPatch>> ExistingCphSDLt, 
+        public IEnumerable<CRegion> AggregateSmallestAndUpdateQ(CRegion lscrg, CRegion sscrg, SortedSet<CRegion> Q,
+            List<SortedDictionary<CRegion, CRegion>> ExistingCrgSDLt, List<SortedDictionary<CPatch, CPatch>> ExistingCphSDLt,
             SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, int intFinalTypeIndex, double[,] padblTD, int intFactor)
         {
             var pAdjCorrCphsSD = this.AdjCorrCphsSD;
@@ -464,7 +465,7 @@ namespace MorphingClass.CGeometry
 
 
         public IEnumerable<CRegion> AggregateAllAndUpdateQ(CRegion lscrg, CRegion sscrg, SortedSet<CRegion> Q,
-            List<SortedDictionary<CRegion, CRegion>> ExistingCrgSDLt, List<SortedDictionary<CPatch, CPatch>> ExistingCphSDLt, 
+            List<SortedDictionary<CRegion, CRegion>> ExistingCrgSDLt, List<SortedDictionary<CPatch, CPatch>> ExistingCphSDLt,
             SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, int intFinalTypeIndex, double[,] padblTD, int intFactor)
         {
             var pAdjCorrCphsSD = this.AdjCorrCphsSD;
@@ -472,7 +473,7 @@ namespace MorphingClass.CGeometry
             //for every pair of neighboring Cphs, we aggregate them and generate a new Crg
             foreach (var unitingCorrCphs in pAdjCorrCphsSD.Keys)
             {
-                foreach (var item in AggregateAndUpdateQ_Common(lscrg, sscrg, Q, pAdjCorrCphsSD, unitingCorrCphs, ExistingCrgSDLt, 
+                foreach (var item in AggregateAndUpdateQ_Common(lscrg, sscrg, Q, pAdjCorrCphsSD, unitingCorrCphs, ExistingCrgSDLt,
                     ExistingCphSDLt, ExistingCorrCphsSD, intFinalTypeIndex, padblTD, intFactor))
                 {
                     yield return item;
@@ -480,35 +481,35 @@ namespace MorphingClass.CGeometry
             }
         }
 
-        private IEnumerable<CRegion> AggregateAndUpdateQ_Common(CRegion lscrg, CRegion sscrg, SortedSet<CRegion> Q, SortedDictionary<CCorrCphs, 
-            CCorrCphs> pAdjCorrCphsSD, CCorrCphs unitingCorrCphs, List<SortedDictionary<CRegion, CRegion>> ExistingCrgSDLt, 
-            List<SortedDictionary<CPatch, CPatch>> ExistingCphSDLt, SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, 
+        private IEnumerable<CRegion> AggregateAndUpdateQ_Common(CRegion lscrg, CRegion sscrg, SortedSet<CRegion> Q, SortedDictionary<CCorrCphs,
+            CCorrCphs> pAdjCorrCphsSD, CCorrCphs unitingCorrCphs, List<SortedDictionary<CRegion, CRegion>> ExistingCrgSDLt,
+            List<SortedDictionary<CPatch, CPatch>> ExistingCphSDLt, SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD,
             int intFinalTypeIndex, double[,] padblTD, int intFactor)
         {
-            
+
             var newcph = ComputeNewCph(unitingCorrCphs, ExistingCphSDLt);
-            var newAdjCorrCphsSD = ComputeNewAdjCorrCphsSDAndUpdateExistingCorrCphsSD(pAdjCorrCphsSD, unitingCorrCphs,newcph,ExistingCorrCphsSD);
+            var newAdjCorrCphsSD = ComputeNewAdjCorrCphsSDAndUpdateExistingCorrCphsSD(pAdjCorrCphsSD, unitingCorrCphs, newcph, ExistingCorrCphsSD);
 
 
             var frcph = unitingCorrCphs.FrCph;
             var tocph = unitingCorrCphs.ToCph;
             int intfrTypeIndex = this.GetCphTypeIndex(frcph);
             int inttoTypeIndex = this.GetCphTypeIndex(tocph);
-            
+
 
             //if the two cphs have the same type, then we only need to aggregate the smaller one into the larger one (this will certainly have smaller cost in terms of area)
             //otherwise, we need to aggregate from two directions
             if (intfrTypeIndex == inttoTypeIndex)
             {
-                yield return GenerateCrgAndUpdateQ(lscrg, sscrg, Q, ExistingCrgSDLt, newAdjCorrCphsSD, frcph, tocph, newcph, unitingCorrCphs, 
+                yield return GenerateCrgAndUpdateQ(lscrg, sscrg, Q, ExistingCrgSDLt, newAdjCorrCphsSD, frcph, tocph, newcph, unitingCorrCphs,
                     intFinalTypeIndex, padblTD, intFactor);
             }
             else
             {
                 //The aggregate can happen from two directions
-                yield return GenerateCrgAndUpdateQ(lscrg, sscrg, Q, ExistingCrgSDLt, newAdjCorrCphsSD, frcph, tocph, newcph, unitingCorrCphs, 
+                yield return GenerateCrgAndUpdateQ(lscrg, sscrg, Q, ExistingCrgSDLt, newAdjCorrCphsSD, frcph, tocph, newcph, unitingCorrCphs,
                     intFinalTypeIndex, padblTD, intFactor);
-                yield return GenerateCrgAndUpdateQ(lscrg, sscrg, Q, ExistingCrgSDLt, newAdjCorrCphsSD, tocph, frcph, newcph, unitingCorrCphs, 
+                yield return GenerateCrgAndUpdateQ(lscrg, sscrg, Q, ExistingCrgSDLt, newAdjCorrCphsSD, tocph, frcph, newcph, unitingCorrCphs,
                     intFinalTypeIndex, padblTD, intFactor);
             }
         }
@@ -525,7 +526,7 @@ namespace MorphingClass.CGeometry
             }
             else
             {
-               return  null;
+                return null;
             }
         }
 
@@ -650,7 +651,7 @@ namespace MorphingClass.CGeometry
             return pNewAdjCorrCphsSD;
         }
         #endregion
-        
+
 
         /// <summary>
         /// compute cost during generating a new Crg
@@ -662,9 +663,9 @@ namespace MorphingClass.CGeometry
         /// <param name="intFinalTypeIndex"></param>
         /// <param name="padblTD"></param>
         /// <returns></returns>
-        public CRegion GenerateCrgAndUpdateQ(CRegion lscrg, CRegion sscrg, SortedSet<CRegion> Q, List<SortedDictionary<CRegion, CRegion>> ExistingCrgSDLt, 
-            SortedDictionary<CCorrCphs, CCorrCphs> newAdjCorrCphsSD, CPatch activecph, CPatch passivecph, CPatch unitedcph, 
-            CCorrCphs unitingCorrCphs, int intFinalTypeIndex, double[,] padblTD, int intFactor=1)
+        public CRegion GenerateCrgAndUpdateQ(CRegion lscrg, CRegion sscrg, SortedSet<CRegion> Q, List<SortedDictionary<CRegion, CRegion>> ExistingCrgSDLt,
+            SortedDictionary<CCorrCphs, CCorrCphs> newAdjCorrCphsSD, CPatch activecph, CPatch passivecph, CPatch unitedcph,
+            CCorrCphs unitingCorrCphs, int intFinalTypeIndex, double[,] padblTD, int intFactor = 1)
         {
             int intactiveTypeIndex = this.GetCphTypeIndex(activecph);
             int intpassiveTypeIndex = this.GetCphTypeIndex(passivecph);
@@ -672,30 +673,30 @@ namespace MorphingClass.CGeometry
             var newcrg = this.GenerateCrgChildAndComputeCost(lscrg, newAdjCorrCphsSD,
              activecph, passivecph, unitedcph, unitingCorrCphs, intactiveTypeIndex, intpassiveTypeIndex, padblTD);
 
-            var intGIDLt = new List<int>();
-            var intTypeLt = new List<int>();
-            if (newcrg.intSumCphGID==65794 &&newcrg.intSumTypeIndex==172)
-            {
-                
-                foreach (var cph in newcrg.GetCphCol())
-                {
-                    intGIDLt.Add(cph.GID);
-                }
+            //var intGIDLt = new List<int>();
+            //var intTypeLt = new List<int>();
+            //if (newcrg.intSumCphGID==65794 &&newcrg.intSumTypeIndex==172)
+            //{
 
-                
-                foreach (var inttype in newcrg.GetCphTypeIndexCol())
-                {
-                    intTypeLt.Add(inttype);
-                }
+            //    foreach (var cph in newcrg.GetCphCol())
+            //    {
+            //        intGIDLt.Add(cph.GID);
+            //    }
 
-                foreach (var item in Q)
-                {
-                    if (item.intSumCphGID== 65794 && item.intSumTypeIndex == 172)
-                    {
-                        int ss = 5;
-                    }
-                }
-            }
+
+            //    foreach (var inttype in newcrg.GetCphTypeIndexCol())
+            //    {
+            //        intTypeLt.Add(inttype);
+            //    }
+
+            //    foreach (var item in Q)
+            //    {
+            //        if (item.intSumCphGID== 65794 && item.intSumTypeIndex == 172)
+            //        {
+            //            int ss = 5;
+            //        }
+            //    }
+            //}
 
 
             CRegion outcrg;
@@ -708,21 +709,24 @@ namespace MorphingClass.CGeometry
                 {
                     //from the idea of A* algorithm, we know that outcrg must be in Q
                     //var Q = new SortedSet<CRegion>(CRegion.pCmpCRegion_Cost_CphGIDTypeIndex);
-                    if (Q.Remove(outcrg) == true) //there is no decrease key function for SortedSet, so we have to remove it and later add it again
+                    //there is no decrease key function for SortedSet, so we have to remove it and later add it again
+                    if (Q.Remove(outcrg) == true) 
                     {
+                        //we don't use newcrg dicrectly because some regions may use ourcrg as their children
                         outcrg.cenumColor = newcrg.cenumColor;
-                        outcrg.dblCostExactType = newcrg.dblCostExactType;   //*****the cost will need be updated if we integrate more evaluations
-                        outcrg.dblCostExactComp = newcrg.dblCostExactComp;   //*****the cost will need be updated if we integrate more evaluations
+                        outcrg.dblCostExactType = newcrg.dblCostExactType;
+                        outcrg.dblCostExactComp = newcrg.dblCostExactComp;
                         outcrg.dblCostExactArea = newcrg.dblCostExactArea;
                         outcrg.dblCostExact = newcrg.dblCostExact;
                         outcrg.d = newcrg.dblCostExact + outcrg.dblCostEst;
 
+                        outcrg.newCph = newcrg.newCph;
                         outcrg.parent = newcrg.parent;
                         newcrg = outcrg;
                         Q.Add(newcrg);
                     }
                     else
-                    {                       
+                    {
                         if (intFactor == 1)
                         {
                             throw new ArgumentException("outcrg should be removed!");
@@ -751,18 +755,22 @@ namespace MorphingClass.CGeometry
             return newcrg;
         }
 
-        public CRegion GenerateCrgChildAndComputeCost(CRegion lscrg, SortedDictionary<CCorrCphs, CCorrCphs> newAdjCorrCphsSD, 
-            CPatch activecph, CPatch passivecph, CPatch unitedcph, CCorrCphs unitingCorrCphs, int intactiveTypeIndex, int intpassiveTypeIndex,  double[,] padblTD)
+        public CRegion GenerateCrgChildAndComputeCost(CRegion lscrg, SortedDictionary<CCorrCphs, CCorrCphs> newAdjCorrCphsSD,
+            CPatch activecph, CPatch passivecph, CPatch unitedcph, CCorrCphs unitingCorrCphs,
+            int intactiveTypeIndex, int intpassiveTypeIndex, double[,] padblTD)
         {
             var newCphTypeIndexSD = new SortedDictionary<CPatch, int>(this.CphTypeIndexSD_Area_CphGID, CPatch.pCmpCPatch_Area_CphGID);
             newCphTypeIndexSD.Remove(activecph);
             newCphTypeIndexSD.Remove(passivecph);
             newCphTypeIndexSD.Add(unitedcph, intactiveTypeIndex);
 
+            //****if I update the codes below, then I should consider updating the codes for transfering information to outcrg
+            //e.g., outcrg.newCph = newcrg.newCph;
             CRegion newcrg = new CRegion(this.ID);
             newcrg.dblArea = this.dblArea;
             newcrg.cenumColor = CEnumColor.gray;
             newcrg.parent = this;
+            newcrg.newCph = unitedcph;
             newcrg.AdjCorrCphsSD = newAdjCorrCphsSD;
             newcrg.CphTypeIndexSD_Area_CphGID = newCphTypeIndexSD;
             newcrg.intSumCphGID = this.intSumCphGID - activecph.GID - passivecph.GID + unitedcph.GID;
@@ -840,8 +848,8 @@ namespace MorphingClass.CGeometry
                 this.dblCostEstComp = intFactor * BalancedEstCompInteriorLength_Basic(this, this);
             }
 
-            this.dblCostEst = (1 - CCAMDijkstra.dblLamda) * this.dblCostEstType + 
-                CCAMDijkstra.dblLamda * this.dblArea * this.dblCostEstComp;
+            this.dblCostEst = (1 - CAreaAgg_AStar.dblLamda) * this.dblCostEstType + 
+                CAreaAgg_AStar.dblLamda * this.dblArea * this.dblCostEstComp;
 
             this.d = this.dblCostEst;
         }
@@ -875,8 +883,8 @@ namespace MorphingClass.CGeometry
                     NewCrg.dblCostExactComp = 0;
                 }
 
-                NewCrg.dblCostExact = (1 - CCAMDijkstra.dblLamda) * NewCrg.dblCostExactType +
-                    CCAMDijkstra.dblLamda * NewCrg.dblArea * NewCrg.dblCostExactComp;
+                NewCrg.dblCostExact = (1 - CAreaAgg_AStar.dblLamda) * NewCrg.dblCostExactType +
+                    CAreaAgg_AStar.dblLamda * NewCrg.dblArea * NewCrg.dblCostExactComp;
             }
             else if (CConstants.strShapeConstraint == "MaximizeMinComp_EdgeNumber"
                 || CConstants.strShapeConstraint == "MaximizeMinComp_Combine")
@@ -892,8 +900,8 @@ namespace MorphingClass.CGeometry
                     NewCrg.dblCostExactComp = 0;
                 }
 
-                NewCrg.dblCostExact = (1 - CCAMDijkstra.dblLamda) * NewCrg.dblCostExactType +
-                    CCAMDijkstra.dblLamda * NewCrg.dblArea * NewCrg.dblCostExactComp;
+                NewCrg.dblCostExact = (1 - CAreaAgg_AStar.dblLamda) * NewCrg.dblCostExactType +
+                    CAreaAgg_AStar.dblLamda * NewCrg.dblArea * NewCrg.dblCostExactComp;
             }
             else if (CConstants.strShapeConstraint == "MinimizeInteriorBoundaries")
             {
@@ -912,8 +920,8 @@ namespace MorphingClass.CGeometry
                     NewCrg.dblCostExactComp = 0;
                 }
 
-                NewCrg.dblCostExact = (1 - CCAMDijkstra.dblLamda) * NewCrg.dblCostExactType +
-                    CCAMDijkstra.dblLamda * NewCrg.dblArea * NewCrg.dblCostExactComp;
+                NewCrg.dblCostExact = (1 - CAreaAgg_AStar.dblLamda) * NewCrg.dblCostExactType +
+                    CAreaAgg_AStar.dblLamda * NewCrg.dblArea * NewCrg.dblCostExactComp;
             }
             else if (CConstants.strShapeConstraint == "NonShape")
             {
@@ -956,8 +964,8 @@ namespace MorphingClass.CGeometry
 
                 //to make dblCostEstComp comparable to dblCostEstType and to avoid digital problems, we time dblCostEstComp by area
                 //we will adjust the value later
-                NewCrg.dblCostEst = (1 - CCAMDijkstra.dblLamda) * NewCrg.dblCostEstType +
-                    CCAMDijkstra.dblLamda * NewCrg.dblArea * NewCrg.dblCostEstComp;
+                NewCrg.dblCostEst = (1 - CAreaAgg_AStar.dblLamda) * NewCrg.dblCostEstType +
+                    CAreaAgg_AStar.dblLamda * NewCrg.dblArea * NewCrg.dblCostEstComp;
             }
             else if (CConstants.strShapeConstraint == "MaximizeAvgComp_Combine")
             {
@@ -969,8 +977,8 @@ namespace MorphingClass.CGeometry
 
                 //to make dblCostEstComp comparable to dblCostEstType and to avoid digital problems, we time dblCostEstComp by area
                 //we will adjust the value later
-                NewCrg.dblCostEst = (1 - CCAMDijkstra.dblLamda) * NewCrg.dblCostEstType + 
-                    CCAMDijkstra.dblLamda * NewCrg.dblArea * NewCrg.dblCostEstComp;   
+                NewCrg.dblCostEst = (1 - CAreaAgg_AStar.dblLamda) * NewCrg.dblCostEstType + 
+                    CAreaAgg_AStar.dblLamda * NewCrg.dblArea * NewCrg.dblCostEstComp;   
             }
             else if (CConstants.strShapeConstraint == "MaximizeMinComp_EdgeNumber")
             {
@@ -978,8 +986,8 @@ namespace MorphingClass.CGeometry
 
                 //to make dblCostEstComp comparable to dblCostEstType and to avoid digital problems, we time dblCostEstComp by area
                 //we will adjust the value later
-                NewCrg.dblCostEst = (1 - CCAMDijkstra.dblLamda) * NewCrg.dblCostEstType + 
-                    CCAMDijkstra.dblLamda * NewCrg.dblArea * NewCrg.dblCostEstComp;   
+                NewCrg.dblCostEst = (1 - CAreaAgg_AStar.dblLamda) * NewCrg.dblCostEstType + 
+                    CAreaAgg_AStar.dblLamda * NewCrg.dblArea * NewCrg.dblCostEstComp;   
             }
             else if (CConstants.strShapeConstraint == "MinimizeInteriorBoundaries")
             {
@@ -987,8 +995,8 @@ namespace MorphingClass.CGeometry
 
                 ////to make dblCostEstComp comparable to dblCostEstType and to avoid digital problems, we time dblCostEstComp by area
                 ////we will adjust the value later
-                NewCrg.dblCostEst = (1 - CCAMDijkstra.dblLamda) * NewCrg.dblCostEstType +
-                    CCAMDijkstra.dblLamda * NewCrg.dblArea * NewCrg.dblCostEstComp; 
+                NewCrg.dblCostEst = (1 - CAreaAgg_AStar.dblLamda) * NewCrg.dblCostEstType +
+                    CAreaAgg_AStar.dblLamda * NewCrg.dblArea * NewCrg.dblCostEstComp; 
             }
             else if (CConstants.strShapeConstraint == "NonShape")
             {

@@ -31,8 +31,7 @@ namespace MorphingClass.CGeometry.CGeometryBase
         protected IGeometry _pGeo;
 
         protected CGeo _CorrCGeo;
-        protected List<CGeo> _CorrCGeoLt;
-
+        public List<CGeo> CorrCGeoLt { get; set; }
 
 
         public CGeometricBase()
@@ -128,10 +127,6 @@ namespace MorphingClass.CGeometry.CGeometryBase
             set { _CorrCGeo = value; }
         }
 
-        public List<CGeo> CorrCGeoLt
-        {
-            get { return _CorrCGeoLt; }
-            set { _CorrCGeoLt = value; }
-        }
+
     }
 }

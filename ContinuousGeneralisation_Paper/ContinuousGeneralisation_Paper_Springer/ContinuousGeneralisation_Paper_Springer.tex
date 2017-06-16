@@ -26,7 +26,7 @@
 %
 \usepackage{makeidx}         % allows index generation
 \usepackage{graphicx}        % standard LaTeX graphics tool
-\usepackage{caption}
+\usepackage[size=small,labelfont=bf]{caption}
                              % when including figure files
 \usepackage{multicol}        % used for the two-column index
 \usepackage[bottom]{footmisc}% places footnotes at page bottom
@@ -34,10 +34,9 @@
 %\usepackage{rotating}
 \usepackage{afterpage}
 %\usepackage[disable]{todonotes}
-\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\usepackage[colorinlistoftodos,prependcaption]{todonotes}
 %\usepackage{todonotes}
 \usepackage{subfigure}
-\usepackage[font=small,labelfont=bf]{caption}
 \usepackage{setspace}
 \usepackage{epstopdf}
 \usepackage{flafter} %make sure that the floats are not placed 
@@ -217,29 +216,26 @@ eprint=false,dashed=false]{biblatex}
 \maketitle
 
 \newcommand{\myabstract}{We proposed a method to continuous 
-generalization of buildings from a start scale to a goal scale. 
-%
-For each building at the start scale, we generate its 
-generalized form at 
-the goal scale by enlarging and simplifying. Then we grow the  
-building to the 
-generalized form to realize continuous transformation. During 
-the 
-growing, we aggregate two buildings once they become too close 
-to each other. We generate a new generalized form at the goal 
-scale for 
-the aggregated building so that we can continue growing.
-%
-After finishing the growing, we take the goal scale as the 
-start scale and repeat our continuous generalization. The start 
-scale and the target scale should not be too far away because we 
-want the intermediate results to be somewhat simplified.
-
-Our contribution is as follows. First, the buildings 
-are enlarged continuously and at the same time are simplified. 
-Second, the distance between each pair of two buildings is 
-always larger than a specified distance. Third, there is no thin 
-part in our results.}
+	generalization of buildings from given start scale to any smaller goal 
+	scale. 
+	%
+	If several buildings are close to each other at the start 
+	scale, we bridge them by line segments and take the merge of these 
+	buildings 
+	and bridges as one building.
+	For each building, either an original one or a merged one, at the start 
+	scale, 
+	we generate its target shape at 
+	the goal scale by enlarging and simplifying. Then we grow the  
+	building to the target shape. 
+	%
+	After finishing the growing, we take the goal scale as the 
+	start scale and repeat our continuous generalization.
+	\newline\indent
+	Our contribution is as follows. First, the buildings 
+	are enlarged continuously. At the same time, they are simplified. 
+	Second, we ensure that the distance between any pair of two buildings is 
+	always larger than a specified threshold.}
 
 %We proposed a method to continuous 
 %generalization of buildings from a start scale to a goal scale. 
@@ -495,8 +491,8 @@ buildings from the previous step?
 
 
 Elimination
-If every building should have area 4d2at least, we buffer 
-buildings with radius xd (x<2). After the buffering, some too 
+If every building should have area $4d^2$at least, we buffer 
+buildings with radius $xd$ (x<2). After the buffering, some too 
 small buildings will be eliminated. The small buildings which 
 manage to merge with other buildings may survive. The eliminated 
 buildings should not participate in next buffering step, which 
@@ -525,6 +521,7 @@ Issues regarding the data:
 %\pagebreak[4]
 %\newpage
 \clearpage
+
 
 \section{An idea of continuously generalising buildings}
 We have an input map at scale $1:15 \mathrm{k}$.
@@ -574,11 +571,167 @@ $\epsilon_i=\frac{1}{10}(r_i-r_{i-1})$. After these buffering
 operations, we eliminate the buildings with area less than 
 $A_i$.
 
+\section{Method}
+
+
+If several buildings are close to each other at the start 
+scale, we bridge them by line segments and take the merge of these 
+buildings 
+and bridges as one building.
+For each building, either an original one or a merged one, at the start 
+scale, 
+we generate its target shape at 
+the goal scale by enlarging and simplifying. Then we grow the  
+building to the target shape. 
+%
+After finishing the growing, we take the goal scale as the 
+start scale and repeat our continuous generalization.
+\newline\indent
+Our contribution is as follows. First, the buildings 
+are enlarged continuously. At the same time, they are simplified. 
+Second, we ensure that the distance between any pair of two buildings is 
+always larger than a specified threshold.
+
+If we grow a building with radius $d_\mathrm{G}$, some part of a building will 
+grow at most $2d_\mathrm{G}$.
+The length of a bridge can be as large as
+\begin{equation}
+\label{eq:BridgeLength}
+l_b=4d_\mathrm{G}+d_\epsilon.
+\end{equation}
+\todo[inline]{$d_\mathrm{G}$ or $D_\mathrm{G}$?}
+
+
+\subsection{Parameters for growing}
+The start scale is $1:S_\mathrm{s}$, and the goal scale is $1:S_\mathrm{g}$ 
+($S_\mathrm{g}>S_\mathrm{s}$).
+The area of a building should be larger than $a$ mm$^2$ on a map.
+A square at the start scale has area $a S_\mathrm{s}^2$ mm$^2$ at least.
+A square at the goal scale has area $a S_\mathrm{g}^2$ mm$^2$ at least.
+The difference of the side lengths is $\sqrt{a} (S_\mathrm{g}-S_\mathrm{s})$ mm.
+Therefore, a square on the start map needs to grow $\frac{1}{2}\sqrt{a} 
+(S_\mathrm{g}-S_\mathrm{s})$ mm in order to survive.
+In order to eliminate some small buildings, we define our growing distance as
+\begin{equation}
+\label{eq:d_G}
+	d_\mathrm{G}=\frac{\lambda}{2}\sqrt{a} (S_\mathrm{g}-S_\mathrm{s}) \text{ 
+	mm} \quad 0 < \lambda <1,
+\end{equation}
+where variable $\lambda$ is our growing factor. A larger $\lambda$ results in  
+fewer buildings to be eliminated, and vice versa.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics{Growth}
+	\caption{Growth.}
+	\label{fig:Growth}
+\end{figure}
+
+The distance between two buildings should be larger than a threshold, say, 
+$\epsilon$ mm on map \parencite{Stoter2009}.
+In order to make the shape of a building simpler, we simplify buildings 
+using the Douglas--Peucker algorithm \parencite{Douglas1973} with preservation 
+of right angles.
+To avoid using too many thresholds, we also use $\epsilon$ mm for the 
+simplification algorithm, hence the real threshold distance 
+is
+\begin{equation}
+\label{eq:d_epsilon}
+d_\epsilon= \epsilon  S_\mathrm{g}.
+\end{equation}
+
+If we insist on that we should observe 
+the growing, say, $x \% (0<x<100)$ of the time at least, then we should make 
+sure that
+\begin{equation}
+\label{eq:a_limit}
+\frac{d_\mathrm{G}}{d_\mathrm{G}+d_\epsilon} \ge x \%.
+\end{equation}
+Using $d_\mathrm{G}$ and $d_\epsilon$ from Eqs.~\ref{eq:d_G} 
+and~\ref{eq:d_epsilon}, we transform Eq.~\ref{eq:a_limit} to
+\begin{equation}
+a \ge \Big(\frac{2 \epsilon S_g x}{\lambda (100-x) (S_g-S_s)}\Big)^2
+\end{equation}
+\textcite{Stoter2009} used $0.2$ mm as minimal distance between two buildings 
+on a map. We set our $\epsilon=0.2$.
+We also require 
+that $S_g \ge 2 S_s$, which means $S_s \le \frac{1}{2} S_g$.
+On one hand, we should have a large $x$ so that we will see the 
+growing most of the time.
+On the other hand, we wish to keep bridges short as bridges are intrusions to 
+our map, which means we should have a small $x$ and a large $\lambda$ so that 
+we will have a small 
+$a$ (according to Eq.~\ref{eq:a_limit}), a small $d_\mathrm{G}$ (according to 
+Eq.~\ref{eq:d_G}), and finally a small $l_b$ (according to 
+Eq.~\ref{eq:BridgeLength}). Also we should have a small $x$ and a large 
+$\lambda$ as our $a$ is already much larger than $0.16$ mm$^2$ on 
+map, which is the area limit used by \textcite{Stoter2009}. As a result, we set 
+$\lambda=0.8$ and $x=\frac{2}{3} \cdot 100$.
+Using these setting, we have
+\begin{equation}
+a \ge 4.
+\end{equation}
+according to Eq.~\ref{eq:a_limit}.
+
+
+
+
+Therefore, we may grow up to distance 
+\[
+D_\mathrm{G} = d_\mathrm{G} + d_\epsilon.
+\]
+Fig.~\ref{fig:ExtraGrowth} shows such an enlargement and simplification, where  
+variable $d_\mathrm{e} (\le d_\epsilon)$ is the extra growing distance.
+
+A hole has area less than $\pi D_\mathrm{G}^2$ can be filled by growing. 
+A hole has area 
+slightly more than $\pi D_\mathrm{G}^2$ will become a very small hole after 
+growing with 
+distance $D_\mathrm{G}$. In order to avoid small holes, we do not fill a hole 
+unless the 
+area of the hole on the start map is smaller than $\pi D_\mathrm{G}^2$. Note 
+that we do 
+not fill a hole even if the hole has a large area because a large hole may be 
+split into several small holes by filling. 
+Although our intermediate results may violate the rule that a hole should be at 
+least some size, we try to avoid the violation for a map at a goal scale.
+\textcite{Chaudhry2008} thought that a hole of a settlement should be at least 
+$0.5$ km$^2$ for a map at scale $1:250{,}000$, which means that the hole is at 
+least $8$ mm$^2$ on the map. Following their setting, we wish to have $\pi 
+D_\mathrm{G}^2 \ge 8 S_g^2$.
+
+
+Now we discuss how to set the parameters according to our requirements. First, 
+we wish to increase $d_\mathrm{G}/d_\epsilon$. Most part of a building will 
+grow $d_\mathrm{G}$. Only a small part will continue growing after the building 
+has grown $d_\mathrm{G}$. To ensure that we can see the growing most of the 
+time, we want to have a large $d_\mathrm{G}/d_\epsilon$.
 
 
 
 
 
+We cannot fulfill all the requirements. 
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics{ExtraGrowth}
+	\caption{In the left figure, the green polygon represents a building, and 
+	the dashed polygon is the enlargement of the building. In the right 
+	figure, the dashed polygon has been simplified to a rectangle. In order to 
+	fill the rectangle, most parts of the (green) building needs to grow 
+	distance $d_\mathrm{G}$, but the pit needs to grow $d_G + d_\mathrm{e}$, 
+	where $d_\mathrm{e}$ is the extra growing distance.}
+	\label{fig:ExtraGrowth}
+\end{figure}
+
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics{GrowingExample}
+	\caption{GrowingExample.}
+	\label{fig:GrowingExample}
+\end{figure}
 
 \section{Section Title}
 \label{sec:AStarAlgorithm}
@@ -615,6 +768,14 @@ buffering function of this library has been evaluated by
 \textcite{Palfrader2015}.
 
 One can also discuss about our growing speed.
+
+We our intermediate results may violate more cartographic rules, but we try to 
+make the results at goal scales violate as few rules as possible.
+
+Ideally, for a rectangle, the ratio of width to height should be kept. 
+
+\todo[inline]{consider multi bridges; consider transparency of bridges in stead 
+of enlarging}
 
 \printbibliography
 %\bibliographystyle{plainnat}

@@ -59,7 +59,7 @@
             this.txtIpeMaxY.Name = "txtIpeMaxY";
             this.txtIpeMaxY.Size = new System.Drawing.Size(90, 20);
             this.txtIpeMaxY.TabIndex = 106;
-            this.txtIpeMaxY.Text = "72";
+            this.txtIpeMaxY.Text = "128";
             this.txtIpeMaxY.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // txtIpeMinY
@@ -86,7 +86,7 @@
             this.txtIpeMaxX.Name = "txtIpeMaxX";
             this.txtIpeMaxX.Size = new System.Drawing.Size(90, 20);
             this.txtIpeMaxX.TabIndex = 103;
-            this.txtIpeMaxX.Text = "72";
+            this.txtIpeMaxX.Text = "128";
             this.txtIpeMaxX.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label2

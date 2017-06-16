@@ -20,70 +20,19 @@ namespace MorphingClass.CUtility
 {
     public class CFrmOperation
     {
-        private CParameterInitialize _ParameterInitialize;  //存储初始化的参数
-        //private CSpatialHelperFunction _SpatialHelperFunction;
-
-        //属性：初始化参数
-        public CParameterInitialize ParameterInitialize
-        {
-            get { return _ParameterInitialize; }
-            set { _ParameterInitialize = value; }
-        }
-
-        /// <summary>构造函数</summary>
+        /// <summary>Constructor</summary>
         public CFrmOperation(ref CParameterInitialize pParameterInitialize)
         {
-            _ParameterInitialize = pParameterInitialize;
-            GetAllLayers(pParameterInitialize);
-            LoadTocbo(pParameterInitialize);
-
-            //if (ParameterInitialize.cboMorphingMethod !=null )
-            //{
-            //    ParameterInitialize.cboMorphingMethod.SelectedIndex = 0;
-            //}
-            //_SpatialHelperFunction = new CSpatialHelperFunction();
+            pParameterInitialize.m_mapFeature = CHelpFunc.GetAllLayers(pParameterInitialize.m_mapControl);
+            LoadTocbo(pParameterInitialize);            
         }
 
-        private void GetAllLayers(CParameterInitialize pParameterInitialize)
-        {
-            pParameterInitialize.pMap = pParameterInitialize.m_mapControl.Map;
-            IMap mapFeature=new MapClass (); 
-
-            for (int i = pParameterInitialize.pMap.LayerCount - 1; i >= 0; i--) //获取所有的要素图层（由于之后的“AddLayer”方法总是将新的图层放在第一个位置，所以这里从后面开始遍历）
-            {
-                ILayer pLayer = pParameterInitialize.pMap.get_Layer(i);
-                RecursivelyGetLayers(pLayer, ref mapFeature);
-            }
-
-            pParameterInitialize.m_mapFeature = mapFeature;
-        }
-
-        private void RecursivelyGetLayers(ILayer pLayer, ref IMap mapFeature)
-        {
-            if (pLayer is IGroupLayer || pLayer is ICompositeLayer)
-            {
-                ICompositeLayer pComLayer = pLayer as ICompositeLayer;
-                for (int j = pComLayer.Count - 1; j >= 0; j--)
-                {
-                   ILayer psubLayer=  pComLayer.get_Layer(j);
-                   psubLayer.Visible = (psubLayer.Visible && pLayer.Visible);    //we do this because it's helpful for exporting data to Ipe
-                   RecursivelyGetLayers(psubLayer, ref mapFeature);
-                }
-            }
-            else
-            {
-                if (pLayer is IFeatureLayer)  //是否为要素图层
-                {
-                    mapFeature.AddLayer(pLayer);
-                }
-            }
-        }
 
 
 
         private void LoadTocbo(CParameterInitialize pParameterInitialize)
         {
-            if (pParameterInitialize.cboLayerLt == null )
+            if (pParameterInitialize.cboLayerLt == null)
             {
                 return;
             }
@@ -92,14 +41,14 @@ namespace MorphingClass.CUtility
             IEnumLayer pEnumlayer = pm_mapFeature.Layers;
             string[] astrLayerName = new string[pm_mapFeature.LayerCount];
             int intIndex = 0;
-            while (intIndex<pm_mapFeature.LayerCount)
+            while (intIndex < pm_mapFeature.LayerCount)
             {
-              astrLayerName[intIndex]=  pEnumlayer.Next().Name;
-              intIndex++;
+                astrLayerName[intIndex] = pEnumlayer.Next().Name;
+                intIndex++;
             }
 
             int intSelect = 0;
-            foreach (ComboBox  cboLayer in pParameterInitialize .cboLayerLt )
+            foreach (ComboBox cboLayer in pParameterInitialize.cboLayerLt)
             {
                 cboLayer.Items.AddRange(astrLayerName);
                 cboLayer.SelectedIndex = intSelect;
@@ -107,158 +56,160 @@ namespace MorphingClass.CUtility
             }
         }
 
+        #region Obsolete: loading cbolayers
+        ///// <summary>实现Frm_Load的方法</summary>
+        ///// <remarks>最一般的Frm_Load的方法</remarks>
+        //public void FrmLoad()
+        //{
+        //    _ParameterInitialize.cboLayer.Items.Clear();//图层列表框
 
-        /// <summary>实现Frm_Load的方法</summary>
-        /// <remarks>最一般的Frm_Load的方法</remarks>
-        public void FrmLoad()
-        {
-            _ParameterInitialize.cboLayer.Items.Clear();//图层列表框
+        //    for (int i = _ParameterInitialize.pMap.LayerCount - 1; i >= 0; i--) //获取所有的要素图层（由于之后的“AddLayer”方法总是将新的图层放在第一个位置，所以这里从后面开始遍历）
+        //    {
+        //        ILayer pLayer = _ParameterInitialize.pMap.get_Layer(i);
+        //        if (pLayer is IGroupLayer || pLayer is ICompositeLayer)
+        //        {
+        //            bool isVisible = pLayer.Visible;
+        //            ICompositeLayer pComLayer = pLayer as ICompositeLayer;
+        //            for (int j = pComLayer.Count - 1; j >= 0; j--)
+        //            {
+        //                if (isVisible==false)
+        //                {
+        //                    pComLayer.get_Layer(j).Visible = false;
+        //                }
 
-            for (int i = _ParameterInitialize.pMap.LayerCount - 1; i >= 0; i--) //获取所有的要素图层（由于之后的“AddLayer”方法总是将新的图层放在第一个位置，所以这里从后面开始遍历）
-            {
-                ILayer pLayer = _ParameterInitialize.pMap.get_Layer(i);
-                if (pLayer is IGroupLayer || pLayer is ICompositeLayer)
-                {
-                    bool isVisible = pLayer.Visible;
-                    ICompositeLayer pComLayer = pLayer as ICompositeLayer;
-                    for (int j = pComLayer.Count - 1; j >= 0; j--)
-                    {
-                        if (isVisible==false)
-                        {
-                            pComLayer.get_Layer(j).Visible = false;
-                        }
-                        
-                        if (pComLayer.get_Layer(j) is IFeatureLayer)  //是否为要素图层
-                        {
-                            _ParameterInitialize.m_mapFeature.AddLayer(pComLayer.get_Layer(j));
-                            _ParameterInitialize.cboLayer.Items.Insert(0, pComLayer.get_Layer(j).Name);
-                        }
-                    }
-                }
-                else
-                {
-                    if (pLayer is IFeatureLayer)  //是否为要素图层
-                    {
-                        _ParameterInitialize.m_mapFeature.AddLayer(pLayer);
-                        _ParameterInitialize.cboLayer.Items.Insert(0, pLayer.Name);
-                    }
-                }
-            }
-            if (_ParameterInitialize.cboLayer.Items.Count > 0)
-                _ParameterInitialize.cboLayer.SelectedIndex = 0;//默认选取第一个要素图层
-        }
+        //                if (pComLayer.get_Layer(j) is IFeatureLayer)  //是否为要素图层
+        //                {
+        //                    _ParameterInitialize.m_mapFeature.AddLayer(pComLayer.get_Layer(j));
+        //                    _ParameterInitialize.cboLayer.Items.Insert(0, pComLayer.get_Layer(j).Name);
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (pLayer is IFeatureLayer)  //是否为要素图层
+        //            {
+        //                _ParameterInitialize.m_mapFeature.AddLayer(pLayer);
+        //                _ParameterInitialize.cboLayer.Items.Insert(0, pLayer.Name);
+        //            }
+        //        }
+        //    }
+        //    if (_ParameterInitialize.cboLayer.Items.Count > 0)
+        //        _ParameterInitialize.cboLayer.SelectedIndex = 0;//默认选取第一个要素图层
+        //}
 
-        /// <summary>实现Frm_Load的方法</summary>
-        /// <remarks>两个图层选择框</remarks>
-        public void FrmLoadMulticbo()
-        {
-            _ParameterInitialize.cboLargerScaleLayer.Items.Clear();//图层列表框
-            _ParameterInitialize.cboSmallerScaleLayer.Items.Clear();//图层列表框
+        ///// <summary>实现Frm_Load的方法</summary>
+        ///// <remarks>两个图层选择框</remarks>
+        //public void FrmLoadMulticbo()
+        //{
+        //    _ParameterInitialize.cboLargerScaleLayer.Items.Clear();//图层列表框
+        //    _ParameterInitialize.cboSmallerScaleLayer.Items.Clear();//图层列表框
 
-            for (int i = _ParameterInitialize.pMap.LayerCount - 1; i >= 0; i--) //获取所有的要素图层（由于之后的“AddLayer”方法总是将新的图层放在第一个位置，所以这里从后面开始遍历）
-            {
-                ILayer pLayer = _ParameterInitialize.pMap.get_Layer(i);
-                if (pLayer is IGroupLayer || pLayer is ICompositeLayer)
-                {
-                    bool isVisible = pLayer.Visible;
-                    ICompositeLayer pComLayer = pLayer as ICompositeLayer;
-                    for (int j = pComLayer.Count - 1; j >= 0; j--)
-                    {
-                        if (isVisible == false)
-                        {
-                            pComLayer.get_Layer(j).Visible = false;
-                        }
-                        //_ParameterInitialize.m_mapAll.AddLayer(pComLayer.get_Layer(j));
-                        if (pComLayer.get_Layer(j) is IFeatureLayer)  //是否为要素图层
-                        {
-                            IFeatureLayer pFeaturelayer = (IFeatureLayer)pComLayer.get_Layer(j);
-                            _ParameterInitialize.cboLargerScaleLayer.Items.Insert(0, pFeaturelayer.Name);
-                            _ParameterInitialize.cboSmallerScaleLayer.Items.Insert(0, pFeaturelayer.Name);
-                            _ParameterInitialize.m_mapFeature.AddLayer(pFeaturelayer);
-                        }
-                    }
-                }
-                else
-                {
-                    if (pLayer is IFeatureLayer)
-                    {
-                        _ParameterInitialize.m_mapFeature.AddLayer(pLayer);
-                        _ParameterInitialize.cboLargerScaleLayer.Items.Insert(0, pLayer.Name);
-                        _ParameterInitialize.cboSmallerScaleLayer.Items.Insert(0, pLayer.Name);
+        //    for (int i = _ParameterInitialize.pMap.LayerCount - 1; i >= 0; i--) //获取所有的要素图层（由于之后的“AddLayer”方法总是将新的图层放在第一个位置，所以这里从后面开始遍历）
+        //    {
+        //        ILayer pLayer = _ParameterInitialize.pMap.get_Layer(i);
+        //        if (pLayer is IGroupLayer || pLayer is ICompositeLayer)
+        //        {
+        //            bool isVisible = pLayer.Visible;
+        //            ICompositeLayer pComLayer = pLayer as ICompositeLayer;
+        //            for (int j = pComLayer.Count - 1; j >= 0; j--)
+        //            {
+        //                if (isVisible == false)
+        //                {
+        //                    pComLayer.get_Layer(j).Visible = false;
+        //                }
+        //                //_ParameterInitialize.m_mapAll.AddLayer(pComLayer.get_Layer(j));
+        //                if (pComLayer.get_Layer(j) is IFeatureLayer)  //是否为要素图层
+        //                {
+        //                    IFeatureLayer pFeaturelayer = (IFeatureLayer)pComLayer.get_Layer(j);
+        //                    _ParameterInitialize.cboLargerScaleLayer.Items.Insert(0, pFeaturelayer.Name);
+        //                    _ParameterInitialize.cboSmallerScaleLayer.Items.Insert(0, pFeaturelayer.Name);
+        //                    _ParameterInitialize.m_mapFeature.AddLayer(pFeaturelayer);
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (pLayer is IFeatureLayer)
+        //            {
+        //                _ParameterInitialize.m_mapFeature.AddLayer(pLayer);
+        //                _ParameterInitialize.cboLargerScaleLayer.Items.Insert(0, pLayer.Name);
+        //                _ParameterInitialize.cboSmallerScaleLayer.Items.Insert(0, pLayer.Name);
 
-                        //IFeatureLayer pFeaturelayer = (IFeatureLayer)pLayer;
-                        //if (pFeaturelayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
-                        //{
-                        //    _ParameterInitialize.cboLargerScaleLayer.Items.Add(pFeaturelayer.Name);
-                        //    _ParameterInitialize.cboSmallerScaleLayer.Items.Add(pFeaturelayer.Name);
-                        //    _ParameterInitialize.m_mapPolyline.AddLayer(pFeaturelayer);
-                        //}
-                    }
-                }
-            }
+        //                //IFeatureLayer pFeaturelayer = (IFeatureLayer)pLayer;
+        //                //if (pFeaturelayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPolyline)
+        //                //{
+        //                //    _ParameterInitialize.cboLargerScaleLayer.Items.Add(pFeaturelayer.Name);
+        //                //    _ParameterInitialize.cboSmallerScaleLayer.Items.Add(pFeaturelayer.Name);
+        //                //    _ParameterInitialize.m_mapPolyline.AddLayer(pFeaturelayer);
+        //                //}
+        //            }
+        //        }
+        //    }
 
-            if (_ParameterInitialize.cboLargerScaleLayer.Items.Count > 1 && _ParameterInitialize.cboSmallerScaleLayer.Items.Count > 1)
-            {
-                _ParameterInitialize.cboLargerScaleLayer.SelectedIndex = 0;//默认选取第一个点要素图层
-                _ParameterInitialize.cboSmallerScaleLayer.SelectedIndex = 1;//默认选取第一个点要素图层
-            }
+        //    if (_ParameterInitialize.cboLargerScaleLayer.Items.Count > 1 && _ParameterInitialize.cboSmallerScaleLayer.Items.Count > 1)
+        //    {
+        //        _ParameterInitialize.cboLargerScaleLayer.SelectedIndex = 0;//默认选取第一个点要素图层
+        //        _ParameterInitialize.cboSmallerScaleLayer.SelectedIndex = 1;//默认选取第一个点要素图层
+        //    }
 
 
-        }
+        //}
 
-        /// <summary>实现Frm_Load的方法</summary>
-        /// <remarks>两个图层选择框</remarks>
-        public void FrmLoadThreecbo()
-        {
-            _ParameterInitialize.cboLargerScaleLayer.Items.Clear();//图层列表框
-            _ParameterInitialize.cboSmallerScaleLayer.Items.Clear();//图层列表框
-            _ParameterInitialize.cboLayer.Items.Clear();
+        ///// <summary>实现Frm_Load的方法</summary>
+        ///// <remarks>两个图层选择框</remarks>
+        //public void FrmLoadThreecbo()
+        //{
+        //    _ParameterInitialize.cboLargerScaleLayer.Items.Clear();//图层列表框
+        //    _ParameterInitialize.cboSmallerScaleLayer.Items.Clear();//图层列表框
+        //    _ParameterInitialize.cboLayer.Items.Clear();
 
-            for (int i = _ParameterInitialize.pMap.LayerCount - 1; i >= 0; i--) //获取所有的要素图层
-            {
-                ILayer pLayer = _ParameterInitialize.pMap.get_Layer(i);
-                if (pLayer is IGroupLayer || pLayer is ICompositeLayer)
-                {
-                    bool isVisible = pLayer.Visible;
-                    ICompositeLayer pComLayer = pLayer as ICompositeLayer;
-                    for (int j = pComLayer.Count - 1; j >= 0; j--)
-                    {
-                        if (isVisible == false)
-                        {
-                            pComLayer.get_Layer(j).Visible = false;
-                        }
-                        if (pComLayer.get_Layer(j) is IFeatureLayer)  //是否为要素图层
-                        {
-                            IFeatureLayer pFeaturelayer = (IFeatureLayer)pComLayer.get_Layer(j);
-                            _ParameterInitialize.m_mapFeature.AddLayer(pFeaturelayer);
+        //    for (int i = _ParameterInitialize.pMap.LayerCount - 1; i >= 0; i--) //获取所有的要素图层
+        //    {
+        //        ILayer pLayer = _ParameterInitialize.pMap.get_Layer(i);
+        //        if (pLayer is IGroupLayer || pLayer is ICompositeLayer)
+        //        {
+        //            bool isVisible = pLayer.Visible;
+        //            ICompositeLayer pComLayer = pLayer as ICompositeLayer;
+        //            for (int j = pComLayer.Count - 1; j >= 0; j--)
+        //            {
+        //                if (isVisible == false)
+        //                {
+        //                    pComLayer.get_Layer(j).Visible = false;
+        //                }
+        //                if (pComLayer.get_Layer(j) is IFeatureLayer)  //是否为要素图层
+        //                {
+        //                    IFeatureLayer pFeaturelayer = (IFeatureLayer)pComLayer.get_Layer(j);
+        //                    _ParameterInitialize.m_mapFeature.AddLayer(pFeaturelayer);
 
-                            _ParameterInitialize.cboLargerScaleLayer.Items.Insert(0, pFeaturelayer.Name);
-                            _ParameterInitialize.cboSmallerScaleLayer.Items.Insert(0, pFeaturelayer.Name);
-                            _ParameterInitialize.cboLayer.Items.Insert(0, pFeaturelayer.Name);
-                        }
-                    }
-                }
-                else
-                {
-                    if (pLayer is IFeatureLayer)
-                    {
-                        IFeatureLayer pFeaturelayer = (IFeatureLayer)pLayer;
-                        _ParameterInitialize.m_mapFeature.AddLayer(pFeaturelayer);
+        //                    _ParameterInitialize.cboLargerScaleLayer.Items.Insert(0, pFeaturelayer.Name);
+        //                    _ParameterInitialize.cboSmallerScaleLayer.Items.Insert(0, pFeaturelayer.Name);
+        //                    _ParameterInitialize.cboLayer.Items.Insert(0, pFeaturelayer.Name);
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (pLayer is IFeatureLayer)
+        //            {
+        //                IFeatureLayer pFeaturelayer = (IFeatureLayer)pLayer;
+        //                _ParameterInitialize.m_mapFeature.AddLayer(pFeaturelayer);
 
-                        _ParameterInitialize.cboLargerScaleLayer.Items.Insert(0, pFeaturelayer.Name);
-                        _ParameterInitialize.cboSmallerScaleLayer.Items.Insert(0, pFeaturelayer.Name);
-                        _ParameterInitialize.cboLayer.Items.Insert(0, pFeaturelayer.Name);
-                    }
-                }
-            }
+        //                _ParameterInitialize.cboLargerScaleLayer.Items.Insert(0, pFeaturelayer.Name);
+        //                _ParameterInitialize.cboSmallerScaleLayer.Items.Insert(0, pFeaturelayer.Name);
+        //                _ParameterInitialize.cboLayer.Items.Insert(0, pFeaturelayer.Name);
+        //            }
+        //        }
+        //    }
 
-            if (_ParameterInitialize.cboLargerScaleLayer.Items.Count > 1 && _ParameterInitialize.cboSmallerScaleLayer.Items.Count > 1)
-            {
-                _ParameterInitialize.cboLargerScaleLayer.SelectedIndex = 0;//默认选取第一个点要素图层
-                _ParameterInitialize.cboSmallerScaleLayer.SelectedIndex = 1;//默认选取第一个点要素图层
-                _ParameterInitialize.cboLayer.SelectedIndex = 2;
-            }
+        //    if (_ParameterInitialize.cboLargerScaleLayer.Items.Count > 1 && _ParameterInitialize.cboSmallerScaleLayer.Items.Count > 1)
+        //    {
+        //        _ParameterInitialize.cboLargerScaleLayer.SelectedIndex = 0;//默认选取第一个点要素图层
+        //        _ParameterInitialize.cboSmallerScaleLayer.SelectedIndex = 1;//默认选取第一个点要素图层
+        //        _ParameterInitialize.cboLayer.SelectedIndex = 2;
+        //    }
 
-        }
+        //}
+        #endregion
+
     }
 }

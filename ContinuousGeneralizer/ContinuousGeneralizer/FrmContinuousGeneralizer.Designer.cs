@@ -74,8 +74,8 @@ namespace ContinuousGeneralizer
             this.mnuPAL = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuGeneralization = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDPSimplification = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuCAMDijkstra = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuBuildingGrowing = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuAreaAgg_AStar = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuBldgGrow = new System.Windows.Forms.ToolStripMenuItem();
             this.morphingExtendToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCDTLSA = new System.Windows.Forms.ToolStripMenuItem();
             this.fishEyeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -488,8 +488,8 @@ namespace ContinuousGeneralizer
             // 
             this.mnuGeneralization.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuDPSimplification,
-            this.mnuCAMDijkstra,
-            this.mnuBuildingGrowing});
+            this.mnuAreaAgg_AStar,
+            this.mnuBldgGrow});
             this.mnuGeneralization.Name = "mnuGeneralization";
             this.mnuGeneralization.Size = new System.Drawing.Size(94, 20);
             this.mnuGeneralization.Text = "Generalization";
@@ -501,19 +501,19 @@ namespace ContinuousGeneralizer
             this.mnuDPSimplification.Text = "DPSimplification";
             this.mnuDPSimplification.Click += new System.EventHandler(this.mnuDPSimplification_Click);
             // 
-            // mnuCAMDijkstra
+            // mnuAreaAgg_AStar
             // 
-            this.mnuCAMDijkstra.Name = "mnuCAMDijkstra";
-            this.mnuCAMDijkstra.Size = new System.Drawing.Size(163, 22);
-            this.mnuCAMDijkstra.Text = "CAMDijkstra";
-            this.mnuCAMDijkstra.Click += new System.EventHandler(this.mnuCAMDijkstra_Click);
+            this.mnuAreaAgg_AStar.Name = "mnuAreaAgg_AStar";
+            this.mnuAreaAgg_AStar.Size = new System.Drawing.Size(163, 22);
+            this.mnuAreaAgg_AStar.Text = "AreaAgg_AStar";
+            this.mnuAreaAgg_AStar.Click += new System.EventHandler(this.mnuAreaAgg_AStar_Click);
             // 
-            // mnuBuildingGrowing
+            // mnuBldgGrow
             // 
-            this.mnuBuildingGrowing.Name = "mnuBuildingGrowing";
-            this.mnuBuildingGrowing.Size = new System.Drawing.Size(163, 22);
-            this.mnuBuildingGrowing.Text = "BuildingGrowing";
-            this.mnuBuildingGrowing.Click += new System.EventHandler(this.mnuBuildingGrowing_Click);
+            this.mnuBldgGrow.Name = "mnuBldgGrow";
+            this.mnuBldgGrow.Size = new System.Drawing.Size(163, 22);
+            this.mnuBldgGrow.Text = "BldgGrow";
+            this.mnuBldgGrow.Click += new System.EventHandler(this.mnuBldgGrow_Click);
             // 
             // morphingExtendToolStripMenuItem
             // 
@@ -1442,9 +1442,9 @@ namespace ContinuousGeneralizer
         private System.Windows.Forms.ToolStripMenuItem mnuUnifyIndicesPolylines;
         private System.Windows.Forms.ToolStripMenuItem mnuTemporary;
         private System.Windows.Forms.ToolStripMenuItem mnuIdentifyCorrCpgAddRegionNum;
-        private System.Windows.Forms.ToolStripMenuItem mnuCAMDijkstra;
+        private System.Windows.Forms.ToolStripMenuItem mnuAreaAgg_AStar;
         private System.Windows.Forms.ToolStripMenuItem mnuCalGeo_Ipe;
-        private System.Windows.Forms.ToolStripMenuItem mnuBuildingGrowing;
+        private System.Windows.Forms.ToolStripMenuItem mnuBldgGrow;
         private System.Windows.Forms.ToolStripMenuItem mnuCompareExcel;
         private System.Windows.Forms.ToolStripMenuItem otherToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mnuKillExcel;

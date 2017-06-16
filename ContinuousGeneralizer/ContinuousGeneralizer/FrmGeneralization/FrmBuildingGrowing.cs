@@ -34,13 +34,13 @@ using MorphingClass.CGeometry;
 
 namespace ContinuousGeneralizer.FrmGeneralization
 {
-    public partial class FrmBuildingGrowing : Form
+    public partial class FrmBldgGrow : Form
     {
         private CDataRecords _DataRecords;                    //数据记录
         private CFrmOperation _FrmOperation;
 
 
-        private CBuildingGrowing _pBuildingGrowing;
+        private CBldgGrow _pBldgGrow;
 
 
         private double _dblProportion = 0.5;
@@ -53,19 +53,19 @@ namespace ContinuousGeneralizer.FrmGeneralization
         }
 
 
-        public FrmBuildingGrowing()
+        public FrmBldgGrow()
         {
             InitializeComponent();
         }
 
-        public FrmBuildingGrowing(CDataRecords pDataRecords)
+        public FrmBldgGrow(CDataRecords pDataRecords)
         {
             InitializeComponent();
             _DataRecords = pDataRecords;
             pDataRecords.ParameterInitialize.frmCurrentForm = this;
         }
 
-        private void FrmBuildingGrowing_Load(object sender, EventArgs e)
+        private void FrmBldgGrow_Load(object sender, EventArgs e)
         {
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
             ParameterInitialize.cboLayerLt = new List<ComboBox>(2);
@@ -73,7 +73,7 @@ namespace ContinuousGeneralizer.FrmGeneralization
             ParameterInitialize.cboLayerLt.Add(this.cboSmallerScaleLayer);
             ParameterInitialize.cboLayerLt.Add(this.cboLSRoad);
             ParameterInitialize.cboLayerLt.Add(this.cboSSRoad);
-            CConstants.strMethod = "BuildingGrowing";
+            CConstants.strMethod = "BldgGrow";
 
             this.cboBufferStyle.SelectedIndex = 0;
 
@@ -89,8 +89,8 @@ namespace ContinuousGeneralizer.FrmGeneralization
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
 
             //读取数据
-            _pBuildingGrowing = new CBuildingGrowing(ParameterInitialize);
-            _pBuildingGrowing.BuildingGrowing(
+            _pBldgGrow = new CBldgGrow(ParameterInitialize);
+            _pBldgGrow.BldgGrow(
                 //Convert.ToDouble(this.txtBufferRadius.Text), 
                 this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text),
                 Convert.ToDouble(this.txtLargerScale.Text),Convert.ToDouble(this.txtSmallerScale.Text),Convert.ToInt32(this.txtOutput.Text));
@@ -108,73 +108,73 @@ namespace ContinuousGeneralizer.FrmGeneralization
         private void btn010_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.1;
-            //_pBuildingGrowing.Output(_dblProportion);
+            //_pBldgGrow.Output(_dblProportion);
         }
         private void btn020_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.2;
-            //_pBuildingGrowing.Output(_dblProportion);
+            //_pBldgGrow.Output(_dblProportion);
         }
         private void btn030_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.3;
-            //_pBuildingGrowing.Output(_dblProportion);
+            //_pBldgGrow.Output(_dblProportion);
         }
         private void btn040_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.4;
-            //_pBuildingGrowing.Output(_dblProportion);
+            //_pBldgGrow.Output(_dblProportion);
         }
         private void btn050_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.5;
-            //_pBuildingGrowing.Output(_dblProportion);
+            //_pBldgGrow.Output(_dblProportion);
         }
         private void btn060_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.6;
-            //_pBuildingGrowing.Output(_dblProportion);
+            //_pBldgGrow.Output(_dblProportion);
         }
         private void btn070_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.7;
-            //_pBuildingGrowing.Output(_dblProportion);
+            //_pBldgGrow.Output(_dblProportion);
         }
         private void btn080_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.8;
-            //_pBuildingGrowing.Output(_dblProportion);
+            //_pBldgGrow.Output(_dblProportion);
         }
         private void btn090_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.9;
-            //_pBuildingGrowing.Output(_dblProportion);
+            //_pBldgGrow.Output(_dblProportion);
         }
         private void btn000_Click(object sender, EventArgs e)
         {
             _dblProportion = 0;
-            //_pBuildingGrowing.Output(_dblProportion);
+            //_pBldgGrow.Output(_dblProportion);
         }
         private void btn025_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.25;
-            //_pBuildingGrowing.Output(_dblProportion);
+            //_pBldgGrow.Output(_dblProportion);
         }
         private void btn075_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.75;
-            //_pBuildingGrowing.Output(_dblProportion);
+            //_pBldgGrow.Output(_dblProportion);
         }
         private void btn100_Click(object sender, EventArgs e)
         {
             _dblProportion = 1;
-            //_pBuildingGrowing.Output(_dblProportion);
+            //_pBldgGrow.Output(_dblProportion);
         }
 
         private void btnInputedScale_Click(object sender, EventArgs e)
         {
             _dblProportion = Convert.ToDouble(this.txtProportion.Text);
-            //_pBuildingGrowing.Output(_dblProportion);
+            //_pBldgGrow.Output(_dblProportion);
 
         }
 
@@ -184,7 +184,7 @@ namespace ContinuousGeneralizer.FrmGeneralization
             {
                 _dblProportion = _dblProportion - 0.02;
                 pbScale.Value = Convert.ToInt16(100 * _dblProportion);
-                //_pBuildingGrowing.Output(_dblProportion);
+                //_pBldgGrow.Output(_dblProportion);
             }
             catch (System.Exception)
             {
@@ -197,7 +197,7 @@ namespace ContinuousGeneralizer.FrmGeneralization
         {
             _dblProportion = _dblProportion + 0.02;
             pbScale.Value = Convert.ToInt16(100 * _dblProportion);
-            //_pBuildingGrowing.Output(_dblProportion);
+            //_pBldgGrow.Output(_dblProportion);
         }
 
         private void btnSaveInterpolation_Click(object sender, EventArgs e)
@@ -227,7 +227,7 @@ namespace ContinuousGeneralizer.FrmGeneralization
             for (int i = 0; i < 11; i++)
             {
                 _dblProportion = i * 0.1;
-                //_pBuildingGrowing.Output(_dblProportion);
+                //_pBldgGrow.Output(_dblProportion);
             }
         }
     }

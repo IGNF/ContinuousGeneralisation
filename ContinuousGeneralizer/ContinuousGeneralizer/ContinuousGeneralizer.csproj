@@ -376,11 +376,11 @@
     <Compile Include="FrmGeneralization\FrmBuildingGrowing.Designer.cs">
       <DependentUpon>FrmBuildingGrowing.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmGeneralization\FrmCAMDijkstra.cs">
+    <Compile Include="FrmGeneralization\FrmAreaAgg.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmGeneralization\FrmCAMDijkstra.Designer.cs">
-      <DependentUpon>FrmCAMDijkstra.cs</DependentUpon>
+    <Compile Include="FrmGeneralization\FrmAreaAgg.Designer.cs">
+      <DependentUpon>FrmAreaAgg.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmGeneralization\FrmDPSimplification.cs">
       <SubType>Form</SubType>
@@ -795,8 +795,8 @@
     <EmbeddedResource Include="FrmGeneralization\FrmBuildingGrowing.resx">
       <DependentUpon>FrmBuildingGrowing.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmGeneralization\FrmCAMDijkstra.resx">
-      <DependentUpon>FrmCAMDijkstra.cs</DependentUpon>
+    <EmbeddedResource Include="FrmGeneralization\FrmAreaAgg.resx">
+      <DependentUpon>FrmAreaAgg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmGeneralization\FrmDPSimplification.resx">
       <DependentUpon>FrmDPSimplification.cs</DependentUpon>
