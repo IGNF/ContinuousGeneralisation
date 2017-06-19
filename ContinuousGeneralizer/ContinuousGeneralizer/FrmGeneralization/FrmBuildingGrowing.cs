@@ -224,11 +224,11 @@ namespace ContinuousGeneralizer.FrmGeneralization
 
         private void btnMultiResults_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < 11; i++)
+            for (int i = 1; i < 11; i++)
             {
                 _dblProportion = i * 0.1;
-                //_pBldgGrow.Output(_dblProportion);
+                _pBldgGrow.Output(_dblProportion);
             }
-        }
+        }        
     }
 }

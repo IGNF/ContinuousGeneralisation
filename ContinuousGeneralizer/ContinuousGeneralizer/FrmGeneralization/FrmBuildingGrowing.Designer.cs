@@ -456,6 +456,7 @@
             this.btnMultiResults.TabIndex = 81;
             this.btnMultiResults.Text = "MultiResults";
             this.btnMultiResults.UseVisualStyleBackColor = true;
+            this.btnMultiResults.Click += new System.EventHandler(this.btnMultiResults_Click);
             // 
             // txtProportion
             // 

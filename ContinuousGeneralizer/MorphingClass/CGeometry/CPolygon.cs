@@ -30,11 +30,13 @@ namespace MorphingClass.CGeometry
         //private CPatch _cpatch;
 
         public double dblAreaSimple { get; set; }
+        public bool WasTooSmall { get; set; }
 
         public int intType { get; set; }
         public int intTypeIndex { get; set; } //the index (0, 1, 2, ...) of a type; used for access type distance directly
 
         public CPolygon ParentCpg { get; set; }
+        public CPolygon ClipCpg { get; set; }
 
         public List<CPolygon> HoleCpgLt { get; set; }
         public CPoint CentroidCptSimple { get; set; }
@@ -48,6 +50,7 @@ namespace MorphingClass.CGeometry
         private CPoint _LeftMostCpt;
         private bool _IsHole;
         private bool _IsMerged;
+
         //private Func<IEnumerable<List<CPoint>>> getHoleCptLtEb;
 
         /// <summary>

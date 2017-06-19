@@ -605,7 +605,7 @@ l_b=4d_\mathrm{G}+d_\epsilon.
 \subsection{Parameters for growing}
 The start scale is $1:S_\mathrm{s}$, and the goal scale is $1:S_\mathrm{g}$ 
 ($S_\mathrm{g}>S_\mathrm{s}$).
-The area of a building should be larger than $a$ mm$^2$ on a map.
+The area of a building should be larger than $a$ mm$^2$ on map.
 A square at the start scale has area $a S_\mathrm{s}^2$ mm$^2$ at least.
 A square at the goal scale has area $a S_\mathrm{g}^2$ mm$^2$ at least.
 The difference of the side lengths is $\sqrt{a} (S_\mathrm{g}-S_\mathrm{s})$ mm.
@@ -683,35 +683,51 @@ D_\mathrm{G} = d_\mathrm{G} + d_\epsilon.
 Fig.~\ref{fig:ExtraGrowth} shows such an enlargement and simplification, where  
 variable $d_\mathrm{e} (\le d_\epsilon)$ is the extra growing distance.
 
-A hole has area less than $\pi D_\mathrm{G}^2$ can be filled by growing. 
-A hole has area 
-slightly more than $\pi D_\mathrm{G}^2$ will become a very small hole after 
-growing with 
-distance $D_\mathrm{G}$. In order to avoid small holes, we do not fill a hole 
-unless the 
-area of the hole on the start map is smaller than $\pi D_\mathrm{G}^2$. Note 
-that we do 
-not fill a hole even if the hole has a large area because a large hole may be 
-split into several small holes by filling. 
-Although our intermediate results may violate the rule that a hole should be at 
-least some size, we try to avoid the violation for a map at a goal scale.
+
 \textcite{Chaudhry2008} thought that a hole of a settlement should be at least 
 $0.5$ km$^2$ for a map at scale $1:250{,}000$, which means that the hole is at 
-least $8$ mm$^2$ on the map. Following their setting, we wish to have $\pi 
-D_\mathrm{G}^2 \ge 8 S_g^2$.
-
-
-Now we discuss how to set the parameters according to our requirements. First, 
-we wish to increase $d_\mathrm{G}/d_\epsilon$. Most part of a building will 
-grow $d_\mathrm{G}$. Only a small part will continue growing after the building 
-has grown $d_\mathrm{G}$. To ensure that we can see the growing most of the 
-time, we want to have a large $d_\mathrm{G}/d_\epsilon$.
+least $8$ mm$^2$ on map. Following their setting, we shrink a hole and 
+eliminate the hole one its size is smaller than $8$ mm$^2$ on map eliminate a 
+hole.
 
 
 
 
 
-We cannot fulfill all the requirements. 
+
+
+%
+%A hole has area less than $\pi D_\mathrm{G}^2$ can be filled by growing. 
+%A hole has area 
+%slightly more than $\pi D_\mathrm{G}^2$ will become a very small hole after 
+%growing with 
+%distance $D_\mathrm{G}$. In order to avoid small holes, we do not fill a hole 
+%unless the 
+%area of the hole on the start map is smaller than $\pi D_\mathrm{G}^2$. Note 
+%that we do 
+%not fill a hole even if the hole has a large area because a large hole may be 
+%split into several small holes by filling. 
+%Although our intermediate results may violate the rule that a hole should be 
+%at 
+%least some size, we try to avoid the violation for a map at a goal scale.
+%\textcite{Chaudhry2008} thought that a hole of a settlement should be at least 
+%$0.5$ km$^2$ for a map at scale $1:250{,}000$, which means that the hole is at 
+%least $8$ mm$^2$ on the map. Following their setting, we wish to have $\pi 
+%D_\mathrm{G}^2 \ge 8 S_g^2$.
+%
+%
+%Now we discuss how to set the parameters according to our requirements. First, 
+%we wish to increase $d_\mathrm{G}/d_\epsilon$. Most part of a building will 
+%grow $d_\mathrm{G}$. Only a small part will continue growing after the 
+%building 
+%has grown $d_\mathrm{G}$. To ensure that we can see the growing most of the 
+%time, we want to have a large $d_\mathrm{G}/d_\epsilon$.
+%
+%
+%
+%
+%
+%We cannot fulfill all the requirements. 
 
 \begin{figure}[tb]
 	\centering
