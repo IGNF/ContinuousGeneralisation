@@ -2237,7 +2237,7 @@ namespace MorphingClass.CUtility
         }
 
 
-        public static IPolygon4 MergeCpgEbAE(IEnumerable<CPolygon> CpgEb, int intID = -1)
+        public static IPolygon4 MergeCpgEbToIpg(IEnumerable<CPolygon> CpgEb, int intID = -1)
         {
             IGeometry geometryBag = new GeometryBagClass();
 

@@ -27,19 +27,20 @@ namespace MorphingClass.CAid
             //save path
             //CHelpFunc.SetSavePath(ParameterInitialize);
 
-            double dblFactorIpeToLayer = pIpeEnv.Height / pFLayerEnv.Height;
-            double dblLegend16 = 16 / dblFactorIpeToLayer;
-            int intLegendInt = CMath.GetNumberTidy(dblLegend16);
-            double dblLegentInt = intLegendInt * dblFactorIpeToLayer;
+            //        double dblFactorIpeToLayer = pIpeEnv.Height / pFLayerEnv.Height;
+            //        double dblLegend16 = 16 / dblFactorIpeToLayer;
+            //        int intLegendInt = CMath.GetNumberTidy(dblLegend16);
+            //        double dblLegentInt = intLegendInt * dblFactorIpeToLayer;
 
 
-            //add legend (unit and a sample line), draw a line with length 32 in ipe
-            string strData = CIpeDraw.writeIpeText(dblLegend16 + " " + ParameterInitialize.m_mapControl.MapUnits.ToString(), 320, 80) +
-                CIpeDraw.drawIpeEdge(320, 64, 336, 64);
+            //        //add legend (unit and a sample line), draw a line with length 32 in ipe
+            //        string strData = CIpeDraw.writeIpeText(dblLegend16 + " " + ParameterInitialize.m_mapControl.MapUnits.ToString(), 320, 80) +
+            //            CIpeDraw.drawIpeEdge(320, 64, 336, 64);
 
-            strData += CIpeDraw.writeIpeText(intLegendInt + " " + ParameterInitialize.m_mapControl.MapUnits.ToString(), 320, 32) +
-    CIpeDraw.drawIpeEdge(320, 16, 320 + dblLegentInt, 16) +
-    CIpeDraw.drawIpeEdge(320, 16, 320, 20) + CIpeDraw.drawIpeEdge(320 + dblLegentInt, 16, 320 + dblLegentInt, 20);
+            //        strData += CIpeDraw.writeIpeText(intLegendInt + " " + ParameterInitialize.m_mapControl.MapUnits.ToString(), 320, 32) +
+            //CIpeDraw.drawIpeEdge(320, 16, 320 + dblLegentInt, 16) +
+            //CIpeDraw.drawIpeEdge(320, 16, 320, 20) + CIpeDraw.drawIpeEdge(320 + dblLegentInt, 16, 320 + dblLegentInt, 20);
+            var strData = GetScaleLegend(pFLayerEnv, pIpeEnv, CHelpFunc.GetUnits(ParameterInitialize.m_mapControl.MapUnits));
 
             for (int i = 0; i < pFLayerLt.Count; i++)
             {
@@ -50,7 +51,7 @@ namespace MorphingClass.CAid
                     strData += "<group>\n";
                 }
 
-                strData += CToIpe.GetDataOfFeatureLayer(pFLayer, pFLayerEnv, pIpeEnv, strBoundWidth);
+                strData += CToIpe.GetDataOfFeatureLayer(pFLayer, pFLayerEnv, pIpeEnv, strBoundWidth,true);
 
                 if (blnGroup == true)
                 {
@@ -73,10 +74,34 @@ namespace MorphingClass.CAid
             System.Diagnostics.Process.Start(@strFullName);
         }
 
+        public static string GetScaleLegend(IEnvelope pFLayerEnv, CEnvelope pIpeEnv, string strMapUnits)
+        {
+            double dblFactorIpeToLayer = pIpeEnv.Height / pFLayerEnv.Height;
+            double dblLegend16 = 16 / dblFactorIpeToLayer;
+            int intLegendInt = CMath.GetNumberTidy(dblLegend16);
+            double dblLegentInt = intLegendInt * dblFactorIpeToLayer;
+
+
+            ////add legend (unit and a sample line), draw a line with length 16 in ipe
+            //string strData = CIpeDraw.writeIpeText(dblLegend16 + " " + ParameterInitialize.m_mapControl.MapUnits.ToString(), 320, 80) +
+            //    CIpeDraw.drawIpeEdge(320, 64, 336, 64);
+
+            //add legend (unit and a sample line), draw a line with length 32 in ipe
+            return CIpeDraw.writeIpeText(intLegendInt + " " + strMapUnits, 320, 32) +
+    CIpeDraw.drawIpeEdge(320, 16, 320 + dblLegentInt, 16) +
+    CIpeDraw.drawIpeEdge(320, 16, 320, 20) + CIpeDraw.drawIpeEdge(320 + dblLegentInt, 16, 320 + dblLegentInt, 20);
+
+        }
+
         public static string GetDataOfFeatureLayer(IFeatureLayer pFLayer, IEnvelope pFLayerEnv, 
-            CEnvelope pIpeEnv, string strBoundWidth)
+            CEnvelope pIpeEnv, string strBoundWidth, bool blnDrawBound=false)
         {
             string str = "";
+            if (blnDrawBound == true)
+            {
+                str += CIpeDraw.drawIpeEdge(pIpeEnv.XMin, pIpeEnv.YMin, pIpeEnv.XMin, pIpeEnv.YMax, "white");
+            }
+
             IFeatureClass pFeatureClass = pFLayer.FeatureClass;
             int intFeatureCount = pFeatureClass.FeatureCount(null);
             IFeatureCursor pFeatureCursor = pFeatureClass.Search(null, false);    //注意此处的参数(****,false)！！！            
@@ -85,7 +110,7 @@ namespace MorphingClass.CAid
             {
                 //at the last round of this loop, pFeatureCursor.NextFeature() will return null
                 IFeature pFeature = pFeatureCursor.NextFeature();
-
+                
                 switch (pFeatureClass.ShapeType)
                 {
                     case esriGeometryType.esriGeometryPoint:
@@ -153,13 +178,13 @@ namespace MorphingClass.CAid
             IEnvelope pFLayerEnv, CEnvelope pIpeEnv, string strBoundWidth)
         {
             var pFillSymbol = pRenderer.SymbolByFeature[pFeature] as IFillSymbol;
-            return TranIpgToIpe((IPolygon)pFeature.Shape, pFillSymbol, pFLayerEnv, pIpeEnv, strBoundWidth);
+            return TranIpgToIpe((IPolygon4)pFeature.Shape, pFillSymbol, pFLayerEnv, pIpeEnv, strBoundWidth);
         }
 
         /// <summary>
         /// Save a feature layer of IPolygon to Ipe
         /// </summary>
-        public static string TranIpgToIpe(IPolygon ipg, IFillSymbol pFillSymbol, 
+        public static string TranIpgToIpe(IPolygon4 ipg, IFillSymbol pFillSymbol, 
             IEnvelope pFLayerEnv, CEnvelope pIpeEnv, string strBoundWidth)
         {
             //get the color of the filled part
@@ -178,11 +203,39 @@ namespace MorphingClass.CAid
             }
 
             //get the feature
-            CPolygon cpg = new CPolygon(0, ipg as IPolygon4);
+            CPolygon cpg = new CPolygon(0, ipg);
 
             //append the string
             return CIpeDraw.DrawCpg(cpg, pFLayerEnv, pIpeEnv, new CColor(pOutlineRgbColor),
 new CColor(pFillSymbolRgbColor), strBoundWidth);
+        }
+
+        /// <summary>
+        /// Save a feature layer of IPolygon to Ipe
+        /// </summary>
+        public static string TranIpgBoundToIpe(IPolygon ipg,
+            IEnvelope pFLayerEnv, CEnvelope pIpeEnv, CColor StrokeColor, string strBoundWidth, string strDash)
+        {
+            ////get the color of the filled part
+            ////we are not allowed to directly use "var pFillRgbColor = pFillSymbol.Color as IRgbColor;"
+            ////Nor can we use "var pFillRgbColor = pFillSymbol.Color.RGB as IRgbColor;"
+            ////pFillSymbol.Color.RGB has type 'int'
+            //IColor pFillSymbolColor = new RgbColorClass();
+            //pFillSymbolColor.RGB = pFillSymbol.Color.RGB;
+            //var pFillSymbolRgbColor = pFillSymbolColor as IRgbColor;
+
+            ////get the color of the out line                
+            //var pOutlineRgbColor = pFillSymbol.Outline.Color as IRgbColor;
+            //if (strBoundWidth == "")
+            //{
+            //    strBoundWidth = pFillSymbol.Outline.Width.ToString();
+            //}
+
+            //get the feature
+            CPolygon cpg = new CPolygon(0, ipg as IPolygon4);
+
+            //append the string
+            return CIpeDraw.DrawCpgBound(cpg, pFLayerEnv, pIpeEnv, StrokeColor, strBoundWidth, strDash);
         }
 
 

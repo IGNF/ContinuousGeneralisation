@@ -475,11 +475,24 @@ namespace ContinuousGeneralizer.FrmMorphing
 
         }
 
+        IEnumerator<IFeatureLayer> _pFLayerEt;
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            _dblProportion = _dblProportion + 0.02;
-            pbScale.Value = Convert.ToInt16(100 * _dblProportion);
-            _pCAreaAgg_Base.Output(_dblProportion);
+            //_dblProportion = _dblProportion + 0.02;
+            //pbScale.Value = Convert.ToInt16(100 * _dblProportion);
+            _pFLayerEt = _pCAreaAgg_Base.AggregateStepByStep().GetEnumerator();
+            this.timerAdd.Interval = 500;
+           this.timerAdd.Enabled = true;
+
+        }
+
+
+        private void timerAdd_Tick(object sender, EventArgs e)
+        {
+            if (_pFLayerEt.MoveNext()==false)
+            {
+                this.timerAdd.Enabled = false;
+            }
         }
 
         private void btnSaveInterpolation_Click(object sender, EventArgs e)

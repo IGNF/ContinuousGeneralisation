@@ -68,7 +68,8 @@ namespace MorphingClass.CGeometry
         public CRegion parent { get; set; }
         public CRegion child { get; set; }
         public CEnumColor cenumColor { get; set; }
-        public CPatch newCph { get; set; }
+        public CValTri<CPatch, CPatch, CPatch> AggedCphs { get; set; }
+
 
         public double dblArea { get; set; }
         public double dblSumComp { get; set; }
@@ -501,8 +502,16 @@ namespace MorphingClass.CGeometry
             //otherwise, we need to aggregate from two directions
             if (intfrTypeIndex == inttoTypeIndex)
             {
-                yield return GenerateCrgAndUpdateQ(lscrg, sscrg, Q, ExistingCrgSDLt, newAdjCorrCphsSD, frcph, tocph, newcph, unitingCorrCphs,
-                    intFinalTypeIndex, padblTD, intFactor);
+                if (frcph.dblArea>= tocph.dblArea)
+                {
+                    yield return GenerateCrgAndUpdateQ(lscrg, sscrg, Q, ExistingCrgSDLt, newAdjCorrCphsSD, 
+                        frcph, tocph, newcph, unitingCorrCphs, intFinalTypeIndex, padblTD, intFactor);
+                }
+                else
+                {
+                    yield return GenerateCrgAndUpdateQ(lscrg, sscrg, Q, ExistingCrgSDLt, newAdjCorrCphsSD,
+                        tocph, frcph, newcph, unitingCorrCphs, intFinalTypeIndex, padblTD, intFactor);
+                }                
             }
             else
             {
@@ -720,7 +729,7 @@ namespace MorphingClass.CGeometry
                         outcrg.dblCostExact = newcrg.dblCostExact;
                         outcrg.d = newcrg.dblCostExact + outcrg.dblCostEst;
 
-                        outcrg.newCph = newcrg.newCph;
+                        outcrg.AggedCphs = newcrg.AggedCphs;
                         outcrg.parent = newcrg.parent;
                         newcrg = outcrg;
                         Q.Add(newcrg);
@@ -764,13 +773,14 @@ namespace MorphingClass.CGeometry
             newCphTypeIndexSD.Remove(passivecph);
             newCphTypeIndexSD.Add(unitedcph, intactiveTypeIndex);
 
-            //****if I update the codes below, then I should consider updating the codes for transfering information to outcrg
+            //****if I update the codes below, then I should consider updating the codes in function GenerateCrgAndUpdateQ
+            //for transfering information to outcrg
             //e.g., outcrg.newCph = newcrg.newCph;
             CRegion newcrg = new CRegion(this.ID);
             newcrg.dblArea = this.dblArea;
             newcrg.cenumColor = CEnumColor.gray;
             newcrg.parent = this;
-            newcrg.newCph = unitedcph;
+            newcrg.AggedCphs = new CValTri<CPatch, CPatch, CPatch>(activecph, passivecph, unitedcph);
             newcrg.AdjCorrCphsSD = newAdjCorrCphsSD;
             newcrg.CphTypeIndexSD_Area_CphGID = newCphTypeIndexSD;
             newcrg.intSumCphGID = this.intSumCphGID - activecph.GID - passivecph.GID + unitedcph.GID;

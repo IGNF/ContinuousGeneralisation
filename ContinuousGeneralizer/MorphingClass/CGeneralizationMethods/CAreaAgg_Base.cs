@@ -92,7 +92,7 @@ namespace MorphingClass.CGeneralizationMethods
 
         protected void Preprocessing(CParameterInitialize ParameterInitialize, string strSpecifiedFieldName = null, string strSpecifiedValue = null)
         {
-            Construct<CPolygon, CPolygon>(ParameterInitialize, 2, 0, true,1, strSpecifiedFieldName, strSpecifiedValue);
+            Construct<CPolygon, CPolygon>(ParameterInitialize, 2, 0, true, 1, strSpecifiedFieldName, strSpecifiedValue);
             CConstants.strShapeConstraint = ParameterInitialize.cboShapeConstraint.Text;
             if (CConstants.strShapeConstraint == "MaximizeMinComp_EdgeNumber" || CConstants.strShapeConstraint == "MaximizeMinComp_Combine")
             {
@@ -377,7 +377,7 @@ namespace MorphingClass.CGeneralizationMethods
             {
                 intTotalCphCount += pInitialCrgLt[i].GetCphCount();
             }
-            int intTotalTimeNum = intTotalCphCount- pInitialCrgLt.Count +1;
+            int intTotalTimeNum = intTotalCphCount - pInitialCrgLt.Count + 1;
             int intOutputStepNum = Convert.ToInt32(Math.Floor((intTotalTimeNum - 1) * dblProportion));
 
             var OutputCrgLt = new List<CRegion>(pInitialCrgLt.Count);
@@ -419,14 +419,9 @@ namespace MorphingClass.CGeneralizationMethods
         public static void OutputMap(IEnumerable<CRegion> OutputCrgLt, CValMap_SD<int, int> pTypePVSD, double dblProportion,
             int intTime, CParameterInitialize pParameterInitialize)
         {
-            int intAttributeNum = 2;
-            var pstrFieldNameLt = new List<string>(intAttributeNum);
-            pstrFieldNameLt.Add("OBJART");
-            pstrFieldNameLt.Add("RegionNum");
-
-            var pesriFieldTypeLt = new List<esriFieldType>(intAttributeNum);
-            pesriFieldTypeLt.Add(esriFieldType.esriFieldTypeInteger);
-            pesriFieldTypeLt.Add(esriFieldType.esriFieldTypeInteger);
+            List<string> pstrFieldNameLt;
+            List<esriFieldType> pesriFieldTypeLt;
+            SetAttributes(out pstrFieldNameLt, out pesriFieldTypeLt);
 
             var pobjectValueLtLt = new List<List<object>>();
             var CpgLt = new List<CPolygon>();
@@ -435,8 +430,8 @@ namespace MorphingClass.CGeneralizationMethods
             {
                 foreach (var CphTypeIndexKVP in crg.CphTypeIndexSD_Area_CphGID)
                 {
-                    IpgLt.Add(CphTypeIndexKVP.Key.MergeCpgSS());
-                    var pobjectValueLt = new List<object>(intAttributeNum);
+                    IpgLt.Add(CphTypeIndexKVP.Key.JudgeAndMergeCpgSSToIpg());
+                    var pobjectValueLt = new List<object>(2);
                     int intType;
                     pTypePVSD.SD_R.TryGetValue(CphTypeIndexKVP.Value, out intType);
                     pobjectValueLt.Add(intType);
@@ -445,9 +440,24 @@ namespace MorphingClass.CGeneralizationMethods
                 }
             }
 
-            CSaveFeature.SaveIGeoEb(IpgLt, esriGeometryType.esriGeometryPolygon, 
+            CSaveFeature.SaveIGeoEb(IpgLt, esriGeometryType.esriGeometryPolygon,
                 dblProportion.ToString() + "_#" + IpgLt.Count + "_Step" + intTime.ToString() + "_" + CHelpFunc.GetTimeStampWithPrefix(),
                 pParameterInitialize, pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt, strSymbolLayerPath: pParameterInitialize.strMxdPathBackSlash + "complete.lyr");
+        }
+
+        private static void SetAttributes(out List<string> pstrFieldNameLt, out List<esriFieldType> pesriFieldTypeLt)
+        {
+            pstrFieldNameLt = new List<string>
+            {
+                "OBJART",
+                "RegionNum"
+            };
+
+            pesriFieldTypeLt = new List<esriFieldType>
+            {
+                esriFieldType.esriFieldTypeInteger,
+                esriFieldType.esriFieldTypeInteger
+            };
         }
 
 
@@ -663,27 +673,99 @@ namespace MorphingClass.CGeneralizationMethods
             }
         }
 
-        public void DetailToIpe()
+        public IEnumerable<IFeatureLayer> AggregateStepByStep()
         {
             var pParameterInitialize = _ParameterInitialize;
-           var pFLayer = pParameterInitialize.pFLayerLt[0];
+            var pFLayer = pParameterInitialize.pFLayerLt[0];
             var pFLayerEnv = pFLayer.AreaOfInterest;
-            CEnvelope pIpeEnv = new CEnvelope(
-                Convert.ToDouble(0), Convert.ToDouble(0),
-                Convert.ToDouble(128), Convert.ToDouble(128));
-            string strBoundWidth = "0.05";
 
 
             var pInitialCrgLt = this.InitialCrgLt;
             int intTotalCphCount = 0;
-            for (int i = 0; i < InitialCrgLt.Count; i++)
+            for (int i = 0; i < pInitialCrgLt.Count; i++)
             {
                 intTotalCphCount += pInitialCrgLt[i].GetCphCount();
             }
             int intOutputStepNum = intTotalCphCount - pInitialCrgLt.Count;
 
+            //List<IFillSymbol> pFillSymbolLt;
+            List<int> TypeIndexLt;
+            List<IPolygon4> passiveIptLt;
+            var newIpgLt = GenerateAggregatedIpgLt(pInitialCrgLt, intOutputStepNum, pParameterInitialize.strAreaAggregation,
+                out passiveIptLt, out TypeIndexLt);
+
+            for (int i = 0; i < newIpgLt.Count; i++)
+            {
+                List<string> pstrFieldNameLt;
+                List<esriFieldType> pesriFieldTypeLt;
+                SetAttributes(out pstrFieldNameLt, out pesriFieldTypeLt);
+                var pobjectValueLtLt = new List<List<object>>();
+
+                var pobjectValueLt = new List<object>(2);
+                int intType;
+                _TypePVSD.SD_R.TryGetValue(TypeIndexLt[i], out intType);
+                pobjectValueLt.Add(intType);
+                pobjectValueLt.Add(-1);
+                pobjectValueLtLt.Add(pobjectValueLt);
+
+                var ipglt = new List<IPolygon4> { newIpgLt[i] };
+
+                yield return CSaveFeature.SaveIGeoEb(ipglt, esriGeometryType.esriGeometryPolygon, "#" + (intTotalCphCount - i - 1).ToString() + "_Step" + (i + 1).ToString() + "_" + CHelpFunc.GetTimeStampWithPrefix(),
+                pParameterInitialize, pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt, strSymbolLayerPath: pParameterInitialize.strMxdPathBackSlash + "complete.lyr");
+
+            }
+        }
+
+        public void DisplayStepByStep(IEnumerable<IFeatureLayer> IFLayerEb)
+        {
+            foreach (var pFLayer in IFLayerEb)
+            {
+                //do nothing, so that we save layer in function "AggregateStepByStep"
+            }
+        }
+
+
+        public void DetailToIpe()
+        {
+            var pParameterInitialize = _ParameterInitialize;
+            var pFLayer = pParameterInitialize.pFLayerLt[0];
+            var pFLayerEnv = pFLayer.AreaOfInterest;
+            string strBoundWidth = "0.05";
+
+
+            var pInitialCrgLt = this.InitialCrgLt;
+            int intTotalCphCount = 0;
+            for (int i = 0; i < pInitialCrgLt.Count; i++)
+            {
+                intTotalCphCount += pInitialCrgLt[i].GetCphCount();
+            }
+            int intOutputStepNum = intTotalCphCount - pInitialCrgLt.Count;
+
+            List<int> intTypeIndexLt;
+            List<IPolygon4> passiveIpgLt;
+            var newIpgLt = GenerateAggregatedIpgLt(pInitialCrgLt, intOutputStepNum, pParameterInitialize.strAreaAggregation,
+                out passiveIpgLt, out intTypeIndexLt);
+            var pFillSymbolLt = GetFillSymbolLt(intTypeIndexLt, _TypePVSD, _intTypeSymbolSD);
+
+            var strLayerNameLt = GetLayerNames(intTotalCphCount, pInitialCrgLt.Count);
+            string strIpeCont = CIpeDraw.GetDataOfLayerNames(strLayerNameLt);
+            strIpeCont += CIpeDraw.GetDataOfViewsAreaAgg(strLayerNameLt);
+            strIpeCont += strDataOfCphs(newIpgLt, passiveIpgLt, pFillSymbolLt, strLayerNameLt, pFLayer, pFLayerEnv, CConstants.pIpeEnv, strBoundWidth);
+
+            string strFullName = pParameterInitialize.strSavePath + "\\" + CHelpFunc.GetTimeStamp() + ".ipe";
+            using (var writer = new System.IO.StreamWriter(strFullName, true))
+            {
+                writer.Write(CIpeDraw.GenerateIpeContentByDataWithLayerInfo(strIpeCont));
+            }
+
+            System.Diagnostics.Process.Start(@strFullName);
+        }
+
+        private static List<IPolygon4> GenerateAggregatedIpgLt(List<CRegion> pInitialCrgLt, int intOutputStepNum,
+            string strAreaAggregation, out List<IPolygon4> passiveIptLt, out List<int> TypeIndexLt)
+        {
             var CrgSS = new SortedSet<CRegion>();
-            if (pParameterInitialize.strAreaAggregation == "Smallest")
+            if (strAreaAggregation == "Smallest")
             {
                 CrgSS = new SortedSet<CRegion>(pInitialCrgLt, CRegion.pCmpCRegion_MinArea_CphGIDTypeIndex);
             }
@@ -692,8 +774,9 @@ namespace MorphingClass.CGeneralizationMethods
                 CrgSS = new SortedSet<CRegion>(pInitialCrgLt, CRegion.pCmpCRegion_CostExact_CphGIDTypeIndex);
             }
 
-            var newIpgLt = new List<IPolygon>(intOutputStepNum);
-            var pFillSymbolLt = new List<IFillSymbol>(intOutputStepNum);
+            var newIpgLt = new List<IPolygon4>(intOutputStepNum);
+            passiveIptLt = new List<IPolygon4>(intOutputStepNum);
+            TypeIndexLt = new List<int>(intOutputStepNum);
             for (int i = 0; i < intOutputStepNum; i++)
             {
                 var currentMinCrg = CrgSS.Min;
@@ -707,58 +790,95 @@ namespace MorphingClass.CGeneralizationMethods
                 else
                 {
                     //get the new polygon
-                    newIpgLt.Add(newCrg.newCph.MergeCpgSS());
-
-                    //get fillsymbol of the polygon
-                    int intType;
-                    _TypePVSD.SD_R.TryGetValue(newCrg.GetCphTypeIndex(newCrg.newCph), out intType);
-                    ISymbol pSymbol;
-                    _intTypeSymbolSD.TryGetValue(intType, out pSymbol);
-                    pFillSymbolLt.Add(pSymbol as IFillSymbol);
+                    newIpgLt.Add(newCrg.AggedCphs.valResult.JudgeAndMergeCpgSSToIpg());                    
+                    TypeIndexLt.Add(newCrg.GetCphTypeIndex(newCrg.AggedCphs.valResult));
+                    passiveIptLt.Add(newCrg.AggedCphs.valPassive.JudgeAndMergeCpgSSToIpg());
 
                     CrgSS.Add(newCrg);
                 }
             }
+            return newIpgLt;
 
-            
-            var strLayerNameLt = GetLayerNames(intTotalCphCount, pInitialCrgLt.Count);
-            string strContent = GetDataOfLayerNames(strLayerNameLt);
-            strContent += GetDataOfViews(strLayerNameLt);
-            strContent += strDataOfCphs(newIpgLt, pFillSymbolLt, strLayerNameLt, pFLayer,pFLayerEnv, pIpeEnv, strBoundWidth);
-
-            string strFullName = pParameterInitialize.strSavePath + "\\" + CHelpFunc.GetTimeStamp() + ".ipe";
-            using (var writer = new System.IO.StreamWriter(strFullName, true))
-            {
-                writer.Write(CIpeDraw.GenerateIpeContentByDataWithLayerInfo(strContent));
-            }
-
-            System.Diagnostics.Process.Start(@strFullName);
         }
 
-        private static string strDataOfCphs(List<IPolygon> IpgLt, List<IFillSymbol> pFillSymbolLt, List<string> strLayerNameLt, IFeatureLayer pFLayer, 
+        private static List<IFillSymbol> GetFillSymbolLt(List<int> intTypeIndexLt,
+            CValMap_SD<int, int> pTypePVSD, SortedDictionary<int, ISymbol> pintTypeSymbolSD)
+        {
+            var pFillSymbolLt = new List<IFillSymbol>(intTypeIndexLt.Count);
+            foreach (var intTypeIndex in intTypeIndexLt)
+            {
+                //get fillsymbol of the polygon
+                int intType;
+                pTypePVSD.SD_R.TryGetValue(intTypeIndex, out intType);
+                ISymbol pSymbol;
+                pintTypeSymbolSD.TryGetValue(intType, out pSymbol);
+                pFillSymbolLt.Add(pSymbol as IFillSymbol);
+            }
+
+            return pFillSymbolLt;
+        }
+
+        private static string strDataOfCphs(List<IPolygon4> IpgLt, List<IPolygon4> passiveIpgLt, List<IFillSymbol> pFillSymbolLt, List<string> strLayerNameLt, IFeatureLayer pFLayer,
             IEnvelope pFLayerEnv, CEnvelope pIpeEnv, string strBoundWidth)
         {
+            var passiveColor = new CColor(0, 0, 255);
+            var resultColor = new CColor(0, 0, 255);
+            //var resultColor = new CColor(45, 121, 147);
+
             //for the first layer, we add all the patches
-            string strDataAllLayers = CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[0], "removable", 320, 64);
-             strDataAllLayers += CIpeDraw.writeIpeText(strLayerNameLt[0], 320, 128)
-                + "<group>\n" + CToIpe.GetDataOfFeatureLayer(pFLayer, pFLayerEnv, pIpeEnv, strBoundWidth) + "</group>\n";
+            string strIpeContAllLayers = CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[0], "removable", 320, 64);
+            strIpeContAllLayers += CIpeDraw.writeIpeText(strLayerNameLt[0], 320, 128)  //write the number of patches
+               + "<group>\n" + CToIpe.GetDataOfFeatureLayer(pFLayer, pFLayerEnv, pIpeEnv, strBoundWidth) + "</group>\n";
+
+            strIpeContAllLayers += CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[1], "removable", 320, 64);
+            strIpeContAllLayers += 
+                "<group>\n" +
+                CToIpe.TranIpgBoundToIpe(IpgLt[0], pFLayerEnv, pIpeEnv, resultColor, "normal", "normal") +
+                CToIpe.TranIpgBoundToIpe(passiveIpgLt[0], pFLayerEnv, pIpeEnv, passiveColor, "heavier", "normal") +
+                "</group>\n";
+
+
 
             //for each of other layers, we only add the new patch
-            for (int i = 1; i < strLayerNameLt.Count; i++)
+            for (int i = 2; i < strLayerNameLt.Count-2; i++)
             {
-                strDataAllLayers += CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[i], "removable", 320, 64);
+                strIpeContAllLayers += CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[i], "removable", 320, 64);
 
                 //draw a rectangle to cover the patch number of the last layer
-                strDataAllLayers += CIpeDraw.drawIpeBox(304, 112, 384, 160, "white");
+                strIpeContAllLayers += CIpeDraw.drawIpeBox(304, 112, 384, 160, "white");
 
-                //add layer name and a text of patch numbers
-                strDataAllLayers += CIpeDraw.writeIpeText(strLayerNameLt[i], 320, 128);
+                //add a text of patch numbers
+                strIpeContAllLayers += CIpeDraw.writeIpeText(strLayerNameLt[i], 320, 128);
 
                 //add the data
-                strDataAllLayers += CToIpe.TranIpgToIpe(IpgLt[i-1], pFillSymbolLt[i-1], pFLayerEnv, pIpeEnv, strBoundWidth);
-            }           
+                strIpeContAllLayers += CToIpe.TranIpgToIpe(IpgLt[i/2 - 1], pFillSymbolLt[i / 2 - 1], pFLayerEnv, pIpeEnv, strBoundWidth);
 
-            return strDataAllLayers;
+
+
+
+                strIpeContAllLayers += CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[i+1], "removable", 320, 64);
+                strIpeContAllLayers +=
+                    "<group>\n" +
+                    CToIpe.TranIpgBoundToIpe(IpgLt[i / 2], pFLayerEnv, pIpeEnv, resultColor, "normal", "normal") +
+                    CToIpe.TranIpgBoundToIpe(passiveIpgLt[i / 2], pFLayerEnv, pIpeEnv, passiveColor, "heavier", "normal") +               
+                    "</group>\n";
+                i++;
+            }
+
+            strIpeContAllLayers += CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[strLayerNameLt.Count-2], "removable", 320, 64);
+
+            //draw a rectangle to cover the patch number of the last layer
+            strIpeContAllLayers += CIpeDraw.drawIpeBox(304, 112, 384, 160, "white");
+
+            //add a text of patch numbers
+            strIpeContAllLayers += CIpeDraw.writeIpeText(strLayerNameLt[strLayerNameLt.Count - 2], 320, 128);
+
+            //add the data
+            strIpeContAllLayers += CToIpe.TranIpgToIpe(IpgLt[strLayerNameLt.Count /2-2], 
+                pFillSymbolLt[strLayerNameLt.Count  / 2 -2], pFLayerEnv, pIpeEnv, strBoundWidth);
+
+
+            return strIpeContAllLayers;
         }
 
         /// <summary>
@@ -767,48 +887,19 @@ namespace MorphingClass.CGeneralizationMethods
         /// <param name="intCphCount"></param>
         /// <param name="intCrgCount"></param>
         /// <returns></returns>
-        private static List< string> GetLayerNames(int intCphCount, int intCrgCount)
+        private static List<string> GetLayerNames(int intCphCount, int intCrgCount)
         {
-            var strLayerNameLt = new List<string>(intCphCount- intCrgCount+1);            
+            var strLayerNameLt = new List<string>(2 * (intCphCount - intCrgCount + 1));
+            //var strLayerNameLt = new List<string>(intCphCount - intCrgCount + 1);
             for (int i = intCphCount; i >= intCrgCount; i--)
             {
                 strLayerNameLt.Add(i.ToString());
+                strLayerNameLt.Add(i.ToString() + "a");
             }
             return strLayerNameLt;
         }
 
-        /// <summary>
-        /// Prepare each layer for Ipe
-        /// </summary>
-        /// <param name="strLayerNameLt"></param>
-        /// <returns></returns>
-        private static string GetDataOfLayerNames(List<string> strLayerNameLt)
-        {
-            string strData = "";
-            foreach (var strName in strLayerNameLt)
-            {
-                strData += CIpeDraw.AddLayer(strName);
-            }
-            return strData;
-        }
 
-        /// <summary>
-        /// Incrementally dislay the layers
-        /// </summary>
-        /// <param name="strLayerNameLt"></param>
-        /// <returns></returns>
-        private static string GetDataOfViews(List<string> strLayerNameLt)
-        {            
-            string strView = strLayerNameLt[0];
-            string strData = CIpeDraw.AddView(strView, strLayerNameLt[0]);
-
-            for (int i = 1; i < strLayerNameLt.Count; i++)
-            {
-                strView += " " + strLayerNameLt[i];
-                strData += CIpeDraw.AddView(strView, strLayerNameLt[i]);
-            }
-            return strData;
-        }
 
         #endregion
     }

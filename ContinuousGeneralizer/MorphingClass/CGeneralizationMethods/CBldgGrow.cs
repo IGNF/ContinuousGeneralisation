@@ -50,7 +50,7 @@ namespace MorphingClass.CGeneralizationMethods
         public List<CPolygon> MergedCpgLt { get; set; }
 
         private static double _dblFactorClipper;
-        private static int _intI = 0;
+        private static int _intI = 3;
         private double _dblD_G;
         private static double _dblAreaLimit;
         private static double _dblHoleAreaLimit;
@@ -1669,7 +1669,7 @@ namespace MorphingClass.CGeneralizationMethods
             return targetcpg;
         }
 
-        private void BufferDilateErodeSimplify_OneComponent(CParameterInitialize pParameterInitialize, ref CPolygon targetcpg, 
+        private void BufferDilateErodeSimplify_OneComponent(CParameterInitialize pParameterInitialize, ref CPolygon targetcpg,
             CPolygon componentCpg, double dblD, double dblGrowR, string strBufferStyle, double dblMiterLimit, double dblFactorClipper)
         {
             double dblHoleIndicator = 1;
@@ -1685,13 +1685,14 @@ namespace MorphingClass.CGeneralizationMethods
 
             //var inputpaths = GeneratePathsByCEdgeLt(cpg.CEdgeLt).ToList();
             double dblOverDilated = dblD / 2; //To avoid breaking the polygon when we errod, dblOverDilated should not be too large 
-            var overdilationPaths = 
+            //dblOverDilated = 0.000000001;
+            var overdilationPaths =
                 ClipperOffset_Paths(inputpaths, dblHoleIndicator * (dblGrowR + dblOverDilated), strBufferStyle, dblMiterLimit);
-            //if (_intI==3)
+            //if (_intI == 3)
             //{
             //    //save the enlarged
             //    //var enlargedpaths = Clipper.ClosedPathsFromPolyTree(pPolyTree);
-            //    var pathsCptEbEb_Raw = ConvertPathsToCptEbEb(Paths, 1);
+            //    var pathsCptEbEb_Raw = ConvertPathsToCptEbEb(overdilationPaths, 1);
             //    var pathsCptEbEb = CGeoFunc.RemoveClosePointsForCptEbEb(pathsCptEbEb_Raw, false);
             //    var scaledpathsCptEbEb = ScaleCptEbEb(pathsCptEbEb, 1 / dblFactorClipper);
             //    CSaveFeature.SaveCGeoEb(GenerateCplEbByPathCptEbEb(scaledpathsCptEbEb), esriGeometryType.esriGeometryPolyline,
@@ -1741,8 +1742,8 @@ namespace MorphingClass.CGeneralizationMethods
             SimplifyFreeEdges(polytree, ref targetcpg, componentCpg, dblD);
         }
 
-        private List<List<IntPoint>> ClipperOffset_Paths(List<List<IntPoint>> inputpaths, double dbldelta, 
-            string strBufferStyle= "Miter", double dblMiterLimit= 2)
+        private List<List<IntPoint>> ClipperOffset_Paths(List<List<IntPoint>> inputpaths, double dbldelta,
+            string strBufferStyle = "Miter", double dblMiterLimit = 2)
         {
             //keep in mind that the first point and the last point of a path are not identical
             //the direction of a path of outcome is counter-clockwise, whereas it is clockwise for a IPolygon
@@ -1863,7 +1864,7 @@ namespace MorphingClass.CGeneralizationMethods
         /// <remarks>OLH: One Level Hole; we assume that there is only one polygon in pPolyTree</remarks>
         private CPolygon GenerateOLHCpgByPolyTree(PolyTree pPolyTree, int intID)
         {
-            if (pPolyTree.ChildCount>1)
+            if (pPolyTree.ChildCount > 1)
             {
                 throw new ArgumentOutOfRangeException("there should be no more than 1 polygon!");
             }
@@ -2118,134 +2119,7 @@ namespace MorphingClass.CGeneralizationMethods
 
 
 
-        #region BufferAndMerge
-        //private IEnumerable<IPolygon4> BufferAndMerge(CParameterInitialize pParameterInitialize, ICollection<CPolygon> CpgCol, double dblBufferRadius,
-        //    string strBufferStyle, double dblMiterLimit, double dblLimitArea, double dblFactorClipper, string strName)
-        //{
-        //    if (CpgCol.Count == 0)
-        //    {
-        //        throw new ArgumentNullException("There is no input!");
-        //    }
-
-
-        //    #region Construct based on arcobjects
-        //    //IGeometryCollection geometryBag = new GeometryBagClass();
-        //    //foreach (var item in this.ObjIGeoLtLt[0].AsExpectedClass<IGeometry, object>())
-        //    //{
-        //    //    geometryBag.AddGeometry(item as IGeometry);
-        //    //}
-
-
-        //    //IBufferConstruction pBufferConstruction = new BufferConstructionClass();
-        //    //IGeometryCollection pOutGeometryCollection = new GeometryBagClass();
-        //    //IBufferConstructionProperties pBufferConstructionProperties = pBufferConstruction as IBufferConstructionProperties;
-        //    //pBufferConstructionProperties.EndOption = esriBufferConstructionEndEnum.esriBufferFlat;
-        //    //pBufferConstructionProperties.UnionOverlappingBuffers = true;
-        //    //pBufferConstruction.ConstructBuffers(geometryBag as IEnumGeometry, _dblBufferRadius, pOutGeometryCollection);
-        //    #endregion
-
-        //    //keep in mind that the first point and the last point of a path are not identical
-        //    //the direction of a path of outcome is counter-clockwise, whereas it is clockwise for a IPolygon
-        //    ClipperOffset pClipperOffset = new ClipperOffset();
-        //    var inputpaths = GeneratePathsByCpgCol(CpgCol, dblFactorClipper).ToList();
-        //    switch (strBufferStyle)
-        //    {
-        //        case "Miter":
-        //            //Property MiterLimit sets the maximum distance in multiples of delta that vertices can be offset from 
-        //            //their original positions before squaring is applied. (Squaring truncates a miter by 'cutting it off' 
-        //            //at 1 × delta distance from the original vertex.)
-        //            pClipperOffset.MiterLimit = dblMiterLimit;
-        //            pClipperOffset.AddPaths(inputpaths, JoinType.jtMiter, EndType.etClosedPolygon);
-        //            break;
-        //        case "Round":
-        //            pClipperOffset.ArcTolerance *= dblFactorClipper;
-        //            pClipperOffset.AddPaths(inputpaths, JoinType.jtRound, EndType.etClosedPolygon);
-        //            break;
-        //        case "Square":
-        //            pClipperOffset.AddPaths(inputpaths, JoinType.jtSquare, EndType.etClosedPolygon);
-        //            break;
-        //        default:
-        //            break;
-        //    }
-
-        //    var Paths = new List<List<IntPoint>>();
-        //    pClipperOffset.Execute(ref Paths, dblBufferRadius * dblFactorClipper);
-        //    var pathsCptEbEb_Raw = ConvertPathsToCptEbEb(Paths, dblFactorClipper);
-        //    var pathsCptLtLt = CGeoFunc.RemoveClosePointsForCptEbEb(pathsCptEbEb_Raw, false).ToLtLt();
-
-
-        //    //var 
-        //    //        CSaveFeature.SaveCGeoEb(GenerateCplEbByPaths(pathsCptLtLt), esriGeometryType.esriGeometryPolyline,
-        //    // "BufferLine_" + strName + "_" + pParameterInitialize.pFLayerLt[0].Name + CHelpFunc.GetTimeStamp(),
-        //    //pParameterInitialize);
-        //    if (pathsCptLtLt.SelectMany(cpt => cpt).AreAnyDuplicates(CCmpCptYX_VerySmall.pCmpCptYX_VerySmall))
-        //    {
-        //        throw new ArgumentException("There are very close points!");
-        //    }
-
-
-        //    Clipper pclipper = new Clipper();
-        //    //pclipper.
-        //    //pclipper.Execute(ClipType.ctIntersection,)
-
-        //    var cedgelt = GenerateCEdgeEbByPathsCptEbEb(pathsCptLtLt).ToList();
-
-        //    CDCEL pDCEL = new CDCEL(cedgelt);
-        //    pDCEL.ConstructDCEL();
-
-
-
-        //    var superface = pDCEL.FaceCpgLt[0];
-        //    var CpgShowStack = new Stack<CPolygon>();
-        //    foreach (var cedgeInnerComponent in superface.cedgeLkInnerComponents)
-        //    {
-        //        CpgShowStack.Push(cedgeInnerComponent.cedgeTwin.cpgIncidentFace);
-        //    }
-
-        //    while (CpgShowStack.Count > 0)
-        //    {
-        //        var CpgShow = CpgShowStack.Pop();
-
-        //        //generate outer ring
-        //        var outercptlt = CpgShow.GetOuterCptEb(true).ToList();
-        //        var outerring = CGeoFunc.GenerateRingByCptlt(outercptlt);
-
-        //        //generate the polygon with outter ring and inner rings
-        //        IPolygon4 ipg = new PolygonClass();
-        //        IGeometryCollection pGeoCol = ipg as IGeometryCollection;
-        //        pGeoCol.AddGeometry(outerring);
-        //        //add inner rings
-        //        if (CpgShow.cedgeLkInnerComponents != null)
-        //        {
-
-        //            foreach (var faceCEdgeInnerComponent in CpgShow.cedgeLkInnerComponents)
-        //            {
-        //                var innercptlt = CpgShow.GetInnerCptEb(faceCEdgeInnerComponent, false).ToList();
-        //                var innerring = CGeoFunc.GenerateRingByCptlt(innercptlt);
-        //                pGeoCol.AddGeometry(innerring);
-
-        //                //holes inteior of an inner ring: we consider these holes as independent polygons
-        //                var furthercedgeLkInnerComponents = faceCEdgeInnerComponent.cedgeTwin.cpgIncidentFace.cedgeLkInnerComponents;
-        //                if (furthercedgeLkInnerComponents != null)
-        //                {
-        //                    foreach (var furthercedgeInnerComponent in furthercedgeLkInnerComponents)
-        //                    {
-        //                        furthercedgeInnerComponent.cedgeTwin.PrintMySelf();
-        //                        CpgShowStack.Push(furthercedgeInnerComponent.cedgeTwin.cpgIncidentFace);
-        //                    }
-        //                }
-        //            }
-        //        }
-
-        //        ipg.SimplifyEx(true, true, true);
-        //        if (strName != "Compensation" || (ipg as IArea).Area >= dblLimitArea)
-        //        {
-        //            yield return ipg;
-        //        }
-
-        //    }
-
-        //}
+        #region BufferAndMerge     
 
 
         private static IEnumerable<IEnumerable<CPoint>> ConvertPathsToCptEbEb(List<List<IntPoint>> Paths, double dblFactorClipper)
@@ -2427,35 +2301,41 @@ namespace MorphingClass.CGeneralizationMethods
 
         public void Output(double dblProportion)
         {
-            var mergedCpgLt = this.MergedCpgLt;
-            var resultCpgLt = new List<CPolygon>(mergedCpgLt.Count);
+            var resultCpgEb = GetResultCpgEb(this.MergedCpgLt, dblProportion);
+            CSaveFeature.SaveCGeoEb(resultCpgEb, esriGeometryType.esriGeometryPolygon,
+                dblProportion + "_Growing", _ParameterInitialize, intBlue: 255);
+        }
+
+        private IEnumerable<CPolygon> GetResultCpgEb(List<CPolygon> mergedCpgLt, double dblProportion)
+        {
+            var GrownAndClippedCpgLt = new List<CPolygon>(mergedCpgLt.Count);
             foreach (var mergedcpg in mergedCpgLt)
             {
                 if (mergedcpg.WasTooSmall == false)
                 {
-                    var resultCpg = GrowAndClipCpg(mergedcpg, dblProportion);
-                    resultCpg.CorrCGeo = mergedcpg;
-                    resultCpgLt.Add(resultCpg);
+                    var GrownAndClippedCpg = GrowAndClipCpg(mergedcpg, dblProportion);
+                    GrownAndClippedCpg.CorrCGeo = mergedcpg;
+                    GrownAndClippedCpgLt.Add(GrownAndClippedCpg);
                 }
             }
 
 
-            var scaledbackcpgLt = ScaleCpgLt(resultCpgLt, 1 / _dblFactorClipper).ToList();
+            var scaledbackcpgLt = ScaleCpgLt(GrownAndClippedCpgLt, 1 / _dblFactorClipper).ToList();
             for (int i = 0; i < scaledbackcpgLt.Count; i++)
             {
-                scaledbackcpgLt[i].CorrCGeo = resultCpgLt[i].CorrCGeo;
+                scaledbackcpgLt[i].CorrCGeo = GrownAndClippedCpgLt[i].CorrCGeo;
             }
 
-            var remainedcpgeb = GetLargeCpgEb(scaledbackcpgLt, _dblAreaLimit, _dblHoleAreaLimit);
-            CSaveFeature.SaveCGeoEb(remainedcpgeb, esriGeometryType.esriGeometryPolygon, 
-                dblProportion + "_Growing", _ParameterInitialize, intBlue:255);
+            var resultcpgeb = GetLargeCpgEb(scaledbackcpgLt, _dblAreaLimit, _dblHoleAreaLimit);
+
+            return resultcpgeb;
         }
 
         private CPolygon GrowAndClipCpg(CPolygon mergedcpg, double dblProportion)
         {
             var inputpaths = GeneratePathsByCpg(mergedcpg).ToList();
 
-            double dblgrow = dblProportion*_dblD_G; //To avoid breaking the polygon when we errod, dblOverDilated should not be too large 
+            double dblgrow = dblProportion * _dblD_G;
             var subjPaths = ClipperOffset_Paths(inputpaths, dblgrow * _dblFactorClipper);
 
             var clipPaths = GeneratePathsByCpg(mergedcpg.ClipCpg).ToList();
@@ -2465,8 +2345,68 @@ namespace MorphingClass.CGeneralizationMethods
             pClipper.AddPaths(subjPaths, PolyType.ptSubject, true);
             pClipper.AddPaths(clipPaths, PolyType.ptClip, true);
             pClipper.Execute(ClipType.ctIntersection, solutionPolyTree, PolyFillType.pftEvenOdd, PolyFillType.pftEvenOdd);
-            
+
             return GenerateOLHCpgByPolyTree(solutionPolyTree, mergedcpg.ID);
+        }
+
+        public void MakeAnimations()
+        {
+            int intLayerNum = 10;
+            var strLayerNameLt = new List<string>(intLayerNum + 1);
+            for (int i = 0; i <= intLayerNum; i++)
+            {
+                strLayerNameLt.Add(String.Format("{0:0.00}", Convert.ToDouble(i) / intLayerNum));
+            }
+
+            string strContent = CIpeDraw.GetDataOfLayerNames(strLayerNameLt);
+            strContent += CIpeDraw.GetDataOfViews(strLayerNameLt, false);
+            strContent += strDataOfLayers(intLayerNum, strLayerNameLt,
+                _ParameterInitialize.pFLayerLt[0], _ParameterInitialize.pFLayerLt[0].AreaOfInterest, CConstants.pIpeEnv, "0.05");
+
+            string strFullName = _ParameterInitialize.strSavePath + "\\" + CHelpFunc.GetTimeStamp() + ".ipe";
+            using (var writer = new System.IO.StreamWriter(strFullName, true))
+            {
+                writer.Write(CIpeDraw.GenerateIpeContentByDataWithLayerInfo(strContent));
+            }
+
+            System.Diagnostics.Process.Start(@strFullName);
+        }
+
+        private string strDataOfLayers(int intLayerNum, List<string> strLayerNameLt, IFeatureLayer pFLayer,
+            IEnvelope pFLayerEnv, CEnvelope pIpeEnv, string strBoundWidth)
+        {
+            //for the first layer, we add all the patches
+            string strDataAllLayers = CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[0], "removable", 320, 64);
+            strDataAllLayers += CToIpe.GetScaleLegend(pFLayerEnv, pIpeEnv, CHelpFunc.GetUnits(_ParameterInitialize.m_mapControl.MapUnits));
+            strDataAllLayers += CIpeDraw.writeIpeText(strLayerNameLt[0], 320, 128)
+               + "<group>\n" + CToIpe.GetDataOfFeatureLayer(pFLayer, pFLayerEnv, pIpeEnv, strBoundWidth,true) + "</group>\n";
+
+            //for each of other layers, we only add the new patch
+            for (int i = 1; i < strLayerNameLt.Count; i++)
+            {
+                strDataAllLayers += CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[i], "removable", 320, 64);
+
+                //draw a rectangle to cover the patch number of the last layer
+                strDataAllLayers += CIpeDraw.drawIpeBox(304, 112, 384, 160, "white");
+
+                //add layer name and a text of patch numbers
+                strDataAllLayers += CIpeDraw.writeIpeText(strLayerNameLt[i], 320, 128);
+
+                strDataAllLayers += CToIpe.GetScaleLegend(pFLayerEnv, pIpeEnv, CHelpFunc.GetUnits(_ParameterInitialize.m_mapControl.MapUnits));
+
+                //add the data
+                strDataAllLayers += "<group>\n";
+                strDataAllLayers += CIpeDraw.drawIpeEdge(pIpeEnv.XMin, pIpeEnv.YMin, pIpeEnv.XMin, pIpeEnv.YMax, "white");
+                foreach (var cpg in GetResultCpgEb(this.MergedCpgLt, Convert.ToDouble(strLayerNameLt[i])))
+                {
+                    strDataAllLayers += CIpeDraw.DrawCpg(cpg, pFLayerEnv, pIpeEnv,
+                        new CUtility.CColor(128, 128, 128), new CUtility.CColor(0, 255, 0), strBoundWidth);
+                }
+                strDataAllLayers += "</group>\n";
+                //strDataAllLayers += CToIpe.TranIpgToIpe(IpgLt[i - 1], pFillSymbolLt[i - 1], pFLayerEnv, pIpeEnv, strBoundWidth);
+            }
+
+            return strDataAllLayers;
         }
     }
 }

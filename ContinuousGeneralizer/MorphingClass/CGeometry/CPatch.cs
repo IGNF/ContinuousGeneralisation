@@ -17,7 +17,16 @@ namespace MorphingClass.CGeometry
         public static CCmpCPatch_Area_CphGID pCmpCPatch_Area_CphGID = new CCmpCPatch_Area_CphGID();  //this variable should be used for CPatch itself
         public static CCmpCPatch_Compactness_CphGID pCmpCPatch_Compactness_CphGID = new CCmpCPatch_Compactness_CphGID();
 
-        
+        private IPolygon4 _pPolygon;
+        public IPolygon4 pPolygon
+        {
+            get { return _pPolygon; }
+            set
+            {
+                _pPolygon = value;
+                //_pGeo = value;
+            }
+        }
 
         public SortedSet<CPolygon> CpgSS { get; set; }
         public int intSumCpgGID { get; set; }
@@ -134,10 +143,22 @@ namespace MorphingClass.CGeometry
 
 
 
-        public IPolygon4 MergeCpgSS()
+        public IPolygon4 MergeCpgSSToIpg()
         {
-            return CGeoFunc.MergeCpgEbAE(this.CpgSS);
+            _pPolygon= CGeoFunc.MergeCpgEbToIpg(this.CpgSS);
+            return _pPolygon;
         }
 
+        public IPolygon4 JudgeAndMergeCpgSSToIpg()
+        {
+            if (_pPolygon == null)
+            {
+                return MergeCpgSSToIpg();
+            }
+            else
+            {
+                return _pPolygon;
+            }
+        }
     }
 }

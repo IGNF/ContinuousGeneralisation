@@ -28,11 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btnAdd = new System.Windows.Forms.Button();
             this.btnReduce = new System.Windows.Forms.Button();
             this.btnSaveInterpolation = new System.Windows.Forms.Button();
             this.pbScale = new System.Windows.Forms.ProgressBar();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnDetailToIpe = new System.Windows.Forms.Button();
             this.btnMultiResults = new System.Windows.Forms.Button();
             this.txtProportion = new System.Windows.Forms.TextBox();
             this.btnInputedScale = new System.Windows.Forms.Button();
@@ -82,7 +84,7 @@
             this.btnGreedy = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.btnDetailToIpe = new System.Windows.Forms.Button();
+            this.timerAdd = new System.Windows.Forms.Timer(this.components);
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -160,6 +162,16 @@
             this.groupBox2.TabIndex = 74;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Display";
+            // 
+            // btnDetailToIpe
+            // 
+            this.btnDetailToIpe.Location = new System.Drawing.Point(172, 148);
+            this.btnDetailToIpe.Name = "btnDetailToIpe";
+            this.btnDetailToIpe.Size = new System.Drawing.Size(106, 25);
+            this.btnDetailToIpe.TabIndex = 82;
+            this.btnDetailToIpe.Text = "Detail To Ipe";
+            this.btnDetailToIpe.UseVisualStyleBackColor = true;
+            this.btnDetailToIpe.Click += new System.EventHandler(this.btnDetailToIpe_Click);
             // 
             // btnMultiResults
             // 
@@ -666,15 +678,10 @@
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Greedy and AStar";
             // 
-            // btnDetailToIpe
+            // timerAdd
             // 
-            this.btnDetailToIpe.Location = new System.Drawing.Point(172, 148);
-            this.btnDetailToIpe.Name = "btnDetailToIpe";
-            this.btnDetailToIpe.Size = new System.Drawing.Size(106, 25);
-            this.btnDetailToIpe.TabIndex = 82;
-            this.btnDetailToIpe.Text = "Detail To Ipe";
-            this.btnDetailToIpe.UseVisualStyleBackColor = true;
-            this.btnDetailToIpe.Click += new System.EventHandler(this.btnDetailToIpe_Click);
+            this.timerAdd.Interval = 500;
+            this.timerAdd.Tick += new System.EventHandler(this.timerAdd_Tick);
             // 
             // FrmAreaAgg
             // 
@@ -762,5 +769,6 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.Button btnDetailToIpe;
+        private System.Windows.Forms.Timer timerAdd;
     }
 }

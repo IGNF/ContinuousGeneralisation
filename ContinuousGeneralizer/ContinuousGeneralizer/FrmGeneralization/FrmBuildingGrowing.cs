@@ -229,6 +229,11 @@ namespace ContinuousGeneralizer.FrmGeneralization
                 _dblProportion = i * 0.1;
                 _pBldgGrow.Output(_dblProportion);
             }
-        }        
+        }
+
+        private void btnDetailToIpe_Click(object sender, EventArgs e)
+        {
+            _pBldgGrow.MakeAnimations();
+        }
     }
 }

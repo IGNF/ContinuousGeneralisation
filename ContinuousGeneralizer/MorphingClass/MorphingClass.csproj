@@ -223,6 +223,7 @@
     <Compile Include="CCorrepondObjects\CCptbCtgl.cs" />
     <Compile Include="CCorrepondObjects\CCorrCphs.cs" />
     <Compile Include="CCorrepondObjects\CPairInt.cs" />
+    <Compile Include="CCorrepondObjects\CValTri.cs" />
     <Compile Include="CCorrepondObjects\CValFour.cs" />
     <Compile Include="CCorrepondObjects\CValPair.cs" />
     <Compile Include="CCorrepondObjects\CValMap_SD.cs" />

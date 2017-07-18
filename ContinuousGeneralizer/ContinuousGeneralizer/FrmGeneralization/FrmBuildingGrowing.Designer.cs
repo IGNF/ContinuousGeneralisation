@@ -62,6 +62,7 @@
             this.pbScale = new System.Windows.Forms.ProgressBar();
             this.btnSaveInterpolation = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnDetailToIpe = new System.Windows.Forms.Button();
             this.btnMultiResults = new System.Windows.Forms.Button();
             this.txtProportion = new System.Windows.Forms.TextBox();
             this.btnInputedScale = new System.Windows.Forms.Button();
@@ -392,6 +393,7 @@
             this.btnAdd.TabIndex = 80;
             this.btnAdd.Text = "+";
             this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // btnReduce
             // 
@@ -421,6 +423,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.btnDetailToIpe);
             this.groupBox2.Controls.Add(this.btnMultiResults);
             this.groupBox2.Controls.Add(this.btnAdd);
             this.groupBox2.Controls.Add(this.btnReduce);
@@ -447,6 +450,16 @@
             this.groupBox2.TabIndex = 79;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Display";
+            // 
+            // btnDetailToIpe
+            // 
+            this.btnDetailToIpe.Location = new System.Drawing.Point(174, 148);
+            this.btnDetailToIpe.Name = "btnDetailToIpe";
+            this.btnDetailToIpe.Size = new System.Drawing.Size(106, 25);
+            this.btnDetailToIpe.TabIndex = 83;
+            this.btnDetailToIpe.Text = "Detail To Ipe";
+            this.btnDetailToIpe.UseVisualStyleBackColor = true;
+            this.btnDetailToIpe.Click += new System.EventHandler(this.btnDetailToIpe_Click);
             // 
             // btnMultiResults
             // 
@@ -669,5 +682,6 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Button btnDetailToIpe;
     }
 }

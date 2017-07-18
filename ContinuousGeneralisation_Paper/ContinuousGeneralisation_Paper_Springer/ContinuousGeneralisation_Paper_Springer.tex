@@ -237,48 +237,6 @@ eprint=false,dashed=false]{biblatex}
 	Second, we ensure that the distance between any pair of two buildings is 
 	always larger than a specified threshold.}
 
-%We proposed a method to continuous 
-%generalization of buildings from a start scale to a goal scale. 
-%%
-%For each building at the start scale, we enlarge it by 
-%buffering. We simplify the enlarged building by the operator of 
-%dilation-erosion-erosion-dilation. Then we merge the 
-%simplified form with the original 
-%building so that the merged result completely contains the 
-%original 
-%shape. We use the merged shape as the building at the goal 
-%scale, and grow the original building to the 
-%goal shape to realize continuous transformation. 
-%%
-%During the 
-%growing, if two buildings become too close to each other, we 
-%aggregate them to avoid narrow gap. To aggregate, we dilate and 
-%merge the two buildings, then we erode the merged shape. To 
-%avoid 
-%failure or thin parts from the aggregation, we construct a 
-%skeleton of the dilated and merged form. We make a buffer of 
-%the 
-%skeleton 
-%and merge the buffer with the eroded shape. We take the 
-%aggregated shape which may be merged with the skeleton buffer 
-%as 
-%a new 
-%building and generate its goal shape at the goal scale so that 
-%we can grow this new building.
-%
-%Once we arrive at the goal scale, we take the goal scale as the 
-%start scale and repeat our continuous generalization. The start 
-%scale and the target scale cannot be too far away because we 
-%want to see some simplification during the growing of buildings.
-%%
-%There are several advantages of our method. First, the 
-%buildings 
-%are enlarged continuously and the same time are simplified. 
-%Second, the distance between each pair of two buildings is 
-%always larger than a specified distance. Third, there is no 
-%thin 
-%part in our results.
-
 \abstract*{\myabstract}
 
 \abstract{\myabstract}
@@ -288,6 +246,43 @@ eprint=false,dashed=false]{biblatex}
 
 \section{Introduction}
 \label{sec:Introduction}
+
+
+Digital maps such as Google Maps and OpenStreetMap support zooming by 
+displaying maps at different levels. 
+This discrete strategy may results in sudden changes, which annoy users.
+To provide better zooming experience, continuous generalization aims to 
+produce 
+a sequence of maps with small incremental changes.
+To realize continuous generalization, \textcite{Sester2005_CG} discussed some 
+generalization operators for buildings and proposed to morph a building 
+between 
+its forms at different levels. Morphing has been used to generate intermediate 
+representations for two representations at different scales 
+\parencite{mnwb-mpstc-08,Peng2013_LSA,Deng2015,Peng2016_Admin}. 
+Also aiming at 
+realize continuous generalization, \textcite{Chimani2014_Eat} generated a good 
+selection sequence for road networks, and 
+\textcite{Peng2017_AStar} tried to compute optimal aggregation sequences for 
+land-cover areas.
+
+When users zoom out on digital maps, buildings become closer with each other 
+and buildings themselves become smaller. 
+In order to make sure that the map is 
+easily perceived \parencite{Weibel1997}, small building should be eliminated, 
+some building should be enlarged, and buildings close to each other should be 
+aggregated.
+Although algorithms of simplifying buildings have been studied, e.g., 
+\textcite{Buchin2011_Simp,haunertwolff2010}, problems become more complicated 
+when we have to aggregate buildings in the meantime.
+In order to aggregate, we should first group the buildings.
+
+
+
+
+
+
+\bigskip
 
 The papers we may review:   
 \textcite{vanSmaalen2003, Buchin2016, Chaudhry2008, Stoter2009},
@@ -310,270 +305,9 @@ Cetinkaya2015,Deng2017,Regnauld1996}
 
 
 
-\section{Discussion}
-\label{sec:Discussion}
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics{Framework}
-	\caption{Framework.}
-	\label{fig:Framework}
-\end{figure}
-
-
-
-We discussed two ways of achieving continuous generalization of 
-buildings. 
-
-The first way is that we cover the smallest block at each step. 
-Should we consider the density of the buildings? 
-\marginalcomment{relevant comment. If small buildings exist in 
-	all blocks, there will be small buildings remaining at small 
-	scales in the blocks that have not been covered.}
-A disadvantage 
-is that some small buildings in a large block may exist very 
-long.
-Alternatively, we may cover two buildings together if they are 
-close enough, say the distance is smaller than d. We can 
-increase d so that we will cover more and more buildings 
-together. To avoid overlap between two covers, we may need to 
-use Voronoi diagrams of the original buildings. We can cover 
-buildings without overlap if we always use a cover inside the 
-Voronoi cells of these buildings. This idea about Voronoi cells 
-is used in \textcite{vanGoethem2013}. We may need to try 
-different 
-possible covers. 
-Unfortunately, this trying may be very time-consuming, probably 
-NP-hard.
-
-The second way is that we grow buildings by buffering with an 
-increasing radius, and then merge the buffers overlapping each 
-other. A disadvantage is that the corners of the buffers 
-\marginalcomment{this may be avoided by using square buffers 
-(the Minkowski sum is done with a square rather than a circle), 
-don't know if it's available in ESRI products}
-\marginalcomment{We can also think about the method described at 
-%\url{http://stackoverflow.com/questions/1109536/an-algorithm-for-inflating-deflating-offsetting-buffering-polygons#}
- }
-are not 
-orthogonal anymore. Two kinds of buffer:
-
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[width=\linewidth]{BufferRoundJoint}
-	\caption{BufferRoundJoint.}
-	\label{fig:BufferRoundJoint}
-\end{figure}
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[width=\linewidth]{BufferMiterJoint}
-	\caption{BufferMiterJoint.}
-	\label{fig:BufferMiterJoint}
-\end{figure}
-
-
-
-
-A disadvantage of buffering based on miter joint is that the 
-method is sensitive to noise. By sensitive, if there is a short 
-edge at the end or a sharp corner, then the result will be very 
-different to the case that there is no such short edge. In 
-contrary, buffers based on round joint are continuous and stable.
-
-This method should be easier to implement than the first method.
-\marginalcomment{We can erode back in order to keep enough 
-distance between buildings. The operator of growing and 
-shrinking of buffers are mentioned in paper Automated Processing 
-for Map Generalization with Modular Operator Services (Neun 
-2009).
-} 
-We may not need to erode back after buffering. In this second 
-strategy, undesired very small shapes or holes might appear at 
-some point, and should be reverted until the growing totally 
-collapses the hole or makes the small parts big enough. As 
-buffers are not allowed to cross roads, we may clip some parts 
-of the buffers off along the roads.
-If we buffer with miter joint, it can happen that a very sharp 
-angle yields a very long buffer. Fortunately, we do not have 
-this situation so far. Otherwise, we may need to cut the long 
-buffer at some point.
-We may have small holes after buffering and merging the buffers 
-of the buildings, which is not nice. See below as an example, 
-where we can find a small “white” hole in the middle. We may 
-simply fill out all the holes having small area.
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[width=\linewidth/2]{BufferWithHole}
-	\caption{BufferWithHole.}
-	\label{fig:BufferWithHole}
-\end{figure}
-
-
-We have two maps at different scales. We generalize the 
-buildings on the larger-scale map, and we use the boundaries of 
-the buildings on the smaller-scale map as the limits of the 
-generalization (including growing).
-
-
-We have a requirement that the buildings should not cross 
-existing roads. Therefore, we need to cut the the enlarged 
-buildings by the roads. If we do this cut, then some buildings 
-may almost touch each other, but separated by roads. The 
-too-close buildings will look ugly. To avoid the ugly 
-performance, we should also make buffers for roads, and require 
-that the enlarged buildings should be outside the buffers of the 
-roads. Should we use the same radius that we used for enlarging 
-buildings? With the buffers of roads growing, we may need to 
-move enlarged buildings, otherwise, the enlarged buildings will 
-overlap the buffers of roads. 
-We may move by a method based on least-squares adjustment. In 
-this method, we may assign large weight for keeping the distance 
-between a road and a building. We may assign small weight for 
-keeping the distance between buildings because buildings will be 
-buffered and merged later.
-
-We want to enlarge the buildings by a radius r, and require that 
-the distance between any two buildings after the enlargement 
-should be 2d at least. To achieve this aim, we first buffer the 
-buildings by a radius r+d, and then buffer the enlarged 
-buildings by a radius -d. Following is an example, where r=10 
-and d=15.
-
-Buffering the original buildings with radius 25
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[width=\linewidth]{BufferRadius25}
-	\caption{BufferRadius25.}
-	\label{fig:BufferRadius25}
-\end{figure}
-
-Buffering the enlarged buildings with radius -15 (erosion). We 
-call the result Map A. Unfortunately, we produced some spikes by 
-this erosion. Since we used the miter joint and we allow the 
-enlargements twice of radius r=10 away from the original 
-buildings, the corners of the enlarged buildings can be 2r=20 
-from the original buildings. After erosion, the smallest 
-distance between two buildings can be as small as 0. I will give 
-more details.
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[width=\linewidth]{MapA}
-	\caption{MapA.}
-	\label{fig:MapA}
-\end{figure}
-
-Buffering the original buildings with radius 10. We call the 
-result Map B.
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[width=\linewidth]{MapB}
-	\caption{MapB.}
-	\label{fig:MapB}
-\end{figure}
-
-To remove the spikes in Map A, we may subtract Map B from Map A. 
-Then we get some leftovers in Map A. The outward triangles of 
-the leftovers are the spikes which we want to remove. We 
-subtract those outward triangles from Map A, which may guarantee 
-that we will have removed the spikes in Map A.
-
-To remove the spikes in Map A, Guillaume suggested that we could 
-%buffer by a small value -ɛ, and then buffer again by ɛ.
-
-Should we buffer from the original buildings or buffer from the 
-buildings from the previous step?
-
-
-Elimination
-If every building should have area $4d^2$at least, we buffer 
-buildings with radius $xd$ (x<2). After the buffering, some too 
-small buildings will be eliminated. The small buildings which 
-manage to merge with other buildings may survive. The eliminated 
-buildings should not participate in next buffering step, which 
-uses larger d.
-
-
-
-
-Issues regarding the data:
-
-%How were the layers of data road_25k and road_100k produced?
-%Was road_25k produced by surveying?
-%Was road_100k generalized from road_25k?
-%
-%How were the layers of data building_15k, building_25k, 
-%urban_area_50k, and urban_area_100k produced?
-%Was building_15k produced by surveying?
-%Was building_25k derived from building_15k by the methods 
-%illustrated in paper Optimization Approaches for Generalization 
-%and Data Abstraction (Sester, 2005)?
-%Was urban_area_50k derived from building_15k by constructing 
-%buffers and filling out the holes of the buffers?
-%Was urban_area_100k derived from building_15k by constructing 
-%buffers and filling out the holes of the buffers?
-
-%\pagebreak[4]
-%\newpage
-\clearpage
-
-
-\section{An idea of continuously generalising buildings}
-We have an input map at scale $1:15 \mathrm{k}$.
-We want to generate, by generalisation, $10$ maps which are at 
-scale $1:20\mathrm{k}$, $1:25\mathrm{k}$, 
-$1:30\mathrm{k}$, $\dots$, $1:65\mathrm{k}$.
-We always produce a map by generalising the 
-immediate-larger-scale map. For example, we produce the map at 
-scale $1:25\mathrm{k}$ by generalising, instead of the input 
-map, the map at scale $1:20\mathrm{k}$.
-This production 
-guarantees consistency. Namely, if a building does not exist on 
-a map at a certain scale, then the building will never exist on 
-a map at a smaller scale.
-
-We have two requirements for an output map.
-The first one is that the distance between two 
-buildings should be at least $d_i=0.2 \mathrm{mm}/S_i$, where 
-$S_i$ is the scale of map $i$.
-The second requirement is that a building with area less than 
-$A_i=0.16\mathrm{mm}^2/S^2_i$ should be eliminated. Roughly, a 
-building with width less than 
-$w_i=\sqrt{A_i}=0.4\mathrm{mm}/S_i$ should be eliminated.
-In order to make sure that some small buildings will be 
-eliminated, the radius $r_i$ that we use to buffer buildings 
-should be smaller than $\frac{1}{2}w_i$. We simply use 
-$r_i=\frac{1}{4}w_i$.
-Our buildings may have been buffered with radius, in total, 
-$r_{i-1}$ from previous steps.
-Therefore, we only need to buffer with radius $r_i-r_{i-1}$ at 
-the new 
-step.
-
-Our generalisation is as following $4$ steps:
-\begin{enumerate}[label=(\alph*),leftmargin=2\parindent]
-	\item We buffer buildings with 
-	radius $\frac{1}{2}d_i+r_i-r_{i-1}$, and merge the buffers 
-	overlapping each other.
-	\item Then we buffer the results with $-\frac{1}{2}d_i$.
-	\item In order to 
-	remove some spikes from the buffering, we buffer the new 
-	results with $-\epsilon_i$.
-	\item To compensate, we buffer with $\epsilon_i$.	
-\end{enumerate}
-We simply set 
-$\epsilon_i=\frac{1}{10}(r_i-r_{i-1})$. After these buffering 
-operations, we eliminate the buildings with area less than 
-$A_i$.
-
 \section{Method}
 
-
+\subsection{Growing}
 If several buildings are close to each other at the start 
 scale, we bridge them by line segments and take the merge of these 
 buildings 
@@ -601,14 +335,18 @@ l_b=4d_\mathrm{G}+d_\epsilon.
 \end{equation}
 \todo[inline]{$d_\mathrm{G}$ or $D_\mathrm{G}$?}
 
+\subsection{Simplification}
+we use a buffer-based method, similar to \textcite{Damen2008,Meijers2016}, to 
+simplify our grown buildings.
 
-\subsection{Parameters for growing}
+\subsection{Parameters for growing and simplification}
 The start scale is $1:S_\mathrm{s}$, and the goal scale is $1:S_\mathrm{g}$ 
 ($S_\mathrm{g}>S_\mathrm{s}$).
 The area of a building should be larger than $a$ mm$^2$ on map.
 A square at the start scale has area $a S_\mathrm{s}^2$ mm$^2$ at least.
 A square at the goal scale has area $a S_\mathrm{g}^2$ mm$^2$ at least.
-The difference of the side lengths is $\sqrt{a} (S_\mathrm{g}-S_\mathrm{s})$ mm.
+The difference of the side lengths is $\sqrt{a} (S_\mathrm{g}-S_\mathrm{s})$ 
+mm.
 Therefore, a square on the start map needs to grow $\frac{1}{2}\sqrt{a} 
 (S_\mathrm{g}-S_\mathrm{s})$ mm in order to survive.
 In order to eliminate some small buildings, we define our growing distance as
@@ -665,7 +403,8 @@ $a$ (according to Eq.~\ref{eq:a_limit}), a small $d_\mathrm{G}$ (according to
 Eq.~\ref{eq:d_G}), and finally a small $l_b$ (according to 
 Eq.~\ref{eq:BridgeLength}). Also we should have a small $x$ and a large 
 $\lambda$ as our $a$ is already much larger than $0.16$ mm$^2$ on 
-map, which is the area limit used by \textcite{Stoter2009}. As a result, we set 
+map, which is the area limit used by \textcite{Stoter2009}. As a result, we 
+set 
 $\lambda=0.8$ and $x=\frac{2}{3} \cdot 100$.
 Using these setting, we have
 \begin{equation}
@@ -680,15 +419,15 @@ Therefore, we may grow up to distance
 \[
 D_\mathrm{G} = d_\mathrm{G} + d_\epsilon.
 \]
-Fig.~\ref{fig:ExtraGrowth} shows such an enlargement and simplification, where  
+Fig.~\ref{fig:ExtraGrowth} shows such an enlargement and simplification, 
+where  
 variable $d_\mathrm{e} (\le d_\epsilon)$ is the extra growing distance.
 
 
 \textcite{Chaudhry2008} thought that a hole of a settlement should be at least 
 $0.5$ km$^2$ for a map at scale $1:250{,}000$, which means that the hole is at 
 least $8$ mm$^2$ on map. Following their setting, we shrink a hole and 
-eliminate the hole one its size is smaller than $8$ mm$^2$ on map eliminate a 
-hole.
+eliminate the hole once its size is smaller than $8$ mm$^2$ on map.
 
 
 
@@ -710,13 +449,16 @@ hole.
 %Although our intermediate results may violate the rule that a hole should be 
 %at 
 %least some size, we try to avoid the violation for a map at a goal scale.
-%\textcite{Chaudhry2008} thought that a hole of a settlement should be at least 
-%$0.5$ km$^2$ for a map at scale $1:250{,}000$, which means that the hole is at 
+%\textcite{Chaudhry2008} thought that a hole of a settlement should be at 
+%least 
+%$0.5$ km$^2$ for a map at scale $1:250{,}000$, which means that the hole is 
+%at 
 %least $8$ mm$^2$ on the map. Following their setting, we wish to have $\pi 
 %D_\mathrm{G}^2 \ge 8 S_g^2$.
 %
 %
-%Now we discuss how to set the parameters according to our requirements. First, 
+%Now we discuss how to set the parameters according to our requirements. 
+%First, 
 %we wish to increase $d_\mathrm{G}/d_\epsilon$. Most part of a building will 
 %grow $d_\mathrm{G}$. Only a small part will continue growing after the 
 %building 
@@ -790,7 +532,8 @@ make the results at goal scales violate as few rules as possible.
 
 Ideally, for a rectangle, the ratio of width to height should be kept. 
 
-\todo[inline]{consider multi bridges; consider transparency of bridges in stead 
+\todo[inline]{consider multi bridges; consider transparency of bridges in 
+stead 
 of enlarging}
 
 \printbibliography

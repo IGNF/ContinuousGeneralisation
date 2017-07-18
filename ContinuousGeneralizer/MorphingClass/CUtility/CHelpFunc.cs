@@ -70,6 +70,7 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "AreaAggregation-664-easy";
         //private static string _strDataFolderName = "AreaAggregation_Problematic";
         //private static string _strDataFolderName = "AreaAggregation_Some";
+        private static string _strDataFolderName = "AreaAggregation_Some2";
         //private static string _strDataFolderName = "AreaAggregation-590";
         //private static string _strDataFolderName = "AreaAggregation-Simplest";
         //private static string _strDataFolderName = "AreaAggregation_SmallInstances";
@@ -77,19 +78,20 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "AreaAggregation-Computable";
         //private static string _strDataFolderName = "AreaAggregation-Uncomputable";
         //private static string _strDataFolderName = "AreaAggregation-Mostpatches";
-        //private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\AreaAggregation\\" + _strDataFolderName + "\\";
+        private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\AreaAggregation\\" + _strDataFolderName + "\\";
 
         //private static string _strDataFolderName = "France";
         //private static string _strDataFolderName = "France_Part";
         //private static string _strDataFolderName = "France_FourBuildings";
-        private static string _strDataFolderName = "France_Smallpart";
+        //private static string _strDataFolderName = "France_Smallpart";
+        //private static string _strDataFolderName = "France_Presenting";
         //private static string _strDataFolderName = "France_Problematic";
         //private static string _strDataFolderName = "France_WithOneHole";
         //private static string _strDataFolderName = "France_OneSquare";
         //private static string _strDataFolderName = "France_TwoSquares_Faraway";
         //private static string _strDataFolderName = "France_TwoSquares_SingleBridge";
         //private static string _strDataFolderName = "France_TwoSquares_Overlap";
-        private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\BuildingGrowing\\" + _strDataFolderName + "\\";
+        //private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\BuildingGrowing\\" + _strDataFolderName + "\\";
 
         //private static string _strDataFolderName = "An Approximate Morphing between Polylines";
         //private static string _strPath = 
@@ -909,7 +911,11 @@ namespace MorphingClass.CUtility
         }
 
 
-
+        public static string GetUnits(esriUnits pMapUnits)
+        {
+            //don't need the first four characters, which are "esri"
+            return pMapUnits.ToString().Substring(4);
+        }
 
 
 
