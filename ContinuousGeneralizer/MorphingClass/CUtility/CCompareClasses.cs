@@ -98,7 +98,15 @@ namespace MorphingClass.CUtility
         }
     }
 
-    
+    public class CCmpCptXY_VerySmall : Comparer<CPoint>
+    {
+        public static CCmpCptXY_VerySmall pCmpCptXY_VerySmall = new CCmpCptXY_VerySmall();
+
+        public override int Compare(CPoint cpt1, CPoint cpt2)
+        {
+            return CCmpMethods.CmpCptXY(cpt1, cpt2);
+        }
+    }
 
     public class CCmpCptYX_VerySmall : Comparer<CPoint>
     {
@@ -258,7 +266,7 @@ namespace MorphingClass.CUtility
     {
         public override int Compare(CEdge cedge1, CEdge cedge2)
         {
-            return CCmpMethods.CmpCEdgeCoordinates(cedge1, cedge2);
+            return CCmpMethods.CmpCEdgeCoordinates(cedge1, cedge2, true);
         }
     }
 

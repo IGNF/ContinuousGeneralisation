@@ -2213,7 +2213,7 @@ namespace MorphingClass.CUtility
             int intSuperFaceCount = 0;
             foreach (var FaceCpg in pDCEL.FaceCpgLt)
             {
-                if (FaceCpg.cedgeOuterComponent == null)
+                if (FaceCpg.OuterCmptCEdge == null)
                 {
                     intSuperFaceCount++;
                     SuperFaceCpg = FaceCpg;

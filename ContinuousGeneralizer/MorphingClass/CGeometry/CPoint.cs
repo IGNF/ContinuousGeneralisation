@@ -82,8 +82,9 @@ namespace MorphingClass.CGeometry
         private List<CIntersection> _pIntersectionLt;
         private CPolygon _HoleCpg;
         private object _BelongedObject;
+        
 
-        private List<CEdge> _AxisAngleCEdgeLt;
+        public List<CEdge> AxisAngleCEdgeLt { set; get; }
 
         private CCorrCpts _PairCorrCpt;
         //private CRiver _BelongedCRiver;
@@ -454,11 +455,7 @@ namespace MorphingClass.CGeometry
         }
 
 
-        public List<CEdge> AxisAngleCEdgeLt
-        {
-            get { return _AxisAngleCEdgeLt; }
-            set { _AxisAngleCEdgeLt = value; }
-        }
+
 
         public bool isSteiner
         {

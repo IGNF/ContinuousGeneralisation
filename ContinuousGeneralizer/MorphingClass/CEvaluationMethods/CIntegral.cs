@@ -199,7 +199,7 @@ namespace MorphingClass.CEvaluationMethods
             tocedge.SetLength();
 
 
-            if (CCmpMethods.CmpCEdgeCoordinates(frcedge, tocedge)==0 ||
+            if (CCmpMethods.CmpCEdgeCoordinates(frcedge, tocedge, true)==0 ||
                (frcedge.dblLength == 0 && tocedge.dblLength == 0))   //为了应付刚开始时有重合的对应点
             {
                 return 0;

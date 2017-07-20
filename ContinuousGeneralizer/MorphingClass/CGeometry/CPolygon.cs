@@ -23,11 +23,9 @@ namespace MorphingClass.CGeometry
 
         private static int _intStaticGID;
 
-        private CEdge _cedgeOuterComponent;    //if a face has cedgeOuterComponent == null, then this face is super face
+        private CEdge _OuterCmptCEdge;    //if a face has OuterCmptCEdge == null, then this face is super face
         private CEdge _cedgeStartAtLeftMost;
-        private LinkedList<CEdge> _cedgeLkInnerComponents;     //counter clockwise???
-        private SortedDictionary<CPolygon, LinkedList<CEdge>> _AdjacentSD;    //Why SortedDictionary? Because we may need to unite the adjacent elements of two elements, and we also need to consider the shared borders
-        //private CPatch _cpatch;
+        private List<CEdge> _InnerCmptCEdgeLt;     //counter clockwise???
 
         public double dblAreaSimple { get; set; }
         public bool WasTooSmall { get; set; }
@@ -40,6 +38,9 @@ namespace MorphingClass.CGeometry
 
         public List<CPolygon> HoleCpgLt { get; set; }
         public CPoint CentroidCptSimple { get; set; }
+
+        public List<CPolygon> MergedSubCpgLt { get; set; }
+        public List<CEdge> BridgeCEdgeLt { get; set; }
 
         //public CPolygon AssigningFace { get; set; }
         //public List<CPolygon> AssignedFaceLt { get; set; }
@@ -302,22 +303,22 @@ namespace MorphingClass.CGeometry
 
         public IEnumerable<CPoint> GetOuterCptEb(bool clockwise = true, bool blnIdentical = true)
         {
-            var pcedgeOuterComponent = _cedgeOuterComponent;
-            if (pcedgeOuterComponent == null)
+            var pOuterCmptCEdge = _OuterCmptCEdge;
+            if (pOuterCmptCEdge == null)
             {
                 throw new ArgumentException("Super face does not have a outer ring!");
             }
 
             if (clockwise == true)   //for an outer path, the edges are stored counter-clockwise in DCEL
             {
-                foreach (var cpt in TraverseToGetCptEb(pcedgeOuterComponent, false))
+                foreach (var cpt in TraverseToGetCptEb(pOuterCmptCEdge, false))
                 {
                     yield return cpt;
                 }
             }
             else
             {
-                foreach (var cpt in TraverseToGetCptEb(pcedgeOuterComponent, true))
+                foreach (var cpt in TraverseToGetCptEb(pOuterCmptCEdge, true))
                 {
                     yield return cpt;
                 }
@@ -325,24 +326,24 @@ namespace MorphingClass.CGeometry
 
             if (blnIdentical == true)
             {
-                yield return pcedgeOuterComponent.FrCpt;
+                yield return pOuterCmptCEdge.FrCpt;
             }
         }
 
         public IEnumerable<CPoint> GetInnerCptEb(CEdge cedgeComponent, bool clockwise = true, bool blnIdentical = true)
         {
-            var pcedgeOuterComponent = cedgeComponent;
+            var pOuterCmptCEdge = cedgeComponent;
 
             if (clockwise == true)  //for an inner path, the edges are stored clockwise in DCEL
             {
-                foreach (var cpt in TraverseToGetCptEb(pcedgeOuterComponent, true))
+                foreach (var cpt in TraverseToGetCptEb(pOuterCmptCEdge, true))
                 {
                     yield return cpt;
                 }
             }
             else
             {
-                foreach (var cpt in TraverseToGetCptEb(pcedgeOuterComponent, false))
+                foreach (var cpt in TraverseToGetCptEb(pOuterCmptCEdge, false))
                 {
                     yield return cpt;
                 }
@@ -350,7 +351,7 @@ namespace MorphingClass.CGeometry
 
             if (blnIdentical == true)
             {
-                yield return pcedgeOuterComponent.FrCpt;
+                yield return pOuterCmptCEdge.FrCpt;
             }
         }
 
@@ -383,9 +384,9 @@ namespace MorphingClass.CGeometry
         public List<List<CPoint>> GetInnerCptLtLt(bool clockwise = true, bool blnIdentical = true)
         {
             var innercptltlt = new List<List<CPoint>>();
-            if (_cedgeLkInnerComponents != null && _cedgeLkInnerComponents.Count > 0)
+            if (_InnerCmptCEdgeLt != null && _InnerCmptCEdgeLt.Count > 0)
             {
-                foreach (var cedgeInnerComponent in _cedgeLkInnerComponents)
+                foreach (var cedgeInnerComponent in _InnerCmptCEdgeLt)
                 {
 
                     innercptltlt.Add(GetInnerCptEb(cedgeInnerComponent, clockwise, blnIdentical).ToList());
@@ -401,9 +402,9 @@ namespace MorphingClass.CGeometry
         public List<CPoint> GetOnlyInnerCptLt(bool clockwise = true, bool blnIdentical = true)
         {
             //var innercptltlt = new List<List<CPoint>>();
-            if (_cedgeLkInnerComponents != null && _cedgeLkInnerComponents.Count == 1)
+            if (_InnerCmptCEdgeLt != null && _InnerCmptCEdgeLt.Count == 1)
             {
-                return GetInnerCptEb(_cedgeLkInnerComponents.GetFirstT(), clockwise, blnIdentical).ToList();
+                return GetInnerCptEb(_InnerCmptCEdgeLt.GetFirstT(), clockwise, blnIdentical).ToList();
             }
             else
             {
@@ -417,7 +418,7 @@ namespace MorphingClass.CGeometry
         ///// </summary>
         ///// <param name="cedgeComponent"></param>
         ///// <returns></returns>
-        ///// <remarks>we don't just use the FrCpt of cedgeOuterComponent as the start vertex, because a pair of corresponding faces may have different cedgeOuterComponent
+        ///// <remarks>we don't just use the FrCpt of OuterCmptCEdge as the start vertex, because a pair of corresponding faces may have different OuterCmptCEdge
         /////          Instead, we use the Cpt having the smallest indexID as the start vertex</remarks>
         //private List <CPoint> TraverseToGenerateCptLt(CEdge cedgeComponent)
         //{
@@ -452,29 +453,29 @@ namespace MorphingClass.CGeometry
         /// <summary>
         /// (counter clockwise???)
         /// </summary>
-        public LinkedList<CEdge> cedgeLkInnerComponents
+        /// <remarks>inner components</remarks>
+        public List<CEdge> InnerCmptCEdgeLt
         {
-            get { return _cedgeLkInnerComponents; }
-            set { _cedgeLkInnerComponents = value; }
+            get { return _InnerCmptCEdgeLt; }
+            set { _InnerCmptCEdgeLt = value; }
         }
 
 
-        public CEdge cedgeOuterComponent
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>outer component</remarks>
+        public CEdge OuterCmptCEdge
         {
-            get { return _cedgeOuterComponent; }
-            set { _cedgeOuterComponent = value; }
+            get { return _OuterCmptCEdge; }
+            set { _OuterCmptCEdge = value; }
         }
 
         public CEdge cedgeStartAtLeftMost
         {
             get { return _cedgeStartAtLeftMost; }
             set { _cedgeStartAtLeftMost = value; }
-        }
-
-        public SortedDictionary<CPolygon, LinkedList<CEdge>> AdjacentSD
-        {
-            get { return _AdjacentSD; }
-            set { _AdjacentSD = value; }
         }
 
 
@@ -499,9 +500,9 @@ namespace MorphingClass.CGeometry
 
         //public void Clear()
         //{
-        //    _cedgeLkInnerComponents = null;
+        //    _InnerCmptCEdgeLt = null;
         //    this.CEdgeLt = null;
-        //    _cedgeOuterComponent = null;
+        //    _OuterCmptCEdge = null;
         //    _cedgeStartAtLeftMost = null;
         //    _CorrCGeo = null;
         //    _CorrCGeoLt = null;

@@ -21,7 +21,7 @@ namespace MorphingClass.CGeometry
     {
         
         private List<CEdge> _HalfEdgeLt;  //output, we always store one edge and then imediately its twin edge; in the construction of compatible triangulations we always store the outer edges in the front of this list
-        private List<CPolygon> _FaceCpgLt;      //output; superface is the first element in this list,i.e., _FaceCpgLt[0]. if a face has cedgeOuterComponent == null, then this face is super face
+        private List<CPolygon> _FaceCpgLt;      //output; superface is the first element in this list,i.e., _FaceCpgLt[0]. if a face has OuterCmptCEdge == null, then this face is super face
         private CEdgeGrid _pEdgeGrid;
         public List<CEdge> CEdgeLt { get; set; }
         public List<CPoint> CptLt { get; set; }
@@ -93,8 +93,8 @@ namespace MorphingClass.CGeometry
                 fHalfEdgeLt.Add(cedge.cedgeTwin);
             }
 
-            SortedDictionary<CPoint, List<CEdge>> CoStartCEdgeSD = IdentifyCoStartCEdge(fHalfEdgeLt);
-            ConstrcutRelationshipBetweenEdges(CoStartCEdgeSD);
+            SortedDictionary<CPoint, List<CEdge>> CoStartHalfCEdgeSD = IdentifyCoStartCEdge(fHalfEdgeLt);
+            ConstrcutRelationshipBetweenEdges(CoStartHalfCEdgeSD);
 
             fHalfEdgeLt.SetIndexID();
 
@@ -103,11 +103,12 @@ namespace MorphingClass.CGeometry
 
         private SortedDictionary<CPoint, List<CEdge>> IdentifyCoStartCEdge(List<CEdge> fHalfEdgeLt)
         {
-            SortedDictionary<CPoint, List<CEdge>> CoStartCEdgeSD = new SortedDictionary<CPoint, List<CEdge>>(CCmpCptYX_VerySmall.pCmpCptYX_VerySmall);
+            SortedDictionary<CPoint, List<CEdge>> CoStartHalfCEdgeSD = 
+                new SortedDictionary<CPoint, List<CEdge>>(CCmpCptYX_VerySmall.pCmpCptYX_VerySmall);
             foreach (CEdge cedge in fHalfEdgeLt)
             {
                 List<CEdge> cedgeLt;
-                bool isExisted = CoStartCEdgeSD.TryGetValue(cedge.FrCpt, out cedgeLt);
+                bool isExisted = CoStartHalfCEdgeSD.TryGetValue(cedge.FrCpt, out cedgeLt);
                 if (isExisted == true)
                 {
                     cedgeLt.Add(cedge);
@@ -116,16 +117,16 @@ namespace MorphingClass.CGeometry
                 {
                     cedgeLt = new List<CEdge>(2);  //we know that there is at least two edges starting at the same vertex
                     cedgeLt.Add(cedge);
-                    CoStartCEdgeSD.Add(cedge.FrCpt, cedgeLt);
+                    CoStartHalfCEdgeSD.Add(cedge.FrCpt, cedgeLt);
                 }
             }
-            return CoStartCEdgeSD;
+            return CoStartHalfCEdgeSD;
         }
 
-        private void ConstrcutRelationshipBetweenEdges(SortedDictionary<CPoint, List<CEdge>> CoStartCEdgeSD)
+        private void ConstrcutRelationshipBetweenEdges(SortedDictionary<CPoint, List<CEdge>> CoStartHalfCEdgeSD)
         {
             //vertexLt = new List<CPoint>(CoStartCEdgeSD.Count);
-            foreach (var kvp in CoStartCEdgeSD)
+            foreach (var kvp in CoStartHalfCEdgeSD)
             {
                 var AxisAngleCEdgeLt = kvp.Value.OrderBy(cedge => cedge.dblAxisAngle).ToList();
                 var AxisAngleCEdgeEt = AxisAngleCEdgeLt.GetEnumerator();
@@ -283,19 +284,10 @@ namespace MorphingClass.CGeometry
             {
                 if (cedge.isTraversed == true) continue;
 
-                var currentcedge = cedge;
+                var cedgeStartAtLeftMost = GetCEdgeStartAtExtreme(cedge, CCmpCptXY_VerySmall.pCmpCptXY_VerySmall, -1);
                 var cpgIncidentFace = cedge.cpgIncidentFace;
-                cpgIncidentFace.LeftMostCpt = new CPoint(-1, double.MaxValue, double.MaxValue);
-                do
-                {
-                    if (CCmpMethods.CmpCptXY(currentcedge.FrCpt, cpgIncidentFace.LeftMostCpt) == -1)
-                    {
-                        cpgIncidentFace.LeftMostCpt = currentcedge.FrCpt;
-                        cpgIncidentFace.cedgeStartAtLeftMost = currentcedge;
-                    }
-                    currentcedge.isTraversed = true;
-                    currentcedge = currentcedge.cedgeNext;
-                } while (currentcedge.isTraversed == false);
+                cpgIncidentFace.LeftMostCpt = cedgeStartAtLeftMost.FrCpt;
+                cpgIncidentFace.cedgeStartAtLeftMost = cedgeStartAtLeftMost;
             }
         }
 
@@ -305,11 +297,108 @@ namespace MorphingClass.CGeometry
         {
             foreach (CPolygon cpg in rawfaceLt)
             {
-                CEdge cedgeStartAtLeftMost = cpg.cedgeStartAtLeftMost;
-                cpg.IsHole = CGeoFunc.IsClockwise(cedgeStartAtLeftMost.cedgePrev.FrCpt, 
-                    cedgeStartAtLeftMost.FrCpt, cedgeStartAtLeftMost.ToCpt);                
+                var AxisAngleCEdgeLt = cpg.LeftMostCpt.AxisAngleCEdgeLt;
+
+                //find UpperCorrectAxisAngleCEdge and LowerCorrectAxisAngleCEdge
+                //UpperCorrectAxisAngleCEdge has angle most close to 90 degrees
+                //LowerCorrectAxisAngleCEdge has angle most close to 270 degrees
+                var UpperCorrectAxisAngleCEdge = AxisAngleCEdgeLt[0];
+                var dblUpperAngleToHalfPI =
+                    CGeoFunc.CalAngle_Counterclockwise(AxisAngleCEdgeLt[0].dblAxisAngle, CConstants.dblHalfPI);
+                var LowerCorrectAxisAngleCEdge = AxisAngleCEdgeLt[0];
+                var dblLowerAngleToHalfPI = dblUpperAngleToHalfPI;
+                for (int i = 1; i < AxisAngleCEdgeLt.Count; i++)
+                {
+                    double dblAngleToHalfPI =
+                    CGeoFunc.CalAngle_Counterclockwise(AxisAngleCEdgeLt[i].dblAxisAngle, CConstants.dblHalfPI);
+
+                    if (dblAngleToHalfPI <= dblUpperAngleToHalfPI)
+                    {
+                        dblUpperAngleToHalfPI = dblAngleToHalfPI;
+                        UpperCorrectAxisAngleCEdge = AxisAngleCEdgeLt[i];
+                    }
+
+                    if (dblAngleToHalfPI > dblLowerAngleToHalfPI)
+                    {
+                        dblLowerAngleToHalfPI = dblAngleToHalfPI;
+                        LowerCorrectAxisAngleCEdge = AxisAngleCEdgeLt[i];
+                    }
+                }
+
+
+                cpg.IsHole = false;
+                var TestCEdgeStartAtExtreme = cpg.cedgeStartAtLeftMost;
+                do
+                {
+                    if (TestCEdgeStartAtExtreme.cpgIncidentFace.GID == cpg.GID)  //TestCEdgeStartAtExtreme belongs to face cpg
+                    {
+                        //if the component is a hole, the following must hold
+                        if (TestCEdgeStartAtExtreme.GID == UpperCorrectAxisAngleCEdge.GID
+                            && TestCEdgeStartAtExtreme.cedgePrev.GID == LowerCorrectAxisAngleCEdge.cedgeTwin.GID)
+                        {
+                            cpg.IsHole = true;  //inner boundary
+                            break;
+                        }
+                    }
+                    TestCEdgeStartAtExtreme = TestCEdgeStartAtExtreme.GetLargerAxisAngleCEdge();
+                } while (TestCEdgeStartAtExtreme.GID != cpg.cedgeStartAtLeftMost.GID);
             }
         }
+
+
+        /// <summary>
+        /// there are more than one edge in the face starting from the vertex
+        /// we should try rightmost, uppermost, or lowest vertex
+        /// </summary>
+        /// <param name="cedge"></param>
+        /// <returns></returns>
+        private CEdge GetValidCEdgeStartAtExtreme(CEdge cedge)
+        {
+            var cedgeStartAtExtreme = GetCEdgeStartAtExtreme(cedge, CCmpCptXY_VerySmall.pCmpCptXY_VerySmall, 1);  //rightmost
+
+            if (IsOnlyOneEdgeStartAtFrCpt(cedgeStartAtExtreme) == false)
+            {
+                cedgeStartAtExtreme = GetCEdgeStartAtExtreme(cedge, CCmpCptYX_VerySmall.pCmpCptYX_VerySmall, 1);  //uppermost
+                if (IsOnlyOneEdgeStartAtFrCpt(cedgeStartAtExtreme) == false)
+                {
+                    cedgeStartAtExtreme = GetCEdgeStartAtExtreme(cedge, CCmpCptYX_VerySmall.pCmpCptYX_VerySmall, -1);  //lowest
+                    if (IsOnlyOneEdgeStartAtFrCpt(cedgeStartAtExtreme) == false)
+                    {
+                        throw new ArgumentOutOfRangeException("The four extreme points are not available to test holes or outer!");
+                    }
+                }
+            }
+
+            return cedgeStartAtExtreme;
+        }
+
+        /// <summary>
+        /// there are more than one edge in the face starting from the vertex
+        /// </summary>
+        /// <param name="cedge"></param>
+        /// <returns></returns>
+        private bool IsOnlyOneEdgeStartAtFrCpt(CEdge cedge)
+        {
+            return (cedge.GID == cedge.cedgeTwin.cedgeNext.cedgeTwin.cedgeNext.GID);
+        }
+
+        private CEdge GetCEdgeStartAtExtreme(CEdge cedge, IComparer<CPoint> pCmpCpt, int intValue)
+        {
+            var CEdgeStartAtExtreme = cedge;
+            var currentcedge = cedge.cedgeNext;
+            while (currentcedge.GID != cedge.GID)
+            {
+                if (pCmpCpt.Compare(currentcedge.FrCpt, CEdgeStartAtExtreme.FrCpt) == intValue)
+                {
+                    CEdgeStartAtExtreme = currentcedge;
+                }
+                currentcedge.isTraversed = true;  //this sentence is only useful for funcion FindTheLeftMostVertexForFace
+                currentcedge = currentcedge.cedgeNext;
+            }
+
+            return CEdgeStartAtExtreme;
+        }
+
 
         /// <summary>
         /// 
@@ -325,13 +414,13 @@ namespace MorphingClass.CGeometry
                 cpg.cedgeStartAtLeftMost.isStartEdge = true;   //we label isStartEdge so that we know the start (and know when we should stop) when we traverse the edges of the face
                 if (cpg.IsHole == false)
                 {
-                    cpg.cedgeOuterComponent = cpg.cedgeStartAtLeftMost;
-                    //cpg.cedgeOuterComponent.isStartEdge = true;
+                    cpg.OuterCmptCEdge = cpg.cedgeStartAtLeftMost;
+                    //cpg.OuterCmptCEdge.isStartEdge = true;
                 }
                 else
                 {
-                    cpg.cedgeLkInnerComponents = new LinkedList<CEdge>();
-                    cpg.cedgeLkInnerComponents.AddLast(cpg.cedgeStartAtLeftMost);
+                    cpg.InnerCmptCEdgeLt = new List<CEdge>();
+                    cpg.InnerCmptCEdgeLt.Add(cpg.cedgeStartAtLeftMost);
                 }
             }
         }
@@ -349,8 +438,8 @@ namespace MorphingClass.CGeometry
             {
                 if (cpg.IsHole == true)
                 {
-                    cpg.cedgeStartAtLeftMost.FrCpt.HoleCpg = cpg;
-                    holeleftcptlt.Add(cpg.cedgeStartAtLeftMost.FrCpt);
+                    cpg.LeftMostCpt.HoleCpg = cpg;
+                    holeleftcptlt.Add(cpg.LeftMostCpt);
                 }
             }
 
@@ -362,7 +451,7 @@ namespace MorphingClass.CGeometry
 
             int intCount = 0;
             CPolygon SuperFace = new CPolygon();
-            SuperFace.cedgeLkInnerComponents = new LinkedList<CEdge>();
+            SuperFace.InnerCmptCEdgeLt = new List<CEdge>();
 
             foreach (var rawface in rawfaceLt)
             {
@@ -370,7 +459,7 @@ namespace MorphingClass.CGeometry
                 {
                     //LeftFace can be a hole or the face inluding the current hole
                     //we merge the information of faces and store the information in the LeftFace
-                    //we don't need to care about the cedgeOuterComponent, because it is always from the LeftFace which will be kept
+                    //we don't need to care about the OuterCmptCEdge, because it is always from the LeftFace which will be kept
                     CPolygon TargetFace = null;
                     if (rawface.LeftMostCpt.ClosestLeftCIntersection != null)  //there is an edge to the left
                     {
@@ -380,29 +469,29 @@ namespace MorphingClass.CGeometry
                         if (LeftFace.IsHole == true)
                         {
                             //TargetCpg may or may not be LeftFace because the cedgeInnerComponent of a face may be updated to indicate another cpgIncidentFace
-                            TargetFace = LeftFace.cedgeLkInnerComponents.First.Value.cpgIncidentFace;
-                            TargetFace.cedgeLkInnerComponents.AppendRange(rawface.cedgeLkInnerComponents);
+                            TargetFace = LeftFace.InnerCmptCEdgeLt[0].cpgIncidentFace;
+                            TargetFace.InnerCmptCEdgeLt.AddRange(rawface.InnerCmptCEdgeLt);
                         }
                         else  //LeftFace is the TargetCpg
                         {
-                            if (LeftFace.cedgeLkInnerComponents == null)
+                            if (LeftFace.InnerCmptCEdgeLt == null)
                             {
-                                LeftFace.cedgeLkInnerComponents = rawface.cedgeLkInnerComponents;
+                                LeftFace.InnerCmptCEdgeLt = rawface.InnerCmptCEdgeLt;
                             }
                             else
                             {
-                                LeftFace.cedgeLkInnerComponents.AppendRange(rawface.cedgeLkInnerComponents);
+                                LeftFace.InnerCmptCEdgeLt.AddRange(rawface.InnerCmptCEdgeLt);
                             }
                             TargetFace = LeftFace;
                         }
                     }
                     else
                     {
-                        SuperFace.cedgeLkInnerComponents.AppendRange(rawface.cedgeLkInnerComponents);
+                        SuperFace.InnerCmptCEdgeLt.AddRange(rawface.InnerCmptCEdgeLt);
                         TargetFace = SuperFace;
                     }
 
-                    foreach (var cedgeInnerComponent in rawface.cedgeLkInnerComponents)
+                    foreach (var cedgeInnerComponent in rawface.InnerCmptCEdgeLt)
                     {
                         cedgeInnerComponent.cpgIncidentFace = TargetFace;
                     }
@@ -420,12 +509,12 @@ namespace MorphingClass.CGeometry
             SuperFace.isTraversed = true;
             foreach (CPolygon rawface in rawfaceLt)
             {
-                if (rawface.cedgeOuterComponent != null)
+                if (rawface.OuterCmptCEdge != null)
                 {
-                    if (rawface.cedgeOuterComponent.cpgIncidentFace.isTraversed == false)
+                    if (rawface.OuterCmptCEdge.cpgIncidentFace.isTraversed == false)
                     {
-                        FaceCpgLt.Add(rawface.cedgeOuterComponent.cpgIncidentFace);
-                        rawface.cedgeOuterComponent.cpgIncidentFace.isTraversed = true;
+                        FaceCpgLt.Add(rawface.OuterCmptCEdge.cpgIncidentFace);
+                        rawface.OuterCmptCEdge.cpgIncidentFace.isTraversed = true;
                     }
                 }
             }
@@ -440,9 +529,9 @@ namespace MorphingClass.CGeometry
         {
             foreach (var face in faceeb)
             {
-                if (face.cedgeLkInnerComponents != null)
+                if (face.InnerCmptCEdgeLt != null)
                 {
-                    foreach (var cedgeInnerComponent in face.cedgeLkInnerComponents)
+                    foreach (var cedgeInnerComponent in face.InnerCmptCEdgeLt)
                     {
                         //cedgeInnerComponent has already indicated to the face, we need to update other edges
                         var currentcedge = cedgeInnerComponent.cedgeNext;
@@ -549,7 +638,7 @@ namespace MorphingClass.CGeometry
         //{
         //    foreach (var face in _FaceCpgLt)
         //    {
-        //        if (face.cedgeOuterComponent != null)
+        //        if (face.OuterCmptCEdge != null)
         //        {
         //            face.TraverseFaceToGenerateCptLt();
         //        }

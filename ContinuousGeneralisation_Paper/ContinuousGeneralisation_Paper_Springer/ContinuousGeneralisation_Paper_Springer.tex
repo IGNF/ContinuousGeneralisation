@@ -182,31 +182,19 @@ eprint=false,dashed=false]{biblatex}
 \titlerunning{Continuous Generalization of Buildings}
 % Use \titlerunning{Short Title} for an abbreviated version of
 % your contribution title if the original one is too long
-%\author{Dongliang Peng, Alexander Wolff, and Jan-Henrik Haunert}
+\author{Dongliang Peng and Guillaume Touya}
 % Use \authorrunning{Short Title} for an abbreviated version of
 % your contribution title if the original one is too long
-% \institute{Name of First Author \at Name, Address of Institute, \email{name@email.address}
-% \and Name of Second Author \at Name, Address of Institute
-% \email{name@email.address}}
 \institute{
-%	Dongliang Peng 
-%	\at Chair of Computer Science I, University of W\"urzburg, 
-%	Germany \\
-%	\email{dongliang.peng@uni-wuerzburg.de}
-%	\and
-%	% 
-%	Alexander Wolff 
-%	\at Chair of Computer Science I, University 
-%	of W\"urzburg, Germany \\
-%	\url{URL: 
-%	
-%http://www1.informatik.uni-wuerzburg.de/en/staff/wolff_alexander}
-%	\and
-%	%
-%	Jan-Henrik Haunert 
-%	\at Institute for Geoinformatics and Remote Sensing (IGF), 
-%	University of Osnabr\"uck, Germany \\
-%	\email{janhhaunert@uni-osnabrueck.de}
+	Dongliang Peng 
+	\at Chair of Computer Science I, University of W\"urzburg, 
+	Germany \\
+	\email{dongliang.peng@uni-wuerzburg.de}
+	\and
+	% 
+	Guillaume Touya
+	\at COGIT, IGN, France \\
+	\email{guillaume.touya@ign.fr}
 }
 %
 % Use the package "url.sty" to avoid
@@ -274,7 +262,7 @@ some building should be enlarged, and buildings close to each other should be
 aggregated.
 Although algorithms of simplifying buildings have been studied, e.g., 
 \textcite{Buchin2011_Simp,haunertwolff2010}, problems become more complicated 
-when we have to aggregate buildings in the meantime.
+when we have to aggregate buildings simultaneously.
 In order to aggregate, we should first group the buildings.
 
 
@@ -306,6 +294,19 @@ Cetinkaya2015,Deng2017,Regnauld1996}
 
 
 \section{Method}
+
+We grow all the buildings with the same speed.
+
+
+If several buildings are close to each other at the start 
+scale, we bridge them by line segments and take the merge of these 
+buildings 
+and bridges as one building.
+For each building, either an original one or a merged one, at the start 
+scale, 
+we generate its target shape at 
+the goal scale by enlarging and simplifying. Then we grow the  
+building to the target shape. 
 
 \subsection{Growing}
 If several buildings are close to each other at the start 
@@ -339,7 +340,7 @@ l_b=4d_\mathrm{G}+d_\epsilon.
 we use a buffer-based method, similar to \textcite{Damen2008,Meijers2016}, to 
 simplify our grown buildings.
 
-\subsection{Parameters for growing and simplification}
+\subsection{Parameters for growing and simplifying}
 The start scale is $1:S_\mathrm{s}$, and the goal scale is $1:S_\mathrm{g}$ 
 ($S_\mathrm{g}>S_\mathrm{s}$).
 The area of a building should be larger than $a$ mm$^2$ on map.
@@ -475,10 +476,11 @@ eliminate the hole once its size is smaller than $8$ mm$^2$ on map.
 	\centering
 	\includegraphics{ExtraGrowth}
 	\caption{In the left figure, the green polygon represents a building, and 
-	the dashed polygon is the enlargement of the building. In the right 
-	figure, the dashed polygon has been simplified to a rectangle. In order to 
-	fill the rectangle, most parts of the (green) building needs to grow 
-	distance $d_\mathrm{G}$, but the pit needs to grow $d_G + d_\mathrm{e}$, 
+	the gray polygon is the enlargement of the building. In the right 
+	figure, the gray polygon has been simplified to a rectangle. In order to 
+	fill the rectangle, most parts of the (green) building needs to grow with
+	distance $d_\mathrm{G}$, but the pit needs to grow with $d_G + 
+	d_\mathrm{e}$, 
 	where $d_\mathrm{e}$ is the extra growing distance.}
 	\label{fig:ExtraGrowth}
 \end{figure}

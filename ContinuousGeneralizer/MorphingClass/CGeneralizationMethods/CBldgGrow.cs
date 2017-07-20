@@ -52,6 +52,11 @@ namespace MorphingClass.CGeneralizationMethods
         private static double _dblFactorClipper;
         private static int _intI = 3;
         private double _dblD_G;
+        private static double _dblStartScale;
+        private static double _dblTargetScale;
+        private static double _dblSqrtAreaLimitMap;
+
+
         private static double _dblAreaLimit;
         private static double _dblHoleAreaLimit;
 
@@ -122,7 +127,7 @@ namespace MorphingClass.CGeneralizationMethods
             //var newcpg = new CPolygon(0, cptlt);
             //LSCpgLt = new List<CPolygon> { newcpg };
 
-            double dblLastScale = dblLS;
+            double dblStartScale = dblLS;
             //double dblStartScale = dblLS;
             //double dblGrowLast = 0;
             //double dblDLast = 0.2 * dblStartScale;
@@ -133,71 +138,73 @@ namespace MorphingClass.CGeneralizationMethods
             int intStart = 0;
             int intEnd = intStart + intOutput;
             CHelpFunc.Displaytspb(0.5, intEnd - intStart, pParameterInitialize.tspbMain);
-            double dblScale = 0;
+            double dblTargetScale = 0;
             for (int i = intStart; i < intEnd; i++)
             {
-                //double dblScale = dblStartScale + (i + 1) * 5;
+                //double dblTargetScale = dblStartScale + (i + 1) * 5;
                 switch (i)
                 {
                     case 0:
-                        dblScale = 50;
-                        //dblScale = 25;
+                        dblTargetScale = 50;
+                        //dblTargetScale = 25;
                         break;
                     case 1:
-                        dblScale = 100;
-                        //dblScale = 50;
+                        dblTargetScale = 100;
+                        //dblTargetScale = 50;
                         break;
                     case 2:
-                        dblScale = 250;
-                        //dblScale = 100;
+                        dblTargetScale = 250;
+                        //dblTargetScale = 100;
                         break;
                     case 3:
-                        dblScale = 500;
+                        dblTargetScale = 500;
                         //CConstants.blnStop = true;
-                        //dblScale = 250;
+                        //dblTargetScale = 250;
                         _intI = 3;
                         break;
                     case 4:
-                        dblScale = 1000;
+                        dblTargetScale = 1000;
                         //CConstants.blnStop = true;
-                        //dblScale = 500;
+                        //dblTargetScale = 500;
                         _intI = 3;
                         break;
                     default:
                         break;
                 }
 
+                //dblTargetScale = 30;
+                _dblStartScale = dblStartScale;
+                _dblTargetScale = dblTargetScale;
 
-
-
-                //double dblD = 0.2 * dblScale;  //dblD is the increase limit and the limit distance between two buildings
-                //double dblGrow = 0.75 * (dblD - dblDLast);  //0.15(dblScale-dblStartScale)
-                ////double dblhalfD = 0.1 * dblScale;  //d=0.2mm * dblScale
-                ////double dblGrow = 0.1 * dblScale;
-                //double dblAreaLimit = 0.16 * dblScale * dblScale; //dblAreaLimit=0.16 mm^2 * dblScale * dblScale
-                ////double dblHoleAreaLimit = 50* dblAreaLimit; //dblHoleAreaLimit=8 mm^2 * dblScale * dblScale
-                //double dblGrowSpeed = dblGrow + dblD;  //0.35*dblScale - 0.15*dblStartScale
-                //double dblHoleAreaLimit = Math.PI* dblGrowSpeed* dblGrowSpeed; //dblHoleAreaLimit=8 mm^2 * dblScale * dblScale
-                ////double dblr = dblhalfD;  //r= 1/4 sqrt(A)= 0.1 * dblScale
-                ////double dblSimpR = 0.2 * dblScale;  //a building should be large enough in order to have some detailes
-                double dblSqrtAreaLimitMap = 1;
-                double dblAqrtAreaLimitReal = dblSqrtAreaLimitMap * dblScale;
-                double dblAreaLimit = dblAqrtAreaLimitReal * dblAqrtAreaLimitReal; //dblAreaLimit= 16 mm^2 * dblScale * dblScale
+                
+                //double dblD = 0.2 * dblTargetScale;  //dblD is the increase limit and the limit distance between two buildings
+                //double dblGrow = 0.75 * (dblD - dblDLast);  //0.15(dblTargetScale-dblStartScale)
+                ////double dblhalfD = 0.1 * dblTargetScale;  //d=0.2mm * dblTargetScale
+                ////double dblGrow = 0.1 * dblTargetScale;
+                //double dblAreaLimit = 0.16 * dblTargetScale * dblTargetScale; //dblAreaLimit=0.16 mm^2 * dblTargetScale * dblTargetScale
+                ////double dblHoleAreaLimit = 50* dblAreaLimit; //dblHoleAreaLimit=8 mm^2 * dblTargetScale * dblTargetScale
+                //double dblGrowSpeed = dblGrow + dblD;  //0.35*dblTargetScale - 0.15*dblStartScale
+                //double dblHoleAreaLimit = Math.PI* dblGrowSpeed* dblGrowSpeed; //dblHoleAreaLimit=8 mm^2 * dblTargetScale * dblTargetScale
+                ////double dblr = dblhalfD;  //r= 1/4 sqrt(A)= 0.1 * dblTargetScale
+                ////double dblSimpR = 0.2 * dblTargetScale;  //a building should be large enough in order to have some detailes
+                _dblSqrtAreaLimitMap = 1;
+                double dblAqrtAreaLimitReal = _dblSqrtAreaLimitMap * dblTargetScale;
+                double dblAreaLimit = dblAqrtAreaLimitReal * dblAqrtAreaLimitReal; //dblAreaLimit= 16 mm^2 * dblTargetScale * dblTargetScale
                 _dblAreaLimit = dblAreaLimit;
 
-                double dblD = 0.2 * dblScale;  //epsilon * dblScale, dblD is the increase limit and the limit distance between two buildings
-                double dblGrow = 0.4 * dblSqrtAreaLimitMap * (dblScale - dblLastScale);  //lambda/2 * dblAqrtAreaLimit * (dblScale-dblStartScale)
-                                                                                         //double dblhalfD = 0.1 * dblScale;  //d=0.2mm * dblScale
-                                                                                         //double dblGrow = 0.1 * dblScale;
+                double dblD = 0.2 * dblTargetScale;  //epsilon * dblTargetScale, dblD is the increase limit and the limit distance between two buildings
+                double dblGrow = 0.4 * _dblSqrtAreaLimitMap * (dblTargetScale - dblStartScale);  //lambda/2 * dblAqrtAreaLimit * (dblTargetScale-dblStartScale)
+                                                                                         //double dblhalfD = 0.1 * dblTargetScale;  //d=0.2mm * dblTargetScale
+                                                                                         //double dblGrow = 0.1 * dblTargetScale;
 
-                _dblD_G = dblGrow + dblD;  //0.35*dblScale - 0.15*dblStartScale
-                //double dblHoleAreaLimit = Math.PI * dblGrowSpeed * dblGrowSpeed; //dblHoleAreaLimit=8 mm^2 * dblScale * dblScale
-                double dblHoleAreaLimit = 8 * dblScale * dblScale; //dblHoleAreaLimit=8 mm^2 * dblScale * dblScale
+                _dblD_G = dblGrow + dblD;  //0.35*dblTargetScale - 0.15*dblStartScale
+                //double dblHoleAreaLimit = Math.PI * dblGrowSpeed * dblGrowSpeed; //dblHoleAreaLimit=8 mm^2 * dblTargetScale * dblTargetScale
+                double dblHoleAreaLimit = 8 * dblTargetScale * dblTargetScale; //dblHoleAreaLimit=8 mm^2 * dblTargetScale * dblTargetScale
                 _dblHoleAreaLimit = dblHoleAreaLimit;
 
 
-                //double dblr = dblhalfD;  //r= 1/4 sqrt(A)= 0.1 * dblScale
-                //double dblSimpR = 0.2 * dblScale;  //a building should be large enough in order to have some detailes
+                //double dblr = dblhalfD;  //r= 1/4 sqrt(A)= 0.1 * dblTargetScale
+                //double dblSimpR = 0.2 * dblTargetScale;  //a building should be large enough in order to have some detailes
 
                 MagnifiedCpgLt.ForEach(cpg => cpg.RemoveClosePoints());
                 MagnifiedCpgLt.ForEach(cpg => cpg.FormCEdgeLt());
@@ -219,11 +226,11 @@ namespace MorphingClass.CGeneralizationMethods
                 //var remainedcpgeb = GetLargeCpgEb(scaledbackcpgEb, dblAreaLimit, dblHoleAreaLimit);
 
                 CSaveFeature.SaveCGeoEb(scaledbackcpgEb, esriGeometryType.esriGeometryPolygon,
-     dblScale + "k_TargetForm" + dblD + "m_" + CHelpFunc.GetTimeStampWithPrefix(),
+     dblTargetScale + "k_TargetForm" + dblD + "m_" + CHelpFunc.GetTimeStampWithPrefix(),
     pParameterInitialize, intGreen: 255);
 
                 MagnifiedCpgLt = targetcpglt;
-                dblLastScale = dblScale;
+                dblStartScale = dblTargetScale;
                 CHelpFunc.Displaytspb((i + 1 - intStart), intEnd - intStart, pParameterInitialize.tspbMain);
 
 
@@ -1116,7 +1123,7 @@ namespace MorphingClass.CGeneralizationMethods
 
         //var mergedcpg = new CPolygon(cpglt[0].ID, 
         //    pDCEL.FaceCpgLt[0].GetOnlyInnerCptLt(), 
-        //    pDCEL.FaceCpgLt[0].cedgeLkInnerComponents.GetFirstT().cedgeTwin.cpgIncidentFace.GetOnlyInnerCptLt());
+        //    pDCEL.FaceCpgLt[0].InnerCmptCEdgeLt.GetFirstT().cedgeTwin.cpgIncidentFace.GetOnlyInnerCptLt());
 
         //            //return new CPolygon(cpglt[0].ID, pDCEL.FaceCpgLt[0].GetOnlyInnerCptLt(), holecpglt);
         //        }
@@ -1522,6 +1529,7 @@ namespace MorphingClass.CGeneralizationMethods
             cpglt.ForEach(cpg => cpg.CEdgeLt.ForEach(cedge => CEdgeSS.Add(cedge)));
             CGeoFunc.CheckShortEdges(CEdgeSS);
 
+            var BridgeCEdgeLt = new List<CEdge>(cpglt.Count);
             var AllCEdgeLt = new List<CEdge>(CEdgeSS.Count + cpglt.Count); //the count is roughtly
             var CEdgeCptEdgeDisLtSD = new SortedDictionary<CEdge, List<CptEdgeDis>>();
             foreach (var cptEdgeDis in CptEdgeDisLt)
@@ -1530,12 +1538,13 @@ namespace MorphingClass.CGeneralizationMethods
                 if (CCmpMethods.CmpCoordDbl_VerySmall(cptEdgeDis.dblDis, 0) != 0)
                 {
                     //add the bridge as an edge
-                    AllCEdgeLt.Add(new CEdge(cptEdgeDis.Cpt, cptEdgeDis.CptOnTargetCEdge));
+                    BridgeCEdgeLt.Add(new CEdge(cptEdgeDis.Cpt, cptEdgeDis.CptOnTargetCEdge));
                 }
 
                 //if the smallest distance of two polygons happen to between a point and an edge
                 //this edge can be the closest edge of the polygon to several polygons, 
-                //so we need to split the edge into several edges
+                //so we will split the edge into several edges
+                //here we record all the cases
                 if (cptEdgeDis.t != 0 && cptEdgeDis.t != 1)
                 {
                     List<CptEdgeDis> outCptEdgeDislt;
@@ -1551,6 +1560,8 @@ namespace MorphingClass.CGeneralizationMethods
                     }
                 }
             }
+            AllCEdgeLt.AddRange(BridgeCEdgeLt);
+
 
             //CGeoFunc.CheckShortEdges(AllCEdgeLt);
 
@@ -1565,7 +1576,7 @@ namespace MorphingClass.CGeneralizationMethods
 
                 AllCEdgeLt.AddRange(GenerateNewCEdgeEb(TargetCEdge, CEdgeCptEdgeDisLt.Value));
             }
-            CGeoFunc.CheckShortEdges(AllCEdgeLt);
+            //CGeoFunc.CheckShortEdges(AllCEdgeLt);
             //if (CGeoFunc.ExistDuplicate(AllCEdgeLt, new CCmpCEdgeCoordinates()))
             //{
             //    throw new ArgumentException("There are duplicated edges!");
@@ -1598,8 +1609,10 @@ namespace MorphingClass.CGeneralizationMethods
             CDCEL pDCEL = new CGeometry.CDCEL(AllCEdgeLt);
             pDCEL.ConstructDCEL();
 
-
-            return new CPolygon(cpglt[0].ID, pDCEL.FaceCpgLt[0].GetOnlyInnerCptLt(), holecpglt);
+            var mergedcpg= new CPolygon(cpglt[0].ID, pDCEL.FaceCpgLt[0].GetOnlyInnerCptLt(), holecpglt);
+            mergedcpg.MergedSubCpgLt = cpglt;
+            mergedcpg.BridgeCEdgeLt = BridgeCEdgeLt;
+            return mergedcpg;
         }
 
 
@@ -2230,6 +2243,7 @@ namespace MorphingClass.CGeneralizationMethods
                         foreach (var holecpg in recursivecpg.HoleCpgLt)
                         {
                             var scaledholecpg = new CPolygon(holecpg.ID, ScaleCptEb(holecpg.CptLt, dblFactor).ToList());
+                            scaledholecpg.IsHole = true;
                             scaledrecursivecpg.HoleCpgLt.Add(scaledholecpg);
                             //scaledholecpg.ParentCpg = scaledrecursivecpg;
 

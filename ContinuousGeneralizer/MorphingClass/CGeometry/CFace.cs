@@ -22,8 +22,8 @@
 
 //        private List<CPoint> _CptLt;      // vertices(clockwise)??? ; the first point and the last point in cptlt must have the same coordinates
 //        private List<CEdge> _CEdgeLt;     // cedges(clockwise)???
-//        private CEdge _cedgeOuterComponent;
-//        private List<CEdge> _cedgeLkInnerComponents;     //counter clockwise
+//        private CEdge _OuterCmptCEdge;
+//        private List<CEdge> _InnerCmptCEdgeLt;     //counter clockwise
 //        private SortedDictionary<CPolygon, LinkedList<CEdge>> _AdjacentSD;    //Why SortedDictionary? Because we may need to unite the adjacent elements of two elements, and we also need to consider the shared borders
 //        private CPatch _cpatch;
 //        private int _intType;
@@ -64,17 +64,17 @@
 //        /// <summary>
 //        /// (counter clockwise)
 //        /// </summary>
-//        public List<CEdge> cedgeLkInnerComponents
+//        public List<CEdge> InnerCmptCEdgeLt
 //        {
-//            get { return _cedgeLkInnerComponents; }
-//            set { _cedgeLkInnerComponents = value; }
+//            get { return _InnerCmptCEdgeLt; }
+//            set { _InnerCmptCEdgeLt = value; }
 //        }
 
 
-//        public CEdge cedgeOuterComponent
+//        public CEdge OuterCmptCEdge
 //        {
-//            get { return _cedgeOuterComponent; }
-//            set { _cedgeOuterComponent = value; }
+//            get { return _OuterCmptCEdge; }
+//            set { _OuterCmptCEdge = value; }
 //        }
 
 //        public SortedDictionary<CPolygon, LinkedList<CEdge>> AdjacentSD

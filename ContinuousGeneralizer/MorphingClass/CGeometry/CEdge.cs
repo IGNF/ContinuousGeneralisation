@@ -413,10 +413,10 @@ namespace MorphingClass.CGeometry
             return _pPolyline;
         }
 
-        public int Compare(CEdge other)
-        {
-            return CCmpMethods.CmpCEdgeCoordinates(this, other);
-        }
+        //public int Compare(CEdge other)
+        //{
+        //    return CCmpMethods.CmpCEdgeCoordinates(this, other, true);
+        //}
 
         public void PrintMySelf()
         {

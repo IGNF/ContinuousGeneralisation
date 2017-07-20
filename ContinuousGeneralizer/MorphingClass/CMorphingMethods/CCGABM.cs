@@ -810,7 +810,7 @@ namespace MorphingClass.CMorphingMethods
                 else if (LSMixSgHalfEdge.BelongedCPolyline.enumScale == CEnumScale.Larger)  //the polygon is found
                 {
                     LSFace = LSMixSgHalfEdge.cpgIncidentFace2;    //any cpgIncidentFace2 of the edges is available, because they are the same
-                    if (LSFace.cedgeOuterComponent == null)   //only the SuperFace dosen't have OuterComponent
+                    if (LSFace.OuterCmptCEdge == null)   //only the SuperFace dosen't have OuterComponent
                     {
                         return;  //we return here to avoid a very deep recursion, which may lead to StackOverflowException
                     }
@@ -823,13 +823,13 @@ namespace MorphingClass.CMorphingMethods
 
         private void CollectingVerticesInnerOuterComponents(CPolygon LSMoreDetailedFace, ref List<CPoint> InsideSameFaceCptLt, ref List<CEdge> InsideSameFaceHalfCEdgeLt, ref CPolygon LSFace)
         {
-            if (LSMoreDetailedFace.cedgeOuterComponent != null)
+            if (LSMoreDetailedFace.OuterCmptCEdge != null)
             {
-                RecursivelyCollectingVertices(LSMoreDetailedFace.cedgeOuterComponent, ref InsideSameFaceCptLt, ref InsideSameFaceHalfCEdgeLt, ref LSFace);
+                RecursivelyCollectingVertices(LSMoreDetailedFace.OuterCmptCEdge, ref InsideSameFaceCptLt, ref InsideSameFaceHalfCEdgeLt, ref LSFace);
             }
-            if (LSMoreDetailedFace.cedgeLkInnerComponents != null)
+            if (LSMoreDetailedFace.InnerCmptCEdgeLt != null)
             {
-                foreach (CEdge InnerCEdge in LSMoreDetailedFace.cedgeLkInnerComponents)
+                foreach (CEdge InnerCEdge in LSMoreDetailedFace.InnerCmptCEdgeLt)
                 {
                     RecursivelyCollectingVertices(InnerCEdge, ref InsideSameFaceCptLt, ref InsideSameFaceHalfCEdgeLt, ref LSFace);
                 }
@@ -857,14 +857,14 @@ namespace MorphingClass.CMorphingMethods
             double dblIntegralWeightedMoveY = 0;
             double dblIntegralWeight = 0;
 
-            if (LSFace.cedgeOuterComponent != null)
+            if (LSFace.OuterCmptCEdge != null)
             {
-                CalSgMoveVectorIDW(cpt, LSFace.cedgeOuterComponent, ref dblIntegralWeightedMoveX, ref dblIntegralWeightedMoveY, ref dblIntegralWeight);
+                CalSgMoveVectorIDW(cpt, LSFace.OuterCmptCEdge, ref dblIntegralWeightedMoveX, ref dblIntegralWeightedMoveY, ref dblIntegralWeight);
             }
 
-            if (LSFace.cedgeLkInnerComponents != null)
+            if (LSFace.InnerCmptCEdgeLt != null)
             {
-                foreach (CEdge cedge in LSFace.cedgeLkInnerComponents)
+                foreach (CEdge cedge in LSFace.InnerCmptCEdgeLt)
                 {
                     CalSgMoveVectorIDW(cpt, cedge, ref dblIntegralWeightedMoveX, ref dblIntegralWeightedMoveY, ref dblIntegralWeight);
                 }

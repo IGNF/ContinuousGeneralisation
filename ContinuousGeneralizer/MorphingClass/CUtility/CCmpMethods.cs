@@ -76,34 +76,62 @@ namespace MorphingClass.CUtility
         /// <returns>1, if the first parameter larger than the second one; -1, smaller; 0, equal</returns>
         /// <remarks>First comapre FrCpts. If the two cedges have the same FrCpts, then compare ToCpts. 
         /// If they neither have the same FrCpts nor have the same ToCpts, then compare FrCpt with ToCpt as well as ToCpt with FrCpt to find whether they are equal</remarks>
-        public static int CmpCEdgeCoordinates(CEdge cedge1, CEdge cedge2)
+        public static int CmpCEdgeCoordinates(CEdge cedge1, CEdge cedge2, bool blnMayFlip=false)
         {
-            var frcpt1 = cedge1.FrCpt;
-            var tocpt1 = cedge1.ToCpt;
-            var frcpt2 = cedge2.FrCpt;
-            var tocpt2 = cedge2.ToCpt;
-
-            //cedge1.PrintMySelf();
-            //cedge2.PrintMySelf();
-            //when we use a SortedSet to store edges, we want that the edge will have the same position no matter which end is the start
-            if (cedge1 .intIncrease ==-1)  
-            {
-                frcpt1=cedge1.ToCpt;
-                tocpt1 = cedge1.FrCpt;
-            }
-
-            if (cedge2.intIncrease == -1)
-            {
-                frcpt2 = cedge2.ToCpt;
-                tocpt2 = cedge2.FrCpt;
-            }
-
+            CPoint frcpt1;
+            CPoint tocpt1;
+            CPoint frcpt2;
+            CPoint tocpt2;
+            GetCpts(cedge1, cedge2, blnMayFlip, out frcpt1, out tocpt1, out frcpt2, out tocpt2);
 
             int intResultFF = CmpCptYX(frcpt1, frcpt2);
             int intResultTT = CmpCptYX(tocpt1, tocpt2);
 
-            int intResult = CCmpMethods.HandleTwoResults(intResultFF, intResultTT);
-            return intResult;
+            return CCmpMethods.HandleTwoResults(intResultFF, intResultTT);
+        }
+
+
+        public static int CmpCEdgeGID(CEdge cedge1, CEdge cedge2, bool blnMayFlip = false)
+        {
+            CPoint frcpt1;
+            CPoint tocpt1;
+            CPoint frcpt2;
+            CPoint tocpt2;
+            GetCpts(cedge1, cedge2, blnMayFlip, out frcpt1, out tocpt1, out frcpt2, out tocpt2);
+
+            int intResultFF = frcpt1.GID.CompareTo(frcpt2.GID);
+            int intResultTT = tocpt1.GID.CompareTo(tocpt2.GID);
+
+            return CCmpMethods.HandleTwoResults(intResultFF, intResultTT);
+        }
+
+        private static void GetCpts(CEdge cedge1, CEdge cedge2, bool blnMayFlip, 
+            out CPoint frcpt1, out CPoint tocpt1, out CPoint frcpt2, out CPoint tocpt2)
+        {
+            frcpt1 = cedge1.FrCpt;
+            tocpt1 = cedge1.ToCpt;
+            frcpt2 = cedge2.FrCpt;
+            tocpt2 = cedge2.ToCpt;
+
+            //cedge1.PrintMySelf();
+            //cedge2.PrintMySelf();
+
+            if (blnMayFlip == true)
+            {
+                //when we use a SortedSet to store edges, 
+                //we want that the edge will have the same position no matter which end is the start
+                if (cedge1.intIncrease == -1)
+                {
+                    frcpt1 = cedge1.ToCpt;
+                    tocpt1 = cedge1.FrCpt;
+                }
+
+                if (cedge2.intIncrease == -1)
+                {
+                    frcpt2 = cedge2.ToCpt;
+                    tocpt2 = cedge2.FrCpt;
+                }
+            }
         }
 
         //public static int CmpGeneric<T>(T pT1, T pT2)
@@ -111,7 +139,7 @@ namespace MorphingClass.CUtility
 
 
         //}
-        
+
 
         public static int HandleTwoResults(int intResult1, int intResult2)
         {
