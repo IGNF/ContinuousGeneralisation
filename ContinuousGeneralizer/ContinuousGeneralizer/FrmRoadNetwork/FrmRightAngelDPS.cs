@@ -29,7 +29,7 @@ namespace ContinuousGeneralizer.RoadNetwork
         private CFrmOperation _FrmOperation;
         //private CHelpFunc _HelperFunction = new CHelpFunc();
         //private CHelpFuncExcel _HelperFunctionExcel = new CHelpFuncExcel();
-        //private CDPSimplification _pDPSimplification = new CDPSimplification();
+        //private CDPSimplify _pDPSimplify = new CDPSimplify();
 
 
         public FrmRightAngelDPS()
@@ -94,12 +94,12 @@ namespace ContinuousGeneralizer.RoadNetwork
             //    List<CPolyline> Csumpllt = new List<CPolyline>();
             //    for (int j = 0; j < cpllt.Count; j++)
             //    {
-            //        _pDPSimplification.DivideCplByDP(cpllt[j], cpllt[j].pVirtualPolyline);
+            //        _pDPSimplify.DivideCplByDP(cpllt[j], cpllt[j].pVirtualPolyline);
             //    }
             //    for (int j = 0; j < cpllt.Count; j++)
             //    {
             //        List<CPoint> newcptlt = new List<CPoint>();
-            //        _pDPSimplification.RecursivelyGetNewCptLt(cpllt[j], cpllt[j].pVirtualPolyline, ref newcptlt, dblDistanceThreshold);
+            //        _pDPSimplify.RecursivelyGetNewCptLt(cpllt[j], cpllt[j].pVirtualPolyline, ref newcptlt, dblDistanceThreshold);
             //        List<CPolyline> Cpllt = new List<CPolyline>();
             //        Cpllt.Add(cpllt[j]);
             //        for (int k = 0; k < newcptlt.Count; k++)
@@ -155,7 +155,7 @@ namespace ContinuousGeneralizer.RoadNetwork
             //    }
             //    for (int j = 0; j < Cnewsumpllt.Count; j++)
             //    {
-            //        _pDPSimplification.DivideCplByDP(Cnewsumpllt[j], Cnewsumpllt[j].pVirtualPolyline);
+            //        _pDPSimplify.DivideCplByDP(Cnewsumpllt[j], Cnewsumpllt[j].pVirtualPolyline);
             //        List<CPoint> newcptlt = new List<CPoint>();
             //        CEdge newBaseLine = new CEdge(Cnewsumpllt[j].CptLt[0], Cnewsumpllt[j].CptLt[Csumpllt[j].CptLt.Count - 1]);
             //        RecursivelyMovePt(Cnewsumpllt[j], Cnewsumpllt[j].pVirtualPolyline, ref newBaseLine, ref newcptlt, dblProportion);

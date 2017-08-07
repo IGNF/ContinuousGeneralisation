@@ -44,7 +44,7 @@ namespace MorphingClass.CGeometry
 
         private SortedDictionary<CPoint, CPoint> TestCloseCpts(List<CPoint> cptlt)
         {
-           var cptSD = cptlt.ToSD(cpt => cpt, CCmpCptYX_VerySmall.pCmpCptYX_VerySmall);
+           var cptSD = cptlt.ToSD(cpt => cpt, CCmpCptYX_VerySmall.sComparer);
 
            if (cptSD.Count == cptlt.Count)
            {

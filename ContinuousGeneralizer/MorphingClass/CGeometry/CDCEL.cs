@@ -68,7 +68,11 @@ namespace MorphingClass.CGeometry
             //report if there is a short edge
             //short edges may cause problems. Take a polygon as an example, an edge and its twin edge may refer to the same face
             CGeoFunc.CheckShortEdges(cedgelt);
-            CGeoFunc.RemoveLaterDuplicate(cedgelt, new CCmpCEdgeCoordinates());
+
+            if (CGeoFunc.ExistDuplicate(cedgelt, new CCmpEqCEdgeCoord())==true)
+            {
+                throw new ArgumentException("There are duplicated edges! Please keep one copy for each edge!");
+            }
 
             _HalfEdgeLt = ConstructHalfEdgeLt(cedgelt);  //already set indexID
             this.CptLt = ConstructVertexLt(_HalfEdgeLt);         //already set indexID
@@ -83,7 +87,7 @@ namespace MorphingClass.CGeometry
         /// <remarks>could be faster if we do it based on grid</remarks>
         private List<CEdge> ConstructHalfEdgeLt(List<CEdge> cedgelt)
         {
-            List<CEdge> fHalfEdgeLt = new List<CEdge>(cedgelt.Count * 2);
+            var fHalfEdgeLt = new List<CEdge>(cedgelt.Count * 2);
 
             foreach (CEdge cedge in cedgelt)
             {
@@ -93,22 +97,21 @@ namespace MorphingClass.CGeometry
                 fHalfEdgeLt.Add(cedge.cedgeTwin);
             }
 
-            SortedDictionary<CPoint, List<CEdge>> CoStartHalfCEdgeSD = IdentifyCoStartCEdge(fHalfEdgeLt);
-            ConstrcutRelationshipBetweenEdges(CoStartHalfCEdgeSD);
+            var CoStartHalfCEdgeDt = IdentifyCoStartCEdge(fHalfEdgeLt);
+            ConstrcutRelationshipBetweenEdges(CoStartHalfCEdgeDt);
 
             fHalfEdgeLt.SetIndexID();
 
             return fHalfEdgeLt;
         }
 
-        private SortedDictionary<CPoint, List<CEdge>> IdentifyCoStartCEdge(List<CEdge> fHalfEdgeLt)
+        private Dictionary<CPoint, List<CEdge>> IdentifyCoStartCEdge(List<CEdge> fHalfEdgeLt)
         {
-            SortedDictionary<CPoint, List<CEdge>> CoStartHalfCEdgeSD = 
-                new SortedDictionary<CPoint, List<CEdge>>(CCmpCptYX_VerySmall.pCmpCptYX_VerySmall);
+            var CoStartHalfCEdgeDt = new Dictionary<CPoint, List<CEdge>>(new CCmpEqCptXY());
             foreach (CEdge cedge in fHalfEdgeLt)
             {
                 List<CEdge> cedgeLt;
-                bool isExisted = CoStartHalfCEdgeSD.TryGetValue(cedge.FrCpt, out cedgeLt);
+                bool isExisted = CoStartHalfCEdgeDt.TryGetValue(cedge.FrCpt, out cedgeLt);
                 if (isExisted == true)
                 {
                     cedgeLt.Add(cedge);
@@ -117,16 +120,16 @@ namespace MorphingClass.CGeometry
                 {
                     cedgeLt = new List<CEdge>(2);  //we know that there is at least two edges starting at the same vertex
                     cedgeLt.Add(cedge);
-                    CoStartHalfCEdgeSD.Add(cedge.FrCpt, cedgeLt);
+                    CoStartHalfCEdgeDt.Add(cedge.FrCpt, cedgeLt);
                 }
             }
-            return CoStartHalfCEdgeSD;
+            return CoStartHalfCEdgeDt;
         }
 
-        private void ConstrcutRelationshipBetweenEdges(SortedDictionary<CPoint, List<CEdge>> CoStartHalfCEdgeSD)
+        private void ConstrcutRelationshipBetweenEdges(Dictionary<CPoint, List<CEdge>> CoStartHalfCEdgeDt)
         {
             //vertexLt = new List<CPoint>(CoStartCEdgeSD.Count);
-            foreach (var kvp in CoStartHalfCEdgeSD)
+            foreach (var kvp in CoStartHalfCEdgeDt)
             {
                 var AxisAngleCEdgeLt = kvp.Value.OrderBy(cedge => cedge.dblAxisAngle).ToList();
                 var AxisAngleCEdgeEt = AxisAngleCEdgeLt.GetEnumerator();
@@ -284,7 +287,7 @@ namespace MorphingClass.CGeometry
             {
                 if (cedge.isTraversed == true) continue;
 
-                var cedgeStartAtLeftMost = GetCEdgeStartAtExtreme(cedge, CCmpCptXY_VerySmall.pCmpCptXY_VerySmall, -1);
+                var cedgeStartAtLeftMost = GetCEdgeStartAtExtreme(cedge, CCmpCptXY_VerySmall.sComparer, -1);
                 var cpgIncidentFace = cedge.cpgIncidentFace;
                 cpgIncidentFace.LeftMostCpt = cedgeStartAtLeftMost.FrCpt;
                 cpgIncidentFace.cedgeStartAtLeftMost = cedgeStartAtLeftMost;
@@ -354,14 +357,14 @@ namespace MorphingClass.CGeometry
         /// <returns></returns>
         private CEdge GetValidCEdgeStartAtExtreme(CEdge cedge)
         {
-            var cedgeStartAtExtreme = GetCEdgeStartAtExtreme(cedge, CCmpCptXY_VerySmall.pCmpCptXY_VerySmall, 1);  //rightmost
+            var cedgeStartAtExtreme = GetCEdgeStartAtExtreme(cedge, CCmpCptXY_VerySmall.sComparer, 1);  //rightmost
 
             if (IsOnlyOneEdgeStartAtFrCpt(cedgeStartAtExtreme) == false)
             {
-                cedgeStartAtExtreme = GetCEdgeStartAtExtreme(cedge, CCmpCptYX_VerySmall.pCmpCptYX_VerySmall, 1);  //uppermost
+                cedgeStartAtExtreme = GetCEdgeStartAtExtreme(cedge, CCmpCptYX_VerySmall.sComparer, 1);  //uppermost
                 if (IsOnlyOneEdgeStartAtFrCpt(cedgeStartAtExtreme) == false)
                 {
-                    cedgeStartAtExtreme = GetCEdgeStartAtExtreme(cedge, CCmpCptYX_VerySmall.pCmpCptYX_VerySmall, -1);  //lowest
+                    cedgeStartAtExtreme = GetCEdgeStartAtExtreme(cedge, CCmpCptYX_VerySmall.sComparer, -1);  //lowest
                     if (IsOnlyOneEdgeStartAtFrCpt(cedgeStartAtExtreme) == false)
                     {
                         throw new ArgumentOutOfRangeException("The four extreme points are not available to test holes or outer!");

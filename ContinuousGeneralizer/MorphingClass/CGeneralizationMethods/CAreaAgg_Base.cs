@@ -465,7 +465,7 @@ namespace MorphingClass.CGeneralizationMethods
         public static void SaveData(CStrObjLtSD StrObjLtSD, CParameterInitialize pParameterInitialize, string strMethod, int intQuitCount)
         {
             int intAtrNum = StrObjLtSD.Count;
-            int intCrgNum = StrObjLtSD.Values.GetFirstT().Count;
+            int intCrgNum = StrObjLtSD.Values.First().Count;
 
             var pobjDataLtLt = new List<IList<object>>(intCrgNum);
             var TempobjDataLtLt = new List<IList<object>>(intAtrNum);

@@ -361,11 +361,11 @@
     <Compile Include="FrmAid\FrmSettleRailwayNetwork.Designer.cs">
       <DependentUpon>FrmSettleRailwayNetwork.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmGeneralization\FrmBuildingGrowing.cs">
+    <Compile Include="FrmGeneralization\FrmBldgGrow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmGeneralization\FrmBuildingGrowing.Designer.cs">
-      <DependentUpon>FrmBuildingGrowing.cs</DependentUpon>
+    <Compile Include="FrmGeneralization\FrmBldgGrow.Designer.cs">
+      <DependentUpon>FrmBldgGrow.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmGeneralization\FrmAreaAgg.cs">
       <SubType>Form</SubType>
@@ -373,11 +373,11 @@
     <Compile Include="FrmGeneralization\FrmAreaAgg.Designer.cs">
       <DependentUpon>FrmAreaAgg.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmGeneralization\FrmDPSimplification.cs">
+    <Compile Include="FrmGeneralization\FrmDPSimplify.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmGeneralization\FrmDPSimplification.designer.cs">
-      <DependentUpon>FrmDPSimplification.cs</DependentUpon>
+    <Compile Include="FrmGeneralization\FrmDPSimplify.designer.cs">
+      <DependentUpon>FrmDPSimplify.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmGISCommand\FrmAttributeTable.cs">
       <SubType>Form</SubType>
@@ -783,14 +783,14 @@
     <EmbeddedResource Include="FrmAid\FrmSettleRailwayNetwork.resx">
       <DependentUpon>FrmSettleRailwayNetwork.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmGeneralization\FrmBuildingGrowing.resx">
-      <DependentUpon>FrmBuildingGrowing.cs</DependentUpon>
+    <EmbeddedResource Include="FrmGeneralization\FrmBldgGrow.resx">
+      <DependentUpon>FrmBldgGrow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmGeneralization\FrmAreaAgg.resx">
       <DependentUpon>FrmAreaAgg.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmGeneralization\FrmDPSimplification.resx">
-      <DependentUpon>FrmDPSimplification.cs</DependentUpon>
+    <EmbeddedResource Include="FrmGeneralization\FrmDPSimplify.resx">
+      <DependentUpon>FrmDPSimplify.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmGISCommand\FrmAttributeTable.resx">
       <DependentUpon>FrmAttributeTable.cs</DependentUpon>

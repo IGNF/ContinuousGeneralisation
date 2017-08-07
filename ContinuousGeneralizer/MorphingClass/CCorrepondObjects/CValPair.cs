@@ -20,6 +20,7 @@ using MorphingClass.CUtility;
 
 namespace MorphingClass.CCorrepondObjects
 {
+
     public class CValPair<T1, T2> : IComparable<CValPair<T1, T2>>
     {
         public T1 val1 { get; set; }
@@ -45,38 +46,6 @@ namespace MorphingClass.CCorrepondObjects
         }
 
 
-    }
-
-
-    public class CPairValIncrease<T> : CValPair<T, T>
-        where T: IComparable<T>
-    {
-        public IComparer<T> cmp { get; set; }
-        public CPairValIncrease()
-        {
-
-        }
-
-
-        public CPairValIncrease(T pVal1, T pVal2, IComparer<T> pCmp = null)
-        {
-            this.val1 = pVal1;
-            this.val2 = pVal2;
-            this.cmp = CHelpFunc.SetOrDefaultCmp(pCmp);
-
-            //var 
-
-            if (this.cmp.Compare(pVal1, pVal2) == 1)
-            {
-                this.val1 = pVal2;
-                this.val2 = pVal1;
-            }
-        }
-
-        public int CompareTo(CPairValIncrease<T> other)
-        {
-            return CCmpMethods.CmpDual(this, other, valpair => valpair.val1, valpair => valpair.val2, this.cmp, this.cmp);
-        }
     }
 
 

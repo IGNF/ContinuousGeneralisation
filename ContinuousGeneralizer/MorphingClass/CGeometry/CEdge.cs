@@ -38,6 +38,8 @@ namespace MorphingClass.CGeometry
         private bool _isStartEdge2;
         private int _intIncrease;
 
+
+
         //private int _intTime = 0;       //匹配成功的次数
         //private CMoveInformation _pMoveInformation;
         //private ILine _pLine;
@@ -62,11 +64,15 @@ namespace MorphingClass.CGeometry
 
         private double _dblAxisAngle = CConstants.dblSpecialValue;
 
-        private CPolyline _BelongedCPolyline;
         private CEdge _ParentCEdge;   //used in the construction of compatible triangulations. we set Parent CEdge so that we know whether or not an edge has been traversed (we don't need to traverse its twin edge), and we know the sub edges of the edge
         private CEdge _CorrRglCEdge;
         private List<CEdge> _CorrRglSubCEdgeLt;
         public SortedDictionary<double, CPoint> BreakCptSD { get; set; }
+        public CPolygon LinkedFrCpg { get; set; }
+        public CPolygon LinkedToCpg { get; set; }
+        public CPolygon BelongedCpg { get; set; }
+        public CPolyline BelongedCpl { get; set; }
+
         //private string _strLabel;
 
         /// <summary>
@@ -270,6 +276,10 @@ namespace MorphingClass.CGeometry
         }
 
 
+        public void SetFrCptCEdge()
+        {
+            this.FrCpt.CEdge = this;
+        }
 
         public double SetLength()
         {
@@ -694,11 +704,7 @@ namespace MorphingClass.CGeometry
         //    set { _dblDifffromMovePtY = value; }
         //}
 
-        public CPolyline BelongedCPolyline
-        {
-            get { return _BelongedCPolyline; }
-            set { _BelongedCPolyline = value; }
-        }
+
 
         public CEdge CorrRglCEdge
         {

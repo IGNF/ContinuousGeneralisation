@@ -120,14 +120,14 @@ namespace MorphingClass.CMorphingAlgorithms
 
                 foreach (CPoint comcpt in CombinedCPtLt)
                 {
-                    if (comcpt.BelongedCPolyline.enumScale == CEnumScale.Larger)
+                    if (comcpt.BelongedCpl.enumScale == CEnumScale.Larger)
                     {
                         //CPoint 
                         CPoint cpt = CGeoFunc.QueryCPointByLength(comcpt, toptlt, ref intToKnownIndex);
                         comcpt.CorrespondingPtLt.Add(cpt);
                         ResultPtLt.Add(comcpt);
                     }
-                    else if (comcpt.BelongedCPolyline.enumScale == CEnumScale.Smaller)
+                    else if (comcpt.BelongedCpl.enumScale == CEnumScale.Smaller)
                     {
                         CPoint cpt = CGeoFunc.QueryCPointByLength(comcpt, frptlt, ref intFrKnownIndex);
                         cpt.CorrespondingPtLt = new List<CPoint>(1);

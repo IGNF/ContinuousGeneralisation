@@ -25,13 +25,14 @@ namespace MorphingClass.CUtility
         public static double _dblVerySmallDenominator = 1000000; //I test it many times. it seems 10 X e6 is appropriate value. This value may need change when we have different data sets
         private static double _dblSmallDisDenominator = 1000;
         public static double dblSpecialValue { set; get; } = -Math.Pow(Math.PI, 3);  //we use the special value to initial some number
-
         
         public static double dblVerySmallConst { set; get; } = 0.00000001;
         public static double dblTwoPI { set; get; } = 2 * Math.PI;
         public static double dblHalfPI { set; get; } = Math.PI/2;
         public static double dblThreeSecondPI { set; get; } = 3*Math.PI / 2;
         public static double dblFiveDegreeRad { set; get; } = Math.PI / 36;
+        public static double dblFclipper { set; get; } = 100000000;
+        public static double dblRationVerySmallFclipper { set; get; } = dblVerySmallCoord/ dblFclipper;
 
         private static double _dblTwoSqrtPI = 2 * Math .Sqrt ( Math.PI);
         private static double _dblHalfDoubleMax = double.MaxValue / 2;
@@ -52,6 +53,7 @@ namespace MorphingClass.CUtility
         public static string strMethod { set; get; }
         public static string strShapeConstraint { set; get; }
         public static CEnvelope pIpeEnv { set; get; } = new CEnvelope(0, 0, 128, 128);
+        
 
         //        var output = string.Format("{0,3}{1,10}{2,13}{3,10}{4,9}{5,10}{6,7}{7,22}{8,7}{9,22}",
         //    "ID:", this.ID, ";    indexID:", this.indexID , ";    GID:" , this.GID , ";    X:", this.X , ";    Y:", this.Y);
@@ -120,6 +122,8 @@ namespace MorphingClass.CUtility
                 _dblVerySmallSquare = 2 * X * y + yy;
                 _dblVerySmallPower3 = 3 * XX * y + 3 * X * yy + yyy;
                 _dblVerySmallPower4 = 4 * XXX * y + 6 * XX * yy + 4 * X * yyy + yyyy;
+
+                dblRationVerySmallFclipper = y / dblFclipper;
             }
         }
 

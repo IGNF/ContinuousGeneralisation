@@ -25,7 +25,7 @@ namespace ContinuousGeneralizer.RoadNetwork
     {
         private CDataRecords _DataRecords;                    //数据记录
         private CFrmOperation _FrmOperation;
-        //private CDPSimplification _pDPSimplification = new CDPSimplification();
+        //private CDPSimplify _pDPSimplify = new CDPSimplify();
         public FrmTransparencyMorphing()
         {
             InitializeComponent();

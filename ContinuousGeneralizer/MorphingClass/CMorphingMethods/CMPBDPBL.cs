@@ -20,7 +20,7 @@ namespace MorphingClass.CMorphingMethods
         //private List<CPolyline> _InterLSCPlLt = new List<CPolyline>();  //BS:LargerScale
         //private List<CPolyline> _SSCPlLt = new List<CPolyline>();  //SS:SmallerScale
 
-        //private CDPSimplification _pDPSimplification = new CDPSimplification();
+        //private CDPSimplify _pDPSimplify = new CDPSimplify();
         //private CParameterResult _ParameterResult;
 
         //private CParameterInitialize _ParameterInitialize;
@@ -78,8 +78,8 @@ namespace MorphingClass.CMorphingMethods
         //    //have to upgrade the codes
         //    //frcpl.SetVirtualPolyline();
         //    //tocpl.SetVirtualPolyline();
-        //    //_pDPSimplification.DivideCplByDP(frcpl, frcpl.pVirtualPolyline);
-        //    //_pDPSimplification.DivideCplByDP(tocpl, tocpl.pVirtualPolyline);
+        //    //_pDPSimplify.DivideCplByDP(frcpl, frcpl.pVirtualPolyline);
+        //    //_pDPSimplify.DivideCplByDP(tocpl, tocpl.pVirtualPolyline);
 
         //    int intIndex = 0;
         //    double dblMin = double.MaxValue;

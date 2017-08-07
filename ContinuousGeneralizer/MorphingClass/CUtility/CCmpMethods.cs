@@ -76,60 +76,49 @@ namespace MorphingClass.CUtility
         /// <returns>1, if the first parameter larger than the second one; -1, smaller; 0, equal</returns>
         /// <remarks>First comapre FrCpts. If the two cedges have the same FrCpts, then compare ToCpts. 
         /// If they neither have the same FrCpts nor have the same ToCpts, then compare FrCpt with ToCpt as well as ToCpt with FrCpt to find whether they are equal</remarks>
-        public static int CmpCEdgeCoordinates(CEdge cedge1, CEdge cedge2, bool blnMayFlip=false)
+        public static int CmpCEdgeCoord(CEdge cedge1, CEdge cedge2, bool blnMayFlip = false)
         {
             CPoint frcpt1;
             CPoint tocpt1;
+            GetCpts(cedge1, blnMayFlip, out frcpt1, out tocpt1);
+
             CPoint frcpt2;
             CPoint tocpt2;
-            GetCpts(cedge1, cedge2, blnMayFlip, out frcpt1, out tocpt1, out frcpt2, out tocpt2);
+            GetCpts(cedge2, blnMayFlip, out frcpt2, out tocpt2);
 
             int intResultFF = CmpCptYX(frcpt1, frcpt2);
             int intResultTT = CmpCptYX(tocpt1, tocpt2);
-
             return CCmpMethods.HandleTwoResults(intResultFF, intResultTT);
         }
-
 
         public static int CmpCEdgeGID(CEdge cedge1, CEdge cedge2, bool blnMayFlip = false)
         {
             CPoint frcpt1;
             CPoint tocpt1;
+            GetCpts(cedge1, blnMayFlip, out frcpt1, out tocpt1);
+
             CPoint frcpt2;
             CPoint tocpt2;
-            GetCpts(cedge1, cedge2, blnMayFlip, out frcpt1, out tocpt1, out frcpt2, out tocpt2);
+            GetCpts(cedge2, blnMayFlip, out frcpt2, out tocpt2);
 
             int intResultFF = frcpt1.GID.CompareTo(frcpt2.GID);
             int intResultTT = tocpt1.GID.CompareTo(tocpt2.GID);
-
             return CCmpMethods.HandleTwoResults(intResultFF, intResultTT);
         }
 
-        private static void GetCpts(CEdge cedge1, CEdge cedge2, bool blnMayFlip, 
-            out CPoint frcpt1, out CPoint tocpt1, out CPoint frcpt2, out CPoint tocpt2)
+        public static void GetCpts(CEdge cedge, bool blnMayFlip, out CPoint frcpt, out CPoint tocpt)
         {
-            frcpt1 = cedge1.FrCpt;
-            tocpt1 = cedge1.ToCpt;
-            frcpt2 = cedge2.FrCpt;
-            tocpt2 = cedge2.ToCpt;
-
-            //cedge1.PrintMySelf();
-            //cedge2.PrintMySelf();
+            frcpt = cedge.FrCpt;
+            tocpt = cedge.ToCpt;
 
             if (blnMayFlip == true)
             {
                 //when we use a SortedSet to store edges, 
                 //we want that the edge will have the same position no matter which end is the start
-                if (cedge1.intIncrease == -1)
+                if (cedge.intIncrease == -1)
                 {
-                    frcpt1 = cedge1.ToCpt;
-                    tocpt1 = cedge1.FrCpt;
-                }
-
-                if (cedge2.intIncrease == -1)
-                {
-                    frcpt2 = cedge2.ToCpt;
-                    tocpt2 = cedge2.FrCpt;
+                    frcpt = cedge.ToCpt;
+                    tocpt = cedge.FrCpt;
                 }
             }
         }
@@ -172,7 +161,7 @@ namespace MorphingClass.CUtility
             IComparer<double> cmp = null;
             if (blnVerySmall==true)
             {
-                cmp = CCmpCoordDbl_VerySmall.pCmpCoordDbl_VerySmall;
+                cmp = CCmpCoordDbl_VerySmall.sComparer;
             }
 
             return CmpDual(cpt1, cpt2, cpt => cpt.Y, cpt => cpt.X, cmp, cmp);
@@ -183,7 +172,7 @@ namespace MorphingClass.CUtility
             IComparer<double> cmp = null;
             if (blnVerySmall == true)
             {
-                cmp = CCmpCoordDbl_VerySmall.pCmpCoordDbl_VerySmall;
+                cmp = CCmpCoordDbl_VerySmall.sComparer;
             }
 
             return CmpDual(cpt1, cpt2, cpt => cpt.X, cpt => cpt.Y, cmp, cmp);

@@ -128,7 +128,7 @@ namespace MorphingClass.CUtility
                     total += (item as IEnumerable<T>).GetCountCpt<T, CGeo>();
                 else
                 {
-                    CPolyBase<T> pLineBase = item as CPolyBase<T>;
+                    var pLineBase = item as CPolyBase<T>;
                     total += pLineBase.CptLt.Count;
                 }
             }
@@ -141,26 +141,7 @@ namespace MorphingClass.CUtility
         {
             items[0] = item;
         }
-
-        public static T GetFirstT<T>(this List<T> items)
-        {
-            return items[0];
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="TEnumerable"></param>
-        /// <returns></returns>
-        /// <remarks>for a dictionary, this operation takes O(log n) time;
-        /// see https://msdn.microsoft.com/en-us/library/1z8z05h2.aspx?f=255&MSPPError=-2147217396 </remarks>
-        public static T GetFirstT<T>(this IEnumerable<T> TEnumerable)
-        {
-            IEnumerator<T> selfEnumerator = TEnumerable.GetEnumerator();
-            if (!selfEnumerator.MoveNext()) throw new ArgumentException("List is empty.", "self");
-            return selfEnumerator.Current;
-        }
+        
 
 
         public static void SetLastT<T>(this List<T> items, T item)  //we add T at last to make it has the same number of characters as GetFirstElement
@@ -247,7 +228,7 @@ namespace MorphingClass.CUtility
        
 
         public static void SetIndexID<T>(this IEnumerable<T> TEnumerable)
-            where T : CGeometricBase<T>
+            where T : CBasicBase
         {
             IEnumerator<T> selfEnumerator = TEnumerable.GetEnumerator();
             int intIndexID = 0;

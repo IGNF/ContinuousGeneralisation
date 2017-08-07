@@ -265,7 +265,7 @@ Although algorithms of simplifying buildings have been studied, e.g.,
 when we have to aggregate buildings simultaneously.
 In order to aggregate, we should first group the buildings.
 
-
+$\bar{a}$
 
 
 
@@ -334,11 +334,15 @@ The length of a bridge can be as large as
 \label{eq:BridgeLength}
 l_b=4d_\mathrm{G}+d_\epsilon.
 \end{equation}
-\todo[inline]{$d_\mathrm{G}$ or $D_\mathrm{G}$?}
+%\todo[inline]{$d_\mathrm{G}$ or $D_\mathrm{G}$?}
 
 \subsection{Simplification}
 we use a buffer-based method, similar to \textcite{Damen2008,Meijers2016}, to 
 simplify our grown buildings.
+
+We tried simplifying using Douglas--Peucker algorithm \parencite{Douglas1973}, 
+but we hoped to remove more points. We found that Imai--Iri simplification 
+algorithm \parencite{ImaiIri1988} fit our needs well.
 
 \subsection{Parameters for growing and simplifying}
 The start scale is $1:S_\mathrm{s}$, and the goal scale is $1:S_\mathrm{g}$ 
@@ -532,7 +536,10 @@ One can also discuss about our growing speed.
 We our intermediate results may violate more cartographic rules, but we try to 
 make the results at goal scales violate as few rules as possible.
 
-Ideally, for a rectangle, the ratio of width to height should be kept. 
+Ideally, for a rectangle, the ratio of width to height should be kept.
+
+The closest place of two buildings before enlarging is not necessarily the same 
+as the closest place after enlarging. 
 
 \todo[inline]{consider multi bridges; consider transparency of bridges in 
 stead 

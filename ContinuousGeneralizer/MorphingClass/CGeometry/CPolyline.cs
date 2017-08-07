@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
+using System.Linq;
 
 using ESRI.ArcGIS.Geometry;
 
@@ -58,7 +59,7 @@ namespace MorphingClass.CGeometry
 
 
         public CPolyline()
-            : this(-2, CHelpFunc.MakeLt<CPoint>(0))
+            : this(-2, CHelpFunc.MakeLt<CPoint>())
         {
 
         }
@@ -93,13 +94,13 @@ namespace MorphingClass.CGeometry
         }
 
         public CPolyline(CPoint cpt, bool blnSetPolyline = false)
-            : this(cpt.ID, CHelpFunc.MakeLt<CPoint>(1, cpt, null, null), blnSetPolyline)
+            : this(cpt.ID, CHelpFunc.MakeLt(cpt), blnSetPolyline)
         {
 
         }
 
         public CPolyline(int intID, CPoint cpt, bool blnSetPolyline = false)
-            : this(intID, CHelpFunc.MakeLt<CPoint>(1, cpt, null, null), blnSetPolyline)
+            : this(intID, CHelpFunc.MakeLt(cpt), blnSetPolyline)
         {
 
         }
@@ -122,12 +123,12 @@ namespace MorphingClass.CGeometry
         }
 
         public CPolyline(CPoint cpt1, CPoint cpt2, bool blnSetPolyline = false)
-            : this(cpt1.ID, CHelpFunc.MakeLt<CPoint>(2, cpt1, cpt2, null), blnSetPolyline)
+            : this(cpt1.ID, CHelpFunc.MakeLt<CPoint>(cpt1, cpt2), blnSetPolyline)
         {
         }
 
         public CPolyline(int intID, CPoint cpt1, CPoint cpt2, bool blnSetPolyline = false)
-            : this(intID, CHelpFunc.MakeLt<CPoint>(2, cpt1, cpt2, null), blnSetPolyline)
+            : this(intID, CHelpFunc.MakeLt<CPoint>(cpt1, cpt2), blnSetPolyline)
         {
         }
 
@@ -208,29 +209,7 @@ namespace MorphingClass.CGeometry
 
 
 
-        public void SetCptBelongedPolyline()
-        {
-            foreach (CPoint cpt in this.CptLt)
-            {
-                cpt.BelongedCPolyline = this;
-            }
-        }
-
-        public void SetCEdgeBelongedPolyline()
-        {
-            foreach (CEdge cedge in this.CEdgeLt)
-            {
-                cedge.BelongedCPolyline = this;
-            }
-        }
-
-        public void SetCEdgeTwinBelongedPolyline()
-        {
-            foreach (CEdge cedge in this.CEdgeLt)
-            {
-                cedge.cedgeTwin.BelongedCPolyline = this;
-            }
-        }
+        
 
        
 
@@ -284,7 +263,7 @@ namespace MorphingClass.CGeometry
             List<CPoint> ocptlt = other.CptLt;
             List<CPoint> newcptlt = new List<CPoint>();
 
-            if (CCmpMethods.CmpCptYX(fcptlt.GetLastT(), ocptlt.GetFirstT()) == 0)
+            if (CCmpMethods.CmpCptYX(fcptlt.GetLastT(), ocptlt.First()) == 0)
             {
                 newcptlt.AddRange(fcptlt);
                 newcptlt.RemoveLastT();
@@ -300,7 +279,7 @@ namespace MorphingClass.CGeometry
 
                 newcptlt.AddRange(copiedreversedcptlt);
             }
-            else if (CCmpMethods.CmpCptYX(fcptlt.GetFirstT(), ocptlt.GetFirstT()) == 0)
+            else if (CCmpMethods.CmpCptYX(fcptlt.First(), ocptlt.First()) == 0)
             {
                 var copiedreversedcptlt = CHelpFunc.CopyCptLt(ocptlt);
                 copiedreversedcptlt.Reverse();
@@ -309,7 +288,7 @@ namespace MorphingClass.CGeometry
                 newcptlt.RemoveLastT();
                 newcptlt.AddRange(fcptlt);
             }
-            else if (CCmpMethods.CmpCptYX(fcptlt.GetFirstT(), ocptlt.GetLastT()) == 0)
+            else if (CCmpMethods.CmpCptYX(fcptlt.First(), ocptlt.GetLastT()) == 0)
             {
                 //CPolyline cplCopyOther = other.CopyCpl();
                 newcptlt.AddRange(ocptlt);
@@ -355,6 +334,29 @@ namespace MorphingClass.CGeometry
             FormPolyBase(fcptlt);
         }
 
+        public void SetCptBelongedCpl()
+        {
+            foreach (CPoint cpt in this.CptLt)
+            {
+                cpt.BelongedCpl = this;
+            }
+        }
+
+        public void SetCEdgeBelongedCpl()
+        {
+            foreach (CEdge cedge in this.CEdgeLt)
+            {
+                cedge.BelongedCpl = this;
+            }
+        }
+
+        public void SetCEdgeTwinBelongedCpl()
+        {
+            foreach (CEdge cedge in this.CEdgeLt)
+            {
+                cedge.cedgeTwin.BelongedCpl = this;
+            }
+        }
 
         /// <summary>
         /// 获取本折线最长边的边长

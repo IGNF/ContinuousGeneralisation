@@ -1,10 +1,10 @@
 ﻿/*******************************************************************************
 *                                                                              *
 * Author    :  Angus Johnson                                                   *
-* Version   :  6.4.0                                                           *
-* Date      :  2 July 2015                                                     *
+* Version   :  6.4.2                                                           *
+* Date      :  27 February 2017                                                *
 * Website   :  http://www.angusj.com                                           *
-* Copyright :  Angus Johnson 2010-2015                                         *
+* Copyright :  Angus Johnson 2010-2017                                         *
 *                                                                              *
 * License:                                                                     *
 * Use, modification & distribution is subject to Boost Software License Ver 1. *
@@ -751,7 +751,7 @@ namespace ClipperLib
         private TEdge FindNextLocMin(TEdge E)
         {
             TEdge E2;
-            for (; ; )
+            for (;;)
             {
                 while (E.Bot != E.Prev.Bot || E.Curr == E.Top) E = E.Next;
                 if (E.Dx != horizontal && E.Prev.Dx != horizontal) break;
@@ -915,7 +915,7 @@ namespace ClipperLib
 
             //2. Remove duplicate vertices, and (when closed) collinear edges ...
             TEdge E = eStart, eLoopStop = eStart;
-            for (; ; )
+            for (;;)
             {
                 //nb: allows matching start and end points when not Closed ...
                 if (E.Curr == E.Next.Curr && (Closed || E.Next != eStart))
@@ -981,7 +981,7 @@ namespace ClipperLib
                 locMin.RightBound = E;
                 locMin.RightBound.Side = EdgeSide.esRight;
                 locMin.RightBound.WindDelta = 0;
-                for (; ; )
+                for (;;)
                 {
                     if (E.Bot.X != E.Prev.Top.X) ReverseHorizontal(E);
                     if (E.Next.OutIdx == Skip) break;
@@ -1001,7 +1001,7 @@ namespace ClipperLib
             //open paths have matching start and end points ...
             if (E.Prev.Bot == E.Prev.Top) E = E.Next;
 
-            for (; ; )
+            for (;;)
             {
                 E = FindNextLocMin(E);
                 if (E == EMin) break;
@@ -1380,8 +1380,7 @@ namespace ClipperLib
         IntPoint bot2, IntPoint top2, ref IntPoint pt);
       public ZFillCallback ZFillFunction { get; set; }
 #endif
-        public Clipper(int InitOptions = 0)
-            : base() //constructor
+        public Clipper(int InitOptions = 0) : base() //constructor
         {
             m_Scanbeam = null;
             m_Maxima = null;
@@ -1425,7 +1424,7 @@ namespace ClipperLib
                 Maxima m = m_Maxima;
                 while (m.Next != null && (X >= m.Next.X)) m = m.Next;
                 if (X == m.X) return; //ie ignores duplicates (& CG to clean up newMax)
-                //insert newMax between m and m.Next ...
+                                      //insert newMax between m and m.Next ...
                 newMax.Next = m.Next;
                 newMax.Prev = m;
                 if (m.Next != null) m.Next.Prev = newMax;
@@ -2131,7 +2130,7 @@ namespace ClipperLib
                     prevE = e.PrevInAEL;
             }
 
-            if (prevE != null && prevE.OutIdx >= 0)
+            if (prevE != null && prevE.OutIdx >= 0 && prevE.Top.Y < pt.Y && e.Top.Y < pt.Y)
             {
                 cInt xPrev = TopX(prevE, pt.Y);
                 cInt xE = TopX(e, pt.Y);
@@ -2756,7 +2755,7 @@ namespace ClipperLib
             }
 
             OutPt op1 = null;
-            for (; ; ) //loop through consec. horizontal edges
+            for (;;) //loop through consec. horizontal edges
             {
                 bool IsLastHorz = (horzEdge == eLastHorz);
                 TEdge e = GetNextInAEL(horzEdge, dir);
@@ -2798,6 +2797,11 @@ namespace ClipperLib
 
                     if (horzEdge.OutIdx >= 0 && !IsOpen)  //note: may be done multiple times
                     {
+#if use_xyz
+                  if (dir == Direction.dLeftToRight) SetZ(ref e.Curr, horzEdge, e);
+                  else SetZ(ref e.Curr, e, horzEdge);
+#endif
+
                         op1 = AddOutPt(horzEdge, e.Curr);
                         TEdge eNextHorz = m_SortedEdges;
                         while (eNextHorz != null)
@@ -3206,8 +3210,12 @@ namespace ClipperLib
                     {
                         e.Curr.X = TopX(e, topY);
                         e.Curr.Y = topY;
+#if use_xyz
+              if (e.Top.Y == topY) e.Curr.Z = e.Top.Z;
+              else if (e.Bot.Y == topY) e.Curr.Z = e.Bot.Z;
+              else e.Curr.Z = 0;
+#endif
                     }
-
                     //When StrictlySimple and 'e' is being touched by another edge, then
                     //make sure both edges have a vertex here ...
                     if (StrictlySimple)
@@ -3447,7 +3455,7 @@ namespace ClipperLib
             outRec.BottomPt = null;
             OutPt pp = outRec.Pts;
             bool preserveCol = PreserveCollinear || StrictlySimple;
-            for (; ; )
+            for (;;)
             {
                 if (pp.Prev == pp || pp.Prev == pp.Next)
                 {
@@ -3920,7 +3928,7 @@ namespace ClipperLib
             foreach (OutRec outRec in m_PolyOuts)
             {
                 OutRec firstLeft = ParseFirstLeft(outRec.FirstLeft);
-                if (outRec.Pts != null && outRec.FirstLeft == OldOutRec)
+                if (outRec.Pts != null && firstLeft == OldOutRec)
                     outRec.FirstLeft = NewOutRec;
             }
         }
@@ -4071,22 +4079,22 @@ namespace ClipperLib
                                 if (m_UsingPolyTree) FixupFirstLefts2(outrec2, outrec);
                             }
                             else
-                                if (Poly2ContainsPoly1(outrec.Pts, outrec2.Pts))
-                                {
-                                    //OutRec1 is contained by OutRec2 ...
-                                    outrec2.IsHole = outrec.IsHole;
-                                    outrec.IsHole = !outrec2.IsHole;
-                                    outrec2.FirstLeft = outrec.FirstLeft;
-                                    outrec.FirstLeft = outrec2;
-                                    if (m_UsingPolyTree) FixupFirstLefts2(outrec, outrec2);
-                                }
-                                else
-                                {
-                                    //the 2 polygons are separate ...
-                                    outrec2.IsHole = outrec.IsHole;
-                                    outrec2.FirstLeft = outrec.FirstLeft;
-                                    if (m_UsingPolyTree) FixupFirstLefts1(outrec, outrec2);
-                                }
+                              if (Poly2ContainsPoly1(outrec.Pts, outrec2.Pts))
+                            {
+                                //OutRec1 is contained by OutRec2 ...
+                                outrec2.IsHole = outrec.IsHole;
+                                outrec.IsHole = !outrec2.IsHole;
+                                outrec2.FirstLeft = outrec.FirstLeft;
+                                outrec.FirstLeft = outrec2;
+                                if (m_UsingPolyTree) FixupFirstLefts2(outrec, outrec2);
+                            }
+                            else
+                            {
+                                //the 2 polygons are separate ...
+                                outrec2.IsHole = outrec.IsHole;
+                                outrec2.FirstLeft = outrec.FirstLeft;
+                                if (m_UsingPolyTree) FixupFirstLefts1(outrec, outrec2);
+                            }
                             op2 = op; //ie get ready for the next iteration
                         }
                         op2 = op2.Next;

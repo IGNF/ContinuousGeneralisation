@@ -20,8 +20,8 @@ namespace MorphingClass.CGeometry.CGeometryBase
         public int indexID2 { get; set; }
 
         public bool isMatched { get; set; }
-        public bool isTraversed { get; set; }
-        public int indexID { get; set; }
+        
+        
         
         protected CEnumScale _enumScale;
         //protected int _intRed =0;

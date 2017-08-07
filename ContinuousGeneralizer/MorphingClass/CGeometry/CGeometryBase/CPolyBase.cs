@@ -15,15 +15,14 @@ namespace MorphingClass.CGeometry.CGeometryBase
     {
 
         /// <summary>
-        /// 
+        /// Whether the last vertex is the first vertex: My Cpg (yes, clockwise), Ipolygon (yes, clockwise), clipper (no, counter), Ipe (no)
         /// </summary>
         /// <remarks>
         /// for a polygon, the first point and the last point in cptlt must have the same coordinates, which is the same as in IPolygon
-        /// CptLtLt[0] indicates the only exterior ring of the polygon if applicable
         /// for polygons, exterior rings have a clockwise orientation; Interior Rings have a counterclockwise orientation
+        /// the first point and the last point of a output path are not identical
+            //the direction of a path of outcome is counter-clockwise, whereas it is clockwise for a IPolygon
         /// </remarks>
-        //public List<List<CPoint>> CptLtLt { get; set; }
-        //public List<List<CEdge>> CEdgeLtLt { get; set; }
         public List<CPoint> CptLt { get; set; }
         public List<CEdge> CEdgeLt { get; set; }
         public List <double> dblAngleDiffLt { get; set; }  //we may need to extend this attribute to dblCornerAngleLtLt
@@ -99,17 +98,18 @@ namespace MorphingClass.CGeometry.CGeometryBase
 
         private static CptEdgeDis CalMinDisCptLtCEdgeLt(IEnumerable<CPoint> cptlt, IEnumerable<CEdge> cedgelt)
         {
-            CptEdgeDis PtEdgeDis =new CGeometry.CptEdgeDis(double.MaxValue);
+            var PtEdgeDis =new CGeometry.CptEdgeDis(double.MaxValue);
             foreach (var cpt in cptlt)
             {
                 foreach (var cedge in cedgelt)
                 {
-                    var test = cpt.DistanceTo(cedge);
                     PtEdgeDis = CHelpFunc.Min(PtEdgeDis, cpt.DistanceTo(cedge), ptedgedis => ptedgedis.dblDis);                    
                 }
             }
             return PtEdgeDis;
         }
+
+        
 
         //public void FormPolyBase(List<List<CPoint>> fcptltlt)
         //{
@@ -154,10 +154,17 @@ namespace MorphingClass.CGeometry.CGeometryBase
         //    this.CEdgeLtLt = CGeoFunc.FormCEdgeLtLt(this.CptLtLt);
         //}
 
+        public virtual void SetCEdgeLtFrCptCEdge()
+        {
+            this.CEdgeLt.ForEach(cedge => cedge.SetFrCptCEdge());
+        }
+
         public virtual void SetCEdgeLtLength()
         {
             this.CEdgeLt.ForEach(cedge => cedge.SetLength());
         }
+
+
 
         //public virtual void SetCEdgeLtLtLength()
         //{
@@ -243,7 +250,7 @@ namespace MorphingClass.CGeometry.CGeometryBase
         /// </summary>
         public override CPoint FrCpt
         {
-            get { return this.CptLt.GetFirstT(); }
+            get { return this.CptLt.First(); }
             set { this.CptLt.SetFirstT(value); }
         }
 

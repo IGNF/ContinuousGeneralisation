@@ -26,7 +26,7 @@ namespace MorphingClass.CMorphingMethods
     {
         
         
-        //private CDPSimplification _pDPSimplification = new CDPSimplification();
+        //private CDPSimplify _pDPSimplify = new CDPSimplify();
         private CParameterResult _ParameterResult;
         private object _Missing = Type.Missing;
 
@@ -147,8 +147,8 @@ namespace MorphingClass.CMorphingMethods
                 pBSAtBdLt[i].CResultPtLt = pLinearInterpolation.CLI(frcpl, tocpl);
 
                 ////By DP Algorithm
-                //_pDPSimplification.DivideCplByDP(pBSAtBdLt[i] as CPolyline, pBSAtBdLt[i].pVirtualPolyline);
-                //_pDPSimplification.DivideCplByDP(pSSAtBdLt[i] as CPolyline, pSSAtBdLt[i].pVirtualPolyline);
+                //_pDPSimplify.DivideCplByDP(pBSAtBdLt[i] as CPolyline, pBSAtBdLt[i].pVirtualPolyline);
+                //_pDPSimplify.DivideCplByDP(pSSAtBdLt[i] as CPolyline, pSSAtBdLt[i].pVirtualPolyline);
 
                 //C5.LinkedList<CCorrespondSegment> CorrespondSegmentLk = new C5.LinkedList<CCorrespondSegment>();
                 //SubPolylineMatchLA(pBSAtBdLt[i] as CPolyline, pBSAtBdLt[i].pVirtualPolyline, pSSAtBdLt[i] as CPolyline, pSSAtBdLt[i].pVirtualPolyline, ParameterThreshold, ref CorrespondSegmentLk);
@@ -164,7 +164,7 @@ namespace MorphingClass.CMorphingMethods
             for (int i = 0; i < pSgAtBdLt.Count; i++)
             {
                 pSgAtBdLt[i].SetVirtualPolyline();
-                //_pDPSimplification.DivideCplByDP(pSgAtBdLt[i] as CPolyline, pSgAtBdLt[i].pVirtualPolyline);
+                //_pDPSimplify.DivideCplByDP(pSgAtBdLt[i] as CPolyline, pSgAtBdLt[i].pVirtualPolyline);
             }
         }
 
@@ -532,12 +532,12 @@ namespace MorphingClass.CMorphingMethods
             //int intDeletePtNum = intSgRealPtNum-intRemainPtNum;
 
 
-            //double dblTDis = CDPSimplification.CalTDisByDeletePtNum(pSgAtBdLt, intSgInnerPtNum, intDeletePtNum);
+            //double dblTDis = CDPSimplify.CalTDisByDeletePtNum(pSgAtBdLt, intSgInnerPtNum, intDeletePtNum);
 
 
             //for (int i = 0; i < pSgAtBdLt.Count; i++)
             //{
-            //    _pDPSimplification.ConfirmMoveInfo(pSgAtBdLt[i] as CPolyline, pSgAtBdLt[i].pVirtualPolyline, dblTDis);
+            //    _pDPSimplify.ConfirmMoveInfo(pSgAtBdLt[i] as CPolyline, pSgAtBdLt[i].pVirtualPolyline, dblTDis);
             //}
         }
 
@@ -652,7 +652,7 @@ namespace MorphingClass.CMorphingMethods
             for (int i = 0; i < pParameterResult.CSgAtBdLt.Count; i++)
             {
                 CAtBd pAtBd = pParameterResult.CSgAtBdLt[i];
-                //List<CPoint> newcptlt = _pDPSimplification.DPCplMorph(pAtBd as CPolyline, dblProportion).CptLt;
+                //List<CPoint> newcptlt = _pDPSimplify.DPCplMorph(pAtBd as CPolyline, dblProportion).CptLt;
                 List<CPoint> newcptlt = new List<CPoint>();
 
                 //the first point
@@ -663,7 +663,7 @@ namespace MorphingClass.CMorphingMethods
                 else
                 {
                     newcptlt[0] = CGeoFunc.GetInbetweenCpt(pAtBd.Frcpt2, pAtBd.Frcpt2.CorrespondingPtLt[0], dblProportion, 0);
-                    int dblBSCplID = pAtBd.Frcpt2.BelongedCPolyline.ID;
+                    int dblBSCplID = pAtBd.Frcpt2.BelongedCpl.ID;
                     DWIntersect(normaldisplaycpllt[dblBSCplID], ref newcptlt, dblIgnorableDis);
                 }
 
@@ -677,7 +677,7 @@ namespace MorphingClass.CMorphingMethods
                     CPoint cptlast = CGeoFunc.GetInbetweenCpt(pAtBd.Tocpt2, pAtBd.Tocpt2.CorrespondingPtLt[0], dblProportion, pAtBd.CptLt.Count - 1);
                     newcptlt[newcptlt.Count - 1] = cptlast;
                     CHelpFunc.ReverseCptLt(ref newcptlt);
-                    int dblBSCplID = pAtBd.Tocpt2.BelongedCPolyline.ID;
+                    int dblBSCplID = pAtBd.Tocpt2.BelongedCpl.ID;
                     DWIntersect(normaldisplaycpllt[dblBSCplID], ref newcptlt, dblIgnorableDis);
                     CHelpFunc.ReverseCptLt(ref newcptlt);
                 }

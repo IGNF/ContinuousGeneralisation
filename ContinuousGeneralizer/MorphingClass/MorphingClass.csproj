@@ -223,6 +223,7 @@
     <Compile Include="CCorrepondObjects\CCptbCtgl.cs" />
     <Compile Include="CCorrepondObjects\CCorrCphs.cs" />
     <Compile Include="CCorrepondObjects\CPairInt.cs" />
+    <Compile Include="CCorrepondObjects\CValPairIncrease.cs" />
     <Compile Include="CCorrepondObjects\CValTri.cs" />
     <Compile Include="CCorrepondObjects\CValFour.cs" />
     <Compile Include="CCorrepondObjects\CValPair.cs" />
@@ -243,10 +244,10 @@
     <Compile Include="CGeneralizationMethods\CAreaAgg_ILP.cs" />
     <Compile Include="CGeneralizationMethods\CBezierDetectPoint.cs" />
     <Compile Include="CGeneralizationMethods\CAreaAgg_AStar.cs" />
-    <Compile Include="CGeneralizationMethods\CDPSimplification.cs" />
+    <Compile Include="CGeneralizationMethods\CDPSimplify.cs" />
     <Compile Include="CGeneralizationMethods\CGDNWDD.cs" />
     <Compile Include="CGeneralizationMethods\CHWPGRN.cs" />
-    <Compile Include="CGeneralizationMethods\CBldgGrow.cs" />
+    <Compile Include="CBldgGrow.cs" />
     <Compile Include="CGeneralizationMethods\CplexServer.cs" />
     <Compile Include="CGeneralizationMethods\CVetexCover.cs" />
     <Compile Include="CGeometry\CCphRecord.cs" />
@@ -270,6 +271,7 @@
     <Compile Include="CGeometry\CMBR\Geometry\Vector2d.cs" />
     <Compile Include="CGeometry\CMBR\MinimalBoundingBox.cs" />
     <Compile Include="CGeometry\CMoveVector.cs" />
+    <Compile Include="CGeometry\CNode.cs" />
     <Compile Include="CGeometry\CPtEdgeDis.cs" />
     <Compile Include="CGeometry\CTriangulation.cs" />
     <Compile Include="CGeometry\CPatch.cs" />
@@ -328,7 +330,9 @@
     <Compile Include="CUtility\CColor.cs" />
     <Compile Include="CUtility\CConstants.cs" />
     <Compile Include="CUtility\CDataRecords.cs" />
-    <Compile Include="CUtility\CCompareClasses.cs" />
+    <Compile Include="CUtility\CCmpClasses.cs" />
+    <Compile Include="CUtility\CCmpEq.cs" />
+    <Compile Include="CUtility\clipperMethods.cs" />
     <Compile Include="CUtility\CPointer.cs" />
     <Compile Include="CUtility\clipper.cs" />
     <Compile Include="CUtility\CStrObjLtSD.cs" />
@@ -337,7 +341,7 @@
     <Compile Include="CUtility\CExcelOperator.cs" />
     <Compile Include="CUtility\CFrmOperation.cs" />
     <Compile Include="CUtility\CGeoFunc.cs" />
-    <Compile Include="CUtility\CHelpFunc.cs" />
+    <Compile Include="CHelpFunc.cs" />
     <Compile Include="CUtility\CHelpFuncExcel.cs" />
     <Compile Include="CUtility\CIEnumerableExtensions.cs" />
     <Compile Include="CUtility\CIpeDraw.cs" />

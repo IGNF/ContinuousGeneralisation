@@ -30,7 +30,7 @@ namespace MorphingClass.CMorphingMethods
     /// <remarks>we set slope for every edge when we put the edges in a grid</remarks>
     public class CCGABM : CMorphingBaseCpl
     {
-        //private CDPSimplification _pDPSimplification = new CDPSimplification();
+        //private CDPSimplify _pDPSimplify = new CDPSimplify();
 
         protected
 
@@ -631,7 +631,7 @@ namespace MorphingClass.CMorphingMethods
             var sgcptlt = SgCpl.CptLt;
 
             var cptlt = new List<CPoint>(sgcptlt.Count);
-            cptlt.Add(RSComputeEndCpt(sgcptlt.GetFirstT(), pInterLSCptSD));  //the first point
+            cptlt.Add(RSComputeEndCpt(sgcptlt.First(), pInterLSCptSD));  //the first point
             for (int i = 1; i < sgcptlt.Count - 1; i++)                      //other points
             {
                 cptlt.Add(RSComputeCpt(sgcptlt[i], pInterLSCptSD));
@@ -797,7 +797,7 @@ namespace MorphingClass.CMorphingMethods
             if (LSMixSgHalfEdge.isTraversed == false)
             {
                 LSMixSgHalfEdge.isTraversed = true;
-                if (LSMixSgHalfEdge.BelongedCPolyline.enumScale == CEnumScale.Single)
+                if (LSMixSgHalfEdge.BelongedCpl.enumScale == CEnumScale.Single)
                 {
                     InsideSameFaceHalfCEdgeLt.Add(LSMixSgHalfEdge);
                     if (LSMixSgHalfEdge.FrCpt.isAdded == false)
@@ -807,7 +807,7 @@ namespace MorphingClass.CMorphingMethods
                     }
                     RecursivelyCollectingVertices(LSMixSgHalfEdge.cedgeTwin, ref InsideSameFaceCptLt, ref InsideSameFaceHalfCEdgeLt, ref LSFace);   //twin                    
                 }
-                else if (LSMixSgHalfEdge.BelongedCPolyline.enumScale == CEnumScale.Larger)  //the polygon is found
+                else if (LSMixSgHalfEdge.BelongedCpl.enumScale == CEnumScale.Larger)  //the polygon is found
                 {
                     LSFace = LSMixSgHalfEdge.cpgIncidentFace2;    //any cpgIncidentFace2 of the edges is available, because they are the same
                     if (LSFace.OuterCmptCEdge == null)   //only the SuperFace dosen't have OuterComponent
@@ -844,7 +844,7 @@ namespace MorphingClass.CMorphingMethods
         {
             foreach (CPoint cpt in InsideSameFaceCptLt)
             {
-                if (cpt.BelongedCPolyline.enumScale != CEnumScale.Larger) //If an end of a single polyline is at the same time a vertex of a larger-scale polyline (this single polyline dosen't represent a hole), then MoveVectorPtLt has already been calculated from the corresponding polylines
+                if (cpt.BelongedCpl.enumScale != CEnumScale.Larger) //If an end of a single polyline is at the same time a vertex of a larger-scale polyline (this single polyline dosen't represent a hole), then MoveVectorPtLt has already been calculated from the corresponding polylines
                 {
                     CalSgMoveVectorIDW(cpt, LSFace);
                 }
@@ -968,7 +968,7 @@ namespace MorphingClass.CMorphingMethods
             {
                 intSgInnerPtNum += (cpl.CptLt.Count - 2);
 
-                var FrCpt = cpl.CptLt.GetFirstT();
+                var FrCpt = cpl.CptLt.First();
                 if (LScptSS.Contains(FrCpt) == false)
                 {
                     SgEndPtLt.Add(FrCpt);

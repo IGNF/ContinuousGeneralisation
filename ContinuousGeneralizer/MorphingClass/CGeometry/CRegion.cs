@@ -90,7 +90,7 @@ namespace MorphingClass.CGeometry
             get { return _dblCostEstType; }
             set
             {
-                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.pCmpCoordDbl_VerySmall);
+                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.sComparer);
                 _dblCostEstType = value;
             }
         }
@@ -101,7 +101,7 @@ namespace MorphingClass.CGeometry
             get { return _dblCostEstComp; }
             set
             {
-                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.pCmpCoordDbl_VerySmall);
+                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.sComparer);
                 _dblCostEstComp = value;
             }
         }
@@ -112,7 +112,7 @@ namespace MorphingClass.CGeometry
             get { return _dblCostExactType; }
             set
             {
-                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.pCmpCoordDbl_VerySmall);
+                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.sComparer);
                 _dblCostExactType = value;
             }
         }
@@ -123,7 +123,7 @@ namespace MorphingClass.CGeometry
             get { return _dblCostExactComp; }
             set
             {
-                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.pCmpCoordDbl_VerySmall);
+                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.sComparer);
                 _dblCostExactComp = value;
             }
         }
@@ -134,7 +134,7 @@ namespace MorphingClass.CGeometry
             get { return _dblCostExact; }
             set
             {
-                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.pCmpCoordDbl_VerySmall);
+                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.sComparer);
                 _dblCostExact = value;
             }
         }
@@ -145,7 +145,7 @@ namespace MorphingClass.CGeometry
             get { return _dblCostEst; }
             set
             {
-                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.pCmpCoordDbl_VerySmall);
+                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.sComparer);
                 _dblCostEst = value;
             }
         }
@@ -200,7 +200,7 @@ namespace MorphingClass.CGeometry
             //    _intStaticGID--;
             //}
             //this.d = double.MaxValue;
-
+            
             this.parent = null;
             this.cenumColor = CEnumColor.white;
         }
@@ -237,7 +237,7 @@ namespace MorphingClass.CGeometry
 
         public CPatch GetSmallestCph()
         {
-            return this.CphTypeIndexSD_Area_CphGID.GetFirstT().Key;
+            return this.CphTypeIndexSD_Area_CphGID.First().Key;
         }
 
         public int GetSoloCphTypeIndex()
@@ -247,7 +247,7 @@ namespace MorphingClass.CGeometry
                 throw new ArgumentOutOfRangeException("There are more than one elements!");
             }
 
-            return this.CphTypeIndexSD_Area_CphGID.GetFirstT().Value;
+            return this.CphTypeIndexSD_Area_CphGID.First().Value;
         }
 
 

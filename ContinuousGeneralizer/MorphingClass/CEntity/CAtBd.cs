@@ -54,7 +54,7 @@ namespace MorphingClass.CEntity
         {
             foreach (CPoint cpt in this.CptLt)
             {
-                cpt.BelongedCPolyline = this;
+                cpt.BelongedCpl = this;
             }
         }
 

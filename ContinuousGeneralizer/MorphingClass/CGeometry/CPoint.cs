@@ -72,8 +72,7 @@ namespace MorphingClass.CGeometry
         //private double this.X;
         //private double this.Y;
         //private double this.Z;
-
-        private CPolyline _BelongedCPolyline;
+        
         //private CEdge _BelongedCEdge;
         private CEdge _IncidentCEdge;   //we always set the edge with the smallest axis angle as the IncidentCEdge
         private CEdge _IncidentCEdge1;
@@ -85,6 +84,7 @@ namespace MorphingClass.CGeometry
         
 
         public List<CEdge> AxisAngleCEdgeLt { set; get; }
+        public CEdge CEdge { set; get; }
 
         private CCorrCpts _PairCorrCpt;
         //private CRiver _BelongedCRiver;
@@ -94,6 +94,7 @@ namespace MorphingClass.CGeometry
         public double dblAbsLengthFromStart { set; get; }
         public double dblRatioLengthFromStart { set; get; }
         public double dblEdgeLength { set; get; }
+        public CPolyline BelongedCpl { set; get; }
 
         /// <summary>
         /// 实例化一个点
@@ -142,9 +143,9 @@ namespace MorphingClass.CGeometry
             return CGeoFunc.CalDis(this, other);
         }
 
-        public CptEdgeDis DistanceTo(CEdge cedge, bool blnHeight = false)
+        public CptEdgeDis DistanceTo(CEdge cedge, bool blnHeight = false, CEdge thisCEdge = null)
         {
-            return CGeoFunc.CalDisBetweenCptCEdge(this, cedge, blnHeight);
+            return CGeoFunc.CalDisBetweenCptCEdge(this, cedge, blnHeight, thisCEdge);
         }
 
 
@@ -390,11 +391,7 @@ namespace MorphingClass.CGeometry
         //    set { _intXID = value; }
         //}
 
-        public CPolyline BelongedCPolyline
-        {
-            get { return _BelongedCPolyline; }
-            set { _BelongedCPolyline = value; }
-        }
+
 
         //public CEdge BelongedCEdge
         //{

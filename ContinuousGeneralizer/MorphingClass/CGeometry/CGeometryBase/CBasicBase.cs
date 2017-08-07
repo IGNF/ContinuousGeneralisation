@@ -9,8 +9,9 @@ namespace MorphingClass.CGeometry.CGeometryBase
     {
         protected int _intID = -1;
         public int GID { get; set; } //global id
-        
-        
+        public int indexID { get; set; }
+        public bool isTraversed { get; set; }
+
 
         public int CompareTo(CBasicBase other)
         {

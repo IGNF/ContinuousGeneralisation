@@ -10,6 +10,10 @@ using MorphingClass.CUtility;
 using MorphingClass.CEntity;
 using MorphingClass.CGeometry.CGeometryBase;
 
+using ClipperLib;
+using Path = System.Collections.Generic.List<ClipperLib.IntPoint>;
+using Paths = System.Collections.Generic.List<System.Collections.Generic.List<ClipperLib.IntPoint>>;
+
 namespace MorphingClass.CGeometry
 {
     public class CPolygon : CPolyBase<CPolygon>
@@ -34,14 +38,23 @@ namespace MorphingClass.CGeometry
         public int intTypeIndex { get; set; } //the index (0, 1, 2, ...) of a type; used for access type distance directly
 
         public CPolygon ParentCpg { get; set; }
-        public CPolygon ClipCpg { get; set; }
+        //public CPolygon ClipCpg { get; set; }
+
+        /// <summary>for a polygon, there is one element in ClipCpgLt;
+        /// but for a hole, there may be several elements in ClipCpgLt </summary>    
+        public List<CPolygon> ClipCpgLt { get; set; }  
+        public CPolygon ExteriorOffsetCpg { get; set; }
+        //public cp CPolygon ClipBridge { get; set; }
+
+        public Paths CpgPaths { get; set; }
+        public PolyTree pPolyTree { get; set; }
 
         public List<CPolygon> HoleCpgLt { get; set; }
         public CPoint CentroidCptSimple { get; set; }
 
-        public List<CPolygon> MergedSubCpgLt { get; set; }
-        public List<CEdge> BridgeCEdgeLt { get; set; }
-
+        public List<CPolygon> SubCpgLt { get; set; }
+        public SortedSet<CptEdgeDis> BridgeCptEdgeDisSS { get; set; }
+        
         //public CPolygon AssigningFace { get; set; }
         //public List<CPolygon> AssignedFaceLt { get; set; }
 
@@ -49,8 +62,11 @@ namespace MorphingClass.CGeometry
 
         //private CPoint _CentroidCpt;
         private CPoint _LeftMostCpt;
-        private bool _IsHole;
-        private bool _IsMerged;
+
+        public bool IsHole { get; set; }
+        public bool IsMerged { get; set; }
+        public bool IsSubCpg { get; set; }
+        //public bool IsOriginal { get; set; } = true;
 
         //private Func<IEnumerable<List<CPoint>>> getHoleCptLtEb;
 
@@ -103,20 +119,29 @@ namespace MorphingClass.CGeometry
             FormPolyBase(cptlt);
 
 
-            //if (holecpglt!=null)
-            //{
-            //    foreach (var holecpg in holecpglt)
-            //    {
-            //        holecpg.ParentCpg = this;
-            //    }
-            //}
-            this.HoleCpgLt = holecpglt;
+            if (holecpglt != null)
+            {
+                foreach (var holecpg in holecpglt)
+                {
+                    holecpg.IsHole = true;
+                }
+                this.HoleCpgLt = holecpglt;
+            }
+
         }
 
         //public CPolygon(int intID = -2, List<CPoint> cptlt = null, List<CPolygon> holecpglt = null, Func<IEnumerable<List<CPoint>>> getHoleCptLtEb = null) : this(intID, cptlt, holecpglt)
         //{
         //    this.getHoleCptLtEb = getHoleCptLtEb;
         //}
+
+        public override void JudgeAndFormCEdgeLt()
+        {
+            if (this.CEdgeLt == null)
+            {
+                FormCEdgeLt();
+            }            
+        }
 
         public override void FormCEdgeLt()
         {
@@ -127,6 +152,19 @@ namespace MorphingClass.CGeometry
                 foreach (var holecpg in this.HoleCpgLt)
                 {
                     holecpg.FormCEdgeLt();
+                }
+            }
+        }
+
+        public override void SetCEdgeLtFrCptCEdge()
+        {
+            this.CEdgeLt.ForEach(cedge => cedge.SetFrCptCEdge());
+
+            if (this.HoleCpgLt != null)
+            {
+                foreach (var holecpg in this.HoleCpgLt)
+                {
+                    holecpg.SetCEdgeLtFrCptCEdge();
                 }
             }
         }
@@ -201,13 +239,13 @@ namespace MorphingClass.CGeometry
 
         
 
-        public override void JudgeAndFormCEdgeLt()
-        {
-            if (this.CEdgeLt == null)
-            {
-                FormCEdgeLt();
-            }
-        }
+        //public override void JudgeAndFormCEdgeLt()
+        //{
+        //    if (this.CEdgeLt == null)
+        //    {
+        //        FormCEdgeLt();
+        //    }
+        //}
 
 
         /// <summary>
@@ -404,51 +442,14 @@ namespace MorphingClass.CGeometry
             //var innercptltlt = new List<List<CPoint>>();
             if (_InnerCmptCEdgeLt != null && _InnerCmptCEdgeLt.Count == 1)
             {
-                return GetInnerCptEb(_InnerCmptCEdgeLt.GetFirstT(), clockwise, blnIdentical).ToList();
+                return GetInnerCptEb(_InnerCmptCEdgeLt.First(), clockwise, blnIdentical).ToList();
             }
             else
             {
                 throw new ArgumentException("This face has no or more than one inner components!");
             }
         }
-
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="cedgeComponent"></param>
-        ///// <returns></returns>
-        ///// <remarks>we don't just use the FrCpt of OuterCmptCEdge as the start vertex, because a pair of corresponding faces may have different OuterCmptCEdge
-        /////          Instead, we use the Cpt having the smallest indexID as the start vertex</remarks>
-        //private List <CPoint> TraverseToGenerateCptLt(CEdge cedgeComponent)
-        //{
-        //    var MinFrIndexIDCEdge = cedgeComponent;
-        //    var CurrentCEdge = cedgeComponent.cedgeNext;
-        //    int intCount = 1;
-        //    do
-        //    {
-        //        intCount++;
-        //        if (CurrentCEdge.FrCpt.indexID < MinFrIndexIDCEdge.FrCpt.indexID)
-        //        {
-        //            MinFrIndexIDCEdge = CurrentCEdge;
-        //        }
-        //        //Console.WriteLine(CurrentCEdge.indexID + "___" + CurrentCEdge.indexID1 + "   " + CurrentCEdge.indexID2);
-        //        CurrentCEdge = CurrentCEdge.cedgeNext;
-        //    } while (CurrentCEdge.indexID != cedgeComponent.indexID);
-
-
-        //    var cptlt = new List<CPoint>(intCount + 1);
-        //    cptlt.Add(MinFrIndexIDCEdge.FrCpt);
-        //    cptlt.Add(MinFrIndexIDCEdge.ToCpt);
-        //    CurrentCEdge = MinFrIndexIDCEdge.cedgeNext;
-        //    do
-        //    {
-        //        cptlt.Add(CurrentCEdge.ToCpt);
-        //        CurrentCEdge = CurrentCEdge.cedgeNext;
-        //    } while (CurrentCEdge.indexID != MinFrIndexIDCEdge.indexID);
-        //    this.CptLt = cptlt;
-        //    return cptlt;
-        //}
+        
 
         /// <summary>
         /// (counter clockwise???)
@@ -498,24 +499,6 @@ namespace MorphingClass.CGeometry
             return this.CentroidCptSimple;
         }
 
-        //public void Clear()
-        //{
-        //    _InnerCmptCEdgeLt = null;
-        //    this.CEdgeLt = null;
-        //    _OuterCmptCEdge = null;
-        //    _cedgeStartAtLeftMost = null;
-        //    _CorrCGeo = null;
-        //    _CorrCGeoLt = null;
-        //    this.CptLt = null;
-        //    _LeftMostCpt = null;
-        //    //_pGeo = null;
-
-
-
-
-
-        //}
-
 
 
         public CPoint LeftMostCpt
@@ -541,49 +524,6 @@ namespace MorphingClass.CGeometry
                 _pGeo = value;
             }
         }
-
-        public bool IsHole
-        {
-            get { return _IsHole; }
-            set { _IsHole = value; }
-        }
-
-        public bool IsMerged
-        {
-            get { return _IsMerged; }
-            set { _IsMerged = value; }
-        }
-
-
-
-        //public void SetPolygonAndEdge()
-        //{
-        //    if (this .pPolygon ==null)
-        //    {
-        //        IPointCollection4 pPntCtl = CHelpFunc.GetPointCollectionFromCptLt(cptlt);
-        //        this.pPolygon = pPntCtl as IPolygon4;
-        //        this.pPolygon.Close();
-        //    }
-
-        //    if (true)
-        //    {
-        //        ISegmentCollection pSegmentCollection = this.pPolygon as ISegmentCollection;
-        //        List<CEdge> pedgelt = _CEdgeLt;
-        //        for (int i = 0; i < pedgelt.Count ; i++)
-        //        {
-        //            pedgelt[i].pLine = pSegmentCollection.get_Segment(i) as ILine;
-        //        }
-        //    }
-
-        //}
-
-        //public void SetEdgeIncidentFace()
-        //{
-        //    foreach (CEdge  cedge in _CEdgeLt)
-        //    {
-        //        cedge.cpgIncidentFace = this;
-        //    }
-        //}
 
 
 

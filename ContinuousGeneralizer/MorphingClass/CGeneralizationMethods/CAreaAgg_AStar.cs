@@ -571,7 +571,7 @@ namespace MorphingClass.CGeneralizationMethods
             ILinearNumExpr pFinalStateExpr = model.LinearNumExpr();
             for (int i = 0; i < intCpgCount; i++)
             {
-                if (aCph[i].intTypeIndex == sscrg.CphTypeIndexSD_Area_CphGID.Keys.GetFirstT().intTypeIndex)
+                if (aCph[i].intTypeIndex == sscrg.CphTypeIndexSD_Area_CphGID.Keys.First().intTypeIndex)
                 {
                     pFinalStateExpr.AddTerm(x[intCpgCount - 1][i][i], 1.0);
                 }
@@ -764,7 +764,7 @@ namespace MorphingClass.CGeneralizationMethods
             }
 
             //Output LSCrg: ID Area dblInteriorSegLength intTargetTypeIndex {corrcphs: GID FrCph.ID ToCph.ID dblSharedSegLength ...}
-            string strLSCrg = LSCrg.ID + " " + LSCrg.dblArea + " " + LSCrg.dblInteriorSegLength + " " + SSCrg.CphTypeIndexSD_Area_CphGID.GetFirstT().Key.intTypeIndex + "\n";
+            string strLSCrg = LSCrg.ID + " " + LSCrg.dblArea + " " + LSCrg.dblInteriorSegLength + " " + SSCrg.CphTypeIndexSD_Area_CphGID.First().Key.intTypeIndex + "\n";
             foreach (var corrcphs in LSCrg.AdjCorrCphsSD.Keys)
             {
                 strLSCrg +=corrcphs.GID + " " + corrcphs.FrCph.ID + " " + corrcphs.ToCph.ID + " " + corrcphs.dblSharedSegLength + "\n";
@@ -900,7 +900,7 @@ namespace MorphingClass.CGeneralizationMethods
             SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, int intFactor, CStrObjLtSD StrObjLtSD, double[,] padblTD, int intQuitCount = 200000)
         {
             int intRegionID = LSCrg.ID;  //all the regions generated in this function will have the same intRegionID
-            int intSSTypeIndex = SSCrg.CphTypeIndexSD_Area_CphGID.GetFirstT().Value;
+            int intSSTypeIndex = SSCrg.CphTypeIndexSD_Area_CphGID.First().Value;
 
             LSCrg.InitialEstimatedCost(SSCrg, padblTD, intFactor);
             //LSCrg.SetCoreCph(intSSTypeIndex);

@@ -73,7 +73,7 @@ namespace ContinuousGeneralizer
             this.mnuLinear_AL = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuPAL = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuGeneralization = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuDPSimplification = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDPSimplify = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAreaAgg_AStar = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBldgGrow = new System.Windows.Forms.ToolStripMenuItem();
             this.morphingExtendToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -487,19 +487,19 @@ namespace ContinuousGeneralizer
             // mnuGeneralization
             // 
             this.mnuGeneralization.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuDPSimplification,
+            this.mnuDPSimplify,
             this.mnuAreaAgg_AStar,
             this.mnuBldgGrow});
             this.mnuGeneralization.Name = "mnuGeneralization";
             this.mnuGeneralization.Size = new System.Drawing.Size(94, 20);
             this.mnuGeneralization.Text = "Generalization";
             // 
-            // mnuDPSimplification
+            // mnuDPSimplify
             // 
-            this.mnuDPSimplification.Name = "mnuDPSimplification";
-            this.mnuDPSimplification.Size = new System.Drawing.Size(163, 22);
-            this.mnuDPSimplification.Text = "DPSimplification";
-            this.mnuDPSimplification.Click += new System.EventHandler(this.mnuDPSimplification_Click);
+            this.mnuDPSimplify.Name = "mnuDPSimplify";
+            this.mnuDPSimplify.Size = new System.Drawing.Size(163, 22);
+            this.mnuDPSimplify.Text = "DPSimplify";
+            this.mnuDPSimplify.Click += new System.EventHandler(this.mnuDPSimplify_Click);
             // 
             // mnuAreaAgg_AStar
             // 
@@ -1350,7 +1350,7 @@ namespace ContinuousGeneralizer
         private System.Windows.Forms.ToolStripMenuItem mnuLinear_AL;
         private System.Windows.Forms.ToolStripMenuItem mnuPAL;
         private System.Windows.Forms.ToolStripMenuItem mnuGeneralization;
-        private System.Windows.Forms.ToolStripMenuItem mnuDPSimplification;
+        private System.Windows.Forms.ToolStripMenuItem mnuDPSimplify;
         private System.Windows.Forms.ToolStripMenuItem morphingExtendToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mnuCDTLSA;
         private System.Windows.Forms.ToolStripMenuItem fishEyeToolStripMenuItem;

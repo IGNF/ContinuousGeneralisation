@@ -26,6 +26,10 @@ using MorphingClass.CEntity;
 using MorphingClass.CGeometry.CGeometryBase;
 using VBClass;
 
+using ClipperLib;
+using Path = System.Collections.Generic.List<ClipperLib.IntPoint>;
+using Paths = System.Collections.Generic.List<System.Collections.Generic.List<ClipperLib.IntPoint>>;
+
 namespace MorphingClass.CUtility
 {
     public static class CGeoFunc
@@ -206,7 +210,7 @@ namespace MorphingClass.CUtility
         //    return Math.Sqrt(CalSquareSum(dbldiffx, dbldiffy));
         //}
 
-        public static CptEdgeDis CalDisBetweenCptCEdge(CPoint cpt, CEdge cedge, bool blnHeight = false)
+        public static CptEdgeDis CalDisBetweenCptCEdge(CPoint cpt, CEdge cedge, bool blnHeight = false, CEdge thisCEdge=null)
         {
             cedge.JudgeAndSetLength();
             CPoint projection;
@@ -246,7 +250,7 @@ namespace MorphingClass.CUtility
 
             //const vec2 projection = v + t * (w - v);  // Projection falls on the segment
             return new CGeometry.CptEdgeDis
-                    (cpt.DistanceTo(projection), t, cpt, projection, cedge, blnHeight);
+                    (cpt.DistanceTo(projection), t, cpt, thisCEdge, projection, cedge, blnHeight);
         }
 
 
@@ -262,7 +266,7 @@ namespace MorphingClass.CUtility
         {
             cpl.SetEdgeLengthOnToCpt();
             cpl.enumScale = enumScale;
-            cpl.SetCptBelongedPolyline();
+            cpl.SetCptBelongedCpl();
         }
 
         public static CMoveVector CalMoveVector(CPoint frcpt, CPoint tocpt)
@@ -1976,12 +1980,12 @@ namespace MorphingClass.CUtility
         /// <returns>a list of edges, there are only two vertices are stored</returns>
         /// <remarks>if the set of points are from a polygon, then first point and the last point must have the same coordinates</remarks>
         /// <ret>
-        public static List<List<CEdge>> FormCEdgeLtLt(List<List<CPoint>> cptltlt)
+        public static List<List<CEdge>> FormCEdgeLtLt(IEnumerable<IEnumerable<CPoint>> cptebeb)
         {
-            List<List<CEdge>> cedgeltlt = new List<List<CEdge>>(cptltlt.Count);
-            foreach (var cptlt in cptltlt)
+            List<List<CEdge>> cedgeltlt = new List<List<CEdge>>();
+            foreach (var cpteb in cptebeb)
             {
-                cedgeltlt.Add(FormCEdgeEb(cptlt).ToList ());
+                cedgeltlt.Add(FormCEdgeEb(cpteb).ToList ());
             }
             return cedgeltlt;
         }
@@ -1993,7 +1997,7 @@ namespace MorphingClass.CUtility
         /// <param name="blnIdentical">blnIdentical == true means the first point and the last point are the same</param>
         /// <returns>a list of edges, there are only two vertices are stored</returns>
         /// <remarks>if the set of points are from a polygon, then first point and the last point must have the same coordinates</remarks>
-        public static IEnumerable<CEdge> FormCEdgeEb(IEnumerable<CPoint> cptEb, bool blnIdentical = true)
+        public static IEnumerable<CEdge> FormCEdgeEb(IEnumerable<CPoint> cptEb, bool AddCEdge_lastcptTofirstcpt = false)
         {
             var cptEt = cptEb.GetEnumerator();
             cptEt.MoveNext();
@@ -2006,7 +2010,7 @@ namespace MorphingClass.CUtility
                 lastcpt = cptEt.Current;
             }
 
-            if (blnIdentical == false)
+            if (AddCEdge_lastcptTofirstcpt == true)
             {
                 yield return new CEdge(lastcpt, firstcpt);
             }
@@ -2083,6 +2087,17 @@ namespace MorphingClass.CUtility
             }
         }
 
+        public static IEnumerable<T> AddFirstAsLastForEb<T>(IEnumerable<T> TEb)
+        {
+            var TEt = TEb.GetEnumerator();
+            TEt.MoveNext();
+            var firstelement = TEt.Current;
+            do
+            {
+                yield return TEt.Current;
+            } while (TEt.MoveNext());
+            yield return firstelement;
+        }
 
         ///// <summary>Set pPolyline and pPoint to null</summary>
         ///// <remarks > If the coordinates have been changed, we have to set the pPolyline and the pPoint to null so that we can generate new ones</remarks>
@@ -2265,25 +2280,11 @@ namespace MorphingClass.CUtility
         {
             foreach (var cedge in cedgeEb)
             {
-                if (CCmpMethods.CmpCptXY(cedge.FrCpt, cedge.ToCpt)==0)
+                if (CCmpMethods.CmpCptXY(cedge.FrCpt, cedge.ToCpt) == 0)
                 {
                     throw new ArgumentException("There is a small edge!");
                 }
             }
-        }
-
-        public static bool ExistDuplicate<T>(SCG.ICollection<T> TCol, IComparer<T> cmp = null)
-        {
-            var TSS = RemoveLaterDuplicate(TCol, cmp);
-            if (TSS.Count< TCol.Count)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-            
         }
 
         /// <summary>
@@ -2293,19 +2294,22 @@ namespace MorphingClass.CUtility
         /// <param name="TEnumerable"></param>
         /// <param name="cmp"></param>
         /// <returns></returns>
-        public static  SortedSet<T> RemoveLaterDuplicate<T>(IEnumerable<T> TEnumerable, IComparer<T> cmp = null)
+        public static bool ExistDuplicate<T>(IEnumerable<T> TEnumerable, IEqualityComparer<T> EqCmp)
         {
             IEnumerator<T> selfEnumerator = TEnumerable.GetEnumerator();
             if (!selfEnumerator.MoveNext()) throw new ArgumentException("List is empty.", "self");
-            if (cmp == null) { cmp = SCG.Comparer<T>.Default; }
+            if (EqCmp == null) { EqCmp = SCG.EqualityComparer<T>.Default; }
 
-            var ExistingSS = new SortedSet<T>(cmp);
+            var ExistingHS = new SCG.HashSet<T>(EqCmp);
             do
             {
-                ExistingSS.Add(selfEnumerator.Current);
+                if (ExistingHS.Add(selfEnumerator.Current) == false)
+                {
+                    return true;
+                }
             } while (selfEnumerator.MoveNext());
 
-            return ExistingSS;
+            return false;
         }
 
 
@@ -2445,6 +2449,17 @@ namespace MorphingClass.CUtility
                     }
                 }                
             }
+        }
+
+        public static IEnumerable<Path> GetClosedPathEb(Paths paths)
+        {
+            foreach (var path in paths)
+            {
+                var closedpath = new Path(path);
+                closedpath.Add(path[0]);
+                yield return closedpath;
+            }
+
         }
 
         //public static IEnumerable<CEdge> RemoveShortEdges(IEnumerable<CEdge> cedgeEb)

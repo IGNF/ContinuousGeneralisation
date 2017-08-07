@@ -92,7 +92,7 @@ namespace MorphingClass.CMorphingMethods
             //delegation of morphing method
             DlgCreateTable dlgCreateTable = SetDlgCreateTable(pParameterInitialize.cboMorphingMethod.Text);
             _pEvaluation = new CEvaluation(pParameterInitialize.cboEvaluationMethod.SelectedIndex);
-            var StandardVectorCpt = SetStandardVectorCpt(pParameterInitialize.cboStandardVector.SelectedIndex, pFrCptLtLt[0].GetFirstT(), pToCptLtLt[0].GetFirstT());
+            var StandardVectorCpt = SetStandardVectorCpt(pParameterInitialize.cboStandardVector.SelectedIndex, pFrCptLtLt[0].First(), pToCptLtLt[0].First());
 
             long lngStartTime1 = System.Environment.TickCount;  //lngTime1
 
@@ -689,7 +689,7 @@ namespace MorphingClass.CMorphingMethods
             {
                 tocptltWithoutEnds = tocptlt.GetRange(1, tocptlt.Count - 2);
             }
-            var tocptsd = tocptltWithoutEnds.ToSD(cpt => cpt, CCmpCptYX_VerySmall.pCmpCptYX_VerySmall);
+            var tocptsd = tocptltWithoutEnds.ToSD(cpt => cpt, CCmpCptYX_VerySmall.sComparer);
 
             LinkedList<CCorrCpts> CtrlCptsLk = new LinkedList<CCorrCpts>();
             CtrlCptsLk.AddLast(new CCorrCpts(frcptlt[0], tocptlt[0]));     //the first pair

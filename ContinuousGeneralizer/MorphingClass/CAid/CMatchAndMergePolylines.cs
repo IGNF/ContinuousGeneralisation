@@ -121,7 +121,7 @@ namespace MorphingClass.CAid
                     }
                     else if (intCount == 1)
                     {
-                        CCorrCplInfo pCorrCplInfo2 = pCorrCplInfoSD.Values.GetFirstT();
+                        CCorrCplInfo pCorrCplInfo2 = pCorrCplInfoSD.Values.First();
                         pLSCPlLt[i].CorrCGeoLt.Add(pCorrCplInfo2.pCorrCpl);
                         pCorrCplInfo2.pCorrCpl.CorrCGeoLt.Add(pLSCPlLt[i]);
                     }

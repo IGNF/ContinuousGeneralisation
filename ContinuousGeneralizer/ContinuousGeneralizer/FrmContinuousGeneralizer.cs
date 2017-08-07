@@ -1059,10 +1059,10 @@ namespace ContinuousGeneralizer
             frmEnlargeLayer.Show();
         }
 
-        private void mnuDPSimplification_Click(object sender, EventArgs e)
+        private void mnuDPSimplify_Click(object sender, EventArgs e)
         {
-            FrmDPSimplification frmDPSimplification = new FrmDPSimplification(_DataRecords);
-            frmDPSimplification.Show();
+            FrmDPSimplify frmDPSimplify = new FrmDPSimplify(_DataRecords);
+            frmDPSimplify.Show();
         }
 
         private void mnuLookingForNeighboursDT2_Click(object sender, EventArgs e)

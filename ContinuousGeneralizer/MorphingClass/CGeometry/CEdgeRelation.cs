@@ -40,20 +40,20 @@ namespace MorphingClass.CGeometry
                 case CEnumIntersectionType.FrFr:
                     this.pEnumDisMode = CEnumDisMode.FrFr;
                     this.cptEdgeDis = new CGeometry.CptEdgeDis
-                        (0, 0, _CEdge1.FrCpt, _CEdge2.FrCpt, _CEdge2, false);
+                        (0, 0, _CEdge1.FrCpt, _CEdge1, _CEdge2.FrCpt, _CEdge2, false);
                     break;
                 case CEnumIntersectionType.FrIn:
                     this.pEnumDisMode = CEnumDisMode.FrIn;
-                    this.cptEdgeDis = _CEdge1.FrCpt.DistanceTo(_CEdge2);
+                    this.cptEdgeDis = _CEdge1.FrCpt.DistanceTo(_CEdge2,false, _CEdge1);
                     break;
                 case CEnumIntersectionType.FrTo:
                     this.pEnumDisMode = CEnumDisMode.FrTo;
                     this.cptEdgeDis = new CGeometry.CptEdgeDis
-                        (0, 1, _CEdge1.FrCpt, _CEdge2.ToCpt, _CEdge2, false);
+                        (0, 1, _CEdge1.FrCpt, _CEdge1, _CEdge2.ToCpt, _CEdge2, false);
                     break;
                 case CEnumIntersectionType.InFr:
                     this.pEnumDisMode = CEnumDisMode.InFr;
-                    this.cptEdgeDis = _CEdge2.FrCpt.DistanceTo(_CEdge1);
+                    this.cptEdgeDis = _CEdge2.FrCpt.DistanceTo(_CEdge1, false, _CEdge2);
                     break;
                 case CEnumIntersectionType.InIn:
                     this.pEnumDisMode = CEnumDisMode.InIn;
@@ -61,23 +61,23 @@ namespace MorphingClass.CGeometry
                     break;
                 case CEnumIntersectionType.InTo:
                     this.pEnumDisMode = CEnumDisMode.InTo;
-                    this.cptEdgeDis = _CEdge2.ToCpt.DistanceTo(_CEdge1);
+                    this.cptEdgeDis = _CEdge2.ToCpt.DistanceTo(_CEdge1, false, _CEdge2);
                     break;
                 case CEnumIntersectionType.ToFr:
                     this.pEnumDisMode = CEnumDisMode.ToFr;
                     this.cptEdgeDis = new CGeometry.CptEdgeDis
-                        (0, 0, _CEdge1.ToCpt, _CEdge2.FrCpt, _CEdge2, false);
+                        (0, 0, _CEdge1.ToCpt, _CEdge1, _CEdge2.FrCpt, _CEdge2, false);
                     break;
                 case CEnumIntersectionType.ToIn:
                     this.pEnumDisMode = CEnumDisMode.ToIn;
-                    this.cptEdgeDis = _CEdge1.ToCpt.DistanceTo(_CEdge2);
+                    this.cptEdgeDis = _CEdge1.ToCpt.DistanceTo(_CEdge2, false, _CEdge1);
                     break;
                 case CEnumIntersectionType.ToTo:
                     this.pEnumDisMode = CEnumDisMode.ToTo;
                     this.cptEdgeDis = new CGeometry.CptEdgeDis
-                        (0, 1, _CEdge1.ToCpt, _CEdge2.ToCpt, _CEdge2, false);
+                        (0, 1, _CEdge1.ToCpt, _CEdge1, _CEdge2.ToCpt, _CEdge2, false);
                     break;
-                case CEnumIntersectionType.Overlap:                    
+                case CEnumIntersectionType.Overlap:
                     DetectPtEdge();
                     this.pEnumDisMode = CEnumDisMode.Overlap;
                     break;
@@ -91,10 +91,10 @@ namespace MorphingClass.CGeometry
             CEdge cedge1 = _CEdge1;
             CEdge cedge2 = _CEdge2;
 
-            var FrcptEdgeDis = cedge1.FrCpt.DistanceTo(cedge2);
-            var TocptEdgeDis = cedge1.ToCpt.DistanceTo(cedge2);
-            var EdgeFrcptDis = cedge2.FrCpt.DistanceTo(cedge1);
-            var EdgeTocptDis = cedge2.ToCpt.DistanceTo(cedge1);
+            var FrcptEdgeDis = cedge1.FrCpt.DistanceTo(cedge2, false, cedge1);
+            var TocptEdgeDis = cedge1.ToCpt.DistanceTo(cedge2, false, cedge1);
+            var EdgeFrcptDis = cedge2.FrCpt.DistanceTo(cedge1, false, cedge2);
+            var EdgeTocptDis = cedge2.ToCpt.DistanceTo(cedge1, false, cedge2);
 
             if (FrcptEdgeDis.dblDis <= TocptEdgeDis.dblDis &&
                 FrcptEdgeDis.dblDis <= EdgeFrcptDis.dblDis &&
