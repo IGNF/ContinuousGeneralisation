@@ -467,7 +467,7 @@ namespace MorphingClass.CCorrepondObjects
                     if (CoStartCEdge.FrCpt.indexID == ParentCEdge.FrCpt.indexID)  //we cannot compare coordinates here because cedge is from regular polygon while ParentCEdge is from real polygon
                     {
                         var SubCEdge = CoStartCEdge;
-                        ParentCEdge.CorrRglSubCEdgeLt = new List<CEdge>(1); //at least one sub edge
+                        ParentCEdge.CorrRglSubCEdgeLt = new List<CEdge>(); //at least one sub edge
                         do
                         {
                             SubCEdge.SetLength();   //set length

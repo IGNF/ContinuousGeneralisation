@@ -351,8 +351,8 @@ namespace MorphingClass.CGeometry
                                 }
                                 else
                                 {
-                                    //List<CEdge> NewCphSharedEdgesLt = new List<CEdge>(1);
-                                    //CorrCphs.SharedCEdgeLt = new List<CEdge>(1);
+                                    //List<CEdge> NewCphSharedEdgesLt = new List<CEdge>();
+                                    //CorrCphs.SharedCEdgeLt = new List<CEdge>();
                                     CorrCphs.SharedCEdgeLt.Add(cedge);
                                     CorrCphs.dblSharedSegLength += cedge.dblLength;
                                     CorrCphs.intSharedCEdgeCount++;

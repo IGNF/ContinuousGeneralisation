@@ -45,7 +45,7 @@ namespace ContinuousGeneralizer.FrmAid
         private void FrmCreatePointLayer_Load(object sender, EventArgs e)
         {
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
-            ParameterInitialize.cboLayerLt = new List<ComboBox>(1);
+            ParameterInitialize.cboLayerLt = new List<ComboBox>();
             ParameterInitialize.cboLayerLt.Add(this.cboLayer);
            
             //进行Load操作，初始化变量

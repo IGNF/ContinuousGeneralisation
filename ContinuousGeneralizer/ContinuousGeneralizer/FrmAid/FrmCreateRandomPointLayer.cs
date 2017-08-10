@@ -108,7 +108,7 @@ namespace ContinuousGeneralizer.FrmAid
                 //{
                 //    objshapelt.Add(cptlt[i]);
 
-                //    List<object> objvaluelt = new List<object>(1);
+                //    List<object> objvaluelt = new List<object>();
                 //    objvaluelt.Add(i);
                 //    objectvalueltlt.Add(objvaluelt);
                 //}

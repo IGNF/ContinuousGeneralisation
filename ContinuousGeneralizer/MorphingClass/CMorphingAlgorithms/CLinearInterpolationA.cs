@@ -36,7 +36,7 @@ namespace MorphingClass.CMorphingAlgorithms
         {
             List<CPoint> ResultPtLt = new List<CPoint>(CFrPolyline.CptLt.Count + CToPolyline.CptLt.Count - 1);  //please consider the special case: one segment corresponds to one point
             CPoint cfrpt0 = CFrPolyline.CptLt[0];
-            cfrpt0.CorrespondingPtLt = new List<CPoint>(1);
+            cfrpt0.CorrespondingPtLt = new List<CPoint>();
             //CToPolyline.CptLt[0].isCtrl = true;  //标记为控制点
             cfrpt0.CorrespondingPtLt.Add(CToPolyline.CptLt[0]);
             ResultPtLt.Add(cfrpt0);
@@ -57,7 +57,7 @@ namespace MorphingClass.CMorphingAlgorithms
             List<CPoint> toptlt = CToPolyline.CptLt;
 
             for (int i = 1; i < frptlt.Count; i++)
-                frptlt[i].CorrespondingPtLt = new List<CPoint>(1);
+                frptlt[i].CorrespondingPtLt = new List<CPoint>();
             //for (int i = 1; i < toptlt.Count; i++)
             //    toptlt[i].isCtrl = false;
 
@@ -130,7 +130,7 @@ namespace MorphingClass.CMorphingAlgorithms
                     else if (comcpt.BelongedCpl.enumScale == CEnumScale.Smaller)
                     {
                         CPoint cpt = CGeoFunc.QueryCPointByLength(comcpt, frptlt, ref intFrKnownIndex);
-                        cpt.CorrespondingPtLt = new List<CPoint>(1);
+                        cpt.CorrespondingPtLt = new List<CPoint>();
                         cpt.CorrespondingPtLt.Add(comcpt);
                         ResultPtLt.Add(cpt);
                     }

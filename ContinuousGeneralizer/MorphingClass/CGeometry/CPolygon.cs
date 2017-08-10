@@ -9,6 +9,7 @@ using ESRI.ArcGIS.Geometry;
 using MorphingClass.CUtility;
 using MorphingClass.CEntity;
 using MorphingClass.CGeometry.CGeometryBase;
+using MorphingClass.CCorrepondObjects;
 
 using ClipperLib;
 using Path = System.Collections.Generic.List<ClipperLib.IntPoint>;
@@ -46,7 +47,7 @@ namespace MorphingClass.CGeometry
         public CPolygon ExteriorOffsetCpg { get; set; }
         //public cp CPolygon ClipBridge { get; set; }
 
-        public Paths CpgPaths { get; set; }
+        public Paths ExteriorPaths { get; set; }
         public PolyTree pPolyTree { get; set; }
 
         public List<CPolygon> HoleCpgLt { get; set; }
@@ -55,6 +56,8 @@ namespace MorphingClass.CGeometry
         public List<CPolygon> SubCpgLt { get; set; }
         public SortedSet<CptEdgeDis> BridgeCptEdgeDisSS { get; set; }
         
+        public Dictionary<CValPairIncr<CPolygon>, CptEdgeDis> CpipeDt { get; set; }
+
         //public CPolygon AssigningFace { get; set; }
         //public List<CPolygon> AssignedFaceLt { get; set; }
 
@@ -368,30 +371,7 @@ namespace MorphingClass.CGeometry
             }
         }
 
-        public IEnumerable<CPoint> GetInnerCptEb(CEdge cedgeComponent, bool clockwise = true, bool blnIdentical = true)
-        {
-            var pOuterCmptCEdge = cedgeComponent;
-
-            if (clockwise == true)  //for an inner path, the edges are stored clockwise in DCEL
-            {
-                foreach (var cpt in TraverseToGetCptEb(pOuterCmptCEdge, true))
-                {
-                    yield return cpt;
-                }
-            }
-            else
-            {
-                foreach (var cpt in TraverseToGetCptEb(pOuterCmptCEdge, false))
-                {
-                    yield return cpt;
-                }
-            }
-
-            if (blnIdentical == true)
-            {
-                yield return pOuterCmptCEdge.FrCpt;
-            }
-        }
+       
 
         /// <summary>
         /// 
@@ -405,6 +385,25 @@ namespace MorphingClass.CGeometry
             do
             {
                 yield return currentcedge.FrCpt;
+
+                if (blnNext == true)
+                {
+                    currentcedge = currentcedge.cedgeNext;
+                }
+                else
+                {
+                    currentcedge = currentcedge.cedgePrev;
+                }
+
+            } while (currentcedge.GID != cedgeComponent.GID);
+        }
+
+        private static IEnumerable<CEdge> TraverseToGetCEdgeEb(CEdge cedgeComponent, bool blnNext)
+        {
+            var currentcedge = cedgeComponent;
+            do
+            {
+                yield return currentcedge;
 
                 if (blnNext == true)
                 {
@@ -449,7 +448,64 @@ namespace MorphingClass.CGeometry
                 throw new ArgumentException("This face has no or more than one inner components!");
             }
         }
-        
+
+        public List<CEdge> GetOnlyInnerCEdgeLt(bool clockwise = true)
+        {
+            //var innercptltlt = new List<List<CPoint>>();
+            if (_InnerCmptCEdgeLt != null && _InnerCmptCEdgeLt.Count == 1)
+            {
+                return GetInnerCEdgeEb(_InnerCmptCEdgeLt.First(), clockwise).ToList();
+            }
+            else
+            {
+                throw new ArgumentException("This face has no or more than one inner components!");
+            }
+        }
+
+        public IEnumerable<CPoint> GetInnerCptEb(CEdge cedgeComponent, bool clockwise = true, bool blnIdentical = true)
+        {
+            var pOuterCmptCEdge = cedgeComponent;
+
+            if (clockwise == true)  //for an inner path, the edges are stored clockwise in DCEL
+            {
+                foreach (var cpt in TraverseToGetCptEb(pOuterCmptCEdge, true))
+                {
+                    yield return cpt;
+                }
+            }
+            else
+            {
+                foreach (var cpt in TraverseToGetCptEb(pOuterCmptCEdge, false))
+                {
+                    yield return cpt;
+                }
+            }
+
+            if (blnIdentical == true)
+            {
+                yield return pOuterCmptCEdge.FrCpt;
+            }
+        }
+
+        public IEnumerable<CEdge> GetInnerCEdgeEb(CEdge cedgeComponent, bool clockwise = true)
+        {
+            var pOuterCmptCEdge = cedgeComponent;
+
+            if (clockwise == true)  //for an inner path, the edges are stored clockwise in DCEL
+            {
+                foreach (var cedge in TraverseToGetCEdgeEb(pOuterCmptCEdge, true))
+                {
+                    yield return cedge;
+                }
+            }
+            else
+            {
+                foreach (var cedge in TraverseToGetCEdgeEb(pOuterCmptCEdge, false))
+                {
+                    yield return cedge;
+                }
+            }
+        }
 
         /// <summary>
         /// (counter clockwise???)

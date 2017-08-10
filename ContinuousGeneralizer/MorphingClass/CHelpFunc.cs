@@ -263,7 +263,7 @@ namespace MorphingClass.CUtility
             if (strSpecifiedFieldName!=null )
             {
                intSpecifiedFieldIndex = pFeatureClass.FindField(strSpecifiedFieldName);
-               pobjectValueLtLt = new List<List<object>>(1);
+               pobjectValueLtLt = new List<List<object>>();
             }
            
             var ObjShapeLt = new List<object>(intFeatureCount);            
@@ -486,7 +486,7 @@ namespace MorphingClass.CUtility
         public static List<T> MakeLt<T>(T item1=null, T item2=null, T item3=null)
            where T:class
         {
-            List<T> TLt = new List<T>(1);
+            List<T> TLt = new List<T>();
 
             if (item1 != null)
             {

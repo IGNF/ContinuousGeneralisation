@@ -55,7 +55,7 @@ namespace MorphingClass.CMorphingAlgorithms
             List<CPoint> CResultPtLt = new List<CPoint>(intCount);
             ////添加第一个点
             CPoint cpt0 =CorrespondSegmentLk.First.Value.CFrPolyline.CptLt[0];
-            cpt0.CorrespondingPtLt = new List<CPoint>(1);
+            cpt0.CorrespondingPtLt = new List<CPoint>();
             //CorrespondSegmentLk[0].CToPolyline.CptLt[0].isCtrl = true;  //标记为控制点
             cpt0.CorrespondingPtLt.Add(CorrespondSegmentLk.First.Value.CToPolyline.CptLt[0]);
             CResultPtLt.Add(cpt0);

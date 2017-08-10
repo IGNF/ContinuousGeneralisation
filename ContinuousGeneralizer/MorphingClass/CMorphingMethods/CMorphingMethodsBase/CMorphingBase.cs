@@ -62,7 +62,7 @@ namespace MorphingClass.CMorphingMethods.CMorphingMethodsBase
         {
             Console.WriteLine("");
             Console.WriteLine("memory consumption: " + Math.Round(Convert.ToDouble(GC.GetTotalMemory(true)) / 1048576, 1) + "MB");
-
+            CConstants.ParameterInitialize = ParameterInitialize;
             CHelpFunc.SetSavePath(ParameterInitialize, blnCreateFileGdbWorkspace);
 
 

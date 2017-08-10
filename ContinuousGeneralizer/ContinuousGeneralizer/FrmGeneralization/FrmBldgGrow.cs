@@ -92,7 +92,6 @@ namespace ContinuousGeneralizer.FrmGeneralization
             //读取数据
             _pBldgGrow = new CBldgGrow(ParameterInitialize);
             _pBldgGrow.BldgGrow(
-                //Convert.ToDouble(this.txtBufferRadius.Text), 
                 this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text),
                 this.cboSimplification.Text,
                 Convert.ToDouble(this.txtLargerScale.Text),Convert.ToDouble(this.txtSmallerScale.Text),
@@ -230,13 +229,13 @@ namespace ContinuousGeneralizer.FrmGeneralization
             for (int i = 1; i < 11; i++)
             {
                 _dblProportion = i * 0.1;
-                _pBldgGrow.Output(_dblProportion);
+                _pBldgGrow.Output(_dblProportion, this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
             }
         }
 
         private void btnDetailToIpe_Click(object sender, EventArgs e)
         {
-            _pBldgGrow.MakeAnimations();
+            _pBldgGrow.MakeAnimations(this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
     }
 }

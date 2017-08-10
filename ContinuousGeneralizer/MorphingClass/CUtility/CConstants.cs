@@ -53,7 +53,8 @@ namespace MorphingClass.CUtility
         public static string strMethod { set; get; }
         public static string strShapeConstraint { set; get; }
         public static CEnvelope pIpeEnv { set; get; } = new CEnvelope(0, 0, 128, 128);
-        
+
+        public static  CParameterInitialize ParameterInitialize { set; get; }
 
         //        var output = string.Format("{0,3}{1,10}{2,13}{3,10}{4,9}{5,10}{6,7}{7,22}{8,7}{9,22}",
         //    "ID:", this.ID, ";    indexID:", this.indexID , ";    GID:" , this.GID , ";    X:", this.X , ";    Y:", this.Y);

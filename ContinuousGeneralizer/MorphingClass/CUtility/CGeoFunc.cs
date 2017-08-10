@@ -1866,9 +1866,9 @@ namespace MorphingClass.CUtility
         /// -1, not intersection; 3, intersection
         /// one has to specify type 0, types 1 & 2, and type 4 respectively by blnTouchBothEnds, blnTouchEndEdge, and blnOverlap
         /// </remarks>
-        public static List<CEdgeRelation> DetectCEdgeRelations(List<CEdge> cedgelt, double dblRangeDis)
+        public static List<CEdgeRelation> DetectCEdgeRelations(List<CEdge> cedgelt, double dblRangeDis, bool NotCheckBelonged = false)
         {
-            List<CEdgeRelation> CEdgeRelationLt = new List<CEdgeRelation>();
+            var CEdgeRelationLt = new List<CEdgeRelation>();
             foreach (CEdge cedge in cedgelt)
             {
                 cedge.isTraversed = false;
@@ -1895,18 +1895,27 @@ namespace MorphingClass.CUtility
                         {
                             foreach (var pcedge in pEdgeGrid.aCEdgeLtCell[i, j])
                             {
-                                if (pcedge.isTraversed == false)
+                                if (pcedge.isTraversed == true)
                                 {
-                                    pcedge.isTraversed = true;
-                                    TraversedCEdgeLt.Add(pcedge);   // we will set IsTraversed of these TraversedCEdge to false after looking for intersection for this cedge 
-
-                                    CEdgeRelation pEdgeRelation = new CEdgeRelation(cedge, pcedge);
-                                    pEdgeRelation.DetectRelation();
-                                    if (pEdgeRelation.cptEdgeDis.dblDis < dblRangeDis)
-                                    {
-                                        CEdgeRelationLt.Add(pEdgeRelation);
-                                    }
+                                    continue;
                                 }
+                                if (NotCheckBelonged == true && cedge.BelongedCpg.GID == pcedge.BelongedCpg.GID)
+                                {
+                                    continue;
+                                }
+
+                                pcedge.isTraversed = true;
+                                // we will set IsTraversed of these TraversedCEdge to false 
+                                //after looking for intersection for this cedge
+                                TraversedCEdgeLt.Add(pcedge);    
+
+                                CEdgeRelation pEdgeRelation = new CEdgeRelation(cedge, pcedge);
+                                pEdgeRelation.DetectRelation();
+                                if (pEdgeRelation.cptEdgeDis.dblDis < dblRangeDis)
+                                {
+                                    CEdgeRelationLt.Add(pEdgeRelation);
+                                }
+
                             }
                         }
                     }

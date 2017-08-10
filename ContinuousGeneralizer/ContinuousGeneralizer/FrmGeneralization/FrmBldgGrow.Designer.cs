@@ -31,6 +31,8 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.txtEvaluation = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.cboSimplification = new System.Windows.Forms.ComboBox();
             this.label13 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.txtOutput = new System.Windows.Forms.TextBox();
@@ -43,8 +45,6 @@
             this.label10 = new System.Windows.Forms.Label();
             this.txtMiterLimit = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.txtBufferRadius = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.cboBufferStyle = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -79,8 +79,6 @@
             this.btn080 = new System.Windows.Forms.Button();
             this.btn070 = new System.Windows.Forms.Button();
             this.btn090 = new System.Windows.Forms.Button();
-            this.label14 = new System.Windows.Forms.Label();
-            this.cboSimplification = new System.Windows.Forms.ComboBox();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -120,8 +118,6 @@
             this.groupBox1.Controls.Add(this.label10);
             this.groupBox1.Controls.Add(this.txtMiterLimit);
             this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.txtBufferRadius);
-            this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.cboBufferStyle);
             this.groupBox1.Controls.Add(this.label8);
@@ -139,6 +135,30 @@
             this.groupBox1.TabIndex = 78;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parameters";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(6, 134);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(71, 13);
+            this.label14.TabIndex = 119;
+            this.label14.Text = "Simplification:";
+            // 
+            // cboSimplification
+            // 
+            this.cboSimplification.BackColor = System.Drawing.SystemColors.WindowText;
+            this.cboSimplification.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboSimplification.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.cboSimplification.FormattingEnabled = true;
+            this.cboSimplification.Items.AddRange(new object[] {
+            "Non",
+            "DP",
+            "Imai-Iri"});
+            this.cboSimplification.Location = new System.Drawing.Point(122, 131);
+            this.cboSimplification.Name = "cboSimplification";
+            this.cboSimplification.Size = new System.Drawing.Size(160, 21);
+            this.cboSimplification.TabIndex = 120;
             // 
             // label13
             // 
@@ -237,7 +257,7 @@
             this.txtMiterLimit.Name = "txtMiterLimit";
             this.txtMiterLimit.Size = new System.Drawing.Size(158, 20);
             this.txtMiterLimit.TabIndex = 107;
-            this.txtMiterLimit.Text = "2";
+            this.txtMiterLimit.Text = "1.5";
             this.txtMiterLimit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label4
@@ -248,25 +268,6 @@
             this.label4.Size = new System.Drawing.Size(57, 13);
             this.label4.TabIndex = 106;
             this.label4.Text = "Miter Limit:";
-            // 
-            // txtBufferRadius
-            // 
-            this.txtBufferRadius.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.txtBufferRadius.Location = new System.Drawing.Point(122, 175);
-            this.txtBufferRadius.Name = "txtBufferRadius";
-            this.txtBufferRadius.Size = new System.Drawing.Size(158, 20);
-            this.txtBufferRadius.TabIndex = 105;
-            this.txtBufferRadius.Text = "10";
-            this.txtBufferRadius.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(4, 178);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(74, 13);
-            this.label3.TabIndex = 104;
-            this.label3.Text = "Buffer Radius:";
             // 
             // label1
             // 
@@ -610,30 +611,6 @@
             this.btn090.Text = "t=0.9";
             this.btn090.UseVisualStyleBackColor = true;
             // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(6, 134);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(71, 13);
-            this.label14.TabIndex = 119;
-            this.label14.Text = "Simplification:";
-            // 
-            // cboSimplification
-            // 
-            this.cboSimplification.BackColor = System.Drawing.SystemColors.WindowText;
-            this.cboSimplification.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboSimplification.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.cboSimplification.FormattingEnabled = true;
-            this.cboSimplification.Items.AddRange(new object[] {
-            "Non",
-            "DP",
-            "Imai-Iri"});
-            this.cboSimplification.Location = new System.Drawing.Point(122, 131);
-            this.cboSimplification.Name = "cboSimplification";
-            this.cboSimplification.Size = new System.Drawing.Size(160, 21);
-            this.cboSimplification.TabIndex = 120;
-            // 
             // FrmBldgGrow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -696,8 +673,6 @@
         private System.Windows.Forms.ComboBox cboLSRoad;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cboBufferStyle;
-        private System.Windows.Forms.TextBox txtBufferRadius;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtMiterLimit;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtOutput;

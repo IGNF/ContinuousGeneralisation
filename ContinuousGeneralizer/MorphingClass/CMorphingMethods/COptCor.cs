@@ -656,7 +656,7 @@ namespace MorphingClass.CMorphingMethods
             {
                 for (int i = 0; i < frcptltlt.Count; i++)
                 {
-                    List<List<CPoint>> plfrcptltlt = new List<List<CPoint>>(1);
+                    List<List<CPoint>> plfrcptltlt = new List<List<CPoint>>();
                     List<List<CPoint>> pltocptltlt = new List<List<CPoint>>(1);
 
                     plfrcptltlt.Add(frcptltlt[i]);

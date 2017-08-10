@@ -4597,8 +4597,10 @@ namespace ClipperLib
             }
 
             //see offset_triginometry3.svg in the documentation folder ...
-            if (MiterLimit > 2) m_miterLim = 2 / (MiterLimit * MiterLimit);
-            else m_miterLim = 0.5;
+            //if (MiterLimit > 2) m_miterLim = 2 / (MiterLimit * MiterLimit);
+            //else m_miterLim = 0.5;
+            if (MiterLimit > 1.5) m_miterLim = 2 / (MiterLimit * MiterLimit);  //dongliang's change
+            else m_miterLim = 0.89;
 
             double y;
             if (ArcTolerance <= 0.0)

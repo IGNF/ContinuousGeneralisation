@@ -62,7 +62,7 @@ namespace ContinuousGeneralizer.FrmAid
         private void FrmToIpe_Load(object sender, EventArgs e)
         {
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
-            ParameterInitialize.cboLayerLt = new List<ComboBox>(1);
+            ParameterInitialize.cboLayerLt = new List<ComboBox>();
             ParameterInitialize.cboLayerLt.Add(this.cboLayer);
             this.cboSize.SelectedIndex = 0;
 

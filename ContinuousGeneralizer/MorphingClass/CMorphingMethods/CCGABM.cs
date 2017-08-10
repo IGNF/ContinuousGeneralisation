@@ -465,7 +465,7 @@ namespace MorphingClass.CMorphingMethods
         private List<CEdge> GetCareCEdgeLtCptCoincident(CPoint LSNodeCpt, CEdge SgCEdge)
         {
             var SmallerAxisAngleCEdge = CDCEL.FindSmallerAxisAngleCEdgebyCEdge(LSNodeCpt, SgCEdge);
-            List<CEdge> CareCEdgeLt = new List<CEdge>(1);
+            List<CEdge> CareCEdgeLt = new List<CEdge>();
             CareCEdgeLt.Add(SmallerAxisAngleCEdge.cedgeNext);
 
             return CareCEdgeLt;

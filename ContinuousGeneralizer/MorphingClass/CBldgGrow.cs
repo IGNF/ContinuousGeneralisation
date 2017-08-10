@@ -48,7 +48,8 @@ namespace MorphingClass.CGeneralizationMethods
     public class CBldgGrow : CMorphingBaseCpg
     {
         public List<CPolygon> MergedCpgLt { get; set; }
-        
+
+        private double _intRound = 0;
         private static int _intI = 3;
         private double _dblTotalGrow;
         //private double _dblTargetDepsilon;
@@ -64,16 +65,7 @@ namespace MorphingClass.CGeneralizationMethods
 
         private static double _dblAreaLimit;
         private static double _dblHoleAreaLimit;
-
-        //private double _dblBufferRadius = -2 * _dblFclipper;
-        private void UpdateStartEnd(ref int intStart, ref int intEnd)
-        {
-            //intStart = 543;
-            //intEnd = intStart + 1;
-            //intEnd = 2;
-        }
-
-        private static int _intDigits = 6;
+        
 
         private static int _intStart = 0;
         private static int _intEnd = _intStart + 1;
@@ -88,25 +80,19 @@ namespace MorphingClass.CGeneralizationMethods
         public CBldgGrow(CParameterInitialize ParameterInitialize)
         {
             Construct<CPolygon, CPolygon>(ParameterInitialize, 1, 0, blnCreateFileGdbWorkspace: false);
-
-
-
         }
 
 
         public void BldgGrow(string strBufferStyle, double dblMiterLimit, string strSimplification,
             double dblLS, double dblSS, int intOutputMapCount)
         {
+
             //**********************************************//
             //I may need to do buffering based on Miterjoint in a more clever way
             //if the distance from the miter point to original line is larger than dblMiterLimit*dblBufferRadius, we, instead of calling
             //the normal square method, make a square so that the farthest distance to the original line exactly dblMiterLimit*dblBufferRadius
-
-
-            //we suppose that a hole is not separated to several parts. a hole can contain other holes.
-
-            Stopwatch pStopwatch = Stopwatch.StartNew();
-            CParameterInitialize pParameterInitialize = _ParameterInitialize;
+            var pStopwatch = Stopwatch.StartNew();
+            var pParameterInitialize = _ParameterInitialize;
 
             var LSCpgLt = this.ObjCGeoLtLt[0].AsExpectedClass<CPolygon, object>().ToList();
 
@@ -156,7 +142,7 @@ namespace MorphingClass.CGeneralizationMethods
                 _dblTargetScale = dblTargetScale;
 
 
-                _dblAreaLimit = 4;//area limit 4 mm^2
+                _dblAreaLimit = 4;//area limit 0.16 mm^2
                 //double dblAreaLimitTargetScale= dblAreaLimit * dblTargetScale * dblTargetScale;
 
                 _dblEpsilon = 0.2;
@@ -170,18 +156,37 @@ namespace MorphingClass.CGeneralizationMethods
                 _dblHoleAreaLimit = 8; //dblHoleAreaLimit=8 mm^2 * dblTargetScale * dblTargetScale
                 double dblHoleAreaLimitTargetScale = _dblHoleAreaLimit * dblTargetScale * dblTargetScale * dblFclipper * dblFclipper;
 
-                //_dblDilation = Math.Sqrt(_dblHoleAreaLimit / Math.PI);
-                _dblDilation = _dblEpsilon / 2;
-                double dblTargetDilation = _dblDilation * dblTargetScale * dblFclipper;
-
+                //_dblErosion = _dblTotalGrow / 2;
                 _dblErosion = _dblEpsilon / 2; //To avoid breaking the polygon when we errod, dblOverDilated should not be too large 
                 double dblTargetErosion = _dblErosion * dblTargetScale * dblFclipper;
+                //dblTargetErosion = 0;
+
+                //_dblDilation should be larger than dblEpsilon * Math.Sqrt(5) / 2 + 4 * dblGrow, because of function GroupAndGetShortestCpipeSD_Overlap
+                //_dblDilation = Math.Sqrt(_dblHoleAreaLimit / Math.PI);
+                //_dblDilation = _dblEpsilon / 2;
+                double dblTargetDilation = (dblTotalGrow - dblMiterLimit * dblTargetErosion) / (dblMiterLimit - 1);
+                //double dblTargetDilation = dblTotalGrow;
+                
 
 
-                MagnifiedCpgLt.ForEach(cpg => cpg.RemoveClosePoints());
-                MagnifiedCpgLt.ForEach(cpg => cpg.FormCEdgeLt());
-                var mergedCpgLt = MergeCloseCpgsAndAddBridges(MagnifiedCpgLt, dblTotalGrow, dblTargetEpsilon);
+                foreach (var MagnifiedCpg in MagnifiedCpgLt)
+                {
+                    MagnifiedCpg.RemoveClosePoints();
+                    //MagnifiedCpg.SubCpgLt = new List<CPolygon> { MagnifiedCpg };
+                    MagnifiedCpg.FormCEdgeLt();
+                    MagnifiedCpg.CEdgeLt.ForEach(cedge => cedge.BelongedCpg = MagnifiedCpg);
+                    MagnifiedCpg.ExteriorPaths = CHelpFunc.MakeLt(clipperMethods.GeneratePathByCpgExterior(MagnifiedCpg));
+                }
 
+                //foreach (var cpg in cpglt)
+                //{
+                //    cpg.SubCpgLt = new List<CPolygon> { cpg };
+                //}
+
+                //var mergedCpgLt = MergeCloseCpgsAndAddBridges(MagnifiedCpgLt, dblTotalGrow, dblTargetDilation, dblTargetEpsilon);
+                var mergedCpgLt = MergeCloseCpgsAndAddBridges(MagnifiedCpgLt, dblTotalGrow, dblTargetDilation, dblTargetEpsilon, 
+                    strBufferStyle, dblMiterLimit);
+                
                 //dblGrow, dblDilation, dblErosion, dblEpsilon
 
                 var targetcpglt = new List<CPolygon>();
@@ -191,20 +196,55 @@ namespace MorphingClass.CGeneralizationMethods
                         dblTotalGrow, dblTargetDilation, dblTargetErosion, dblTargetEpsilon,
                         dblHoleAreaLimitTargetScale, strSimplification, strBufferStyle, dblMiterLimit);
 
-                    var targetCpg = mergedcpg.ClipCpgLt[0];
+                    //var newBridgeCptEdgeDisSS = new SortedSet<CptEdgeDis>(CCmpCptEdgeDis_Dis.sComparer);
+                    //foreach (var item in mergedcpg.BridgeCptEdgeDisSS)
+                    //{
+
+                    //}
+                    if (mergedcpg.BridgeCptEdgeDisSS!=null)
+                    {
+                        var CpipeDt = new Dictionary<CValPairIncr<CPolygon>, CptEdgeDis>
+                    (mergedcpg.BridgeCptEdgeDisSS.Count, new CCmpEqCpgPairIncr());
+                        foreach (var BridgeCptEdgeDis in mergedcpg.BridgeCptEdgeDisSS)
+                        {
+                            CpipeDt.Add(new CValPairIncr<CPolygon>(BridgeCptEdgeDis.FrCEdge.BelongedCpg,
+                                BridgeCptEdgeDis.ToCEdge.BelongedCpg), BridgeCptEdgeDis);
+                        }
+                        mergedcpg.CpipeDt = CpipeDt;
+                    }
                     
+
+                    var targetCpg = new CPolygon(mergedcpg.ID, mergedcpg.ClipCpgLt[0].CptLt);
+                    if (mergedcpg.ClipCpgLt[0].HoleCpgLt != null)
+                    {
+                        targetCpg.HoleCpgLt = new List<CPolygon>(mergedcpg.ClipCpgLt[0].HoleCpgLt.Count);
+                        foreach (var holeclipcpg in mergedcpg.ClipCpgLt[0].HoleCpgLt)
+                        {
+                            var holecpg = new CPolygon(holeclipcpg.ID, holeclipcpg.CptLt);
+                            holecpg.IsHole = true;
+                            targetCpg.HoleCpgLt.Add(holecpg);
+                        }
+                    }
+
                     if (mergedcpg.HoleCpgLt != null)
                     {
-                        if (targetCpg.HoleCpgLt==null)
+                        if (targetCpg.HoleCpgLt == null)
                         {
                             targetCpg.HoleCpgLt = new List<CPolygon>();
                         }
 
                         foreach (var holecpg in mergedcpg.HoleCpgLt)
                         {
-                            foreach (var clipholecpg in holecpg.ClipCpgLt)
+                            if (holecpg.ClipCpgLt == null)
                             {
-                                targetCpg.HoleCpgLt.Add(clipholecpg);
+                                continue;
+                            }
+
+                            foreach (var holeclipcpg in holecpg.ClipCpgLt)
+                            {
+                                var originalholecpg = new CPolygon(holeclipcpg.ID, holeclipcpg.CptLt);
+                                originalholecpg.IsHole = true;
+                                targetCpg.HoleCpgLt.Add(originalholecpg);
                             }
                         }
                     }
@@ -281,133 +321,232 @@ namespace MorphingClass.CGeneralizationMethods
 
         #region GroupCloseCpgsAndAddBridges single bridges
 
-    //    private List<CPolygon> IterativeMergeCloseCpgsAndAddBridges(List<CPolygon> cpglt,
-    //double dblGrow, double dblDilation, double dblErosion, double dblEpsilon)
-    //    {
-    //        var mergedcpglt = cpglt;
-    //        do
-    //        {
-    //            cpglt = mergedcpglt;
-    //            mergedcpglt = MergeCloseCpgsAndAddBridges(cpglt, dblGrow, dblDilation, dblErosion, dblEpsilon);
-    //        } while (mergedcpglt.Count<cpglt.Count);
+        //private List<CPolygon> IterativeMergeCloseCpgsAndAddBridges(List<CPolygon> cpglt, 
+        //    double dblGrow, double dblDilation, double dblEpsilon)
+        //{
+        //    var mergedcpglt = cpglt;
 
-    //        return mergedcpglt;
-    //    }
 
-        private List<CPolygon> MergeCloseCpgsAndAddBridges(List<CPolygon> cpglt, double dblGrow, double dblEpsilon)
+        //    _intRound = 0;
+        //    do
+        //    {                
+        //        foreach (var mergedcpg in mergedcpglt)
+        //        {
+        //            if (mergedcpg.ExteriorPaths==null)
+        //            {
+        //                mergedcpg.ExteriorPaths = CHelpFunc.MakeLt(clipperMethods.GeneratePathByCpgExterior(mergedcpg));
+        //            }
+
+        //            //if (mergedcpg.CEdgeLt==null)
+        //            //{
+        //            //    mergedcpg.FormCEdgeLt();
+        //            //}
+        //        }
+        //        cpglt = mergedcpglt;
+        //        mergedcpglt = MergeCloseCpgsAndAddBridges(cpglt, dblGrow, dblDilation, dblEpsilon);
+
+        //        _intRound++;
+        //    } while (mergedcpglt.Count < cpglt.Count);
+        //    Console.WriteLine("iterations for merging close cpgs: " + (_intRound + 1).ToString());
+        //    return mergedcpglt;
+        //}
+
+        //private List<CPolygon> MergeCloseCpgsAndAddBridges(List<CPolygon> cpglt, 
+        //    double dblGrow, double dblDilation, double dblEpsilon)
+        //{
+        //    //var GroupedShortestCpipeSD = GroupAndGetShortestCpipeSD(cpglt, dblGrow, dblEpsilon);
+        //    //var CptEdgeDisSSLt = GetCptEdgeDisSSForEachGroup_FromCpipeDt(cpglt, GroupedShortestCpipeSD);
+
+
+        //    //var CptEdgeDisSSLt = GroupAndGetShortestCpipeSD_Overlap(cpglt, dblGrow, dblDilation, dblEpsilon).ToList();
+        //    //CptEdgeDisSSLt[0].Min.ConnectCEdge.PrintMySelf();
+        //    var CptEdgeDisSSLt = GroupAndGetShortestCpipeSD(cpglt, dblGrow, dblDilation, dblEpsilon).ToList();
+        //    return GetMergedCpgLt_Prim(cpglt, CptEdgeDisSSLt);
+        //}
+
+        //private IEnumerable<SortedSet<CptEdgeDis>> GroupAndGetShortestCpipeSD_Overlap(List<CPolygon> cpglt,
+        //    double dblGrow, double dblDilation, double dblEpsilon)
+        //{
+        //    var GroupCpgLtLt = clipperMethods.GroupCpgsByOverlapIndependently(cpglt, dblGrow, dblDilation, dblEpsilon);
+        //    //double dblCloseDis = dblEpsilon * Math.Sqrt(5) / 2 + 4 * dblGrow;  //dblCloseDis just need to be large enough
+        //    double dblCloseDis = dblEpsilon * Math.Sqrt(5) / 2 + dblDilation + 4 * dblGrow;  //dblCloseDis just need to be large enough
+
+
+
+        //    foreach (var groupcpglt in GroupCpgLtLt)
+        //    {
+        //        var groupCloseCpgPairPtEdgeDisDt = GetCloseCpgPairPtEdgeDisDt_EdgeRelation(groupcpglt, dblCloseDis);
+        //        yield return new SortedSet<CptEdgeDis>(groupCloseCpgPairPtEdgeDisDt.Values, CCmpCptEdgeDis_Dis.sComparer);
+        //    }
+        //}
+
+
+        //private List<CPolygon> IterativeMergeCloseCpgsAndAddBridges(List<CPolygon> cpglt,
+        //double dblGrow, double dblDilation, double dblEpsilon)
+        //{
+        //    var mergedcpglt = cpglt;
+
+
+        //    _intRound = 0;
+        //    do
+        //    {
+        //        foreach (var mergedcpg in mergedcpglt)
+        //        {
+        //            if (mergedcpg.ExteriorPaths == null)
+        //            {
+        //                mergedcpg.ExteriorPaths = CHelpFunc.MakeLt(clipperMethods.GeneratePathByCpgExterior(mergedcpg));
+        //            }
+
+        //            //if (mergedcpg.CEdgeLt==null)
+        //            //{
+        //            //    mergedcpg.FormCEdgeLt();
+        //            //}
+        //        }
+        //        cpglt = mergedcpglt;
+        //        mergedcpglt = MergeCloseCpgsAndAddBridges(cpglt, dblGrow, dblDilation, dblEpsilon);
+
+        //        _intRound++;
+        //    } while (mergedcpglt.Count < cpglt.Count);
+        //    Console.WriteLine("iterations for merging close cpgs: " + (_intRound + 1).ToString());
+        //    return mergedcpglt;
+        //}
+
+        private List<CPolygon> MergeCloseCpgsAndAddBridges(List<CPolygon> cpglt,
+            double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "Miter",
+            double dblMiterLimit = 2)
         {
-            var CloseCpipeDt = GetCloseCpipeSD(cpglt, dblGrow, dblEpsilon);
-            var CptEdgeDisSSLt = GetCptEdgeDisSSLt_FromCpipeDt(cpglt, CloseCpipeDt);
-            return GetMergedCpgLt_Prim(cpglt, CptEdgeDisSSLt);
+            var GroupedCpgLtLt = clipperMethods.IterativeGroupCpgsByOverlapIndependently(cpglt, 
+                dblGrow, dblDilation, dblEpsilon, strBufferStyle, dblMiterLimit);
+            var CptEdgeDisLtLt = GetShortestCpipeSD(GroupedCpgLtLt, dblGrow, dblDilation, dblEpsilon, dblMiterLimit).ToList();
+            return GetMergedCpgLt_Prim(cpglt, CptEdgeDisLtLt);
         }
 
-        private List<CPolygon> GetMergedCpgLt_Prim(List<CPolygon> cpglt, List<SortedSet<CptEdgeDis>> CptEdgeDisSSLt)
+
+        private IEnumerable<List<CptEdgeDis>> GetShortestCpipeSD(List<List<CPolygon>> GroupedCpgLtLt,
+            double dblGrow, double dblDilation, double dblEpsilon, double dblMiterLimit)
+        {
+            //dblCloseDis just needs to be large enough
+            double dblCloseDis = dblDilation + 2 * dblMiterLimit * dblGrow;
+            foreach (var groupedCpgLt in GroupedCpgLtLt)
+            {
+                if (groupedCpgLt.Count > 1)
+                {
+                    yield return GetCloseCpgPairPtEdgeDisDt_EdgeRelation(groupedCpgLt, dblCloseDis).Values.ToList();
+                }
+                else
+                {
+                    yield return null;
+                }
+            }
+        }
+
+
+
+
+        private List<CPolygon> GetMergedCpgLt_Prim(List<CPolygon> cpglt, List<List<CptEdgeDis>> CptEdgeDisLtLt)
         {
             cpglt.ForEach(cpg => cpg.IsSubCpg = false);
 
             //*****************When computing intermediate resulats (second time of using this function),
             //we can do this step in a simpler way, we don't really need to use BFS. 
             //Instead, we know that all the polygons are connected as a tree
-            var GroupedCptEdgeDisSSLt = GroupCpgsAndBridges_Prim(cpglt, CptEdgeDisSSLt).ToList();
+            var GroupedCptEdgeDisSSLt = GroupCpgsAndBridges_Prim(cpglt, CptEdgeDisLtLt).ToList();
 
             var mergedCpgLt = new List<CPolygon>();
             //add merged polygons
-            foreach (var GroupedCptEdgeDisLt in GroupedCptEdgeDisSSLt)
+            foreach (var GroupedCptEdgeDisSS in GroupedCptEdgeDisSSLt)
             {
                 //merge grouped cpgs by DCEL; add SubCpgLt and BridgeCptEdgeDisSS 
-                mergedCpgLt.Add(MergeGroupedCpgsAndBridges(GroupedCptEdgeDisLt));
+                mergedCpgLt.Add(MergeGroupedCpgsAndBridges(GroupedCptEdgeDisSS));
             }
             //add alone polygons
             foreach (var cpg in cpglt)
             {
-                if (cpg.IsSubCpg == false)
+                if (cpg.IsSubCpg == true)
                 {
-                    cpg.SubCpgLt = new List<CPolygon>
-                    {
-                        cpg
-                    };
-
-                    mergedCpgLt.Add(cpg);
+                    continue;
                 }
+                mergedCpgLt.Add(cpg);
             }
+
             return mergedCpgLt;
         }
 
 
-        private Dictionary<CValPairIncr<CPolygon>, CptEdgeDis>
-            GetCloseCpipeSD(List<CPolygon> cpglt, double dblGrow, double dblEpsilon)
-        {
-            var grownCpgLt = GetGrownExteriorCpgLt(cpglt, dblGrow);
+        //private Dictionary<CValPairIncr<CPolygon>, CptEdgeDis>
+        //    GroupAndGetShortestCpipeSD(List<CPolygon> cpglt, double dblGrow, double dblEpsilon)
+        //{
+        //    var grownCpgLt = GetGrownExteriorCpgLt(cpglt, dblGrow);
 
-            //Each Bridge in CloseGrownCpgPairPtEdgeDisSD is from a grown Cpg to another grown Cpg
-            var grownCloseCpgPairPtEdgeDisDt = GetCloseCpgPairPtEdgeDisDt_EdgeRelation(grownCpgLt, dblEpsilon*Math.Sqrt(5)/2);
+        //    //Get the shortest brige between two grown polygons
+        //    //Each Bridge in CloseGrownCpgPairPtEdgeDisSD is from a grown Cpg to another grown Cpg
+        //    var grownCloseCpgPairPtEdgeDisDt = GetCloseCpgPairPtEdgeDisDt_EdgeRelation(grownCpgLt, dblEpsilon * Math.Sqrt(5) / 2);
 
-            //Each Bridge in CloseCpgPairPtEdgeDisSD is from an original Cpg to another original Cpg
-            var CloseCpipeDt = new Dictionary<CValPairIncr<CPolygon>, CptEdgeDis>();
-            //each building can grow up to 2*dblGrow
-            double dblCloseDis = dblEpsilon * Math.Sqrt(5) / 2 + 4 * dblGrow;  //dblCloseDis just need to be large enough
-            cpglt.SetIndexID();
-            foreach (var cpg in cpglt)
-            {
-                foreach (var cedge in cpg.CEdgeLt)
-                {
-                    cedge.BelongedCpg = cpg;
-                }
-            }
-            foreach (var CloseGrownCpgPairPtEdgeDt in grownCloseCpgPairPtEdgeDisDt)
-            {
-                var cpg1 = cpglt[CloseGrownCpgPairPtEdgeDt.Key.val1.indexID];
-                var cpg2 = cpglt[CloseGrownCpgPairPtEdgeDt.Key.val2.indexID];
+        //    //Get the shortest brige between two grown polygons
+        //    //Each Bridge in CloseCpgPairPtEdgeDisSD is from an original Cpg to another original Cpg
+        //    var CloseCpipeDt = new Dictionary<CValPairIncr<CPolygon>, CptEdgeDis>();
+        //    //each building can grow up to 2*dblGrow
+        //    double dblCloseDis = dblEpsilon * Math.Sqrt(5) / 2 + 4 * dblGrow;  //dblCloseDis just need to be large enough
+        //    cpglt.SetIndexID();
+        //    foreach (var CloseGrownCpgPairPtEdgeDt in grownCloseCpgPairPtEdgeDisDt)
+        //    {
+        //        var cpg1 = cpglt[CloseGrownCpgPairPtEdgeDt.Key.val1.indexID];
+        //        var cpg2 = cpglt[CloseGrownCpgPairPtEdgeDt.Key.val2.indexID];
 
-                var subCloseCpgPairPtEdgeDisDt = GetCloseCpgPairPtEdgeDisDt_EdgeRelation(CHelpFunc.MakeLt(cpg1, cpg2), dblCloseDis);
-                var kvp = subCloseCpgPairPtEdgeDisDt.First();  //there is only one element in subCloseCpgPairPtEdgeDisSD
-                kvp.Value.SetConnectEdge();  //set ConnectEdge for all the bridges
-                CloseCpipeDt.Add(kvp.Key, kvp.Value);
-            }
+        //        var subCloseCpgPairPtEdgeDisDt = GetCloseCpgPairPtEdgeDisDt_EdgeRelation(CHelpFunc.MakeLt(cpg1, cpg2), dblCloseDis);
+        //        var kvp = subCloseCpgPairPtEdgeDisDt.First();  //there is only one element in subCloseCpgPairPtEdgeDisSD                
+        //        CloseCpipeDt.Add(kvp.Key, kvp.Value);
+        //    }
 
-            return CloseCpipeDt;
-        }
+        //    return CloseCpipeDt;
+        //}
 
-        /// <summary>get the grownCpg of each cpg's exterior ring</summary>
-        private List<CPolygon> GetGrownExteriorCpgLt(List<CPolygon> cpglt, double dblGrow)
-        {
-            var grownCpgLt = new List<CPolygon>(cpglt.Count);
-            foreach (var cpg in cpglt)
-            {
-                var ExteriorPath = clipperMethods.GeneratePathByCpgExterior(cpg);
-                var ExteriorOffsetPolyTree = clipperMethods.Offset_PolyTree(CHelpFunc.MakeLt(ExteriorPath), dblGrow);
-                var ExteriorOffsetCpg = clipperMethods.GenerateOLHCpgByPolyTree(ExteriorOffsetPolyTree, cpg.ID);
+        ///// <summary>get the grownCpg of each cpg's exterior ring</summary>
+        //private List<CPolygon> GetGrownExteriorCpgLt(List<CPolygon> cpglt, double dblGrow, string strBufferStyle = "Miter",
+        //    double dblMiterLimit = 2)
+        //{
+        //    var grownCpgLt = new List<CPolygon>(cpglt.Count);
+        //    foreach (var cpg in cpglt)
+        //    {
+        //        var ExteriorPath = clipperMethods.GeneratePathByCpgExterior(cpg);
+        //        var ExteriorOffsetPolyTree = clipperMethods.Offset_PolyTree(CHelpFunc.MakeLt(ExteriorPath), dblGrow, strBufferStyle, dblMiterLimit);
+        //        var ExteriorOffsetCpg = clipperMethods.GenerateOLHCpgByPolyTree(ExteriorOffsetPolyTree, cpg.ID);
 
-                //ExteriorOffsetCpg.pPolyTree = ExteriorOffsetPolyTree;
-                //cpg.ExteriorOffsetCpg = ExteriorOffsetCpg;
+        //        //ExteriorOffsetCpg.pPolyTree = ExteriorOffsetPolyTree;
+        //        //cpg.ExteriorOffsetCpg = ExteriorOffsetCpg;
 
-                grownCpgLt.Add(ExteriorOffsetCpg);
-            }
+        //        grownCpgLt.Add(ExteriorOffsetCpg);
+        //    }
 
-            grownCpgLt.SetIndexID();
-            foreach (var cpg in grownCpgLt)
-            {
-                cpg.FormCEdgeLt();
-                foreach (var cedge in cpg.CEdgeLt)
-                {
-                    cedge.BelongedCpg = cpg;
-                }
-            }
+        //    grownCpgLt.SetIndexID();
+        //    foreach (var cpg in grownCpgLt)
+        //    {
+        //        cpg.FormCEdgeLt();
+        //    }
 
-            return grownCpgLt;
-        }
+        //    return grownCpgLt;
+        //}
 
         private Dictionary<CValPairIncr<CPolygon>, CptEdgeDis> GetCloseCpgPairPtEdgeDisDt_EdgeRelation(
     List<CPolygon> cpglt, double dblCloseDis)
         {
             var cedgelt = new List<CEdge>();
-            foreach (var cpg in cpglt)
-            {
-                cedgelt.AddRange(cpg.CEdgeLt);
-            }
+            cpglt.ForEach(cpg => cedgelt.AddRange(cpg.CEdgeLt));
+
+            //foreach (var cpg in cpglt)
+            //{
+            //    foreach (var subcpg in cpg.SubCpgLt) //we don't use bridges
+            //    {
+            //        foreach (var cedge in subcpg.CEdgeLt)
+            //        {
+            //            cedge.BelongedCpg = cpg;
+            //            cedgelt.Add(cedge);                        
+            //        }
+            //    }
+            //}
 
             var CloseCpipeDt = new Dictionary<CValPairIncr<CPolygon>, CptEdgeDis>(cpglt.Count * 2, new CCmpEqCpgPairIncr());
-            foreach (var pEdgeRelation in CGeoFunc.DetectCEdgeRelations(cedgelt, dblCloseDis))
+            foreach (var pEdgeRelation in CGeoFunc.DetectCEdgeRelations(cedgelt, dblCloseDis, true))
             {
                 //if (pEdgeRelation.pEnumDisMode == CEnumDisMode.InIn)
                 //{
@@ -417,12 +556,16 @@ namespace MorphingClass.CGeneralizationMethods
                 //pEdgeRelation.CEdge1.PrintMySelf();
                 //pEdgeRelation.CEdge2.PrintMySelf();
 
+                //var cpg1 = pEdgeRelation.CEdge1.BelongedOriginalCpg;
+                //var cpg2 = pEdgeRelation.CEdge2.BelongedOriginalCpg;
+
                 var cpg1 = pEdgeRelation.CEdge1.BelongedCpg;
                 var cpg2 = pEdgeRelation.CEdge2.BelongedCpg;
                 if (cpg1.GID != cpg2.GID)
                 {
                     CptEdgeDis cptEdgeDis;
                     var cpgpair = new CValPairIncr<CPolygon>(cpg1, cpg2);
+                    pEdgeRelation.cptEdgeDis.CpgPairIncr = cpgpair;
                     if (CloseCpipeDt.TryGetValue(cpgpair, out cptEdgeDis))
                     {
                         if (pEdgeRelation.cptEdgeDis.dblDis < cptEdgeDis.dblDis)
@@ -437,11 +580,16 @@ namespace MorphingClass.CGeneralizationMethods
                 }
             }
 
+            foreach (var cptEdgeDis in CloseCpipeDt.Values)
+            {
+                cptEdgeDis.SetConnectEdge(); //set ConnectEdge for all the bridges
+            }
+
             return CloseCpipeDt;
         }
 
 
-        private static List<SortedSet<CptEdgeDis>> GetCptEdgeDisSSLt_FromCpipeDt(List<CPolygon> cpglt,
+        private static List<SortedSet<CptEdgeDis>> GetCptEdgeDisSSForEachGroup_FromCpipeDt(List<CPolygon> cpglt,
             Dictionary<CValPairIncr<CPolygon>, CptEdgeDis> CloseCpgPairPtEdgeDisDt)
         {
             var CptEdgeDisSSLt = new List<SortedSet<CptEdgeDis>>(cpglt.Count);
@@ -506,24 +654,23 @@ namespace MorphingClass.CGeneralizationMethods
 
         /// <summary>return lists of grouped CptEdgeDis, alone polygons are not included</summary>
         private static IEnumerable<SortedSet<CptEdgeDis>> GroupCpgsAndBridges_Prim(List<CPolygon> cpglt,
-            List<SortedSet<CptEdgeDis>> CptEdgeDisSSLt)
+            List<List<CptEdgeDis>> CptEdgeDisLtLt)
         {
             cpglt.ForEach(cpg => cpg.isTraversed = false);
 
-            for (int i = 0; i < CptEdgeDisSSLt.Count; i++)
-            {
-                var CptEdgeDisSS = CptEdgeDisSSLt[i];
-                if (CptEdgeDisSS == null)  //the polygon is far away from other polygons
+            for (int i = 0; i < CptEdgeDisLtLt.Count; i++)
+            {                
+                if (CptEdgeDisLtLt[i] == null || CptEdgeDisLtLt[i].Count == 0)  //the polygon is far away from other polygons
                 {
                     continue;
-                    //cpglt[i].IsSubCpg = true;
                 }
+                var CptEdgeDisSS = new SortedSet<CptEdgeDis>(CptEdgeDisLtLt[i], CCmpCptEdgeDis_Dis.sComparer);
 
-                var FirstCpg = CptEdgeDisSS.Min.CpgPairIncr.val1;
-                if (FirstCpg.isTraversed == true)  //all the polygons in this entry have been handled because of an earlier entry
-                {
-                    continue;
-                }
+                //var FirstCpg = CptEdgeDisSS.Min.CpgPairIncr.val1;
+                //if (FirstCpg.isTraversed == true)  //all the polygons in this entry have been handled because of an earlier entry
+                //{
+                //    continue;
+                //}
 
                 foreach (var CptEdgeDis in CptEdgeDisSS)
                 {
@@ -537,25 +684,15 @@ namespace MorphingClass.CGeneralizationMethods
 
         private static SortedSet<CptEdgeDis> GroupCpgsAndBridgesForEachCluster_Prim(SortedSet<CptEdgeDis> CloseInfoSD)
         {
-            var CptEdgeDisSSEt = CloseInfoSD.GetEnumerator();
-            CptEdgeDisSSEt.MoveNext();
-            var FirstCptEdgeDisSS = CptEdgeDisSSEt.Current;
+            var CpgCptEdgeDisLtDt = AttachCptEdgeDisLtToCpg(CloseInfoSD);
 
-            var CpgCptEdgeDisLtSD = new SortedDictionary<CPolygon, List<CptEdgeDis>>();
-            do
-            {
-                //add all close relations to CptEdgeDisLt
-                UpdateCpgCptEdgeDisLtSD(ref CpgCptEdgeDisLtSD, CptEdgeDisSSEt.Current.CpgPairIncr.val1, CptEdgeDisSSEt.Current);
-                UpdateCpgCptEdgeDisLtSD(ref CpgCptEdgeDisLtSD, CptEdgeDisSSEt.Current.CpgPairIncr.val2, CptEdgeDisSSEt.Current);
-            } while (CptEdgeDisSSEt.MoveNext());
-
-            var intCpgCount = CpgCptEdgeDisLtSD.Count;
-            var FirstCpg = FirstCptEdgeDisSS.CpgPairIncr.val1;
+            var intCpgCount = CpgCptEdgeDisLtDt.Count;
+            var FirstCpg = CloseInfoSD.Min.CpgPairIncr.val1;
             //FirstCpg.isTraversed = true;  //we should not do this
             var groupcpglt = new List<CPolygon>(intCpgCount);
             //groupcpglt.Add(FirstCpg);  //we should not do this 
             var BridgeCptEdgeDisSS = new SortedSet<CptEdgeDis>(CCmpCptEdgeDis_Dis.sComparer);
-            var SmallestCptEdgeDis = FirstCptEdgeDisSS;
+            var SmallestCptEdgeDis = CloseInfoSD.Min;
             //var queueSS = new SortedSet<CValPair<CptEdgeDis, CPolygon>>();
             var queueSD = new SortedDictionary<CptEdgeDis, CPolygon>(CCmpCptEdgeDis_Dis.sComparer);
 
@@ -576,7 +713,7 @@ namespace MorphingClass.CGeneralizationMethods
                 BridgeCptEdgeDisSS.Add(minCptEdgeDisCpgKvp.Key);
 
                 List<CptEdgeDis> outCptEdgeDisLt;
-                CpgCptEdgeDisLtSD.TryGetValue(BridgedCpg, out outCptEdgeDisLt);
+                CpgCptEdgeDisLtDt.TryGetValue(BridgedCpg, out outCptEdgeDisLt);
 
                 foreach (var cptEdgeDis in outCptEdgeDisLt)
                 {
@@ -597,31 +734,39 @@ namespace MorphingClass.CGeneralizationMethods
             return BridgeCptEdgeDisSS;
         }
 
-        private static void UpdateCpgCptEdgeDisLtSD(
-            ref SortedDictionary<CPolygon, List<CptEdgeDis>> CpgCptEdgeDisLtSD, CPolygon cpg, CptEdgeDis cptEdgeDis)
+        private static Dictionary<CPolygon, List<CptEdgeDis>> AttachCptEdgeDisLtToCpg(SortedSet<CptEdgeDis> CloseInfoSD)
         {
-            List<CptEdgeDis> outCptEdgeDisLt;
-            if (CpgCptEdgeDisLtSD.TryGetValue(cpg, out outCptEdgeDisLt))
+            var CpgCptEdgeDisLtDt = new Dictionary<CPolygon, List<CptEdgeDis>>();
+            foreach (var CptEdgeDis in CloseInfoSD)
             {
-                outCptEdgeDisLt.Add(cptEdgeDis);
+                //add all close relations to CptEdgeDisLt
+                UpdateCpgCptEdgeDisLtDt(ref CpgCptEdgeDisLtDt, CptEdgeDis.CpgPairIncr.val1, CptEdgeDis);
+                UpdateCpgCptEdgeDisLtDt(ref CpgCptEdgeDisLtDt, CptEdgeDis.CpgPairIncr.val2, CptEdgeDis);
             }
-            else
+
+            return CpgCptEdgeDisLtDt;
+        }
+
+        private static void UpdateCpgCptEdgeDisLtDt(
+            ref Dictionary<CPolygon, List<CptEdgeDis>> CpgCptEdgeDisLtDt, CPolygon cpg, CptEdgeDis cptEdgeDis)
+        {
+            if (CpgCptEdgeDisLtDt.ContainsKey(cpg) == false)
             {
-                outCptEdgeDisLt = new List<CptEdgeDis> { cptEdgeDis };
-                CpgCptEdgeDisLtSD.Add(cpg, outCptEdgeDisLt);
+                CpgCptEdgeDisLtDt[cpg] = new List<CptEdgeDis>();
             }
+            CpgCptEdgeDisLtDt[cpg].Add(cptEdgeDis);
         }
 
         private CPolygon MergeGroupedCpgsAndBridges(SortedSet<CptEdgeDis> CptEdgeDisSS)
         {
-            //we use SortedSet so that each cpg will be added once
-            var cpgss = new SortedSet<CPolygon>();
+            //we use HashSet so that each cpg will be added once
+            var cpghs = new HashSet<CPolygon>();
             foreach (var CptEdgeDis in CptEdgeDisSS)
             {
-                cpgss.Add(CptEdgeDis.CpgPairIncr.val1);
-                cpgss.Add(CptEdgeDis.CpgPairIncr.val2);
+                cpghs.Add(CptEdgeDis.CpgPairIncr.val1);
+                cpghs.Add(CptEdgeDis.CpgPairIncr.val2);
             }
-            var cpglt = cpgss.ToList();
+            var cpglt = cpghs.ToList();
             cpglt.ForEach(cpg => cpg.isTraversed = false);
 
             //some buildings may share boundaries, so we may have same edge 
@@ -632,7 +777,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             var BridgeCEdgeLt = new List<CEdge>(cpglt.Count);
             var AllCEdgeLt = new List<CEdge>(CEdgeHS.Count + cpglt.Count); //the count is roughtly
-            var CEdgeCptEdgeDisLtSD = new SortedDictionary<CEdge, List<CptEdgeDis>>();
+            var CEdgeCptEdgeDisLtDt = new Dictionary<CEdge, List<CptEdgeDis>>();
             foreach (var cptEdgeDis in CptEdgeDisSS)
             {
                 //if (CCmpMethods.CmpCoordDbl_VerySmall(cptEdgeDis.dblDis, 0) == 0), then the two buildings touch each other
@@ -648,17 +793,11 @@ namespace MorphingClass.CGeneralizationMethods
                 //here we record all the cases
                 if (cptEdgeDis.t != 0 && cptEdgeDis.t != 1)
                 {
-                    List<CptEdgeDis> outCptEdgeDislt;
-                    if (CEdgeCptEdgeDisLtSD.TryGetValue(cptEdgeDis.ToCEdge, out outCptEdgeDislt) == false)
+                    if (CEdgeCptEdgeDisLtDt.ContainsKey(cptEdgeDis.ToCEdge) == false)
                     {
-                        outCptEdgeDislt = new List<CptEdgeDis>(1);
-                        outCptEdgeDislt.Add(cptEdgeDis);
-                        CEdgeCptEdgeDisLtSD.Add(cptEdgeDis.ToCEdge, outCptEdgeDislt);
+                        CEdgeCptEdgeDisLtDt[cptEdgeDis.ToCEdge] = new List<CptEdgeDis>();
                     }
-                    else
-                    {
-                        outCptEdgeDislt.Add(cptEdgeDis);
-                    }
+                    CEdgeCptEdgeDisLtDt[cptEdgeDis.ToCEdge].Add(cptEdgeDis);
                 }
             }
             AllCEdgeLt.AddRange(BridgeCEdgeLt);
@@ -667,7 +806,7 @@ namespace MorphingClass.CGeneralizationMethods
             //CGeoFunc.CheckShortEdges(AllCEdgeLt);
 
             //We need to split the edge into several edges
-            foreach (var CEdgeCptEdgeDisLt in CEdgeCptEdgeDisLtSD)
+            foreach (var CEdgeCptEdgeDisLt in CEdgeCptEdgeDisLtDt)
             {
                 var TargetCEdge = CEdgeCptEdgeDisLt.Key;
                 if (CEdgeHS.Remove(TargetCEdge) == false)
@@ -699,7 +838,7 @@ namespace MorphingClass.CGeneralizationMethods
 
 
 
-            //CSaveFeature.SaveCGeoEb(clipperMethods.ScaleCEdgeEb(AllCEdgeLt, 1 / _dblFclipper), esriGeometryType.esriGeometryPolyline,
+            //CSaveFeature.SaveCGeoEb(clipperMethods.ScaleCEdgeEb(AllCEdgeLt, 1 / CConstants.dblFclipper), esriGeometryType.esriGeometryPolyline,
             //    "TestEdgeLt" + CHelpFunc.GetTimeStampWithPrefix(), _ParameterInitialize);
 
 
@@ -707,8 +846,37 @@ namespace MorphingClass.CGeneralizationMethods
             pDCEL.ConstructDCEL();
 
             var mergedcpg = new CPolygon(cpglt[0].ID, pDCEL.FaceCpgLt[0].GetOnlyInnerCptLt(), holecpglt);
-            mergedcpg.SubCpgLt = cpglt;
+            mergedcpg.CEdgeLt = pDCEL.FaceCpgLt[0].GetOnlyInnerCEdgeLt();
             mergedcpg.BridgeCptEdgeDisSS = CptEdgeDisSS;
+            mergedcpg.SubCpgLt = cpglt;
+
+
+            //if (_intRound == 0)
+            //{
+            //    mergedcpg.SubCpgLt = cpglt;
+            //}
+            //else  //if  (_intRound > 0)
+            //{
+            //    mergedcpg.SubCpgLt = new List<CPolygon>();
+            //    foreach (var cpg in cpglt)
+            //    {
+            //        if (cpg.SubCpgLt.Count < 1)
+            //        {
+            //            throw new ArgumentException("An impossible case!");
+            //        }
+            //        mergedcpg.SubCpgLt.AddRange(cpg.SubCpgLt);
+
+            //        if (cpg.BridgeCptEdgeDisSS != null)
+            //        {
+            //            foreach (var BridgeCptEdgeDis in cpg.BridgeCptEdgeDisSS)
+            //            {
+            //                mergedcpg.BridgeCptEdgeDisSS.Add(BridgeCptEdgeDis);
+            //            }
+            //        }
+            //    }
+            //}
+
+            
             return mergedcpg;
         }
 
@@ -728,7 +896,10 @@ namespace MorphingClass.CGeneralizationMethods
                 {
                     throw new ArgumentException("small edge!");
                 }
-                yield return new CEdge(precpt, cpter.Current);
+
+                CEdge newcedge= new CEdge(precpt, cpter.Current);
+                newcedge.BelongedCpg = TargetCEdge.BelongedCpg;
+                yield return newcedge;
                 precpt = cpter.Current;
             }
         }
@@ -747,8 +918,8 @@ namespace MorphingClass.CGeneralizationMethods
 
         #endregion
 
-        private void SetClipCpgLt_BufferDilateErodeSimplify(CPolygon mergedcpg, 
-            double dblGrow, double dblDilation, double dblErosion, double dblEpsilon, 
+        private void SetClipCpgLt_BufferDilateErodeSimplify(CPolygon mergedcpg,
+            double dblGrow, double dblDilation, double dblErosion, double dblEpsilon,
             double dblHoleAreaLimit, string strSimplification, string strBufferStyle = "Miter", double dblMiterLimit = 2)
         {
             mergedcpg.FormCEdgeLt();
@@ -759,7 +930,8 @@ namespace MorphingClass.CGeneralizationMethods
             var ExteriorOffsetCpg = clipperMethods.GenerateOLHCpgByPolyTree(ExteriorOffsetPolyTree, mergedcpg.ID);
 
             //we also simplify the holes from Exterior ring
-            var targetCpg = CDPSimplify.SimplifyAccordRightAnglesAndExistEdges(ExteriorOffsetCpg, mergedcpg.CEdgeLt, strSimplification, 2 * dblEpsilon);
+            var targetCpg = CDPSimplify.SimplifyAccordRightAnglesAndExistEdges(ExteriorOffsetCpg, 
+                mergedcpg.CEdgeLt, strSimplification, 2 * dblEpsilon);
             mergedcpg.ClipCpgLt.Add(targetCpg);
             //if (targetCpg.HoleCpgLt != null)
             //{
@@ -780,7 +952,7 @@ namespace MorphingClass.CGeneralizationMethods
                         continue;
                     }
 
-                    var holeOffsetPolyTree = clipperMethods.DilateErodeOffsetCpgExterior_PolyTree(holecpg, 
+                    var holeOffsetPolyTree = clipperMethods.DilateErodeOffsetCpgExterior_PolyTree(holecpg,
                         dblGrow, dblDilation, dblErosion, strBufferStyle, dblMiterLimit);
 
                     holecpg.ClipCpgLt = new List<CPolygon>();
@@ -791,34 +963,19 @@ namespace MorphingClass.CGeneralizationMethods
                         holecpg.ClipCpgLt.Add(simplifiedcpg);
                     }
                 }
-
-                ////add the large holes into targetCpg
-                //if (targetCpg.HoleCpgLt == null)
-                //{
-                //    targetCpg.HoleCpgLt = new List<CPolygon>(holecpglt.Count);
-                //}
-                //foreach (var holecpg in holecpglt)
-                //{
-                //    holecpg.SetAreaSimple();
-                //    if (holecpg.dblAreaSimple > dblHoleAreaLimit)
-                //    {
-                //        targetCpg.HoleCpgLt.Add(holecpg);
-                //    }
-                //}
             }
-            //return targetCpg;
         }
 
         #region Output
-        public void Output(double dblProportion)
+        public void Output(double dblProportion, string strBufferStyle, double dblMiterLimit)
         {
-            var resultCpgEb = GetResultCpgEb(this.MergedCpgLt, dblProportion);
+            var resultCpgEb = GetResultCpgEb(this.MergedCpgLt, dblProportion, strBufferStyle, dblMiterLimit);
             CSaveFeature.SaveCGeoEb(resultCpgEb, esriGeometryType.esriGeometryPolygon,
                 dblProportion + "_Growing", _ParameterInitialize, intBlue: 255);
         }
 
 
-        public void MakeAnimations()
+        public void MakeAnimations(string strBufferStyle, double dblMiterLimit)
         {
             int intLayerNum = 10;
             var strLayerNameLt = new List<string>(intLayerNum + 1);
@@ -832,7 +989,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             //The Content of animations are obtained here
             strContent += strDataOfLayers(intLayerNum, strLayerNameLt,
-                _ParameterInitialize.pFLayerLt[0], _ParameterInitialize.pFLayerLt[0].AreaOfInterest, CConstants.pIpeEnv, "0.05");
+                _ParameterInitialize.pFLayerLt[0], _ParameterInitialize.pFLayerLt[0].AreaOfInterest, CConstants.pIpeEnv, "0.05", strBufferStyle, dblMiterLimit);
 
             string strFullName = _ParameterInitialize.strSavePath + "\\" + CHelpFunc.GetTimeStamp() + ".ipe";
             using (var writer = new System.IO.StreamWriter(strFullName, true))
@@ -844,7 +1001,7 @@ namespace MorphingClass.CGeneralizationMethods
         }
 
         private string strDataOfLayers(int intLayerNum, List<string> strLayerNameLt, IFeatureLayer pFLayer,
-            IEnvelope pFLayerEnv, CEnvelope pIpeEnv, string strBoundWidth)
+            IEnvelope pFLayerEnv, CEnvelope pIpeEnv, string strBoundWidth, string strBufferStyle, double dblMiterLimit)
         {
             //for the first layer, we add all the patches
             string strDataAllLayers = CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[0], "removable", 320, 64);
@@ -868,7 +1025,7 @@ namespace MorphingClass.CGeneralizationMethods
                 //add the Content of animations
                 strDataAllLayers += "<group>\n";
                 strDataAllLayers += CIpeDraw.drawIpeEdge(pIpeEnv.XMin, pIpeEnv.YMin, pIpeEnv.XMin, pIpeEnv.YMax, "white");
-                foreach (var cpg in GetResultCpgEb(this.MergedCpgLt, Convert.ToDouble(strLayerNameLt[i])))
+                foreach (var cpg in GetResultCpgEb(this.MergedCpgLt, Convert.ToDouble(strLayerNameLt[i]), strBufferStyle, dblMiterLimit))
                 {
                     strDataAllLayers += CIpeDraw.DrawCpg(cpg, pFLayerEnv, pIpeEnv,
                         new CUtility.CColor(128, 128, 128), new CUtility.CColor(0, 255, 0), strBoundWidth);
@@ -880,16 +1037,20 @@ namespace MorphingClass.CGeneralizationMethods
             return strDataAllLayers;
         }
 
-        private IEnumerable<CPolygon> GetResultCpgEb(List<CPolygon> mergedCpgLt, double dblProportion)
+        private IEnumerable<CPolygon> GetResultCpgEb(List<CPolygon> mergedCpgLt, double dblProportion, string strBufferStyle, double dblMiterLimit)
         {
             //dblProportion = 0.6;
+            CConstants.ParameterInitialize.tspbMain.Value = Convert.ToInt32(dblProportion * 100);
+
+
             double dblCurrentScale = _dblStartScale + dblProportion * (_dblTargetScale - _dblStartScale);
             double dblAreaLimitCurrentScale = _dblAreaLimit * dblCurrentScale * dblCurrentScale
                 * CConstants.dblFclipper * CConstants.dblFclipper;
-            double dblHoleAreaLimitTargetScale = _dblHoleAreaLimit * dblCurrentScale * dblCurrentScale
+            double dblHoleAreaLimitCurrentScale = _dblHoleAreaLimit * dblCurrentScale * dblCurrentScale
                 * CConstants.dblFclipper * CConstants.dblFclipper;
 
             //**********consider that some holes are already too small
+            
 
             var AllGrownAndClippedCpgLt = new List<CPolygon>(mergedCpgLt.Count);
             foreach (var mergedcpg in mergedCpgLt)
@@ -897,29 +1058,19 @@ namespace MorphingClass.CGeneralizationMethods
                 if (mergedcpg.WasTooSmall == true)
                 {
                     continue;
-                }
+                }                
 
                 //there is not SubCpgLt in GrownAndClippedCpg
-                var GrownAndClippedCpgLt = GrowAndClipMergedCpg(mergedcpg, dblProportion).ToList();
-                if (GrownAndClippedCpgLt.Count == 1)  //the subcpgs are merged into one 
+                var GrownAndClippedCpgLt = GrowAndClipMergedCpg_Overlap(mergedcpg, dblProportion, strBufferStyle, dblMiterLimit).ToList();
+                var dblArea = ComputeCpgEbAreaAndRemoveSmallHoles(GrownAndClippedCpgLt, dblHoleAreaLimitCurrentScale);
+
+                if (dblArea >= dblAreaLimitCurrentScale)
                 {
-                    var blnlargeEnoughCpg = CheckLargeCpgAndRemoveSmallHoles(GrownAndClippedCpgLt[0],
-                        dblAreaLimitCurrentScale, dblHoleAreaLimitTargetScale);
-                    if (blnlargeEnoughCpg == true)
-                    {
-                        AllGrownAndClippedCpgLt.Add(GrownAndClippedCpgLt[0]);
-                    }
-                    else
-                    {
-                        mergedcpg.WasTooSmall = true;
-                    }
+                    AllGrownAndClippedCpgLt.AddRange(GrownAndClippedCpgLt);
                 }
                 else
                 {
-                    //remove small holes
-                    CheckLargeCpgEbAndRemoveSmallHoles(GrownAndClippedCpgLt,
-                        dblAreaLimitCurrentScale, dblHoleAreaLimitTargetScale).ToList();
-                    AllGrownAndClippedCpgLt.AddRange(GrownAndClippedCpgLt);
+                    mergedcpg.WasTooSmall = true;
                 }
             }
 
@@ -927,98 +1078,171 @@ namespace MorphingClass.CGeneralizationMethods
             return scaledbackcpgLt;
         }
 
-        private IEnumerable<bool> CheckLargeCpgEbAndRemoveSmallHoles(IEnumerable<CPolygon> cpgeb,
-            double dblAreaLimit, double dblHoleAreaLimit)
+        private double ComputeCpgEbAreaAndRemoveSmallHoles(IEnumerable<CPolygon> cpgeb, double dblHoleAreaLimit)
         {
-            //dblHoleArea = 0;
+            double dblAreaSum = 0;
             foreach (var cpg in cpgeb)
             {
-                yield return CheckLargeCpgAndRemoveSmallHoles(cpg, dblAreaLimit, dblHoleAreaLimit);
+                dblAreaSum += ComputeCpgAreaAndRemoveSmallHoles(cpg, dblHoleAreaLimit);                
             }
+            return dblAreaSum;
         }
 
-        private bool CheckLargeCpgAndRemoveSmallHoles(CPolygon cpg, double dblAreaLimit, double dblHoleAreaLimit)
+        private double ComputeCpgAreaAndRemoveSmallHoles(CPolygon cpg, double dblHoleAreaLimit)
         {
             cpg.SetAreaSimple();
-            if (cpg.dblAreaSimple >= dblAreaLimit)
+
+            if (cpg.HoleCpgLt != null)
             {
-                if (cpg.HoleCpgLt != null)
+                var holecpglt = new List<CPolygon>(cpg.HoleCpgLt.Count);
+                foreach (var holecpg in cpg.HoleCpgLt)
                 {
-                    var holecpglt = new List<CPolygon>(cpg.HoleCpgLt.Count);
-                    foreach (var holecpg in cpg.HoleCpgLt)
+                    if (holecpg.dblAreaSimple >= dblHoleAreaLimit)
                     {
-                        if (holecpg.dblAreaSimple >= dblHoleAreaLimit)
-                        {
-                            holecpglt.Add(holecpg);
-                        }
+                        holecpglt.Add(holecpg);
                     }
-                    cpg.HoleCpgLt = holecpglt;
                 }
-                return true;
+                cpg.HoleCpgLt = holecpglt;
             }
-            else
-            {
-                return false;
-            }
+            return cpg.dblAreaSimple;
         }
 
-        private IEnumerable<CPolygon> GrowAndClipMergedCpg(CPolygon mergedcpg, double dblProportion)
+        private IEnumerable<CPolygon> GrowAndClipMergedCpg_Overlap(CPolygon mergedcpg, double dblProportion, string strBufferStyle, double dblMiterLimit)
         {
-            //dblProportion = 0.99;
+            //dblProportion = 0.4;
+            //dblProportion = 1;
             double dblCurrentScale = _dblStartScale + dblProportion * (_dblTargetScale - _dblStartScale);
             double dblCurrentGrow = dblProportion * _dblTotalGrow * CConstants.dblFclipper;
-            double dblCurrentEpsilon = _dblEpsilon * dblCurrentScale * CConstants.dblFclipper;
-            double dblCurrentDilation = _dblDilation * dblCurrentScale * CConstants.dblFclipper;
+            double dblCurrentEpsilon = Math.Min(dblCurrentGrow / dblMiterLimit, _dblEpsilon * dblCurrentScale * CConstants.dblFclipper);
             double dblCurrentErosion = _dblErosion * dblCurrentScale * CConstants.dblFclipper;
+            //dblCurrentErosion = 0;
+            //double dblCurrentDilation = Math.Max(dblCurrentEpsilon / 2, dblProportion * _dblDilation * dblCurrentScale * CConstants.dblFclipper);
+            double dblCurrentDilation = (dblCurrentGrow - dblMiterLimit * dblCurrentErosion) / (dblMiterLimit - 1);
 
-
-            //double dblCurrentSimplifyDepsilon=_dblSimplifyEpsilon * dblCurrentScale * _dblFclipper;
+            //dblCurrentDilation = dblCurrentGrow;
 
             var clipPathsFirstLevel = clipperMethods.GenerateClipPathsByCpgEb(mergedcpg.ClipCpgLt);
-            if (mergedcpg.SubCpgLt.Count == 1)
+            if (mergedcpg.SubCpgLt == null || mergedcpg.SubCpgLt.Count <= 1)
             {
-                yield return GrowAndClipCpg(mergedcpg, dblCurrentGrow, dblCurrentDilation, dblCurrentErosion, clipPathsFirstLevel);
+                yield return GrowAndClipCpg(mergedcpg, dblCurrentGrow, dblCurrentDilation, dblCurrentErosion, clipPathsFirstLevel, strBufferStyle, dblMiterLimit);
             }
             else
             {
                 var SubCpgLt = mergedcpg.SubCpgLt;
-                SubCpgLt.SetIndexID();
-                var grownCpgLt = GetGrownExteriorCpgLt(SubCpgLt, dblCurrentGrow);
+                var submergedcpglt = MergeCloseCpgsAndAddBridges(SubCpgLt, dblCurrentGrow, dblCurrentDilation, dblCurrentEpsilon);
 
-                var CloseCpgPairPtEdgeDisDt = new Dictionary<CValPairIncr<CPolygon>, CptEdgeDis>(new CCmpEqCpgPairIncr());
-                foreach (var BridgeCptEdgeDis in mergedcpg.BridgeCptEdgeDisSS)
+
+                //var GroupCpgLtLt = clipperMethods.GroupCpgsByOverlap(SubCpgLt, dblCurrentGrow, dblCurrentDilation, dblCurrentEpsilon);
+                var CpipeDt = mergedcpg.CpipeDt;
+
+
+                var CptEdgeDisSSLt = new List<SortedSet<CptEdgeDis>>(submergedcpglt.Count);
+                foreach (var submergedcpg in submergedcpglt)
                 {
-                    //compute real minimum distance of two buildings, after growing
-                    var cpg1 = grownCpgLt[BridgeCptEdgeDis.CpgPairIncr.val1.indexID];
-                    var cpg2 = grownCpgLt[BridgeCptEdgeDis.CpgPairIncr.val2.indexID];
-
-                    var subCloseCpgPairPtEdgeDisDt =
-                        GetCloseCpgPairPtEdgeDisDt_EdgeRelation(CHelpFunc.MakeLt(cpg1, cpg2), dblCurrentEpsilon);
-
-                    if (subCloseCpgPairPtEdgeDisDt.Count > 0)
+                    var subsubCpgLt = submergedcpg.SubCpgLt;
+                    var CptEdgeDisSS = new SortedSet<CptEdgeDis>(CCmpCptEdgeDis_Dis.sComparer);
+                    if (subsubCpgLt != null && subsubCpgLt.Count > 1)
                     {
-                        CloseCpgPairPtEdgeDisDt.Add(BridgeCptEdgeDis.CpgPairIncr, BridgeCptEdgeDis);
+                        for (int i = 0; i < subsubCpgLt.Count - 1; i++)
+                        {
+                            for (int j = i + 1; j < subsubCpgLt.Count; j++)
+                            {
+                                CptEdgeDis outCptEdgeDis;
+                                if (CpipeDt.TryGetValue(new CValPairIncr<CPolygon>(subsubCpgLt[i], subsubCpgLt[j]), out outCptEdgeDis))
+                                {
+                                    CptEdgeDisSS.Add(outCptEdgeDis);
+                                }
+                            }
+                        }
+                    }
+                    CptEdgeDisSSLt.Add(CptEdgeDisSS);
+                }
+
+                for (int i = 0; i < CptEdgeDisSSLt.Count; i++)
+                {
+                    var CptEdgeDisSS = CptEdgeDisSSLt[i];
+                    if (CptEdgeDisSS.Count == 0)  //the the polygon is not close to other polygons yet
+                    {
+                        yield return GrowAndClipCpg(submergedcpglt[i],
+                            dblCurrentGrow, dblCurrentDilation, dblCurrentErosion, clipPathsFirstLevel, strBufferStyle, dblMiterLimit);
+                    }
+                    else  //(CptEdgeDisSS.Count > 0)
+                    {
+                        yield return GrowAndClipCpg(MergeGroupedCpgsAndBridges(CptEdgeDisSS),
+                            dblCurrentGrow, dblCurrentDilation, dblCurrentErosion, clipPathsFirstLevel, strBufferStyle, dblMiterLimit);
                     }
                 }
-
-                //in the preprocess, we also need to compute CptEdgeDisSSLt. At that stage, we have no idea of closeness
-                //at this stage, we already know which edge is a part of the MST of the totally merged building
-                var CptEdgeDisSSLt = GetCptEdgeDisSSLt_FromCpipeDt(SubCpgLt, CloseCpgPairPtEdgeDisDt);
-
-                var subMergedCpgLt = GetMergedCpgLt_Prim(SubCpgLt, CptEdgeDisSSLt);
-                foreach (var subMergedCpg in subMergedCpgLt)
-                {
-                    //CSaveFeature.SaveCGeoEb(CHelpFunc.MakeLt(subMergedCpg), esriGeometryType.esriGeometryPolygon, "subMergedCpg", _ParameterInitialize);
-                    yield return GrowAndClipCpg(subMergedCpg, dblCurrentGrow, dblCurrentDilation, dblCurrentErosion, clipPathsFirstLevel);
-                }
             }
+
+            //yield return null;
         }
 
+        //private IEnumerable<CPolygon> GrowAndClipMergedCpg(CPolygon mergedcpg, double dblProportion)
+        //{
+            ////dblProportion = 0.99;
+            //double dblCurrentScale = _dblStartScale + dblProportion * (_dblTargetScale - _dblStartScale);
+            //double dblCurrentGrow = dblProportion * _dblTotalGrow * CConstants.dblFclipper;
+            //double dblCurrentEpsilon = _dblEpsilon * dblCurrentScale * CConstants.dblFclipper;            
+            //double dblCurrentErosion = _dblErosion * dblCurrentScale * CConstants.dblFclipper;
+            //double dblCurrentDilation =Math.Max(dblCurrentErosion,  _dblDilation * dblCurrentScale * CConstants.dblFclipper);
+
+
+            ////double dblCurrentSimplifyDepsilon=_dblSimplifyEpsilon * dblCurrentScale * _dblFclipper;
+
+            //var clipPathsFirstLevel = clipperMethods.GenerateClipPathsByCpgEb(mergedcpg.ClipCpgLt);
+            //if (mergedcpg.SubCpgLt.Count == 1)
+            //{
+            //    yield return GrowAndClipCpg(mergedcpg, dblCurrentGrow, dblCurrentDilation, dblCurrentErosion, clipPathsFirstLevel);
+            //}
+            //else
+            //{
+            //    var SubCpgLt = mergedcpg.SubCpgLt;
+            //    SubCpgLt.SetIndexID();
+            //    var grownCpgLt = GetGrownExteriorCpgLt(SubCpgLt, dblCurrentGrow);
+
+            //    //there is a flaw in this function, that is,
+            //    //for a bridge linking two sets of polygons, the space along the bridge may not be narrow enough to aggregate, 
+            //    //but the space of somewhere else is already narrow enough.
+            //    //In this case, we should use the bridge to aggregate the two sets of polygons, 
+            //    //but the following codes will not do the aggregation
+            //    var CloseCpgPairPtEdgeDisDt = new Dictionary<CValPairIncr<CPolygon>, CptEdgeDis>(new CCmpEqCpgPairIncr());
+            //    foreach (var BridgeCptEdgeDis in mergedcpg.BridgeCptEdgeDisSS)
+            //    {
+            //        //compute real minimum distance of two buildings, after growing
+            //        var cpg1 = grownCpgLt[BridgeCptEdgeDis.CpgPairIncr.val1.indexID];
+            //        var cpg2 = grownCpgLt[BridgeCptEdgeDis.CpgPairIncr.val2.indexID];
+
+            //        var subCloseCpgPairPtEdgeDisDt =
+            //            GetCloseCpgPairPtEdgeDisDt_EdgeRelation(CHelpFunc.MakeLt(cpg1, cpg2), dblCurrentEpsilon * 2 / Math.Sqrt(5));
+
+            //        if (subCloseCpgPairPtEdgeDisDt.Count > 0)
+            //        {
+            //            CloseCpgPairPtEdgeDisDt.Add(BridgeCptEdgeDis.CpgPairIncr, BridgeCptEdgeDis);
+            //        }
+            //    }
+
+            //    //in the preprocess, we also need to compute CptEdgeDisSSLt. At that stage, we have no idea of closeness
+            //    //at this stage, we already know which edge is a part of the MST of the totally merged building
+            //    var CptEdgeDisSSLt = GetCptEdgeDisSSForEachGroup_FromCpipeDt(SubCpgLt, CloseCpgPairPtEdgeDisDt);
+
+            //    //*****we can improve here by directly calling a sub function
+            //    var subMergedCpgLt = GetMergedCpgLt_Prim(SubCpgLt, CptEdgeDisSSLt); 
+            //    foreach (var subMergedCpg in subMergedCpgLt)
+            //    {
+            //        //CSaveFeature.SaveCGeoEb(CHelpFunc.MakeLt(subMergedCpg), esriGeometryType.esriGeometryPolygon, "subMergedCpg", _ParameterInitialize);
+            //        yield return GrowAndClipCpg(subMergedCpg, dblCurrentGrow, dblCurrentDilation, dblCurrentErosion, clipPathsFirstLevel);
+            //    }
+            //}
+            
+        //}
+
+
         private CPolygon GrowAndClipCpg(CPolygon cpg,
-            double dblGrow, double dblDilation, double dblErosion, Paths clipPathsFirstLevel)
+            double dblGrow, double dblDilation, double dblErosion, Paths clipPathsFirstLevel,
+            string strBufferStyle, double dblMiterLimit)
         {
-            var clippedPolyTree = clipperMethods.ClipOneComponent_BufferDilateErode(cpg,  
-                dblGrow, dblDilation, dblErosion, clipPathsFirstLevel, CConstants.dblFclipper, _ParameterInitialize);
+            var clippedPolyTree = clipperMethods.ClipOneComponent_BufferDilateErode(cpg,
+                dblGrow, dblDilation, dblErosion, clipPathsFirstLevel, CConstants.dblFclipper, _ParameterInitialize, strBufferStyle, dblMiterLimit);
             var clippedCpg = clipperMethods.GenerateOLHCpgByPolyTree(clippedPolyTree, cpg.ID);
 
 
@@ -1031,9 +1255,14 @@ namespace MorphingClass.CGeneralizationMethods
 
                 foreach (var holecpg in cpg.HoleCpgLt)
                 {
+                    if (holecpg.ClipCpgLt == null || holecpg.ClipCpgLt.Count == 0)
+                    {
+                        continue;
+                    }
+
                     var clipPaths = clipperMethods.GenerateClipPathsByCpgEb(holecpg.ClipCpgLt);
                     var clippedHolePolyTree = clipperMethods.ClipOneComponent_BufferDilateErode(holecpg,
-                        dblGrow, dblDilation, dblErosion, clipPaths, CConstants.dblFclipper, _ParameterInitialize);
+                        dblGrow, dblDilation, dblErosion, clipPaths, CConstants.dblFclipper, _ParameterInitialize, strBufferStyle, dblMiterLimit);
 
                     //*******************check the direction of the HoleCpgs
                     foreach (var clippedHoleCpg in clipperMethods.GenerateOLHCpgEbByPolyTree(clippedHolePolyTree, holecpg.ID, true))
@@ -1045,10 +1274,6 @@ namespace MorphingClass.CGeneralizationMethods
 
             return clippedCpg;
         }
-
-
-
-
 
         #endregion
 

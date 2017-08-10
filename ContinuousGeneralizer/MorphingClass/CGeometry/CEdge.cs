@@ -71,6 +71,7 @@ namespace MorphingClass.CGeometry
         public CPolygon LinkedFrCpg { get; set; }
         public CPolygon LinkedToCpg { get; set; }
         public CPolygon BelongedCpg { get; set; }
+        public CPolygon BelongedOriginalCpg { get; set; }
         public CPolyline BelongedCpl { get; set; }
 
         //private string _strLabel;
@@ -259,6 +260,7 @@ namespace MorphingClass.CGeometry
                 _cedgeTwin = TwinCEdge;
                 JudgeAndSetAxisAngle();
                 SetTwinCEdgeAxisAngle();
+                //TwinCEdge.BelongedOriginalCpg = this.BelongedOriginalCpg;
             }
 
             SetCEdgePrevNextAsTwin();

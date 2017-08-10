@@ -58,7 +58,7 @@ namespace MorphingClass.CAid
                 
                 for (int j = 0; j < CPolylineLt[i].CptLt .Count; j++)
                 {
-                    //var pobjectValueLt = new List<object>(1);
+                    //var pobjectValueLt = new List<object>();
                     //pobjectValueLt.Add(j);
                     //pobjectValueLtLt.Add(pobjectValueLt);
 
