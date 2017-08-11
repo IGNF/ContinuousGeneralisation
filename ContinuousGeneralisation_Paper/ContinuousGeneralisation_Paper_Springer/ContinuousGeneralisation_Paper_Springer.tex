@@ -299,7 +299,7 @@ Cetinkaya2015,Deng2017,Regnauld1996}
 
 
 
-\section{Method}
+\section{Methodology}
 
 We grow all the buildings with the same speed.
 
@@ -343,9 +343,11 @@ l_b=4d_\mathrm{G}+d_\epsilon.
 %\todo[inline]{$d_\mathrm{G}$ or $D_\mathrm{G}$?}
 
 \subsection{Simplification}
-we use a buffer-based method, similar to \textcite{Damen2008,Meijers2016}, to 
-simplify our grown buildings.
+We use an offset-based method, similar to \textcite{Damen2008,Meijers2016}, to 
+simplify our grown buildings. We first dilate the grown buildings to remove 
+pits, and then erode the results to remove spikes.
 
+After carrying out the offset-based method, we simplify the grown buildings 
 We tried simplifying using Douglas--Peucker algorithm \parencite{Douglas1973}, 
 but we hoped to remove more points. We found that the Imai--Iri 
 algorithm \parencite{ImaiIri1988} fit our needs well. Although a version with a 
@@ -369,18 +371,19 @@ and has the least number of line segments.
 	\label{fig:ImaiIri_Shortcut}
 \end{figure}
 
-We add three more constraints for a shortcut to be valid
+\todo[inline]{more details in the below paragraph?}
+We add two more constraints for a shortcut to be valid
 when we use the Imai--Iri algorithm. 
-That is, 
-a shortcut is not allowed to intersect the boundary of the original building, 
-is not allowed to intersect the boundary of the grown building, 
-and must be inside the grown building.
-For the first constraint, 
-if a shortcut intersects the boundary of the original building, 
-we will need to shrink the building, which we do not want.
-For the second and the third constraints,
-if a shortcut is outside the grown building,
+The first one is that
+a shortcut must be completely inside the grown building.
+If a shortcut is outside,
 we are not able to arrive at the shortcut by growing.
+The second constraint is that a shortcut is not allowed to intersect the 
+boundary of the original building.
+If a shortcut does intersect, 
+we will need to shrink the building instead of growing. Of course, we do not 
+want to shrink.
+
 
 
 
@@ -537,8 +540,32 @@ eliminate the hole once its size is smaller than $8$ mm$^2$ on map.
 	\label{fig:GrowingExample}
 \end{figure}
 
-\section{Section Title}
-\label{sec:AStarAlgorithm}
+\section{Case Study}
+\label{sec:CaseStudy}
+We have implemented our method based on C\# (Microsoft Visual 
+Studio 
+2015) and ArcObjects SDK \revise{for the Microsoft .Net Framework}{}10.2. 
+We ran our case study under 64-bit 
+Windows 7 on a 3.3 GHz dual core CPU with 8 GB RAM.
+%As ArcObjects SDK for the Microsoft .Net Framework 10.2 can 
+%only  run under a 32-bit platform, we set a Post-build 
+%event\footnote{The details of the setting can be found at 	
+%\url{http://stackoverflow.com/questions/2597790/can-i-set-largeaddressaware-from-within-visual-studio}.},
+%in Microsoft Visual Studio 2012
+%so that we managed to use up to 3GM of RAM.
+We measured processing time by the built-in C\# class 
+\emph{Stopwatch}.
+We tested our method on a dataset from the German topographic 
+database ATKIS DLM 50. The dataset represents the place 
+``Buchholz in der Nordheide'' at scale $1:50{,}000$. Our start 
+map is the map after the collapse of areas by \citet[pp. 
+61--66]{haunert2008f}, which has $5{,}537$ polygons. Our goal 
+map was generalized from the start map by 
+\citet{haunertwolff2010b} setting the scale at $1:250{,}000$ 
+(see Fig.~\ref{fig:Data}). The goal map has $734$ polygons, 
+which means that \revise{we have}{there are $N=734$} regions.  
+
+
 
 \mypar{Notation}
 Text. 
@@ -551,12 +578,6 @@ Text.
 \section{Conclusions}
 \label{sec:Conclusions}
 
-Because of our aggregation with skeletons and original 
-buildings, we may have too many details in the intermediate 
-results.
-
-Some buildings are too small to be eroded. We have to generate 
-squares or MBR?
 
 To make it more efficient for on line displaying, we may need 
 some external memories. First, we store the data at some key 
@@ -571,15 +592,12 @@ two operators are from library Clipper. The efficiency of the
 buffering function of this library has been evaluated by 
 \textcite{Palfrader2015}.
 
-One can also discuss about our growing speed.
 
 We our intermediate results may violate more cartographic rules, but we try to 
 make the results at goal scales violate as few rules as possible.
 
-Ideally, for a rectangle, the ratio of width to height should be kept.
-
-The closest place of two buildings before enlarging is not necessarily the same 
-as the closest place after enlarging. 
+Eventually, our result is a set of settlement boundaries. An interesting 
+problem is to compare our method with \textcite{Chaudhry2008}.
 
 \todo[inline]{consider multi bridges; consider transparency of bridges in 
 stead 
