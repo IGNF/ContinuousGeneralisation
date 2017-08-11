@@ -754,31 +754,31 @@ namespace MorphingClass.CGeneralizationMethods
             CNodeQueue.Enqueue(startCNode);
             bool isFoundGoal = false;
 
-            while (CNodeQueue.Count>0 && isFoundGoal ==false)
+            while (CNodeQueue.Count > 0 && isFoundGoal == false)
             {
                 var currentCNode = CNodeQueue.Dequeue();
                 foreach (var nbrcnode in currentCNode.NbrCNodeLt)
                 {
-                    if (nbrcnode.strColor=="white")
+                    if (nbrcnode.strColor == "white")
                     {
                         nbrcnode.strColor = "gray";
-                        nbrcnode.PrevCNode = currentCNode;                        
+                        nbrcnode.PrevCNode = currentCNode;
 
                         CNodeQueue.Enqueue(nbrcnode);
                     }
 
-                    if (nbrcnode.GID== goalCNode.GID)
+                    if (nbrcnode.GID == goalCNode.GID)
                     {
                         isFoundGoal = true;
                     }
                 }
                 currentCNode.strColor = "black";
             }
-            
+
 
             // set NextCNode for each Node on the path
             var backCNode = goalCNode;
-            while (backCNode.GID!= startCNode.GID)
+            while (backCNode.GID != startCNode.GID)
             {
                 backCNode.PrevCNode.NextCNode = backCNode;
 

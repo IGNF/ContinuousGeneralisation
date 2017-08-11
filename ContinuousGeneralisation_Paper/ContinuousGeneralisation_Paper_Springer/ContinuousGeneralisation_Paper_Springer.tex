@@ -119,6 +119,8 @@ eprint=false,dashed=false]{biblatex}
 \newcommand{\mypar}[1]{\bigskip\noindent\textbf{#1.}~}
 
 \newcommand{\e}[1]{\times 10^{#1}}
+\newcommand{\fig}{Fig.~}
+\newcommand{\eq}{Eq.~}
 
 \graphicspath{{figures/}}
 \DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
@@ -178,7 +180,8 @@ eprint=false,dashed=false]{biblatex}
 
 \begin{document}
 
-\title*{Continuous Generalization of Buildings}
+\title*{Continuous Generalization of Buildings \protect\\ by Growing and 
+Merging}
 \titlerunning{Continuous Generalization of Buildings}
 % Use \titlerunning{Short Title} for an abbreviated version of
 % your contribution title if the original one is too long
@@ -344,10 +347,41 @@ we use a buffer-based method, similar to \textcite{Damen2008,Meijers2016}, to
 simplify our grown buildings.
 
 We tried simplifying using Douglas--Peucker algorithm \parencite{Douglas1973}, 
-but we hoped to remove more points. We found that Imai--Iri 
-algorithm \parencite{ImaiIri1988} fit our needs well.
+but we hoped to remove more points. We found that the Imai--Iri 
+algorithm \parencite{ImaiIri1988} fit our needs well. Although a version with a 
+lower running time exists \parencite[see][]{Chan1992}, we implemented the basic 
+version.
 
-Imai--Iri algorithm finds all the valid shortcuts, and then 
+The Imai--Iri algorithm first finds all the valid shortcuts of a polyline.
+For a sequence of points on a polyline, 
+if their distances to their shortcut are 
+at most specified value $\epsilon$, then the shortcut is valid (see 
+\fig\ref{fig:ImaiIri_Shortcut}). 
+Second, the algorithm finds a sequence of valid shortcuts, from the beginning 
+of a polyline to the end, using breadth-first search.
+The sequence of valid shortcuts is an approximation of the polyline, 
+and has the least number of line segments.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics{ImaiIri_Shortcut}
+	\caption{Valid shortcut and invalid shortcut for Imai--Iri algorithm.}
+	\label{fig:ImaiIri_Shortcut}
+\end{figure}
+
+We add three more constraints for a shortcut to be valid
+when we use the Imai--Iri algorithm. 
+That is, 
+a shortcut is not allowed to intersect the boundary of the original building, 
+is not allowed to intersect the boundary of the grown building, 
+and must be inside the grown building.
+For the first constraint, 
+if a shortcut intersects the boundary of the original building, 
+we will need to shrink the building, which we do not want.
+For the second and the third constraints,
+if a shortcut is outside the grown building,
+we are not able to arrive at the shortcut by growing.
+
 
 
 \subsection{Parameters for growing and simplifying}

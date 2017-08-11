@@ -193,7 +193,7 @@ namespace MorphingClass.CUtility
                 }
                 GroupedCpgLtLt = newGroupedCpgLtLt;
                 ++intRound;
-                Console.WriteLine("IterativeGroupCpgsByOverlapIndependently: " + intRound);
+                //Console.WriteLine("IterativeGroupCpgsByOverlapIndependently: " + intRound);
             }
         }
 
