@@ -183,18 +183,25 @@ namespace MorphingClass.CUtility
             }
 
             int intRound = 0;
+            var newGroupedCpgLtLt = new List<List<CPolygon>>();
             while (true)
             {
-                var newGroupedCpgLtLt = DilateAndOverlapPaths(cpglt, GroupedCpgLtLt,
+                newGroupedCpgLtLt = DilateAndOverlapPaths(cpglt, GroupedCpgLtLt,
                     dblGrow, dblDilation, dblEpsilon, strBufferStyle, dblMiterLimit);
-                if (newGroupedCpgLtLt.Count== GroupedCpgLtLt.Count)
+                if (newGroupedCpgLtLt.Count == GroupedCpgLtLt.Count)
                 {
-                    return newGroupedCpgLtLt;
+                    break;
                 }
                 GroupedCpgLtLt = newGroupedCpgLtLt;
                 ++intRound;
-                //Console.WriteLine("IterativeGroupCpgsByOverlapIndependently: " + intRound);
             }
+
+            if (intRound > 1)
+            {
+                Console.WriteLine("IterativeGroupCpgsByOverlapIndependently: " + intRound);
+            }
+
+            return newGroupedCpgLtLt;
         }
 
 

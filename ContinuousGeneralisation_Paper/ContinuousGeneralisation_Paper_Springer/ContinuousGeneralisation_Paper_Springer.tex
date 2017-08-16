@@ -314,37 +314,34 @@ we generate its target shape at
 the goal scale by enlarging and simplifying. Then we grow the  
 building to the target shape. 
 
-\subsection{Growing}
-If several buildings are close to each other at the start 
-scale, we bridge them by line segments and take the merge of these 
-buildings 
-and bridges as one building.
-For each building, either an original one or a merged one, at the start 
-scale, 
-we generate its target shape at 
-the goal scale by enlarging and simplifying. Then we grow the  
-building to the target shape. 
-%
-After finishing the growing, we take the goal scale as the 
-start scale and repeat our continuous generalization.
-\newline\indent
-Our contribution is as follows. First, the buildings 
-are enlarged continuously. At the same time, they are simplified. 
-Second, we ensure that the distance between any pair of two buildings is 
-always larger than a specified threshold.
+\subsection{Grouping buildings based on buffering}
+We group buildings based on the buffers of the buildings. 
+We buffer each building with distance $d_G + \frac{d_\epsilon}{2}$, 
+where distance $d_G$ is the growing amount of each building. 
+Parameter $d_\epsilon$ is the least distance allowed between two buildings.
+We grow an additional $\frac{d_\epsilon}{2}$ so that if two buffers overlap, 
+the corresponding two buildings will become too close during our growing step.
+The two buildings are in the same group.
 
-If we grow a building with radius $d_\mathrm{G}$, some part of a building will 
-grow at most $2d_\mathrm{G}$.
-The length of a bridge can be as large as
-\begin{equation}
-\label{eq:BridgeLength}
-l_b=4d_\mathrm{G}+d_\epsilon.
-\end{equation}
-%\todo[inline]{$d_\mathrm{G}$ or $D_\mathrm{G}$?}
+We merge the buffers which overlap each others so that we have some large units.
+Now we iteratively remove small ``bays''.
+Each iteration consists of three steps, i.e., 
+buffering with distance $r_H$, buffering with distance $-r_H$, and
+merging overlapping units.
+The iterative process stops when the number of units do not decrease anymore.
 
-\subsection{Simplification}
-We use an offset-based method, similar to \textcite{Damen2008,Meijers2016}, to 
-simplify our grown buildings. We first dilate the grown buildings to remove 
+All the buildings overlapping with the same unit belong to the same group.
+
+
+\subsection{Enlarging and merging buildings}
+
+
+
+\subsection{Simplifying merged buildings}
+We use an buffering-based method, 
+similar to \textcite{Damen2008,Meijers2016}, 
+to simplify our grown buildings. 
+We first dilate the grown buildings to remove 
 pits, and then erode the results to remove spikes.
 
 After carrying out the offset-based method, we simplify the grown buildings 
@@ -385,7 +382,33 @@ we will need to shrink the building instead of growing. Of course, we do not
 want to shrink.
 
 
+\subsection{Growing}
+If several buildings are close to each other at the start 
+scale, we bridge them by line segments and take the merge of these 
+buildings 
+and bridges as one building.
+For each building, either an original one or a merged one, at the start 
+scale, 
+we generate its target shape at 
+the goal scale by enlarging and simplifying. Then we grow the  
+building to the target shape. 
+%
+After finishing the growing, we take the goal scale as the 
+start scale and repeat our continuous generalization.
+\newline\indent
+Our contribution is as follows. First, the buildings 
+are enlarged continuously. At the same time, they are simplified. 
+Second, we ensure that the distance between any pair of two buildings is 
+always larger than a specified threshold.
 
+If we grow a building with radius $d_\mathrm{G}$, some part of a building will 
+grow at most $2d_\mathrm{G}$.
+The length of a bridge can be as large as
+\begin{equation}
+\label{eq:BridgeLength}
+l_b=4d_\mathrm{G}+d_\epsilon.
+\end{equation}
+%\todo[inline]{$d_\mathrm{G}$ or $D_\mathrm{G}$?}
 
 \subsection{Parameters for growing and simplifying}
 The start scale is $1:S_\mathrm{s}$, and the goal scale is $1:S_\mathrm{g}$ 
@@ -544,26 +567,18 @@ eliminate the hole once its size is smaller than $8$ mm$^2$ on map.
 \label{sec:CaseStudy}
 We have implemented our method based on C\# (Microsoft Visual 
 Studio 
-2015) and ArcObjects SDK \revise{for the Microsoft .Net Framework}{}10.2. 
+2015) and ArcObjects SDK 10.4.1. 
 We ran our case study under 64-bit 
 Windows 7 on a 3.3 GHz dual core CPU with 8 GB RAM.
-%As ArcObjects SDK for the Microsoft .Net Framework 10.2 can 
-%only  run under a 32-bit platform, we set a Post-build 
-%event\footnote{The details of the setting can be found at 	
-%\url{http://stackoverflow.com/questions/2597790/can-i-set-largeaddressaware-from-within-visual-studio}.},
-%in Microsoft Visual Studio 2012
-%so that we managed to use up to 3GM of RAM.
 We measured processing time by the built-in C\# class 
 \emph{Stopwatch}.
-We tested our method on a dataset from the German topographic 
-database ATKIS DLM 50. The dataset represents the place 
-``Buchholz in der Nordheide'' at scale $1:50{,}000$. Our start 
-map is the map after the collapse of areas by \citet[pp. 
-61--66]{haunert2008f}, which has $5{,}537$ polygons. Our goal 
-map was generalized from the start map by 
-\citet{haunertwolff2010b} setting the scale at $1:250{,}000$ 
-(see Fig.~\ref{fig:Data}). The goal map has $734$ polygons, 
-which means that \revise{we have}{there are $N=734$} regions.  
+We tested our method on a dataset from French Mapping Agency (IGN).
+The dataset represents four towns (communes in French), i.e., Aussevielle, 
+Denguin,  Poey-de-Lescar, and Siros, in the 
+Pyr\'en\'ees-Atlantiques department, south-western France.
+The scale of the dataset is $1:15{,}000$.
+Our goal scale is $1:50{,}000$.
+
 
 
 
@@ -596,8 +611,12 @@ buffering function of this library has been evaluated by
 We our intermediate results may violate more cartographic rules, but we try to 
 make the results at goal scales violate as few rules as possible.
 
+
 Eventually, our result is a set of settlement boundaries. An interesting 
 problem is to compare our method with \textcite{Chaudhry2008}.
+
+We did not include streets. We can either put them above the settlement 
+boundaries on map, or use them as restriction for building growing.
 
 \todo[inline]{consider multi bridges; consider transparency of bridges in 
 stead 
