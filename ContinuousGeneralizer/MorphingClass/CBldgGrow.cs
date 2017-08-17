@@ -759,6 +759,9 @@ namespace MorphingClass.CGeneralizationMethods
 
         private CPolygon MergeGroupedCpgsAndBridges(SortedSet<CptEdgeDis> CptEdgeDisSS)
         {
+            var testCEdge = new CEdge(new CPoint(0, 415112.200, 6257946.900), new CPoint(1, 415131.200, 6257932.700));
+
+
             //we use HashSet so that each cpg will be added once
             var cpghs = new HashSet<CPolygon>();
             foreach (var CptEdgeDis in CptEdgeDisSS)
@@ -786,6 +789,11 @@ namespace MorphingClass.CGeneralizationMethods
                     //add the bridge as an edge
                     BridgeCEdgeLt.Add(cptEdgeDis.ConnectCEdge);
                 }
+
+                //if (CCmpMethods.CmpCEdgeCoord(cptEdgeDis.ConnectCEdge,testCEdge,true)==0)
+                //{
+                //    throw new ArgumentException("we have found this edge!");
+                //}
 
                 //if the smallest distance of two polygons happen to between a point and an edge
                 //this edge can be the closest edge of the polygon to several polygons, 

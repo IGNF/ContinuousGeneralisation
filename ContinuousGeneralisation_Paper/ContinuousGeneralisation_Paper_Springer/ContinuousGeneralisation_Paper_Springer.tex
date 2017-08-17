@@ -121,6 +121,7 @@ eprint=false,dashed=false]{biblatex}
 \newcommand{\e}[1]{\times 10^{#1}}
 \newcommand{\fig}{Fig.~}
 \newcommand{\eq}{Eq.~}
+\newcommand{\sect}{Sec.~}
 
 \graphicspath{{figures/}}
 \DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
@@ -315,6 +316,7 @@ the goal scale by enlarging and simplifying. Then we grow the
 building to the target shape. 
 
 \subsection{Grouping buildings based on buffering}
+\label{sec:Grouping}
 We group buildings based on the buffers of the buildings. 
 We buffer each building with distance $d_G + \frac{d_\epsilon}{2}$, 
 where distance $d_G$ is the growing amount of each building. 
@@ -333,8 +335,13 @@ The iterative process stops when the number of units do not decrease anymore.
 All the buildings overlapping with the same unit belong to the same group.
 
 
-\subsection{Enlarging and merging buildings}
-
+\subsection{Enlarging and merging buildings for goal map}
+For each pair of buildings in the same group, 
+we find the smallest distance between them.
+We connect the buildings by adding an edge from the nearest points.
+We find a minimum spanning tree of the buildings using Prim's algorithm 
+\parencite{Prim1957}.
+We enlarge and merge buildings as the way we do in \sect\ref{sec:Grouping}.
 
 
 \subsection{Simplifying merged buildings}
