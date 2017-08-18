@@ -54,7 +54,7 @@ namespace MorphingClass.CGeometry
         public CPoint CentroidCptSimple { get; set; }
 
         public List<CPolygon> SubCpgLt { get; set; }
-        public SortedSet<CptEdgeDis> BridgeCptEdgeDisSS { get; set; }
+        public HashSet<CptEdgeDis> BridgeCptEdgeDisSS { get; set; }
         
         public Dictionary<CValPairIncr<CPolygon>, CptEdgeDis> CpipeDt { get; set; }
 
@@ -119,6 +119,14 @@ namespace MorphingClass.CGeometry
             this.GID = _intStaticGID++;
             _intID = intID;
             this.strShape = "Polygon";
+
+            if (cptlt != null && cptlt.Count > 0)
+            {
+                cptlt[cptlt.Count - 1] = cptlt[0];  //make sure that the first vertex and the last vertex are identical
+            }
+            
+
+
             FormPolyBase(cptlt);
 
 
@@ -159,15 +167,15 @@ namespace MorphingClass.CGeometry
             }
         }
 
-        public override void SetCEdgeLtFrCptCEdge()
+        public override void SetCEdgeToCpts()
         {
-            this.CEdgeLt.ForEach(cedge => cedge.SetFrCptCEdge());
+            this.CEdgeLt.ForEach(cedge => cedge.SetCEdgeToCpts());
 
             if (this.HoleCpgLt != null)
             {
                 foreach (var holecpg in this.HoleCpgLt)
                 {
-                    holecpg.SetCEdgeLtFrCptCEdge();
+                    holecpg.SetCEdgeToCpts();
                 }
             }
         }

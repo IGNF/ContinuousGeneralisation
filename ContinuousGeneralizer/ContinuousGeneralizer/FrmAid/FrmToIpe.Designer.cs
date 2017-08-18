@@ -200,6 +200,7 @@
             this.cboSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboSize.FormattingEnabled = true;
             this.cboSize.Items.AddRange(new object[] {
+            "0.01",
             "0.05",
             "0.5",
             "0.8",

@@ -115,11 +115,13 @@ namespace ContinuousGeneralizer.FrmGeneralization
         private void btn020_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.2;
+            _pBldgGrow.Output(_dblProportion, this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
             //_pBldgGrow.Output(_dblProportion);
         }
         private void btn030_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.3;
+            _pBldgGrow.Output(_dblProportion, this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
             //_pBldgGrow.Output(_dblProportion);
         }
         private void btn040_Click(object sender, EventArgs e)

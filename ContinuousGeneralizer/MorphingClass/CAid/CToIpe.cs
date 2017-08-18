@@ -86,7 +86,7 @@ namespace MorphingClass.CAid
             //string strData = CIpeDraw.writeIpeText(dblLegend16 + " " + ParameterInitialize.m_mapControl.MapUnits.ToString(), 320, 80) +
             //    CIpeDraw.drawIpeEdge(320, 64, 336, 64);
 
-            //add legend (unit and a sample line), draw a line with length 32 in ipe
+            //add legend (unit and a sample line), draw a line with length 32 in ipe so that we can easily compare shrinks with other figures
             return CIpeDraw.writeIpeText(intLegendInt + " " + strMapUnits, 320, 32) +
     CIpeDraw.drawIpeEdge(320, 16, 320 + dblLegentInt, 16) +
     CIpeDraw.drawIpeEdge(320, 16, 320, 20) + CIpeDraw.drawIpeEdge(320 + dblLegentInt, 16, 320 + dblLegentInt, 20);

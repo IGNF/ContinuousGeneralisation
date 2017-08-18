@@ -257,194 +257,7 @@ namespace MorphingClass.CUtility
             }
 
             return GroupedCpgLtLt;
-        }
-
-
-        //    public static List<List<CPolygon>> GroupCpgsByOverlapIndependently(List<CPolygon> cpglt,
-        //        double dblGrow, double dblDilation, double dblEpsilon)
-        //    {
-        //        var CpgLtPaths = new Paths(cpglt.Count);
-        //        foreach (var cpg in cpglt)
-        //        {
-        //            var overdilationPaths = Offset_Paths(cpg.ExteriorPaths, dblGrow + dblDilation);
-        //            var erosionpaths = Offset_Paths(overdilationPaths, -dblDilation);
-
-        //            //if two polygons intersect, they will be too close without overdiating dblEpsilon / 2
-        //            //var overdilationPolyTree = Offset_PolyTree(erosionpaths, dblEpsilon / 2, "Round");
-        //            var finalPolyTree = Offset_PolyTree(erosionpaths, dblEpsilon / 2);
-
-
-        ////            CSaveFeature.SaveCGeoEb(clipperMethods.ScaleCpgLt(CHelpFunc.MakeLt(cpg), 1 / CConstants.dblFclipper),
-        ////                esriGeometryType.esriGeometryPolygon, "cpg" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-        ////            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-        ////overdilationPaths, true), 1 / CConstants.dblFclipper), "overdilationPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-
-        ////            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-        ////erosionpaths, true), 1 / CConstants.dblFclipper), "erosionpaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-        ////            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-        //// finalPaths, true), 1 / CConstants.dblFclipper), "finalPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-
-
-        //            if (finalPolyTree.ChildCount > 1)
-        //            {
-        //                throw new ArgumentException("there should be only one path in finalpaths!");
-        //            }
-
-        //            CpgLtPaths.Add(finalPolyTree.Childs[0].Contour);
-        //        }
-
-
-        //        var AllOverDilationPolyTree = Offset_PolyTree(CpgLtPaths, 0); //union is not reliable, so we offset by 0
-
-        //        return  return GroupCpgsByOverlap(cpglt, AllOverDilationPolyTree);
-        //    }
-
-        //public static List<List<CPolygon>> GroupCpgsByOverlapIndependently(List<CPolygon> cpglt,
-        //    double dblGrow, double dblDilation, double dblEpsilon)
-        //{
-        //    //var CpgPathsLt = new List< Paths>(cpglt.Count);
-
-        //    foreach (var cpg in cpglt)
-        //    {
-        //        cpg.ExteriorPaths= CHelpFunc.MakeLt(clipperMethods.GeneratePathByCpgExterior(cpg));
-
-        //        //var cpgPaths = CHelpFunc.MakeLt(clipperMethods.GeneratePathByCpgExterior(cpg));
-        //        //CpgPathsLt.Add(cpgPaths);
-        //    }
-
-        //    var newgroupedpathslt = CpgPathsLt;
-        //    var groupedpathslt = new List<Paths>();            
-        //    do
-        //    {
-        //        groupedpathslt = newgroupedpathslt;
-        //        newgroupedpathslt = IterativeGroupPaths(groupedpathslt, dblGrow, dblDilation, dblEpsilon);
-        //    } while (newgroupedpathslt.Count< groupedpathslt.Count);
-
-
-
-        //    while (newgroupedpathslt.Count< groupedpathslt.Count)
-        //    {
-
-        //    }
-
-        //    //var overdilationPaths = Offset_Paths(Paths, dblGrow + dblDilation);
-        //    //var erosionpaths = Offset_Paths(overdilationPaths, -dblDilation);
-
-        //    ////if two polygons intersect, they will be too close without overdiating dblEpsilon / 2
-        //    ////var overdilationPolyTree = Offset_PolyTree(erosionpaths, dblEpsilon / 2, "Round");
-        //    //var overdilationPolyTree = Offset_PolyTree(erosionpaths, dblEpsilon / 2);
-
-
-        //    //CSaveFeature.SaveCGeoEb(clipperMethods.ScaleCpgLt(CHelpFunc.MakeLt(Cpg), 1 / CConstants.dblFclipper),
-        //    //    esriGeometryType.esriGeometryPolygon, "Cpg" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-        //    //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-        //    //overdilationPaths, true), 1 / CConstants.dblFclipper), "overdilationPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-
-        //    //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-        //    //erosionpaths, true), 1 / CConstants.dblFclipper), "erosionpaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-        //    //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-        //    // Clipper.PolyTreeToPaths(overdilationPolyTree), true), 1 / CConstants.dblFclipper), "overdilationPolyTree" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-
-
-        //    cpglt.SetIndexID();
-        //    var testCpgLt = cpglt;
-        //    var GroupCpgLtLt = new List<List<CPolygon>>();
-        //    foreach (var polynode in overdilationPolyTree.Childs)
-        //    {
-        //        var remainCpgLt = new List<CPolygon>(testCpgLt.Count);
-        //        Paths nodePaths = CHelpFunc.MakeLt(polynode.Contour);
-        //        var groupcpglt = new List<CPolygon>();
-        //        foreach (var testcpg in testCpgLt)
-        //        {
-        //            var clippedPaths = Clip_Paths(nodePaths, true,
-        //                CHelpFunc.MakeLt(Paths[testcpg.indexID]), true, ClipType.ctIntersection);
-        //            if (clippedPaths == null || clippedPaths.Count == 0)
-        //            {
-        //                remainCpgLt.Add(testcpg);
-        //            }
-        //            else
-        //            {
-        //                groupcpglt.Add(testcpg);
-        //            }
-        //        }
-        //        GroupCpgLtLt.Add(groupcpglt);
-        //        testCpgLt = remainCpgLt;
-        //    }
-
-        //    return GroupCpgLtLt;
-        //}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //public static List<List<CPolygon>> GroupCpgsByOverlap(List<CPolygon> cpglt,
-        //    double dblGrow, double dblDilation, double dblEpsilon)
-        //{
-        //    var Paths = new Paths(cpglt.Count);
-        //    foreach (var cpg in cpglt)
-        //    {
-        //        Paths.Add(clipperMethods.GeneratePathByCpgExterior(cpg));
-        //    }
-
-        //    var overdilationPaths = Offset_Paths(Paths, dblGrow + dblDilation);
-        //    var erosionpaths = Offset_Paths(overdilationPaths, -dblDilation);
-        //    //overdilationPaths = null;
-        //    //GC.Collect();
-        //    //if two polygons intersect, they will be too close without overdiating dblEpsilon / 2
-        //    //var overdilationPolyTree = Offset_PolyTree(erosionpaths, dblEpsilon / 2, "Round");
-        //    var overdilationPolyTree = Offset_PolyTree(erosionpaths, dblEpsilon / 2);
-
-
-        //    //CSaveFeature.SaveCGeoEb(clipperMethods.ScaleCpgLt(CHelpFunc.MakeLt(Cpg), 1 / CConstants.dblFclipper),
-        //    //    esriGeometryType.esriGeometryPolygon, "Cpg" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-        //    //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-        //    //overdilationPaths, true), 1 / CConstants.dblFclipper), "overdilationPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-
-        //    //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-        //    //erosionpaths, true), 1 / CConstants.dblFclipper), "erosionpaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-        //    //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-        //    // Clipper.PolyTreeToPaths(overdilationPolyTree), true), 1 / CConstants.dblFclipper), "overdilationPolyTree" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-
-
-        //    cpglt.SetIndexID();
-        //    var testCpgLt = cpglt;
-        //    var GroupCpgLtLt = new List<List<CPolygon>>();
-        //    foreach (var polynode in overdilationPolyTree.Childs)
-        //    {
-        //        var remainCpgLt = new List<CPolygon>(testCpgLt.Count);
-        //        Paths nodePaths = CHelpFunc.MakeLt(polynode.Contour);
-        //        var groupcpglt = new List<CPolygon>();
-        //        foreach (var testcpg in testCpgLt)
-        //        {
-        //            var clippedPaths = Clip_Paths(nodePaths, true,
-        //                CHelpFunc.MakeLt(Paths[testcpg.indexID]), true, ClipType.ctIntersection);
-        //            if (clippedPaths == null || clippedPaths.Count == 0)
-        //            {
-        //                remainCpgLt.Add(testcpg);
-        //            }
-        //            else
-        //            {
-        //                groupcpglt.Add(testcpg);
-        //            }
-        //        }
-        //        GroupCpgLtLt.Add(groupcpglt);
-        //        testCpgLt = remainCpgLt;
-        //    }
-
-        //    return GroupCpgLtLt;
-        //}
+        }        
 
 
         public static PolyTree ClipOneComponent_BufferDilateErode(CPolygon cpg,
@@ -523,16 +336,16 @@ namespace MorphingClass.CUtility
 
 
 
-            //            CSaveFeature.SaveCGeoEb(clipperMethods.ScaleCpgLt(CHelpFunc.MakeLt(Cpg), 1 / CConstants.dblFclipper),
-            //                esriGeometryType.esriGeometryPolygon, "Cpg" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-            //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-            //growndilationPaths, true), 1 / CConstants.dblFclipper), "growndilationPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-            //           CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-            //overdilationPaths, true), 1 / CConstants.dblFclipper), "overdilationPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-            //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-            //backPaths, true), 1 / CConstants.dblFclipper), "backPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-            //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-            //erosionpaths, true), 1 / CConstants.dblFclipper), "erosionpaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
+//            CSaveFeature.SaveCGeoEb(clipperMethods.ScaleCpgLt(CHelpFunc.MakeLt(Cpg), 1 / CConstants.dblFclipper),
+//                esriGeometryType.esriGeometryPolygon, "Cpg" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
+////            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
+////growndilationPaths, true), 1 / CConstants.dblFclipper), "growndilationPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
+//            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
+// overdilationPaths, true), 1 / CConstants.dblFclipper), "overdilationPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
+////            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
+////backPaths, true), 1 / CConstants.dblFclipper), "backPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
+//            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
+//erosionpaths, true), 1 / CConstants.dblFclipper), "erosionpaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
 
 
             return Offset_Paths(erosionpaths, dblHoleIndicator * dblErosion, strBufferStyle, dblMiterLimit);

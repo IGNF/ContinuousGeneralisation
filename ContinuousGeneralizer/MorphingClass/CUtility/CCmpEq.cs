@@ -87,4 +87,35 @@ namespace MorphingClass.CUtility
             return Tuple.Create(x1, y1, x2, y2).GetHashCode();
         }
     }
+
+    //public class CCmpEqCptEdgeDis : EqualityComparer<CptEdgeDis>
+    //{
+    //    //public static CCmpCoordDbl_VerySmall sComparer = new CCmpCoordDbl_VerySmall();
+
+    //    public override bool Equals(CptEdgeDis x, CptEdgeDis y)
+    //    {
+    //        if (CCmpMethods.CmpCEdgeCoord(x, y, true) == 0)
+    //        {
+    //            return true;
+    //        }
+    //        else
+    //        {
+    //            return false;
+    //        }
+    //    }
+
+    //    public override int GetHashCode(CptEdgeDis cedge)
+    //    {
+    //        CPoint frcpt;
+    //        CPoint tocpt;
+    //        CCmpMethods.GetCpts(cedge, true, out frcpt, out tocpt);
+
+    //        var x1 = Convert.ToInt64(frcpt.X * CConstants.dblRationVerySmallFclipper);
+    //        var y1 = Convert.ToInt64(frcpt.Y * CConstants.dblRationVerySmallFclipper);
+    //        var x2 = Convert.ToInt64(tocpt.X * CConstants.dblRationVerySmallFclipper);
+    //        var y2 = Convert.ToInt64(tocpt.Y * CConstants.dblRationVerySmallFclipper);
+
+    //        return Tuple.Create(x1, y1, x2, y2).GetHashCode();
+    //    }
+    //}
 }

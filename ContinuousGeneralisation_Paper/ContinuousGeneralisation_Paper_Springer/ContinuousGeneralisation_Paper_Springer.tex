@@ -344,14 +344,15 @@ We find a minimum spanning tree of the buildings using Prim's algorithm
 We enlarge and merge buildings as the way we do in \sect\ref{sec:Grouping}.
 
 
-\subsection{Simplifying merged buildings}
+\subsection{Simplifying merged buildings considering right angles}
+
 We use an buffering-based method, 
 similar to \textcite{Damen2008,Meijers2016}, 
 to simplify our grown buildings. 
 We first dilate the grown buildings to remove 
 pits, and then erode the results to remove spikes.
 
-After carrying out the offset-based method, we simplify the grown buildings 
+After carrying out the offset-based method, we simplify the grown buildings. 
 We tried simplifying using Douglas--Peucker algorithm \parencite{Douglas1973}, 
 but we hoped to remove more points. We found that the Imai--Iri 
 algorithm \parencite{ImaiIri1988} fit our needs well. Although a version with a 
@@ -587,7 +588,12 @@ The scale of the dataset is $1:15{,}000$.
 Our goal scale is $1:50{,}000$.
 
 
-
+\begin{figure}[tb]
+	\centering
+	\includegraphics{Data}
+	\caption{scale.}
+	\label{fig:Data}
+\end{figure}
 
 \mypar{Notation}
 Text. 
@@ -624,6 +630,9 @@ problem is to compare our method with \textcite{Chaudhry2008}.
 
 We did not include streets. We can either put them above the settlement 
 boundaries on map, or use them as restriction for building growing.
+
+At some point, we should remove the requirement of keeping right angles. Right 
+angles may not be important anymore when we deal with settlement boundaries.
 
 \todo[inline]{consider multi bridges; consider transparency of bridges in 
 stead 

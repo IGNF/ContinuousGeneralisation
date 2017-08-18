@@ -278,9 +278,10 @@ namespace MorphingClass.CGeometry
         }
 
 
-        public void SetFrCptCEdge()
+        public void SetCEdgeToCpts()
         {
-            this.FrCpt.CEdge = this;
+            this.FrCpt.OutCEdge = this;
+            this.ToCpt.InCEdge = this;
         }
 
         public double SetLength()

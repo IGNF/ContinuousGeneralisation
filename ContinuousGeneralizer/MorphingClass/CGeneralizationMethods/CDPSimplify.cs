@@ -575,6 +575,8 @@ namespace MorphingClass.CGeneralizationMethods
         //    return SimplifyAccordRightAnglesAndExistEdges(EnlargedCpg, ConflictCEdgeLt, dblDepsilon);
         //}
 
+
+
         /// <summary>
         /// the angle from the baseline to the firstedge should smaller than PI
         /// </summary>
@@ -582,21 +584,21 @@ namespace MorphingClass.CGeneralizationMethods
         /// <param name="ocpg"></param>
         /// <param name="dblThreshold"></param>
         /// <returns>the first vertex and the last vertex are identical</returns>
-        public static CPolygon SimplifyAccordRightAnglesAndExistEdges(CPolygon EnlargedCpg,
+        public static CPolygon SimplifyCpgAccordExistEdges(CPolygon EnlargedCpg,
             List<CEdge> OriginalCEdgeLt, string strSimplification, double dblThreshold)
         {
             //generate new polygon
-            var newcptlt = SimplifyCptltAccordRightAnglesAndExistEdges(EnlargedCpg, OriginalCEdgeLt, strSimplification, dblThreshold);
+            var newcptlt = SimplifyAccordExistEdges(EnlargedCpg, OriginalCEdgeLt, strSimplification, dblThreshold);
             if (EnlargedCpg.HoleCpgLt != null)
             {
                 List<List<CPoint>> newholecptltlt;
                 newholecptltlt = new List<List<CPoint>>(EnlargedCpg.HoleCpgLt.Count);
                 foreach (var holeEnlargedCpg in EnlargedCpg.HoleCpgLt)
                 {
-                    var newholecptlt = SimplifyCptltAccordRightAnglesAndExistEdges(holeEnlargedCpg, OriginalCEdgeLt, strSimplification, dblThreshold);
+                    var newholecptlt = SimplifyAccordExistEdges(holeEnlargedCpg, OriginalCEdgeLt, strSimplification, dblThreshold);
                     newholecptltlt.Add(newholecptlt);
                 }
-                var simplifiedCpg= new CPolygon(EnlargedCpg.ID, newcptlt, newholecptltlt);
+                var simplifiedCpg = new CPolygon(EnlargedCpg.ID, newcptlt, newholecptltlt);
                 //simplifiedCpg.HoleCpgLt.ForEach(holecpg => holecpg.IsOriginal = false);  //these holes are 
 
                 return simplifiedCpg;
@@ -607,104 +609,152 @@ namespace MorphingClass.CGeneralizationMethods
             }
         }
 
-        private static List<CPoint> SimplifyCptltAccordRightAnglesAndExistEdges(CPolygon EnlargedCpg, 
+        private static List<CPoint> SimplifyAccordExistEdges(CPolygon EnlargedCpg,
             List<CEdge> OriginalCEdgeLt, string strSimplification, double dblThreshold)
         {
-            
             //EnlargedCpg.SetGeometricProperties();
             EnlargedCpg.FormCEdgeLt();
-            EnlargedCpg.SetCEdgeLtLength();
-            EnlargedCpg.SetCEdgeLtFrCptCEdge();
-            EnlargedCpg.SetCEdgeLtAxisAngle();
-            EnlargedCpg.SetAngleDiffLt();
+            //EnlargedCpg.SetCEdgeLtLength();
+            EnlargedCpg.SetCEdgeToCpts();
+            //EnlargedCpg.SetCEdgeLtAxisAngle();
+            //EnlargedCpg.SetAngleDiffLt();
 
-            //ConflictCEdgeLt.AddRange(EnlargedCpg.CEdgeLt);
 
-            //the first vertex and the last vertex of EnlargedCpg.CptLt point to the same address in memory
-            var cptlt = EnlargedCpg.CptLt.CopyEbWithoutFirstLastT(true, false).ToList();
-            cptlt.ForEach(cpt => cpt.isCtrl = false);
-
-            var dupcptlt = new List<CPoint>(2 * cptlt.Count);
-            dupcptlt.AddRange(cptlt);
-            dupcptlt.AddRange(cptlt);
-
-            var cedgelt = EnlargedCpg.CEdgeLt;
-            var lastcedge = cedgelt.GetLastT();
-            var pdblAngleDiffLt = EnlargedCpg.dblAngleDiffLt;
-
-            //the angle is almost 90 degrees, we fix the three points
-            int intIndexCtrl = -1;
-            var lastcpt = cptlt.GetLastT();
-            for (int i = 0; i < cptlt.Count; i++)
-            {
-                if ((CCmpMethods.CmpDblRange(pdblAngleDiffLt[i], CConstants.dblHalfPI, CConstants.dblFiveDegreeRad) == 0 ||
-                   CCmpMethods.CmpDblRange(pdblAngleDiffLt[i], CConstants.dblThreeSecondPI, CConstants.dblFiveDegreeRad) == 0)
-                   && lastcedge.dblLength >= dblThreshold && cedgelt[i].dblLength >=  dblThreshold)
-                {
-                    lastcpt.isCtrl = true;
-                    dupcptlt[i].isCtrl = true;
-                    dupcptlt[i + 1].isCtrl = true;
-                    intIndexCtrl = i;
-                }
-
-                lastcpt = cptlt[i];
-                lastcedge = cedgelt[i];
-            }
-
-            var newcptlt = new List<CPoint>(cptlt.Count);  //newcptlt has at most cptlt.Count points
-            if (intIndexCtrl == -1) //there is no control points, we perform DP algorithm to the building
-            {
-                newcptlt.AddRange(SimplifyAccordExistEdges(EnlargedCpg.CptLt, OriginalCEdgeLt, strSimplification,  dblThreshold));
-
-            }
-            else //there are some control points, we perform DP algorithm to the split polylines
-            {
-                int intCurrentIndex = intIndexCtrl;
-                var processcptlt = new List<CPoint> { new CPoint() };
-                CPoint currentcpt = dupcptlt[intCurrentIndex];
-                do
-                {
-                    if (currentcpt.isCtrl == true)
-                    {
-                        if (processcptlt.Count >= 2)
-                        {
-                            processcptlt.Add(currentcpt);
-                            newcptlt.AddRange(
-                                SimplifyAccordExistEdges(processcptlt, OriginalCEdgeLt, strSimplification,  dblThreshold)
-                                .CopyEbWithoutFirstLastT(false, true));
-
-                            processcptlt = new List<CPoint> { new CPoint() };
-                        }
-                        else
-                        {
-                            newcptlt.Add(currentcpt);
-                        }
-                        processcptlt[0] = currentcpt;  //make processcptlt ready for adding points                                          
-                    }
-                    else
-                    {
-                        processcptlt.Add(currentcpt);
-                    }
-                    currentcpt = dupcptlt[++intCurrentIndex];
-                } while (currentcpt.GID != dupcptlt[intIndexCtrl].GID);
-
-                newcptlt.Add(dupcptlt[intIndexCtrl]);
-            }
-
-            return newcptlt;
+            var EnlargedCEdgeHS = new HashSet<CEdge>(EnlargedCpg.CEdgeLt);
+            return SimplifyAccordExistEdges(EnlargedCpg.CptLt, OriginalCEdgeLt, EnlargedCEdgeHS, strSimplification, dblThreshold).ToList();
         }
 
+
+        ///// <summary>
+        ///// the angle from the baseline to the firstedge should smaller than PI
+        ///// </summary>
+        ///// <param name="cpg"></param>
+        ///// <param name="ocpg"></param>
+        ///// <param name="dblThreshold"></param>
+        ///// <returns>the first vertex and the last vertex are identical</returns>
+        //public static CPolygon SimplifyAccordRightAnglesAndExistEdges(CPolygon EnlargedCpg,
+        //    List<CEdge> OriginalCEdgeLt, string strSimplification, double dblThreshold)
+        //{
+        //    //generate new polygon
+        //    var newcptlt = SimplifyCptltAccordRightAnglesAndExistEdges(EnlargedCpg, OriginalCEdgeLt, strSimplification, dblThreshold);
+        //    if (EnlargedCpg.HoleCpgLt != null)
+        //    {
+        //        List<List<CPoint>> newholecptltlt;
+        //        newholecptltlt = new List<List<CPoint>>(EnlargedCpg.HoleCpgLt.Count);
+        //        foreach (var holeEnlargedCpg in EnlargedCpg.HoleCpgLt)
+        //        {
+        //            var newholecptlt = SimplifyCptltAccordRightAnglesAndExistEdges(holeEnlargedCpg, OriginalCEdgeLt, strSimplification, dblThreshold);
+        //            newholecptltlt.Add(newholecptlt);
+        //        }
+        //        var simplifiedCpg= new CPolygon(EnlargedCpg.ID, newcptlt, newholecptltlt);
+        //        //simplifiedCpg.HoleCpgLt.ForEach(holecpg => holecpg.IsOriginal = false);  //these holes are 
+
+        //        return simplifiedCpg;
+        //    }
+        //    else
+        //    {
+        //        return new CPolygon(EnlargedCpg.ID, newcptlt);
+        //    }
+        //}
+
+        //private static List<CPoint> SimplifyCptltAccordRightAnglesAndExistEdges(CPolygon EnlargedCpg, 
+        //    List<CEdge> OriginalCEdgeLt, string strSimplification, double dblThreshold)
+        //{
+            
+        //    //EnlargedCpg.SetGeometricProperties();
+        //    EnlargedCpg.FormCEdgeLt();
+        //    EnlargedCpg.SetCEdgeLtLength();
+        //    EnlargedCpg.SetCEdgeToCpts();
+        //    EnlargedCpg.SetCEdgeLtAxisAngle();
+        //    EnlargedCpg.SetAngleDiffLt();
+
+
+        //    //the first vertex and the last vertex of EnlargedCpg.CptLt point to the same address in memory
+        //    var cptlt = EnlargedCpg.CptLt.CopyEbWithoutFirstLastT(true, false).ToList();
+        //    cptlt.ForEach(cpt => cpt.isCtrl = false);
+
+        //    var dupcptlt = new List<CPoint>(2 * cptlt.Count);
+        //    dupcptlt.AddRange(cptlt);
+        //    dupcptlt.AddRange(cptlt);
+
+        //    var cedgelt = EnlargedCpg.CEdgeLt;
+        //    var lastcedge = cedgelt.GetLastT();
+        //    var pdblAngleDiffLt = EnlargedCpg.dblAngleDiffLt;
+
+        //    //the angle is almost 90 degrees, we fix the three points
+        //    int intIndexCtrl = -1;
+        //    var lastcpt = cptlt.GetLastT();
+        //    for (int i = 0; i < cptlt.Count; i++)
+        //    {
+        //        if ((CCmpMethods.CmpDblRange(pdblAngleDiffLt[i], CConstants.dblHalfPI, CConstants.dblFiveDegreeRad) == 0 ||
+        //           CCmpMethods.CmpDblRange(pdblAngleDiffLt[i], CConstants.dblThreeSecondPI, CConstants.dblFiveDegreeRad) == 0)
+        //           && lastcedge.dblLength >= dblThreshold && cedgelt[i].dblLength >= dblThreshold)
+        //        {
+        //            lastcpt.isCtrl = true;
+        //            dupcptlt[i].isCtrl = true;
+        //            dupcptlt[i + 1].isCtrl = true;
+        //            intIndexCtrl = i;
+        //        }
+
+        //        lastcpt = cptlt[i];
+        //        lastcedge = cedgelt[i];
+        //    }
+
+        //    var newcptlt = new List<CPoint>(EnlargedCpg.CptLt.Count);  //newcptlt has at most cptlt.Count points
+        //    if (intIndexCtrl == -1) //there is no control points, we perform DP algorithm to the building
+        //    {
+        //        newcptlt.AddRange(SimplifyAccordExistEdges(EnlargedCpg.CptLt, OriginalCEdgeLt, strSimplification, dblThreshold));
+
+        //    }
+        //    else //there are some control points, we perform DP algorithm to the split polylines
+        //    {
+        //        int intCurrentIndex = intIndexCtrl;
+        //        var processcptlt = new List<CPoint> { new CPoint() };
+        //        CPoint currentcpt = dupcptlt[intCurrentIndex];
+        //        do
+        //        {
+        //            if (currentcpt.isCtrl == true)
+        //            {
+        //                if (processcptlt.Count >= 2)
+        //                {
+        //                    processcptlt.Add(currentcpt);
+        //                    newcptlt.AddRange(
+        //                        SimplifyAccordExistEdges(processcptlt, OriginalCEdgeLt, strSimplification, dblThreshold)
+        //                        .CopyEbWithoutFirstLastT(false, true));
+
+        //                    processcptlt = new List<CPoint> { new CPoint() };
+        //                }
+        //                else
+        //                {
+        //                    newcptlt.Add(currentcpt);
+        //                }
+        //                processcptlt[0] = currentcpt;  //make processcptlt ready for adding points                                          
+        //            }
+        //            else
+        //            {
+        //                processcptlt.Add(currentcpt);
+        //            }
+        //            currentcpt = dupcptlt[++intCurrentIndex];
+        //        } while (currentcpt.GID != dupcptlt[intIndexCtrl].GID);
+
+        //        newcptlt.Add(dupcptlt[intIndexCtrl]);
+        //    }
+
+        //    return newcptlt;
+        //}
+
         private static IEnumerable<CPoint> SimplifyAccordExistEdges(List<CPoint> cptlt,
-            List<CEdge> OriginalCEdgeLt, string strSimplification, double dblThreshold)
+            List<CEdge> OriginalCEdgeLt, HashSet<CEdge> EnlargedCEdgeHS, string strSimplification, double dblThreshold)
         {
             switch (strSimplification)
             {
                 case "Non":
                     return cptlt;
                 case "DP":
-                    return DPSimplifyAccordExistEdges(cptlt, OriginalCEdgeLt, dblThreshold);
+                    throw new ArgumentException("need to be implemented");
+                    //return DPSimplifyAccordExistEdges(cptlt, OriginalCEdgeLt, EnlargedCEdgeHS, dblThreshold);
                 case "Imai-Iri":
-                    return ImaiIriSimplifyAccordExistEdges(cptlt, OriginalCEdgeLt, dblThreshold);
+                    return ImaiIriSimplifyAccordExistEdges(cptlt, OriginalCEdgeLt, EnlargedCEdgeHS, dblThreshold);
                 default:
                     Console.WriteLine("Default case");
                     return null;
@@ -713,7 +763,7 @@ namespace MorphingClass.CGeneralizationMethods
 
 
         private static IEnumerable<CPoint> ImaiIriSimplifyAccordExistEdges(List<CPoint> cptlt,
-            List<CEdge> OriginalCEdgeLt, double dblThreshold)
+            List<CEdge> OriginalCEdgeLt, HashSet<CEdge> EnlargedCEdgeHS, double dblThreshold)
         {
             if (cptlt.Count <= 2)
             {
@@ -731,7 +781,7 @@ namespace MorphingClass.CGeneralizationMethods
                 {
                     var subcptlt = cptlt.GetRange(i, j - i + 1);
                     int intIndexMaxdis;
-                    if (IsCutValid(subcptlt, OriginalCEdgeLt, dblThreshold, out intIndexMaxdis))
+                    if (IsCutValid(subcptlt, OriginalCEdgeLt, EnlargedCEdgeHS, dblThreshold, out intIndexMaxdis))
                     {
                         CNodeLt[i].NbrCNodeLt.Add(CNodeLt[j]);
                     }                    
@@ -788,43 +838,43 @@ namespace MorphingClass.CGeneralizationMethods
         }
 
 
-        //*******************check the codes below***************************
-        //****************** should we keep at least three points?
-        /// <summary>
-        /// for an exterior ring, cptlt should be clockwise; for a hole, cptlt should be counter clockwise
-        /// </summary>
-        private static IEnumerable<CPoint> DPSimplifyAccordExistEdges(List<CPoint> cptlt,
-            List<CEdge> OriginalCEdgeLt, double dblThreshold)
-        {
-            if (cptlt.Count <= 2)
-            {
-                throw new ArgumentOutOfRangeException("There is no points for simplification!");
-            }
+        ////*******************check the codes below***************************
+        ////****************** should we keep at least three points?
+        ///// <summary>
+        ///// for an exterior ring, cptlt should be clockwise; for a hole, cptlt should be counter clockwise
+        ///// </summary>
+        //private static IEnumerable<CPoint> DPSimplifyAccordExistEdges(List<CPoint> cptlt,
+        //    List<CEdge> OriginalCEdgeLt, HashSet<CEdge> EnlargedCEdgeHS, double dblThreshold)
+        //{
+        //    if (cptlt.Count <= 2)
+        //    {
+        //        throw new ArgumentOutOfRangeException("There is no points for simplification!");
+        //    }
 
-            var IndexSk = new Stack<CValPair<int, int>>();
-            IndexSk.Push(new CValPair<int, int>(0, cptlt.Count - 1));
+        //    var IndexSk = new Stack<CValPair<int, int>>();
+        //    IndexSk.Push(new CValPair<int, int>(0, cptlt.Count - 1));
 
-            do
-            {
-                var StartEndVP = IndexSk.Pop();
+        //    do
+        //    {
+        //        var StartEndVP = IndexSk.Pop();
 
-                var subcptlt = cptlt.GetRange(StartEndVP.val1, StartEndVP.val2 - StartEndVP.val1 + 1);
-                int intIndexMaxdis;
-                if (subcptlt.Count <= 2 || IsCutValid(subcptlt, OriginalCEdgeLt, dblThreshold, out intIndexMaxdis))
-                {
-                    yield return cptlt[StartEndVP.val1];
-                }
-                else
-                {
-                    IndexSk.Push(new CValPair<int, int>(intIndexMaxdis + StartEndVP.val1, StartEndVP.val2));
-                    IndexSk.Push(new CValPair<int, int>(StartEndVP.val1, intIndexMaxdis + StartEndVP.val1));
-                }
-            } while (IndexSk.Count > 0);
-            yield return cptlt.GetLastT();
-        }
+        //        var subcptlt = cptlt.GetRange(StartEndVP.val1, StartEndVP.val2 - StartEndVP.val1 + 1);
+        //        int intIndexMaxdis;
+        //        if (subcptlt.Count <= 2 || IsCutValid(subcptlt, OriginalCEdgeLt, dblThreshold, out intIndexMaxdis))
+        //        {
+        //            yield return cptlt[StartEndVP.val1];
+        //        }
+        //        else
+        //        {
+        //            IndexSk.Push(new CValPair<int, int>(intIndexMaxdis + StartEndVP.val1, StartEndVP.val2));
+        //            IndexSk.Push(new CValPair<int, int>(StartEndVP.val1, intIndexMaxdis + StartEndVP.val1));
+        //        }
+        //    } while (IndexSk.Count > 0);
+        //    yield return cptlt.GetLastT();
+        //}
 
-        private static bool IsCutValid(List<CPoint> cptlt, List<CEdge> OriginalCEdgeLt, double dblThreshold, 
-            out int intIndexMaxDis)
+        private static bool IsCutValid(List<CPoint> cptlt, List<CEdge> OriginalCEdgeLt, HashSet<CEdge> EnlargedCEdgeHS,   
+            double dblThreshold, out int intIndexMaxDis)
         {
             //the distances from all the removed points to cedgebaseline should be smaller than a threshold
             var cedgebaseline = new CEdge(cptlt[0], cptlt.GetLastT());
@@ -842,7 +892,18 @@ namespace MorphingClass.CGeneralizationMethods
             }
 
             //cedgebaseline should no intersect any of the edges
-            if (BlnIntersect(cedgebaseline, OriginalCEdgeLt, cptlt))
+            if (BlnIntersect(cedgebaseline, OriginalCEdgeLt))
+            {
+                return false;
+            }
+
+            var newEnlargedCEdgeHS = new HashSet<CEdge>(EnlargedCEdgeHS);
+            newEnlargedCEdgeHS.Remove(cedgebaseline.FrCpt.InCEdge);
+            newEnlargedCEdgeHS.Remove(cedgebaseline.FrCpt.OutCEdge);
+            newEnlargedCEdgeHS.Remove(cedgebaseline.ToCpt.InCEdge);
+            newEnlargedCEdgeHS.Remove(cedgebaseline.ToCpt.OutCEdge);
+
+            if (BlnIntersect(cedgebaseline, newEnlargedCEdgeHS))
             {
                 return false;
             }
@@ -863,20 +924,20 @@ namespace MorphingClass.CGeneralizationMethods
             }
         }
 
-        private static bool BlnIntersect(CEdge cedge, List<CEdge> OriginalCEdgeLt, List<CPoint> cptlt)
-        {
-            var ConflictCEdgeLt = new List<CEdge>(OriginalCEdgeLt);
-            for (int i = 1; i < cptlt.Count - 2; i++)
-            {
-                ConflictCEdgeLt.Add(cptlt[i].CEdge);
-            }
+        //private static bool BlnIntersect(CEdge cedge, List<CEdge> OriginalCEdgeLt, List<CPoint> cptlt)
+        //{
+        //    var ConflictCEdgeLt = new List<CEdge>(OriginalCEdgeLt);
+        //    for (int i = 1; i < cptlt.Count - 2; i++)
+        //    {
+        //        ConflictCEdgeLt.Add(cptlt[i].CEdge);
+        //    }
 
-            return BlnIntersect(cedge, ConflictCEdgeLt);
-        }
+        //    return BlnIntersect(cedge, ConflictCEdgeLt);
+        //}
 
-        private static bool BlnIntersect(CEdge cedge, List<CEdge> cedgelt)
+        private static bool BlnIntersect(CEdge cedge, IEnumerable<CEdge> cedgeEb)
         {
-            foreach (var item in cedgelt)
+            foreach (var item in cedgeEb)
             {
                 //item.PrintMySelf();
                 if (cedge.IntersectWith(item).enumIntersectionType != CEnumIntersectionType.NoNo)

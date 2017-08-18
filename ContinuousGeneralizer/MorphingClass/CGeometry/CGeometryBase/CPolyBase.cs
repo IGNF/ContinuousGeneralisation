@@ -154,9 +154,9 @@ namespace MorphingClass.CGeometry.CGeometryBase
         //    this.CEdgeLtLt = CGeoFunc.FormCEdgeLtLt(this.CptLtLt);
         //}
 
-        public virtual void SetCEdgeLtFrCptCEdge()
+        public virtual void SetCEdgeToCpts()
         {
-            this.CEdgeLt.ForEach(cedge => cedge.SetFrCptCEdge());
+            this.CEdgeLt.ForEach(cedge => cedge.SetCEdgeToCpts());
         }
 
         public virtual void SetCEdgeLtLength()

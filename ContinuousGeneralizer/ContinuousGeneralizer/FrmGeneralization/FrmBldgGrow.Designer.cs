@@ -529,6 +529,7 @@
             this.btn020.TabIndex = 52;
             this.btn020.Text = "t=0.2";
             this.btn020.UseVisualStyleBackColor = true;
+            this.btn020.Click += new System.EventHandler(this.btn020_Click);
             // 
             // btn100
             // 

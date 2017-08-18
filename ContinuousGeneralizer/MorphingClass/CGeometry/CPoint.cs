@@ -84,7 +84,8 @@ namespace MorphingClass.CGeometry
         
 
         public List<CEdge> AxisAngleCEdgeLt { set; get; }
-        public CEdge CEdge { set; get; }
+        public CEdge OutCEdge { set; get; }
+        public CEdge InCEdge { set; get; }
 
         private CCorrCpts _PairCorrCpt;
         //private CRiver _BelongedCRiver;
