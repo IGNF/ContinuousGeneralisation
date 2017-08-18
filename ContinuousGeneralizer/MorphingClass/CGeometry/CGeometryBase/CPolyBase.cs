@@ -47,13 +47,7 @@ namespace MorphingClass.CGeometry.CGeometryBase
         /// </summary>
         /// <remarks>如果已经生成过边，则直接返回</remarks>
         public virtual void FormPolyBase(List<CPoint> fcptlt)
-        {
-            if (fcptlt!=null && fcptlt.Count>0)
-            {
-                _FrCpt = fcptlt[0];
-                _ToCpt = fcptlt.GetLastT();
-            }            
-
+        { 
             this.CptLt = fcptlt;
             //this.CEdgeLt = CGeoFunc.FormCEdgeEb(fcptlt).ToList();
         }
@@ -147,6 +141,11 @@ namespace MorphingClass.CGeometry.CGeometryBase
             this.CEdgeLt = CGeoFunc.FormCEdgeEb(this.CptLt).ToList();
 
             //FormCEdgeLtLt();
+        }
+
+        public virtual int GetEdgeCount()
+        {
+            return this.CEdgeLt.Count;
         }
 
         //public virtual void FormCEdgeLtLt()

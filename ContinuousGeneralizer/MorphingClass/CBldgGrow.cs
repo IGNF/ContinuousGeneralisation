@@ -178,10 +178,13 @@ namespace MorphingClass.CGeneralizationMethods
                     MagnifiedCpg.ExteriorPaths = CHelpFunc.MakeLt(clipperMethods.GeneratePathByCpgExterior(MagnifiedCpg));
                 }
 
-                //foreach (var cpg in cpglt)
+                //var intEdgeCount = 0;
+                //foreach (var MagnifiedCpg in MagnifiedCpgLt)
                 //{
-                //    cpg.SubCpgLt = new List<CPolygon> { cpg };
+                //    intEdgeCount += MagnifiedCpg.GetEdgeCount();
                 //}
+
+                
 
                 //var mergedCpgLt = MergeCloseCpgsAndAddBridges(MagnifiedCpgLt, dblTotalGrow, dblTargetDilation, dblTargetEpsilon);
                 var mergedCpgLt = MergeCloseCpgsAndAddBridges(MagnifiedCpgLt, dblTotalGrow, dblTargetDilation, dblTargetEpsilon, 
@@ -190,8 +193,14 @@ namespace MorphingClass.CGeneralizationMethods
                 //dblGrow, dblDilation, dblErosion, dblEpsilon
 
                 var targetcpglt = new List<CPolygon>();
-                foreach (var mergedcpg in mergedCpgLt)
+                //foreach (var mergedcpg in mergedCpgLt)
+                //{
+
+                for (int j = 0; j < mergedCpgLt.Count; j++)
                 {
+                    var mergedcpg = mergedCpgLt[j];
+
+
                     SetClipCpgLt_BufferDilateErodeSimplify(mergedcpg,
                         dblTotalGrow, dblTargetDilation, dblTargetErosion, dblTargetEpsilon,
                         dblHoleAreaLimitTargetScale, strSimplification, strBufferStyle, dblMiterLimit);
@@ -201,7 +210,7 @@ namespace MorphingClass.CGeneralizationMethods
                     //{
 
                     //}
-                    if (mergedcpg.BridgeCptEdgeDisSS!=null)
+                    if (mergedcpg.BridgeCptEdgeDisSS != null)
                     {
                         var CpipeDt = new Dictionary<CValPairIncr<CPolygon>, CptEdgeDis>
                     (mergedcpg.BridgeCptEdgeDisSS.Count, new CCmpEqCpgPairIncr());
@@ -213,10 +222,7 @@ namespace MorphingClass.CGeneralizationMethods
                         mergedcpg.CpipeDt = CpipeDt;
                     }
 
-                    CSaveFeature.SaveCGeoEb(clipperMethods.ScaleCpgLt(CHelpFunc.MakeLt(mergedcpg), 1/ dblFclipper), 
-                        esriGeometryType.esriGeometryPolygon, strSimplification + "_" +
-     dblTargetScale + "k_mergedcpg" + dblTargetEpsilon + "m_" + CHelpFunc.GetTimeStampWithPrefix(),
-    pParameterInitialize, intGreen: 255);
+
 
 
                     var targetCpg = new CPolygon(mergedcpg.ID, mergedcpg.ClipCpgLt[0].CptLt);
@@ -254,23 +260,26 @@ namespace MorphingClass.CGeneralizationMethods
                         }
                     }
                     targetcpglt.Add(targetCpg);
+
+                    dblStartScale = dblTargetScale;
+                    CHelpFunc.Displaytspb(j + 1, mergedCpgLt.Count, pParameterInitialize.tspbMain);
                 }
 
 
-
-
                 this.MergedCpgLt = mergedCpgLt;
-                var scaledbackcpgEb = clipperMethods.ScaleCpgLt(targetcpglt, 1 / dblFclipper);
-                //remove small polygons and small holes
-                //var remainedcpgeb = GetLargeCpgEb(scaledbackcpgEb, dblAreaLimit, dblHoleAreaLimit);
 
-                CSaveFeature.SaveCGeoEb(scaledbackcpgEb, esriGeometryType.esriGeometryPolygon, strSimplification + "_" +
-     dblTargetScale + "k_TargetForm" + dblTargetEpsilon + "m_" + CHelpFunc.GetTimeStampWithPrefix(),
-    pParameterInitialize, intGreen: 255);
+                CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgLt(targetcpglt, 1 / dblFclipper),
+    strSimplification + "_" + dblTargetScale + "k_TargetForm" + dblTargetEpsilon + "m_" +
+    CHelpFunc.GetTimeStampWithPrefix(), intGreen: 255);
+
+                CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgLt(mergedCpgLt, 1 / dblFclipper),
+    strSimplification + "_" + dblTargetScale + "k_mergedcpg" + dblTargetEpsilon + "m_" +
+    CHelpFunc.GetTimeStampWithPrefix(), intGreen: 255);
+
+                
 
                 //MagnifiedCpgLt = targetcpglt;
-                dblStartScale = dblTargetScale;
-                CHelpFunc.Displaytspb((i + 1 - intStart), intEnd - intStart, pParameterInitialize.tspbMain);
+                
 
 
 
@@ -805,8 +814,8 @@ namespace MorphingClass.CGeneralizationMethods
         public void Output(double dblProportion, string strBufferStyle, double dblMiterLimit)
         {
             var resultCpgEb = GetResultCpgEb(this.MergedCpgLt, dblProportion, strBufferStyle, dblMiterLimit);
-            CSaveFeature.SaveCGeoEb(resultCpgEb, esriGeometryType.esriGeometryPolygon,
-                dblProportion + "_Growing", _ParameterInitialize, intBlue: 255);
+            CSaveFeature.SaveCpgEb(resultCpgEb, 
+                dblProportion + "_Growing", intBlue: 255);
         }
 
 

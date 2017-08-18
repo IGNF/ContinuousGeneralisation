@@ -225,6 +225,10 @@ namespace MorphingClass.CUtility
             //if two polygons intersect, they will be too close without overdiating dblEpsilon / 2
             var AllOverDilationPolyTree = Offset_PolyTree(GrownPaths, Math.Sqrt(5) * dblEpsilon / 2, strBufferStyle, dblMiterLimit);
 
+            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
+                Clipper.PolyTreeToPaths(AllOverDilationPolyTree), true), 1 / CConstants.dblFclipper),
+                CHelpFunc.GetTimeStamp());
+
             return GroupCpgsByOverlap(cpglt, AllOverDilationPolyTree);
         }
 

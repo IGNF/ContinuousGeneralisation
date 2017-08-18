@@ -191,7 +191,7 @@ namespace MorphingClass.CGeometry
 
         public CEdge SetBaseLine(bool isSetLength = false, bool isSetAxisAngle = false)
         {
-            var pbaseline = new CEdge(_FrCpt, _ToCpt);
+            var pbaseline = new CEdge(this.FrCpt, this.ToCpt);
 
             if (isSetLength == true)
             {

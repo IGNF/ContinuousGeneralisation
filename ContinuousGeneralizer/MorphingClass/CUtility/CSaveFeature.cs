@@ -419,14 +419,28 @@ namespace MorphingClass.CUtility
         }
 
 
-        public static IFeatureLayer SaveCGeoEb<T>(IEnumerable<T> CGeoEb, esriGeometryType pesriGeometryType, string strFileName,
-            CParameterInitialize pParameterInitialize, List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null,
-            List<List<object>> pobjectValueLtLt = null, int intRed = 0, int intGreen = 0, int intBlue = 0, double dblWidth = 1,
+        public static IFeatureLayer SaveCpgEb(IEnumerable<CPolygon> CpgEb, string strFileName,
+            List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null,
+            List<List<object>> pobjectValueLtLt = null,
+            int intRed = 0, int intGreen = 0, int intBlue = 0, double dblWidth = 1,
+            string strSymbolLayerPath = null, bool blnVisible = true)
+        {
+            return SaveCGeoEb(CpgEb, esriGeometryType.esriGeometryPolygon, strFileName,
+                CConstants.ParameterInitialize.pWorkspace, CConstants.ParameterInitialize.m_mapControl,
+                pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt, intRed, intGreen, intBlue, dblWidth, strSymbolLayerPath, blnVisible);
+        }
+
+
+        public static IFeatureLayer SaveCGeoEb<T>(IEnumerable<T> CGeoEb, esriGeometryType pesriGeometryType, string strFileName, 
+            List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null,
+            List<List<object>> pobjectValueLtLt = null, 
+            int intRed = 0, int intGreen = 0, int intBlue = 0, double dblWidth = 1,
             string strSymbolLayerPath = null, bool blnVisible = true)
              where T : CGeometricBase<T>
         {
-            return SaveCGeoEb(CGeoEb, pesriGeometryType, strFileName, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl,
-               pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt, intRed, intGreen, intBlue, dblWidth, strSymbolLayerPath, blnVisible);
+            return SaveCGeoEb(CGeoEb, pesriGeometryType, strFileName, 
+                CConstants.ParameterInitialize.pWorkspace, CConstants.ParameterInitialize.m_mapControl,
+                pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt, intRed, intGreen, intBlue, dblWidth, strSymbolLayerPath, blnVisible);
         }
 
         /// <summary>
@@ -495,9 +509,9 @@ namespace MorphingClass.CUtility
         }
 
 
-        public static IFeatureLayer SaveCEdgeEb(IEnumerable<CEdge> CGeoEb, string strFileName, CParameterInitialize pParameterInitialize)
+        public static IFeatureLayer SaveCEdgeEb(IEnumerable<CEdge> CGeoEb, string strFileName)
         {
-            return SaveCGeoEb(CGeoEb, esriGeometryType.esriGeometryPolyline, strFileName, pParameterInitialize);
+            return SaveCGeoEb(CGeoEb, esriGeometryType.esriGeometryPolyline, strFileName);
         }
     }
 }

@@ -158,13 +158,27 @@ namespace MorphingClass.CGeometry
         {
             this.CEdgeLt = CGeoFunc.FormCEdgeEb(this.CptLt).ToList();
 
-            if (this.HoleCpgLt!=null)
+            if (this.HoleCpgLt != null)
             {
                 foreach (var holecpg in this.HoleCpgLt)
                 {
                     holecpg.FormCEdgeLt();
                 }
             }
+        }
+
+        public override int GetEdgeCount()
+        {
+            var intEdgeCount = this.CEdgeLt.Count;
+            
+            if (this.HoleCpgLt != null)
+            {
+                foreach (var holecpg in this.HoleCpgLt)
+                {
+                    intEdgeCount += holecpg.GetEdgeCount();
+                }
+            }
+            return intEdgeCount;
         }
 
         public override void SetCEdgeToCpts()
