@@ -103,6 +103,43 @@ namespace MorphingClass.CUtility
             return dblLength;
         }
 
+        //public static double CalLengthForPtEb<T, TOrder>(IEnumerable<T> ptEb, 
+        //    Func<T, TOrder> orderFuncX, Func<T, TOrder> orderFuncY)
+        //{
+        //    var ptEt = ptEb.GetEnumerator();
+        //    ptEt.MoveNext();
+        //    var lastcpt = ptEt.Current;
+
+        //    double dblLength = 0;
+        //    while (ptEt.MoveNext())
+        //    {
+        //        var cpt = ptEt.Current;
+        //        dblLength += CalDis((double)orderFuncX(lastcpt), (double)orderFuncX(lastcpt),
+        //            (double)orderFuncX(lastcpt), (double)orderFuncX(lastcpt));
+        //        lastcpt = cpt;
+        //    }
+
+        //    return dblLength;
+        //}
+
+        public static double CalLengthForIntptEb(IEnumerable<IntPoint> cptEb)
+        {
+            var cptEt = cptEb.GetEnumerator();
+            cptEt.MoveNext();
+            var lastcpt = cptEt.Current;
+
+            double dblLength = 0;
+            while (cptEt.MoveNext())
+            {
+                var cpt = cptEt.Current;
+                dblLength += CalDis(lastcpt.X, lastcpt.Y, cpt.X, cpt.Y);
+                lastcpt = cpt;
+            }
+
+            return dblLength;
+        }
+
+
         /// <summary>
         /// 
         /// </summary>

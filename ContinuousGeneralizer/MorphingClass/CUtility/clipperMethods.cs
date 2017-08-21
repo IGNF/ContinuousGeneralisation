@@ -133,104 +133,68 @@ namespace MorphingClass.CUtility
             return clippedPolyTree;
         }
 
-        //public static List<List<CPolygon>> IterativeGroupCpgsByOverlapIndependently(List<CPolygon> cpglt,
-        //    double dblGrow, double dblDilation, double dblEpsilon)
+
+        public static List<List<CPolygon>> GroupCpgsByOverlapIndependently(List<CPolygon> cpglt,
+double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "Miter", double dblMiterLimit = 2)
+        {
+            var cpglyDilationPolyTree = GetPolyTreeForGroupedCpgs(cpglt, dblGrow, dblDilation, dblEpsilon, strBufferStyle, dblMiterLimit);
+            var groupedcpgltlt = GroupCpgsByOverlap(cpglt, cpglyDilationPolyTree);
+
+            int intCpgCount = 0;
+            groupedcpgltlt.ForEach(groupedcpglt => intCpgCount += groupedcpglt.Count);
+
+            if (intCpgCount != cpglt.Count)
+            {
+                throw new ArgumentException("some polygons are lost!");
+            }
+
+            return groupedcpgltlt;
+        }
+
+        private static PolyTree GetPolyTreeForGroupedCpgs(List<CPolygon> cpglt,
+double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "Miter", double dblMiterLimit = 2)
+        {
+            var cpgltPaths = new Paths(cpglt.Count);
+            cpglt.ForEach(cpg => cpgltPaths.AddRange(cpg.ExteriorPaths));
+            var overgrownPaths = Offset_Paths(cpgltPaths, dblGrow + Math.Sqrt(5) * dblEpsilon / 2, strBufferStyle, dblMiterLimit);
+
+            var overdilationPaths = Offset_Paths(overgrownPaths, dblDilation, strBufferStyle, dblMiterLimit);
+            var stablePolyTree = Offset_PolyTree(overdilationPaths, -dblDilation, strBufferStyle, dblMiterLimit);
+
+            //var stablePolyTreePaths = Clipper.PolyTreeToPaths(stablePolyTree);
+            //CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
+            //stablePolyTreePaths, true), 1 / CConstants.dblFclipper), CHelpFunc.GetTimeStamp());
+
+            return stablePolyTree;
+        }
+
+
+        //public static List<List<CPolygon>> DilateAndOverlapPaths(List<CPolygon> cpglt, List<List<CPolygon>> GroupedCpgLtLt,
+        //    double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "Miter", double dblMiterLimit = 2)
         //{
-        //    var CpgLtPaths = new Paths(cpglt.Count);
-        //    foreach (var cpg in cpglt)
+        //    var GrownPaths = new Paths();
+        //    foreach (var groupedCpgLt in GroupedCpgLtLt)
         //    {
-        //        var overdilationPaths = Offset_Paths(cpg.ExteriorPaths, dblGrow + dblDilation);
-        //        var erosionpaths = Offset_Paths(overdilationPaths, -dblDilation);
-
-        //        //if two polygons intersect, they will be too close without overdiating dblEpsilon / 2
-        //        //var overdilationPolyTree = Offset_PolyTree(erosionpaths, dblEpsilon / 2, "Round");
-        //        var finalPolyTree = Offset_PolyTree(erosionpaths, dblEpsilon / 2);
-
-
-        //        //            CSaveFeature.SaveCGeoEb(clipperMethods.ScaleCpgLt(CHelpFunc.MakeLt(cpg), 1 / CConstants.dblFclipper),
-        //        //                esriGeometryType.esriGeometryPolygon, "cpg" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-        //        //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-        //        //overdilationPaths, true), 1 / CConstants.dblFclipper), "overdilationPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-
-        //        //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-        //        //erosionpaths, true), 1 / CConstants.dblFclipper), "erosionpaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-        //        //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-        //        // finalPaths, true), 1 / CConstants.dblFclipper), "finalPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-
-
-        //        if (finalPolyTree.ChildCount > 1)
+        //        var groupedPaths = new Paths();
+        //        foreach (var cpg in groupedCpgLt)
         //        {
-        //            throw new ArgumentException("there should be only one path in finalpaths!");
+        //            groupedPaths.AddRange(cpg.ExteriorPaths);
         //        }
 
-        //        CpgLtPaths.Add(finalPolyTree.Childs[0].Contour);
+        //        var overdilationPaths = Offset_Paths(groupedPaths, dblGrow + dblDilation, strBufferStyle, dblMiterLimit);
+        //        var grownpaths = Offset_Paths(overdilationPaths, -dblDilation, strBufferStyle, dblMiterLimit);
+        //        GrownPaths.AddRange(grownpaths);
         //    }
 
+        //    //if two polygons intersect, they will be too close without overdiating dblEpsilon / 2
+        //    var AllOverDilationPolyTree = Offset_PolyTree(GrownPaths, Math.Sqrt(5) * dblEpsilon / 2, strBufferStyle, dblMiterLimit);
 
-        //    var AllOverDilationPolyTree = Offset_PolyTree(CpgLtPaths, 0); //union is not reliable, so we offset by 0
-
+        //    CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
+        //        Clipper.PolyTreeToPaths(AllOverDilationPolyTree), true), 1 / CConstants.dblFclipper),
+        //        CHelpFunc.GetTimeStamp());
 
         //    return GroupCpgsByOverlap(cpglt, AllOverDilationPolyTree);
         //}
-
-        public static List<List<CPolygon>> IterativeGroupCpgsByOverlapIndependently(List<CPolygon> cpglt,
-    double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "Miter", double dblMiterLimit = 2)
-        {
-            var GroupedCpgLtLt = new List<List<CPolygon>>(cpglt.Count);
-            foreach (var cpg in cpglt)
-            {
-                GroupedCpgLtLt.Add(new List<CPolygon> { cpg });
-            }
-
-            int intRound = 0;
-            var newGroupedCpgLtLt = new List<List<CPolygon>>();
-            while (true)
-            {
-                newGroupedCpgLtLt = DilateAndOverlapPaths(cpglt, GroupedCpgLtLt,
-                    dblGrow, dblDilation, dblEpsilon, strBufferStyle, dblMiterLimit);
-                if (newGroupedCpgLtLt.Count == GroupedCpgLtLt.Count)
-                {
-                    break;
-                }
-                GroupedCpgLtLt = newGroupedCpgLtLt;
-                ++intRound;
-            }
-
-            if (intRound > 1)
-            {
-                Console.WriteLine("IterativeGroupCpgsByOverlapIndependently: " + intRound);
-            }
-
-            return newGroupedCpgLtLt;
-        }
-
-
-        public static List<List<CPolygon>> DilateAndOverlapPaths(List<CPolygon> cpglt, List<List<CPolygon>> GroupedCpgLtLt,
-            double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "Miter", double dblMiterLimit = 2)
-        {
-            var GrownPaths = new Paths();
-            foreach (var groupedCpgLt in GroupedCpgLtLt)
-            {
-                var groupedPaths = new Paths();
-                foreach (var cpg in groupedCpgLt)
-                {
-                    groupedPaths.AddRange(cpg.ExteriorPaths);
-                }
-
-                var overdilationPaths = Offset_Paths(groupedPaths, dblGrow + dblDilation, strBufferStyle, dblMiterLimit);
-                var grownpaths = Offset_Paths(overdilationPaths, -dblDilation, strBufferStyle, dblMiterLimit);
-                GrownPaths.AddRange(grownpaths);
-            }
-
-            //if two polygons intersect, they will be too close without overdiating dblEpsilon / 2
-            var AllOverDilationPolyTree = Offset_PolyTree(GrownPaths, Math.Sqrt(5) * dblEpsilon / 2, strBufferStyle, dblMiterLimit);
-
-            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-                Clipper.PolyTreeToPaths(AllOverDilationPolyTree), true), 1 / CConstants.dblFclipper),
-                CHelpFunc.GetTimeStamp());
-
-            return GroupCpgsByOverlap(cpglt, AllOverDilationPolyTree);
-        }
 
 
 
@@ -238,10 +202,31 @@ namespace MorphingClass.CUtility
         {
             var GroupedCpgLtLt = new List<List<CPolygon>>(polyTree.ChildCount);
             var testCpgLt = cpglt;
-            foreach (var polynode in polyTree.Childs)
+            var QueueNode = new Queue<PolyNode>(polyTree.Childs);
+
+            while (QueueNode.Count > 0)
             {
+                var polynode = QueueNode.Dequeue();
+                var nodePaths = new Paths { polynode.Contour };
+                if (polynode.ChildCount > 0)
+                {
+                    foreach (var holepolynode in polynode.Childs)
+                    {
+                        nodePaths.Add(holepolynode.Contour);
+
+                        //do it recursively
+                        if (holepolynode.ChildCount > 0)
+                        {
+                            foreach (var exteriorpolynode in holepolynode.Childs)
+                            {
+                                QueueNode.Enqueue(exteriorpolynode);
+                            }
+                        }
+                    }
+                }
+
+                //overlap
                 var remainCpgLt = new List<CPolygon>(testCpgLt.Count);
-                Paths nodePaths = CHelpFunc.MakeLt(polynode.Contour);
                 var groupCpglt = new List<CPolygon>();
                 foreach (var testCpg in testCpgLt)
                 {
@@ -261,13 +246,12 @@ namespace MorphingClass.CUtility
             }
 
             return GroupedCpgLtLt;
-        }        
+        }     
 
 
         public static PolyTree ClipOneComponent_BufferDilateErode(CPolygon cpg,
             double dblGrow, double dblDilation, double dblErosion, 
-            Paths clipPaths, double dblFclipper, CParameterInitialize pParameterInitialize, 
-            string strBufferStyle = "Miter", double dblMiterLimit = 2)
+            Paths clipPaths, double dblFclipper, string strBufferStyle = "Miter", double dblMiterLimit = 2)
         {
             var ExteriorOffsetPaths = clipperMethods.DilateErodeOffsetCpgExterior_Paths
     (cpg, dblGrow, dblDilation, dblErosion, strBufferStyle, dblMiterLimit);
@@ -433,7 +417,7 @@ namespace MorphingClass.CUtility
         }
 
         /// <summary>we do reverse because the direction of contour is different from the direction of our Cpg</summary>
-        public static IEnumerable<CPoint> ContourToCptEb(List<IntPoint> Contour, bool isExteriorHole = false)
+        public static IEnumerable<CPoint> ContourToCptEb(Path Contour, bool isExteriorHole = false)
         {
             var ContourAddFirst = CGeoFunc.AddFirstAsLastForEb(Contour);
             if (isExteriorHole == false)
@@ -460,6 +444,27 @@ namespace MorphingClass.CUtility
         }
 
 
+        public static int CalEdgeCountPaths(Paths paths)
+        {
+            int intEdgeCount = 0;
+            foreach (var path in paths)
+            {
+                intEdgeCount += path.Count - 1;
+            }
+            return intEdgeCount;
+        }
+
+        public static double CalLengthPaths(Paths paths)
+        {
+            double dblLength = 0;
+            foreach (var path in paths)
+            {
+                dblLength += CGeoFunc.CalLengthForIntptEb(path);
+            }
+            return dblLength;
+        }
+
+
         //public static IEnumerable<IEnumerable<CEdge>> ConvertPathsToCEdgeEbEb(Paths paths)
         //{
         //    foreach (var path in paths)
@@ -476,12 +481,12 @@ namespace MorphingClass.CUtility
         //    }
         //}
 
-        public static IEnumerable<CEdge> ConvertPathToCEdgeEb(List<IntPoint> path, bool AddCEdge_lastcptTofirstcpt = false)
+        public static IEnumerable<CEdge> ConvertPathToCEdgeEb(Path path, bool AddCEdge_lastcptTofirstcpt = false)
         {
             return CGeoFunc.FormCEdgeEb(ConvertPathToCptEb(path), AddCEdge_lastcptTofirstcpt);
         }
 
-        public static IEnumerable<CPoint> ConvertPathToCptEb(List<IntPoint> path)
+        public static IEnumerable<CPoint> ConvertPathToCptEb(Path path)
         {
             for (int i = 0; i < path.Count; i++)
             {

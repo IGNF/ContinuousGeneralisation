@@ -339,7 +339,7 @@ namespace MorphingClass.CGeneralizationMethods
             double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "Miter",
             double dblMiterLimit = 2)
         {
-            var GroupedCpgLtLt = clipperMethods.IterativeGroupCpgsByOverlapIndependently(cpglt, 
+            var GroupedCpgLtLt = clipperMethods.GroupCpgsByOverlapIndependently(cpglt, 
                 dblGrow, dblDilation, dblEpsilon, strBufferStyle, dblMiterLimit);
             var CptEdgeDisLtLt = GetShortestCpipeSD(GroupedCpgLtLt, dblGrow, dblDilation, dblEpsilon, dblMiterLimit).ToList();
             return GetMergedCpgLt_Prim(cpglt, CptEdgeDisLtLt);
@@ -350,7 +350,7 @@ namespace MorphingClass.CGeneralizationMethods
             double dblGrow, double dblDilation, double dblEpsilon, double dblMiterLimit)
         {
             //dblCloseDis just needs to be large enough
-            double dblCloseDis = dblDilation + (2 * dblGrow + dblEpsilon) * dblMiterLimit;
+            double dblCloseDis = 2 * (dblDilation + dblGrow + Math.Sqrt(5) * dblEpsilon / 2) * dblMiterLimit;
             foreach (var groupedCpgLt in GroupedCpgLtLt)
             {
                 if (groupedCpgLt.Count > 1)
@@ -543,7 +543,7 @@ namespace MorphingClass.CGeneralizationMethods
             var CpgCptEdgeDisLtDt = AttachCptEdgeDisLtToCpg(CloseInfoSD);
 
             int minIndex;
-           var mincptEdgeDis=  CloseInfoSD.GetMin(cptEdgeDis => cptEdgeDis.dblDis, out minIndex);            
+            var mincptEdgeDis = CloseInfoSD.GetMin(cptEdgeDis => cptEdgeDis.dblDis, out minIndex);
 
             var intCpgCount = CpgCptEdgeDisLtDt.Count;
             var FirstCpg = mincptEdgeDis.CpgPairIncr.val1;
@@ -561,7 +561,7 @@ namespace MorphingClass.CGeneralizationMethods
 
                 var cpg1 = minCptEdgeDis.CpgPairIncr.val1;
                 var cpg2 = minCptEdgeDis.CpgPairIncr.val2;
-                var BridgedCpg = cpg1;
+                CPolygon BridgedCpg = null;
                 if (cpg1.isTraversed == true && cpg2.isTraversed == true)
                 {
                     continue;
@@ -584,7 +584,7 @@ namespace MorphingClass.CGeneralizationMethods
 
                 FindandAddBridgeCptEdgeDisIntoQueue(QueueSS, BridgedCpg, CpgCptEdgeDisLtDt);
             } while (QueueSS.Count > 0 && groupcpglt.Count < intCpgCount);
-            
+
 
             return BridgeCptEdgeDisSS;
         }
@@ -1025,7 +1025,7 @@ namespace MorphingClass.CGeneralizationMethods
             string strBufferStyle, double dblMiterLimit)
         {
             var clippedPolyTree = clipperMethods.ClipOneComponent_BufferDilateErode(cpg,
-                dblGrow, dblDilation, dblErosion, clipPathsFirstLevel, CConstants.dblFclipper, _ParameterInitialize, strBufferStyle, dblMiterLimit);
+                dblGrow, dblDilation, dblErosion, clipPathsFirstLevel, CConstants.dblFclipper, strBufferStyle, dblMiterLimit);
             var clippedCpg = clipperMethods.GenerateOLHCpgByPolyTree(clippedPolyTree, cpg.ID);
 
 
@@ -1045,7 +1045,7 @@ namespace MorphingClass.CGeneralizationMethods
 
                     var clipPaths = clipperMethods.GenerateClipPathsByCpgEb(holecpg.ClipCpgLt);
                     var clippedHolePolyTree = clipperMethods.ClipOneComponent_BufferDilateErode(holecpg,
-                        dblGrow, dblDilation, dblErosion, clipPaths, CConstants.dblFclipper, _ParameterInitialize, strBufferStyle, dblMiterLimit);
+                        dblGrow, dblDilation, dblErosion, clipPaths, CConstants.dblFclipper, strBufferStyle, dblMiterLimit);
 
                     //*******************check the direction of the HoleCpgs
                     foreach (var clippedHoleCpg in clipperMethods.GenerateOLHCpgEbByPolyTree(clippedHolePolyTree, holecpg.ID, true))
