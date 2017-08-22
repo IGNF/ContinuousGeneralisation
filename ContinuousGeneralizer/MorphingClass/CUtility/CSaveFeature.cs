@@ -20,6 +20,7 @@ namespace MorphingClass.CUtility
     public class CSaveFeature
     {
         public IFeatureLayer pFeatureLayer { get; set; }
+        private const int _intColor=0;
         //private int _intKnown = 2;   //we don't need the first three FieldNames, i.e., "FID", "Shape"
 
         public CSaveFeature()
@@ -422,7 +423,7 @@ namespace MorphingClass.CUtility
         public static IFeatureLayer SaveCpgEb(IEnumerable<CPolygon> CpgEb, string strFileName,
             List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null,
             List<List<object>> pobjectValueLtLt = null,
-            int intRed = 0, int intGreen = 0, int intBlue = 0, double dblWidth = 1,
+            int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
             string strSymbolLayerPath = null, bool blnVisible = true)
         {
             return SaveCGeoEb(CpgEb, esriGeometryType.esriGeometryPolygon, strFileName,
@@ -434,7 +435,7 @@ namespace MorphingClass.CUtility
         public static IFeatureLayer SaveCGeoEb<T>(IEnumerable<T> CGeoEb, esriGeometryType pesriGeometryType, string strFileName, 
             List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null,
             List<List<object>> pobjectValueLtLt = null, 
-            int intRed = 0, int intGreen = 0, int intBlue = 0, double dblWidth = 1,
+            int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
             string strSymbolLayerPath = null, bool blnVisible = true)
              where T : CGeometricBase<T>
         {
@@ -463,8 +464,8 @@ namespace MorphingClass.CUtility
         /// <returns></returns>
         public static IFeatureLayer SaveCGeoEb<T>(IEnumerable<T> CGeoEb, esriGeometryType pesriGeometryType, string strFileName,
             IWorkspace pWorkspace, IMapControl4 m_mapControl, List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, 
-            List<List<object>> pobjectValueLtLt = null, int intRed = 0, int intGreen = 0, int intBlue = 0, double dblWidth = 1, 
-            string strSymbolLayerPath = null, bool blnVisible = true)
+            List<List<object>> pobjectValueLtLt = null, int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, 
+            double dblWidth = 1, string strSymbolLayerPath = null, bool blnVisible = true)
             where T : CGeometricBase<T>
         {
             if (CGeoEb.GetEnumerator().MoveNext() == false)
@@ -484,8 +485,8 @@ namespace MorphingClass.CUtility
 
         public static IFeatureLayer SaveIGeoEb<T>(IEnumerable<T> IGeoEb, esriGeometryType pesriGeometryType, string strFileName,
             CParameterInitialize pParameterInitialize, List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null,
-            List<List<object>> pobjectValueLtLt = null, int intRed = 0, int intGreen = 0, int intBlue = 0, double dblWidth = 1,
-            string strSymbolLayerPath = null, bool blnVisible = true)
+            List<List<object>> pobjectValueLtLt = null, int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, 
+            double dblWidth = 1, string strSymbolLayerPath = null, bool blnVisible = true)
              where T : IGeometry
         {
             return SaveIGeoEb(IGeoEb, pesriGeometryType, strFileName, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl,
@@ -494,7 +495,8 @@ namespace MorphingClass.CUtility
 
         private static IFeatureLayer SaveIGeoEb<T>(IEnumerable<T> IGeoEb, esriGeometryType pesriGeometryType, string strFileName,
             IWorkspace pWorkspace, IMapControl4 m_mapControl, List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, 
-            List<List<object>> pobjectValueLtLt = null, int intRed = 0, int intGreen = 0, int intBlue = 0, double dblWidth = 1, string strSymbolLayerPath = null, bool blnVisible = true)
+            List<List<object>> pobjectValueLtLt = null, int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, 
+            double dblWidth = 1, string strSymbolLayerPath = null, bool blnVisible = true)
             where T : IGeometry
         {
             if (IGeoEb.GetEnumerator().MoveNext() == false)

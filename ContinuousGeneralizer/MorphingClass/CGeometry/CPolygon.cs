@@ -47,7 +47,7 @@ namespace MorphingClass.CGeometry
         public CPolygon ExteriorOffsetCpg { get; set; }
         //public cp CPolygon ClipBridge { get; set; }
 
-        public Paths ExteriorPaths { get; set; }
+        public Path ExteriorPath { get; set; }
         public PolyTree pPolyTree { get; set; }
 
         public List<CPolygon> HoleCpgLt { get; set; }
@@ -218,6 +218,34 @@ namespace MorphingClass.CGeometry
                     holecpg.SetCEdgeLtAxisAngle();
                 }
             }
+        }
+
+        public void SetExteriorPath()
+        {
+            this.ExteriorPath = clipperMethods.GeneratePathByCptEb(this.CptLt, true);
+
+            if (this.HoleCpgLt != null)
+            {
+                foreach (var holecpg in this.HoleCpgLt)
+                {
+                    holecpg.SetExteriorPath();
+                }
+            }
+        }
+
+        public Paths GetAllPaths()
+        {
+            var allPaths = new Paths();
+            allPaths.Add(this.ExteriorPath);
+
+            if (this.HoleCpgLt != null)
+            {
+                foreach (var holecpg in this.HoleCpgLt)
+                {
+                    allPaths.AddRange(holecpg.GetAllPaths());
+                }
+            }
+            return allPaths;
         }
 
         public void SetAreaSimple()

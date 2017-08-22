@@ -89,6 +89,7 @@
   <ItemGroup>
     <Reference Include="C5">
       <HintPath>..\Citations\C5\C5.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ESRI.ArcGIS.ADF.Local, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -107,6 +108,7 @@
     <Reference Include="ESRI.ArcGIS.CartographyTools, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files (x86)\ArcGIS\DeveloperKit10.4\DotNet\Toolboxes\ESRI.ArcGIS.CartographyTools.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ESRI.ArcGIS.Catalog, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -177,11 +179,11 @@
     </Reference>
     <Reference Include="ILOG.Concert">
       <HintPath>..\Citations\Cplex\ILOG.Concert.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ILOG.CPLEX">
       <HintPath>..\Citations\Cplex\ILOG.CPLEX.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -367,6 +369,7 @@
     <ProjectReference Include="..\CPlusClass\CPlusClass.vcxproj">
       <Project>{fbbf5c0b-9ca4-4078-8676-c0decd9a42ba}</Project>
       <Name>CPlusClass</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\VBClass\VBClass.vbproj">
       <Project>{37C13D51-20CC-4F15-B16F-20A219F2F3FC}</Project>

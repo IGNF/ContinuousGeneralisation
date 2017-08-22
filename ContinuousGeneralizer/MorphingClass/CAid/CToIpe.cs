@@ -158,6 +158,7 @@ namespace MorphingClass.CAid
         {
             var pLineSymbol = pRenderer.SymbolByFeature[pFeature] as ILineSymbol;
             var pLineSymbolRgbColor = pLineSymbol.Color as IRgbColor;
+            
             if (strBoundWidth == "")
             {
                 strBoundWidth = pLineSymbol.Width.ToString();

@@ -98,6 +98,7 @@
   <ItemGroup>
     <Reference Include="C5">
       <HintPath>..\Citations\C5\C5.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ESRI.ArcGIS.3DAnalyst, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -173,12 +174,12 @@
     <Reference Include="ILOG.Concert, Version=12.6.2.0, Culture=neutral, PublicKeyToken=7906592bc7cc7340, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Citations\Cplex\ILOG.Concert.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ILOG.CPLEX, Version=12.6.2.0, Culture=neutral, PublicKeyToken=7906592bc7cc7340, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Citations\Cplex\ILOG.CPLEX.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -988,6 +989,7 @@
     <ProjectReference Include="..\CPlusClass\CPlusClass.vcxproj">
       <Project>{fbbf5c0b-9ca4-4078-8676-c0decd9a42ba}</Project>
       <Name>CPlusClass</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\MorphingClass\MorphingClass.csproj">
       <Project>{456FD3DF-B3F9-41F9-B359-AA1498B57826}</Project>
@@ -997,7 +999,7 @@
     <ProjectReference Include="..\VBClass\VBClass.vbproj">
       <Project>{37C13D51-20CC-4F15-B16F-20A219F2F3FC}</Project>
       <Name>VBClass</Name>
-      <Private>True</Private>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

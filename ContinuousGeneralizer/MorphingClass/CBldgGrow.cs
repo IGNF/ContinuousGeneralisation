@@ -166,7 +166,7 @@ namespace MorphingClass.CGeneralizationMethods
                 //_dblDilation = _dblEpsilon / 2;
                 double dblTargetDilation = (dblTotalGrow - dblMiterLimit * dblTargetErosion) / (dblMiterLimit - 1);
                 //double dblTargetDilation = dblTotalGrow;
-                
+
 
 
                 foreach (var MagnifiedCpg in MagnifiedCpgLt)
@@ -175,8 +175,23 @@ namespace MorphingClass.CGeneralizationMethods
                     //MagnifiedCpg.SubCpgLt = new List<CPolygon> { MagnifiedCpg };
                     MagnifiedCpg.FormCEdgeLt();
                     MagnifiedCpg.CEdgeLt.ForEach(cedge => cedge.BelongedCpg = MagnifiedCpg);
-                    MagnifiedCpg.ExteriorPaths = CHelpFunc.MakeLt(clipperMethods.GeneratePathByCpgExterior(MagnifiedCpg));
+                    MagnifiedCpg.SetExteriorPath();
+
+                    //MagnifiedCpg. = CHelpFunc.MakeLt(clipperMethods.GeneratePathByCpgExterior(MagnifiedCpg));
                 }
+
+                var allpaths = new Paths();
+                foreach (var MagnifiedCpg in MagnifiedCpgLt)
+                {
+                    allpaths.AddRange(MagnifiedCpg.GetAllPaths());
+                }
+                var offsetpaths = clipperMethods.Offset_Paths(allpaths,
+                dblTotalGrow, strBufferStyle, dblMiterLimit);
+
+                CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(offsetpaths, true),
+                    1 / CConstants.dblFclipper), strBufferStyle+CHelpFunc.GetTimeStampWithPrefix());
+
+
 
                 //var intEdgeCount = 0;
                 //foreach (var MagnifiedCpg in MagnifiedCpgLt)
@@ -184,32 +199,24 @@ namespace MorphingClass.CGeneralizationMethods
                 //    intEdgeCount += MagnifiedCpg.GetEdgeCount();
                 //}
 
-                
+
 
                 //var mergedCpgLt = MergeCloseCpgsAndAddBridges(MagnifiedCpgLt, dblTotalGrow, dblTargetDilation, dblTargetEpsilon);
-                var mergedCpgLt = MergeCloseCpgsAndAddBridges(MagnifiedCpgLt, dblTotalGrow, dblTargetDilation, dblTargetEpsilon, 
+                var mergedCpgLt = MergeCloseCpgsAndAddBridges(MagnifiedCpgLt, dblTotalGrow, dblTargetDilation, dblTargetEpsilon,
                     strBufferStyle, dblMiterLimit);
-                
+
                 //dblGrow, dblDilation, dblErosion, dblEpsilon
 
                 var targetcpglt = new List<CPolygon>();
-                //foreach (var mergedcpg in mergedCpgLt)
-                //{
 
                 for (int j = 0; j < mergedCpgLt.Count; j++)
                 {
                     var mergedcpg = mergedCpgLt[j];
 
-
                     SetClipCpgLt_BufferDilateErodeSimplify(mergedcpg,
                         dblTotalGrow, dblTargetDilation, dblTargetErosion, dblTargetEpsilon,
                         dblHoleAreaLimitTargetScale, strSimplification, strBufferStyle, dblMiterLimit);
 
-                    //var newBridgeCptEdgeDisSS = new SortedSet<CptEdgeDis>(CCmpCptEdgeDis_Dis.sComparer);
-                    //foreach (var item in mergedcpg.BridgeCptEdgeDisSS)
-                    //{
-
-                    //}
                     if (mergedcpg.BridgeCptEdgeDisSS != null)
                     {
                         var CpipeDt = new Dictionary<CValPairIncr<CPolygon>, CptEdgeDis>
@@ -221,8 +228,6 @@ namespace MorphingClass.CGeneralizationMethods
                         }
                         mergedcpg.CpipeDt = CpipeDt;
                     }
-
-
 
 
                     var targetCpg = new CPolygon(mergedcpg.ID, mergedcpg.ClipCpgLt[0].CptLt);
@@ -276,14 +281,6 @@ namespace MorphingClass.CGeneralizationMethods
     strSimplification + "_" + dblTargetScale + "k_mergedcpg" + dblTargetEpsilon + "m_" +
     CHelpFunc.GetTimeStampWithPrefix(), intGreen: 255);
 
-                
-
-                //MagnifiedCpgLt = targetcpglt;
-                
-
-
-
-
                 #region Geoprocessor Samples
                 //// Initialize the geoprocessor. 
                 ////IGeoProcessor2 gp2 = new GeoProcessorClass();
@@ -321,8 +318,6 @@ namespace MorphingClass.CGeneralizationMethods
                 ////GP.Execute(pSimplifyBuilding,null);
                 #endregion
 
-
-
             }
 
             CConstants.dblVerySmallCoord /= dblFclipper;
@@ -339,7 +334,7 @@ namespace MorphingClass.CGeneralizationMethods
             double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "Miter",
             double dblMiterLimit = 2)
         {
-            var GroupedCpgLtLt = clipperMethods.GroupCpgsByOverlapIndependently(cpglt, 
+            var GroupedCpgLtLt = clipperMethods.IterativelyGroupCpgsByOverlapIndependently(cpglt, 
                 dblGrow, dblDilation, dblEpsilon, strBufferStyle, dblMiterLimit);
             var CptEdgeDisLtLt = GetShortestCpipeSD(GroupedCpgLtLt, dblGrow, dblDilation, dblEpsilon, dblMiterLimit).ToList();
             return GetMergedCpgLt_Prim(cpglt, CptEdgeDisLtLt);
