@@ -47,6 +47,7 @@ namespace MorphingClass.CGeometry
         public CPolygon ExteriorOffsetCpg { get; set; }
         //public cp CPolygon ClipBridge { get; set; }
 
+        public Paths LastTimePaths { get; set; }
         public Path ExteriorPath { get; set; }
         public PolyTree pPolyTree { get; set; }
 

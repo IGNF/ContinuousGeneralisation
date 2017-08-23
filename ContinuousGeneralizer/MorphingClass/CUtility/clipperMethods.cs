@@ -14,6 +14,7 @@ using MorphingClass.CUtility;
 using MorphingClass.CGeometry;
 using MorphingClass.CGeometry.CGeometryBase;
 using MorphingClass.CCorrepondObjects;
+using MorphingClass.CGeneralizationMethods;
 
 using ClipperLib;
 using Path = System.Collections.Generic.List<ClipperLib.IntPoint>;
@@ -305,9 +306,9 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
 
 
             int intRound = 0;
-            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-    Clipper.PolyTreeToPaths(grownPolyTree), true), 1 / CConstants.dblFclipper),
-    intRound.ToString() + CHelpFunc.GetTimeStampWithPrefix());
+    //        CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
+    //Clipper.PolyTreeToPaths(grownPolyTree), true), 1 / CConstants.dblFclipper),
+    //intRound.ToString() + CHelpFunc.GetTimeStampWithPrefix());
 
 
             var IterativeGrownPathsLt = grownPathsLt;
@@ -329,9 +330,9 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
                 newIterativeGrownPathsLt = GetOneLevelPathsEbFromPolyTree(finalPolyTree).ToList();
 
                 intRound++;
-                CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-    Clipper.PolyTreeToPaths(finalPolyTree), true), 1 / CConstants.dblFclipper),
-    intRound.ToString() + CHelpFunc.GetTimeStampWithPrefix());
+    //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
+    //Clipper.PolyTreeToPaths(finalPolyTree), true), 1 / CConstants.dblFclipper),
+    //intRound.ToString() + CHelpFunc.GetTimeStampWithPrefix());
 
             } while (newIterativeGrownPathsLt.Count != IterativeGrownPathsLt.Count);
 
@@ -360,77 +361,48 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
             return finalPolyTree;
 
         }
+
+    //    public static PolyTree ClipOneComponent_BufferDilateErode_PolyTree(CPolygon cpg,
+    //        double dblGrow, double dblDilation, double dblErosion, 
+    //        Paths clipPaths, double dblFclipper, string strBufferStyle = "Miter", double dblMiterLimit = 2)
+    //    {
+    //        var ExteriorOffsetPaths = clipperMethods.DilateErodeOffsetCpgExterior_Paths
+    //(cpg, dblGrow, dblDilation, dblErosion, strBufferStyle, dblMiterLimit);
+    //        var clippedPolyTree = clipperMethods.Clip_PolyTree(ExteriorOffsetPaths, true, clipPaths, true, ClipType.ctIntersection);
     
+    //        return clippedPolyTree;
+    //    }
 
-
-
-        //        //public static List<List<CPolygon>> DilateAndOverlapPaths(List<CPolygon> cpglt, List<List<CPolygon>> GroupedCpgLtLt,
-        //        //    double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "Miter", double dblMiterLimit = 2)
-        //        //{
-        //        //    var GrownPaths = new Paths();
-        //        //    foreach (var groupedCpgLt in GroupedCpgLtLt)
-        //        //    {
-        //        //        var groupedPaths = new Paths();
-        //        //        foreach (var cpg in groupedCpgLt)
-        //        //        {
-        //        //            groupedPaths.AddRange(cpg.ExteriorPaths);
-        //        //        }
-
-        //        //        var overdilationPaths = Offset_Paths(groupedPaths, dblGrow + dblDilation, strBufferStyle, dblMiterLimit);
-        //        //        var grownpaths = Offset_Paths(overdilationPaths, -dblDilation, strBufferStyle, dblMiterLimit);
-        //        //        GrownPaths.AddRange(grownpaths);
-        //        //    }
-
-        //        //    //if two polygons intersect, they will be too close without overdiating dblEpsilon / 2
-        //        //    var AllOverDilationPolyTree = Offset_PolyTree(GrownPaths, Math.Sqrt(5) * dblEpsilon / 2, strBufferStyle, dblMiterLimit);
-
-        //        //    CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-        //        //        Clipper.PolyTreeToPaths(AllOverDilationPolyTree), true), 1 / CConstants.dblFclipper),
-        //        //        CHelpFunc.GetTimeStamp());
-
-        //        //    return GroupCpgsByOverlap(cpglt, AllOverDilationPolyTree);
-        //        //}
-            
-
-
-        public static PolyTree ClipOneComponent_BufferDilateErode(CPolygon cpg,
-            double dblGrow, double dblDilation, double dblErosion, 
+        public static Paths ClipOneComponent_BufferDilateErode_Paths(CPolygon cpg,
+            double dblGrow, double dblDilation, double dblErosion,
             Paths clipPaths, double dblFclipper, string strBufferStyle = "Miter", double dblMiterLimit = 2)
         {
             var ExteriorOffsetPaths = clipperMethods.DilateErodeOffsetCpgExterior_Paths
     (cpg, dblGrow, dblDilation, dblErosion, strBufferStyle, dblMiterLimit);
-            var clippedPolyTree = clipperMethods.Clip_PolyTree(ExteriorOffsetPaths, true, clipPaths, true, ClipType.ctIntersection);
+            var clippedPaths = clipperMethods.Clip_Paths(ExteriorOffsetPaths, true, clipPaths, true, ClipType.ctIntersection);
 
-
-            //var clippedPolyTree = clipperMethods.Clip_PolyTree(ExteriorOffsetPaths, true, clipPaths.GetRange(0,1), true, ClipType.ctIntersection);
-            //if (clipPaths.Count > 1)
-            //{
-            //    clippedPolyTree = clipperMethods.Clip_PolyTree(Clipper.PolyTreeToPaths(clippedPolyTree), true, clipPaths.GetRange(1, clipPaths.Count - 1), true, ClipType.ctDifference);
-            //}
-
-
-    //        if (clipPaths.Count>5)
-    //        {
-    //            CSaveFeature.SaveCGeoEb(clipperMethods.ScaleCpgLt(CHelpFunc.MakeLt(cpg), 1 / dblFclipper), 
-    //                esriGeometryType.esriGeometryPolygon, "Cpg" + CHelpFunc.GetTimeStampWithPrefix(), pParameterInitialize);
-    //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-    //ExteriorOffsetPaths, true), 1 / dblFclipper), "ExteriorOffsetPaths" +CHelpFunc.GetTimeStampWithPrefix(), pParameterInitialize);
-    //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-    //clipPaths, true), 1 / dblFclipper), "clipPaths" + CHelpFunc.GetTimeStampWithPrefix(), pParameterInitialize);
-
-    //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathToCEdgeEb(
-    //    clippedPolyTree.Childs[0].Contour, true), 1 / dblFclipper), "clipperPolyTree0" + CHelpFunc.GetTimeStampWithPrefix(), pParameterInitialize);
-    //            //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathToCEdgeEb(
-    //            //    clippedPolyTree.Childs[1].Contour, true), 1 / dblFclipper), "clipperPolyTree1", pParameterInitialize);
-    //        }
-
-
-
-            return clippedPolyTree;
+            return clippedPaths;
         }
 
 
-        
+        public static IEnumerable<CPolygon> DilateErodeOffsetSimplifyOneComponent(CPolygon cpg,
+            double dblGrow, double dblDilation, double dblErosion, double dblEpsilon,
+            string strSimplification, bool blnReverse, string strBufferStyle = "Miter", double dblMiterLimit = 2)
+        {
+            cpg.JudgeAndFormCEdgeLt();
+            //cpg.FormCEdgeLt();
+
+            var ExteriorOffsetPolyTree = clipperMethods.DilateErodeOffsetCpgExterior_PolyTree
+                (cpg, dblGrow, dblDilation, dblErosion, strBufferStyle, dblMiterLimit);
+
+            foreach (var OffsetCpg in clipperMethods.GenerateCpgEbByPolyTree(ExteriorOffsetPolyTree, cpg.ID, blnReverse))
+            {
+                var simplifiedcpg = CDPSimplify.SimplifyCpgAccordExistEdges(OffsetCpg,
+                    cpg.CEdgeLt, strSimplification, 2 * dblEpsilon);
+                yield return simplifiedcpg;
+            }
+        }
+
 
 
         public static Paths DilateErodeOffsetCpgExterior_Paths(CPolygon Cpg, double dblGrow, double dblDilation, double dblErosion,
@@ -468,16 +440,16 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
 
 
 
-//            CSaveFeature.SaveCGeoEb(clipperMethods.ScaleCpgLt(CHelpFunc.MakeLt(Cpg), 1 / CConstants.dblFclipper),
-//                esriGeometryType.esriGeometryPolygon, "Cpg" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-////            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-////growndilationPaths, true), 1 / CConstants.dblFclipper), "growndilationPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-//            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-// overdilationPaths, true), 1 / CConstants.dblFclipper), "overdilationPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-////            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-////backPaths, true), 1 / CConstants.dblFclipper), "backPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-//            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-//erosionpaths, true), 1 / CConstants.dblFclipper), "erosionpaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
+            //CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgLt(CHelpFunc.MakeLt(Cpg), 1 / CConstants.dblFclipper), 
+            //    "Cpg" + CHelpFunc.GetTimeStampWithPrefix());
+            ////            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
+            ////growndilationPaths, true), 1 / CConstants.dblFclipper), "growndilationPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
+            //CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(overdilationPaths, true), 
+            //    1 / CConstants.dblFclipper), "overdilationPaths" + CHelpFunc.GetTimeStampWithPrefix());
+            ////            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
+            ////backPaths, true), 1 / CConstants.dblFclipper), "backPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
+            //CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(erosionpaths, true), 
+            //    1 / CConstants.dblFclipper), "erosionpaths" + CHelpFunc.GetTimeStampWithPrefix());
 
 
             return Offset_Paths(erosionpaths, dblHoleIndicator * dblErosion, strBufferStyle, dblMiterLimit);
@@ -504,37 +476,72 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
                     dblHoleIndicator * (dblGrow + dblDilation), strBufferStyle, dblMiterLimit);
             var erosionpaths = Offset_Paths(overdilationPaths,
                     dblHoleIndicator * (-dblDilation - dblErosion), strBufferStyle, dblMiterLimit);
-            return Offset_PolyTree(erosionpaths, dblHoleIndicator * dblErosion, strBufferStyle, dblMiterLimit);
+            var normalPolyTree = Offset_PolyTree(erosionpaths, dblHoleIndicator * dblErosion, strBufferStyle, dblMiterLimit);
+
+    //        CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgLt(CHelpFunc.MakeLt(Cpg), 1 / CConstants.dblFclipper),
+    //            "Cpg" + CHelpFunc.GetTimeStampWithPrefix());
+    //        //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
+    //        //growndilationPaths, true), 1 / CConstants.dblFclipper), "growndilationPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
+    //        CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(overdilationPaths, true),
+    //            1 / CConstants.dblFclipper), "overdilationPaths" + CHelpFunc.GetTimeStampWithPrefix());
+    //        //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
+    //        //backPaths, true), 1 / CConstants.dblFclipper), "backPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
+    //        CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(erosionpaths, true),
+    //            1 / CConstants.dblFclipper), "erosionpaths" + CHelpFunc.GetTimeStampWithPrefix());
+
+    //        CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(Clipper.PolyTreeToPaths(normalPolyTree), true),
+    //1 / CConstants.dblFclipper), "normalpaths" + CHelpFunc.GetTimeStampWithPrefix());
+
+            return normalPolyTree;
         }
 
-        /// <summary>
-        /// OLH: One Level Hole; we assume that there is only one polygon in pPolyTree
-        /// </summary>
-        /// <param name="pPolyTree"></param>
-        /// <returns></returns>
-        /// <remarks></remarks>
-        public static CPolygon GenerateOLHCpgByPolyTree(PolyTree pPolyTree, int intID)
+        ///// <summary>
+        ///// OLH: One Level Hole; we assume that there is only one polygon in pPolyTree
+        ///// </summary>
+        ///// <param name="pPolyTree"></param>
+        ///// <returns></returns>
+        ///// <remarks></remarks>
+        //public static CPolygon GenerateOLHCpgByPolyTree(PolyTree pPolyTree, int intID)
+        //{
+        //    if (pPolyTree.ChildCount > 1)
+        //    {
+        //        throw new ArgumentOutOfRangeException("there should be no more than 1 polygon!");
+        //    }
+
+        //    return GenerateOLHCpgEbByPolyNode(pPolyTree.Childs[0], intID);
+        //}
+
+
+
+        public static IEnumerable<CPolygon> GenerateCpgEbByPolyTree(PolyTree polyTree, int intID, bool blnReverse = false)
         {
-            if (pPolyTree.ChildCount > 1)
+            foreach (var polynode in GetOneLevelPolyNode(polyTree))
             {
-                throw new ArgumentOutOfRangeException("there should be no more than 1 polygon!");
-            }
-
-            return GenerateOLHCpgEbByPolyNode(pPolyTree.Childs[0], intID);
-        }
-
-        public static IEnumerable<CPolygon> GenerateOLHCpgEbByPolyTree(PolyTree pPolyTree, int intID, bool isExteriorHole = false)
-        {
-            foreach (var polyNode in pPolyTree.Childs)
-            {
-                yield return GenerateOLHCpgEbByPolyNode(polyNode, intID, isExteriorHole);
+                yield return GenerateOLHCpgEbByPolyNode(polynode, intID, blnReverse);
             }
         }
 
-        public static CPolygon GenerateOLHCpgEbByPolyNode(PolyNode cpgnode, int intID, bool isExteriorHole = false)
+        //private static CPolygon GenerateCpgEbByPolyNode(PolyNode cpgnode, int intID, bool blnReverse = false)
+        //{
+        //    var cptlt = ContourToCptEb(cpgnode.Contour, blnReverse).ToList();
+        //    var holecptlt = GetOLHCptLtEb(cpgnode, blnReverse).ToLtLt();
+
+        //    return new CPolygon(intID, cptlt, holecptlt);
+        //}
+
+
+        //public static IEnumerable<CPolygon> GenerateOLHCpgEbByPolyTree(PolyTree pPolyTree, int intID, bool blnReverse = false)
+        //{
+        //    foreach (var polyNode in pPolyTree.Childs)
+        //    {
+        //        yield return GenerateOLHCpgEbByPolyNode(polyNode, intID, blnReverse);
+        //    }
+        //}
+
+        private static CPolygon GenerateOLHCpgEbByPolyNode(PolyNode cpgnode, int intID, bool blnReverse = false)
         {
-            var cptlt = ContourToCptEb(cpgnode.Contour, isExteriorHole).ToList();
-            var holecptlt = GetOLHCptLtEb(cpgnode, isExteriorHole).ToLtLt();
+            var cptlt = ContourToCptEb(cpgnode.Contour, blnReverse).ToList();
+            var holecptlt = GetOLHCptLtEb(cpgnode, blnReverse).ToLtLt();
 
             return new CPolygon(intID, cptlt, holecptlt);
         }
@@ -547,24 +554,19 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
         /// <param name="blnMakeIdentical"></param>
         /// <returns></returns>
         /// <remarks>OLH: One Level Hole</remarks>
-        public static IEnumerable<IEnumerable<CPoint>> GetOLHCptLtEb(PolyNode cpgNode, bool isExteriorHole = false)
+        private static IEnumerable<IEnumerable<CPoint>> GetOLHCptLtEb(PolyNode cpgNode, bool blnReverse = false)
         {
             foreach (var holenode in cpgNode.Childs)
             {
-                if (holenode.ChildCount > 0)
-                {
-                    throw new ArgumentException("unconsidered case: the hole contains holes!");
-                }
-
-                yield return ContourToCptEb(holenode.Contour, isExteriorHole);
+                yield return ContourToCptEb(holenode.Contour, blnReverse);
             }
         }
 
         /// <summary>we do reverse because the direction of contour is different from the direction of our Cpg</summary>
-        public static IEnumerable<CPoint> ContourToCptEb(Path Contour, bool isExteriorHole = false)
+        private static IEnumerable<CPoint> ContourToCptEb(Path Contour, bool blnReverse = false)
         {
             var ContourAddFirst = CGeoFunc.AddFirstAsLastForEb(Contour);
-            if (isExteriorHole == false)
+            if (blnReverse == true)
             {
                 ContourAddFirst = ContourAddFirst.Reverse();
             }
@@ -769,62 +771,6 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
                 new IntPoint(cedge.ToCpt.X, cedge.ToCpt.Y)
             };
         }
-
-        //public static Path GenerateClosedClockwisePathByCEdge(CEdge cedge)
-        //{
-        //    return new Path
-        //    {
-        //        new IntPoint(cedge.FrCpt.X, cedge.FrCpt.Y),
-        //        new IntPoint(cedge.ToCpt.X, cedge.ToCpt.Y),
-        //        GetArtefactPt(cedge),
-        //        new IntPoint(cedge.FrCpt.X, cedge.FrCpt.Y)
-        //    };
-        //}
-
-        //public static IntPoint GetArtefactPt(CEdge cedge)
-        //{
-        //    var frcpt = cedge.FrCpt;
-        //    var tocpt = cedge.ToCpt;
-
-        //    if (tocpt.Y > frcpt.Y)
-        //    {
-        //        return new IntPoint(tocpt.X + 2 * CConstants.dblVerySmallCoordClipper, tocpt.Y);
-        //    }
-        //    else if (tocpt.Y < frcpt.Y)
-        //    {
-        //        return new IntPoint(tocpt.X - 2 * CConstants.dblVerySmallCoordClipper, tocpt.Y);
-        //    }
-        //    else // if (tocpt.Y == frcpt.Y)
-        //    {
-        //        if (tocpt.X > frcpt.X)
-        //        {
-        //            return new IntPoint(tocpt.X, tocpt.Y - 2 * CConstants.dblVerySmallCoordClipper);
-        //        }
-        //        else if (tocpt.Y < frcpt.Y)
-        //        {
-        //            return new IntPoint(tocpt.X, tocpt.Y + 2 * CConstants.dblVerySmallCoordClipper);
-        //        }
-        //        else
-        //        {
-        //            throw new ArgumentException("frcpt and tocpt are identical!");
-        //        }
-        //    }
-        //}
-
-
-
-
-        //public static Path GeneratePathByCptEbFromCpg(IEnumerable<CPoint> cpteb, bool blnReverse = false)
-        //{
-
-
-
-        //    return GenerateIntptEbByCptEb(cpteb.Reverse()).ToList();
-
-        //    //return GenerateIntptEbByCptEb(cpteb).ToList();
-        //}
-
-        
 
 
         #region ScaleGeos

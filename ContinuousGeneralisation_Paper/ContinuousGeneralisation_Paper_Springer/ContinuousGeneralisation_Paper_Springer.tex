@@ -321,14 +321,9 @@ from the original vertex,
 a \emph{square} joining is applied
 (see \fig\ref{fig:Buffer_MiterLimits}~(b)).
 To keep right angles of buildings, 
-we must have $\alpha d_G \geq \sqrt{2}$. 
-We set $\alpha d_G = 1.5$ so that a square joining is applied when an angle is 
+we must have $\alpha \geq \sqrt{2}$. 
+We set $\alpha  = 1.5$ so that a square joining is applied when an angle is 
 smaller than $83.6 \degree$.
-
-We use value $1.5$ so that we can keep
-
-
-
 
 \begin{figure}[tb]
 	\centering
@@ -345,7 +340,11 @@ We use value $1.5$ so that we can keep
 \end{figure}
 
 
-If several buildings are close to each other at the start 
+
+If two buildings become too close to each other during growing, we merge them 
+by adding a bridge.
+
+at the start 
 scale, we bridge them by line segments and take the merge of these 
 buildings 
 and bridges as one building.
