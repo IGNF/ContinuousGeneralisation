@@ -100,6 +100,20 @@ namespace MorphingClass.CGeometry
             var CoStartHalfCEdgeDt = IdentifyCoStartCEdge(fHalfEdgeLt);
             ConstrcutRelationshipBetweenEdges(CoStartHalfCEdgeDt);
 
+            foreach (var halfedge in fHalfEdgeLt)
+            {
+                halfedge.PrintMySelf();
+            }
+
+
+
+
+
+
+
+
+
+
             fHalfEdgeLt.SetIndexID();
 
             return fHalfEdgeLt;
@@ -306,14 +320,18 @@ namespace MorphingClass.CGeometry
                 //UpperCorrectAxisAngleCEdge has angle most close to 90 degrees
                 //LowerCorrectAxisAngleCEdge has angle most close to 270 degrees
                 var UpperCorrectAxisAngleCEdge = AxisAngleCEdgeLt[0];
-                var dblUpperAngleToHalfPI =
-                    CGeoFunc.CalAngle_Counterclockwise(AxisAngleCEdgeLt[0].dblAxisAngle, CConstants.dblHalfPI);
+                var dblUpperAngleToHalfPI = MakeAngleCorrect(
+                    CGeoFunc.CalAngle_Counterclockwise(AxisAngleCEdgeLt[0].dblAxisAngle, CConstants.dblHalfPI));
+
+
+
                 var LowerCorrectAxisAngleCEdge = AxisAngleCEdgeLt[0];
                 var dblLowerAngleToHalfPI = dblUpperAngleToHalfPI;
                 for (int i = 1; i < AxisAngleCEdgeLt.Count; i++)
                 {
-                    double dblAngleToHalfPI =
-                    CGeoFunc.CalAngle_Counterclockwise(AxisAngleCEdgeLt[i].dblAxisAngle, CConstants.dblHalfPI);
+                    double dblAngleToHalfPI = MakeAngleCorrect(
+                    CGeoFunc.CalAngle_Counterclockwise(AxisAngleCEdgeLt[i].dblAxisAngle, CConstants.dblHalfPI));
+
 
                     if (dblAngleToHalfPI <= dblUpperAngleToHalfPI)
                     {
@@ -329,7 +347,7 @@ namespace MorphingClass.CGeometry
                 }
 
 
-                cpg.IsHole = false;
+                cpg.IsHole = false;  //a hole means that the direction is clockwise
                 var TestCEdgeStartAtExtreme = cpg.cedgeStartAtLeftMost;
                 do
                 {
@@ -346,6 +364,15 @@ namespace MorphingClass.CGeometry
                     TestCEdgeStartAtExtreme = TestCEdgeStartAtExtreme.GetLargerAxisAngleCEdge();
                 } while (TestCEdgeStartAtExtreme.GID != cpg.cedgeStartAtLeftMost.GID);
             }
+        }
+
+        private static double MakeAngleCorrect(double dblAngle)
+        {
+            if ( CCmpMethods.CmpDbl_ConstVerySmall(dblAngle,CConstants.dblTwoPI)==0)
+            {
+                dblAngle = 0;
+            }
+            return dblAngle;
         }
 
 

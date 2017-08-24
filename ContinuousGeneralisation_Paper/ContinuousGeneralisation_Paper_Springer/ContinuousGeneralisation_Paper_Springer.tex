@@ -76,8 +76,8 @@
 %		\node[shape=circle,draw,inner sep=1pt] (char) {#1};}}
 %\newcommand*\circledtwo[1]{\tikz[baseline=(char.base)]{
 %		\node[shape=circle,draw,inner sep=0.1pt] (char) {#1};}}
-% \newcommand{\ml}{\ensuremath{M_+}\xspace}
-% \newcommand{\ms}{\ensuremath{M_-}\xspace}
+ \newcommand{\maps}{\ensuremath{M_\mathrm{s}}\xspace}
+ \newcommand{\mapg}{\ensuremath{M_\mathrm{g}}\xspace}
 
 
 
@@ -301,8 +301,17 @@ Cetinkaya2015,Deng2017,Regnauld1996}
 
 
 \section{Methodology}
+We name the input map as start map \maps.
+We generate goal map \mapg by generalizing \maps. 
+We use parameter $t\in[0,1]$ to define the continuous generalization
+process. 
+We require that the generalization yields exactly \maps when $t=0$, 
+\mapg when $t=1$, and that \maps is continuously
+generalized into \mapg when $t$ increases
+from~$0$ to~$1$.
 
-\subsection{Growing based on buffering}
+
+\subsection{Grow based on buffering}
 We grow building based on buffering. 
 There are two typical ways of buffering polygons, i.e.,
 one with round joins and the other with miter joins (see 
@@ -335,95 +344,29 @@ smaller than $83.6 \degree$.
 \begin{figure}[tb]
 	\centering
 	\includegraphics{Buffer_MiterLimits}
-	\caption{Two typical ways of buffering a polygon.}
+	\caption{}
 	\label{fig:Buffer_MiterLimits}
 \end{figure}
 
 
-
-If two buildings become too close to each other during growing, we merge them 
-by adding a bridge.
-
-at the start 
-scale, we bridge them by line segments and take the merge of these 
-buildings 
-and bridges as one building.
-For each building, either an original one or a merged one, at the start 
-scale, 
-we generate its target shape at 
-the goal scale by enlarging and simplifying. Then we grow the  
-building to the target shape. 
-%
-After finishing the growing, we take the goal scale as the 
-start scale and repeat our continuous generalization.
-\newline\indent
-Our contribution is as follows. First, the buildings 
-are enlarged continuously. At the same time, they are simplified. 
-Second, we ensure that the distance between any pair of two buildings is 
-always larger than a specified threshold.
-
-If we grow a building with radius $d_\mathrm{G}$, some part of a building will 
-grow at most $2d_\mathrm{G}$.
-The length of a bridge can be as large as
-\begin{equation}
-	\label{eq:BridgeLength}
-	l_b=4d_\mathrm{G}+d_\epsilon.
-\end{equation}
-%\todo[inline]{$d_\mathrm{G}$ or $D_\mathrm{G}$?}
+\subsection{Merge close buildings by introducing bridges}
+If two buildings become too close to each other during growing, 
+we merge them by introducing a bridge connecting the newarest points 
+(see \fig\ref{fig:GrowAndBridge}).
 
 
+\begin{figure}[tb]
+	\centering
+	\includegraphics{GrowAndBridge}
+	\caption{Merge buildings by introducing bridges when the buildings become 
+	too close.
+		Although the bridges appear at different time, 
+		their widths are the same (see the figure with $t=1$).}
+	\label{fig:GrowAndBridge}
+\end{figure}
 
 
-
-
-
-
-
-
-We grow all the buildings with the same speed.
-
-\textcite{Johnson2014}
-
-If several buildings are close to each other at the start 
-scale, we bridge them by line segments and take the merge of these 
-buildings 
-and bridges as one building.
-For each building, either an original one or a merged one, at the start 
-scale, 
-we generate its target shape at 
-the goal scale by enlarging and simplifying. Then we grow the  
-building to the target shape. 
-
-\subsection{Grouping buildings based on buffering}
-\label{sec:Grouping}
-We group buildings based on the buffers of the buildings. 
-We buffer each building with distance $d_G + \frac{d_\epsilon}{2}$, 
-where distance $d_G$ is the growing amount of each building. 
-Parameter $d_\epsilon$ is the least distance allowed between two buildings.
-We grow an additional $\frac{d_\epsilon}{2}$ so that if two buffers overlap, 
-the corresponding two buildings will become too close during our growing step.
-The two buildings are identified as in the same group.
-
-We merge the buffers which overlap each others so that we have some large units.
-Now we iteratively remove small ``bays''.
-Each iteration consists of three steps, i.e., 
-buffering with distance $r_H$, buffering with distance $-r_H$, and
-merging overlapping units.
-The iterative process stops when the number of units do not decrease anymore.
-
-All the buildings overlapping with the same unit belong to the same group.
-
-
-\subsection{Enlarging and merging buildings for goal map}
-For each pair of buildings in the same group, 
-we find the smallest distance between them.
-We connect the buildings by adding an edge from the nearest points.
-We find a minimum spanning tree of the buildings using Prim's algorithm 
-\parencite{Prim1957}.
-We enlarge and merge buildings as the way we do in \sect\ref{sec:Grouping}.
-
-
-\subsection{Simplifying merged buildings}
+\subsection{Simplify merged buildings}
 
 We use a buffering-based method, 
 similar to \textcite{Damen2008,Meijers2016}, 
@@ -470,6 +413,83 @@ Of course, we do not want to shrink.
 
 To avoid using too many thresholds, we also use $\epsilon$ mm for the 
 simplification algorithm.
+
+
+
+
+
+
+
+
+
+%at the start 
+%scale, we bridge them by line segments and take the merge of these 
+%buildings 
+%and bridges as one building.
+%For each building, either an original one or a merged one, at the start 
+%scale, 
+%we generate its target shape at 
+%the goal scale by enlarging and simplifying. Then we grow the  
+%building to the target shape. 
+%%
+%After finishing the growing, we take the goal scale as the 
+%start scale and repeat our continuous generalization.
+%\newline\indent
+%Our contribution is as follows. First, the buildings 
+%are enlarged continuously. At the same time, they are simplified. 
+%Second, we ensure that the distance between any pair of two buildings is 
+%always larger than a specified threshold.
+%
+%If we grow a building with radius $d_\mathrm{G}$, some part of a building will 
+%grow at most $2d_\mathrm{G}$.
+%The length of a bridge can be as large as
+%\begin{equation}
+%	\label{eq:BridgeLength}
+%	l_b=4d_\mathrm{G}+d_\epsilon.
+%\end{equation}
+%%\todo[inline]{$d_\mathrm{G}$ or $D_\mathrm{G}$?}
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Grouping buildings based on buffering}
+\label{sec:Grouping}
+We group buildings based on the buffers of the buildings. 
+We buffer each building with distance $d_G + \frac{d_\epsilon}{2}$, 
+where distance $d_G$ is the growing amount of each building. 
+Parameter $d_\epsilon$ is the least distance allowed between two buildings.
+We grow an additional $\frac{d_\epsilon}{2}$ so that if two buffers overlap, 
+the corresponding two buildings will become too close during our growing step.
+The two buildings are identified as in the same group.
+
+We merge the buffers which overlap each others so that we have some large units.
+Now we iteratively remove small ``bays''.
+Each iteration consists of three steps, i.e., 
+buffering with distance $r_H$, buffering with distance $-r_H$, and
+merging overlapping units.
+The iterative process stops when the number of units do not decrease anymore.
+
+All the buildings overlapping with the same unit belong to the same group.
+
+
+\subsection{Enlarging and merging buildings for goal map}
+For each pair of buildings in the same group, 
+we find the smallest distance between them.
+We connect the buildings by adding an edge from the nearest points.
+We find a minimum spanning tree of the buildings using Prim's algorithm 
+\parencite{Prim1957}.
+We enlarge and merge buildings as the way we do in \sect\ref{sec:Grouping}.
+
+
+
 
 
 
@@ -627,9 +647,11 @@ eliminate the hole once its size is smaller than $8$ mm$^2$ on map.
 
 \section{Case Study}
 \label{sec:CaseStudy}
-We have implemented our method based on C\# (Microsoft Visual 
-Studio 
-2015) and ArcObjects SDK 10.4.1. 
+We have implemented our method based on
+C\# (Microsoft Visual Studio 2015) and ArcObjects SDK 10.4.1.
+The buffer function and clip function are from library \emph{Clipper} 
+of \textcite{Johnson2014}.
+An evaluation of Clipper can be found in \textcite{Palfrader2015}.
 We ran our case study under 64-bit 
 Windows 7 on a 3.3 GHz dual core CPU with 8 GB RAM.
 We measured processing time by the built-in C\# class 
@@ -671,10 +693,7 @@ for each building; $O(n)$ space. Third, we store the aggregation
 time and the target form for the aggregated shape; $O(n^2)$ 
 space if we count vertex number.
 %
-The displaying time is dependent on buffering and clipping. The 
-two operators are from library Clipper. The efficiency of the 
-buffering function of this library has been evaluated by 
-\textcite{Palfrader2015}.
+The displaying time is dependent on buffering and clipping.
 
 
 We our intermediate results may violate more cartographic rules, but we try to 

@@ -437,7 +437,12 @@ namespace MorphingClass.CGeometry
             Console.WriteLine(string.Format(CConstants.strFmtIDs6, "ID:", this.ID, ";    indexID:", this.indexID, ";    GID:", this.GID));
             this.FrCpt.PrintMySelf();
             this.ToCpt.PrintMySelf();
+            if (this.cedgePrev != null)
+            {
+                Console.WriteLine("Previous GID: " + this.cedgePrev.GID + "    Next GID: " + this.cedgeNext.GID + "    Twin GID:" + this.cedgeTwin.GID);
+            }
             Console.WriteLine("***********************End Print an Edge**************************");
+            Console.WriteLine("");
         }
 
         //public CEdge LargerAxisAngleCEdge()

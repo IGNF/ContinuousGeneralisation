@@ -30,6 +30,10 @@ namespace MorphingClass.CGeometry
 
         private CEdge _OuterCmptCEdge;    //if a face has OuterCmptCEdge == null, then this face is super face
         private CEdge _cedgeStartAtLeftMost;
+
+        /// <summary>
+        /// Inner component CEdgeLt
+        /// </summary>
         private List<CEdge> _InnerCmptCEdgeLt;     //counter clockwise???
 
         public double dblAreaSimple { get; set; }
@@ -476,7 +480,6 @@ namespace MorphingClass.CGeometry
             {
                 foreach (var cedgeInnerComponent in _InnerCmptCEdgeLt)
                 {
-
                     innercptltlt.Add(GetInnerCptEb(cedgeInnerComponent, clockwise, blnIdentical).ToList());
                 }
             }
@@ -496,6 +499,17 @@ namespace MorphingClass.CGeometry
             }
             else
             {
+                if (_InnerCmptCEdgeLt != null && _InnerCmptCEdgeLt.Count > 0)
+                {
+                    var cpglt = new List<CPolygon>();
+                    foreach (var cptlt in GetInnerCptLtLt())
+                    {
+                        cpglt.Add(new CPolygon(-1, cptlt));
+                    }
+
+                    CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgEb( cpglt,1/CConstants.dblFclipper), "OuterFace");
+                }
+
                 throw new ArgumentException("This face has no or more than one inner components!");
             }
         }

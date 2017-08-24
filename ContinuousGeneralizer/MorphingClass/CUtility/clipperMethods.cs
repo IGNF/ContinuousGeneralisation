@@ -774,7 +774,7 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
 
 
         #region ScaleGeos
-        public static IEnumerable<CPolygon> ScaleCpgLt(IEnumerable<CPolygon> cpglt, double dblFactor)
+        public static IEnumerable<CPolygon> ScaleCpgEb(IEnumerable<CPolygon> cpglt, double dblFactor)
         {
             foreach (var cpg in cpglt)
             {

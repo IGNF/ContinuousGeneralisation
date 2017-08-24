@@ -99,7 +99,7 @@ namespace MorphingClass.CGeneralizationMethods
             double dblStartScale = dblLS;
             double dblFclipper = CConstants.dblFclipper;
 
-            var MagnifiedCpgLt = clipperMethods.ScaleCpgLt(LSCpgLt, dblFclipper).ToList();
+            var MagnifiedCpgLt = clipperMethods.ScaleCpgEb(LSCpgLt, dblFclipper).ToList();
             CConstants.dblVerySmallCoord *= dblFclipper;
             int intStart = 0;
             int intEnd = intStart + intOutputMapCount;
@@ -245,7 +245,7 @@ namespace MorphingClass.CGeneralizationMethods
                 this.MergedCpgLt = mergedCpgLt;
 
                 var clipcpgEb = GetClipCpgEb(mergedCpgLt);
-                CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgLt(clipcpgEb, 1 / dblFclipper),
+                CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgEb(clipcpgEb, 1 / dblFclipper),
     strSimplification + "_" + dblTargetScale + "k_ClipForm" + dblTargetEpsilon + "m_" +
     CHelpFunc.GetTimeStampWithPrefix(), intGreen: 255);
 
@@ -717,8 +717,8 @@ namespace MorphingClass.CGeneralizationMethods
 
 
 
-            //CSaveFeature.SaveCGeoEb(clipperMethods.ScaleCEdgeEb(AllCEdgeLt, 1 / CConstants.dblFclipper), esriGeometryType.esriGeometryPolyline,
-            //    "TestEdgeLt" + CHelpFunc.GetTimeStampWithPrefix(), _ParameterInitialize);
+            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(AllCEdgeLt, 1 / CConstants.dblFclipper),
+                "TestEdgeLt" + CHelpFunc.GetTimeStampWithPrefix());
 
 
             CDCEL pDCEL = new CGeometry.CDCEL(AllCEdgeLt);
@@ -875,7 +875,7 @@ namespace MorphingClass.CGeneralizationMethods
                     strSimplification, strBufferStyle, dblMiterLimit))
                 {
                     strDataAllLayers += CIpeDraw.DrawCpg(cpg, pFLayerEnv, pIpeEnv,
-                        new CUtility.CColor(128, 128, 128), new CUtility.CColor(0, 255, 0), strBoundWidth);
+                        new CUtility.CColor(0, 0, 0), new CUtility.CColor(230, 230, 230), strBoundWidth);
                 }
                 strDataAllLayers += "</group>\n";
                 //strDataAllLayers += CToIpe.TranIpgToIpe(IpgLt[i - 1], pFillSymbolLt[i - 1], pFLayerEnv, pIpeEnv, strBoundWidth);
@@ -923,7 +923,7 @@ namespace MorphingClass.CGeneralizationMethods
                 }
             }
 
-            var scaledbackcpgLt = clipperMethods.ScaleCpgLt(AllGrownAndClippedCpgLt, 1 / CConstants.dblFclipper).ToList();
+            var scaledbackcpgLt = clipperMethods.ScaleCpgEb(AllGrownAndClippedCpgLt, 1 / CConstants.dblFclipper).ToList();
             return scaledbackcpgLt;
         }
 
@@ -977,22 +977,12 @@ namespace MorphingClass.CGeneralizationMethods
                 LastAndClippedPath.AddRange(DilateErodeOffsetSimplifyCpg(mergedcpg,
                     dblCurrentGrow, dblCurrentDilation, dblCurrentErosion, dblCurrentEpsilon,
                     strSimplification, strBufferStyle, dblMiterLimit));
-                //LastAndClippedPath
-
-
-
-                //yield return GrowAndClipCpg(mergedcpg, dblCurrentGrow, dblCurrentDilation, dblCurrentErosion, 
-                //    clipPathsFirstLevel, strBufferStyle, dblMiterLimit);
             }
             else
             {
                 var SubCpgLt = mergedcpg.SubCpgLt;
                 var submergedcpglt = MergeCloseCpgsAndAddBridges(SubCpgLt, dblCurrentGrow, dblCurrentDilation, dblCurrentEpsilon);
-
-                //var GroupCpgLtLt = clipperMethods.GroupCpgsByOverlap(SubCpgLt, dblCurrentGrow, dblCurrentDilation, dblCurrentEpsilon);
-                var CpipeDt = mergedcpg.CpipeDt;
-
-                //var CptEdgeDisSSLt = new List<SortedSet<CptEdgeDis>>(submergedcpglt.Count);
+                var CpipeDt = mergedcpg.CpipeDt;                
                 foreach (var submergedcpg in submergedcpglt)
                 {
                     var subsubCpgLt = submergedcpg.SubCpgLt;
@@ -1035,17 +1025,10 @@ namespace MorphingClass.CGeneralizationMethods
             var clippedPolyTree = 
                 clipperMethods.Clip_PolyTree(unitedPaths, true, clipPathsFirstLevel, true, ClipType.ctIntersection);
 
-
             //var unitedPolyTree = clipperMethods.Offset_PolyTree(LastAndClippedPath, 0, strBufferStyle, dblMiterLimit);
             mergedcpg.LastTimePaths = Clipper.PolyTreeToPaths(clippedPolyTree);
             return clipperMethods.GenerateCpgEbByPolyTree(clippedPolyTree, mergedcpg.ID,true);
         }
-
-
-
-
-
-
 
         private Paths DilateErodeOffsetSimplifyCpg(CPolygon cpg, 
             double dblGrow, double dblDilation, double dblErosion, double dblEpsilon,
@@ -1061,8 +1044,6 @@ namespace MorphingClass.CGeneralizationMethods
                 rawCpg.SetExteriorPath();
                 rawPaths.AddRange(rawCpg.GetAllPaths());
             }
-
-
 
             if (cpg.HoleCpgLt != null && cpg.HoleCpgLt.Count > 0)
             {
@@ -1087,17 +1068,6 @@ namespace MorphingClass.CGeneralizationMethods
                     var clipPaths = clipperMethods.GenerateClipPathsByCpgEb(holecpg.ClipCpgLt);
                     var clippedPaths = clipperMethods.Clip_Paths(rawholePaths, true, clipPaths, true, ClipType.ctIntersection);
                     rawPaths.AddRange(clippedPaths);
-
-                    //var clippedHolePaths = clipperMethods.ClipOneComponent_BufferDilateErode_Paths(holecpg,
-                    //    dblGrow, dblDilation, dblErosion, clipPaths, CConstants.dblFclipper, strBufferStyle, dblMiterLimit);
-
-                    //*******************check the direction of the HoleCpgs
-                    //foreach (var clippedHoleCpg in clipperMethods.GenerateOLHCpgEbByPolyTree(clippedHolePolyTree, holecpg.ID, true))
-                    //{
-                    //    clippedCpg.HoleCpgLt.Add(clippedHoleCpg);
-                    //}
-
-                    //clippedPaths.AddRange(clippedHolePaths);
                 }
             }
 
