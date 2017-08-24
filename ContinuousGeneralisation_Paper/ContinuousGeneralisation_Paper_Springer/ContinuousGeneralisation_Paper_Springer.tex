@@ -273,7 +273,6 @@ Although algorithms of simplifying buildings have been studied, e.g.,
 when we have to aggregate buildings simultaneously.
 In order to aggregate, we should first group the buildings.
 
-$\bar{a}$
 
 
 
@@ -301,14 +300,16 @@ Cetinkaya2015,Deng2017,Regnauld1996}
 
 
 \section{Methodology}
-We name the input map as start map \maps.
-We generate goal map \mapg by generalizing \maps. 
+We name the input map as start map \maps,
+and generate goal map \mapg by generalizing \maps. 
 We use parameter $t\in[0,1]$ to define the continuous generalization
 process. 
 We require that the generalization yields exactly \maps when $t=0$, 
-\mapg when $t=1$, and that \maps is continuously
+\mapg when $t=1$, 
+and that \maps is continuously 
 generalized into \mapg when $t$ increases
 from~$0$ to~$1$.
+
 
 
 \subsection{Grow based on buffering}
@@ -325,7 +326,8 @@ This spike may go across other buildings
 (see \fig\ref{fig:Buffer_MiterLimits}~(a) for an example).
 To avoid this kind of interruptions, 
 we require that for an angle if a vertex of the 
-buffer is more than $\alpha d_G$, where $d_G$ is the growing distance, away 
+buffer is more than $\alpha d_\mathrm{G}$, where $d_\mathrm{G}$ is the growing 
+distance, away 
 from the original vertex, 
 a \emph{square} joining is applied
 (see \fig\ref{fig:Buffer_MiterLimits}~(b)).
@@ -348,12 +350,88 @@ smaller than $83.6 \degree$.
 	\label{fig:Buffer_MiterLimits}
 \end{figure}
 
+Suppose that our start map is at scale $1:S_\mathrm{s}$, 
+and our goal map is at scale $1:S_\mathrm{g}$ ($S_\mathrm{s}<S_\mathrm{g}$).
+The area of a building on map should be at least $a$ mm$^2$ so that the 
+building is large enough to be perceived.
+In \sect\ref{sec:Simplify}, we show that we set $a=4$.
+Accordingly, a square at the start map should have area $a S_\mathrm{s}^2$ 
+mm$^2$ at least, and
+a square at the goal map should have area $a S_\mathrm{g}^2$ mm$^2$ at least.
+The difference of the side lengths is $\sqrt{a} (S_\mathrm{g}-S_\mathrm{s})$ 
+mm (see \fig\ref{fig:Growth}).
+A square on the start map needs to grow $\frac{1}{2}\sqrt{a} 
+(S_\mathrm{g}-S_\mathrm{s})$ mm so that 
+it can survive when users zoom out from 
+the start map to the goal map.
+In order to eliminate small buildings, 
+we define our growing distance as
+\begin{equation}
+\label{eq:d_G}
+d_\mathrm{G}=\frac{\lambda}{2}\sqrt{a} (S_\mathrm{g}-S_\mathrm{s}) \text{ 
+	mm} \quad 0 < \lambda <1,
+\end{equation}
+where variable $\lambda$ is a growing factor. 
+A larger $\lambda$ results in  
+fewer buildings to be eliminated, and vice versa.
+During our growing, the growth at time $t$ is
+\[
+d_{\mathrm{G}, t} = t \cdot d_\mathrm{G}.
+\]
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics{Growth}
+	\caption{Growth.}
+	\label{fig:Growth}
+\end{figure}
+
 
 \subsection{Merge close buildings by introducing bridges}
-If two buildings become too close to each other during growing, 
-we merge them by introducing a bridge connecting the newarest points 
-(see \fig\ref{fig:GrowAndBridge}).
+The distance between two buildings should be larger than a threshold
+\parencite{Regnauld2001,Li2004}.
+Following \textcite{Basaraner2008,Stoter2009}, we set the separation threshold 
+$\epsilon= 0.2~\text{mm}$ on map. The separation threshold at time $t$ is
+\[
+d_{\epsilon, t} = t \cdot \epsilon (S_\mathrm{g}-S_\mathrm{s}).
+\]
 
+
+
+If two buildings become too close to each other during growing, 
+we merge them by introducing a bridge connecting the nearest points 
+(see \fig\ref{fig:GrowAndBridge}). 
+Note that the two bridges in \fig\ref{fig:GrowAndBridge} at time $t=1$ have the 
+same widths.
+We know where we should add bridges at time $t=0$. 
+We grow the bridges together with the buildings.
+We do not show the bridges until the two buildings are close enough 
+which means that, in our case, 
+the distance of two buildings is smaller than $d_{\epsilon,t}$. 
+
+
+%The distance between two buildings should be larger than a threshold, say, 
+%$\epsilon$ mm on map.
+%The real threshold distance is
+%\begin{equation}
+%\label{eq:d_epsilon}
+%d_\epsilon= \epsilon  S_\mathrm{g}.
+%\end{equation}
+%
+%If we insist on that we should observe 
+%the growing, say, $x \% (0<x<100)$ of the time at least, then we should make 
+%sure that
+%\begin{equation}
+%\label{eq:a_limit}
+%\frac{d_\mathrm{G}}{d_\mathrm{G}+d_\epsilon} \ge x \%.
+%\end{equation}
+%Using $d_\mathrm{G}$ and $d_\epsilon$ from Eqs.~\ref{eq:d_G} 
+%and~\ref{eq:d_epsilon}, we transform Eq.~\ref{eq:a_limit} to
+%\begin{equation}
+%a \ge \Big(\frac{2 \epsilon S_g x}{\lambda (100-x) (S_g-S_s)}\Big)^2
+%\end{equation}
+%\textcite{Stoter2009} used $0.2$ mm as minimal distance between two buildings 
+%on a map. We set our $\epsilon=0.2$.
 
 \begin{figure}[tb]
 	\centering
@@ -366,8 +444,8 @@ we merge them by introducing a bridge connecting the newarest points
 \end{figure}
 
 
-\subsection{Simplify merged buildings}
-
+\subsection{Simplify grown buildings}
+\label{sec:Simplify}
 We use a buffering-based method, 
 similar to \textcite{Damen2008,Meijers2016}, 
 to simplify our grown buildings. 
@@ -394,7 +472,7 @@ and has the least number of line segments.
 \begin{figure}[tb]
 	\centering
 	\includegraphics{ImaiIri_Shortcut}
-	\caption{Valid shortcut and invalid shortcut for Imai--Iri algorithm.}
+	\caption{Valid and invalid shortcuts for Imai--Iri algorithm.}
 	\label{fig:ImaiIri_Shortcut}
 \end{figure}
 
@@ -452,15 +530,24 @@ simplification algorithm.
 
 
 
+\subsection{Unite buildings of the immediate previous step}
+\label{sec:Unite}
+
+As we simplify buildings after growing, 
+some parts of the buildings may shrink 
+comparing to themselves at the previous steps.
+We unite a building with itself at the immediate previous step so that the 
+united building is always larger than both of the united parts.
 
 
+\subsection{Eliminate small buildings}
+\label{sec:Eliminate}
+We eliminate a building if the area of this building is smaller than a 
+threshold.
+For a group of buildings, we consider the area sum of all the buildings.
 
 
-
-
-
-
-\subsection{Grouping buildings based on buffering}
+\subsection{Group buildings based on buffering}
 \label{sec:Grouping}
 We group buildings based on the buffers of the buildings. 
 We buffer each building with distance $d_G + \frac{d_\epsilon}{2}$, 
@@ -494,42 +581,9 @@ We enlarge and merge buildings as the way we do in \sect\ref{sec:Grouping}.
 
 
 \subsection{Parameters for growing and simplifying}
-Suppose that our start map is at scale $1:S_\mathrm{s}$, 
-and our goal map is at scale $1:S_\mathrm{g}$ ($S_\mathrm{s}<S_\mathrm{g}$).
-The area of a building on map should be at least $a$ mm$^2$ so that the 
-building is large enough to be perceived.
-Accordingly, a square at the start map should have area $a S_\mathrm{s}^2$ 
-mm$^2$ at least, and
-a square at the goal map should have area $a S_\mathrm{g}^2$ mm$^2$ at least.
-The difference of the side lengths is $\sqrt{a} (S_\mathrm{g}-S_\mathrm{s})$ 
-mm (see \fig\ref{fig:Growth}).
-A square on the start map needs to grow $\frac{1}{2}\sqrt{a} 
-(S_\mathrm{g}-S_\mathrm{s})$ mm so that it can survive when users zoom out from 
-the start map to the goal map.
-In order to eliminate small buildings, we define our growing distance as
-\begin{equation}
-\label{eq:d_G}
-	d_\mathrm{G}=\frac{\lambda}{2}\sqrt{a} (S_\mathrm{g}-S_\mathrm{s}) \text{ 
-	mm} \quad 0 < \lambda <1,
-\end{equation}
-where variable $\lambda$ is a growing factor. A larger $\lambda$ results in  
-fewer buildings to be eliminated, and vice versa.
 
 
-\begin{figure}[tb]
-	\centering
-	\includegraphics{Growth}
-	\caption{Valid shortcut and invalid shortcut for Imai--Iri algorithm.}
-	\label{fig:Growth}
-\end{figure}
 
-The distance between two buildings should be larger than a threshold, say, 
-$\epsilon$ mm on map.
-The real threshold distance is
-\begin{equation}
-\label{eq:d_epsilon}
-d_\epsilon= \epsilon  S_\mathrm{g}.
-\end{equation}
 
 If we insist on that we should observe 
 the growing, say, $x \% (0<x<100)$ of the time at least, then we should make 
@@ -543,8 +597,6 @@ and~\ref{eq:d_epsilon}, we transform Eq.~\ref{eq:a_limit} to
 \begin{equation}
 a \ge \Big(\frac{2 \epsilon S_g x}{\lambda (100-x) (S_g-S_s)}\Big)^2
 \end{equation}
-\textcite{Stoter2009} used $0.2$ mm as minimal distance between two buildings 
-on a map. We set our $\epsilon=0.2$.
 We also require 
 that $S_g \ge 2 S_s$, which means $S_s \le \frac{1}{2} S_g$.
 On one hand, we should have a large $x$ so that we will see the 
@@ -706,8 +758,7 @@ problem is to compare our method with \textcite{Chaudhry2008}.
 We did not include streets. We can either put them above the settlement 
 boundaries on map, or use them as restriction for building growing.
 
-At some point, we should remove the requirement of keeping right angles. Right 
-angles may not be important anymore when we deal with settlement boundaries.
+Show some results obtained by ArcGIS.
 
 \todo[inline]{consider multi bridges; consider transparency of bridges in 
 stead 
