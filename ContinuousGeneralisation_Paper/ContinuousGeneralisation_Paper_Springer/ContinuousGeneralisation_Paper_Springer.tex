@@ -122,6 +122,13 @@ eprint=false,dashed=false]{biblatex}
 \newcommand{\fig}{Fig.~}
 \newcommand{\eq}{Eq.~}
 \newcommand{\sect}{Sec.~}
+\newcommand{\tab}{Tab.~}
+
+%\newcommand{\myeqref}[1]{Eq.~\ref{#1}}
+%\newcommand{\mysectref}[1]{Sec.~\ref{#1}}
+%\newcommand{\myfigref}[1]{Fig.~\ref{#1}}
+%\newcommand{\mytabref}[1]{Tab.~\ref{#1}}
+
 
 \newcommand{\dtrm}[1]{d_{\mathrm{#1},t}}
 
@@ -326,12 +333,12 @@ better at keeping the right angles.
 If an angle is acute, however, an excessively long \emph{spike} will be 
 produced.
 This spike may go across other buildings 
-(see \fig\ref{fig:Buffer_MiterLimits}~(a) for an example).
+(see \fig\ref{fig:Buffer_MiterLimits}~(a)).
 To avoid this kind of interruptions, 
 we require that for an angle if a vertex of the 
-buffer is more than $\alpha d_\mathrm{G}$, where $d_\mathrm{G}$ is the growing 
-distance, away 
-from the original vertex, 
+buffer is more than $\alpha d_\mathrm{G} (\alpha \ge 1)$, 
+where $d_\mathrm{G}$ is the growing distance, 
+away from the original vertex, 
 a \emph{square} joining is applied
 (see \fig\ref{fig:Buffer_MiterLimits}~(b)).
 To keep right angles of buildings, 
@@ -397,9 +404,10 @@ The distance between two buildings should be larger than a threshold
 Following \textcite{Basaraner2008,Stoter2009}, 
 we set the separation threshold $\epsilon= 0.2~\text{mm}$ for target map. 
 The separation threshold at time $t$ is
-\[
+\begin{equation}
+\label{eq:d_epsilont}
 d_{\epsilon, t} = \epsilon (S_\mathrm{s}+t(S_\mathrm{g}-S_\mathrm{s})).
-\]
+\end{equation}
 
 If two buildings become too close to each other during growing, 
 we merge them by introducing a bridge connecting the nearest points 
@@ -436,31 +444,42 @@ to simplify our grown buildings.
 We first dilate the grown buildings to remove 
 pits, and then erode the results to remove spikes
 (see \fig\ref{fig:RemovePitAndSpike}).
-At time $t$, we dilate with distance $\dtrm{D}$, 
-erode with distance $\dtrm{D}+\dtrm{E}$,
-and dilate back with distance $\dtrm{E}$.
 
 \begin{figure}[tb]
 	\centering
 	\includegraphics[draft=false]{RemovePitAndSpike}
-	\caption{.
+	\caption{Remove a pit by dilating and then remove a spike by eroding.
+		(a) a polygon with a pit and a spike;
+		(b) dilate the polygon in (a) with distance $d$ to remove the pit;
+		(c) erode the polygon in (b) with distance $2d$ to remove the spike;
+		(d) dilate the polygon in (c) with distance $d$ so that the result has 
+		the same size as the polygon in (a).
 	}
 	\label{fig:RemovePitAndSpike}
 \end{figure}
 
-
-The buildings have been grown with distance $\dtrm{G}$ 
-(see \sect\ref{sec:Grow}).
-During the erosion, a part can be eroded with distance 
-$\alpha (\dtrm{D}+\dtrm{E})$ at most.
-In order not to break a building, the following condition must hold:
+At time $t$, we grow buildings with distance $\dtrm{G}$,
+dilate with distance $\dtrm{D} (\dtrm{D}>0)$,
+erode with distance $\dtrm{D}+\dtrm{E} (\dtrm{E}>0)$,
+and dilate back with distance $\dtrm{E}$.
+A problem we may have is that we may break a building by eroding.
+The reason is that 
+some parts of a building may be increased (by growing and dilating) 
+with distance $\dtrm{G}+\dtrm{D}$, 
+but be decreased (by eroding) as much as $\alpha (\dtrm{D}+\dtrm{E})$.
+If  $\dtrm{G}+\dtrm{D} < \alpha (\dtrm{D}+\dtrm{E})$ 
+and a building is not thick enough, 
+the building may be broken into several parts
+(see \fig\ref{fig:ErosionBreak}).
+In order to avoid this problem, we require that
 \[
 \dtrm{G} + \dtrm{D} \ge \alpha (\dtrm{D}+\dtrm{E}),
 \]
 which means
-\[
+\begin{equation}
+\label{eq:d_Dt}
 \dtrm{D} \le \frac{\dtrm{G}-\dtrm{E}}{\alpha - 1}.
-\]
+\end{equation}
 
 \begin{figure}[tb]
 	\centering
@@ -474,19 +493,34 @@ which means
 	\label{fig:ErosionBreak}
 \end{figure}
 
-
-
-The separation threshold at time $t$ is
+We would like to use $\dtrm{E}=d_{\epsilon, t}/2$
+(see \eq\ref{eq:d_epsilont}) so that
+any pits and spikes narrower than $d_{\epsilon, t}$ will be removed.
+According to \eq\ref{eq:d_Gt}, $\dtrm{G}$ can be arbitrarily small 
+when $t$ is small, 
+but $d_{\epsilon, t}$ is at least $\epsilon S_s$. 
+In this case, $\dtrm{G}-\dtrm{E} \le 0$ when $t$ is small, 
+which violates \eq\ref{eq:d_Dt}, where $\dtrm{D}>0$.
+As a compromise, we use
 \[
-d_{\epsilon, t} =t \cdot \epsilon S_\mathrm{g}.
+\dtrm{E} =t \cdot \epsilon S_\mathrm{g}.
 \]
-One may expect that we define 
-$d_{\epsilon, t} = \epsilon (S_\mathrm{s}+t(S_\mathrm{g}-S_\mathrm{s}))$
-so that $\epsilon= 0.2~\text{mm}$ holds for a map at any scale.
-The reason we do not define it as this way is that 
-our growth $\dtrm{G}$ (see \eq\ref{eq:d_Gt}) can be arbitrarily small when $t$ 
-is small.
-In \sect\ref{sec:Simplify}, the erosion operator requires that 
+Still, we should make sure that $\dtrm{G}-\dtrm{E} > 0$, which means
+$t \cdot \frac{\lambda}{2}\sqrt{a} (S_\mathrm{g}-S_\mathrm{s})-
+t \cdot \epsilon S_\mathrm{g} >0$.
+As a result, we should make sure that
+\begin{equation}
+\label{eq:S_g}
+S_\mathrm{g} > \frac{\lambda\sqrt{a}}{\lambda\sqrt{a}-2\epsilon} S_s.
+\end{equation}
+
+We wish to remove ``bays'' which have ``widths'' less than $2\sqrt{a_h/\pi}$.
+\todo{why? more details}
+Usually, our $\dtrm{D}$ is not large enough to do so.
+We use the upper bound in \eq\ref{eq:d_Dt}, that is,
+\[
+\dtrm{D} = \frac{\dtrm{G}-\dtrm{E}}{\alpha - 1}.
+\]
 
 After carrying out the offset-based method, we simplify the grown buildings. 
 We tried simplifying using Douglas--Peucker algorithm \parencite{Douglas1973}, 
