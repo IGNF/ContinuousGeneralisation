@@ -419,7 +419,7 @@ but we do not show the bridges until the two buildings are close enough.
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[draft=false]{GrowAndBridge}
+	\includegraphics{GrowAndBridge}
 	\caption{Merge buildings by introducing bridges when the buildings become 
 	too close.
 		Although the bridges appear at different time, 
@@ -434,10 +434,20 @@ We use a buffering-based method,
 similar to \textcite{Damen2008,Meijers2016}, 
 to simplify our grown buildings. 
 We first dilate the grown buildings to remove 
-pits, and then erode the results to remove spikes.
+pits, and then erode the results to remove spikes
+(see \fig\ref{fig:RemovePitAndSpike}).
 At time $t$, we dilate with distance $\dtrm{D}$, 
 erode with distance $\dtrm{D}+\dtrm{E}$,
 and dilate back with distance $\dtrm{E}$.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[draft=false]{RemovePitAndSpike}
+	\caption{.
+	}
+	\label{fig:RemovePitAndSpike}
+\end{figure}
+
 
 The buildings have been grown with distance $\dtrm{G}$ 
 (see \sect\ref{sec:Grow}).
@@ -455,15 +465,20 @@ which means
 \begin{figure}[tb]
 	\centering
 	\includegraphics[draft=false]{ErosionBreak}
-	\caption{.}
+	\caption{Dilate the gray polygon, then erode the dilated polygon.
+		(a) Dilate and erode with distance $d_1$.
+		(b) Dilate and erode with distance $d_2$, where $d_2>d_1$.
+		In (a) the result of dilation and erosion is the same as the original 
+		polygon, while in (b) the result consists of two parts.
+	}
 	\label{fig:ErosionBreak}
 \end{figure}
-s
+
 
 
 The separation threshold at time $t$ is
 \[
-d_{\epsilon, t} =t \cdot \epsilon S_\mathrm{g}.s
+d_{\epsilon, t} =t \cdot \epsilon S_\mathrm{g}.
 \]
 One may expect that we define 
 $d_{\epsilon, t} = \epsilon (S_\mathrm{s}+t(S_\mathrm{g}-S_\mathrm{s}))$
