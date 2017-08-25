@@ -183,7 +183,7 @@ namespace MorphingClass.CGeneralizationMethods
 
 
                 #region Generate buffers (commented)
-                var allpaths = new Paths();
+                //var allpaths = new Paths();
                 //foreach (var MagnifiedCpg in MagnifiedCpgLt)
                 //{
                 //    allpaths.AddRange(MagnifiedCpg.GetAllPaths());
@@ -193,7 +193,7 @@ namespace MorphingClass.CGeneralizationMethods
 
                 //CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(offsetpaths, true),
                 //    1 / CConstants.dblFclipper), strBufferStyle + CHelpFunc.GetTimeStampWithPrefix());
-                #endregion                
+                #endregion
 
 
                 //var mergedCpgLt = MergeCloseCpgsAndAddBridges(MagnifiedCpgLt, dblTotalGrow, dblTargetDilation, dblTargetEpsilon);
@@ -717,8 +717,8 @@ namespace MorphingClass.CGeneralizationMethods
 
 
 
-            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(AllCEdgeLt, 1 / CConstants.dblFclipper),
-                "TestEdgeLt" + CHelpFunc.GetTimeStampWithPrefix());
+            //CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(AllCEdgeLt, 1 / CConstants.dblFclipper),
+            //    "TestEdgeLt" + CHelpFunc.GetTimeStampWithPrefix());
 
 
             CDCEL pDCEL = new CGeometry.CDCEL(AllCEdgeLt);

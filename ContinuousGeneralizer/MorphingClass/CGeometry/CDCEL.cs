@@ -100,18 +100,11 @@ namespace MorphingClass.CGeometry
             var CoStartHalfCEdgeDt = IdentifyCoStartCEdge(fHalfEdgeLt);
             ConstrcutRelationshipBetweenEdges(CoStartHalfCEdgeDt);
 
-            foreach (var halfedge in fHalfEdgeLt)
-            {
-                halfedge.PrintMySelf();
-            }
-
-
-
-
-
-
-
-
+            //foreach (var halfedge in fHalfEdgeLt)
+            //{
+            //    halfedge.PrintMySelf();
+            //}
+            
 
 
             fHalfEdgeLt.SetIndexID();

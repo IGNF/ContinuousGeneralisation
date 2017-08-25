@@ -25,7 +25,7 @@
                             % not available on your system
 %
 \usepackage{makeidx}         % allows index generation
-\usepackage{graphicx}        % standard LaTeX graphics tool
+\usepackage[draft]{graphicx}        % standard LaTeX graphics tool
 \usepackage[size=small,labelfont=bf]{caption}
                              % when including figure files
 \usepackage{multicol}        % used for the two-column index
@@ -122,6 +122,8 @@ eprint=false,dashed=false]{biblatex}
 \newcommand{\fig}{Fig.~}
 \newcommand{\eq}{Eq.~}
 \newcommand{\sect}{Sec.~}
+
+\newcommand{\dtrm}[1]{d_{\mathrm{#1},t}}
 
 
 \graphicspath{{figures/}}
@@ -313,6 +315,7 @@ from~$0$ to~$1$.
 
 
 \subsection{Grow based on buffering}
+\label{sec:Grow}
 We grow building based on buffering. 
 There are two typical ways of buffering polygons, i.e.,
 one with round joins and the other with miter joins (see 
@@ -375,9 +378,10 @@ where variable $\lambda$ is a growing factor.
 A larger $\lambda$ results in  
 fewer buildings to be eliminated, and vice versa.
 During our growing, the growth at time $t$ is
-\[
-d_{\mathrm{G}, t} = t \cdot d_\mathrm{G}.
-\]
+\begin{equation}
+\label{eq:d_Gt}
+\dtrm{G} = t \cdot d_\mathrm{G}.
+\end{equation}
 
 \begin{figure}[tb]
 	\centering
@@ -390,52 +394,32 @@ d_{\mathrm{G}, t} = t \cdot d_\mathrm{G}.
 \subsection{Merge close buildings by introducing bridges}
 The distance between two buildings should be larger than a threshold
 \parencite{Regnauld2001,Li2004}.
-Following \textcite{Basaraner2008,Stoter2009}, we set the separation threshold 
-$\epsilon= 0.2~\text{mm}$ on map. The separation threshold at time $t$ is
+Following \textcite{Basaraner2008,Stoter2009}, 
+we set the separation threshold $\epsilon= 0.2~\text{mm}$ for target map. 
+The separation threshold at time $t$ is
 \[
-d_{\epsilon, t} = t \cdot \epsilon (S_\mathrm{g}-S_\mathrm{s}).
+d_{\epsilon, t} = \epsilon (S_\mathrm{s}+t(S_\mathrm{g}-S_\mathrm{s})).
 \]
-
-
 
 If two buildings become too close to each other during growing, 
 we merge them by introducing a bridge connecting the nearest points 
-(see \fig\ref{fig:GrowAndBridge}). 
-Note that the two bridges in \fig\ref{fig:GrowAndBridge} at time $t=1$ have the 
-same widths.
-We know where we should add bridges at time $t=0$. 
-We grow the bridges together with the buildings.
-We do not show the bridges until the two buildings are close enough 
-which means that, in our case, 
-the distance of two buildings is smaller than $d_{\epsilon,t}$. 
+(see \fig\ref{fig:GrowAndBridge}).
+No matter a bridge appear earlier or later, 
+it has width $2\dtrm{G}$ at time $t$.
+This setting guarantees that no bridge is thin when $t=1$.
+For example, the two bridges in \fig\ref{fig:GrowAndBridge} at time $t=1$ have 
+the same widths.
+This setting is achieved by following.
+We detect nearest points for each pair of buildings at time $t=0$ so that 
+we know where we should add bridges. 
+We grow the bridges together with the buildings,
+but we do not show the bridges until the two buildings are close enough. 
+\todo[inline]{actually larger than $d_{\epsilon, t}$.}
 
-
-%The distance between two buildings should be larger than a threshold, say, 
-%$\epsilon$ mm on map.
-%The real threshold distance is
-%\begin{equation}
-%\label{eq:d_epsilon}
-%d_\epsilon= \epsilon  S_\mathrm{g}.
-%\end{equation}
-%
-%If we insist on that we should observe 
-%the growing, say, $x \% (0<x<100)$ of the time at least, then we should make 
-%sure that
-%\begin{equation}
-%\label{eq:a_limit}
-%\frac{d_\mathrm{G}}{d_\mathrm{G}+d_\epsilon} \ge x \%.
-%\end{equation}
-%Using $d_\mathrm{G}$ and $d_\epsilon$ from Eqs.~\ref{eq:d_G} 
-%and~\ref{eq:d_epsilon}, we transform Eq.~\ref{eq:a_limit} to
-%\begin{equation}
-%a \ge \Big(\frac{2 \epsilon S_g x}{\lambda (100-x) (S_g-S_s)}\Big)^2
-%\end{equation}
-%\textcite{Stoter2009} used $0.2$ mm as minimal distance between two buildings 
-%on a map. We set our $\epsilon=0.2$.
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics{GrowAndBridge}
+	\includegraphics[draft=false]{GrowAndBridge}
 	\caption{Merge buildings by introducing bridges when the buildings become 
 	too close.
 		Although the bridges appear at different time, 
@@ -451,6 +435,43 @@ similar to \textcite{Damen2008,Meijers2016},
 to simplify our grown buildings. 
 We first dilate the grown buildings to remove 
 pits, and then erode the results to remove spikes.
+At time $t$, we dilate with distance $\dtrm{D}$, 
+erode with distance $\dtrm{D}+\dtrm{E}$,
+and dilate back with distance $\dtrm{E}$.
+
+The buildings have been grown with distance $\dtrm{G}$ 
+(see \sect\ref{sec:Grow}).
+During the erosion, a part can be eroded with distance 
+$\alpha (\dtrm{D}+\dtrm{E})$ at most.
+In order not to break a building, the following condition must hold:
+\[
+\dtrm{G} + \dtrm{D} \ge \alpha (\dtrm{D}+\dtrm{E}),
+\]
+which means
+\[
+\dtrm{D} \le \frac{\dtrm{G}-\dtrm{E}}{\alpha - 1}.
+\]
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[draft=false]{ErosionBreak}
+	\caption{.}
+	\label{fig:ErosionBreak}
+\end{figure}
+s
+
+
+The separation threshold at time $t$ is
+\[
+d_{\epsilon, t} =t \cdot \epsilon S_\mathrm{g}.s
+\]
+One may expect that we define 
+$d_{\epsilon, t} = \epsilon (S_\mathrm{s}+t(S_\mathrm{g}-S_\mathrm{s}))$
+so that $\epsilon= 0.2~\text{mm}$ holds for a map at any scale.
+The reason we do not define it as this way is that 
+our growth $\dtrm{G}$ (see \eq\ref{eq:d_Gt}) can be arbitrarily small when $t$ 
+is small.
+In \sect\ref{sec:Simplify}, the erosion operator requires that 
 
 After carrying out the offset-based method, we simplify the grown buildings. 
 We tried simplifying using Douglas--Peucker algorithm \parencite{Douglas1973}, 
@@ -494,6 +515,24 @@ simplification algorithm.
 
 
 
+\subsection{Group buildings based on buffering}
+\label{sec:Grouping}
+We group buildings based on the buffers of the buildings. 
+We buffer each building with distance $d_G + \frac{d_\epsilon}{2}$, 
+where distance $d_G$ is the growing amount of each building. 
+Parameter $d_\epsilon$ is the least distance allowed between two buildings.
+We grow an additional $\frac{d_\epsilon}{2}$ so that if two buffers overlap, 
+the corresponding two buildings will become too close during our growing step.
+The two buildings are identified as in the same group.
+
+We merge the buffers which overlap each others so that we have some large units.
+Now we iteratively remove small ``bays''.
+Each iteration consists of three steps, i.e., 
+buffering with distance $r_H$, buffering with distance $-r_H$, and
+merging overlapping units.
+The iterative process stops when the number of units do not decrease anymore.
+
+All the buildings overlapping with the same unit belong to the same group.
 
 
 
@@ -547,24 +586,7 @@ threshold.
 For a group of buildings, we consider the area sum of all the buildings.
 
 
-\subsection{Group buildings based on buffering}
-\label{sec:Grouping}
-We group buildings based on the buffers of the buildings. 
-We buffer each building with distance $d_G + \frac{d_\epsilon}{2}$, 
-where distance $d_G$ is the growing amount of each building. 
-Parameter $d_\epsilon$ is the least distance allowed between two buildings.
-We grow an additional $\frac{d_\epsilon}{2}$ so that if two buffers overlap, 
-the corresponding two buildings will become too close during our growing step.
-The two buildings are identified as in the same group.
 
-We merge the buffers which overlap each others so that we have some large units.
-Now we iteratively remove small ``bays''.
-Each iteration consists of three steps, i.e., 
-buffering with distance $r_H$, buffering with distance $-r_H$, and
-merging overlapping units.
-The iterative process stops when the number of units do not decrease anymore.
-
-All the buildings overlapping with the same unit belong to the same group.
 
 
 \subsection{Enlarging and merging buildings for goal map}
@@ -759,13 +781,11 @@ We did not include streets. We can either put them above the settlement
 boundaries on map, or use them as restriction for building growing.
 
 Show some results obtained by ArcGIS.
+Show the data at $1:50{,}000$.
 
 \todo[inline]{consider multi bridges; consider transparency of bridges in 
 stead 
 of enlarging}
 
 \printbibliography
-%\bibliographystyle{plainnat}
-%%	\bibliography{References}
-%\input{referenc}
 \end{document}

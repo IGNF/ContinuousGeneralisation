@@ -462,6 +462,9 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
         public static PolyTree DilateErodeOffsetCpgExterior_PolyTree(CPolygon Cpg,
     double dblGrow, double dblDilation, double dblErosion, string strBufferStyle, double dblMiterLimit)
         {
+            //dblDilation = dblDilation / 2;
+            //dblErosion = dblGrow;
+
             double dblHoleIndicator = 1;
             if (Cpg.IsHole == true)
             {
@@ -478,19 +481,19 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
                     dblHoleIndicator * (-dblDilation - dblErosion), strBufferStyle, dblMiterLimit);
             var normalPolyTree = Offset_PolyTree(erosionpaths, dblHoleIndicator * dblErosion, strBufferStyle, dblMiterLimit);
 
-    //        CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgLt(CHelpFunc.MakeLt(Cpg), 1 / CConstants.dblFclipper),
-    //            "Cpg" + CHelpFunc.GetTimeStampWithPrefix());
-    //        //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-    //        //growndilationPaths, true), 1 / CConstants.dblFclipper), "growndilationPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-    //        CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(overdilationPaths, true),
-    //            1 / CConstants.dblFclipper), "overdilationPaths" + CHelpFunc.GetTimeStampWithPrefix());
-    //        //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-    //        //backPaths, true), 1 / CConstants.dblFclipper), "backPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-    //        CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(erosionpaths, true),
-    //            1 / CConstants.dblFclipper), "erosionpaths" + CHelpFunc.GetTimeStampWithPrefix());
+            CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgEb(CHelpFunc.MakeLt(Cpg), 1 / CConstants.dblFclipper),
+                "Cpg" + CHelpFunc.GetTimeStampWithPrefix());
+            //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
+            //growndilationPaths, true), 1 / CConstants.dblFclipper), "growndilationPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
+            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(overdilationPaths, true),
+                1 / CConstants.dblFclipper), "overdilationPaths" + CHelpFunc.GetTimeStampWithPrefix());
+            //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
+            //backPaths, true), 1 / CConstants.dblFclipper), "backPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
+            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(erosionpaths, true),
+                1 / CConstants.dblFclipper), "erosionpaths" + CHelpFunc.GetTimeStampWithPrefix());
 
-    //        CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(Clipper.PolyTreeToPaths(normalPolyTree), true),
-    //1 / CConstants.dblFclipper), "normalpaths" + CHelpFunc.GetTimeStampWithPrefix());
+            //        CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(Clipper.PolyTreeToPaths(normalPolyTree), true),
+            //1 / CConstants.dblFclipper), "normalpaths" + CHelpFunc.GetTimeStampWithPrefix());
 
             return normalPolyTree;
         }
