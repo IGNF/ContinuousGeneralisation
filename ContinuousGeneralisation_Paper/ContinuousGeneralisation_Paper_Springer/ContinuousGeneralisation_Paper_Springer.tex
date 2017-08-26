@@ -309,16 +309,20 @@ Cetinkaya2015,Deng2017,Regnauld1996}
 
 
 \section{Methodology}
-We name the input map as start map \maps,
-and generate goal map \mapg by generalizing \maps. 
-We use parameter $t\in[0,1]$ to define the continuous generalization
+
+\todo[inline]{a brief introduction of our method.}
+We name our input map as start map \maps,
+and denote the scale of the start maps by $1:S_\mathrm{s}$.
+We generate goal map \mapg at scale $1:S_\mathrm{g}$ 
+($S_\mathrm{g} > S_\mathrm{s}$) by generalizing \maps. 
+We use time $t\in[0,1]$ to define the continuous generalization
 process. 
 We require that the generalization yields exactly \maps when $t=0$, 
 \mapg when $t=1$, 
-and that \maps is continuously 
-generalized into \mapg when $t$ increases
-from~$0$ to~$1$.
-
+and that \maps is continuously generalized into \mapg 
+when $t$ increases from~$0$ to~$1$.
+We define a simple function between scale and time, that is,
+$S_t= S_\mathrm{s} + t(S_\mathrm{g}-S_\mathrm{s})$.
 
 
 \subsection{Grow based on buffering}
@@ -360,26 +364,27 @@ smaller than $83.6 \degree$.
 	\label{fig:Buffer_MiterLimits}
 \end{figure}
 
-Suppose that our start map is at scale $1:S_\mathrm{s}$, 
-and our goal map is at scale $1:S_\mathrm{g}$ ($S_\mathrm{s}<S_\mathrm{g}$).
-The area of a building on map should be at least $a$ mm$^2$ so that the 
+
+The area of a building on map should be at least $a\,\mathrm{mm}^2$ so that the 
 building is large enough to be perceived.
 In \sect\ref{sec:Simplify}, we show that we set $a=4$.
-Accordingly, a square at the start map should have area $a S_\mathrm{s}^2$ 
-mm$^2$ at least, and
-a square at the goal map should have area $a S_\mathrm{g}^2$ mm$^2$ at least.
-The difference of the side lengths is $\sqrt{a} (S_\mathrm{g}-S_\mathrm{s})$ 
-mm (see \fig\ref{fig:Growth}).
+Accordingly, a square at the start map should have 
+area $a S_\mathrm{s}^2\,\mathrm{mm}^2$ at least, and
+a square at the goal map should have 
+area $a S_\mathrm{g}^2\,\mathrm{mm}^2$ at least.
+The difference of the side lengths is 
+$\sqrt{a} (S_\mathrm{g}-S_\mathrm{s})\,\mathrm{mm}$ 
+ (see \fig\ref{fig:Growth}).
 A square on the start map needs to grow $\frac{1}{2}\sqrt{a} 
-(S_\mathrm{g}-S_\mathrm{s})$ mm so that 
+(S_\mathrm{g}-S_\mathrm{s})\,\mathrm{mm}$ so that 
 it can survive when users zoom out from 
 the start map to the goal map.
 In order to eliminate small buildings, 
 we define our growing distance as
 \begin{equation}
 \label{eq:d_G}
-d_\mathrm{G}=\frac{\lambda}{2}\sqrt{a} (S_\mathrm{g}-S_\mathrm{s}) \text{ 
-	mm} \quad 0 < \lambda <1,
+d_\mathrm{G}=\frac{\lambda}{2}\sqrt{a} (S_\mathrm{g}-S_\mathrm{s})\,\mathrm{mm} 
+\quad 0 < \lambda <1,
 \end{equation}
 where variable $\lambda$ is a growing factor. 
 A larger $\lambda$ results in  
@@ -402,11 +407,11 @@ During our growing, the growth at time $t$ is
 The distance between two buildings should be larger than a threshold
 \parencite{Regnauld2001,Li2004}.
 Following \textcite{Basaraner2008,Stoter2009}, 
-we set the separation threshold $\epsilon= 0.2~\text{mm}$ for target map. 
+we set the separation threshold $\epsilon= 0.2\,\mathrm{mm}$ for target map. 
 The separation threshold at time $t$ is
 \begin{equation}
 \label{eq:d_epsilont}
-d_{\epsilon, t} = \epsilon (S_\mathrm{s}+t(S_\mathrm{g}-S_\mathrm{s})).
+d_{\epsilon, t} = \epsilon \cdot S_t.
 \end{equation}
 
 If two buildings become too close to each other during growing, 
@@ -447,7 +452,7 @@ pits, and then erode the results to remove spikes
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[draft=false]{RemovePitAndSpike}
+	\includegraphics[draft=true]{RemovePitAndSpike}
 	\caption{Remove a pit by dilating and then remove a spike by eroding.
 		(a) a polygon with a pit and a spike;
 		(b) dilate the polygon in (a) with distance $d$ to remove the pit;
@@ -483,7 +488,7 @@ which means
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[draft=false]{ErosionBreak}
+	\includegraphics[draft=true]{ErosionBreak}
 	\caption{Dilate the gray polygon, then erode the dilated polygon.
 		(a) Dilate and erode with distance $d_1$.
 		(b) Dilate and erode with distance $d_2$, where $d_2>d_1$.
@@ -493,25 +498,27 @@ which means
 	\label{fig:ErosionBreak}
 \end{figure}
 
-We would like to use $\dtrm{E}=d_{\epsilon, t}/2$
+We would like to use $\dtrm{E}=\frac{l}{2} \cdot S_t$
 (see \eq\ref{eq:d_epsilont}) so that
-any pits and spikes narrower than $d_{\epsilon, t}$ will be removed.
+any pits and spikes narrower than $l$ will be removed. 
+We set $l=0.3\,\mathrm{mm}$, which was used as a length threshold by 
+\textcite{Regnauld2001,Li2004,Basaraner2008}.
 According to \eq\ref{eq:d_Gt}, $\dtrm{G}$ can be arbitrarily small 
 when $t$ is small, 
-but $d_{\epsilon, t}$ is at least $\epsilon S_s$. 
+but $d_{\epsilon, t}$ is at least $\frac{l}{2} S_\mathrm{s}$. 
 In this case, $\dtrm{G}-\dtrm{E} \le 0$ when $t$ is small, 
 which violates \eq\ref{eq:d_Dt}, where $\dtrm{D}>0$.
 As a compromise, we use
 \[
-\dtrm{E} =t \cdot \epsilon S_\mathrm{g}.
+\dtrm{E} =t \cdot \frac{l}{2} S_\mathrm{g}.
 \]
 Still, we should make sure that $\dtrm{G}-\dtrm{E} > 0$, which means
 $t \cdot \frac{\lambda}{2}\sqrt{a} (S_\mathrm{g}-S_\mathrm{s})-
-t \cdot \epsilon S_\mathrm{g} >0$.
+t \cdot \frac{l}{2} S_\mathrm{g} >0$.
 As a result, we should make sure that
 \begin{equation}
 \label{eq:S_g}
-S_\mathrm{g} > \frac{\lambda\sqrt{a}}{\lambda\sqrt{a}-2\epsilon} S_s.
+S_\mathrm{g} > \frac{\lambda\sqrt{a}}{\lambda\sqrt{a}-l} S_s.
 \end{equation}
 
 We wish to remove ``bays'' which have ``widths'' less than $2\sqrt{a_h/\pi}$.
@@ -522,18 +529,15 @@ We use the upper bound in \eq\ref{eq:d_Dt}, that is,
 \dtrm{D} = \frac{\dtrm{G}-\dtrm{E}}{\alpha - 1}.
 \]
 
-After carrying out the offset-based method, we simplify the grown buildings. 
-We tried simplifying using Douglas--Peucker algorithm \parencite{Douglas1973}, 
-but we hoped to remove more points. We found that the Imai--Iri 
-algorithm \parencite{ImaiIri1988} fit our needs well. Although a version with a 
-lower running time exists \parencite[see][]{Chan1992}, we implemented the basic 
-version.
-
-The Imai--Iri algorithm first finds all the valid shortcuts of a polyline.
-For a sequence of points on a polyline, 
-if their distances to their shortcut are 
-at most specified value $\epsilon$, then the shortcut is valid (see 
-\fig\ref{fig:ImaiIri_Shortcut}). 
+After carrying out the buffering-based methods, 
+we simplify the grown buildings using Imai--Iri algorithm 
+\parencite{ImaiIri1988}.
+This algorithm first finds all the valid shortcuts of a polyline.
+A shortcut is valid for a segment 
+if the distance between the segment and the shortcut is at most a specified 
+value.
+We set the value as $l$
+(see \fig\ref{fig:ImaiIri_Shortcut}). 
 Second, the algorithm finds a sequence of valid shortcuts, from the beginning 
 of a polyline to the end, using breadth-first search.
 The sequence of valid shortcuts is an approximation of the polyline, 
@@ -541,28 +545,25 @@ and has the least number of line segments.
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics{ImaiIri_Shortcut}
+	\includegraphics[draft=false]{ImaiIri_Shortcut}
 	\caption{Valid and invalid shortcuts for Imai--Iri algorithm.}
 	\label{fig:ImaiIri_Shortcut}
 \end{figure}
 
 \todo[inline]{more details in the below paragraph?}
-We add two more constraints for a shortcut to be valid
-when we use the Imai--Iri algorithm. 
-The first one is that
-a shortcut must be completely inside the grown building.
+We add two more constraints for a shortcut to be valid. 
+First, a shortcut must be completely inside the grown building.
 If a shortcut is outside,
 we are not able to arrive at the shortcut by growing.
-The second constraint is that a shortcut is not allowed to intersect the 
+Second, a shortcut is not allowed to intersect the 
 boundary of the original building.
 If we allow this intersection, 
 we need to shrink the building instead of growing. 
 Of course, we do not want to shrink.
 
-To avoid using too many thresholds, we also use $\epsilon$ mm for the 
-simplification algorithm.
-
-
+We tried simplifying using Douglas--Peucker algorithm \parencite{Douglas1973}, 
+but we hoped to remove more points. We found that the Imai--Iri 
+algorithm fit our needs better. 
 
 \subsection{Group buildings based on buffering}
 \label{sec:Grouping}
@@ -678,7 +679,7 @@ we will have a small
 $a$ (according to Eq.~\ref{eq:a_limit}), a small $d_\mathrm{G}$ (according to 
 Eq.~\ref{eq:d_G}), and finally a small $l_b$ (according to 
 Eq.~\ref{eq:BridgeLength}). Also we should have a small $x$ and a large 
-$\lambda$ as our $a$ is already much larger than $0.16$ mm$^2$ on 
+$\lambda$ as our $a$ is already much larger than $0.16\,\mathrm{mm}^2$ on 
 map, which is the area limit used by \textcite{Stoter2009}. As a result, we 
 set 
 $\lambda=0.8$ and $x=\frac{2}{3} \cdot 100$.
@@ -701,9 +702,10 @@ variable $d_\mathrm{e} (\le d_\epsilon)$ is the extra growing distance.
 
 
 \textcite{Chaudhry2008} thought that a hole of a settlement should be at least 
-$0.5$ km$^2$ for a map at scale $1:250{,}000$, which means that the hole is at 
-least $8$ mm$^2$ on map. Following their setting, we shrink a hole and 
-eliminate the hole once its size is smaller than $8$ mm$^2$ on map.
+$0.5\,\mathrm{km}^2$ for a map at scale $1:250{,}000$, 
+which means that the hole is at least $8\,\mathrm{mm}^2$ on map. 
+Following their setting, we shrink a hole and 
+eliminate the hole once its size is smaller than $8\,\mathrm{mm}^2$ on map.
 
 
 
@@ -729,7 +731,8 @@ eliminate the hole once its size is smaller than $8$ mm$^2$ on map.
 %least 
 %$0.5$ km$^2$ for a map at scale $1:250{,}000$, which means that the hole is 
 %at 
-%least $8$ mm$^2$ on the map. Following their setting, we wish to have $\pi 
+%least $8\,\mathrm{mm}^2$ on the map. Following their setting, we wish to have 
+%$\pi 
 %D_\mathrm{G}^2 \ge 8 S_g^2$.
 %
 %
@@ -768,6 +771,12 @@ eliminate the hole once its size is smaller than $8$ mm$^2$ on map.
 	\label{fig:GrowingExample}
 \end{figure}
 
+\subsection{Running time analysis}
+Although a version with a 
+lower running time exists \parencite[see][]{Chan1992}, we implemented the basic 
+version.
+
+
 \section{Case Study}
 \label{sec:CaseStudy}
 We have implemented our method based on
@@ -796,8 +805,8 @@ Our goal scale is $1:50{,}000$.
 	\label{fig:Data}
 \end{figure}
 
-\mypar{Notation}
-Text. 
+\todo[inline]{comparison of simplification between Douglas--Peucker and 
+Imai--Iri}
 
 \subsection{Text}
 \label{sec:Formalizing}
@@ -832,9 +841,8 @@ boundaries on map, or use them as restriction for building growing.
 Show some results obtained by ArcGIS.
 Show the data at $1:50{,}000$.
 
-\todo[inline]{consider multi bridges; consider transparency of bridges in 
-stead 
-of enlarging}
+\todo[inline]{consider multi bridges; 
+	consider transparency of bridges in stead of enlarging}
 
 \printbibliography
 \end{document}
