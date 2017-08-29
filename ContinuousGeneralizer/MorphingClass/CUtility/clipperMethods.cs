@@ -398,7 +398,8 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
             foreach (var OffsetCpg in clipperMethods.GenerateCpgEbByPolyTree(ExteriorOffsetPolyTree, cpg.ID, blnReverse))
             {
                 var simplifiedcpg = CDPSimplify.SimplifyCpgAccordExistEdges(OffsetCpg,
-                    cpg.CEdgeLt, strSimplification, 2 * dblEpsilon);
+                    cpg.CEdgeLt, strSimplification, 1.5 * dblEpsilon);
+                //var simplifiedcpg = OffsetCpg;
                 yield return simplifiedcpg;
             }
         }
@@ -441,15 +442,15 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
 
 
             //CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgLt(CHelpFunc.MakeLt(Cpg), 1 / CConstants.dblFclipper), 
-            //    "Cpg" + CHelpFunc.GetTimeStampWithPrefix());
+            //    "Cpg");
             ////            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-            ////growndilationPaths, true), 1 / CConstants.dblFclipper), "growndilationPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
+            ////growndilationPaths, true), 1 / CConstants.dblFclipper), "growndilationPaths", CConstants.ParameterInitialize);
             //CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(overdilationPaths, true), 
-            //    1 / CConstants.dblFclipper), "overdilationPaths" + CHelpFunc.GetTimeStampWithPrefix());
+            //    1 / CConstants.dblFclipper), "overdilationPaths");
             ////            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-            ////backPaths, true), 1 / CConstants.dblFclipper), "backPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
+            ////backPaths, true), 1 / CConstants.dblFclipper), "backPaths", CConstants.ParameterInitialize);
             //CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(erosionpaths, true), 
-            //    1 / CConstants.dblFclipper), "erosionpaths" + CHelpFunc.GetTimeStampWithPrefix());
+            //    1 / CConstants.dblFclipper), "erosionpaths");
 
 
             return Offset_Paths(erosionpaths, dblHoleIndicator * dblErosion, strBufferStyle, dblMiterLimit);
@@ -462,10 +463,10 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
         public static PolyTree DilateErodeOffsetCpgExterior_PolyTree(CPolygon Cpg,
     double dblGrow, double dblDilation, double dblErosion, string strBufferStyle, double dblMiterLimit)
         {
-            dblDilation = dblDilation / 2;
+            //dblDilation = dblDilation / 2;
             //dblErosion = dblGrow;
-            dblGrow = 0;
-            dblErosion = dblDilation;
+            //dblGrow = 0;
+            //dblErosion = dblDilation;
 
             double dblHoleIndicator = 1;
             if (Cpg.IsHole == true)
@@ -477,25 +478,26 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
             {
                 Cpg.SetExteriorPath();
             }
-            var overdilationPaths = Offset_Paths(CHelpFunc.MakeLt( Cpg.ExteriorPath),
+            var overdilationPaths = Offset_Paths(CHelpFunc.MakeLt(Cpg.ExteriorPath),
                     dblHoleIndicator * (dblGrow + dblDilation), strBufferStyle, dblMiterLimit);
             var erosionpaths = Offset_Paths(overdilationPaths,
                     dblHoleIndicator * (-dblDilation - dblErosion), strBufferStyle, dblMiterLimit);
             var normalPolyTree = Offset_PolyTree(erosionpaths, dblHoleIndicator * dblErosion, strBufferStyle, dblMiterLimit);
 
-            CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgEb(CHelpFunc.MakeLt(Cpg), 1 / CConstants.dblFclipper),
-                "Cpg" + CHelpFunc.GetTimeStampWithPrefix());
+            //CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgEb(CHelpFunc.MakeLt(Cpg), 1 / CConstants.dblFclipper),
+            //    "Cpg" + CHelpFunc.GetTimeStampWithPrefix());
+            ////            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
+            ////growndilationPaths, true), 1 / CConstants.dblFclipper), "growndilationPaths", CConstants.ParameterInitialize);
+            CSaveFeature.SaveCplEb(clipperMethods.ScaleCplEb(clipperMethods.ConvertPathsToCplEb(overdilationPaths, true, true),
+                1 / CConstants.dblFclipper), "overdilationPaths", blnVisible: false);
             //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-            //growndilationPaths, true), 1 / CConstants.dblFclipper), "growndilationPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-            CSaveFeature.SaveCplEb(clipperMethods.ScaleCplEb(clipperMethods.ConvertPathsToCplEb(overdilationPaths, true),
-                1 / CConstants.dblFclipper), "overdilationPaths" + CHelpFunc.GetTimeStampWithPrefix());
-            //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-            //backPaths, true), 1 / CConstants.dblFclipper), "backPaths" + CHelpFunc.GetTimeStampWithPrefix(), CConstants.ParameterInitialize);
-            CSaveFeature.SaveCplEb(clipperMethods.ScaleCplEb(clipperMethods.ConvertPathsToCplEb(erosionpaths, true),
-                1 / CConstants.dblFclipper), "erosionpaths" + CHelpFunc.GetTimeStampWithPrefix());
+            //backPaths, true), 1 / CConstants.dblFclipper), "backPaths", CConstants.ParameterInitialize);
+            CSaveFeature.SaveCplEb(clipperMethods.ScaleCplEb(clipperMethods.ConvertPathsToCplEb(erosionpaths, true, true),
+                1 / CConstants.dblFclipper), "erosionpaths", blnVisible: false);
 
-            //        CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(Clipper.PolyTreeToPaths(normalPolyTree), true),
-            //1 / CConstants.dblFclipper), "normalpaths" + CHelpFunc.GetTimeStampWithPrefix());
+            CSaveFeature.SaveCplEb(clipperMethods.ScaleCplEb(clipperMethods.ConvertPathsToCplEb(
+                Clipper.PolyTreeToPaths(normalPolyTree), true, true), 1 / CConstants.dblFclipper),
+                "normalpaths", blnVisible: false);
 
             return normalPolyTree;
         }
@@ -545,10 +547,15 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
 
         private static CPolygon GenerateOLHCpgEbByPolyNode(PolyNode cpgnode, int intID, bool blnReverse = false)
         {
-            var cptlt = ContourToCptEb(cpgnode.Contour, blnReverse).ToList();
+            //CSaveFeature.SavePathEb(CHelpFunc.MakeLt(cpgnode.Contour), "OLHCpg");
+
+            var cptlt = ConvertPathToCptEb(cpgnode.Contour, blnReverse).ToList();
             var holecptlt = GetOLHCptLtEb(cpgnode, blnReverse).ToLtLt();
 
-            return new CPolygon(intID, cptlt, holecptlt);
+            var cpg= new CPolygon(intID, cptlt, holecptlt);
+            //CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgEb(CHelpFunc.MakeLt(cpg), 1 / CConstants.dblFclipper), "Cpg");
+
+            return cpg;
         }
 
 
@@ -563,43 +570,54 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
         {
             foreach (var holenode in cpgNode.Childs)
             {
-                yield return ContourToCptEb(holenode.Contour, blnReverse);
+                yield return ConvertPathToCptEb(holenode.Contour, blnReverse);
             }
         }
 
-        /// <summary>we do reverse because the direction of contour is different from the direction of our Cpg</summary>
-        private static IEnumerable<CPoint> ContourToCptEb(Path Contour, bool blnReverse = false)
-        {
-            var ContourAddFirst = CGeoFunc.AddFirstAsLastForEb(Contour);
-            if (blnReverse == true)
-            {
-                ContourAddFirst = ContourAddFirst.Reverse();
-            }
-
-            int intCount = 0;
-            foreach (var intPt in ContourAddFirst)
-            {
-                yield return new CPoint(intCount++, intPt.X, intPt.Y);
-            }
-        }
-
-        public static IEnumerable<CPolyline> ConvertPathsToCplEb(Paths Paths, bool AddFirstcptAsLastcpg = false)
+        public static IEnumerable<CPolyline> ConvertPathsToCplEb(IEnumerable<Path> PathEb, bool blnReverse = false, bool AddFirstcptAsLastcpg = false)
         {
             int intID = 0;
-            foreach (var path in Paths)
+            foreach (var path in PathEb)
             {
-               yield return new CPolyline(intID++, ConvertPathToCptEb(path, AddFirstcptAsLastcpg).ToList());
+               yield return new CPolyline(intID++, ConvertPathToCptEb(path, blnReverse, AddFirstcptAsLastcpg).ToList());
             }
         }
 
-        public static IEnumerable<CEdge> ConvertPathsToCEdgeEb(Paths Paths, bool AddFirstcptAsLastcpg = false)
+        public static IEnumerable<CEdge> ConvertPathsToCEdgeEb(Paths Paths, bool blnReverse = false, bool AddFirstcptAsLastcpg = false)
         {
             foreach (var path in Paths)
             {
-                foreach (var cedge in ConvertPathToCEdgeEb(path, AddFirstcptAsLastcpg))
+                foreach (var cedge in ConvertPathToCEdgeEb(path, blnReverse, AddFirstcptAsLastcpg))
                 {
                     yield return cedge;
                 }                
+            }
+        }
+
+
+        public static IEnumerable<CEdge> ConvertPathToCEdgeEb(Path path, bool blnReverse = false, bool AddFirstcptAsLastcpg = false)
+        {
+            return CGeoFunc.FormCEdgeEb(ConvertPathToCptEb(path, blnReverse, AddFirstcptAsLastcpg));
+        }
+
+        /// <summary>we do reverse because the direction of contour is different from the direction of our Cpg</summary>
+        public static IEnumerable<CPoint> ConvertPathToCptEb(Path path, bool blnReverse = false, bool AddFirstcptAsLastcpg = true)
+        {
+            var newpath = path;
+            if (blnReverse == true)
+            {
+                newpath= Enumerable.Reverse(path).ToList();
+            }
+
+            int intID = 0;
+            foreach (var intpt in newpath)
+            {
+                yield return new CPoint(intID++, intpt.X, intpt.Y);
+            }
+
+            if (AddFirstcptAsLastcpg == true)
+            {
+                yield return new CPoint(intID, newpath[0].X, newpath[0].Y);
             }
         }
 
@@ -622,42 +640,6 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
                 dblLength += CGeoFunc.CalLengthForIntptEb(path);
             }
             return dblLength;
-        }
-
-
-        //public static IEnumerable<IEnumerable<CEdge>> ConvertPathsToCEdgeEbEb(Paths paths)
-        //{
-        //    foreach (var path in paths)
-        //    {
-        //        yield return CGeoFunc.FormCEdgeEb(ConvertPathToCptEb(path));
-        //    }
-        //}
-
-        //public static IEnumerable<IEnumerable<CPoint>> ConvertPathsToCptEbEb(Paths paths)
-        //{
-        //    foreach (var path in paths)
-        //    {
-        //        yield return ConvertPathToCptEb(path);
-        //    }
-        //}
-
-        public static IEnumerable<CEdge> ConvertPathToCEdgeEb(Path path, bool AddFirstcptAsLastcpg = false)
-        {
-            return CGeoFunc.FormCEdgeEb(ConvertPathToCptEb(path, AddFirstcptAsLastcpg));
-        }
-
-        public static IEnumerable<CPoint> ConvertPathToCptEb(Path path, bool AddFirstcptAsLastcpg = false)
-        {
-            int intID = 0;
-            foreach (var intpt in path)
-            {
-                yield return new CPoint(intID++, intpt.X, intpt.Y);
-            }
-
-            if (AddFirstcptAsLastcpg == true)
-            {
-                yield return new CPoint(intID, path[0].X, path[0].Y);
-            }
         }
 
         //public static IEnumerable<List<IntPoint>> GeneratePathsByCpgltCedgeltVP(

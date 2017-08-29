@@ -25,7 +25,8 @@
                             % not available on your system
 %
 \usepackage{makeidx}         % allows index generation
-\usepackage[draft]{graphicx}        % standard LaTeX graphics tool
+\usepackage[]{graphicx}
+%\usepackage[draft]{graphicx}        % standard LaTeX graphics tool
 \usepackage[size=small,labelfont=bf]{caption}
                              % when including figure files
 \usepackage{multicol}        % used for the two-column index
@@ -130,7 +131,7 @@ eprint=false,dashed=false]{biblatex}
 %\newcommand{\mytabref}[1]{Tab.~\ref{#1}}
 
 
-\newcommand{\dtrm}[1]{d_{\mathrm{#1},t}}
+\newcommand{\dtrm}[2][]{d_{\mathrm{#2}, t\ifthenelse{\equal{#1}{}}{}{_#1}}}
 
 
 \graphicspath{{figures/}}
@@ -295,10 +296,6 @@ Rules for building simplification; see \textcite{Lee2005}
 
 Straight skeletons for map generalization: 
 \textcite{Gold2003,Matuk2006}
-
-Geometric Simplification of Administrative Borders With Mixture 
-of
-Irregular and Orthogonal Segments \parencite{Samsonov2016}
 
 
 An example of enlargement in aggregation: \citetitle{Neun2005}
@@ -488,7 +485,7 @@ which means
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[draft=true]{ErosionBreak}
+	\includegraphics[draft=false]{ErosionBreak}
 	\caption{Dilate the gray polygon, then erode the dilated polygon.
 		(a) Dilate and erode with distance $d_1$.
 		(b) Dilate and erode with distance $d_2$, where $d_2>d_1$.
@@ -509,9 +506,10 @@ but $d_{\epsilon, t}$ is at least $\frac{l}{2} S_\mathrm{s}$.
 In this case, $\dtrm{G}-\dtrm{E} \le 0$ when $t$ is small, 
 which violates \eq\ref{eq:d_Dt}, where $\dtrm{D}>0$.
 As a compromise, we use
-\[
+\begin{equation}
+\label{eq:d_Et}
 \dtrm{E} =t \cdot \frac{l}{2} S_\mathrm{g}.
-\]
+\end{equation}
 Still, we should make sure that $\dtrm{G}-\dtrm{E} > 0$, which means
 $t \cdot \frac{\lambda}{2}\sqrt{a} (S_\mathrm{g}-S_\mathrm{s})-
 t \cdot \frac{l}{2} S_\mathrm{g} >0$.
@@ -535,9 +533,9 @@ we simplify the grown buildings using Imai--Iri algorithm
 This algorithm first finds all the valid shortcuts of a polyline.
 A shortcut is valid for a segment 
 if the distance between the segment and the shortcut is at most a specified 
-value.
-We set the value as $l$
-(see \fig\ref{fig:ImaiIri_Shortcut}). 
+value
+(see \fig\ref{fig:ImaiIri_Shortcut}).
+We set the value also as $l$. 
 Second, the algorithm finds a sequence of valid shortcuts, from the beginning 
 of a polyline to the end, using breadth-first search.
 The sequence of valid shortcuts is an approximation of the polyline, 
@@ -565,6 +563,44 @@ We tried simplifying using Douglas--Peucker algorithm \parencite{Douglas1973},
 but we hoped to remove more points. We found that the Imai--Iri 
 algorithm fit our needs better. 
 
+
+
+
+
+
+\subsection{Unite buildings of the immediate previous step}
+\label{sec:Unite}
+
+As shown in \eq\ref{eq:d_Et}, $\dtrm{E}$ increases along with time $t$.
+We illustrated in \fig\ref{fig:ErosionBreak} that 
+a larger $\dtrm{E}$ may result in the shrinking of a building.
+
+$\dtrm[1]{G} + \dtrm[1]{D}$
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[draft=false]{Shrink_Erosion}
+	\caption{.
+	}
+	\label{fig:Shrink_Erosion}
+\end{figure}
+
+
+As we simplify buildings after growing, 
+some parts of the buildings may shrink 
+comparing to themselves at the immediate previous steps.
+To avoid this shrink, we unite a building with itself at the immediate previous 
+step so that the 
+united building is always larger than both of the united parts.
+
+
+\subsection{Eliminate small buildings}
+\label{sec:Eliminate}
+We eliminate a building if the area of this building is smaller than a 
+threshold.
+For a group of buildings, we consider the area sum of all the buildings.
+
+
 \subsection{Group buildings based on buffering}
 \label{sec:Grouping}
 We group buildings based on the buffers of the buildings. 
@@ -583,59 +619,6 @@ merging overlapping units.
 The iterative process stops when the number of units do not decrease anymore.
 
 All the buildings overlapping with the same unit belong to the same group.
-
-
-
-
-
-
-%at the start 
-%scale, we bridge them by line segments and take the merge of these 
-%buildings 
-%and bridges as one building.
-%For each building, either an original one or a merged one, at the start 
-%scale, 
-%we generate its target shape at 
-%the goal scale by enlarging and simplifying. Then we grow the  
-%building to the target shape. 
-%%
-%After finishing the growing, we take the goal scale as the 
-%start scale and repeat our continuous generalization.
-%\newline\indent
-%Our contribution is as follows. First, the buildings 
-%are enlarged continuously. At the same time, they are simplified. 
-%Second, we ensure that the distance between any pair of two buildings is 
-%always larger than a specified threshold.
-%
-%If we grow a building with radius $d_\mathrm{G}$, some part of a building will 
-%grow at most $2d_\mathrm{G}$.
-%The length of a bridge can be as large as
-%\begin{equation}
-%	\label{eq:BridgeLength}
-%	l_b=4d_\mathrm{G}+d_\epsilon.
-%\end{equation}
-%%\todo[inline]{$d_\mathrm{G}$ or $D_\mathrm{G}$?}
-
-
-
-
-\subsection{Unite buildings of the immediate previous step}
-\label{sec:Unite}
-
-As we simplify buildings after growing, 
-some parts of the buildings may shrink 
-comparing to themselves at the previous steps.
-We unite a building with itself at the immediate previous step so that the 
-united building is always larger than both of the united parts.
-
-
-\subsection{Eliminate small buildings}
-\label{sec:Eliminate}
-We eliminate a building if the area of this building is smaller than a 
-threshold.
-For a group of buildings, we consider the area sum of all the buildings.
-
-
 
 
 
@@ -834,6 +817,9 @@ make the results at goal scales violate as few rules as possible.
 
 Eventually, our result is a set of settlement boundaries. An interesting 
 problem is to compare our method with \textcite{Chaudhry2008}.
+
+We used radical law. We may also consider the fractal nature of maps proposed 
+by \textcite{Jiang2015}.
 
 We did not include streets. We can either put them above the settlement 
 boundaries on map, or use them as restriction for building growing.

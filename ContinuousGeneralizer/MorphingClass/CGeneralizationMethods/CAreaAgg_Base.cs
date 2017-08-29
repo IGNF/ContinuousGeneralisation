@@ -441,7 +441,7 @@ namespace MorphingClass.CGeneralizationMethods
             }
 
             CSaveFeature.SaveIGeoEb(IpgLt, esriGeometryType.esriGeometryPolygon,
-                dblProportion.ToString() + "_#" + IpgLt.Count + "_Step" + intTime.ToString() + "_" + CHelpFunc.GetTimeStampWithPrefix(),
+                dblProportion.ToString() + "_#" + IpgLt.Count + "_Step" + intTime.ToString(),
                 pParameterInitialize, pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt, strSymbolLayerPath: pParameterInitialize.strMxdPathBackSlash + "complete.lyr");
         }
 
@@ -710,7 +710,7 @@ namespace MorphingClass.CGeneralizationMethods
 
                 var ipglt = new List<IPolygon4> { newIpgLt[i] };
 
-                yield return CSaveFeature.SaveIGeoEb(ipglt, esriGeometryType.esriGeometryPolygon, "#" + (intTotalCphCount - i - 1).ToString() + "_Step" + (i + 1).ToString() + "_" + CHelpFunc.GetTimeStampWithPrefix(),
+                yield return CSaveFeature.SaveIGeoEb(ipglt, esriGeometryType.esriGeometryPolygon, "#" + (intTotalCphCount - i - 1).ToString() + "_Step" + (i + 1).ToString(),
                 pParameterInitialize, pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt, strSymbolLayerPath: pParameterInitialize.strMxdPathBackSlash + "complete.lyr");
 
             }

@@ -81,7 +81,7 @@ namespace MorphingClass.CUtility
         //private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\AreaAggregation\\" + _strDataFolderName + "\\";
 
         //private static string _strDataFolderName = "France";
-        //private static string _strDataFolderName = "France_FourTowns";
+        private static string _strDataFolderName = "France_FourTowns";
         //private static string _strDataFolderName = "France_Part";
         //private static string _strDataFolderName = "France_FourBuildings";
         //private static string _strDataFolderName = "France_Smallpart";
@@ -90,7 +90,9 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "France_Presenting_DifferentMiterLimits";
         //private static string _strDataFolderName = "France_Presenting_AddBridges";
         //private static string _strDataFolderName = "France_Presenting_ErodeBreak";
-        private static string _strDataFolderName = "France_Presenting_RemoveSpikeAndPit";
+        //private static string _strDataFolderName = "France_Presenting_RemoveSpikeAndPit";
+        //private static string _strDataFolderName = "France_Presenting_UnitingPrevious_Erosion";        
+        //private static string _strDataFolderName = "France_Presenting_UnitingPrevious_Simplification";
         //private static string _strDataFolderName = "France_Problematic";
         //private static string _strDataFolderName = "France_Problematic2";
         //private static string _strDataFolderName = "France_WithOneHole";

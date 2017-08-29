@@ -2133,18 +2133,6 @@ namespace MorphingClass.CUtility
             }
         }
 
-        public static IEnumerable<T> AddFirstAsLastForEb<T>(IEnumerable<T> TEb)
-        {
-            var TEt = TEb.GetEnumerator();
-            TEt.MoveNext();
-            var firstelement = TEt.Current;
-            do
-            {
-                yield return TEt.Current;
-            } while (TEt.MoveNext());
-            yield return firstelement;
-        }
-
         ///// <summary>Set pPolyline and pPoint to null</summary>
         ///// <remarks > If the coordinates have been changed, we have to set the pPolyline and the pPoint to null so that we can generate new ones</remarks>
         //public static void SetPlPtNull(List<CPolyline> cpllt)

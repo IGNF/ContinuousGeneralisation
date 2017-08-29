@@ -226,9 +226,10 @@ namespace ContinuousGeneralizer.FrmGeneralization
 
         private void btnMultiResults_Click(object sender, EventArgs e)
         {
-            for (int i = 1; i < 11; i++)
+            int intCount = 10;
+            for (int i = 1; i < intCount + 1; i++)
             {
-                _dblProportion = i * 0.1;
+                _dblProportion = Convert.ToDouble(i) / intCount;
                 _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text, this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
             }
         }

@@ -157,7 +157,7 @@ namespace MorphingClass.CGeneralizationMethods
                 double dblHoleAreaLimitTargetScale = _dblHoleAreaLimit * dblTargetScale * dblTargetScale * dblFclipper * dblFclipper;
 
                 //_dblErosion = _dblTotalGrow / 2;
-                _dblErosion = _dblEpsilon / 2; //To avoid breaking the polygon when we errod, dblOverDilated should not be too large 
+                _dblErosion = 1.5* _dblEpsilon / 2; //To avoid breaking the polygon when we errod, dblOverDilated should not be too large 
                 double dblTargetErosion = _dblErosion * dblTargetScale * dblFclipper;
                 //dblTargetErosion = 0;
                 //dblTargetErosion = dblTotalGrow / 2;
@@ -246,8 +246,7 @@ namespace MorphingClass.CGeneralizationMethods
 
                 var clipcpgEb = GetClipCpgEb(mergedCpgLt);
                 CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgEb(clipcpgEb, 1 / dblFclipper),
-    strSimplification + "_" + dblTargetScale + "k_ClipForm" + dblTargetEpsilon + "m_" +
-    CHelpFunc.GetTimeStampWithPrefix(), intGreen: 255);
+    strSimplification + "_" + dblTargetScale + "k_ClipForm" + dblTargetEpsilon + "m", intGreen: 255);
 
     //            CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgLt(mergedCpgLt, 1 / dblFclipper),
     //strSimplification + "_" + dblTargetScale + "k_mergedcpg" + dblTargetEpsilon + "m_" +
@@ -814,8 +813,8 @@ namespace MorphingClass.CGeneralizationMethods
         public void Output(double dblProportion, string strSimplification, string strBufferStyle, double dblMiterLimit)
         {
             var resultCpgEb = GetResultCpgEb(this.MergedCpgLt, dblProportion, strSimplification, strBufferStyle, dblMiterLimit);
-            CSaveFeature.SaveCpgEb(resultCpgEb, 
-                dblProportion + "_Growing", intBlue: 255);
+            CSaveFeature.SaveCpgEb(resultCpgEb,
+                dblProportion + "_Growing", intBlue: 255, blnVisible: false);
         }
 
 
@@ -982,7 +981,7 @@ namespace MorphingClass.CGeneralizationMethods
             {
                 var SubCpgLt = mergedcpg.SubCpgLt;
                 var submergedcpglt = MergeCloseCpgsAndAddBridges(SubCpgLt, dblCurrentGrow, dblCurrentDilation, dblCurrentEpsilon);
-                var CpipeDt = mergedcpg.CpipeDt;                
+                var CpipeDt = mergedcpg.CpipeDt;
                 foreach (var submergedcpg in submergedcpglt)
                 {
                     var subsubCpgLt = submergedcpg.SubCpgLt;
@@ -1019,15 +1018,22 @@ namespace MorphingClass.CGeneralizationMethods
                     }
                 }
             }
-            
-            LastAndClippedPath.AddRange(mergedcpg.LastTimePaths);
-            var unitedPaths = clipperMethods.Offset_Paths(LastAndClippedPath, 0, strBufferStyle, dblMiterLimit);
-            var clippedPolyTree = 
+
+            //CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(
+            //    clipperMethods.ConvertPathsToCEdgeEb(LastAndClippedPath, true), 1 / CConstants.dblFclipper),
+            //    "LastAndClippedPath" + CHelpFunc.GetTimeStampWithPrefix());
+
+            //LastAndClippedPath.AddRange(mergedcpg.LastTimePaths);
+            //var unitedPaths = clipperMethods.Offset_Paths(LastAndClippedPath, 0, strBufferStyle, dblMiterLimit);
+            //var unitedPaths = clipperMethods.Clip_Paths(LastAndClippedPath, true, mergedcpg.LastTimePaths,true,  ClipType.ctUnion);
+            var unitedPaths = LastAndClippedPath;
+
+            var clippedPolyTree =
                 clipperMethods.Clip_PolyTree(unitedPaths, true, clipPathsFirstLevel, true, ClipType.ctIntersection);
 
-            //var unitedPolyTree = clipperMethods.Offset_PolyTree(LastAndClippedPath, 0, strBufferStyle, dblMiterLimit);
             mergedcpg.LastTimePaths = Clipper.PolyTreeToPaths(clippedPolyTree);
-            return clipperMethods.GenerateCpgEbByPolyTree(clippedPolyTree, mergedcpg.ID,true);
+            var GrownAndClippedCpg = clipperMethods.GenerateCpgEbByPolyTree(clippedPolyTree, mergedcpg.ID, true);
+            return GrownAndClippedCpg;
         }
 
         private Paths DilateErodeOffsetSimplifyCpg(CPolygon cpg, 
@@ -1039,11 +1045,14 @@ namespace MorphingClass.CGeneralizationMethods
             var rawCpgEb = clipperMethods.DilateErodeOffsetSimplifyOneComponent(cpg,
                         dblGrow, dblDilation, dblErosion, dblEpsilon,
                          strSimplification, true, strBufferStyle, dblMiterLimit);
+            //CSaveFeature.SaveCpgEb(rawCpgEb, "rawCpgEb" + CHelpFunc.GetTimeStampWithPrefix());
             foreach (var rawCpg in rawCpgEb)
             {
                 rawCpg.SetExteriorPath();
                 rawPaths.AddRange(rawCpg.GetAllPaths());
             }
+
+
 
             if (cpg.HoleCpgLt != null && cpg.HoleCpgLt.Count > 0)
             {
@@ -1073,56 +1082,6 @@ namespace MorphingClass.CGeneralizationMethods
 
             return rawPaths;
         }
-
-
-
-
-
-
-        //private Paths GrowAndClipCpg(CPolygon cpg, double dblGrow, double dblDilation, double dblErosion, double dblEpsilon,
-        //    Paths clipPathsFirstLevel, string strBufferStyle, double dblMiterLimit)
-        //{
-        //    var clippedPaths = clipperMethods.ClipOneComponent_BufferDilateErode_Paths(cpg,
-        //        dblGrow, dblDilation, dblErosion, clipPathsFirstLevel, CConstants.dblFclipper, strBufferStyle, dblMiterLimit);
-        //    //var clippedCpg = clipperMethods.GenerateOLHCpgByPolyTree(clippedPolyTree, cpg.ID);
-
-        //    var clippedCpgEb= clipperMethods.DilateErodeOffsetSimplifyOneComponent(cpg,
-        //                dblGrow, dblDilation, dblErosion, dblEpsilon,
-        //                dblHoleAreaLimit, strSimplification, true, strBufferStyle, dblMiterLimit)
-
-
-
-
-        //    if (cpg.HoleCpgLt != null && cpg.HoleCpgLt.Count > 0)
-        //    {
-        //        //if (clippedCpg.HoleCpgLt == null)
-        //        //{
-        //        //    clippedCpg.HoleCpgLt = new List<CPolygon>(cpg.HoleCpgLt.Count);
-        //        //}
-
-        //        foreach (var holecpg in cpg.HoleCpgLt)
-        //        {
-        //            if (holecpg.ClipCpgLt == null || holecpg.ClipCpgLt.Count == 0)
-        //            {
-        //                continue;
-        //            }
-
-        //            var clipPaths = clipperMethods.GenerateClipPathsByCpgEb(holecpg.ClipCpgLt);
-        //            var clippedHolePaths = clipperMethods.ClipOneComponent_BufferDilateErode_Paths(holecpg,
-        //                dblGrow, dblDilation, dblErosion, clipPaths, CConstants.dblFclipper, strBufferStyle, dblMiterLimit);
-
-        //            //*******************check the direction of the HoleCpgs
-        //            //foreach (var clippedHoleCpg in clipperMethods.GenerateOLHCpgEbByPolyTree(clippedHolePolyTree, holecpg.ID, true))
-        //            //{
-        //            //    clippedCpg.HoleCpgLt.Add(clippedHoleCpg);
-        //            //}
-
-        //            clippedPaths.AddRange(clippedHolePaths);
-        //        }
-        //    }
-
-        //    return clippedPaths;
-        //}
 
         #endregion
 

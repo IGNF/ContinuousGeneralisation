@@ -15,6 +15,10 @@ using ESRI.ArcGIS.Controls;
 using MorphingClass.CGeometry;
 using MorphingClass.CGeometry.CGeometryBase;
 
+using ClipperLib;
+using Path = System.Collections.Generic.List<ClipperLib.IntPoint>;
+using Paths = System.Collections.Generic.List<System.Collections.Generic.List<ClipperLib.IntPoint>>;
+
 namespace MorphingClass.CUtility
 {
     public class CSaveFeature
@@ -50,7 +54,7 @@ namespace MorphingClass.CUtility
             int fintRed = 0, int fintGreen = 0, int fintBlue = 0, double dblWidth = 1, 
             string strSymbolLayerPath=null, bool blnVisible=true)
         {
-
+            pstrLayerName += CHelpFunc.GetTimeStampWithPrefix();
             IFeatureClass pFeatureClass = CreateFeatureClass(pesriGeometryType, pstrLayerName, pWorkspace, pm_mapControl, 
                 pstrFieldNameLt, pesriFieldTypeLt);
             IFeatureLayer pFLayer = new FeatureLayerClass();
@@ -541,6 +545,17 @@ namespace MorphingClass.CUtility
             return pFLayer;
         }
 
+        public static IFeatureLayer SavePathEb(IEnumerable<Path> PathEb, string strFileName)
+        {
+            if (PathEb.GetEnumerator().MoveNext() == false)
+            {
+                return null;
+            }
 
+            var cpleb= clipperMethods.ScaleCplEb( clipperMethods.ConvertPathsToCplEb(PathEb, false, true),1/CConstants.dblFclipper);
+            IFeatureLayer pFLayer = SaveCplEb(cpleb, strFileName);
+
+            return pFLayer;
+        }
     }
 }
