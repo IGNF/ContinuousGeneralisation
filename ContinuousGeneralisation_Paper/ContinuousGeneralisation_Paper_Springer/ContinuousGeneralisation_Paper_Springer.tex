@@ -572,17 +572,28 @@ algorithm fit our needs better.
 
 
 
-
-
-
 \subsection{Unite buildings of the immediate previous step}
 \label{sec:Unite}
 
-As shown in \eq\ref{eq:d_Et}, $\dtrm{E}$ increases along with time $t$.
-We illustrated in \fig\ref{fig:ErosionBreak} that 
-a larger $\dtrm{E}$ may result in the shrinking of a building.
+Both the erosion and line simplification may results in shrinking of a building.
+\fig\ref{fig:Shrink_Erosion} and \fig\ref{fig:Shrink_Simplification} show such 
+examples respectively.
+To avoid these kinds of shrinking,
+we unite a building with itself at the immediately previous step.
+For example, if the grown polygons of 
+\fig\ref{fig:Shrink_Erosion}~(c) and~(g) 
+are from a sequence of $10$ steps, 
+i.e., $t \in \{0.1, 0.2, \dots, 1\}$, 
+then we compute the result of $t=0.8$ by uniting 
+the grown polygon obtained independently at $t=0.8$ and 
+the grown polygon at $t=0.7$. 
+\fig\ref{fig:Shrink_Uniting}~(a) shows the result,
+which is the union of the two grown polygons in 
+\fig\ref{fig:Shrink_Erosion}~(c) and~(g).
+Similarly, \fig\ref{fig:Shrink_Uniting}~(b) shows the union of the two grown 
+polygons in 
+\fig\ref{fig:Shrink_Simplification}~(c) and~(h).
 
-$\dtrm[1]{G} + \dtrm[1]{D}$
 
 \begin{figure}[tb]
 	\centering
@@ -638,20 +649,7 @@ $\dtrm[1]{G} + \dtrm[1]{D}$
 	\label{fig:Shrink_Uniting}
 \end{figure}
 
-As we simplify buildings after growing, 
-some parts of the buildings may shrink 
-comparing to themselves at the immediately previous steps.
-To avoid this shrink, we unite a building with itself at the immediately 
-previous 
-step so that the 
-united building is always larger than both of the united parts.
 
-
-\subsection{Eliminate small buildings}
-\label{sec:Eliminate}
-We eliminate a building if the area of this building is smaller than a 
-threshold.
-For a group of buildings, we consider the area sum of all the buildings.
 
 
 \subsection{Group buildings based on buffering}
@@ -686,6 +684,13 @@ We enlarge and merge buildings as the way we do in \sect\ref{sec:Grouping}.
 
 
 
+
+
+\subsection{Eliminate small buildings}
+\label{sec:Eliminate}
+We eliminate a building if the area of this building is smaller than a 
+threshold.
+For a group of buildings, we consider the area sum of all the buildings.
 
 
 \subsection{Parameters for growing and simplifying}
