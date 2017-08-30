@@ -1023,10 +1023,9 @@ namespace MorphingClass.CGeneralizationMethods
             //    clipperMethods.ConvertPathsToCEdgeEb(LastAndClippedPath, true), 1 / CConstants.dblFclipper),
             //    "LastAndClippedPath" + CHelpFunc.GetTimeStampWithPrefix());
 
-            //LastAndClippedPath.AddRange(mergedcpg.LastTimePaths);
-            //var unitedPaths = clipperMethods.Offset_Paths(LastAndClippedPath, 0, strBufferStyle, dblMiterLimit);
-            //var unitedPaths = clipperMethods.Clip_Paths(LastAndClippedPath, true, mergedcpg.LastTimePaths,true,  ClipType.ctUnion);
-            var unitedPaths = LastAndClippedPath;
+            LastAndClippedPath.AddRange(mergedcpg.LastTimePaths);
+            var unitedPaths = clipperMethods.Clip_Paths(LastAndClippedPath, true, mergedcpg.LastTimePaths, true, ClipType.ctUnion);
+            //var unitedPaths = LastAndClippedPath;
 
             var clippedPolyTree =
                 clipperMethods.Clip_PolyTree(unitedPaths, true, clipPathsFirstLevel, true, ClipType.ctIntersection);

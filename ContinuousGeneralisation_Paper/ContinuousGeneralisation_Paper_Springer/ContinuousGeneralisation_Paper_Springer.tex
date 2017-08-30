@@ -11,6 +11,8 @@
 \documentclass[graybox]{svmult}
 \usepackage{etex}
 
+\newcommand{\blndraft}{true}
+%\newcommand{\blndraft}{false}
 
 %\usepackage[english]{babel}
 %
@@ -77,8 +79,8 @@
 %		\node[shape=circle,draw,inner sep=1pt] (char) {#1};}}
 %\newcommand*\circledtwo[1]{\tikz[baseline=(char.base)]{
 %		\node[shape=circle,draw,inner sep=0.1pt] (char) {#1};}}
- \newcommand{\maps}{\ensuremath{M_\mathrm{s}}\xspace}
- \newcommand{\mapg}{\ensuremath{M_\mathrm{g}}\xspace}
+\newcommand{\maps}{\ensuremath{M_\mathrm{s}}\xspace}
+\newcommand{\mapg}{\ensuremath{M_\mathrm{g}}\xspace}
 
 
 
@@ -485,7 +487,7 @@ which means
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[draft=false]{ErosionBreak}
+	\includegraphics[draft=\blndraft]{ErosionBreak}
 	\caption{Dilate the gray polygon, then erode the dilated polygon.
 		(a) Dilate and erode with distance $d_1$.
 		(b) Dilate and erode with distance $d_2$, where $d_2>d_1$.
@@ -548,7 +550,7 @@ and has the least number of line segments.
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[draft=false]{ImaiIri_Shortcut}
+	\includegraphics[draft=\blndraft]{ImaiIri_Shortcut}
 	\caption{Valid and invalid shortcuts for Imai--Iri algorithm.}
 	\label{fig:ImaiIri_Shortcut}
 \end{figure}
@@ -624,11 +626,23 @@ $\dtrm[1]{G} + \dtrm[1]{D}$
 	\label{fig:Shrink_Simplification}
 \end{figure}
 
+\begin{figure}[tb]
+	\centering
+	\includegraphics[draft=false]{Shrink_Uniting}
+	\caption{Unite a polygon with the polygon at the immediately previous step.
+		(a) Unite the polygon of \fig\ref{fig:Shrink_Erosion}~(c) and the 
+		polygon of \fig\ref{fig:Shrink_Erosion}~(g);
+		(b) Unite the polygon of \fig\ref{fig:Shrink_Simplification}~(c) and 
+		the polygon of \fig\ref{fig:Shrink_Simplification}~(h);
+	}
+	\label{fig:Shrink_Uniting}
+\end{figure}
 
 As we simplify buildings after growing, 
 some parts of the buildings may shrink 
-comparing to themselves at the immediate previous steps.
-To avoid this shrink, we unite a building with itself at the immediate previous 
+comparing to themselves at the immediately previous steps.
+To avoid this shrink, we unite a building with itself at the immediately 
+previous 
 step so that the 
 united building is always larger than both of the united parts.
 
