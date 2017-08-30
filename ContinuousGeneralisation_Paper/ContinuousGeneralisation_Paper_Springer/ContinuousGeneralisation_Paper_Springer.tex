@@ -25,8 +25,8 @@
                             % not available on your system
 %
 \usepackage{makeidx}         % allows index generation
-\usepackage[]{graphicx}
-%\usepackage[draft]{graphicx}        % standard LaTeX graphics tool
+%\usepackage[]{graphicx}
+\usepackage[draft]{graphicx}        % standard LaTeX graphics tool
 \usepackage[size=small,labelfont=bf]{caption}
                              % when including figure files
 \usepackage{multicol}        % used for the two-column index
@@ -308,18 +308,18 @@ Cetinkaya2015,Deng2017,Regnauld1996}
 \section{Methodology}
 
 \todo[inline]{a brief introduction of our method.}
-We name our input map as start map \maps,
-and denote the scale of the start maps by $1:S_\mathrm{s}$.
-We generate goal map \mapg at scale $1:S_\mathrm{g}$ 
-($S_\mathrm{g} > S_\mathrm{s}$) by generalizing \maps. 
+We name our input map as start map,
+and denote the scale of the start map by $1:M_\mathrm{s}$.
+We generate a goal map \mapg at scale $1:M_\mathrm{g}$ 
+($M_\mathrm{g} > M_\mathrm{s}$) by generalizing the start map. 
 We use time $t\in[0,1]$ to define the continuous generalization
 process. 
-We require that the generalization yields exactly \maps when $t=0$, 
-\mapg when $t=1$, 
-and that \maps is continuously generalized into \mapg 
+We require that the generalization yields exactly the start map when $t=0$, 
+the goal map when $t=1$, 
+and that the start map is continuously generalized into the goal map 
 when $t$ increases from~$0$ to~$1$.
-We define a simple function between scale and time, that is,
-$S_t= S_\mathrm{s} + t(S_\mathrm{g}-S_\mathrm{s})$.
+For the sake of convenience, we define parameter
+$M_t= M_\mathrm{s} + t \cdot (M_\mathrm{g}-M_\mathrm{s})$.
 
 
 \subsection{Grow based on buffering}
@@ -345,7 +345,7 @@ a \emph{square} joining is applied
 To keep right angles of buildings, 
 we must have $\alpha \geq \sqrt{2}$. 
 We set $\alpha  = 1.5$ so that a square joining is applied when an angle is 
-smaller than $83.6 \degree$.
+smaller (more acute) than $83.6 \degree$.
 
 \begin{figure}[tb]
 	\centering
@@ -366,21 +366,21 @@ The area of a building on map should be at least $a\,\mathrm{mm}^2$ so that the
 building is large enough to be perceived.
 In \sect\ref{sec:Simplify}, we show that we set $a=4$.
 Accordingly, a square at the start map should have 
-area $a S_\mathrm{s}^2\,\mathrm{mm}^2$ at least, and
+area $a M_\mathrm{s}^2\,\mathrm{mm}^2$ at least, and
 a square at the goal map should have 
-area $a S_\mathrm{g}^2\,\mathrm{mm}^2$ at least.
+area $a M_\mathrm{g}^2\,\mathrm{mm}^2$ at least.
 The difference of the side lengths is 
-$\sqrt{a} (S_\mathrm{g}-S_\mathrm{s})\,\mathrm{mm}$ 
+$\sqrt{a} (M_\mathrm{g}-M_\mathrm{s})\,\mathrm{mm}$ 
  (see \fig\ref{fig:Growth}).
 A square on the start map needs to grow $\frac{1}{2}\sqrt{a} 
-(S_\mathrm{g}-S_\mathrm{s})\,\mathrm{mm}$ so that 
+(M_\mathrm{g}-M_\mathrm{s})\,\mathrm{mm}$ so that 
 it can survive when users zoom out from 
 the start map to the goal map.
 In order to eliminate small buildings, 
 we define our growing distance as
 \begin{equation}
 \label{eq:d_G}
-d_\mathrm{G}=\frac{\lambda}{2}\sqrt{a} (S_\mathrm{g}-S_\mathrm{s})\,\mathrm{mm} 
+d_\mathrm{G}=\frac{\lambda}{2}\sqrt{a} (M_\mathrm{g}-M_\mathrm{s})\,\mathrm{mm} 
 \quad 0 < \lambda <1,
 \end{equation}
 where variable $\lambda$ is a growing factor. 
@@ -408,7 +408,7 @@ we set the separation threshold $\epsilon= 0.2\,\mathrm{mm}$ for target map.
 The separation threshold at time $t$ is
 \begin{equation}
 \label{eq:d_epsilont}
-d_{\epsilon, t} = \epsilon \cdot S_t.
+d_{\epsilon, t} = \epsilon \cdot M_t.
 \end{equation}
 
 If two buildings become too close to each other during growing, 
@@ -495,28 +495,28 @@ which means
 	\label{fig:ErosionBreak}
 \end{figure}
 
-We would like to use $\dtrm{E}=\frac{l}{2} \cdot S_t$
+We would like to use $\dtrm{E}=\frac{l}{2} \cdot M_t$
 (see \eq\ref{eq:d_epsilont}) so that
 any pits and spikes narrower than $l$ will be removed. 
 We set $l=0.3\,\mathrm{mm}$, which was used as a length threshold by 
 \textcite{Regnauld2001,Li2004,Basaraner2008}.
 According to \eq\ref{eq:d_Gt}, $\dtrm{G}$ can be arbitrarily small 
 when $t$ is small, 
-but $d_{\epsilon, t}$ is at least $\frac{l}{2} S_\mathrm{s}$. 
+but $d_{\epsilon, t}$ is at least $\frac{l}{2} M_\mathrm{s}$. 
 In this case, $\dtrm{G}-\dtrm{E} \le 0$ when $t$ is small, 
 which violates \eq\ref{eq:d_Dt}, where $\dtrm{D}>0$.
 As a compromise, we use
 \begin{equation}
 \label{eq:d_Et}
-\dtrm{E} =t \cdot \frac{l}{2} S_\mathrm{g}.
+\dtrm{E} =t \cdot \frac{l}{2} M_\mathrm{g}.
 \end{equation}
 Still, we should make sure that $\dtrm{G}-\dtrm{E} > 0$, which means
-$t \cdot \frac{\lambda}{2}\sqrt{a} (S_\mathrm{g}-S_\mathrm{s})-
-t \cdot \frac{l}{2} S_\mathrm{g} >0$.
+$t \cdot \frac{\lambda}{2}\sqrt{a} (M_\mathrm{g}-M_\mathrm{s})-
+t \cdot \frac{l}{2} M_\mathrm{g} >0$.
 As a result, we should make sure that
 \begin{equation}
 \label{eq:S_g}
-S_\mathrm{g} > \frac{\lambda\sqrt{a}}{\lambda\sqrt{a}-l} S_s.
+M_\mathrm{g} > \frac{\lambda\sqrt{a}}{\lambda\sqrt{a}-l} S_s.
 \end{equation}
 
 We wish to remove ``bays'' which have ``widths'' less than $2\sqrt{a_h/\pi}$.
@@ -535,7 +535,12 @@ A shortcut is valid for a segment
 if the distance between the segment and the shortcut is at most a specified 
 value
 (see \fig\ref{fig:ImaiIri_Shortcut}).
-We set the value also as $l$. 
+We set the value also as $l$.
+That is, at time $t$, the threshold distance is
+\begin{equation}
+\label{eq:d_lt}
+d_{l,t}= l \cdot M_t.
+\end{equation}
 Second, the algorithm finds a sequence of valid shortcuts, from the beginning 
 of a polyline to the end, using breadth-first search.
 The sequence of valid shortcuts is an approximation of the polyline, 
@@ -580,9 +585,43 @@ $\dtrm[1]{G} + \dtrm[1]{D}$
 \begin{figure}[tb]
 	\centering
 	\includegraphics[draft=false]{Shrink_Erosion}
-	\caption{.
+	\caption{A building shrinks during growing because of dilation and erosion, 
+	where $t_1=0.6$, $t_2=0.7$, and $t_3=1$.
+		The small gray polygons represent the original building.
+		(a) Grow and Dilate the building with distances $\dtrm[1]{G}$ and 
+		$\dtrm[1]{D}$, respectively;
+		(b) Erode the polygon in (a) with distance $\dtrm[1]{D} + \dtrm[1]{E}$;
+		(c) Dilate the polygon in (b) with distance $\dtrm[1]{E}$.
+		(d) The large gray polygon is the target shape on goal map.
+		The process for (e), (f), and (g) is the same as the process of (a), 
+		(b), and (c).
+		The darker gray piece in (g) shows 
+		the part which is included in the grown polygon of (c), 
+		but not in the grown polygon of (g).
 	}
 	\label{fig:Shrink_Erosion}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[draft=false]{Shrink_Simplification}
+	\caption{A building shrinks during growing because of line simplification, 
+		where $t_1=0.7$, $t_2=0.8$, and $t_3=1$.
+		The small gray polygons represent the original building.
+		The process for (a), (b), and (c), and 
+		the process for (e), (f), and (g) are the same as 
+		the processes in \fig\ref{fig:Shrink_Erosion}.
+		(d) The large gray polygon is the target shape on goal map.
+		(h) Simplify the polygon in (g) using the Imai--Iri algorithm.
+		Note that $d_{l,t_1}<d_{l,t_2}$ see \eq\ref{eq:d_lt}),
+		which is why the Imai--Iri algorithm does not 
+		remove any point of the polygon in (c),
+		but removes two points of the polygon in (g).
+		The darker gray pieces in (h) show 
+		the parts which are included in the polygon of (c), 
+		but not in the polygon of (h).
+	}
+	\label{fig:Shrink_Simplification}
 \end{figure}
 
 
@@ -791,8 +830,11 @@ Our goal scale is $1:50{,}000$.
 \todo[inline]{comparison of simplification between Douglas--Peucker and 
 Imai--Iri}
 
-\subsection{Text}
-\label{sec:Formalizing}
+
+The area on start map is $some number\,\text{mm}^2$.
+Our area on map is $some number\,\text{mm}^2$.
+According to \eq4 of paper \textcite{Topfer1966}, 
+the area on map should be $some number\,\text{mm}^2$
 
 
 
