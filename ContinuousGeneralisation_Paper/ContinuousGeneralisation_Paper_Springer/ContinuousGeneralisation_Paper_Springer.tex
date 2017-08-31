@@ -126,6 +126,10 @@ eprint=false,dashed=false]{biblatex}
 \newcommand{\eq}{Eq.~}
 \newcommand{\sect}{Sec.~}
 \newcommand{\tab}{Tab.~}
+\newcommand{\figs}{Figs.~}
+\newcommand{\eqs}{Eqs.~}
+\newcommand{\sects}{Secs.~}
+\newcommand{\tabs}{Tabs.~}
 
 %\newcommand{\myeqref}[1]{Eq.~\ref{#1}}
 %\newcommand{\mysectref}[1]{Sec.~\ref{#1}}
@@ -402,42 +406,6 @@ During our growing, the growth at time $t$ is
 \end{figure}
 
 
-\subsection{Merge close buildings by introducing bridges}
-The distance between two buildings should be larger than a threshold
-\parencite{Regnauld2001,Li2004}.
-Following \textcite{Basaraner2008,Stoter2009}, 
-we set the separation threshold $\epsilon= 0.2\,\mathrm{mm}$ for target map. 
-The separation threshold at time $t$ is
-\begin{equation}
-\label{eq:d_epsilont}
-d_{\epsilon, t} = \epsilon \cdot M_t.
-\end{equation}
-
-If two buildings become too close to each other during growing, 
-we merge them by introducing a bridge connecting the nearest points 
-(see \fig\ref{fig:GrowAndBridge}).
-No matter a bridge appear earlier or later, 
-it has width $2\dtrm{G}$ at time $t$.
-This setting guarantees that no bridge is thin when $t=1$.
-For example, the two bridges in \fig\ref{fig:GrowAndBridge} at time $t=1$ have 
-the same widths.
-This setting is achieved by following.
-We detect nearest points for each pair of buildings at time $t=0$ so that 
-we know where we should add bridges. 
-We grow the bridges together with the buildings,
-but we do not show the bridges until the two buildings are close enough. 
-\todo[inline]{actually larger than $d_{\epsilon, t}$.}
-
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics{GrowAndBridge}
-	\caption{Merge buildings by introducing bridges when the buildings become 
-	too close.
-		Although the bridges appear at different time, 
-		their widths are the same (see the figure with $t=1$).}
-	\label{fig:GrowAndBridge}
-\end{figure}
 
 
 \subsection{Simplify grown buildings}
@@ -451,7 +419,7 @@ pits, and then erode the results to remove spikes
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[draft=true]{RemovePitAndSpike}
+	\includegraphics[]{RemovePitAndSpike}
 	\caption{Remove a pit by dilating and then remove a spike by eroding.
 		(a) a polygon with a pit and a spike;
 		(b) dilate the polygon in (a) with distance $d$ to remove the pit;
@@ -487,7 +455,7 @@ which means
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[draft=\blndraft]{ErosionBreak}
+	\includegraphics[]{ErosionBreak}
 	\caption{Dilate the gray polygon, then erode the dilated polygon.
 		(a) Dilate and erode with distance $d_1$.
 		(b) Dilate and erode with distance $d_2$, where $d_2>d_1$.
@@ -550,7 +518,7 @@ and has the least number of line segments.
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[draft=\blndraft]{ImaiIri_Shortcut}
+	\includegraphics[]{ImaiIri_Shortcut}
 	\caption{Valid and invalid shortcuts for Imai--Iri algorithm.}
 	\label{fig:ImaiIri_Shortcut}
 \end{figure}
@@ -566,13 +534,15 @@ If we allow this intersection,
 we need to shrink the building instead of growing. 
 Of course, we do not want to shrink.
 
-We tried simplifying using Douglas--Peucker algorithm \parencite{Douglas1973}, 
-but we hoped to remove more points. We found that the Imai--Iri 
+We tried simplifying using 
+the Douglas--Peucker algorithm \parencite{Douglas1973}, 
+but we hoped to remove more points. 
+We found that the Imai--Iri 
 algorithm fit our needs better. 
 
 
 
-\subsection{Unite buildings of the immediate previous step}
+\subsection{Unite buildings of the immediately previous step}
 \label{sec:Unite}
 
 Both the erosion and line simplification may results in shrinking of a building.
@@ -597,7 +567,7 @@ polygons in
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[draft=false]{Shrink_Erosion}
+	\includegraphics[]{Shrink_Erosion}
 	\caption{A building shrinks during growing because of dilation and erosion, 
 	where $t_1=0.6$, $t_2=0.7$, and $t_3=1$.
 		The small gray polygons represent the original building.
@@ -617,7 +587,7 @@ polygons in
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[draft=false]{Shrink_Simplification}
+	\includegraphics[]{Shrink_Simplification}
 	\caption{A building shrinks during growing because of line simplification, 
 		where $t_1=0.7$, $t_2=0.8$, and $t_3=1$.
 		The small gray polygons represent the original building.
@@ -639,7 +609,7 @@ polygons in
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[draft=false]{Shrink_Uniting}
+	\includegraphics[]{Shrink_Uniting}
 	\caption{Unite a polygon with the polygon at the immediately previous step.
 		(a) Unite the polygon of \fig\ref{fig:Shrink_Erosion}~(c) and the 
 		polygon of \fig\ref{fig:Shrink_Erosion}~(g);
@@ -650,6 +620,57 @@ polygons in
 \end{figure}
 
 
+
+
+\subsection{Merge close buildings by introducing bridges}
+The distance between two buildings on a map should be larger than a threshold
+\parencite{Regnauld2001,Li2004}.
+Following \textcite{Basaraner2008,Stoter2009}, 
+we set the separation threshold $\epsilon= 0.2\,\mathrm{mm}$. 
+The real separation distance at time $t$ is
+\begin{equation}
+	\label{eq:d_epsilont}
+	d_{\epsilon, t} = \epsilon \cdot M_t.
+\end{equation}
+
+If a group of buildings become too close during growing,
+we merge them by introducing bridges (see \fig\ref{fig:GrowAndBridge}).
+We will talk about where to add bridges in \sect\ref{sec:Goal}.
+No matter a bridge appear earlier or later, 
+it has width $2\dtrm{G}$ at time $t$.
+This setting guarantees that no bridge is thin when $t=1$.
+For example, the two bridges in \fig\ref{fig:GrowAndBridge} at time $t=1$ have 
+the same widths.
+This setting is achieved by following.
+We detect nearest points for each pair of buildings at time $t=0$ so that 
+we know where we should add bridges.
+At time $t$, we group buildings that are too close to each other,
+then we merge them by adding the precomputed bridges.
+For this merged building, we grow, simplify, and unite as described in 
+\sects\ref{sec:Grow}, \ref{sec:Simplify}, and~\ref{sec:Unite}.
+We may unite the processed merged building with several separate parts 
+because the group of buildings may be in several smaller groups
+in the immediately previous step.
+
+\todo[inline]{actually larger than $d_{\epsilon, t}$.}
+
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[draft=false]{GrowAndBridge}
+	\caption{Merge buildings by introducing bridges when the buildings become 
+		too close.
+		Although the bridges appear at different time, 
+		their widths are the same (see the figure with $t=1$).}
+	\label{fig:GrowAndBridge}
+\end{figure}
+
+For each pair of buildings in the same group, 
+we find the smallest distance between them.
+We connect the buildings by adding an edge from the nearest points.
+We find a minimum spanning tree of the buildings using Prim's algorithm 
+\parencite{Prim1957}.
+We enlarge and merge buildings as the way we do in \sect\ref{sec:Grouping}.
 
 
 \subsection{Group buildings based on buffering}
@@ -672,14 +693,10 @@ The iterative process stops when the number of units do not decrease anymore.
 All the buildings overlapping with the same unit belong to the same group.
 
 
+\subsection{Generate buildings on goal map}
+\label{sec:Goal}
+We group
 
-\subsection{Enlarging and merging buildings for goal map}
-For each pair of buildings in the same group, 
-we find the smallest distance between them.
-We connect the buildings by adding an edge from the nearest points.
-We find a minimum spanning tree of the buildings using Prim's algorithm 
-\parencite{Prim1957}.
-We enlarge and merge buildings as the way we do in \sect\ref{sec:Grouping}.
 
 
 
