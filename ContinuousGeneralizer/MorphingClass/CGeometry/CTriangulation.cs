@@ -315,7 +315,7 @@ namespace MorphingClass.CGeometry
             return ITinEdgeLt;
         }
 
-        public void SaveDataAreaITinEdgeLt(CParameterInitialize parameterInitialize, string strName)
+        public void SaveDataAreaITinEdgeLt(string strName)
         {
             var ITinEdgeLt = _pTinEdgeLt;
             var CEdgeLt = new List<CEdge>(ITinEdgeLt.Count);
@@ -324,7 +324,7 @@ namespace MorphingClass.CGeometry
                 CEdgeLt.Add(new CEdge(pTinEdge));
             }
 
-            CSaveFeature.SaveCGeoEb(CEdgeLt, esriGeometryType.esriGeometryPolyline, "TIN_"+strName, parameterInitialize.pWorkspace, parameterInitialize.m_mapControl);
+            CSaveFeature.SaveCGeoEb(CEdgeLt, esriGeometryType.esriGeometryPolyline, "TIN_"+strName);
         }
 
         public void CompareCptltAndNode()

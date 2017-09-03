@@ -62,13 +62,17 @@ namespace MorphingClass.CAid
                 }
             }
 
-            CSaveFeature.AddFieldandAttribute(ParameterInitialize.pFLayerLt[0].FeatureClass, esriFieldType.esriFieldTypeInteger, "RegionNum", LSRgNumLt);
-            CSaveFeature.AddFieldandAttribute(ParameterInitialize.pFLayerLt[1].FeatureClass, esriFieldType.esriFieldTypeInteger, "RegionNum", SSRgNumLt);
+            CSaveFeature.AddFieldandAttribute(ParameterInitialize.pFLayerLt[0].FeatureClass, 
+                esriFieldType.esriFieldTypeInteger, "RegionNum", LSRgNumLt);
+            CSaveFeature.AddFieldandAttribute(ParameterInitialize.pFLayerLt[1].FeatureClass, 
+                esriFieldType.esriFieldTypeInteger, "RegionNum", SSRgNumLt);
 
 
 
-            CSaveFeature.SaveCGeoEb(SSAttentionCPgLt, esriGeometryType.esriGeometryPolygon, ParameterInitialize.cboLayerLt[1].Text + "_Attention", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
-            CSaveFeature.SaveCGeoEb(LSAttentionCPgLt, esriGeometryType.esriGeometryPolygon, ParameterInitialize.cboLayerLt[0].Text + "_Attention", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            CSaveFeature.SaveCGeoEb(SSAttentionCPgLt, esriGeometryType.esriGeometryPolygon, 
+                ParameterInitialize.cboLayerLt[1].Text + "_Attention");
+            CSaveFeature.SaveCGeoEb(LSAttentionCPgLt, esriGeometryType.esriGeometryPolygon, 
+                ParameterInitialize.cboLayerLt[0].Text + "_Attention");
         }
 
 

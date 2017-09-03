@@ -52,7 +52,7 @@ namespace MorphingClass.CAid
                 }
             }
 
-            CSaveFeature.SaveCGeoEb(LSCPlLt, esriGeometryType.esriGeometryPolyline, ParameterInitialize.pFLayerLt[0].Name + "UnifiedDirections", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            CSaveFeature.SaveCGeoEb(LSCPlLt, esriGeometryType.esriGeometryPolyline, ParameterInitialize.pFLayerLt[0].Name + "UnifiedDirections");
 
         }
     }

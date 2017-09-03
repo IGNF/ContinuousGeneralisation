@@ -24,7 +24,7 @@ namespace MorphingClass.CUtility
     public class CSaveFeature
     {
         public IFeatureLayer pFeatureLayer { get; set; }
-        private const int _intColor=0;
+        private const int _intColor = 0;
         //private int _intKnown = 2;   //we don't need the first three FieldNames, i.e., "FID", "Shape"
 
         public CSaveFeature()
@@ -39,33 +39,35 @@ namespace MorphingClass.CUtility
         /// <param name="pstrPath">保存路径</param>
         /// <param name="pesriGeometryType">图层类型</param> 
         /// <remarks>If I have time, I will put the parameters of colors and width in one parameter!</remarks>
-        public CSaveFeature(esriGeometryType pesriGeometryType, string pstrLayerName, IWorkspace pWorkspace, IMapControl4 pm_mapControl,
-            List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null,
-            int fintRed = 0, int fintGreen = 0, int fintBlue = 0, double dblWidth = 1, 
-            string strSymbolLayerPath = null, bool blnVisible = true)
+        public CSaveFeature(esriGeometryType pesriGeometryType, string pstrLayerName,
+List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null,
+int fintRed = 0, int fintGreen = 0, int fintBlue = 0, double dblWidth = 1,
+esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid,
+string strSymbolLayerPath = null, bool blnVisible = true)
         {
-            this.pFeatureLayer = CreateFeatureLayer(pesriGeometryType, pstrLayerName, pWorkspace, pm_mapControl, 
-                pstrFieldNameLt, pesriFieldTypeLt, fintRed, fintGreen, fintBlue, dblWidth,strSymbolLayerPath, blnVisible);
+            this.pFeatureLayer = CreateFeatureLayer(pesriGeometryType, pstrLayerName, pstrFieldNameLt, pesriFieldTypeLt,
+                fintRed, fintGreen, fintBlue, dblWidth, pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
         }
 
-        private IFeatureLayer CreateFeatureLayer(esriGeometryType pesriGeometryType, string pstrLayerName, 
-            IWorkspace pWorkspace, IMapControl4 pm_mapControl,
-            List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null,
-            int fintRed = 0, int fintGreen = 0, int fintBlue = 0, double dblWidth = 1, 
-            string strSymbolLayerPath=null, bool blnVisible=true)
+        private IFeatureLayer CreateFeatureLayer(esriGeometryType pesriGeometryType, string pstrLayerName,
+List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null,
+int fintRed = 0, int fintGreen = 0, int fintBlue = 0, double dblWidth = 1,
+esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid,
+string strSymbolLayerPath = null, bool blnVisible = true)
         {
+            var pWorkspace = CConstants.ParameterInitialize.pWorkspace;
+            var pm_mapControl = CConstants.ParameterInitialize.m_mapControl;
+
             pstrLayerName += CHelpFunc.GetTimeStampWithPrefix();
-            IFeatureClass pFeatureClass = CreateFeatureClass(pesriGeometryType, pstrLayerName, pWorkspace, pm_mapControl, 
+            IFeatureClass pFeatureClass = CreateFeatureClass(pesriGeometryType, pstrLayerName, pWorkspace, pm_mapControl,
                 pstrFieldNameLt, pesriFieldTypeLt);
             IFeatureLayer pFLayer = new FeatureLayerClass();
             pFLayer.FeatureClass = pFeatureClass;
             pFLayer.Name = pFeatureClass.AliasName;
             pFLayer.SpatialReference = pm_mapControl.SpatialReference;
 
-            RenderLayer(ref pFLayer, pesriGeometryType, fintRed, fintGreen, fintBlue, dblWidth, strSymbolLayerPath);
-
-            //IDataLayer2 pDataLayer2 = pFLayer as IDataLayer2;
-            //pDataLayer2 .RelativeBase.
+            RenderLayer(ref pFLayer, pesriGeometryType, fintRed, fintGreen, fintBlue, dblWidth,
+                pesriSimpleFillStyle, strSymbolLayerPath);
 
             //save Layer as layer file ".lyr"
             //create a new LayerFile instance
@@ -86,7 +88,8 @@ namespace MorphingClass.CUtility
             return pFLayer;
         }
 
-        public IFeatureLayer SaveCGeosToLayer<T>(IEnumerable<T> pCGeoEb, List<string> pstrFieldNameLt = null, List<List<object>> pobjectValueLtLt = null)
+        public IFeatureLayer SaveCGeosToLayer<T>(IEnumerable<T> pCGeoEb,
+            List<string> pstrFieldNameLt = null, List<List<object>> pobjectValueLtLt = null)
             where T : CGeometricBase<T>
         {
             if (pCGeoEb != null)
@@ -100,7 +103,8 @@ namespace MorphingClass.CUtility
 
         //public IEnumerable<object> 
 
-        public IFeatureLayer SaveIGeosToLayer<T>(IEnumerable<T> pIGeoEb, List<string> pstrFieldNameLt = null, List<List<object>> pobjectValueLtLt = null)
+        public IFeatureLayer SaveIGeosToLayer<T>(IEnumerable<T> pIGeoEb,
+            List<string> pstrFieldNameLt = null, List<List<object>> pobjectValueLtLt = null)
             where T : IGeometry
         {
             if (pIGeoEb != null)
@@ -112,21 +116,13 @@ namespace MorphingClass.CUtility
             return this.pFeatureLayer;
         }
 
-        public IFeatureLayer SaveIGeosToLayer(IGeometryCollection pGeoCol, List<string> pstrFieldNameLt = null, List<List<object>> pobjectValueLtLt = null)
+        public IFeatureLayer SaveIGeosToLayer(IGeometryCollection pGeoCol,
+            List<string> pstrFieldNameLt = null, List<List<object>> pobjectValueLtLt = null)
         {
             var objshapeEb = CHelpFunc.GetTEbFromIGeoCol<object>(pGeoCol);
             CommitFeatures(objshapeEb, pstrFieldNameLt, pobjectValueLtLt);
             return this.pFeatureLayer;
         }
-
-
-
-        //public IFeatureLayer SaveFeaturesToLayer(IEnumerable<object> pobjectShapeEb, List<string> pstrFieldNameLt = null, List<List<object>> pobjectValueLtLt = null)
-        //{
-        //    IFeatureClass pFeatureClass = this.pFeatureLayer.FeatureClass;
-        //    CommitFeatures(ref pFeatureClass, pobjectShapeEb, pstrFieldNameLt, pobjectValueLtLt);
-        //    return this.pFeatureLayer;
-        //}
 
         /// <summary>
         /// 
@@ -135,7 +131,8 @@ namespace MorphingClass.CUtility
         /// <param name="pstrFieldNameLt"></param>
         /// <param name="pobjectValueLtLt"></param>
         /// <remarks>it should be ok if pobjectShapeEb is null or empty</remarks>
-        private void CommitFeatures(IEnumerable<object> pobjectShapeEb, List<string> pstrFieldNameLt = null, List<List<object>> pobjectValueLtLt = null)
+        private void CommitFeatures(IEnumerable<object> pobjectShapeEb,
+            List<string> pstrFieldNameLt = null, List<List<object>> pobjectValueLtLt = null)
         {
             var pFeatureClass = this.pFeatureLayer.FeatureClass;
             if (pobjectShapeEb != null)
@@ -154,30 +151,13 @@ namespace MorphingClass.CUtility
                         pobjectValueLt = pobjectValueLtLt[intCount];
                     }
 
-                    InsertOneFeature(pFeatureCursor, pFeatureBuffer, pFeature, pobjectShape, intIndexLt, pstrFieldNameLt, pobjectValueLt);
+                    InsertOneFeature(pFeatureCursor, pFeatureBuffer, pFeature,
+                        pobjectShape, intIndexLt, pstrFieldNameLt, pobjectValueLt);
                     intCount++;
                 }
                 pFeatureCursor.Flush();
             }
         }
-
-
-        //public void CommitFeature(object pobj, List<string> pstrFieldNameLt = null, List<object> pobjectValueLt = null)
-        //{
-        //    var pFeatureClass = this.pFeatureLayer.FeatureClass;
-        //    if (pobj != null)
-        //    {
-        //        var intIndexLt = GenerateIndexLt(pstrFieldNameLt, pFeatureClass);
-
-        //        IFeatureBuffer pFeatureBuffer = pFeatureClass.CreateFeatureBuffer();
-        //        IFeature pFeature = pFeatureBuffer as IFeature;
-        //        IFeatureCursor pFeatureCursor = pFeatureClass.Insert(true);
-
-        //        InsertOneFeature(pFeatureCursor, pFeatureBuffer,pFeature, pobj, intIndexLt, pstrFieldNameLt, pobjectValueLt);
-        //        pFeatureCursor.Flush();
-        //    }
-        //}
-
 
         private List<int> GenerateIndexLt(List<string> pstrFieldNameLt, IFeatureClass pFeatureClass)
         {
@@ -185,7 +165,8 @@ namespace MorphingClass.CUtility
             if (pstrFieldNameLt != null)
             {
                 intIndexLt = new List<int>(pstrFieldNameLt.Count);
-                for (int i =0; i < pstrFieldNameLt.Count; i++)     //we don't need the first three FieldNames, i.e., "FID", "Shape", and "Id"
+                //we don't need the first three FieldNames, i.e., "FID", "Shape", and "Id"
+                for (int i = 0; i < pstrFieldNameLt.Count; i++)
                 {
                     int intIndex = pFeatureClass.FindField(pstrFieldNameLt[i]);
                     intIndexLt.Add(intIndex);
@@ -194,7 +175,8 @@ namespace MorphingClass.CUtility
             return intIndexLt;
         }
 
-        private void InsertOneFeature(IFeatureCursor pFeatureCursor ,IFeatureBuffer pFeatureBuffer, IFeature pFeature,  object pobj,List<int>intIndexLt, List<string> pstrFieldNameLt, List<object> pobjectValueLt)
+        private void InsertOneFeature(IFeatureCursor pFeatureCursor, IFeatureBuffer pFeatureBuffer, IFeature pFeature,
+            object pobj, List<int> intIndexLt, List<string> pstrFieldNameLt, List<object> pobjectValueLt)
         {
             pFeature.Shape = pobj as IGeometry;
             if (pstrFieldNameLt != null)
@@ -207,7 +189,7 @@ namespace MorphingClass.CUtility
             pFeatureCursor.InsertFeature(pFeatureBuffer);
         }
 
-        
+
         /// <summary>
         /// Coder:  梁  爽
         /// Date:   2008-10-16
@@ -221,13 +203,15 @@ namespace MorphingClass.CUtility
         /// <param name="ValCoordinatType">传递一个数值型参数，该参数为1-UnkownCoordinateSystem，2-GeographicCoordinateSystem
         ///            或3ProjectedCoordinateSystem</param>
         /// <returns></returns>
-        private IFeatureClass CreateFeatureClass(esriGeometryType pesriGeometryType, string pstrLayerName, IWorkspace pWorkspace, IMapControl4 pm_mapControl,
-            List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null)
+        private IFeatureClass CreateFeatureClass(esriGeometryType pesriGeometryType, string pstrLayerName,
+IWorkspace pWorkspace, IMapControl4 pm_mapControl, List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null)
         {
             //创建要素空间
             IFeatureWorkspace pFeatureWorkspace = (IFeatureWorkspace)pWorkspace;
             IGeometryDefEdit pGeometryDefEdit = new GeometryDefClass();
-            pGeometryDefEdit.GeometryType_2 = pesriGeometryType;   //_esriGeometryType could be: esriGeometryPoint, esriGeometryMultipoint, esriGeometryPolyline, esriGeometryPolygon, and esriGeometryMultiPatch.
+            //_esriGeometryType could be: esriGeometryPoint, esriGeometryMultipoint, 
+            //esriGeometryPolyline, esriGeometryPolygon, and esriGeometryMultiPatch.
+            pGeometryDefEdit.GeometryType_2 = pesriGeometryType;
             pGeometryDefEdit.SpatialReference_2 = pm_mapControl.SpatialReference;
 
             //新建字段
@@ -242,7 +226,8 @@ namespace MorphingClass.CUtility
             //添加其它字段
             if (pstrFieldNameLt != null)
             {
-                for (int i = 0; i < pstrFieldNameLt.Count; i++)  //we don't need the first three FieldNames, i.e., "FID", "Shape", and "Id"
+                //we don't need the first three FieldNames, i.e., "FID", "Shape", and "Id"
+                for (int i = 0; i < pstrFieldNameLt.Count; i++)
                 {
                     pFieldsEdit.AddField((IField)GenerateFieldEdit(pesriFieldTypeLt[i], pstrFieldNameLt[i]));
                 }
@@ -259,15 +244,18 @@ namespace MorphingClass.CUtility
 
             try
             {
-                return pFeatureWorkspace.CreateFeatureClass(pstrLayerName, (IFields)pFieldsEdit, null, null, esriFeatureType.esriFTSimple, "Shape&quot;", "");
+                return pFeatureWorkspace.CreateFeatureClass(pstrLayerName,
+                    (IFields)pFieldsEdit, null, null, esriFeatureType.esriFTSimple, "Shape&quot;", "");
             }
             catch
             {
-                return pFeatureWorkspace.CreateFeatureClass(pstrLayerName, (IFields)pFieldsEdit, null, null, esriFeatureType.esriFTSimple, "Shape", "");
+                return pFeatureWorkspace.CreateFeatureClass(pstrLayerName,
+                    (IFields)pFieldsEdit, null, null, esriFeatureType.esriFTSimple, "Shape", "");
             }
         }
 
-        public void RenderLayer(ref IFeatureLayer fLayer, esriGeometryType fesriGeometryType, int fintRed, int fintGreen, int fintBlue, double fdblWidth, string strSymbolLayerPath)
+        public void RenderLayer(ref IFeatureLayer fLayer, esriGeometryType fesriGeometryType,
+int fintRed, int fintGreen, int fintBlue, double fdblWidth, esriSimpleFillStyle pesriSimpleFillStyle, string strSymbolLayerPath)
         {
             if (strSymbolLayerPath == null)
             {
@@ -300,7 +288,8 @@ namespace MorphingClass.CUtility
                         break;
                     case esriGeometryType.esriGeometryPolygon:
                         ISimpleFillSymbol pSimpleFillSymbol = new SimpleFillSymbolClass();
-                        pSimpleFillSymbol.Color = pRgbColor as IColor;                        
+                        pSimpleFillSymbol.Color = pRgbColor as IColor;
+                        pSimpleFillSymbol.Style = pesriSimpleFillStyle;
                         pSimpleFillSymbol.Outline.Width = fdblWidth;
                         pSimpleFillSymbol.Outline.Color = pRgbColorOutline as IColor;
                         pSimpleRenderer.Symbol = pSimpleFillSymbol as ISymbol;
@@ -314,7 +303,9 @@ namespace MorphingClass.CUtility
             }
             else
             {
-                //In the shapefile properties, under the Symbology tab, you have the Import button which allow you to import the symbology definition from another shapefile or layer file. The code below is doing exactly the same. 
+                //In the shapefile properties, under the Symbology tab, 
+                //you have the Import button which allow you to import the symbology definition from another shapefile or layer file. 
+                //The code below is doing exactly the same. 
                 //You need to create a layer file with the desired symbology definition and then call this sub. 
 
                 IGxLayer pGxLayer;
@@ -329,10 +320,10 @@ namespace MorphingClass.CUtility
                 pGxFile.Path = strSymbolLayerPath;
 
                 pSymLayer = pGxLayer.Layer;
-                pLyr = fLayer as IGeoFeatureLayer ;
-                pGeoSymLyr = pSymLayer as IGeoFeatureLayer ;
+                pLyr = fLayer as IGeoFeatureLayer;
+                pGeoSymLyr = pSymLayer as IGeoFeatureLayer;
                 pLyr.Renderer = pGeoSymLyr.Renderer;
-                
+
             }
         }
 
@@ -347,10 +338,11 @@ namespace MorphingClass.CUtility
         /// <remarks>usually, when FieldIndex == 0, strFieldName is FID </remarks>
         public static int TryAddField(IFeatureClass pFeatureClass, esriFieldType pesriFieldType, string pstrFieldName)
         {
-            var intIndex = pFeatureClass.FindField(pstrFieldName);   //If FindField returns -1, the Field could not be found in the Fields collection. 
+            //If FindField returns -1, the Field could not be found in the Fields collection.
+            var intIndex = pFeatureClass.FindField(pstrFieldName);
             if (intIndex == -1)  //strFieldName doesn't exist
             {
-                return AddField(pFeatureClass, pesriFieldType,pstrFieldName);
+                return AddField(pFeatureClass, pesriFieldType, pstrFieldName);
             }
             else
             {
@@ -384,7 +376,8 @@ namespace MorphingClass.CUtility
         /// <param name="pstrFieldName"></param>
         /// <param name="pobjEb"></param>
         /// <remarks>the number of features in pFeatureClass and the count of pobjEb should be the same</remarks>
-        public static void AddFieldandAttribute(IFeatureClass pFeatureClass, esriFieldType pesriFieldType, string pstrFieldName, IEnumerable<object> pobjEb)
+        public static void AddFieldandAttribute(IFeatureClass pFeatureClass,
+            esriFieldType pesriFieldType, string pstrFieldName, IEnumerable<object> pobjEb)
         {
             var intIndex = TryAddField(pFeatureClass, pesriFieldType, pstrFieldName);
 
@@ -418,7 +411,7 @@ namespace MorphingClass.CUtility
             }
         }
 
-        
+
 
 
         public static int FindFieldNameIndex(List<string> strFieldNameLt, string strFieldName)
@@ -435,70 +428,13 @@ namespace MorphingClass.CUtility
         }
 
 
-        public static IFeatureLayer SaveCpgEb(IEnumerable<CPolygon> CpgEb, string strFileName,
-            List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null,
-            List<List<object>> pobjectValueLtLt = null,
-            int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
-            string strSymbolLayerPath = null, bool blnVisible = true)
-        {
-            return SaveCGeoEb(CpgEb, esriGeometryType.esriGeometryPolygon, strFileName,
-                CConstants.ParameterInitialize.pWorkspace, CConstants.ParameterInitialize.m_mapControl,
-                pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt, intRed, intGreen, intBlue, dblWidth,
-                strSymbolLayerPath, blnVisible);
-        }
-
-        public static IFeatureLayer SaveCplEb(IEnumerable<CPolyline> CplEb, string strFileName,
-    List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null,
-    List<List<object>> pobjectValueLtLt = null,
-    int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
-    string strSymbolLayerPath = null, bool blnVisible = true)
-        {
-            return SaveCGeoEb(CplEb, esriGeometryType.esriGeometryPolyline, strFileName,
-                CConstants.ParameterInitialize.pWorkspace, CConstants.ParameterInitialize.m_mapControl,
-                pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt, intRed, intGreen, intBlue, dblWidth,
-                strSymbolLayerPath, blnVisible);
-        }
-
-        public static IFeatureLayer SaveCEdgeEb(IEnumerable<CEdge> CGeoEb, string strFileName)
-        {
-            return SaveCGeoEb(CGeoEb, esriGeometryType.esriGeometryPolyline, strFileName);
-        }
-
-        public static IFeatureLayer SaveCGeoEb<T>(IEnumerable<T> CGeoEb, esriGeometryType pesriGeometryType, string strFileName, 
-            List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null,
-            List<List<object>> pobjectValueLtLt = null, 
-            int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
-            string strSymbolLayerPath = null, bool blnVisible = true)
-             where T : CGeometricBase<T>
-        {
-            return SaveCGeoEb(CGeoEb, pesriGeometryType, strFileName, 
-                CConstants.ParameterInitialize.pWorkspace, CConstants.ParameterInitialize.m_mapControl,
-                pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt, intRed, intGreen, intBlue, dblWidth, 
-                strSymbolLayerPath, blnVisible);
-        }
-
         /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="CGeoEb"></param>
-        /// <param name="pesriGeometryType"></param>
-        /// <param name="strFileName"></param>
-        /// <param name="pWorkspace"></param>
-        /// <param name="m_mapControl"></param>
-        /// <param name="pstrFieldNameLt">pstrFieldNameLt should not contain "FID" and "Shape", these two attributes will be generated automatically</param>
-        /// <param name="pesriFieldTypeLt"></param>
-        /// <param name="pobjectValueLtLt"></param>
-        /// <param name="intRed"></param>
-        /// <param name="intGreen"></param>
-        /// <param name="intBlue"></param>
-        /// <param name="dblWidth"></param>
-        /// <param name="blnVisible"></param>
-        /// <returns></returns>
+        /// pstrFieldNameLt should not contain "FID" and "Shape", these two attributes will be generated automatically
+        /// </summary>       
         public static IFeatureLayer SaveCGeoEb<T>(IEnumerable<T> CGeoEb, esriGeometryType pesriGeometryType, string strFileName,
-            IWorkspace pWorkspace, IMapControl4 m_mapControl, List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, 
-            List<List<object>> pobjectValueLtLt = null, int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, 
-            double dblWidth = 1, string strSymbolLayerPath = null, bool blnVisible = true)
+List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
+int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
+esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, string strSymbolLayerPath = null, bool blnVisible = true)
             where T : CGeometricBase<T>
         {
             if (CGeoEb.GetEnumerator().MoveNext() == false)
@@ -506,31 +442,18 @@ namespace MorphingClass.CUtility
                 return null;
             }
 
-            CSaveFeature pSaveFeature = new CSaveFeature(pesriGeometryType, strFileName, pWorkspace, m_mapControl, 
-                pstrFieldNameLt, pesriFieldTypeLt, intRed, intGreen, intBlue, dblWidth,strSymbolLayerPath, blnVisible);
+            CSaveFeature pSaveFeature = new CSaveFeature(pesriGeometryType, strFileName, pstrFieldNameLt, pesriFieldTypeLt,
+                intRed, intGreen, intBlue, dblWidth, pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
             IFeatureLayer pFLayer = pSaveFeature.SaveCGeosToLayer(CGeoEb, pstrFieldNameLt, pobjectValueLtLt);
 
             return pFLayer;
         }
 
 
-        
-
-
         public static IFeatureLayer SaveIGeoEb<T>(IEnumerable<T> IGeoEb, esriGeometryType pesriGeometryType, string strFileName,
-            CParameterInitialize pParameterInitialize, List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null,
-            List<List<object>> pobjectValueLtLt = null, int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, 
-            double dblWidth = 1, string strSymbolLayerPath = null, bool blnVisible = true)
-             where T : IGeometry
-        {
-            return SaveIGeoEb(IGeoEb, pesriGeometryType, strFileName, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl,
-               pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt, intRed, intGreen, intBlue, dblWidth, strSymbolLayerPath, blnVisible);
-        }
-
-        private static IFeatureLayer SaveIGeoEb<T>(IEnumerable<T> IGeoEb, esriGeometryType pesriGeometryType, string strFileName,
-            IWorkspace pWorkspace, IMapControl4 m_mapControl, List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, 
-            List<List<object>> pobjectValueLtLt = null, int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, 
-            double dblWidth = 1, string strSymbolLayerPath = null, bool blnVisible = true)
+List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
+int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
+esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, string strSymbolLayerPath = null, bool blnVisible = true)
             where T : IGeometry
         {
             if (IGeoEb.GetEnumerator().MoveNext() == false)
@@ -538,22 +461,69 @@ namespace MorphingClass.CUtility
                 return null;
             }
 
-            CSaveFeature pSaveFeature = new CSaveFeature(pesriGeometryType, strFileName, pWorkspace, m_mapControl,
-                pstrFieldNameLt, pesriFieldTypeLt, intRed, intGreen, intBlue, dblWidth, strSymbolLayerPath, blnVisible);
+            CSaveFeature pSaveFeature = new CSaveFeature(pesriGeometryType, strFileName, pstrFieldNameLt, pesriFieldTypeLt,
+                intRed, intGreen, intBlue, dblWidth, pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
             IFeatureLayer pFLayer = pSaveFeature.SaveIGeosToLayer(IGeoEb, pstrFieldNameLt, pobjectValueLtLt);
 
             return pFLayer;
         }
 
-        public static IFeatureLayer SavePathEb(IEnumerable<Path> PathEb, string strFileName)
+
+        public static IFeatureLayer SaveCpgEb(IEnumerable<CPolygon> CpgEb, string strFileName,
+List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
+int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
+esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, string strSymbolLayerPath = null, bool blnVisible = true)
+        {
+            return SaveCGeoEb(CpgEb, esriGeometryType.esriGeometryPolygon, strFileName,
+                pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt,
+                intRed, intGreen, intBlue, dblWidth, pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
+        }
+
+        public static IFeatureLayer SaveCplEb(IEnumerable<CPolyline> CplEb, string strFileName,
+List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
+int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
+string strSymbolLayerPath = null, bool blnVisible = true)
+        {
+            return SaveCGeoEb(CplEb, esriGeometryType.esriGeometryPolyline, strFileName,
+                pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt,
+                intRed, intGreen, intBlue, dblWidth, esriSimpleFillStyle.esriSFSSolid, strSymbolLayerPath, blnVisible);
+        }
+
+        public static IFeatureLayer SaveCEdgeEb(IEnumerable<CEdge> CGeoEb, string strFileName)
+        {
+            return SaveCGeoEb(CGeoEb, esriGeometryType.esriGeometryPolyline, strFileName);
+        }
+
+        public static IFeatureLayer SavePathEbAsCplEb(IEnumerable<Path> PathEb, string strFileName,
+List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
+int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
+string strSymbolLayerPath = null, bool blnVisible = true)
         {
             if (PathEb.GetEnumerator().MoveNext() == false)
             {
                 return null;
             }
 
-            var cpleb= clipperMethods.ScaleCplEb( clipperMethods.ConvertPathsToCplEb(PathEb, false, true),1/CConstants.dblFclipper);
-            IFeatureLayer pFLayer = SaveCplEb(cpleb, strFileName);
+            var cpleb = clipperMethods.ScaleCplEb(clipperMethods.ConvertPathsToCplEb(PathEb, false, true), 1 / CConstants.dblFclipper);
+            IFeatureLayer pFLayer = SaveCplEb(cpleb, strFileName, pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt,
+                intRed, intGreen, intBlue, dblWidth, strSymbolLayerPath, blnVisible);
+
+            return pFLayer;
+        }
+
+        public static IFeatureLayer SavePathEbAsCpgEb(IEnumerable<Path> PathEb, string strFileName,
+List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
+int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
+esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, string strSymbolLayerPath = null, bool blnVisible = true)
+        {
+            if (PathEb.GetEnumerator().MoveNext() == false)
+            {
+                return null;
+            }
+
+            var cpgeb = clipperMethods.ScaleCpgEb(clipperMethods.ConvertPathsToCpgEb(PathEb, true, true), 1 / CConstants.dblFclipper);
+            IFeatureLayer pFLayer = SaveCpgEb(cpgeb, strFileName, pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt,
+                intRed, intGreen, intBlue, dblWidth, pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
 
             return pFLayer;
         }

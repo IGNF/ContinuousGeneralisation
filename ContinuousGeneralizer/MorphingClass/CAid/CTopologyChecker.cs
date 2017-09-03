@@ -142,36 +142,18 @@ namespace MorphingClass.CAid
 
                 IntersectionLt = null;
 
-                CSaveFeature.SaveCGeoEb(UnLinkedCptLt, esriGeometryType.esriGeometryPoint, "UnLinkedCpt_" + i.ToString() + "__" + UnLinkedCptLt.Count, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl, blnVisible :false  );
+                CSaveFeature.SaveCGeoEb(UnLinkedCptLt, esriGeometryType.esriGeometryPoint, 
+                    "UnLinkedCpt_" + i.ToString() + "__" + UnLinkedCptLt.Count,  blnVisible :false  );
                 CHelpFunc.SetAEGeometryNull(UnLinkedCptLt);
                 
-                CSaveFeature.SaveCGeoEb(CrossCptLt, esriGeometryType.esriGeometryPoint, "Crosses_" + i.ToString() + "__" + CrossCptLt.Count, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl, blnVisible: false);
+                CSaveFeature.SaveCGeoEb(CrossCptLt, esriGeometryType.esriGeometryPoint, 
+                    "Crosses_" + i.ToString() + "__" + CrossCptLt.Count, blnVisible: false);
                 CHelpFunc.SetAEGeometryNull(CrossCptLt);
                 
-                CSaveFeature.SaveCGeoEb(OverlapCptLt, esriGeometryType.esriGeometryPoint, "OverlapCpt_" + i.ToString() + "__" + OverlapCptLt.Count, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl, blnVisible: false);
+                CSaveFeature.SaveCGeoEb(OverlapCptLt, esriGeometryType.esriGeometryPoint, 
+                    "OverlapCpt_" + i.ToString() + "__" + OverlapCptLt.Count,  blnVisible: false);
                 CHelpFunc.SetAEGeometryNull(OverlapCptLt);
-
-
-
-
-
-
-
-
-                //if (UnLinkedCptLt.Count > 0)
-                //{
-                //    CSaveFeature.SaveCGeoEb(UnLinkedCptLt, esriGeometryType.esriGeometryPoint, "UnLinkedCpt_" + i.ToString() + "__" + UnLinkedCptLt.Count, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
-                //}
-
-                //if (CrossCptLt.Count > 0)
-                //{
-                //    CSaveFeature.SaveCGeoEb(CrossCptLt, esriGeometryType.esriGeometryPoint, "Crosses_" + i.ToString() + "__" + CrossCptLt.Count, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
-                //}
-
-                //if (OverlapCptLt.Count > 0)
-                //{
-                //    CSaveFeature.SaveCGeoEb(OverlapCptLt, esriGeometryType.esriGeometryPoint, "OverlapCpt_" + i.ToString() + "__" + OverlapCptLt.Count, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
-                //}
+                
             }
 
             long lngEndTime = System.Environment.TickCount;//记录结束时间

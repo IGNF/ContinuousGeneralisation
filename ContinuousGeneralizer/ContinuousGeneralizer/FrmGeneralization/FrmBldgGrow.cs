@@ -147,10 +147,10 @@ namespace ContinuousGeneralizer.FrmGeneralization
             _dblProportion = 0.8;
             //_pBldgGrow.Output(_dblProportion, this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
-        private void btn090_Click(object sender, EventArgs e)
+        public void btn090_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.9;
-            //_pBldgGrow.Output(_dblProportion, this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
+            _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text, this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
         private void btn000_Click(object sender, EventArgs e)
         {
@@ -224,9 +224,9 @@ namespace ContinuousGeneralizer.FrmGeneralization
             //CHelpFunc.SaveCPlLt(cpllt, strFileName, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
         }
 
-        private void btnMultiResults_Click(object sender, EventArgs e)
+        public void btnMultiResults_Click(object sender, EventArgs e)
         {
-            int intCount = 10;
+            int intCount = 5;
             for (int i = 1; i < intCount + 1; i++)
             {
                 _dblProportion = Convert.ToDouble(i) / intCount;

@@ -51,7 +51,7 @@ namespace MorphingClass.CAid
                     strData += "<group>\n";
                 }
 
-                strData += CToIpe.GetDataOfFeatureLayer(pFLayer, pFLayerEnv, pIpeEnv, strBoundWidth,true);
+                strData += CToIpe.GetDataOfFeatureLayer(pFLayer, pFLayerEnv, pIpeEnv, strBoundWidth, true);
 
                 if (blnGroup == true)
                 {
@@ -85,14 +85,14 @@ namespace MorphingClass.CAid
             ////add legend (unit and a sample line), draw a line with length 16 in ipe
             //string strData = CIpeDraw.writeIpeText(dblLegend16 + " " + ParameterInitialize.m_mapControl.MapUnits.ToString(), 320, 80) +
             //    CIpeDraw.drawIpeEdge(320, 64, 336, 64);
-           return CIpeDraw.writeIpeText(intLegendInt + " " + strMapUnits, 320, 32) +
-    CIpeDraw.drawIpeEdge(320, 16, 320 + dblLegentInt, 16) +
-    CIpeDraw.drawIpeEdge(320, 16, 320, 20) + CIpeDraw.drawIpeEdge(320 + dblLegentInt, 16, 320 + dblLegentInt, 20);
+            return CIpeDraw.writeIpeText(intLegendInt + " " + strMapUnits, 320, 32) +
+     CIpeDraw.drawIpeEdge(320, 16, 320 + dblLegentInt, 16) +
+     CIpeDraw.drawIpeEdge(320, 16, 320, 20) + CIpeDraw.drawIpeEdge(320 + dblLegentInt, 16, 320 + dblLegentInt, 20);
 
         }
 
-        public static string GetDataOfFeatureLayer(IFeatureLayer pFLayer, IEnvelope pFLayerEnv, 
-            CEnvelope pIpeEnv, string strBoundWidth, bool blnDrawBound=false)
+        public static string GetDataOfFeatureLayer(IFeatureLayer pFLayer, IEnvelope pFLayerEnv,
+            CEnvelope pIpeEnv, string strBoundWidth, bool blnDrawBound = false)
         {
             string str = "";
             if (blnDrawBound == true)
@@ -112,7 +112,7 @@ namespace MorphingClass.CAid
             {
                 //at the last round of this loop, pFeatureCursor.NextFeature() will return null
                 IFeature pFeature = pFeatureCursor.NextFeature();
-                
+
                 switch (pFeatureClass.ShapeType)
                 {
                     case esriGeometryType.esriGeometryPoint:
@@ -160,7 +160,7 @@ namespace MorphingClass.CAid
         {
             var pLineSymbol = pRenderer.SymbolByFeature[pFeature] as ILineSymbol;
             var pLineSymbolRgbColor = pLineSymbol.Color as IRgbColor;
-            
+
             if (strBoundWidth == "")
             {
                 strBoundWidth = pLineSymbol.Width.ToString();
@@ -177,7 +177,7 @@ namespace MorphingClass.CAid
         /// <summary>
         /// Save a feature layer of IPolygon to Ipe
         /// </summary>
-        private static string TranIpgToIpe(IFeature pFeature, IFeatureRenderer pRenderer, 
+        private static string TranIpgToIpe(IFeature pFeature, IFeatureRenderer pRenderer,
             IEnvelope pFLayerEnv, CEnvelope pIpeEnv, string strBoundWidth)
         {
             var pFillSymbol = pRenderer.SymbolByFeature[pFeature] as IFillSymbol;
@@ -187,16 +187,23 @@ namespace MorphingClass.CAid
         /// <summary>
         /// Save a feature layer of IPolygon to Ipe
         /// </summary>
-        public static string TranIpgToIpe(IPolygon4 ipg, IFillSymbol pFillSymbol, 
+        public static string TranIpgToIpe(IPolygon4 ipg, IFillSymbol pFillSymbol,
             IEnvelope pFLayerEnv, CEnvelope pIpeEnv, string strBoundWidth)
         {
             //get the color of the filled part
             //we are not allowed to directly use "var pFillRgbColor = pFillSymbol.Color as IRgbColor;"
             //Nor can we use "var pFillRgbColor = pFillSymbol.Color.RGB as IRgbColor;"
             //pFillSymbol.Color.RGB has type 'int'
+            var pSimpleFillSymbol = pFillSymbol as ISimpleFillSymbol;
+
             IColor pFillSymbolColor = new RgbColorClass();
             pFillSymbolColor.RGB = pFillSymbol.Color.RGB;
-            var pFillSymbolRgbColor = pFillSymbolColor as IRgbColor;
+            CColor cColor = new CUtility.CColor(pFillSymbolColor as IRgbColor);
+            if (pSimpleFillSymbol.Style == esriSimpleFillStyle.esriSFSHollow ||
+                pSimpleFillSymbol.Style == esriSimpleFillStyle.esriSFSNull)
+            {
+                cColor = null;
+            }
 
             //get the color of the out line                
             var pOutlineRgbColor = pFillSymbol.Outline.Color as IRgbColor;
@@ -209,8 +216,7 @@ namespace MorphingClass.CAid
             CPolygon cpg = new CPolygon(0, ipg);
 
             //append the string
-            return CIpeDraw.DrawCpg(cpg, pFLayerEnv, pIpeEnv, new CColor(pOutlineRgbColor),
-new CColor(pFillSymbolRgbColor), strBoundWidth);
+            return CIpeDraw.DrawCpg(cpg, pFLayerEnv, pIpeEnv, new CColor(pOutlineRgbColor), cColor, strBoundWidth);
         }
 
         /// <summary>

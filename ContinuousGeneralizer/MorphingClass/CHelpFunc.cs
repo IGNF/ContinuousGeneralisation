@@ -92,7 +92,9 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "France_Presenting_ErodeBreak";
         //private static string _strDataFolderName = "France_Presenting_RemoveSpikeAndPit";
         //private static string _strDataFolderName = "France_Presenting_UnitingPrevious_Erosion";
-        private static string _strDataFolderName = "France_Presenting_UnitingPrevious_Simplification";
+        //private static string _strDataFolderName = "France_Presenting_UnitingPrevious_Simplification";
+        private static string _strDataFolderName = "France_Presenting_RemoveBay";
+
         //private static string _strDataFolderName = "France_Problematic";
         //private static string _strDataFolderName = "France_Problematic2";
         //private static string _strDataFolderName = "France_WithOneHole";
@@ -910,7 +912,7 @@ namespace MorphingClass.CUtility
         /// <param name="m_mapControl">µØÍ¼¿Ø¼þ</param>
         public static IFeatureLayer SaveCPlLt(List<CPolyline> cpllt, string strFileName, IWorkspace pWorkspace, IMapControl4 m_mapControl, int intRed = 0, int intGreen = 0, int intBlue = 0, double dblWidth = 1)
         {
-            return CSaveFeature.SaveCGeoEb(cpllt, esriGeometryType.esriGeometryPolyline, strFileName, pWorkspace, m_mapControl,null ,null ,null, intRed, intGreen, intBlue, dblWidth);
+            return CSaveFeature.SaveCGeoEb(cpllt, esriGeometryType.esriGeometryPolyline, strFileName, null ,null ,null, intRed, intGreen, intBlue, dblWidth);
         }
         
 

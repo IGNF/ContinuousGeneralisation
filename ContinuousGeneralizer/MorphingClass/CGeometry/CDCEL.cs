@@ -817,7 +817,7 @@ namespace MorphingClass.CGeometry
         /// <param name="str"></param>
         public void SaveCEdgeLt(CParameterInitialize pParameterInitialize, string str)
         {
-            CSaveFeature.SaveCGeoEb(this.CEdgeLt, esriGeometryType.esriGeometryPolyline, str, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
+            CSaveFeature.SaveCGeoEb(this.CEdgeLt, esriGeometryType.esriGeometryPolyline, str);
         }
 
 

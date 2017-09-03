@@ -111,87 +111,9 @@ namespace ContinuousGeneralizer.FrmAid
                 }
             }
 
-
             CToIpe.SaveToIpe(pFLayerLt, pFLayerEnv, pIpeEnv,
-                this.chkGroup.Checked, strBoundWidth, ParameterInitialize);
-
-            
+                this.chkGroup.Checked, strBoundWidth, ParameterInitialize);            
         }
-
-
-        //public void btnRun_Click(object sender, EventArgs e)
-        //{
-        //    //get parameters
-        //    CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
-        //    IFeatureLayer pFLayer = (IFeatureLayer)ParameterInitialize.m_mapFeature
-        //        .get_Layer(ParameterInitialize.cboLayerLt[0].SelectedIndex);
-        //    CEnvelope pEnvelopeIpe = new CEnvelope(
-        //        Convert.ToDouble(this.txtIpeMinX.Text), Convert.ToDouble(this.txtIpeMinY.Text),
-        //        Convert.ToDouble(this.txtIpeMaxX.Text), Convert.ToDouble(this.txtIpeMaxY.Text));
-
-        //    string strBoundWidth = this.cboSize.SelectedItem.ToString();
-        //    if (chkOverrideWidth.Checked == false)
-        //    {
-        //        strBoundWidth = "";
-        //    }
-
-
-        //    bool blnGroup = this.chkGroup.Checked;
-
-        //    //save path
-        //    CHelpFunc.SetSavePath(ParameterInitialize);
-
-        //    IEnvelope pEnvelopeLayer = pFLayer.AreaOfInterest;
-
-        //    double dblFactorIpeToLayer = pEnvelopeIpe.Height / pEnvelopeLayer.Height;
-        //    int intCount = 0;
-        //    string strHead = "";
-        //    strHead += CIpeDraw.getIpePreamble();
-        //    strHead += CIpeDraw.getIpeConf();
-
-        //    //add legend (unit and a sample line)
-        //    List<bool> blnVisibleLt = new List<bool>();
-        //    var m_mapFeature = CHelpFunc.GetAllLayers(ParameterInitialize.m_mapControl, blnVisibleLt);
-        //    string strData = CIpeDraw.writeIpeText(32 / dblFactorIpeToLayer + " " + m_mapFeature.MapUnits.ToString(), 320, 80) +
-        //        CIpeDraw.drawIpeEdge(320, 64, 352, 64);
-
-        //    for (int i = 0; i < m_mapFeature.LayerCount; i++)
-        //    {
-        //        IFeatureLayer pFeatureLayer = m_mapFeature.get_Layer(i) as IFeatureLayer;
-
-        //        if (blnVisibleLt[i] == false)
-        //        {
-        //            continue;
-        //        }
-
-        //        if (blnGroup == true)
-        //        {
-        //            strData += "<group>\n";
-        //        }
-
-        //        strData += CToIpe.SaveToIpe(pFeatureLayer, pEnvelopeLayer, pEnvelopeIpe, strBoundWidth);
-
-        //        if (blnGroup == true)
-        //        {
-        //            strData += "</group>\n";
-        //        }
-
-        //        pEnvelopeIpe.YMin += pEnvelopeIpe.Height;
-        //        pEnvelopeIpe.YMax += pEnvelopeIpe.Height;
-        //        intCount++;
-        //    }
-
-        //    string strEnd = CIpeDraw.getIpeEnd();
-        //    string strFullName = ParameterInitialize.strSavePath + "\\" + CHelpFunc.GetTimeStamp() + ".ipe";
-        //    using (var writer = new System.IO.StreamWriter(strFullName, true))
-        //    {
-        //        writer.Write(strHead);
-        //        writer.Write(strData);
-        //        writer.Write(strEnd);
-        //    }
-
-        //    System.Diagnostics.Process.Start(@strFullName);
-        //}
 
     }
 }

@@ -46,9 +46,12 @@ namespace MorphingClass.CAid
             MatchCpg(ref pLSCPgLt, ref pSSCPgLt, ref InterLSAttentionCPgLt, ref SSAttentionCPgLt);
             List<CPolygon> ResultCPgLt = MergeCpg(ref pSSCPgLt);
 
-            CSaveFeature.SaveCGeoEb(SSAttentionCPgLt, esriGeometryType.esriGeometryPolygon, ParameterInitialize.cboLayerLt[1].Text + "_Attention", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);            
-            CSaveFeature.SaveCGeoEb(InterLSAttentionCPgLt, esriGeometryType.esriGeometryPolygon,ParameterInitialize.cboLayerLt[0].Text + "_Attention", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
-            CSaveFeature.SaveCGeoEb(ResultCPgLt, esriGeometryType.esriGeometryPolygon, ParameterInitialize.cboLayerLt[0].Text + "_Merged", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            CSaveFeature.SaveCGeoEb(SSAttentionCPgLt, esriGeometryType.esriGeometryPolygon, 
+                ParameterInitialize.cboLayerLt[1].Text + "_Attention");            
+            CSaveFeature.SaveCGeoEb(InterLSAttentionCPgLt, esriGeometryType.esriGeometryPolygon,
+                ParameterInitialize.cboLayerLt[0].Text + "_Attention");
+            CSaveFeature.SaveCGeoEb(ResultCPgLt, esriGeometryType.esriGeometryPolygon, 
+                ParameterInitialize.cboLayerLt[0].Text + "_Merged");
          }
 
         public static void MatchCpg(ref List<CPolygon> pLSCPgLt, ref List<CPolygon> pSSCPgLt, ref List<CPolygon> InterLSAttentionCPgLt, ref List<CPolygon> SSAttentionCPgLt)

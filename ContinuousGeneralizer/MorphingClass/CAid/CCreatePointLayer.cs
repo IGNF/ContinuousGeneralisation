@@ -65,7 +65,8 @@ namespace MorphingClass.CAid
                     pobjectValueLtLt.Add(new List<object> { j });
                 }                
             }
-            CSaveFeature.SaveCGeoEb(cptlt, esriGeometryType.esriGeometryPoint, ParameterInitialize.strSaveFolderName + "Points", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl, pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt);
+            CSaveFeature.SaveCGeoEb(cptlt, esriGeometryType.esriGeometryPoint, ParameterInitialize.strSaveFolderName + "Points", 
+                pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt);
 
 
 

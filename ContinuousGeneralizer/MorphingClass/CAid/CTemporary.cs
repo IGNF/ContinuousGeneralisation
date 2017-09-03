@@ -51,8 +51,8 @@ namespace MorphingClass.CAid
             }
 
 
-            CSaveFeature.SaveCGeoEb(subLSCplLt, esriGeometryType.esriGeometryPolyline, "InterSgLS_203", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
-            CSaveFeature.SaveCGeoEb(subSSCplLt, esriGeometryType.esriGeometryPolyline, "InterSgSS_203", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            CSaveFeature.SaveCGeoEb(subLSCplLt, esriGeometryType.esriGeometryPolyline, "InterSgLS_203");
+            CSaveFeature.SaveCGeoEb(subSSCplLt, esriGeometryType.esriGeometryPolyline, "InterSgSS_203");
 
         }
     }

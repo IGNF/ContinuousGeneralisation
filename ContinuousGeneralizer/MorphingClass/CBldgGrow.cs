@@ -151,7 +151,9 @@ namespace MorphingClass.CGeneralizationMethods
 
                 _dblLambda = 0.8;
                 _dblTotalGrow = _dblLambda / 2 * Math.Sqrt(_dblAreaLimit) * (dblTargetScale - dblStartScale);
+                _dblTotalGrow *= 5;
                 double dblTotalGrow = _dblTotalGrow * dblFclipper;
+
 
                 _dblHoleAreaLimit = 8; //dblHoleAreaLimit=8 mm^2 * dblTargetScale * dblTargetScale
                 double dblHoleAreaLimitTargetScale = _dblHoleAreaLimit * dblTargetScale * dblTargetScale * dblFclipper * dblFclipper;
@@ -191,8 +193,7 @@ namespace MorphingClass.CGeneralizationMethods
                 //var offsetpaths = clipperMethods.Offset_Paths(allpaths,
                 //dblTotalGrow, strBufferStyle, dblMiterLimit);
 
-                //CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(offsetpaths, true),
-                //    1 / CConstants.dblFclipper), strBufferStyle + CHelpFunc.GetTimeStampWithPrefix());
+                //CSaveFeature.SavePathEb(offsetpaths, "offsetpaths");
                 #endregion
 
 

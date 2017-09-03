@@ -11,8 +11,15 @@
 \documentclass[graybox]{svmult}
 \usepackage{etex}
 
-\newcommand{\blndraft}{true}
-%\newcommand{\blndraft}{false}
+
+
+\usepackage[]{graphicx}
+%\usepackage[draft]{graphicx}        % standard LaTeX graphics tool
+
+
+
+
+
 
 %\usepackage[english]{babel}
 %
@@ -27,8 +34,7 @@
                             % not available on your system
 %
 \usepackage{makeidx}         % allows index generation
-%\usepackage[]{graphicx}
-\usepackage[draft]{graphicx}        % standard LaTeX graphics tool
+
 \usepackage[size=small,labelfont=bf]{caption}
                              % when including figure files
 \usepackage{multicol}        % used for the two-column index
@@ -79,8 +85,7 @@
 %		\node[shape=circle,draw,inner sep=1pt] (char) {#1};}}
 %\newcommand*\circledtwo[1]{\tikz[baseline=(char.base)]{
 %		\node[shape=circle,draw,inner sep=0.1pt] (char) {#1};}}
-\newcommand{\maps}{\ensuremath{M_\mathrm{s}}\xspace}
-\newcommand{\mapg}{\ensuremath{M_\mathrm{g}}\xspace}
+
 
 
 
@@ -141,7 +146,6 @@ eprint=false,dashed=false]{biblatex}
 
 
 \graphicspath{{figures/}}
-\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
 
 %For the references, the following commands make the titles 
 %lowercase while keep the initial letters of journal names 
@@ -470,9 +474,8 @@ We would like to use $\dtrm{E}=\frac{l}{2} \cdot M_t$
 any pits and spikes narrower than $l$ will be removed. 
 We set $l=0.3\,\mathrm{mm}$, which was used as a length threshold by 
 \textcite{Regnauld2001,Li2004,Basaraner2008}.
-According to \eq\ref{eq:d_Gt}, $\dtrm{G}$ can be arbitrarily small 
-when $t$ is small, 
-but $d_{\epsilon, t}$ is at least $\frac{l}{2} M_\mathrm{s}$. 
+Distance $\dtrm{G}$ can be arbitrarily small according to \eq\ref{eq:d_Gt}, 
+but $\dtrm{E}$ is at least $\frac{l}{2} M_\mathrm{s}$. 
 In this case, $\dtrm{G}-\dtrm{E} \le 0$ when $t$ is small, 
 which violates \eq\ref{eq:d_Dt}, where $\dtrm{D}>0$.
 As a compromise, we use
@@ -665,23 +668,22 @@ in the immediately previous step.
 	\label{fig:GrowAndBridge}
 \end{figure}
 
-For each pair of buildings in the same group, 
-we find the smallest distance between them.
-We connect the buildings by adding an edge from the nearest points.
-We find a minimum spanning tree of the buildings using Prim's algorithm 
-\parencite{Prim1957}.
-We enlarge and merge buildings as the way we do in \sect\ref{sec:Grouping}.
+%For each pair of buildings in the same group, 
+%we find the smallest distance between them.
+%We connect the buildings by adding an edge from the nearest points.
+%We find a minimum spanning tree of the buildings using Prim's algorithm 
+%\parencite{Prim1957}.
+%We enlarge and merge buildings as the way we do in \sect\ref{sec:Grouping}.
 
 
 \subsection{Group buildings based on buffering}
 \label{sec:Grouping}
 We group buildings based on the buffers of the buildings. 
-We buffer each building with distance $d_G + \frac{d_\epsilon}{2}$, 
-where distance $d_G$ is the growing amount of each building. 
-Parameter $d_\epsilon$ is the least distance allowed between two buildings.
-We grow an additional $\frac{d_\epsilon}{2}$ so that if two buffers overlap, 
-the corresponding two buildings will become too close during our growing step.
-The two buildings are identified as in the same group.
+We buffer each building with distance $\dtrm{G} + d_{\epsilon,t}/2$
+(see \eqs\ref{eq:d_Gt} and~\ref{eq:d_epsilont}).
+We grow an additional $d_{\epsilon,t}/2$ so that if two buffers overlap, 
+the corresponding two buildings will become too close at time $t$.
+As a result, the two buildings are identified as in the same group.
 
 We merge the buffers which overlap each others so that we have some large units.
 Now we iteratively remove small ``bays''.
@@ -904,6 +906,9 @@ boundaries on map, or use them as restriction for building growing.
 
 Show some results obtained by ArcGIS.
 Show the data at $1:50{,}000$.
+
+A special kind of Voronoi diagram considering miter offset. A buildings is 
+allowed to grow inside its own zone.
 
 \todo[inline]{consider multi bridges; 
 	consider transparency of bridges in stead of enlarging}

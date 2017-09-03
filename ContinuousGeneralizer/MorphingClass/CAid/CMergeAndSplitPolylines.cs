@@ -72,7 +72,7 @@ namespace MorphingClass.CAid
                 PreCptLt.AddRange(SucCptLt);
                 OutputCPlLt.Add(new CPolyline(intID++, PreCptLt));
             }
-            CSaveFeature.SaveCGeoEb(OutputCPlLt, esriGeometryType.esriGeometryPolyline, ParameterInitialize.pFLayerLt[0].Name + "MergeAndSplit", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            CSaveFeature.SaveCGeoEb(OutputCPlLt, esriGeometryType.esriGeometryPolyline, ParameterInitialize.pFLayerLt[0].Name + "MergeAndSplit");
 
             long lngEndTime = System.Environment.TickCount;//记录结束时间
             ParameterInitialize.tsslTime.Text = "Running Time: " + Convert.ToString(lngEndTime - lngStartTime) + "ms";  //显示运行时

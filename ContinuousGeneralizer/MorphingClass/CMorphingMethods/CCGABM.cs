@@ -195,9 +195,8 @@ namespace MorphingClass.CMorphingMethods
 
             pStopwatch.Stop();
             pParameterInitialize.tsslTime.Text = pStopwatch.ElapsedMilliseconds.ToString();
-            CSaveFeature.SaveIGeoEb(TransSgIGeoLt, esriGeometryType.esriGeometryPolyline, "TransSgCPlLt" + pParameterInitialize.strSaveFolderName, 
-                pParameterInitialize, this.strFieldNameLtLt[_intSg], this.esriFieldTypeLtLt[_intSg], _ObjValueLtLtLt[_intSg]);
-
+            CSaveFeature.SaveIGeoEb(TransSgIGeoLt, esriGeometryType.esriGeometryPolyline, "TransSgCPlLt" + pParameterInitialize.strSaveFolderName,
+                 this.strFieldNameLtLt[_intSg], this.esriFieldTypeLtLt[_intSg], _ObjValueLtLtLt[_intSg]);
         }
 
 
@@ -1098,8 +1097,10 @@ namespace MorphingClass.CMorphingMethods
             //double dblIgnorableDis = 0.0001 * dblTargetScale / 100000000000;
             //
 
-            CSaveFeature pCsfFade = new CSaveFeature(esriGeometryType.esriGeometryPolyline, "Fade" + pParameterInitialize.strSaveFolderName + "_" + dblProportion.ToString(), pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
-            CSaveFeature pCsfNormal = new CSaveFeature(esriGeometryType.esriGeometryPolyline, "Normal" + pParameterInitialize.strSaveFolderName + "_" + dblProportion.ToString(), pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
+            CSaveFeature pCsfFade = new CSaveFeature(esriGeometryType.esriGeometryPolyline, 
+                "Fade" + pParameterInitialize.strSaveFolderName + "_" + dblProportion.ToString());
+            CSaveFeature pCsfNormal = new CSaveFeature(esriGeometryType.esriGeometryPolyline, 
+                "Normal" + pParameterInitialize.strSaveFolderName + "_" + dblProportion.ToString());
 
 
             Stopwatch pStopwatch = Stopwatch.StartNew();

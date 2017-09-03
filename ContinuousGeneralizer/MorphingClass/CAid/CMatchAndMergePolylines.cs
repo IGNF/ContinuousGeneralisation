@@ -51,9 +51,9 @@ namespace MorphingClass.CAid
             //Save
 
 
-            CSaveFeature.SaveCGeoEb(SSAttentionCPlLt, esriGeometryType.esriGeometryPolyline, "SSAttentionCPl", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
-            CSaveFeature.SaveCGeoEb(LSAttentionCPlLt, esriGeometryType.esriGeometryPolyline, "LSAttentionCPl", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
-            CSaveFeature.SaveCGeoEb(SingleCPlLt, esriGeometryType.esriGeometryPolyline, "SingleCPl", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            CSaveFeature.SaveCGeoEb(SSAttentionCPlLt, esriGeometryType.esriGeometryPolyline, "SSAttentionCPl");
+            CSaveFeature.SaveCGeoEb(LSAttentionCPlLt, esriGeometryType.esriGeometryPolyline, "LSAttentionCPl");
+            CSaveFeature.SaveCGeoEb(SingleCPlLt, esriGeometryType.esriGeometryPolyline, "SingleCPl");
             
             List<CPolyline> pLSCPlLt = new List<CPolyline>();   //the code has to be checked**************************************
             List<CPolyline> pSSCPlLt = new List<CPolyline>();   //the code has to be checked**************************************
@@ -64,8 +64,8 @@ namespace MorphingClass.CAid
             }
 
             //pLSCPlLt and pSSCPlLt has to be saved because there are may be LSAttentionCPlLt and SSAttentionCPlLt
-            CSaveFeature.SaveCGeoEb(pSSCPlLt, esriGeometryType.esriGeometryPolyline, ParameterInitialize.pFLayerLt[1].Name + "SSCPl", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
-            CSaveFeature.SaveCGeoEb(pLSCPlLt, esriGeometryType.esriGeometryPolyline, ParameterInitialize.pFLayerLt[0].Name + "LSCPl", ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            CSaveFeature.SaveCGeoEb(pSSCPlLt, esriGeometryType.esriGeometryPolyline, ParameterInitialize.pFLayerLt[1].Name + "SSCPl");
+            CSaveFeature.SaveCGeoEb(pLSCPlLt, esriGeometryType.esriGeometryPolyline, ParameterInitialize.pFLayerLt[0].Name + "LSCPl");
             
         }
 
@@ -175,8 +175,9 @@ namespace MorphingClass.CAid
                 SSBufferLt.Add(pSSCPlLt[i].pBufferGeo);
             }
 
-            CSaveFeature.SaveIGeoEb(LSBufferLt, esriGeometryType.esriGeometryPolygon, "LSBuffer", ParameterInitialize, blnVisible: false);   //the code has to be checked**************************************
-            CSaveFeature.SaveIGeoEb(SSBufferLt, esriGeometryType.esriGeometryPolygon, "SSBuffer", ParameterInitialize, blnVisible: false);   //the code has to be checked**************************************
+            //the code has to be checked**************************************
+            CSaveFeature.SaveIGeoEb(LSBufferLt, esriGeometryType.esriGeometryPolygon, "LSBuffer", blnVisible: false);   
+            CSaveFeature.SaveIGeoEb(SSBufferLt, esriGeometryType.esriGeometryPolygon, "SSBuffer", blnVisible: false);
 
             return dblBuffer;
         }
