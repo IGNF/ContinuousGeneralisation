@@ -65,8 +65,9 @@ namespace ContinuousGeneralizer
             //var frmCurrent = new FrmExtractPossibleFiles();
             frmCurrent.Show();
             frmCurrent.btnRun_Click(sender, e);
-            //frmCurrent.btn090_Click(sender, e);
             frmCurrent.btnMultiResults_Click(sender, e);
+
+            //frmCurrent.btn090_Click(sender, e);
         }
 
         private object _Missing = Type.Missing;

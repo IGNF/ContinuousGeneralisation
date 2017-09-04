@@ -72,22 +72,22 @@ $M_t= M_\mathrm{s} + t \cdot (M_\mathrm{g}-M_\mathrm{s})$.
 \label{sec:Grow}
 We grow building based on buffering. 
 There are two typical ways of buffering polygons, i.e.,
-one with round joins and the other with miter joins (see 
-\fig\ref{fig:Buffer_TwoKinds}).
+one with round joins and the other with miter joins 
+(see \fig\ref{fig:Buffer_TwoKinds}).
 As buildings are usually rectangles, 
 we choose the second way because it is 
 better at keeping the right angles.
 If an angle is acute, however, an excessively long \emph{spike} will be 
 produced.
 This spike may go across other buildings 
-(see \fig\ref{fig:Buffer_MiterLimits}~(a)).
+(see \fig\ref{fig:Buffer_MiterLimits}a).
 To avoid this kind of interruptions, 
 we require that for an angle if a vertex of the 
 buffer is more than $\alpha d_\mathrm{G} (\alpha \ge 1)$, 
 where $d_\mathrm{G}$ is the growing distance, 
 away from the original vertex, 
 a \emph{square} joining is applied
-(see \fig\ref{fig:Buffer_MiterLimits}~(b)).
+(see \fig\ref{fig:Buffer_MiterLimits}b).
 To keep right angles of buildings, 
 we must have $\alpha \geq \sqrt{2}$. 
 We set $\alpha  = 1.5$ so that a square joining is applied when an angle is 
@@ -100,12 +100,12 @@ smaller (more acute) than $83.6 \degree$.
 	\label{fig:Buffer_TwoKinds}
 \end{figure}
 
-\begin{figure*}[tb]
+\begin{figure}[tb]
 	\centering
 	\includegraphics{Buffer_MiterLimits}
 	\caption{}
 	\label{fig:Buffer_MiterLimits}
-\end{figure*}
+\end{figure}
 
 
 The area of a building on map should be at least $a\,\mathrm{mm}^2$ so that 
@@ -159,7 +159,7 @@ We first dilate the grown buildings to remove
 pits, and then erode the results to remove spikes
 (see \fig\ref{fig:RemovePitAndSpike}).
 
-\begin{figure*}[tb]
+\begin{figure}[tb]
 	\centering
 	\includegraphics[]{RemovePitAndSpike}
 	\caption{Remove a pit by dilating and then remove a spike by eroding.
@@ -170,7 +170,7 @@ pits, and then erode the results to remove spikes
 		the same size as the polygon in (a).
 	}
 	\label{fig:RemovePitAndSpike}
-\end{figure*}
+\end{figure}
 
 At time $t$, we grow buildings with distance $\dtrm{G}$,
 dilate with distance $\dtrm{D} (\dtrm{D}>0)$,
@@ -353,10 +353,10 @@ polygons in
 	\centering
 	\includegraphics[]{Shrink_Uniting}
 	\caption{Unite a polygon with the polygon at the immediately previous step.
-		(a) Unite the polygon of \fig\ref{fig:Shrink_Erosion}~(c) and the 
-		polygon of \fig\ref{fig:Shrink_Erosion}~(g);
-		(b) Unite the polygon of \fig\ref{fig:Shrink_Simplification}~(c) and 
-		the polygon of \fig\ref{fig:Shrink_Simplification}~(h);
+		(a) Unite the polygon of \fig\ref{fig:Shrink_Erosion}c and the 
+		polygon of \fig\ref{fig:Shrink_Erosion}g;
+		(b) Unite the polygon of \fig\ref{fig:Shrink_Simplification}c and 
+		the polygon of \fig\ref{fig:Shrink_Simplification}h;
 	}
 	\label{fig:Shrink_Uniting}
 \end{figure}
@@ -417,7 +417,8 @@ We enlarge and merge buildings as the way we do in \sect\ref{sec:Grouping}.
 
 \subsection{Group buildings based on buffering}
 \label{sec:Grouping}
-We group buildings based on the buffers of the buildings. 
+We group buildings based on the buffers of the buildings 
+(see \fig\ref{fig:RemoveBay} for example). 
 We buffer each building with distance $\dtrm{G} + d_{\epsilon,t}/2$
 (see \eqs\ref{eq:d_Gt} and~\ref{eq:d_epsilont}).
 We grow an additional $d_{\epsilon,t}/2$ so that if two buffers overlap, 
@@ -433,6 +434,33 @@ merging overlapping units.
 The iterative process stops when the number of units do not decrease anymore.
 
 All the buildings overlapping with the same unit belong to the same group.
+
+\begin{figure*}[tb]
+	\centering
+	\includegraphics[draft=false]{RemoveBay}
+	\caption{Group buildings iteratively.
+		(a) Original buildings.
+		(b) Dilate each building in (a) with distance $\dtrm{G}+\dtrm{D}$.		
+		(c) Erode the polygons in (b) with distance $\dtrm{D}$.
+		(d) Dilate the polygons in (c) with distance 
+		$\frac{\sqrt{5}}{2} d_{\epsilon,t}$. 
+		If two polygons in (d) intersect, 
+		the original buildings in (a) will be put in the same group 
+		because they will become too close at time $t$.
+		Until this step, there two groups according to (d), 
+		one consists of the single middle building and 
+		the other group consists of the surrounding $9$ buildings.
+		The process of (e), (f), and (g) is similar to 
+		that of (b), (c), and (d).		
+		The difference is that 
+		instead of applying the operators to each single building, 
+		we do that for the buildings in the same group.
+		There is only one group left according to (g).
+		We iteratively group buildings in this way until the number of groups 
+		does not decrease.
+	}
+	\label{fig:RemoveBay}
+\end{figure*}
 
 
 \subsection{Generate buildings on goal map}

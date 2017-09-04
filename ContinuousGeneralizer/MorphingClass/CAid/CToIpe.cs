@@ -103,7 +103,7 @@ namespace MorphingClass.CAid
                 //this bound line should be under all other objectss
                 str += CIpeDraw.drawIpeEdge(pIpeEnv.XMin, pIpeEnv.YMin, pIpeEnv.XMin, pIpeEnv.YMax, "white");
             }
-
+            string strName = pFLayer.Name;
             IFeatureClass pFeatureClass = pFLayer.FeatureClass;
             int intFeatureCount = pFeatureClass.FeatureCount(null);
             IFeatureCursor pFeatureCursor = pFeatureClass.Search(null, false);    //注意此处的参数(****,false)！！！            
@@ -112,7 +112,6 @@ namespace MorphingClass.CAid
             {
                 //at the last round of this loop, pFeatureCursor.NextFeature() will return null
                 IFeature pFeature = pFeatureCursor.NextFeature();
-
                 switch (pFeatureClass.ShapeType)
                 {
                     case esriGeometryType.esriGeometryPoint:
@@ -149,7 +148,6 @@ namespace MorphingClass.CAid
             var ipt = pFeature.Shape as IPoint;
             return CIpeDraw.DrawIpt(ipt, pFLayerEnv, pIpeEnv, "disk", new CColor(pMarkerSymbolRgbColor), strBoundWidth);
         }
-
 
 
         /// <summary>
@@ -194,16 +192,19 @@ namespace MorphingClass.CAid
             //we are not allowed to directly use "var pFillRgbColor = pFillSymbol.Color as IRgbColor;"
             //Nor can we use "var pFillRgbColor = pFillSymbol.Color.RGB as IRgbColor;"
             //pFillSymbol.Color.RGB has type 'int'
-            var pSimpleFillSymbol = pFillSymbol as ISimpleFillSymbol;
-
             IColor pFillSymbolColor = new RgbColorClass();
             pFillSymbolColor.RGB = pFillSymbol.Color.RGB;
             CColor cColor = new CUtility.CColor(pFillSymbolColor as IRgbColor);
-            if (pSimpleFillSymbol.Style == esriSimpleFillStyle.esriSFSHollow ||
-                pSimpleFillSymbol.Style == esriSimpleFillStyle.esriSFSNull)
+            var pSimpleFillSymbol = pFillSymbol as ISimpleFillSymbol;
+            if (pSimpleFillSymbol!=null)
             {
-                cColor = null;
+                if (pSimpleFillSymbol.Style == esriSimpleFillStyle.esriSFSHollow ||
+                    pSimpleFillSymbol.Style == esriSimpleFillStyle.esriSFSNull)
+                {
+                    cColor = null;
+                }
             }
+
 
             //get the color of the out line                
             var pOutlineRgbColor = pFillSymbol.Outline.Color as IRgbColor;

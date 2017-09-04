@@ -269,7 +269,6 @@ int fintRed, int fintGreen, int fintBlue, double fdblWidth, esriSimpleFillStyle 
                 pRgbColorOutline.Green = 0;
                 pRgbColorOutline.Blue = 0;
 
-
                 ISimpleRenderer pSimpleRenderer = new SimpleRendererClass();
 
                 switch (fesriGeometryType)
@@ -281,18 +280,14 @@ int fintRed, int fintGreen, int fintBlue, double fdblWidth, esriSimpleFillStyle 
                         pSimpleRenderer.Symbol = pSimpleMarkerSymbol as ISymbol;
                         break;
                     case esriGeometryType.esriGeometryPolyline:
-                        ISimpleLineSymbol pSimpleLineSymbol = new SimpleLineSymbolClass();
-                        pSimpleLineSymbol.Color = pRgbColor as IColor;
-                        pSimpleLineSymbol.Width = fdblWidth;
-                        pSimpleRenderer.Symbol = pSimpleLineSymbol as ISymbol;
+                        pSimpleRenderer.Symbol = GetSimpleLineSymbol(pRgbColor, fdblWidth) as ISymbol;
                         break;
                     case esriGeometryType.esriGeometryPolygon:
                         ISimpleFillSymbol pSimpleFillSymbol = new SimpleFillSymbolClass();
+                        pSimpleFillSymbol.Outline = GetSimpleLineSymbol(pRgbColorOutline, fdblWidth);
                         pSimpleFillSymbol.Color = pRgbColor as IColor;
                         pSimpleFillSymbol.Style = pesriSimpleFillStyle;
-                        pSimpleFillSymbol.Outline.Width = fdblWidth;
-                        pSimpleFillSymbol.Outline.Color = pRgbColorOutline as IColor;
-                        pSimpleRenderer.Symbol = pSimpleFillSymbol as ISymbol;
+                        pSimpleRenderer.Symbol= pSimpleFillSymbol as ISymbol;
                         break;
                     default:
                         return;
@@ -300,6 +295,7 @@ int fintRed, int fintGreen, int fintBlue, double fdblWidth, esriSimpleFillStyle 
                 //fLayer.
                 IGeoFeatureLayer pGeoFeaturelayer = fLayer as IGeoFeatureLayer;
                 pGeoFeaturelayer.Renderer = pSimpleRenderer as IFeatureRenderer;
+                
             }
             else
             {
@@ -325,6 +321,17 @@ int fintRed, int fintGreen, int fintBlue, double fdblWidth, esriSimpleFillStyle 
                 pLyr.Renderer = pGeoSymLyr.Renderer;
 
             }
+        }
+
+        private ISimpleLineSymbol GetSimpleLineSymbol(IRgbColor pRgbColor, double fdblWidth,
+            esriSimpleLineStyle pesriSimpleLineStyle=  esriSimpleLineStyle.esriSLSSolid)
+        {
+            ISimpleLineSymbol pSimpleLineSymbol = new SimpleLineSymbolClass();
+            pSimpleLineSymbol.Color = pRgbColor as IColor;
+            pSimpleLineSymbol.Width = fdblWidth;
+            pSimpleLineSymbol.Style = pesriSimpleLineStyle;
+
+            return pSimpleLineSymbol;
         }
 
 
