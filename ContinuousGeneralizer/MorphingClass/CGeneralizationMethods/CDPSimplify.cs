@@ -625,7 +625,7 @@ namespace MorphingClass.CGeneralizationMethods
             return SimplifyAccordExistEdges(EnlargedCpg.CptLt, OriginalCEdgeLt, EnlargedCEdgeHS, strSimplification, dblThreshold).ToList();
         }
 
-
+        #region obsolete: SimplifyAccordRightAnglesAndExistEdges
         ///// <summary>
         ///// the angle from the baseline to the firstedge should smaller than PI
         ///// </summary>
@@ -661,7 +661,7 @@ namespace MorphingClass.CGeneralizationMethods
         //private static List<CPoint> SimplifyCptltAccordRightAnglesAndExistEdges(CPolygon EnlargedCpg, 
         //    List<CEdge> OriginalCEdgeLt, string strSimplification, double dblThreshold)
         //{
-            
+
         //    //EnlargedCpg.SetGeometricProperties();
         //    EnlargedCpg.FormCEdgeLt();
         //    EnlargedCpg.SetCEdgeLtLength();
@@ -744,6 +744,8 @@ namespace MorphingClass.CGeneralizationMethods
         //    return newcptlt;
         //}
 
+        #endregion
+
         private static IEnumerable<CPoint> SimplifyAccordExistEdges(List<CPoint> cptlt,
             List<CEdge> OriginalCEdgeLt, HashSet<CEdge> EnlargedCEdgeHS, string strSimplification, double dblThreshold)
         {
@@ -788,6 +790,12 @@ namespace MorphingClass.CGeneralizationMethods
             CNodeLt.SetIndexID();
             for (int i = 0; i < cptlt.Count - 1; i++)
             {
+                //if (i==29)
+                //{
+                //    int kk=5;
+                //}
+
+
                 CNodeLt[i].NbrCNodeLt = new List<CGeometry.CNode>();
                 CNodeLt[i].NbrCNodeLt.Add(CNodeLt[i + 1]);
                 for (int j = i + 2; j < cptlt.Count; j++)
@@ -853,6 +861,14 @@ namespace MorphingClass.CGeneralizationMethods
         private static bool IsCutValid(List<CPoint> cptlt, CEdgeGrid pEdgeGrid,   
             double dblThreshold, out int intIndexMaxDis)
         {
+            //if (cptlt.Count == 4 &&
+            //    CCmpMethods.CmpCoordDbl_VerySmall(cptlt[0].X, 44506652373093) == 0)
+            //{
+            //    int ss = 5;
+            //}
+
+
+
             //the distances from all the removed points to cedgebaseline should be smaller than a threshold
             var cedgebaseline = new CEdge(cptlt[0], cptlt.GetLastT());
             //cedgebaseline.SetLengthSquareReciprocal();
@@ -883,7 +899,7 @@ namespace MorphingClass.CGeneralizationMethods
             cedgebaseline.ToCpt.InCEdge.isTraversed = false;
             cedgebaseline.ToCpt.OutCEdge.isTraversed = false;
 
-            return blnIntersect;
+            return !blnIntersect;
             ////cedgebaseline should no intersect any of the edges
             //if (BlnIntersect(cedgebaseline, OriginalCEdgeLt))
             //{
