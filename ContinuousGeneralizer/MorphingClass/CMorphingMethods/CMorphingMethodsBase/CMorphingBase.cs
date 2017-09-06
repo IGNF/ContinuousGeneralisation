@@ -78,12 +78,14 @@ namespace MorphingClass.CMorphingMethods.CMorphingMethodsBase
 
             for (int i = intStartLayer; i < intStartLayer + intLayerCount; i++)
             {
-                IFeatureLayer pFLayer = (IFeatureLayer)pm_mapFeature.get_Layer(ParameterInitialize.cboLayerLt[i].SelectedIndex);  //larger-scale layer
+                IFeatureLayer pFLayer = (IFeatureLayer)pm_mapFeature.
+                    get_Layer(ParameterInitialize.cboLayerLt[i].SelectedIndex);  //larger-scale layer
                 ParameterInitialize.pFLayerLt.Add(pFLayer);
                 pstrFieldNameLtLt.Add(GetFieldNameLt(pFLayer.FeatureClass));
                 pesriFieldTypeLtLt.Add(GetFieldTypeLt(pFLayer.FeatureClass));
                 List<List<object>> pObjValueLtLt;
-                pObjIGeoLtLt.Add(CHelpFunc.GetObjLtByFeatureLayer(pFLayer, out pObjValueLtLt, strSpecifiedFieldName ,  strSpecifiedValue ));
+                pObjIGeoLtLt.Add(CHelpFunc.GetObjLtByFeatureLayer(
+                    pFLayer, out pObjValueLtLt, strSpecifiedFieldName ,  strSpecifiedValue ));
                 pObjValueLtLtLt.Add(pObjValueLtLt);
                 this.ObjIGeoLtLt = pObjIGeoLtLt;
             }

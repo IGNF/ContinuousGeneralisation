@@ -134,65 +134,6 @@ namespace MorphingClass.CUtility
             return clippedPolyTree;
         }
 
-        //    public static List<List<CPolygon>> IterativelyGroupCpgsByOverlapIndependently(List<CPolygon> cpglt,
-        //double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "Miter", double dblMiterLimit = 2)
-        //    {
-        //        var GroupedCpgLtLt = new List<List<CPolygon>>(cpglt.Count);
-        //        foreach (var cpg in cpglt)
-        //        {
-        //            GroupedCpgLtLt.Add(new List<CPolygon> { cpg });
-        //        }
-
-        //        int intRound = 0;
-        //        List<List<CPolygon>> newGroupedCpgLtLt = null;
-        //        while (true)
-        //        {
-        //            newGroupedCpgLtLt = DilateAndOverlapPaths(cpglt, GroupedCpgLtLt,
-        //                dblGrow, dblDilation, dblEpsilon, intRound, strBufferStyle, dblMiterLimit);
-        //            if (newGroupedCpgLtLt.Count == GroupedCpgLtLt.Count)
-        //            {
-        //                break;
-        //            }
-        //            GroupedCpgLtLt = newGroupedCpgLtLt;
-        //            ++intRound;
-        //            //Console.WriteLine("IterativeGroupCpgsByOverlapIndependently: " + intRound);
-        //        }
-
-
-        //        return newGroupedCpgLtLt;
-        //    }
-
-
-        //    public static List<List<CPolygon>> DilateAndOverlapPaths(List<CPolygon> cpglt, List<List<CPolygon>> GroupedCpgLtLt,
-        //        double dblGrow, double dblDilation, double dblEpsilon, int intRound,
-        //        string strBufferStyle = "Miter", double dblMiterLimit = 2)
-        //    {
-        //        var GrownPaths = new Paths();
-        //        foreach (var groupedCpgLt in GroupedCpgLtLt)
-        //        {
-        //            var groupedPaths = new Paths();
-        //            foreach (var cpg in groupedCpgLt)
-        //            {
-        //                groupedPaths.AddRange(cpg.ExteriorPaths);
-        //            }
-
-        //            var overdilationPaths = Offset_Paths(groupedPaths, dblGrow + dblDilation, strBufferStyle, dblMiterLimit);
-        //            var grownpaths = Offset_Paths(overdilationPaths, -dblDilation, strBufferStyle, dblMiterLimit);
-        //            GrownPaths.AddRange(grownpaths);
-        //        }
-
-        //        //if two polygons intersect, they will be too close without overdiating dblEpsilon / 2
-        //        var AllOverDilationPolyTree = Offset_PolyTree(GrownPaths, Math.Sqrt(5) * dblEpsilon / 2, strBufferStyle, dblMiterLimit);
-
-        //        if (intRound>1)
-        //        {
-        //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-        //                Clipper.PolyTreeToPaths(AllOverDilationPolyTree), true), 1 / CConstants.dblFclipper), CHelpFunc.GetTimeStamp());
-        //        }
-
-        //        return GroupCpgsByOverlap(cpglt, AllOverDilationPolyTree);
-        //    }
-
 
         private static List<List<CPolygon>> GroupCpgsByOverlap(List<CPolygon> cpglt, PolyTree polyTree)
         {
@@ -333,158 +274,21 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
                 var finalPolyTree = Offset_PolyTree(alloverlapGrownPaths, 0, strBufferStyle, dblMiterLimit);
                 groupedcpgltlt = GroupCpgsByOverlap(cpglt, finalPolyTree);
 
-                //            CSaveFeature.SavePathEbAsCplEb(overdilationPaths,
-                //intRound + "_allgrownpaths_" + dblDilation / CConstants.dblFclipper + "m", blnVisible: false);
-                CSaveFeature.SavePathEbAsCpgEb(alloverdilationPaths,
-    intRound + "_alloverdilationPaths_" + dblDilation / CConstants.dblFclipper + "m",
-    pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
-                CSaveFeature.SavePathEbAsCpgEb(allbackpaths, intRound + "backPaths",
-    pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
-                CSaveFeature.SavePathEbAsCpgEb(alloverlapGrownPaths, intRound + "_alloverlapGrownPaths",
-    pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
+                //CSaveFeature.SavePathEbAsCpgEb(alloverdilationPaths,
+                //    intRound + "_alloverdilationPaths_" + (dblGrow + dblDilation) / CConstants.dblFclipper + "m",
+                //    pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
+                //CSaveFeature.SavePathEbAsCpgEb(allbackpaths, 
+                //    intRound + "backPaths" + dblGrow / CConstants.dblFclipper + "m",
+                //    pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
+                //CSaveFeature.SavePathEbAsCpgEb(alloverlapGrownPaths, 
+                //    intRound + "_alloverlapGrownPaths" + (dblGrow + dblDisOverlap) / CConstants.dblFclipper + "m",
+                //    pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
 
                 intRound++;
             } while (groupedcpgltlt.Count < intGroupCount);
 
 
             return groupedcpgltlt;
-
-
-
-            //        var originalPaths = new Paths(cpglt.Count);
-            //        foreach (var cpg in cpglt)
-            //        {
-            //            originalPaths.AddRange(cpg.GetAllPaths());
-            //        }
-            //        //if two polygons intersect, they will be too close without overdiating dblEpsilon / 2
-            //        var GrownPaths = Offset_Paths(originalPaths, dblGrow, strBufferStyle, dblMiterLimit);
-            //        CSaveFeature.SavePathEbAsCplEb(GrownPaths, "GrownPaths");
-
-            //        var overlapGrownPolyTree = Offset_PolyTree(GrownPaths, dblDisOverlap, "Round");
-            //        var overlapGrownPathsLt = GetOneLevelPathsEbFromPolyTree(overlapGrownPolyTree).ToList();
-
-            //        int intRound = 0;
-            //        CSaveFeature.SavePathEbAsCplEb(overlapGrownPathsLt.SelectMany(paths => paths),
-            //            intRound + "_overlapGrownPathsLt", blnVisible: false);
-
-
-            //        var IterativeOverlapGrownPathsLt = overlapGrownPathsLt;
-            //        var newIterativeOverlapGrownPathsLt = overlapGrownPathsLt;
-            //        PolyTree finalPolyTree = null;
-            //        do
-            //        {
-            //            IterativeOverlapGrownPathsLt = newIterativeOverlapGrownPathsLt;
-            //            var alloverdilationPaths = new Paths();
-            //            var allgrownpaths = new Paths();
-            //            var allbackpaths = new Paths();
-            //            var alloverlapGrownPaths = new Paths();
-            //            foreach (var IterativeOverlapGrownPaths in IterativeOverlapGrownPathsLt)
-            //            {
-            //                var grownpaths = Offset_Paths(IterativeOverlapGrownPaths, -dblDisOverlap, "Round");
-            //                var overdilationPaths = Offset_Paths(grownpaths, dblDilation, strBufferStyle, dblMiterLimit);
-            //                var backPaths = Offset_Paths(overdilationPaths, -dblDilation, strBufferStyle, dblMiterLimit);
-            //                var overlapgrownpaths = Offset_Paths(backPaths, dblDisOverlap, "Round");
-
-            //                allgrownpaths.AddRange(grownpaths);
-            //                alloverdilationPaths.AddRange(overdilationPaths);
-            //                allbackpaths.AddRange(backPaths);
-            //                alloverlapGrownPaths.AddRange(overlapgrownpaths);
-            //            }
-
-            //            finalPolyTree = Offset_PolyTree(alloverlapGrownPaths, 0, strBufferStyle, dblMiterLimit);
-            //            newIterativeOverlapGrownPathsLt = GetOneLevelPathsEbFromPolyTree(finalPolyTree).ToList();
-
-            //            intRound++;
-
-            //            CSaveFeature.SavePathEbAsCplEb(allgrownpaths,
-            //intRound + "_allgrownpaths_" + dblDilation / CConstants.dblFclipper + "m", blnVisible: false);
-            //            CSaveFeature.SavePathEbAsCplEb(alloverdilationPaths,
-            //                intRound + "_alloverdilationPaths_" + dblDilation / CConstants.dblFclipper + "m", blnVisible: false);
-            //            CSaveFeature.SavePathEbAsCplEb(allbackpaths,
-            //intRound + "backPaths" + dblDilation / CConstants.dblFclipper + "m", blnVisible: false);
-            //            CSaveFeature.SavePathEbAsCplEb(newIterativeOverlapGrownPathsLt.SelectMany(paths => paths),
-            //                intRound + "_overlapGrownPathsLt", blnVisible: false);
-
-            //            //            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(clipperMethods.ConvertPathsToCEdgeLt(
-            //            //Clipper.PolyTreeToPaths(finalPolyTree), true), 1 / CConstants.dblFclipper),
-            //            //intRound.ToString() + CHelpFunc.GetTimeStampWithPrefix());
-
-            //        } while (newIterativeOverlapGrownPathsLt.Count != IterativeOverlapGrownPathsLt.Count);
-            //        if (intRound > 1)
-            //        {
-            //            Console.WriteLine("intRound: " + intRound);
-            //        }
-
-            //        return finalPolyTree;
-
-        }
-
-        private static PolyTree IterativelyGetPolyTreeForGroupedCpgs2(List<CPolygon> cpglt,
-double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "Miter", double dblMiterLimit = 2)
-        {
-            double dblDisOverlap = Math.Sqrt(5) * dblEpsilon / 2;
-            var originalPaths = new Paths(cpglt.Count);
-            foreach (var cpg in cpglt)
-            {
-                originalPaths.AddRange(cpg.GetAllPaths());
-            }
-            //if two polygons intersect, they will be too close without overdiating dblEpsilon / 2
-            var GrownPaths = Offset_Paths(originalPaths, dblGrow, strBufferStyle, dblMiterLimit);
-            CSaveFeature.SavePathEbAsCplEb(GrownPaths, "GrownPaths");
-
-            var overlapGrownPolyTree = Offset_PolyTree(GrownPaths, dblDisOverlap, "Round");
-            var overlapGrownPathsLt = GetOneLevelPathsEbFromPolyTree(overlapGrownPolyTree).ToList();
-
-            int intRound = 0;
-            CSaveFeature.SavePathEbAsCplEb(overlapGrownPathsLt.SelectMany(paths => paths),
-                intRound + "_overlapGrownPathsLt", blnVisible: false);
-
-
-            var IterativeOverlapGrownPathsLt = overlapGrownPathsLt;
-            var newIterativeOverlapGrownPathsLt = overlapGrownPathsLt;
-            PolyTree finalPolyTree = null;
-            do
-            {
-                IterativeOverlapGrownPathsLt = newIterativeOverlapGrownPathsLt;
-                var alloverdilationPaths = new Paths();
-                var allgrownpaths = new Paths();
-                var allbackpaths = new Paths();
-                var alloverlapGrownPaths = new Paths();
-                foreach (var IterativeOverlapGrownPaths in IterativeOverlapGrownPathsLt)
-                {
-                    var grownpaths = Offset_Paths(IterativeOverlapGrownPaths, -dblDisOverlap, "Round");
-                    var overdilationPaths = Offset_Paths(grownpaths, dblDilation, strBufferStyle, dblMiterLimit);
-                    var backPaths = Offset_Paths(overdilationPaths, -dblDilation, strBufferStyle, dblMiterLimit);
-                    var overlapgrownpaths = Offset_Paths(backPaths, dblDisOverlap, "Round");
-
-                    allgrownpaths.AddRange(grownpaths);
-                    alloverdilationPaths.AddRange(overdilationPaths);
-                    allbackpaths.AddRange(backPaths);
-                    alloverlapGrownPaths.AddRange(overlapgrownpaths);
-                }
-
-                finalPolyTree = Offset_PolyTree(alloverlapGrownPaths, 0, strBufferStyle, dblMiterLimit);
-                newIterativeOverlapGrownPathsLt = GetOneLevelPathsEbFromPolyTree(finalPolyTree).ToList();
-
-                intRound++;
-
-                CSaveFeature.SavePathEbAsCplEb(allgrownpaths,
-    intRound + "_allgrownpaths_" + dblDilation / CConstants.dblFclipper + "m", blnVisible: false);
-                CSaveFeature.SavePathEbAsCplEb(alloverdilationPaths,
-                    intRound + "_alloverdilationPaths_" + dblDilation / CConstants.dblFclipper + "m", blnVisible: false);
-                CSaveFeature.SavePathEbAsCplEb(allbackpaths,
-    intRound + "backPaths" + dblDilation / CConstants.dblFclipper + "m", blnVisible: false);
-                CSaveFeature.SavePathEbAsCplEb(newIterativeOverlapGrownPathsLt.SelectMany(paths => paths),
-                    intRound + "_overlapGrownPathsLt", blnVisible: false);
-
-            } while (newIterativeOverlapGrownPathsLt.Count != IterativeOverlapGrownPathsLt.Count);
-            if (intRound > 1)
-            {
-                Console.WriteLine("intRound: " + intRound);
-            }
-
-            return finalPolyTree;
-
         }
 
         public static Paths ClipOneComponent_BufferDilateErode_Paths(CPolygon cpg,

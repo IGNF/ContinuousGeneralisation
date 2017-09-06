@@ -87,8 +87,9 @@ namespace ContinuousGeneralizer.FrmGeneralization
 
         public void btnRun_Click(object sender, EventArgs e)
         {
-            CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
 
+            CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
+            ParameterInitialize.tsslMessage.Text = this.Name + ": Computing...";
             //读取数据
             _pBldgGrow = new CBldgGrow(ParameterInitialize);
             _pBldgGrow.BldgGrow(
@@ -97,7 +98,7 @@ namespace ContinuousGeneralizer.FrmGeneralization
                 Convert.ToDouble(this.txtLargerScale.Text),Convert.ToDouble(this.txtSmallerScale.Text),
                 Convert.ToInt32(this.txtOutput.Text));
 
-            MessageBox.Show("Done!");
+            ParameterInitialize.tsslMessage.Text = this.Name + ": Ready!";
         }
 
         private void btnResultFolder_Click(object sender, EventArgs e)
@@ -115,7 +116,8 @@ namespace ContinuousGeneralizer.FrmGeneralization
         private void btn020_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.2;
-            //_pBldgGrow.Output(_dblProportion, this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
+            _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text,
+    this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
         private void btn030_Click(object sender, EventArgs e)
         {
@@ -150,7 +152,8 @@ namespace ContinuousGeneralizer.FrmGeneralization
         public void btn090_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.9;
-            _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text, this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
+            _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text, 
+                this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
         private void btn000_Click(object sender, EventArgs e)
         {

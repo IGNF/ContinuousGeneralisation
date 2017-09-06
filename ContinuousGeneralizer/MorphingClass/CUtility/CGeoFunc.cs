@@ -166,6 +166,46 @@ namespace MorphingClass.CUtility
 
 
 
+       
+
+
+
+        public static double CalDisSquare(CPoint cpt1, CPoint cpt2)
+        {
+            return CalDisSquare(cpt1.X, cpt1.Y, cpt2.X, cpt2.Y);
+        }
+
+        public static double CalDisSquare(double dblx1, double dbly1, double dblx2, double dbly2)
+        {
+            return (dblx1 - dblx2) * (dblx1 - dblx2) + (dbly1 - dbly2) * (dbly1 - dbly2);
+        }
+
+
+        public static double CalDis(CPoint cpt1, CPoint cpt2)
+        {
+            return CalDis(cpt1.X, cpt1.Y, cpt2.X, cpt2.Y);
+        }
+
+        public static double CalDis(IPoint ipt1, IPoint ipt2)
+        {
+            return CalDis(ipt1.X, ipt1.Y, ipt2.X, ipt2.Y);
+        }
+
+        public static double CalDis(CMoveVector cmv1, CMoveVector cmv2)
+        {
+            return CalDis(cmv1.X, cmv1.Y, cmv2.X, cmv2.Y);
+        }
+
+        public static double CalDis(double dblx1, double dbly1, double dblx2, double dbly2)
+        {
+            return Math.Sqrt((dblx1 - dblx2) * (dblx1 - dblx2) + (dbly1 - dbly2) * (dbly1 - dbly2));
+        }
+
+        //public static double CalDis(double dbldiffx, double dbldiffy)
+        //{
+        //    return Math.Sqrt(CalSquareSum(dbldiffx, dbldiffy));
+        //}
+
         public static double CalDisPointToLine(CPoint cpt1, CPoint cpt2, CPoint querycpt)
         {
             double ans = 0;
@@ -200,52 +240,39 @@ namespace MorphingClass.CUtility
             return ans;
         }
 
-
-
-        public static double CalDisSquare(CPoint cpt1, CPoint cpt2)
+        /// <summary>
+        /// you must setlength before using this function
+        /// we may improve this function by using another method
+        /// https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+        /// </summary>
+        /// <param name="cpt"></param>
+        /// <param name="cedge"></param>
+        /// <returns></returns>
+        public static double CalHeightCptCEdge(CPoint cpt, CEdge cedge)
         {
-            return CalDisSquare(cpt1.X, cpt1.Y, cpt2.X, cpt2.Y);
+            if (cedge.blnHasSlope==true)
+            {
+                return Math.Abs(cedge.dblYIntercept + cedge.dblSlope * cpt.X - cpt.Y) * cedge.dblValueForDis;
+            }
+            else
+            {
+                return Math.Abs(cpt.X - cedge.FrCpt.X);
+
+            }
+
+
+            double dblprojX = cedge.FrCpt.X;
+            double dblprojY = cedge.FrCpt.Y;
+            if (cedge.dblLength != 0)
+            {
+                double t = CGeoFunc.DotProduct(cedge.FrCpt, cpt, cedge.ToCpt) * cedge.dblLengthSquareReciprocal;
+                dblprojX = cedge.GetUnsafeInbetweenX(t);
+                dblprojY = cedge.GetUnsafeInbetweenY(t);
+            }
+
+            return CalDis(cpt.X, cpt.Y, dblprojX, dblprojY);
         }
 
-        public static double CalDisSquare(double dblx1, double dbly1, double dblx2, double dbly2)
-        {
-            return CalSquareSum(dblx1 - dblx2, dbly1 - dbly2);
-        }
-
-        //public static double CalDisSquare(double dbldiffx, double dbldiffy)
-        //{
-        //    return CalSquareSum(dbldiffx, dbldiffy);
-        //}
-
-        public static double CalSquareSum(double dblx, double dbly)
-        {
-            return dblx * dblx + dbly * dbly;
-        }
-
-        public static double CalDis(CPoint cpt1, CPoint cpt2)
-        {
-            return CalDis(cpt1.X, cpt1.Y, cpt2.X, cpt2.Y);
-        }
-
-        public static double CalDis(IPoint ipt1, IPoint ipt2)
-        {
-            return CalDis(ipt1.X, ipt1.Y, ipt2.X, ipt2.Y);
-        }
-
-        public static double CalDis(CMoveVector cmv1, CMoveVector cmv2)
-        {
-            return CalDis(cmv1.X, cmv1.Y, cmv2.X, cmv2.Y);
-        }
-
-        public static double CalDis(double dblx1, double dbly1, double dblx2, double dbly2)
-        {
-            return Math.Sqrt(CalDisSquare(dblx1, dbly1, dblx2, dbly2));
-        }
-
-        //public static double CalDis(double dbldiffx, double dbldiffy)
-        //{
-        //    return Math.Sqrt(CalSquareSum(dbldiffx, dbldiffy));
-        //}
 
         public static CptEdgeDis CalDisBetweenCptCEdge(CPoint cpt, CEdge cedge, bool blnHeight = false, CEdge thisCEdge=null)
         {
@@ -564,6 +591,9 @@ namespace MorphingClass.CUtility
             }
         }
 
+        /// <summary>
+        /// if you know the edge from frcpt to tocpt, you can use a function in CEdge class, which is faster
+        /// </summary>
         public static CPoint GetInbetweenCpt(CPoint frcpt, CPoint tocpt, double dblProportion, int intID = -1)
         {
             double dblInbetweenX = GetInbetweenDbl(frcpt.X, tocpt.X, dblProportion);
@@ -1604,83 +1634,7 @@ namespace MorphingClass.CUtility
         }
         #endregion
 
-        ///// <summary>whether a point is in cedge (we already know that the point is on the line that goes through the cedge)</summary>
-        ///// <returns> -1, nonsense,
-        /////                   1, this point is not on the Edge
-        /////                   2, this point is the FrCpt
-        /////                   3, this point is in the Edge
-        /////                   4, this point is the ToCpt</returns>
-        /////                   <remarks></remarks>
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cpt"></param>
-        /// <param name="cedge"></param>
-        /// <returns> "No", "Fr", "In", "To"</returns>
-        public static string InCEdge(CPoint cpt, CEdge cedge)
-        {
-
-            //we test both x and y. if we only test one coordinate, we may get wrong result.
-            //      for example, there is an intersection that is actually in an edge, and this edge is almost vertical.
-            //      if we only test the x coordinate, then we will get that the intersection is the end (on the boundary) of this edge because we use dblVerysmall to judge
-
-            cedge.SetLength();
-            int intCompareX = CCmpMethods.Cmp(cpt.X, cedge.FrCpt.X, cedge.ToCpt.X);
-            int intCompareY = CCmpMethods.Cmp(cpt.Y, cedge.FrCpt.Y, cedge.ToCpt.Y);
-
-            //the result is a result of a 6*6 matrix
-            string strInCEdge = "";
-            if (intCompareX == 1 || intCompareX == 5 || intCompareY == 1 || intCompareY == 5)   //this point is not on the Edge
-            {
-                strInCEdge="No";
-            }
-            else if (intCompareX == 3 || intCompareY == 3)   //this point is in the Edge
-            {
-                strInCEdge = "In";
-            }
-            else // if (intCompareX, intCompareY = 0, 2, 4),    //this point is one of the ends of the Edge
-            {
-                if (intCompareX == 0)
-                {
-                    if (intCompareY == 0 || intCompareY == 2)
-                    {                        
-                        strInCEdge = "Fr";
-                    }
-                    else  //if  (intCompareY==4)
-                    {
-                        strInCEdge = "To";
-                    }
-                }
-                else if (intCompareX == 2)
-                {
-                    if (intCompareY == 0 || intCompareY == 2)
-                    {
-                        strInCEdge = "Fr";
-                    }
-                    else  //if  (intCompareY==4)    //unfortunately, this can happen!!!
-                    {
-                        //MessageBox.Show("This cannot happen! InCEdge!");  //
-                        strInCEdge = "In";
-                    }
-                }
-                else //if (intCompareX == 4)
-                {
-                    if (intCompareY == 0 || intCompareY == 4)
-                    {
-                        strInCEdge = "To";
-                    }
-                    else  //if  (intCompareY==2)
-                    {
-                        //MessageBox.Show("This cannot happen! InCEdge!");
-                        strInCEdge = "In";
-                    }
-                }
-            }
-
-            return strInCEdge;
-        }
+        
 
 
         public static CEdge DetectCloestLeftCEdge(CPoint rayfrcpt, CEdgeGrid pEdgeGrid)
@@ -1723,8 +1677,8 @@ namespace MorphingClass.CUtility
                                     CEdge tempOldCEdge2 = new CEdge(pIntersectionRightMost.IntersectCpt, pIntersectionRightMost.CEdge2.GetInbetweenCpt(0.5));
                                     CEdge tempNewCEdge2 = new CEdge(pIntersectionRightMost.IntersectCpt, pIntersection.CEdge2.GetInbetweenCpt(0.5));
 
-                                    double dblDiffYOld = tempOldCEdge2.GetDiffY();
-                                    double dblDiffYNew = tempNewCEdge2.GetDiffY();
+                                    double dblDiffYOld = tempOldCEdge2.GetIncrY();
+                                    double dblDiffYNew = tempNewCEdge2.GetIncrY();
 
                                     double dblDiffYProd = dblDiffYOld * dblDiffYNew;
                                     if (dblDiffYProd < 0)
@@ -1849,7 +1803,7 @@ namespace MorphingClass.CUtility
         /// -1, not intersection; 3, intersection
         /// one has to specify type 0, types 1 & 2, and type 4 respectively by blnTouchBothEnds, blnTouchEndEdge, and blnOverlap
         /// </remarks>
-        public static List<CIntersection> DetectIntersections(List<CEdge> cedgelt, 
+        public static List<CIntersection> DetectIntersections(List<CEdge> cedgelt,
             bool blnTouchBothEnds = false, bool blnTouchEndEdge = false, bool blnOverlap = false)
         {
             List<CIntersection> IntersectionLt = new List<CIntersection>();
@@ -1859,31 +1813,33 @@ namespace MorphingClass.CUtility
                 cedge.IntersectLt = new List<CIntersection>();
             }
 
-            CEdgeGrid pEdgeGrid = new CEdgeGrid(cedgelt);   //put edges in the cells of a grid
+            var pEdgeGrid = new CEdgeGrid(cedgelt);   //put edges in the cells of a grid
             foreach (CEdge cedge in cedgelt)
             {
                 cedge.isTraversed = true;
-                List<CEdge> TraversedCEdgeLt = new List<CEdge>();
+                var TraversedCEdgeLt = new List<CEdge>();
 
                 foreach (var RowColVp in cedge.RowColVpLt)
                 {
                     foreach (var pcedge in pEdgeGrid.aCEdgeLtCell[RowColVp.val1, RowColVp.val2])
                     {
-                        if (pcedge.isTraversed == false)
+                        if (pcedge.isTraversed == true)
                         {
-                            pcedge.isTraversed = true;
-                            TraversedCEdgeLt.Add(pcedge);   // we will set IsTraversed of these TraversedCEdge to false after looking for intersection for this cedge 
-
-                            CIntersection pIntersection = cedge.IntersectWith(pcedge);
-                            if (pIntersection.JudgeIntersect(blnTouchBothEnds, blnTouchEndEdge, blnOverlap))
-                            {
-                                IntersectionLt.Add(pIntersection);  //record the intersection in the whole Lt
-
-                                cedge.IntersectLt.Add(pIntersection);  //record the intersection in the CEdge
-                                //add the intersection to the other edge
-                                pcedge.IntersectLt.Add(pIntersection.ReverseIntersection());
-                            }
+                            continue;
                         }
+
+                        pcedge.isTraversed = true;
+                        TraversedCEdgeLt.Add(pcedge);   
+
+                        CIntersection pIntersection = cedge.IntersectWith(pcedge);
+                        if (pIntersection.JudgeIntersect(blnTouchBothEnds, blnTouchEndEdge, blnOverlap))
+                        {
+                            IntersectionLt.Add(pIntersection);  //record the intersection in the whole Lt
+                            cedge.IntersectLt.Add(pIntersection);  //record the intersection in the CEdge
+                                                                   //add the intersection to the other edge
+                            pcedge.IntersectLt.Add(pIntersection.ReverseIntersection());
+                        }
+
                     }
                 }
 

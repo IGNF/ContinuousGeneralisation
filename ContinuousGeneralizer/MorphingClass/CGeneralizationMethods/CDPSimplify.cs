@@ -189,6 +189,7 @@ namespace MorphingClass.CGeneralizationMethods
                     subVtPl.SetBaseLine(dcptlt[subVtPl.intFrID], dcptlt[subVtPl.intToID]);
                     for (int i = subVtPl.intFrID + 1; i < subVtPl.intToID; i++)
                     {
+                        throw new ArgumentException("make sure you have set length for pBaseLine!");
                         dblFromDis = subVtPl.pBaseLine.QueryPtHeight(dcptlt[i]);
                         if (dblFromDis > dblMaxDis)
                         {
@@ -761,7 +762,15 @@ namespace MorphingClass.CGeneralizationMethods
             }
         }
 
-
+        /// <summary>
+        /// we can improve by saving a pEdgeGrid for every orginal cpg; ********************************
+        /// for the EnlargedCEdgeHS, we make another pEdgeGrid ********************************
+        /// </summary>
+        /// <param name="cptlt"></param>
+        /// <param name="OriginalCEdgeLt"></param>
+        /// <param name="EnlargedCEdgeHS"></param>
+        /// <param name="dblThreshold"></param>
+        /// <returns></returns>
         private static IEnumerable<CPoint> ImaiIriSimplifyAccordExistEdges(List<CPoint> cptlt,
             List<CEdge> OriginalCEdgeLt, HashSet<CEdge> EnlargedCEdgeHS, double dblThreshold)
         {
@@ -769,6 +778,10 @@ namespace MorphingClass.CGeneralizationMethods
             {
                 throw new ArgumentOutOfRangeException("There is no points for simplification!");
             }
+
+            var allcedgelt = new List<CEdge>(OriginalCEdgeLt);
+            allcedgelt.AddRange(EnlargedCEdgeHS);
+            var pEdgeGrid = new CEdgeGrid(allcedgelt);
 
             var CNodeLt = new List<CNode>(cptlt.Count);
             CNodeLt.EveryElementNew();
@@ -781,7 +794,7 @@ namespace MorphingClass.CGeneralizationMethods
                 {
                     var subcptlt = cptlt.GetRange(i, j - i + 1);
                     int intIndexMaxdis;
-                    if (IsCutValid(subcptlt, OriginalCEdgeLt, EnlargedCEdgeHS, dblThreshold, out intIndexMaxdis))
+                    if (IsCutValid(subcptlt, pEdgeGrid, dblThreshold, out intIndexMaxdis))
                     {
                         CNodeLt[i].NbrCNodeLt.Add(CNodeLt[j]);
                     }                    
@@ -837,6 +850,86 @@ namespace MorphingClass.CGeneralizationMethods
 
         }
 
+        private static bool IsCutValid(List<CPoint> cptlt, CEdgeGrid pEdgeGrid,   
+            double dblThreshold, out int intIndexMaxDis)
+        {
+            //the distances from all the removed points to cedgebaseline should be smaller than a threshold
+            var cedgebaseline = new CEdge(cptlt[0], cptlt.GetLastT());
+            //cedgebaseline.SetLengthSquareReciprocal();
+            cedgebaseline.SetSlope();
+            cedgebaseline.SetDenominatorForDis();
+            var IndexDisVP = ComputeMaxIndexDisVP(cedgebaseline, cptlt, 1, cptlt.Count - 1);
+            intIndexMaxDis = IndexDisVP.val1;
+            if (IndexDisVP.val2 >= dblThreshold)
+            {
+                return false;
+            }
+
+            //if the baseline is outside of the polygon, then the baseline is not a valid choice
+            if (CGeoFunc.IsClockwise(cptlt, false) == false)
+            {
+                return false;
+            }
+
+            //we don't test the four edges
+            cedgebaseline.FrCpt.InCEdge.isTraversed = true;
+            cedgebaseline.FrCpt.OutCEdge.isTraversed = true;
+            cedgebaseline.ToCpt.InCEdge.isTraversed = true;
+            cedgebaseline.ToCpt.OutCEdge.isTraversed = true;
+            var blnIntersect = BlnIntersect(cedgebaseline, pEdgeGrid);
+
+            cedgebaseline.FrCpt.InCEdge.isTraversed = false;
+            cedgebaseline.FrCpt.OutCEdge.isTraversed = false;
+            cedgebaseline.ToCpt.InCEdge.isTraversed = false;
+            cedgebaseline.ToCpt.OutCEdge.isTraversed = false;
+
+            return blnIntersect;
+            ////cedgebaseline should no intersect any of the edges
+            //if (BlnIntersect(cedgebaseline, OriginalCEdgeLt))
+            //{
+            //    return false;
+            //}
+
+            //var newEnlargedCEdgeHS = new HashSet<CEdge>(EnlargedCEdgeHS);
+            //newEnlargedCEdgeHS.Remove(cedgebaseline.FrCpt.InCEdge);
+            //newEnlargedCEdgeHS.Remove(cedgebaseline.FrCpt.OutCEdge);
+            //newEnlargedCEdgeHS.Remove(cedgebaseline.ToCpt.InCEdge);
+            //newEnlargedCEdgeHS.Remove(cedgebaseline.ToCpt.OutCEdge);
+
+            //if (BlnIntersect(cedgebaseline, newEnlargedCEdgeHS))
+            //{
+            //    return false;
+            //}
+
+            //return true;
+        }
+
+        private static bool IsBaselineRightHandSide(CEdge CEdgeBaseline, CEdge CEdgeRef)
+        {
+            double dblAngle = CGeoFunc.CalAngle_Counterclockwise(CEdgeBaseline, CEdgeRef);
+            if (dblAngle < Math.PI)  //it doesn't matter we are simplifying a exterior ring or a interior ring (hole)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        //private static bool BlnIntersect(CEdge cedge, List<CEdge> OriginalCEdgeLt, List<CPoint> cptlt)
+        //{
+        //    var ConflictCEdgeLt = new List<CEdge>(OriginalCEdgeLt);
+        //    for (int i = 1; i < cptlt.Count - 2; i++)
+        //    {
+        //        ConflictCEdgeLt.Add(cptlt[i].CEdge);
+        //    }
+
+        //    return BlnIntersect(cedge, ConflictCEdgeLt);
+        //}
+
+
+
 
         ////*******************check the codes below***************************
         ////****************** should we keep at least three points?
@@ -873,74 +966,12 @@ namespace MorphingClass.CGeneralizationMethods
         //    yield return cptlt.GetLastT();
         //}
 
-        private static bool IsCutValid(List<CPoint> cptlt, List<CEdge> OriginalCEdgeLt, HashSet<CEdge> EnlargedCEdgeHS,   
-            double dblThreshold, out int intIndexMaxDis)
-        {
-            //the distances from all the removed points to cedgebaseline should be smaller than a threshold
-            var cedgebaseline = new CEdge(cptlt[0], cptlt.GetLastT());
-            var IndexDisVP = ComputeMaxIndexDisVP(cedgebaseline, cptlt, 1, cptlt.Count - 1);
-            intIndexMaxDis = IndexDisVP.val1;
-            if (IndexDisVP.val2 >= dblThreshold)
-            {
-                return false;
-            }
-
-            //if the baseline is outside of the polygon, then the baseline is not a valid choice
-            if (CGeoFunc.IsClockwise(cptlt, false) == false)
-            {
-                return false;
-            }
-
-            //cedgebaseline should no intersect any of the edges
-            if (BlnIntersect(cedgebaseline, OriginalCEdgeLt))
-            {
-                return false;
-            }
-
-            var newEnlargedCEdgeHS = new HashSet<CEdge>(EnlargedCEdgeHS);
-            newEnlargedCEdgeHS.Remove(cedgebaseline.FrCpt.InCEdge);
-            newEnlargedCEdgeHS.Remove(cedgebaseline.FrCpt.OutCEdge);
-            newEnlargedCEdgeHS.Remove(cedgebaseline.ToCpt.InCEdge);
-            newEnlargedCEdgeHS.Remove(cedgebaseline.ToCpt.OutCEdge);
-
-            if (BlnIntersect(cedgebaseline, newEnlargedCEdgeHS))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private static bool IsBaselineRightHandSide(CEdge CEdgeBaseline, CEdge CEdgeRef)
-        {
-            double dblAngle = CGeoFunc.CalAngle_Counterclockwise(CEdgeBaseline, CEdgeRef);
-            if (dblAngle < Math.PI)  //it doesn't matter we are simplifying a exterior ring or a interior ring (hole)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        //private static bool BlnIntersect(CEdge cedge, List<CEdge> OriginalCEdgeLt, List<CPoint> cptlt)
-        //{
-        //    var ConflictCEdgeLt = new List<CEdge>(OriginalCEdgeLt);
-        //    for (int i = 1; i < cptlt.Count - 2; i++)
-        //    {
-        //        ConflictCEdgeLt.Add(cptlt[i].CEdge);
-        //    }
-
-        //    return BlnIntersect(cedge, ConflictCEdgeLt);
-        //}
-
         private static bool BlnIntersect(CEdge cedge, IEnumerable<CEdge> cedgeEb)
         {
             foreach (var item in cedgeEb)
             {
                 //item.PrintMySelf();
-                if (cedge.IntersectWith(item).enumIntersectionType != CEnumIntersectionType.NoNo)
+                if (cedge.IsTouchWith(item))
                 {
                     return true;
                 }
@@ -949,6 +980,62 @@ namespace MorphingClass.CGeneralizationMethods
             return false;
         }
 
+        private static bool BlnIntersect(CEdge cedge, CEdgeGrid pEdgeGrid)
+        {
+            var intRowColVpLt = pEdgeGrid.FindRowColVpLt(cedge);
+            var TraversedCEdgeLt = new List<CEdge>();
+            bool blnIntersect = false;
+            foreach (var RowColVp in intRowColVpLt)
+            {
+                if (RowColVp.val1<0 || RowColVp.val1>= pEdgeGrid.intRowCount ||
+                   RowColVp.val2 < 0 || RowColVp.val2 >= pEdgeGrid.intColCount )
+                {
+                    continue; 
+                }
+
+                foreach (var pcedge in pEdgeGrid.aCEdgeLtCell[RowColVp.val1, RowColVp.val2])
+                {
+                    if (pcedge.isTraversed == true)
+                    {
+                        continue;
+                    }
+                    pcedge.isTraversed = true;
+                    TraversedCEdgeLt.Add(pcedge);
+
+                    if (cedge.IsTouchWith(pcedge))
+                    {
+                        blnIntersect = true;
+                        break;
+                    }
+                }
+
+                if (blnIntersect == true)
+                {
+                    break;
+                }
+            }
+
+            //Set the TraversedCEdge to false
+            foreach (CEdge TraversedCEdge in TraversedCEdgeLt)
+            {
+                TraversedCEdge.isTraversed = false;
+            }
+            //foreach (var item in cedgeEb)
+            //{
+            //    //item.PrintMySelf();
+            //    if (cedge.IsTouchWith(item))
+            //    {
+            //        return true;
+            //    }
+            //}
+
+            return blnIntersect;
+        }
+
+
+        /// <summary>
+        /// you must setlength before using this function
+        /// </summary>
         private static CValPair<int, double> ComputeMaxIndexDisVP(CEdge cedge, List<CPoint> cptlt, int intStart, int intEnd)
         {
             var MaxDisVP = new CValPair<int, double>();

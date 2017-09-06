@@ -80,7 +80,7 @@ namespace MorphingClass.CGeometry
                     penumIntersectionType = DetectIntersectionNormal(cedge1, cedge2, out IntersectCpt);
                 }
             }
-            else    if (cedge1.blnHasSlope == true && cedge2.blnHasSlope == false)
+            else if (cedge1.blnHasSlope == true && cedge2.blnHasSlope == false)
             {
                 penumIntersectionType = DetectIntersectionOneNoSlope(cedge1, cedge2, out IntersectCpt);
             }
@@ -106,6 +106,9 @@ namespace MorphingClass.CGeometry
             _OverlapCEdge = overlapcedge;
 
         }
+
+        
+
 
         /// <summary>Detect the intesection between two edges</summary>
         private CEnumIntersectionType DetectIntersectionOneNoSlope(CEdge cedge, CEdge cedgeNoSlope, out CPoint IntersectCpt)
@@ -138,8 +141,8 @@ namespace MorphingClass.CGeometry
         /// <returns></returns>
         private CEnumIntersectionType DetermineIntersectCase(CEdge cedge1, CEdge cedge2, ref CPoint IntersectCpt)
         {
-            string strInCEdge1 = CGeoFunc.InCEdge(IntersectCpt, cedge1);
-            string strInCEdge2 = CGeoFunc.InCEdge(IntersectCpt, cedge2);
+            string strInCEdge1 = InCEdge(IntersectCpt, cedge1);
+            string strInCEdge2 = InCEdge(IntersectCpt, cedge2);
 
             //to save memory, we always use the original points if the intersection overlaps an original point
             //we set the intersection to null if there is no intersection
@@ -328,43 +331,7 @@ namespace MorphingClass.CGeometry
             return blnIntersect;
         }
 
-        public CEdge CEdge1
-        {
-            get { return _CEdge1; }
-            //set { _CEdge1 = value; }
-        }
-
-        public CEdge CEdge2
-        {
-            get { return _CEdge2; }
-            set { _CEdge2 = value; }
-        }
-
-        public CEdge OverlapCEdge
-        {
-            get { return _OverlapCEdge; }
-            //set { _OverlapCEdge = value; }
-        }
-
-        public CPoint IntersectCpt
-        {
-            get { return _IntersectCpt; }
-            set { _IntersectCpt = value; }
-
-        }
-
-
-
-        /// <summary>
-        /// COULD BE: NoNo, FrFr, FrIn, FrTo, InFr, InIn, InTo, ToFr, ToIn, ToTo, Overlap
-        /// </summary>
-        /// <remarks >NoNo: no intersection
-        ///                   InIn: cross </remarks>
-        public CEnumIntersectionType enumIntersectionType
-        {
-            get { return _enumIntersectionType; }
-            //set { _enumIntersectionType = value; }
-        }
+        
 
 
         public CIntersection ReverseIntersection()
@@ -410,35 +377,263 @@ namespace MorphingClass.CGeometry
             }
             return ReversedEnumIntersectionType;
         }
+
+        ///// <summary>whether a point is in cedge (we already know that the point is on the line that goes through the cedge)</summary>
+        ///// <returns> -1, nonsense,
+        /////                   1, this point is not on the Edge
+        /////                   2, this point is the FrCpt
+        /////                   3, this point is in the Edge
+        /////                   4, this point is the ToCpt</returns>
+        /////                   <remarks></remarks>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cpt"></param>
+        /// <param name="cedge"></param>
+        /// <returns> "No", "Fr", "In", "To"</returns>
+        public static string InCEdge(CPoint cpt, CEdge cedge)
+        {
+
+            //we test both x and y. if we only test one coordinate, we may get wrong result.
+            //      for example, there is an intersection that is actually in an edge, and this edge is almost vertical.
+            //      if we only test the x coordinate, then we will get that the intersection is the end (on the boundary) of this edge because we use dblVerysmall to judge
+
+            //cedge.SetLength();
+            int intCompareX = CCmpMethods.CmpThreeCoord(cpt.X, cedge.FrCpt.X, cedge.ToCpt.X);
+            int intCompareY = CCmpMethods.CmpThreeCoord(cpt.Y, cedge.FrCpt.Y, cedge.ToCpt.Y);
+
+            //the result is a result of a 6*6 matrix
+            string strInCEdge = "";
+            if (intCompareX == 1 || intCompareX == 5 || intCompareY == 1 || intCompareY == 5)   //this point is not on the Edge
+            {
+                strInCEdge = "No";
+            }
+            else if (intCompareX == 3 || intCompareY == 3)   //this point is in the Edge
+            {
+                strInCEdge = "In";
+            }
+            else // if (intCompareX, intCompareY = 0, 2, 4),    //this point is one of the ends of the Edge
+            {
+                if (intCompareX == 0)
+                {
+                    if (intCompareY == 0 || intCompareY == 2)
+                    {
+                        strInCEdge = "Fr";
+                    }
+                    else  //if  (intCompareY==4)
+                    {
+                        strInCEdge = "To";
+                    }
+                }
+                else if (intCompareX == 2)
+                {
+                    if (intCompareY == 0 || intCompareY == 2)
+                    {
+                        strInCEdge = "Fr";
+                    }
+                    else  //if  (intCompareY==4)    //unfortunately, this can happen!!!
+                    {
+                        //MessageBox.Show("This cannot happen! InCEdge!");  //
+                        strInCEdge = "In";
+                    }
+                }
+                else //if (intCompareX == 4)
+                {
+                    if (intCompareY == 0 || intCompareY == 4)
+                    {
+                        strInCEdge = "To";
+                    }
+                    else  //if  (intCompareY==2)
+                    {
+                        //MessageBox.Show("This cannot happen! InCEdge!");
+                        strInCEdge = "In";
+                    }
+                }
+            }
+
+            return strInCEdge;
+        }
+
+
+
+        public bool IsTouch()
+        {
+            CEdge cedge1 = _CEdge1;
+            CEdge cedge2 = _CEdge2;
+
+            cedge1.JudgeAndSetSlope();
+            cedge2.JudgeAndSetSlope();
+
+            CPoint IntersectCpt = null;
+            //CEdge overlapcedge = null;
+            //CEnumIntersectionType penumIntersectionType = CEnumIntersectionType.NoNo;
+
+
+            if (cedge1.blnHasSlope == true && cedge2.blnHasSlope == true)   //this is the normal case
+            {
+                //if (CCmpMethods.Cmp(cedge1.dblSlope, cedge2.dblSlope)==0)  //parallel
+                if (CCmpMethods.CmpDbl_ConstVerySmall(cedge1.dblSlope, cedge2.dblSlope) == 0)  //parallel
+                {
+                    if (CCmpMethods.CmpCoordDbl_VerySmall(cedge1.dblYIntercept, cedge2.dblYIntercept) == 0)   //parallel and with the same YIntercept
+                    {
+                        return IsTouchParralel(cedge1, cedge2, out IntersectCpt);
+                    }
+                    else    //parallel but not with the same YIntercept
+                    {
+                        return false;
+                    }
+                }
+                else  //not parallel
+                {
+                    return IsTouchNormal(cedge1, cedge2, out IntersectCpt);
+                }
+            }
+            else if (cedge1.blnHasSlope == true && cedge2.blnHasSlope == false)
+            {
+                return IsTouchOneNoSlope(cedge1, cedge2, out IntersectCpt);
+            }
+            else if (cedge1.blnHasSlope == false && cedge2.blnHasSlope == true)
+            {
+                return IsTouchOneNoSlope(cedge2, cedge1, out IntersectCpt);
+            }
+            else if (cedge1.blnHasSlope == false && cedge2.blnHasSlope == false)
+            {
+                if (CCmpMethods.CmpCoordDbl_VerySmall(cedge1.FrCpt.X, cedge2.FrCpt.X) == 0)   //parallel and with the same X Coordinate
+                {
+                    return IsTouchParralel(cedge1, cedge2, out IntersectCpt);
+                }
+                else    //parallel but not with the same X Coordinate
+                {
+                    return false;
+                }
+            }
+
+            //_enumIntersectionType = penumIntersectionType;
+            _IntersectCpt = IntersectCpt;
+            //_OverlapCEdge = overlapcedge;
+            throw new ArgumentException("unexpected case!");
+
+        }
+
+        /// <summary>
+        ///the intersection of two line segments. The two segments both have slope and not parrallel
+        /// </summary>
+        private bool IsTouchNormal(CEdge cedge1, CEdge cedge2, out CPoint IntersectCpt)
+        {
+            IntersectCpt = new CPoint(-1);  //the intersection of the two lines, not the two line segments
+            IntersectCpt.X = (cedge2.dblYIntercept - cedge1.dblYIntercept) / (cedge1.dblSlope - cedge2.dblSlope);
+            IntersectCpt.Y = IntersectCpt.X * cedge1.dblSlope + cedge1.dblYIntercept;
+
+            return DetermineIsTouch(cedge1, cedge2, ref IntersectCpt);
+        }
+
+        private bool IsTouchParralel(CEdge cedge1, CEdge cedge2, out CPoint IntersectCpt)
+        {
+            if (IsOnCEdge(cedge1.FrCpt, cedge2) == true)
+            {
+                IntersectCpt = cedge1.FrCpt;
+                return true;
+            }
+            else if (IsOnCEdge(cedge1.ToCpt, cedge2) == true)
+            {
+                IntersectCpt = cedge1.ToCpt;
+                return true;
+            }
+            else if (IsOnCEdge(cedge2.FrCpt, cedge1) == true)
+            {
+                IntersectCpt = cedge2.FrCpt;
+                return true;
+            }
+            else if (IsOnCEdge(cedge2.ToCpt, cedge1) == true)
+            {
+                IntersectCpt = cedge2.ToCpt;
+                return true;
+            }
+            else
+            {
+                IntersectCpt = null;
+                return false;
+            }
+        }
+
+        /// <summary>Detect the intesection between two edges</summary>
+        private bool IsTouchOneNoSlope(CEdge cedge, CEdge cedgeNoSlope, out CPoint IntersectCpt)
+        {
+            IntersectCpt = new CPoint(-1);  //the intersection of the two lines, not the two line segments
+            IntersectCpt.X = cedgeNoSlope.FrCpt.X;
+            IntersectCpt.Y = IntersectCpt.X * cedge.dblSlope + cedge.dblYIntercept;
+
+            return DetermineIsTouch(cedge, cedgeNoSlope, ref IntersectCpt);
+        }
+
+        private bool DetermineIsTouch(CEdge cedge1, CEdge cedge2, ref CPoint IntersectCpt)
+        {
+            if (IsOnCEdge(IntersectCpt, cedge1) == false || IsOnCEdge(IntersectCpt, cedge2) == false)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private static bool IsOnCEdge(CPoint cpt, CEdge cedge)
+        {
+            if (CCmpMethods.IsInbetween(cpt.X, cedge.FrCpt.X, cedge.ToCpt.X) == false ||
+                CCmpMethods.IsInbetween(cpt.Y, cedge.FrCpt.Y, cedge.ToCpt.Y) == false)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+
+        public CEdge CEdge1
+        {
+            get { return _CEdge1; }
+            //set { _CEdge1 = value; }
+        }
+
+        public CEdge CEdge2
+        {
+            get { return _CEdge2; }
+            set { _CEdge2 = value; }
+        }
+
+        public CEdge OverlapCEdge
+        {
+            get { return _OverlapCEdge; }
+            //set { _OverlapCEdge = value; }
+        }
+
+        public CPoint IntersectCpt
+        {
+            get { return _IntersectCpt; }
+            set { _IntersectCpt = value; }
+
+        }
+
+
+
+        /// <summary>
+        /// COULD BE: NoNo, FrFr, FrIn, FrTo, InFr, InIn, InTo, ToFr, ToIn, ToTo, Overlap
+        /// </summary>
+        /// <remarks >NoNo: no intersection
+        ///                   InIn: cross </remarks>
+        public CEnumIntersectionType enumIntersectionType
+        {
+            get { return _enumIntersectionType; }
+            //set { _enumIntersectionType = value; }
+        }
     }
 
-    //public class IntersectionType
-    //{
-    //  string  _NoNo=CEnumIntersectionType.NoNo;
-    //  string _FrFr = CEnumIntersectionType.FrFr;
-    //  string _FrIn = CEnumIntersectionType.FrIn;
-    //  string _FrTo = CEnumIntersectionType.FrTo;
-    //  string _InFr = CEnumIntersectionType.InFr;
-    //  string _InIn = CEnumIntersectionType.InIn;
-    //  string _InTo = CEnumIntersectionType.InTo;
-    //  string _ToFr = CEnumIntersectionType.ToFr;
-    //  string _ToIn = CEnumIntersectionType.ToIn;
-    //  string _ToTo = CEnumIntersectionType.ToTo;
-    //  string _Overlap = "_Overlap";
-    //  //string _Part = "_Part";
-    //  //string _Conver = "_Conver";
-
-    //  public string ReverseType(string)
-    //  {
 
 
-
-
-    //  }
-
-
-
-    //}
+    
 
 
 }

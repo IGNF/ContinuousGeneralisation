@@ -497,21 +497,21 @@ namespace ContinuousGeneralizer
             // mnuDPSimplify
             // 
             this.mnuDPSimplify.Name = "mnuDPSimplify";
-            this.mnuDPSimplify.Size = new System.Drawing.Size(163, 22);
+            this.mnuDPSimplify.Size = new System.Drawing.Size(153, 22);
             this.mnuDPSimplify.Text = "DPSimplify";
             this.mnuDPSimplify.Click += new System.EventHandler(this.mnuDPSimplify_Click);
             // 
             // mnuAreaAgg_AStar
             // 
             this.mnuAreaAgg_AStar.Name = "mnuAreaAgg_AStar";
-            this.mnuAreaAgg_AStar.Size = new System.Drawing.Size(163, 22);
+            this.mnuAreaAgg_AStar.Size = new System.Drawing.Size(153, 22);
             this.mnuAreaAgg_AStar.Text = "AreaAgg_AStar";
             this.mnuAreaAgg_AStar.Click += new System.EventHandler(this.mnuAreaAgg_AStar_Click);
             // 
             // mnuBldgGrow
             // 
             this.mnuBldgGrow.Name = "mnuBldgGrow";
-            this.mnuBldgGrow.Size = new System.Drawing.Size(163, 22);
+            this.mnuBldgGrow.Size = new System.Drawing.Size(153, 22);
             this.mnuBldgGrow.Text = "BldgGrow";
             this.mnuBldgGrow.Click += new System.EventHandler(this.mnuBldgGrow_Click);
             // 
@@ -645,6 +645,7 @@ namespace ContinuousGeneralizer
             // propertyGrid
             // 
             this.propertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propertyGrid.LineColor = System.Drawing.SystemColors.ControlDark;
             this.propertyGrid.Location = new System.Drawing.Point(3, 3);
             this.propertyGrid.Name = "propertyGrid";
             this.propertyGrid.Size = new System.Drawing.Size(234, 427);

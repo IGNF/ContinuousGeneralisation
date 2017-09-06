@@ -142,16 +142,18 @@ namespace MorphingClass.CGeneralizationMethods
                 _dblTargetScale = dblTargetScale;
 
 
-                _dblAreaLimit = 4;//area limit 0.16 mm^2
+                //_dblAreaLimit = 4; //area limit 0.16 mm^2
+                _dblAreaLimit = 0.16; //area limit 0.16 mm^2
                 //double dblAreaLimitTargetScale= dblAreaLimit * dblTargetScale * dblTargetScale;
 
                 _dblEpsilon = 0.2;
                 double dblTargetEpsilon = _dblEpsilon * dblTargetScale * dblFclipper;
 
 
-                _dblLambda = 0.8;
-                _dblTotalGrow = _dblLambda / 2 * Math.Sqrt(_dblAreaLimit) * (dblTargetScale - dblStartScale);
-                _dblTotalGrow *= 5;
+                //_dblLambda = 0.8;
+                //_dblTotalGrow = _dblLambda / 2 * Math.Sqrt(_dblAreaLimit) * (dblTargetScale - dblStartScale);
+                //_dblTotalGrow *= 5;
+                _dblTotalGrow = 25;
                 double dblTotalGrow = _dblTotalGrow * dblFclipper;
 
 
@@ -168,6 +170,7 @@ namespace MorphingClass.CGeneralizationMethods
                 //_dblDilation = Math.Sqrt(_dblHoleAreaLimit / Math.PI);
                 //_dblDilation = _dblEpsilon / 2;
                 double dblTargetDilation = (dblTotalGrow - dblMiterLimit * dblTargetErosion) / (dblMiterLimit - 1);
+                //dblTargetDilation = 0;
                 //double dblTargetDilation = dblTotalGrow;
                 //dblTargetDilation= dblTotalGrow / 2;
 
@@ -968,6 +971,7 @@ namespace MorphingClass.CGeneralizationMethods
             //dblCurrentErosion = 0;
             //double dblCurrentDilation = Math.Max(dblCurrentEpsilon / 2, dblProportion * _dblDilation * dblCurrentScale * CConstants.dblFclipper);
             double dblCurrentDilation = (dblCurrentGrow - dblMiterLimit * dblCurrentErosion) / (dblMiterLimit - 1);
+            //dblCurrentDilation = 0;
             //dblCurrentDilation = dblCurrentGrow;
 
             var clipPathsFirstLevel = clipperMethods.GenerateClipPathsByCpgEb(mergedcpg.ClipCpgLt);

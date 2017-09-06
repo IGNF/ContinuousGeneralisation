@@ -15,6 +15,11 @@ namespace MorphingClass.CGeometry
     {
         public static CCmpCEdgeCoordinates pCmpCEdgeCoordinates = new CCmpCEdgeCoordinates();
         public double dblLength { get; set; } = CConstants.dblSpecialValue;
+        public double dblLengthSquare { get; set; }
+        public double dblLengthSquareReciprocal { get; set; }
+        public double dblValueForDis { get; set; }
+        public double dblIncrX { get; set; }
+        public double dblIncrY { get; set; }
 
         /// <summary>
         /// a list of indices for EdgeGrid 
@@ -91,7 +96,7 @@ namespace MorphingClass.CGeometry
         /// </summary>
         /// <param name="eFrCpt">Start cedge vertex index</param>
         /// <param name="eToCpt">End cedge vertex index</param>
-        public CEdge(CPoint eFrCpt, CPoint eToCpt, bool isSetLine = false)
+        public CEdge(CPoint eFrCpt, CPoint eToCpt, bool isSetLength = false)
         {
             this.GID = _intStaticGID++;
             _FrCpt = eFrCpt;
@@ -99,19 +104,19 @@ namespace MorphingClass.CGeometry
 
             _intIncrease = eToCpt.Compare(eFrCpt);
 
-            if (isSetLine == true)
+            if (isSetLength == true)
             {
-                //SetLine();
+                SetLength();
             }
         }
 
-        public CEdge(ITinEdge pTinEdge, bool isSetLine = false)
-            : this(pTinEdge, pTinEdge.FromNode, pTinEdge.ToNode, isSetLine)
+        public CEdge(ITinEdge pTinEdge, bool isSetLength = false)
+            : this(pTinEdge, pTinEdge.FromNode, pTinEdge.ToNode, isSetLength)
         {
         }
 
-        public CEdge(ITinEdge pTinEdge,ITinNode pFrNode, ITinNode pToNode, bool isSetLine = false)
-            : this(new CPoint(pFrNode), new CPoint(pToNode), isSetLine)
+        public CEdge(ITinEdge pTinEdge,ITinNode pFrNode, ITinNode pToNode, bool isSetLength = false)
+            : this(new CPoint(pFrNode), new CPoint(pToNode), isSetLength)
         {
             _pTinEdge = pTinEdge;
         }
@@ -159,9 +164,12 @@ namespace MorphingClass.CGeometry
         //    return cpt;
         //}
 
+        /// <summary>
+        /// you must setlength before using this function
+        /// </summary>
         public double QueryPtHeight(CPoint querycpt)
         {
-            return CGeoFunc.CalDisBetweenCptCEdge(querycpt, this, true).dblDis;
+            return CGeoFunc.CalHeightCptCEdge(querycpt, this);
         }
 
         //public double DistanceTo(CEdge querycedge, bool blnCheckIntersect = true)
@@ -186,7 +194,7 @@ namespace MorphingClass.CGeometry
 
         public CIntersection IntersectWith(CEdge pcedge)
         {
-            CIntersection pIntersection = new CIntersection(this, pcedge);
+            var pIntersection = new CIntersection(this, pcedge);
             pIntersection.DetectIntersection();
             return pIntersection;
         }
@@ -194,13 +202,18 @@ namespace MorphingClass.CGeometry
         public bool IsIntersectWith(CEdge pcedge, 
             bool blnTouchBothEnds = false, bool blnTouchEndEdge = false, bool blnOverlap = false)
         {
-            CIntersection pIntersection = new CIntersection(this, pcedge);
+            var pIntersection = new CIntersection(this, pcedge);
             pIntersection.DetectIntersection();
 
             return pIntersection.JudgeIntersect(blnTouchBothEnds, blnTouchEndEdge, blnOverlap);
         }
 
-        
+        public bool IsTouchWith(CEdge pcedge)
+        {
+            var pIntersection = new CIntersection(this, pcedge);
+           return pIntersection.IsTouch();
+        }
+
 
         /// <summary>
         /// QueryMovedPt
@@ -246,7 +259,7 @@ namespace MorphingClass.CGeometry
             return CGeoFunc.GetInbetweenCpt(_FrCpt, _ToCpt, dblProportion, intID);
         }
 
-        public double GetDiffY()
+        public double GetIncrY()
         {
             return this.ToCpt.Y - this.FrCpt.Y;
         }
@@ -284,21 +297,42 @@ namespace MorphingClass.CGeometry
             this.ToCpt.InCEdge = this;
         }
 
-        public double SetLength()
+        public void SetLength()
         {
-            this.dblLength = _FrCpt.DistanceTo(_ToCpt);
-            return this.dblLength;
+            this.dblIncrX = _ToCpt.X - _FrCpt.X;
+            this.dblIncrY = _ToCpt.Y - _FrCpt.Y;
+            this.dblLengthSquare= this.dblIncrX * this.dblIncrX + this.dblIncrY * this.dblIncrY;
+            this.dblLength = Math.Sqrt(dblLengthSquare);         
         }
 
-        public double JudgeAndSetLength()
+        public void SetLengthSquareReciprocal()
+        {
+            this.dblLengthSquareReciprocal = 1 / this.dblLengthSquare;
+
+        }
+
+
+        /// <summary>
+        /// only if you set length, will this function be safe
+        /// </summary>
+        public double GetUnsafeInbetweenX(double t)
+        {
+            return _FrCpt.X + t * this.dblIncrX;
+        }
+
+        /// <summary>
+        /// only if you set length, will this function be safe
+        /// </summary>
+        public double GetUnsafeInbetweenY(double t)
+        {
+            return _FrCpt.Y + t * this.dblIncrY;
+        }
+
+        public void JudgeAndSetLength()
         {
             if (this.dblLength == CConstants.dblSpecialValue)
             {
-                return SetLength();
-            }
-            else
-            {
-                return this.dblLength;
+                SetLength();
             }
         }
 
@@ -335,25 +369,31 @@ namespace MorphingClass.CGeometry
 
         public bool SetSlope()
         {
-            double dblXDiff = _ToCpt.X - _FrCpt.X;
+            this.dblIncrX = _ToCpt.X - _FrCpt.X;
+            this.dblIncrY = _ToCpt.Y - _FrCpt.Y;
             //for we want to check topological relationships between edges, we use dblVerySmallCoordFixed instead of dblVerySmall, 
             //where dblVerySmall will be changed during checking topological relationships
             //if (CCmpMethods.CmpDblRange(dblXDiff, 0, CConstants.dblVerySmallCoordFixed) == 0)
             //if (dblXDiff == 0)   //this case would result we cannot identify a verticle line
-            if (CCmpMethods.CmpCoordDbl_VerySmall(dblXDiff, 0) == 0)
+            if (CCmpMethods.CmpCoordDbl_VerySmall(this.dblIncrX, 0) == 0)
             {
                 _blnHasSlope = false;
             }
             else
             {
                 _blnHasSlope = true;
-                double dblYDiff = _ToCpt.Y - _FrCpt.Y;
-                _dblSlope = dblYDiff / dblXDiff;
+                _dblSlope = this.dblIncrY / this.dblIncrX;
                 _dblYIntercept = _FrCpt.Y - _dblSlope * _FrCpt.X;
             }
 
             return _blnHasSlope;
         }
+
+        public void SetDenominatorForDis()
+        {
+            this.dblValueForDis = 1 / Math.Sqrt(1 + _dblSlope * _dblSlope);
+        }
+        
 
         //public void CalMoveInformation(CPoint cpt)
         //{

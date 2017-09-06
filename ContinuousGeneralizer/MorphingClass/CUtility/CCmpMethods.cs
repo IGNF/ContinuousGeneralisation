@@ -364,13 +364,14 @@ namespace MorphingClass.CUtility
 
         ///mark
         /// <summary>whether dblValue is in (dblbound1, dblbound2)</summary>
-        /// <returns> 1   If dblValue is smaller than dblbound1;
-        ///                 2    If dblValue is equal to dblbound1 and smaller than dblbound2
-        ///                 0    If dblValue is equal to dblbound1 and equal to dblbound2; this is a very special case, but can happen
-        ///                 3    If dblValue is larger than dblbound1 and smaller than dblbound2,                 
-        ///                 4    If dblValue is larger than dblbound1 and equal to dblbound2, 
-        ///                 5    If dblValue is larger than dblbound1 and larger than dblbound2,</returns>
-        public static int Cmp(double dblValue, double dblbound1, double dblbound2)
+        /// <returns> 
+        /// 1   If dblValue is smaller than dblbound1;
+        /// 2   If dblValue is equal to dblbound1 and smaller than dblbound2
+        /// 0   If dblValue is equal to dblbound1 and equal to dblbound2; this is a very special case, but can happen
+        /// 3   If dblValue is larger than dblbound1 and smaller than dblbound2,                 
+        /// 4   If dblValue is larger than dblbound1 and equal to dblbound2, 
+        /// 5   If dblValue is larger than dblbound1 and larger than dblbound2,</returns>
+        public static int CmpThreeCoord(double dblValue, double dblbound1, double dblbound2)
         {
             int intResult = 0;
             if (dblbound1 <= dblbound2)
@@ -392,13 +393,40 @@ namespace MorphingClass.CUtility
             return intResult;
         }
 
+
+        public static bool IsInbetween(double dblValue, double dblbound1, double dblbound2)
+        {
+            if (dblbound1 <= dblbound2)
+            {
+                return IsInbetweenIncrease(dblValue, dblbound1, dblbound2);
+            }
+            else
+            {
+                return IsInbetweenIncrease(dblValue, dblbound2, dblbound1);
+            }
+        }
+
+        public static bool IsInbetweenIncrease(double dblValue, double dblbound1, double dblbound2)
+        {
+            if (dblValue < dblbound1 - CConstants.dblVerySmallCoord || 
+                dblValue > dblbound2 + CConstants.dblVerySmallCoord)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
         /// <summary>whether dblValue is in (dblbound1, dblbound2)</summary>
-        /// <returns> 1   If dblValue is smaller than dblbound1;
-        ///           2    If dblValue is equal to dblbound1 and smaller than dblbound2
-        ///           0    If dblValue is equal to dblbound1 and equal to dblbound2; this is a very special case, but can happen
-        ///           3    If dblValue is larger than dblbound1 and smaller than dblbound2,                 
-        ///           4    If dblValue is larger than dblbound1 and equal to dblbound2, 
-        ///           5    If dblValue is larger than dblbound1 and larger than dblbound2,</returns>
+        /// <returns> 
+        /// 1   If dblValue is smaller than dblbound1;
+        /// 2   If dblValue is equal to dblbound1 and smaller than dblbound2
+        /// 0   If dblValue is equal to dblbound1 and equal to dblbound2; this is a very special case, but can happen
+        /// 3   If dblValue is larger than dblbound1 and smaller than dblbound2,                 
+        /// 4   If dblValue is larger than dblbound1 and equal to dblbound2, 
+        /// 5   If dblValue is larger than dblbound1 and larger than dblbound2,</returns>
         public static int CmpIncrease(double dblValue, double dblbound1, double dblbound2)
         {
             int intCmp1 = CmpCoordDbl_VerySmall(dblValue, dblbound1);
