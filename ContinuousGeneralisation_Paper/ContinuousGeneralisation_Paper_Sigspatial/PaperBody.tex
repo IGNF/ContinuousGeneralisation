@@ -2,57 +2,96 @@
 \label{sec:Introduction}
 
 
-Digital maps such as Google Maps and OpenStreetMap support zooming by 
-displaying maps at different levels. 
+Digital maps such as Google Maps and OpenStreetMap 
+support zooming by displaying maps at different levels. 
 This discrete strategy may results in sudden changes, which annoy users.
-To provide better zooming experience, continuous generalization aims to 
-produce 
-a sequence of maps with small incremental changes.
-To realize continuous generalization, \citet{Sester2005_CG} discussed some 
-generalization operators for buildings and proposed to morph a building 
-between 
-its forms at different levels. 
-Morphing has been used to generate intermediate 
-representations for two representations at different scales 
-\citep{mnwb-mpstc-08,Peng2013_LSA,Deng2015,Peng2016_Admin}. 
-Also aiming at 
-realize continuous generalization, \citet{Chimani2014_Eat} generated a good 
-selection sequence for road networks, and 
-\citet{Peng2017_AStar} tried to compute optimal aggregation sequences for 
-land-cover areas.
+To provide better zooming experience, 
+we try to produce a sequence of maps 
+with small incremental changes.
+This process is known as \emph{continuous generalization}.
 
-When users zoom out on digital maps, buildings become closer with each other 
-and buildings themselves become smaller. 
-In order to make sure that the map is 
-easily perceived \citep{Weibel1997}, small building should be eliminated, 
-some building should be enlarged, and buildings close to each other should be 
-aggregated.
-Although algorithms of simplifying buildings have been studied, e.g., 
-\citet{Buchin2011_Simp,haunertwolff2010}, problems become more complicated 
-when we have to aggregate buildings simultaneously.
-In order to aggregate, we should first group the buildings.
+A way to realize continuous generalization is to use morphing.
+Often, a start map and a goal map, 
+respectively at a larger scale and a smaller scale, 
+are used as input, 
+and then maps at intermediate scales are produced 
+while the start map is morphed to the goal map.
+In order to morph, correspondences between two maps have to be defined.
+For example, corresponding points between a pair of polylines have been 
+investigated based on 
+dynamic programming \citep{mnwb-mpstc-08}, 
+Delaunay triangulations and binary line generalized tree (BLG-tree)  
+\citep{Deng2015},
+and simulated annealing \citep{Li2017_Annealing}.
+Between corresponding points, 
+straight-line trajectories are often used to interpolate.
+\citet{Peng2013_LSA} investigated the problem of defining interpolate 
+trajectories 
+based on least squares adjustment.
+Using morphing, \citet{Peng2016_Admin} continuously generalized between maps of 
+administrative boundaries based on compatible triangulations.
+
+Also aiming at continuous generalization,
+\citet{Danciger2009} grew polygons when a map was zoomed out. Their method 
+preserves polygons' topology, area-rations, and relative positions. 
+\citet{Chimani2014_Eat} generated a selection sequence for road network.
+They removed one road at each step while keeping the remaining roads connected.
+\citet{Peng2017_AStar} computed optimal aggregation sequences 
+for land-cover areas.
+
+Buildings are important elements on maps.
+There are many methods of generalizing buildings.
+For example, \citet{haunertwolff2010} generalized a set of buildings 
+without topological conflicts based an integer program. 
+Their method minimizes the number of edges of all the buildings 
+and guarantees that the errors are smaller than a user-defined tolerance.
+\citet{Buchin2011_Simp} simplified buildings based on an edge-move operation.
+One advantage is that their method preserves orientations of the edges.
+
+When users zoom out on digital maps, 
+buildings become smaller and the distance between buildings become smaller too. 
+In order to make sure that the map is easily perceived, 
+an objective proposed by \citet{Weibel1997}, 
+some building should be enlarged,
+and buildings close to each other should be aggregated.
+The process of enlarging and aggregating can be used as a new way 
+to compute urban settlement boundaries as did by
+\citet{Chaudhry2008}, 
+who identified the boundaries based on calculating 'citeness'.
+If we have to consider enlarging, simplifying, 
+and aggregating buildings simultaneously,
+the continuous generalization becomes more complicated.
+
+In our method,
 
 
 \bigskip
 
 The papers we may review:   
-\citet{vanSmaalen2003, Buchin2016, Chaudhry2008, Stoter2009},
-
-Rules for building simplification; see \citet{Lee2005}
-
-Straight skeletons for map generalization: 
-\citet{Gold2003,Matuk2006}
+\citet{vanSmaalen2003, Stoter2009},
 
 
-An example of enlargement in aggregation: \citet{Neun2005}
 
-Using MST to group buildings: \citet{Zhang2013, 
-	Cetinkaya2015,Deng2017,Regnauld1996}
+Our contributions are as follows.
+In \sect\ref{sec:Methodology},
+we generalize buildings on a start map to obtain buildings on a goal map 
+by growing and merging. 
+We simplify the buildings on the 
+Using the start map and the goal map,
+we generate maps at intermediate scales. 
+
+a workflow based on compatible
+triangulations for generalizing administrative boundaries in a continuous and 
+topologically
+consistent way; see Section 2.We do a thorough case study with the boundaries
+of the counties and the provinces of Mainland China to test the effectiveness
+and the efficiency of our method; see Section 3. We conclude in Section 4.
+
 
 
 
 \section{Methodology}
-
+\label{sec:Methodology}
 \todo[inline]{a brief introduction of our method.}
 We name our input map as start map,
 and denote the scale of the start map by $1:M_\mathrm{s}$.
@@ -68,7 +107,7 @@ For the sake of convenience, we define parameter
 $M_t= M_\mathrm{s} + t \cdot (M_\mathrm{g}-M_\mathrm{s})$.
 
 
-\subsection{Grow based on buffering}
+\subsection{Growing buildings based on buffering}
 \label{sec:Grow}
 We grow building based on buffering. 
 There are two typical ways of buffering polygons, i.e.,
@@ -154,7 +193,7 @@ We denote by $d_\mathrm{G}$ the total growth. The growth at time $t$ is
 \end{equation}
 
 
-\subsection{Simplify grown buildings}
+\subsection{Simplifying grown buildings}
 \label{sec:Simplify}
 We use a buffering-based method, 
 similar to \citet{Damen2008,Meijers2016}, 
@@ -286,8 +325,14 @@ We found that the Imai--Iri
 algorithm fit our needs better. 
 
 
-\subsection{Group buildings based on buffering}
+\subsection{Grouping buildings based on buffering}
 \label{sec:Group}
+There are many ways to group buildings.
+
+Using MST to group buildings: \citet{Zhang2013, 
+	Cetinkaya2015,Deng2017,Regnauld1996}
+
+
 We group buildings based on their buffers
 (see \fig\ref{fig:RemoveBay} for example).
 We wish to remove some ``bays'' 
@@ -343,7 +388,7 @@ kind of bay and will be removed by overgrowing.
 
 
 
-\subsection{Merge close buildings by introducing bridges}
+\subsection{Merging close buildings by introducing bridges}
 \label{sec:Merge}
 The distance between two buildings on a map should be larger than a threshold
 \citep{Regnauld2001,Li2004}.
@@ -396,7 +441,7 @@ We enlarge and merge buildings as the way we do in \sect\ref{sec:Group}.
 
 
 
-\subsection{Generate the goal forms of buildings}
+\subsection{Generating the goal forms of buildings}
 \label{sec:Goal}
 To generate the goal forms of buildings, we set time $t=1$.
 We group (see \sect\ref{sec:Group}) 
@@ -409,7 +454,7 @@ the building at time $t=1$ is the goal form of the three buildings of $t=0$.
 
 
 
-\subsection{Generate buildings on intermediate maps}
+\subsection{Generating buildings on intermediate-scale maps}
 \label{sec:Unite}
 
 Both the erosion and line simplification may results in shrinking of a 
@@ -498,7 +543,7 @@ and remove the parts outside.
 
 
 
-\subsection{Eliminate small buildings}
+\subsection{Eliminating small buildings}
 \label{sec:Eliminate}
 We eliminate a building if the area of this building is smaller than a 
 threshold.
@@ -673,7 +718,7 @@ the area on map should be $some number\,\text{mm}^2$
 %lower running time exists \citep[see][]{Chan1992}, we implemented the basic 
 %version
 
-\section{Conclusions}
+\section{Conclusion}
 \label{sec:Conclusions}
 
 
