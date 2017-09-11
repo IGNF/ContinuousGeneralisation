@@ -63,19 +63,19 @@ We consider the three operations in our continuous generalization.
 
 Our contributions are as follows.
 In \sect\ref{sec:Methodology},
-we generalize buildings on a start map 
-to obtain buildings on a smaller-scale goal map.
+we continuously generalize a start map, of buildings, 
+to a smaller-scale goal map.
 The generalization consists of aggregating, growing, and simplifying.
-We aggregate buildings which will be too close at an output scale 
+We aggregate original buildings which will be too close at an output scale 
 by introducing bridges.
-We grow buildings by buffering,
+We grow (bridged) original buildings by buffering,
 where we use so-called \emph{miter} joins to keep the right angles of buildings.
 Because of using this kind of joins instead of \emph{round} ones,
-we have to be more careful.
-We show how to solve the problems caused by miter joins.
-Eventually, we manage to generate buildings at any intermediate scales.
-We carry out a case study in \sect\ref{sec:CaseStudy}
-and discuss the performances of our method.
+we have more problems.
+We show how to solve these problems.
+We also simplify the buildings at the output scale.
+We carry out a case study 
+and discuss the performances of our method in \sect\ref{sec:CaseStudy}.
 We conclude our paper in \sect\ref{sec:Conclusion}.
 
 
