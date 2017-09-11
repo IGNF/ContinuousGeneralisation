@@ -95,27 +95,224 @@ when $t$ increases from~$0$ to~$1$.
 For the sake of convenience, we define parameter
 $M_t= M_\mathrm{s} + t \cdot (M_\mathrm{g}-M_\mathrm{s})$.
 
-We group buildings which will be too close at time $t$
+We find buildings which will be too close at time $t$
 and aggregate the buildings in the same group by introducing bridges.
-We grow the buildings by buffering with miter joins.
+We grow the (bridged) original buildings by buffering with miter joins.
 Our building simplification consists of two steps.
 The first one is to use dilation and erosion to remove pits and spikes.
 The second step is to remove vertices using Imai--Iri algorithm.
 To make sure that the intermediate-scale buildings never shrink,
-we merge the shape of a building with the shape at the previously immediate 
-step. 
+we merge the shape of a building 
+with the shape at the previously immediate step. 
 Also, we clip the building using the shape on goal map.
 
+Our aggregation is based on growing and some of simplifying. 
+So we present the two operators before aggregating.
+
+\subsection{Growing buildings based on buffering}
+\label{sec:Grow}
+We grow building based on buffering. 
+There are two typical ways of buffering a polygon, i.e.,
+one with round joins and the other with miter joins 
+(see \fig\ref{fig:Buffer_TwoKinds}).
+As buildings are usually rectangles, 
+we choose the second way to
+better preserve the right angles.
+If an angle is acute, however, an excessively long \emph{spike} will be 
+produced.
+This spike may go across other buildings 
+(see \fig\ref{fig:Buffer_MiterLimits}a).
+To avoid this kind of interruptions, 
+we require that if a vertex of the 
+buffer is more than $\alpha \dtrm{G} (\alpha \ge 1)$
+away from the original vertex, 
+a \emph{square} join is applied
+(see \fig\ref{fig:Buffer_MiterLimits}b).
+Distance $\dtrm{G}$ is the growth at time $t$.
+We denote by $d_\mathrm{G}$ the growth for goal map.
+Then we define
+\begin{equation}
+\label{eq:d_Gt}
+\dtrm{G} = t \cdot d_\mathrm{G}.
+\end{equation}
+To keep right angles of buildings, 
+we must have $\alpha \geq \sqrt{2}$. 
+We set $\alpha  = 1.5$ so that a square join is applied when an angle is 
+smaller (more acute) than $83.6 \degree$.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics{Buffer_TwoKinds}
+	\caption{Buffering a polygon using different kinds of joins.}
+	\label{fig:Buffer_TwoKinds}
+\end{figure}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics{Buffer_MiterLimits}
+	\caption{}
+	\label{fig:Buffer_MiterLimits}
+\end{figure}
+
+
+
+
+\subsection{Simplifying grown buildings}
+\label{sec:Simplify}
+\citet{Damen2008} generalized buildings using morphological operators.
+A drawback of this method is that the directions of the buildings have to be 
+concerned.
+\citet{Meijers2016} simplified buildings 
+based on offset curves generated from straight skeletons.
+We use a method based on buffering to remove pits and spikes of buildings.
+Our method is slightly different than \citet{Meijers2016},
+but there is an available library \textsc{Clipper} \citep{Johnson2014} 
+for the operations.
+\fig\ref{fig:RemovePitAndSpike} illustrates our buffering-based method.
+We first dilate the grown buildings to remove 
+pits, and then erode the results to remove spikes.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[]{RemovePitAndSpike}
+	\caption{Remove a pit by dilating and then remove a spike by eroding.
+		(a) a polygon with a pit and a spike;
+		(b) dilate the polygon in (a) with distance $d$ to remove the pit;
+		(c) erode the polygon in (b) with distance $2d$ to remove the spike;
+		(d) dilate the polygon in (c) with distance $d$ so that the result has 
+		the same size as the polygon in (a).
+	}
+	\label{fig:RemovePitAndSpike}
+\end{figure}
+
+At time $t$, we grow buildings with distance $\dtrm{G}$,
+dilate with distance $\dtrm{D} (\dtrm{D}>0)$,
+erode with distance $\dtrm{D}+\dtrm{E} (\dtrm{E}>0)$,
+and dilate back with distance $\dtrm{E}$.
+A problem we may have is that 
+a building may be broken by eroding
+(see \fig\ref{fig:ErosionBreak} for example).
+The reason is that 
+some parts of a building may be increased (by growing and dilating) 
+with distance $\dtrm{G}+\dtrm{D}$, 
+but can be decreased (by eroding) as much as $\alpha (\dtrm{D}+\dtrm{E})$.
+If $\dtrm{G}+\dtrm{D} < \alpha (\dtrm{D}+\dtrm{E})$ 
+and the building is not thick enough, 
+the thin part may disappear.
+In order to avoid this problem, we require that
+\[
+\dtrm{G} + \dtrm{D} \ge \alpha (\dtrm{D}+\dtrm{E}),
+\]
+which means
+\begin{equation}
+\label{eq:d_Dt}
+\dtrm{D} \le \frac{\dtrm{G}-\dtrm{E}}{\alpha - 1}.
+\end{equation}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[]{ErosionBreak}
+	\caption{Dilate the gray polygon, then erode the dilated polygon.
+		(a) Dilate and erode with distance $d_1$.
+		(b) Dilate and erode with distance $d_2$, where $d_2>d_1$.
+		In (a) the result of dilation and erosion is the same as the original 
+		polygon, while in (b) the result consists of two parts.
+	}
+	\label{fig:ErosionBreak}
+\end{figure}
+
+We would like to use $\dtrm{E}=\frac{l}{2} \cdot M_t$ so that
+any pits and spikes narrower than $l$ will be removed. 
+We set $l=0.3\,\mathrm{mm}$, 
+which was used as a length threshold by, for example, 
+\citet{Regnauld2001}.
+Distance $\dtrm{G}$ can be arbitrarily small according to \eq\ref{eq:d_Gt}, 
+but $\dtrm{E}$ is at least $\frac{l}{2} M_\mathrm{s}$. 
+In this case, $\dtrm{G}-\dtrm{E} \le 0$ when $t$ is small, 
+which violates \eq\ref{eq:d_Dt}, where $\dtrm{D}>0$.
+As a compromise, we use
+\begin{equation}
+\label{eq:d_Et}
+\dtrm{E} =t \cdot \frac{l}{2} M_\mathrm{g}.
+\end{equation}
+%Still, we should make sure that $\dtrm{G}-\dtrm{E} > 0$, which means
+%$t \cdot \frac{\lambda}{2}\sqrt{a} (M_\mathrm{g}-M_\mathrm{s})-
+%t \cdot \frac{l}{2} M_\mathrm{g} >0$.
+Still, we should make sure that $\dtrm{G}-\dtrm{E} > 0$, which means
+$t \cdot d_\mathrm{G} - t \cdot \frac{l}{2} M_\mathrm{g} >0$.
+As a result, we should make sure that
+\begin{equation}
+\label{eq:S_g}
+M_\mathrm{g} < \frac{2 d_\mathrm{G}}{l}.
+\end{equation}
+
+We wish to remove ``bays'' 
+which have ``widths'' less than $r_\mathrm{h} = 2\sqrt{a_\mathrm{h}/\pi}$.
+Variable $a_\mathrm{h}$ is the least area for a hole to be presented on map.
+Following \citep{Chaudhry2008}, we set $a_\mathrm{h} = 8\,\mathrm{mm}^2$.
+Variable $r_\mathrm{h}$ is the radius of such a hole 
+supposing that the hole is a circle.
+Sometimes, our $\dtrm{D}$ is not large enough to do so 
+because of the limitation from \eq\ref{eq:d_Dt}.
+We define
+\[
+\dtrm{D} =\min (\frac{\dtrm{G}-\dtrm{E}}{\alpha - 1}, r_\mathrm{h} M_t) .
+\]
+
+After carrying out the buffering-based methods, 
+we simplify the grown buildings using Imai--Iri algorithm 
+\citep{ImaiIri1988}.
+This algorithm first finds all the valid shortcuts of a polyline.
+A shortcut is valid for a segment 
+if the distance between the segment and the shortcut is at most a specified 
+value
+(see \fig\ref{fig:ImaiIri_Shortcut}).
+We set the value also as $l$.
+That is, at time $t$, the threshold distance is
+\begin{equation}
+\label{eq:d_lt}
+d_{l,t}= l \cdot M_t.
+\end{equation}
+Second, the algorithm finds a sequence of valid shortcuts, from the beginning 
+of a polyline to the end, using breadth-first search.
+The sequence of valid shortcuts is an approximation of the polyline, 
+and has the least number of line segments.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[]{ImaiIri_Shortcut}
+	\caption{Valid and invalid shortcuts for Imai--Iri algorithm.}
+	\label{fig:ImaiIri_Shortcut}
+\end{figure}
+
+\todo[inline]{more details in the below paragraph?}
+We add two more constraints for a shortcut to be valid. 
+First, a shortcut must be completely inside the grown building.
+If a shortcut is outside,
+we are not able to arrive at the shortcut by growing.
+Second, a shortcut is not allowed to intersect the 
+boundary of the original building.
+If we allow this intersection, 
+we need to shrink the building instead of growing. 
+Of course, we do not want to shrink.
+
+We tried simplifying using 
+the Douglas--Peucker algorithm \citep{Douglas1973}, 
+but we hoped to remove more points. 
+We found that the Imai--Iri 
+algorithm fit our needs better. 
 
 \subsection{Grouping buildings based on buffering}
 \label{sec:Group}
-There are many ways to group buildings.
+%There are many ways to group buildings.
+%
+%Using MST to group buildings: \citet{Zhang2013, 
+%	Cetinkaya2015,Deng2017,Regnauld1996}
 
-Using MST to group buildings: \citet{Zhang2013, 
-	Cetinkaya2015,Deng2017,Regnauld1996}
-
-
-We group buildings based on their buffers
+Original buildings grow according to time $t$.
+We put the original building in the same group if 
+they grow to become too close.
+We group buildings based on buffering.
 (see \fig\ref{fig:RemoveBay} for example).
 We wish to remove some ``bays'' 
 which have widths less than $2 \dtrm{D}$.
@@ -140,16 +337,16 @@ kind of bay and will be removed by overgrowing.
 	\includegraphics[draft=false]{RemoveBay}
 	\caption{Group buildings iteratively.
 		(a) Original buildings.
-		(b) Dilate each building in (a) with distance $\dtrm{G}+\dtrm{D}$.		
-		(c) Erode the polygons in (b) with distance $\dtrm{D}$.
-		(d) Dilate the polygons in (c) with distance 
-		$\frac{\sqrt{5}}{2} d_{\epsilon,t}$. 
+		(b) Dilate each original building with distance 
+		$\dtrm{G}+\dtrm{D}$.		
+		(c) Erode the dilated polygons with distance $\dtrm{D}$.
+		(d) Dilate the eroded polygons with distance $\dtrm{C}$. 
 		If two polygons in (d) intersect, 
-		the original buildings in (a) will be put in the same group 
+		the original buildings will be put in the same group 
 		because they will become too close at time $t$.
-		Until this step, there two groups according to (d), 
-		one consists of the single middle building and 
-		the other group consists of the surrounding $9$ buildings.
+		There two groups according to (d).
+		One consists of the single middle building and 
+		the surrounding $9$ buildings comprise the other group.
 		(e) The result of growing and merging at time $t$ 
 		if we use $\dtrm{D}=0$.
 		The process of (f), (g), and (h) is similar to 
@@ -221,182 +418,7 @@ We find a minimum spanning tree of the buildings using Prim's algorithm
 \citep{Prim1957}.
 We enlarge and merge buildings as the way we do in \sect\ref{sec:Group}.
 
-\subsection{Growing buildings based on buffering}
-\label{sec:Grow}
-We grow building based on buffering. 
-There are two typical ways of buffering polygons, i.e.,
-one with round joins and the other with miter joins 
-(see \fig\ref{fig:Buffer_TwoKinds}).
-As buildings are usually rectangles, 
-we choose the second way because it is 
-better at keeping the right angles.
-If an angle is acute, however, an excessively long \emph{spike} will be 
-produced.
-This spike may go across other buildings 
-(see \fig\ref{fig:Buffer_MiterLimits}a).
-To avoid this kind of interruptions, 
-we require that for an angle if a vertex of the 
-buffer is more than $\alpha d_\mathrm{G} (\alpha \ge 1)$, 
-where $d_\mathrm{G}$ is the growing distance, 
-away from the original vertex, 
-a \emph{square} joining is applied
-(see \fig\ref{fig:Buffer_MiterLimits}b).
-To keep right angles of buildings, 
-we must have $\alpha \geq \sqrt{2}$. 
-We set $\alpha  = 1.5$ so that a square joining is applied when an angle is 
-smaller (more acute) than $83.6 \degree$.
 
-\begin{figure}[tb]
-	\centering
-	\includegraphics{Buffer_TwoKinds}
-	\caption{Buffering a polygon using different kinds of joins.}
-	\label{fig:Buffer_TwoKinds}
-\end{figure}
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics{Buffer_MiterLimits}
-	\caption{}
-	\label{fig:Buffer_MiterLimits}
-\end{figure}
-
-
-We denote by $d_\mathrm{G}$ the total growth. The growth at time $t$ is
-\begin{equation}
-	\label{eq:d_Gt}
-	\dtrm{G} = t \cdot d_\mathrm{G}.
-\end{equation}
-
-\subsection{Simplifying grown buildings}
-\label{sec:Simplify}
-We use a buffering-based method, 
-similar to \citet{Damen2008,Meijers2016}, 
-to simplify our grown buildings. 
-We first dilate the grown buildings to remove 
-pits, and then erode the results to remove spikes
-(see \fig\ref{fig:RemovePitAndSpike}).
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[]{RemovePitAndSpike}
-	\caption{Remove a pit by dilating and then remove a spike by eroding.
-		(a) a polygon with a pit and a spike;
-		(b) dilate the polygon in (a) with distance $d$ to remove the pit;
-		(c) erode the polygon in (b) with distance $2d$ to remove the spike;
-		(d) dilate the polygon in (c) with distance $d$ so that the result has 
-		the same size as the polygon in (a).
-	}
-	\label{fig:RemovePitAndSpike}
-\end{figure}
-
-At time $t$, we grow buildings with distance $\dtrm{G}$,
-dilate with distance $\dtrm{D} (\dtrm{D}>0)$,
-erode with distance $\dtrm{D}+\dtrm{E} (\dtrm{E}>0)$,
-and dilate back with distance $\dtrm{E}$.
-A problem we may have is that we may break a building by eroding.
-The reason is that 
-some parts of a building may be increased (by growing and dilating) 
-with distance $\dtrm{G}+\dtrm{D}$, 
-but be decreased (by eroding) as much as $\alpha (\dtrm{D}+\dtrm{E})$.
-If  $\dtrm{G}+\dtrm{D} < \alpha (\dtrm{D}+\dtrm{E})$ 
-and a building is not thick enough, 
-the building may be broken into several parts
-(see \fig\ref{fig:ErosionBreak}).
-In order to avoid this problem, we require that
-\[
-\dtrm{G} + \dtrm{D} \ge \alpha (\dtrm{D}+\dtrm{E}),
-\]
-which means
-\begin{equation}
-\label{eq:d_Dt}
-\dtrm{D} \le \frac{\dtrm{G}-\dtrm{E}}{\alpha - 1}.
-\end{equation}
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[]{ErosionBreak}
-	\caption{Dilate the gray polygon, then erode the dilated polygon.
-		(a) Dilate and erode with distance $d_1$.
-		(b) Dilate and erode with distance $d_2$, where $d_2>d_1$.
-		In (a) the result of dilation and erosion is the same as the original 
-		polygon, while in (b) the result consists of two parts.
-	}
-	\label{fig:ErosionBreak}
-\end{figure}
-
-We would like to use $\dtrm{E}=\frac{l}{2} \cdot M_t$
-(see \eq\ref{eq:d_epsilont}) so that
-any pits and spikes narrower than $l$ will be removed. 
-We set $l=0.3\,\mathrm{mm}$, which was used as a length threshold by 
-\citet{Regnauld2001,Li2004,Basaraner2008}.
-Distance $\dtrm{G}$ can be arbitrarily small according to \eq\ref{eq:d_Gt}, 
-but $\dtrm{E}$ is at least $\frac{l}{2} M_\mathrm{s}$. 
-In this case, $\dtrm{G}-\dtrm{E} \le 0$ when $t$ is small, 
-which violates \eq\ref{eq:d_Dt}, where $\dtrm{D}>0$.
-As a compromise, we use
-\begin{equation}
-\label{eq:d_Et}
-\dtrm{E} =t \cdot \frac{l}{2} M_\mathrm{g}.
-\end{equation}
-Still, we should make sure that $\dtrm{G}-\dtrm{E} > 0$, which means
-$t \cdot \frac{\lambda}{2}\sqrt{a} (M_\mathrm{g}-M_\mathrm{s})-
-t \cdot \frac{l}{2} M_\mathrm{g} >0$.
-As a result, we should make sure that
-\begin{equation}
-\label{eq:S_g}
-M_\mathrm{g} > \frac{\lambda\sqrt{a}}{\lambda\sqrt{a}-l} S_s.
-\end{equation}
-
-We wish to remove ``bays'' which have ``widths'' less than $2\sqrt{a_h/\pi}$.
-\todo{why? more details}
-Usually, our $\dtrm{D}$ is not large enough to do so.
-We use the upper bound in \eq\ref{eq:d_Dt}, that is,
-\[
-\dtrm{D} = \frac{\dtrm{G}-\dtrm{E}}{\alpha - 1}.
-\]
-
-After carrying out the buffering-based methods, 
-we simplify the grown buildings using Imai--Iri algorithm 
-\citep{ImaiIri1988}.
-This algorithm first finds all the valid shortcuts of a polyline.
-A shortcut is valid for a segment 
-if the distance between the segment and the shortcut is at most a specified 
-value
-(see \fig\ref{fig:ImaiIri_Shortcut}).
-We set the value also as $l$.
-That is, at time $t$, the threshold distance is
-\begin{equation}
-\label{eq:d_lt}
-d_{l,t}= l \cdot M_t.
-\end{equation}
-Second, the algorithm finds a sequence of valid shortcuts, from the beginning 
-of a polyline to the end, using breadth-first search.
-The sequence of valid shortcuts is an approximation of the polyline, 
-and has the least number of line segments.
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[]{ImaiIri_Shortcut}
-	\caption{Valid and invalid shortcuts for Imai--Iri algorithm.}
-	\label{fig:ImaiIri_Shortcut}
-\end{figure}
-
-\todo[inline]{more details in the below paragraph?}
-We add two more constraints for a shortcut to be valid. 
-First, a shortcut must be completely inside the grown building.
-If a shortcut is outside,
-we are not able to arrive at the shortcut by growing.
-Second, a shortcut is not allowed to intersect the 
-boundary of the original building.
-If we allow this intersection, 
-we need to shrink the building instead of growing. 
-Of course, we do not want to shrink.
-
-We tried simplifying using 
-the Douglas--Peucker algorithm \citep{Douglas1973}, 
-but we hoped to remove more points. 
-We found that the Imai--Iri 
-algorithm fit our needs better. 
 
 
 
