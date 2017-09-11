@@ -63,10 +63,11 @@ We consider the three operations in our continuous generalization.
 
 Our contributions are as follows.
 In \sect\ref{sec:Methodology},
-we generalize buildings on a start map to obtain buildings on a goal map.
+we generalize buildings on a start map 
+to obtain buildings on a smaller-scale goal map.
 The generalization consists of aggregating, growing, and simplifying.
-We group buildings which will be too close at an output scale.
-We aggregate the grouped buildings by introducing bridges.
+We aggregate buildings which will be too close at an output scale 
+by introducing bridges.
 We grow buildings by buffering,
 where we use so-called \emph{miter} joins to keep the right angles of buildings.
 Because of using this kind of joins instead of \emph{round} ones,
@@ -120,7 +121,7 @@ We wish to remove some ``bays''
 which have widths less than $2 \dtrm{D}$.
 A bay may appear after some buildings are merged by bridging
 (see for example \fig\ref{fig:RemoveBay}e).
-To remove a such kind of bay,
+To remove such kind of bay,
 we overgrow (see \fig\ref{fig:RemoveBay}b and~e) 
 and then erode back (see \fig\ref{fig:RemoveBay}c and~f) 
 with distance $\dtrm{D}$.

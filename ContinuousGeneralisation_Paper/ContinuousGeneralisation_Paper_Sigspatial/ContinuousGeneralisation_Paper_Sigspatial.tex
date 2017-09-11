@@ -95,25 +95,27 @@ Analytics}{November 2017}{Redondo Beach, California USA}
 
 \begin{abstract}
 We propose a method to continuously 
-generalize buildings from a given start scale to a smaller goal scale. 
+generalize buildings from a given start map to a smaller-scale goal map.
+For the sake of convenience, 
+we name the buildings on the start map \emph{original buildings}.
 %
-If several buildings are close to each other at the start 
-scale, we bridge them by line segments and merge them into 
-one 
-building.
-For each building, either an original one or a merged one, at the start 
-scale, 
-we generate its target shape at 
-the goal scale by enlarging and simplifying. 
-Then we grow all buildings to their target shapes.
+For an intermediate scale, 
+we aggregate the original buildings that will be too close 
+by introducing bridges.
+We grow bridged original buildings based on buffering 
+and simplify the grown buildings.
+We take into account the shapes of the buildings 
+both at the previous map and goal map to make sure that 
+the buildings are always growing.
 %
-After finishing the growing, we can take the goal scale as the 
-start scale and repeat the process.
 \newline\indent
-The advantages of our method are as follows. First, the buildings 
-are enlarged continuously. At the same time, they are simplified. 
-Second, we ensure that the distance between any pair of two buildings is 
+The advantages of our method are as follows. 
+First, the buildings grow continuously 
+and, at the same time, are simplified.
+Second, right angles of buildings are preserved during growing. 
+Third, the distances between buildings are 
 always larger than a specified threshold.
+We do a case study to show the performances of our method.
 \end{abstract}
 
 %
