@@ -94,15 +94,16 @@ Analytics}{November 2017}{Redondo Beach, California USA}
 
 
 \begin{abstract}
-We propose a method to continuously 
-generalize buildings from a given start map to a smaller-scale goal map.
+To enable smooth zooming, we propose a method to continuously 
+generalize buildings from a given start map to a smaller-scale goal map, where 
+there are only built-up area polygons instead of individual building polygons.
 For the sake of convenience, 
 we name the buildings on the start map \emph{original buildings}.
 %
 For an intermediate scale, 
 we aggregate the original buildings that will be too close 
 by introducing bridges.
-We grow (bridged) original buildings based on buffering 
+We grow (bridge) original buildings based on buffering 
 and simplify the grown buildings.
 We take into account the shapes of the buildings 
 both at the previous map and goal map to make sure that 
@@ -112,7 +113,8 @@ the buildings are always growing.
 The advantages of our method are as follows. 
 First, the buildings grow continuously 
 and, at the same time, are simplified.
-Second, right angles of buildings are preserved during growing. 
+Second, right angles of buildings are preserved during growing: the merged 
+buildings still look like buildings. 
 Third, the distances between buildings are 
 always larger than a specified threshold.
 We do a case study to show the performances of our method.

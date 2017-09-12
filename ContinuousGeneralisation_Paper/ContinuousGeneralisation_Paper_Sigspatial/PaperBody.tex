@@ -2,15 +2,16 @@
 \label{sec:Introduction}
 
 
-Digital maps such as Google Maps and OpenStreetMap 
+Digital multi-scale maps such as Google Maps and OpenStreetMap 
 support zooming by displaying maps at different levels. 
-This discrete strategy may results in sudden changes, which annoy users.
+This discrete strategy may results in sudden changes, which disturb user 
+navigation.
 To provide better zooming experience, 
 we try to produce a sequence of maps 
 with small incremental changes from a level to another level.
 This process is known as \emph{continuous generalization}.
 
-A way to realize continuous generalization is to use morphing.
+A way to achieve continuous generalization is to use morphing.
 Often, a start map and a goal map, 
 respectively at a larger scale and a smaller scale, 
 are used as input, 
@@ -24,20 +25,26 @@ Delaunay triangulations and binary line generalized tree (BLG-tree)
 \citep{Deng2015},
 and simulated annealing \citep{Li2017_Annealing}.
 From a point to its corresponding point,
-the straight-line trajectory is often used to interpolate.
+a straight-line trajectory is often used to interpolate.
 Using morphing, \citet{Peng2016_Admin} continuously generalized 
-administrative boundaries based on compatible triangulations.
-
-Also aiming at continuous generalization,
-\citet{Danciger2009} grew polygons when a map was zoomed out. Their method 
-preserves polygons' topology, area-rations, and relative positions. 
-\citet{Chimani2014_Eat} generated a selection sequence for road network.
+administrative boundaries based on compatible triangulations. When the number 
+of line features is different in the start and goal maps, a continuous 
+selection is required and \citet{Chimani2014_Eat} proposed to generate a 
+selection sequence applicable for road network.
 They removed one road at each step while keeping the remaining roads connected.
-\citet{Peng2017_AStar} computed optimal aggregation sequences 
-for land-cover areas.
 
-Buildings are important elements on maps.
-Many methods have been proposed to generalize them.
+These methods are interesting but only work on lines and our problem of 
+building polygon interpolation cannot be achieved by similar morphings. 
+Regarding the continuous generalization of polygon map features,
+\citet{Danciger2009} proposed to grow polygons when a map was zoomed out. Their 
+method 
+preserves polygons' topology, area-ratios, and relative positions.  In the case 
+where the goal map is an aggregated version of start landcover map, 
+\citet{Peng2017_AStar} computed optimal aggregation sequences for land-cover 
+areas.
+
+Buildings are important elements on maps, many methods have been proposed to 
+generalize them but not necessarily in a continuous way.
 For example, \citet{haunertwolff2010} simplified a set of buildings 
 based an integer program.
 Their simplification minimizes the number of edges of all the buildings 
@@ -45,20 +52,35 @@ and guarantees that the errors are smaller than a user-defined tolerance.
 At the same time, no topological conflict is introduced by the simplification.
 \citet{Buchin2011_Simp} simplified buildings based on an edge-move operation.
 One advantage is that their method preserves orientations of the edges.
-\citet{Chaudhry2008} identified the boundaries of urban settlement by
-calculating `citeness' based on buildings.
-\citet{Li2017_Building} morphed between two buildings at different scales.
-They managed to preserve the orthogonal characteristics of buildings.
-
 
 When users zoom out on digital maps, 
-buildings become smaller and the distances between buildings decrease. 
-In order to make sure that the information of a map is easily perceived, 
-an objective proposed by \citet{Weibel1997}, 
-some building should be enlarged
-and buildings close to each other should be aggregated.
-Also, buildings should be simplified.
-We consider the three operations in our continuous generalization.
+buildings become smaller and the distances between buildings decrease. So 
+simplification is not the only necessary operation, and buildings can also be 
+aggregated to legible enough \cite{Weibel1997}. Several methods were proposed 
+to aggregate buildings while preserving the shape of buildings (right angles 
+remain) \cite{Regnauld2001}, \cite{RegnauldRevell07}, \cite{Damen2008}. These 
+algorithms can be used as inspirations to define a continuous transformation of 
+buildings.
+
+Algorithms were also proposed to create built-up area polygons (that appear in 
+our goal map) from individual building polygons (that appear in our start map). 
+For instance, \citet{Chaudhry2008} identified the boundaries of urban 
+settlement by calculating `citiness' based on buildings. But the method cannot 
+be adapted to provide a continuous transformation from the buildings to the 
+built-up area.
+
+Finally, some papers directly tackle the continuous transformation of buildings 
+when scale is reduced. \citet{Li2017_Building} morphed between two buildings at 
+different scales.
+They managed to preserve the orthogonal characteristics of buildings, but their 
+algorithm cannot be used in our case as the goal map does not contain buildings 
+anymore. \citet{Touya17b} proposed a progressive transformation of buildings 
+into a built-up area, where buildings are progressively replaced by the shape 
+of the block they belong to. However, this last algorithm is not continuous 
+enough, as each iteration directly transforms a set of buildings in a block 
+into a polygon that covers the whole block. So there is no existing solution 
+for the continuous generalization of building polygons into built-up area 
+polygons.
 
 
 Our contributions are as follows.
@@ -408,9 +430,8 @@ kind of bay and will be removed by overgrowing.
 	\label{fig:RemoveBay}
 \end{figure*}
 
-The prob
-Definition of $\dtrm{C}$
-
+Now we show how to define distance $\dtrm{C}$, 
+which is used to detect closeness.
 The distance between two buildings on a map should be larger than a threshold.
 Following \citet{Stoter2009}, 
 we set the separation threshold $\epsilon= 0.2\,\mathrm{mm}$. 
