@@ -288,7 +288,7 @@ We define
 \dtrm{D} =\min (\frac{\dtrm{G}-\dtrm{E}}{\alpha - 1}, r_\mathrm{h} M_t) .
 \]
 
-After carrying out the dilation-erosion-dilation-based method, 
+After carrying out the dilation-erosion-dilation method, 
 we simplify the buildings using Imai--Iri algorithm 
 \citep{ImaiIri1988}.
 First, this algorithm finds all the valid shortcuts of a polyline.
@@ -350,6 +350,7 @@ We group buildings based on buffering.
 The basic idea is that 
 we buffer the original buildings with distance $\dtrm{G}$
 and an additional distance $\dtrm{C}$.
+We will talk about how to define $\dtrm{C}$ later.
 If two buffers overlap, 
 then the original buildings are put in the same group.
 
@@ -359,7 +360,7 @@ we wish to remove ``bays''
 which have widths less than $2 \dtrm{D}$.
 A bay may come from a complex original building,
 or from bridging some buildings.
-\fig\ref{fig:RemoveBay}e shows an example of the latter case.
+\fig\ref{fig:RemoveBay}e shows an example of the later case.
 To remove a bay,
 we overgrow (see \fig\ref{fig:RemoveBay}b and~e) 
 and then erode back (see \fig\ref{fig:RemoveBay}c and~f) 
@@ -407,6 +408,7 @@ kind of bay and will be removed by overgrowing.
 	\label{fig:RemoveBay}
 \end{figure*}
 
+The prob
 Definition of $\dtrm{C}$
 
 The distance between two buildings on a map should be larger than a threshold.
@@ -538,6 +540,8 @@ We eliminate a building if the area of this building is smaller than a
 threshold.
 For a group of buildings, we consider the area sum of all the buildings.
 
+Following \citet{Stoter2009} and Following \citet{Chaudhry2008}, 
+we set 
 
 %\subsection{Parameters for growing and simplifying}
 %

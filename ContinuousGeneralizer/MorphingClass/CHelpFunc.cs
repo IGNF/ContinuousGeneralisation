@@ -81,10 +81,10 @@ namespace MorphingClass.CUtility
         //private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\AreaAggregation\\" + _strDataFolderName + "\\";
 
         //private static string _strDataFolderName = "France";
-        //private static string _strDataFolderName = "France_FourTowns";
+        private static string _strDataFolderName = "France_FourTowns";
         //private static string _strDataFolderName = "France_Part";
         //private static string _strDataFolderName = "France_FourBuildings";
-        private static string _strDataFolderName = "France_Smallpart";
+        //private static string _strDataFolderName = "France_Smallpart";
         //private static string _strDataFolderName = "France_Presenting";
         //private static string _strDataFolderName = "France_Presenting_DifferentBuffers";
         //private static string _strDataFolderName = "France_Presenting_DifferentMiterLimits";
