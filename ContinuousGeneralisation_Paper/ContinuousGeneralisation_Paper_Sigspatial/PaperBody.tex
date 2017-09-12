@@ -106,12 +106,12 @@ we merge the shape of a building
 with the shape at the previously immediate step. 
 Also, we clip the building using the shape on goal map.
 
-Our aggregation is based on growing and some of simplifying. 
-So we present the two operators before aggregating.
+Our grouping is based on growing, aggregating and some of simplifying. 
+So we present the three operators before grouping.
 
 \subsection{Growing buildings based on buffering}
 \label{sec:Grow}
-We grow building based on buffering. 
+We grow buildings based on buffering. 
 There are two typical ways of buffering a polygon, i.e.,
 one with round joins and the other with miter joins 
 (see \fig\ref{fig:Buffer_TwoKinds}).
@@ -155,7 +155,37 @@ smaller (more acute) than $83.6 \degree$.
 \end{figure}
 
 
+\subsection{Aggregating close buildings by introducing bridges}
+\label{sec:Merge}
 
+
+If a group of buildings will become too close at time $t$ because of growing,
+we aggregate the original buildings by introducing bridges, 
+then we grow the bridged building (see \fig\ref{fig:GrowAndBridge}).
+We show how to group buildings for time $t$ in \sect\ref{sec:Group}.
+No matter a bridge appears earlier or later, 
+it has width $2\dtrm{G}$ at time $t$.
+This setting guarantees that no bridge is thin when $t=1$.
+
+\begin{figure*}[tb]
+	\centering
+	\includegraphics[draft=false]{GrowAndBridge}
+	\caption{Aggregate original buildings in the same group by introducing 
+	bridges.
+		Then grow the bridged buildings.}
+	\label{fig:GrowAndBridge}
+\end{figure*}
+
+For each pair of buildings in the same group, 
+we find a nearest pair of points.
+We connect the buildings by adding a line segment bridging the nearest points.
+If we consider each building as a node and each line segment as an edge, 
+then we have a graph.
+Using Prim's algorithm \citep{Prim1957}, 
+we find a minimum spanning tree (MST) in the graph
+taking the lengths of the line segments as the weights.
+As a results, the line segments corresponding to the edges in the MST
+are used as bridges to aggregate the buildings.
 
 \subsection{Simplifying grown buildings}
 \label{sec:Simplify}
@@ -247,11 +277,10 @@ M_\mathrm{g} < \frac{2 d_\mathrm{G}}{l}.
 \end{equation}
 
 We wish to remove ``bays'' 
-which have ``widths'' less than $r_\mathrm{h} = 2\sqrt{a_\mathrm{h}/\pi}$.
-Variable $a_\mathrm{h}$ is the least area for a hole to be presented on map.
-Following \citep{Chaudhry2008}, we set $a_\mathrm{h} = 8\,\mathrm{mm}^2$.
-Variable $r_\mathrm{h}$ is the radius of such a hole 
-supposing that the hole is a circle.
+which have ``widths'' less than $2 r_\mathrm{h}$. 
+Variable $r_\mathrm{h}= 2\sqrt{a_\mathrm{h}/\pi}$
+is the radius of a hole which is just large enough to be presented on map.
+Following \citep{Chaudhry2008}, we set area $a_\mathrm{h} = 8\,\mathrm{mm}^2$.
 Sometimes, our $\dtrm{D}$ is not large enough to do so 
 because of the limitation from \eq\ref{eq:d_Dt}.
 We define
@@ -259,10 +288,10 @@ We define
 \dtrm{D} =\min (\frac{\dtrm{G}-\dtrm{E}}{\alpha - 1}, r_\mathrm{h} M_t) .
 \]
 
-After carrying out the buffering-based methods, 
-we simplify the grown buildings using Imai--Iri algorithm 
+After carrying out the dilation-erosion-dilation-based method, 
+we simplify the buildings using Imai--Iri algorithm 
 \citep{ImaiIri1988}.
-This algorithm first finds all the valid shortcuts of a polyline.
+First, this algorithm finds all the valid shortcuts of a polyline.
 A shortcut is valid for a segment 
 if the distance between the segment and the shortcut is at most a specified 
 value
@@ -275,8 +304,8 @@ d_{l,t}= l \cdot M_t.
 \end{equation}
 Second, the algorithm finds a sequence of valid shortcuts, from the beginning 
 of a polyline to the end, using breadth-first search.
-The sequence of valid shortcuts is an approximation of the polyline, 
-and has the least number of line segments.
+The sequence of valid shortcuts is an approximation of the polyline 
+and has the least number of line segments, with error smaller than $d_{l,t}$.
 
 \begin{figure}[tb]
 	\centering
@@ -285,16 +314,16 @@ and has the least number of line segments.
 	\label{fig:ImaiIri_Shortcut}
 \end{figure}
 
-\todo[inline]{more details in the below paragraph?}
 We add two more constraints for a shortcut to be valid. 
 First, a shortcut must be completely inside the grown building.
 If a shortcut is outside,
 we are not able to arrive at the shortcut by growing.
-Second, a shortcut is not allowed to intersect the 
-boundary of the original building.
+Second, a shortcut is not allowed to intersect with the aggregated building.
 If we allow this intersection, 
-we need to shrink the building instead of growing. 
+the building will have to be shrunk. 
 Of course, we do not want to shrink.
+\todo{a shortcut is not allowed to intersect with the building at the 
+immediately previous step?}
 
 We tried simplifying using 
 the Douglas--Peucker algorithm \citep{Douglas1973}, 
@@ -302,32 +331,46 @@ but we hoped to remove more points.
 We found that the Imai--Iri 
 algorithm fit our needs better. 
 
+
+
+
 \subsection{Grouping buildings based on buffering}
 \label{sec:Group}
-%There are many ways to group buildings.
-%
-%Using MST to group buildings: \citet{Zhang2013, 
-%	Cetinkaya2015,Deng2017,Regnauld1996}
+There are many research works about grouping buildings.
+\citet{Cetinkaya2015} and \citet{Deng2017} compared some of the methods.
+However, our two needs, 
+the distances between buildings are always larger than a specified threshold 
+and small bays should be removed, 
+motivate us to develop our own grouping method.
 
 Original buildings grow according to time $t$.
-We put the original building in the same group if 
+We put the original buildings in the same group if 
 they grow to become too close.
 We group buildings based on buffering.
-(see \fig\ref{fig:RemoveBay} for example).
-We wish to remove some ``bays'' 
+The basic idea is that 
+we buffer the original buildings with distance $\dtrm{G}$
+and an additional distance $\dtrm{C}$.
+If two buffers overlap, 
+then the original buildings are put in the same group.
+
+%(see \fig\ref{fig:RemoveBay} for example).
+As stated in \sect\ref{sec:Simplify}, 
+we wish to remove ``bays'' 
 which have widths less than $2 \dtrm{D}$.
-A bay may appear after some buildings are merged by bridging
-(see for example \fig\ref{fig:RemoveBay}e).
-To remove such kind of bay,
+A bay may come from a complex original building,
+or from bridging some buildings.
+\fig\ref{fig:RemoveBay}e shows an example of the latter case.
+To remove a bay,
 we overgrow (see \fig\ref{fig:RemoveBay}b and~e) 
 and then erode back (see \fig\ref{fig:RemoveBay}c and~f) 
 with distance $\dtrm{D}$.
 There may be some buildings in a bay (see \fig\ref{fig:RemoveBay}c),
 so we iteratively group until the number of groups does not decrease.
-The result of having removed a bay is the outer polygon of 
+For the buildings in \fig\ref{fig:RemoveBay}a,
+the final result of removing a bay is the outer polygon of 
 \fig\ref{fig:RemoveBay}h. 
 In comparison, the result is \fig\ref{fig:RemoveBay}e 
-if we do not remove a bay.
+if we do not dilate (setting $\dtrm{D}=0$) to remove a bay.
 Note that the pit we want to remove in \fig\ref{fig:RemovePitAndSpike} is a 
 kind of bay and will be removed by overgrowing.
 
@@ -364,59 +407,17 @@ kind of bay and will be removed by overgrowing.
 	\label{fig:RemoveBay}
 \end{figure*}
 
+Definition of $\dtrm{C}$
 
-
-
-\subsection{Aggregating close buildings by introducing bridges}
-\label{sec:Merge}
-The distance between two buildings on a map should be larger than a threshold
-\citep{Regnauld2001,Li2004}.
-Following \citet{Basaraner2008,Stoter2009}, 
+The distance between two buildings on a map should be larger than a threshold.
+Following \citet{Stoter2009}, 
 we set the separation threshold $\epsilon= 0.2\,\mathrm{mm}$. 
 The real separation distance at time $t$ is
 \begin{equation}
-	\label{eq:d_epsilont}
-	d_{\epsilon, t} = \epsilon \cdot M_t.
+\label{eq:d_epsilont}
+d_{\epsilon, t} = \epsilon \cdot M_t.
 \end{equation}
 
-If a group of buildings become too close during growing,
-we merge them by introducing bridges (see \fig\ref{fig:GrowAndBridge}).
-We will talk about where to add bridges in \sect\ref{sec:Goal}.
-No matter a bridge appear earlier or later, 
-it has width $2\dtrm{G}$ at time $t$.
-This setting guarantees that no bridge is thin when $t=1$.
-For example, the two bridges in \fig\ref{fig:GrowAndBridge} at time $t=1$ have 
-the same widths.
-This setting is achieved by following.
-We detect nearest points for each pair of buildings at time $t=0$ so that 
-we know where we should add bridges.
-At time $t$, we group buildings that are too close to each other,
-then we merge them by adding the precomputed bridges.
-For this merged building, we grow, simplify, and unite as described in 
-\sects\ref{sec:Grow}, \ref{sec:Simplify}, and~\ref{sec:Unite}.
-We may unite the processed merged building with several separate parts 
-because the group of buildings may be in several smaller groups
-in the immediately previous step.
-
-\todo[inline]{actually larger than $d_{\epsilon, t}$.}
-
-
-\begin{figure*}[tb]
-	\centering
-	\includegraphics[draft=false]{GrowAndBridge}
-	\caption{Merge buildings by introducing bridges when the buildings become 
-		too close.
-		Although the bridges appear at different time, 
-		their widths are the same (see the figure with $t=1$).}
-	\label{fig:GrowAndBridge}
-\end{figure*}
-
-For each pair of buildings in the same group, 
-we find the smallest distance between them.
-We connect the buildings by adding an edge from the nearest points.
-We find a minimum spanning tree of the buildings using Prim's algorithm 
-\citep{Prim1957}.
-We enlarge and merge buildings as the way we do in \sect\ref{sec:Group}.
 
 
 
@@ -469,6 +470,10 @@ To guarantee the non-exceeding,
 we clip the building by the goal form 
 and remove the parts outside.
 \todo{example?}
+
+We may unite the processed merged building with several separate parts 
+because the group of buildings may be in several smaller groups
+in the immediately previous step.
 
 \begin{figure*}[tb]
 	\centering
@@ -685,7 +690,7 @@ Our goal scale is $1:50{,}000$.
 \begin{figure*}[tb]
 	\centering
 	\includegraphics{Data}
-	\caption{scale.}
+	\caption{data.}
 	\label{fig:Data}
 \end{figure*}
 
