@@ -621,8 +621,22 @@ namespace MorphingClass.CGeneralizationMethods
             //EnlargedCpg.SetAngleDiffLt();
 
 
+            CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgEb(  CHelpFunc.MakeLt(EnlargedCpg), 1 / CConstants.dblFclipper), "EnlargedCpg",
+                pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSHollow, blnVisible: false);
+
             var EnlargedCEdgeHS = new HashSet<CEdge>(EnlargedCpg.CEdgeLt);
-            return SimplifyAccordExistEdges(EnlargedCpg.CptLt, OriginalCEdgeLt, EnlargedCEdgeHS, strSimplification, dblThreshold).ToList();
+            //CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb( EnlargedCEdgeHS, 1 / CConstants.dblFclipper), "EnlargedCEdgeHS",
+            //     blnVisible: false);
+
+            var simplifiedcptlt=  SimplifyAccordExistEdges(EnlargedCpg.CptLt, OriginalCEdgeLt, EnlargedCEdgeHS, strSimplification, dblThreshold).ToList();
+            
+
+            CPolygon simplifiedcpg = new CPolygon(EnlargedCpg.ID, 
+                clipperMethods.ScaleCptEb(simplifiedcptlt,1/ CConstants.dblFclipper).ToList());
+            CSaveFeature.SaveCpg(simplifiedcpg, "simplifiedcpg", 
+                pesriSimpleFillStyle:  esriSimpleFillStyle.esriSFSHollow, blnVisible:false);
+
+            return simplifiedcptlt;
         }
 
         #region obsolete: SimplifyAccordRightAnglesAndExistEdges
@@ -781,6 +795,13 @@ namespace MorphingClass.CGeneralizationMethods
                 throw new ArgumentOutOfRangeException("There is no points for simplification!");
             }
 
+            bool blnPrint = false;
+            if (cptlt.Count>30)
+            {
+                blnPrint = true;
+            }
+
+
             var allcedgelt = new List<CEdge>(OriginalCEdgeLt);
             allcedgelt.AddRange(EnlargedCEdgeHS);
             var pEdgeGrid = new CEdgeGrid(allcedgelt);
@@ -809,7 +830,7 @@ namespace MorphingClass.CGeneralizationMethods
                 }
             }
 
-            BFS(CNodeLt[0], CNodeLt.GetLastT());
+            BFS(CNodeLt[0], CNodeLt.GetLastT(), blnPrint);
             var currentCNode = CNodeLt[0];
             while (currentCNode != null)
             {
@@ -819,7 +840,7 @@ namespace MorphingClass.CGeneralizationMethods
         }
 
 
-        public static void BFS(CNode startCNode, CNode goalCNode)
+        public static void BFS(CNode startCNode, CNode goalCNode, bool blnPrint)
         {
             var CNodeQueue = new Queue<CNode>();
             CNodeQueue.Enqueue(startCNode);
@@ -828,6 +849,12 @@ namespace MorphingClass.CGeneralizationMethods
             while (CNodeQueue.Count > 0 && isFoundGoal == false)
             {
                 var currentCNode = CNodeQueue.Dequeue();
+
+                if (blnPrint==true)
+                {
+                    Console.Write(currentCNode.indexID + "   ");
+                }
+                
                 foreach (var nbrcnode in currentCNode.NbrCNodeLt)
                 {
                     if (nbrcnode.strColor == "white")
@@ -845,7 +872,7 @@ namespace MorphingClass.CGeneralizationMethods
                 }
                 currentCNode.strColor = "black";
             }
-
+            Console.WriteLine();
 
             // set NextCNode for each Node on the path
             var backCNode = goalCNode;
@@ -892,6 +919,8 @@ namespace MorphingClass.CGeneralizationMethods
             cedgebaseline.FrCpt.OutCEdge.isTraversed = true;
             cedgebaseline.ToCpt.InCEdge.isTraversed = true;
             cedgebaseline.ToCpt.OutCEdge.isTraversed = true;
+            //cedgebaseline.ToCpt.InCEdge.PrintMySelf();
+            //cedgebaseline.ToCpt.OutCEdge.PrintMySelf();
             var blnIntersect = BlnIntersect(cedgebaseline, pEdgeGrid);
 
             cedgebaseline.FrCpt.InCEdge.isTraversed = false;
@@ -1017,6 +1046,9 @@ namespace MorphingClass.CGeneralizationMethods
                     }
                     pcedge.isTraversed = true;
                     TraversedCEdgeLt.Add(pcedge);
+
+                    pcedge.PrintMySelf();
+
 
                     if (cedge.IsTouchWith(pcedge))
                     {

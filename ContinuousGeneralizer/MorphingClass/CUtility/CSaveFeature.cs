@@ -475,6 +475,15 @@ esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, str
             return pFLayer;
         }
 
+        public static IFeatureLayer SaveCpg(CPolygon Cpg, string strFileName,
+List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
+int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
+esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, string strSymbolLayerPath = null, bool blnVisible = true)
+        {
+            return SaveCGeoEb(CHelpFunc.MakeLt(Cpg), esriGeometryType.esriGeometryPolygon, strFileName,
+                pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt,
+                intRed, intGreen, intBlue, dblWidth, pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
+        }
 
         public static IFeatureLayer SaveCpgEb(IEnumerable<CPolygon> CpgEb, string strFileName,
 List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
@@ -496,9 +505,14 @@ string strSymbolLayerPath = null, bool blnVisible = true)
                 intRed, intGreen, intBlue, dblWidth, esriSimpleFillStyle.esriSFSSolid, strSymbolLayerPath, blnVisible);
         }
 
-        public static IFeatureLayer SaveCEdgeEb(IEnumerable<CEdge> CGeoEb, string strFileName)
+        public static IFeatureLayer SaveCEdgeEb(IEnumerable<CEdge> CGeoEb, string strFileName,
+List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
+int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
+string strSymbolLayerPath = null, bool blnVisible = true)
         {
-            return SaveCGeoEb(CGeoEb, esriGeometryType.esriGeometryPolyline, strFileName);
+            return SaveCGeoEb(CGeoEb, esriGeometryType.esriGeometryPolyline, strFileName,
+                pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt,
+                intRed, intGreen, intBlue, dblWidth, esriSimpleFillStyle.esriSFSSolid, strSymbolLayerPath, blnVisible);
         }
 
         public static IFeatureLayer SavePathEbAsCplEb(IEnumerable<Path> PathEb, string strFileName,

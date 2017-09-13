@@ -241,7 +241,8 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
         private static List<List<CPolygon>> IterativelyGetPolyTreeForGroupedCpgs(List<CPolygon> cpglt,
 double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "Miter", double dblMiterLimit = 2)
         {
-            double dblDisOverlap = Math.Sqrt(5) * dblEpsilon / 2;
+            //double dblDisOverlap = Math.Sqrt(5) * dblEpsilon / 2;
+            double dblDisOverlap = dblEpsilon / 2;
             var groupedcpgltlt = new List<List<CPolygon>>(cpglt.Count);
             foreach (var cpg in cpglt)
             {
@@ -291,16 +292,16 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
             return groupedcpgltlt;
         }
 
-        public static Paths ClipOneComponent_BufferDilateErode_Paths(CPolygon cpg,
-            double dblGrow, double dblDilation, double dblErosion,
-            Paths clipPaths, double dblFclipper, string strBufferStyle = "Miter", double dblMiterLimit = 2)
-        {
-            var ExteriorOffsetPaths = clipperMethods.DilateErodeOffsetCpgExterior_Paths
-    (cpg, dblGrow, dblDilation, dblErosion, strBufferStyle, dblMiterLimit);
-            var clippedPaths = clipperMethods.Clip_Paths(ExteriorOffsetPaths, true, clipPaths, true, ClipType.ctIntersection);
+    //    public static Paths ClipOneComponent_BufferDilateErode_Paths(CPolygon cpg,
+    //        double dblGrow, double dblDilation, double dblErosion,
+    //        Paths clipPaths, double dblFclipper, string strBufferStyle = "Miter", double dblMiterLimit = 2)
+    //    {
+    //        var ExteriorOffsetPaths = clipperMethods.DilateErodeOffsetCpgExterior_Paths
+    //(cpg, dblGrow, dblDilation, dblErosion, strBufferStyle, dblMiterLimit);
+    //        var clippedPaths = clipperMethods.Clip_Paths(ExteriorOffsetPaths, true, clipPaths, true, ClipType.ctIntersection);
 
-            return clippedPaths;
-        }
+    //        return clippedPaths;
+    //    }
 
 
         public static IEnumerable<CPolygon> DilateErodeOffsetSimplifyOneComponent(CPolygon cpg,
@@ -410,7 +411,7 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
             //    "erosionpaths_" + (dblGrow - dblErosion) / CConstants.dblFclipper + "m",
             //    pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
             //CSaveFeature.SavePathEbAsCpgEb(Clipper.PolyTreeToPaths(normalPolyTree),
-            //    "normalpaths_" + dblGrow  / CConstants.dblFclipper + "m",
+            //    "normalpaths_" + dblGrow / CConstants.dblFclipper + "m",
             //    pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
 
 
@@ -463,8 +464,7 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
         private static CPolygon GenerateOLHCpgEbByPolyNode(PolyNode cpgnode, int intID, bool blnReverse = false)
         {
             //CSaveFeature.SavePathEb(CHelpFunc.MakeLt(cpgnode.Contour), "OLHCpg");
-
-            var cptlt = ConvertPathToCptEb(cpgnode.Contour, blnReverse).ToList();
+            var cptlt = CGeoFunc.RemoveClosePointsForCptEb(ConvertPathToCptEb(cpgnode.Contour, blnReverse)).ToList();
             var holecptlt = GetOLHCptLtEb(cpgnode, blnReverse).ToLtLt();
 
             var cpg= new CPolygon(intID, cptlt, holecptlt);
