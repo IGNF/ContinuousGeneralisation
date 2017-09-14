@@ -250,11 +250,12 @@ namespace MorphingClass.CGeneralizationMethods
 
                 var clipcpgEb = GetClipCpgEb(mergedCpgLt);
                 CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgEb(clipcpgEb, 1 / dblFclipper),
-    strSimplification + "_" + dblTargetScale + "k_ClipForm" + dblTargetEpsilon + "m", intGreen: 255);
+    strSimplification + "_" + dblTargetScale + "k_ClipForm" + dblTargetEpsilon + "m", 
+    pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSHollow, blnVisible: false);
 
-    //            CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgLt(mergedCpgLt, 1 / dblFclipper),
-    //strSimplification + "_" + dblTargetScale + "k_mergedcpg" + dblTargetEpsilon + "m_" +
-    //CHelpFunc.GetTimeStampWithPrefix(), intGreen: 255);
+                CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgEb(mergedCpgLt, 1 / dblFclipper),
+    strSimplification + "_" + dblTargetScale + "k_mergedcpg" + dblTargetEpsilon + "m_",
+    pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSHollow, blnVisible: false);
 
                 #region Geoprocessor Samples
                 //// Initialize the geoprocessor. 

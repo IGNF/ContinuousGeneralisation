@@ -795,12 +795,7 @@ namespace MorphingClass.CGeneralizationMethods
                 throw new ArgumentOutOfRangeException("There is no points for simplification!");
             }
 
-            bool blnPrint = false;
-            if (cptlt.Count>30)
-            {
-                blnPrint = true;
-            }
-
+         
 
             var allcedgelt = new List<CEdge>(OriginalCEdgeLt);
             allcedgelt.AddRange(EnlargedCEdgeHS);
@@ -830,7 +825,7 @@ namespace MorphingClass.CGeneralizationMethods
                 }
             }
 
-            BFS(CNodeLt[0], CNodeLt.GetLastT(), blnPrint);
+            BFS(CNodeLt[0], CNodeLt.GetLastT());
             var currentCNode = CNodeLt[0];
             while (currentCNode != null)
             {
@@ -840,7 +835,7 @@ namespace MorphingClass.CGeneralizationMethods
         }
 
 
-        public static void BFS(CNode startCNode, CNode goalCNode, bool blnPrint)
+        public static void BFS(CNode startCNode, CNode goalCNode)
         {
             var CNodeQueue = new Queue<CNode>();
             CNodeQueue.Enqueue(startCNode);
@@ -849,12 +844,6 @@ namespace MorphingClass.CGeneralizationMethods
             while (CNodeQueue.Count > 0 && isFoundGoal == false)
             {
                 var currentCNode = CNodeQueue.Dequeue();
-
-                if (blnPrint==true)
-                {
-                    Console.Write(currentCNode.indexID + "   ");
-                }
-                
                 foreach (var nbrcnode in currentCNode.NbrCNodeLt)
                 {
                     if (nbrcnode.strColor == "white")
@@ -872,7 +861,6 @@ namespace MorphingClass.CGeneralizationMethods
                 }
                 currentCNode.strColor = "black";
             }
-            Console.WriteLine();
 
             // set NextCNode for each Node on the path
             var backCNode = goalCNode;
@@ -919,8 +907,6 @@ namespace MorphingClass.CGeneralizationMethods
             cedgebaseline.FrCpt.OutCEdge.isTraversed = true;
             cedgebaseline.ToCpt.InCEdge.isTraversed = true;
             cedgebaseline.ToCpt.OutCEdge.isTraversed = true;
-            //cedgebaseline.ToCpt.InCEdge.PrintMySelf();
-            //cedgebaseline.ToCpt.OutCEdge.PrintMySelf();
             var blnIntersect = BlnIntersect(cedgebaseline, pEdgeGrid);
 
             cedgebaseline.FrCpt.InCEdge.isTraversed = false;
@@ -929,24 +915,7 @@ namespace MorphingClass.CGeneralizationMethods
             cedgebaseline.ToCpt.OutCEdge.isTraversed = false;
 
             return !blnIntersect;
-            ////cedgebaseline should no intersect any of the edges
-            //if (BlnIntersect(cedgebaseline, OriginalCEdgeLt))
-            //{
-            //    return false;
-            //}
 
-            //var newEnlargedCEdgeHS = new HashSet<CEdge>(EnlargedCEdgeHS);
-            //newEnlargedCEdgeHS.Remove(cedgebaseline.FrCpt.InCEdge);
-            //newEnlargedCEdgeHS.Remove(cedgebaseline.FrCpt.OutCEdge);
-            //newEnlargedCEdgeHS.Remove(cedgebaseline.ToCpt.InCEdge);
-            //newEnlargedCEdgeHS.Remove(cedgebaseline.ToCpt.OutCEdge);
-
-            //if (BlnIntersect(cedgebaseline, newEnlargedCEdgeHS))
-            //{
-            //    return false;
-            //}
-
-            //return true;
         }
 
         private static bool IsBaselineRightHandSide(CEdge CEdgeBaseline, CEdge CEdgeRef)

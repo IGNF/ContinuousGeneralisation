@@ -177,37 +177,56 @@ smaller (more acute) than $83.6 \degree$.
 \end{figure}
 
 
-\subsection{Aggregating close buildings by introducing bridges}
+\subsection{Aggregating close buildings by adding bridges}
 \label{sec:Merge}
 
-
-If a group of buildings will become too close at time $t$ because of growing,
-we aggregate the original buildings by introducing bridges, 
-then we grow the bridged building (see \fig\ref{fig:GrowAndBridge}).
-We show how to group buildings for time $t$ in \sect\ref{sec:Group}.
-No matter a bridge appears earlier or later, 
-it has width $2\dtrm{G}$ at time $t$.
-This setting guarantees that no bridge is thin when $t=1$.
+We aggregate buildings if they become too close because of growing.
+Our basic idea is to add bridges between buildings
+(see for example \fig\ref{fig:GrowAndBridge}).
 
 \begin{figure*}[tb]
 	\centering
 	\includegraphics[draft=false]{GrowAndBridge}
 	\caption{Aggregate original buildings in the same group by introducing 
-	bridges.
+		bridges.
 		Then grow the bridged buildings.}
 	\label{fig:GrowAndBridge}
 \end{figure*}
 
-For each pair of buildings in the same group, 
-we find a nearest pair of points.
-We connect the buildings by adding a line segment bridging the nearest points.
+
+At time $t=1$, we know that 
+which buildings will finally be aggregated into the same built-up area
+(see \sect\ref{sec:Group}).
+We connect each pair of these buildings by adding a line segment linking the 
+nearest points.
 If we consider each building as a node and each line segment as an edge, 
 then we have a graph.
 Using Prim's algorithm \citep{Prim1957}, 
-we find a minimum spanning tree (MST) in the graph
+we find a minimum spanning tree (MST) in the graph,
 taking the lengths of the line segments as the weights.
 As a results, the line segments corresponding to the edges in the MST
-are used as bridges to aggregate the buildings.
+are used as bridges.
+At any time $t$, we pick some of the bridges to aggregate the buildings.
+Then we grow the bridged buildings (see \fig\ref{fig:GrowAndBridge}).
+No matter a bridge appears earlier or later, 
+it has width $2\dtrm{G}$ at time $t$.
+This setting guarantees that no bridge is thin when $t=1$.
+We do not introduce bridges according to nearest points at time $t$
+because the nearest points may change (see \fig\ref{fig:NearestPoints} for 
+example).
+
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[]{NearestPoints}
+	\caption{The nearest points between a pair of buildings may change because 
+	of growing. 
+		The two squares and the two circles respectively mark
+		the nearest points before and after growing.
+	}
+	\label{fig:NearestPoints}
+\end{figure}
+
 
 \subsection{Simplifying grown buildings}
 \label{sec:Simplify}
@@ -371,10 +390,22 @@ they grow to become too close.
 We group buildings based on buffering.
 The basic idea is that 
 we buffer the original buildings with distance $\dtrm{G}$
-and an additional distance $\dtrm{C}$.
-We will talk about how to define $\dtrm{C}$ later.
+and an additional distance $\dtrm{C}$
+(We will talk about how to define $\dtrm{C}$ later).
 If two buffers overlap, 
 then the original buildings are put in the same group.
+
+
+Now we show how to define distance $\dtrm{C}$, 
+which is used to detect closeness.
+The distance between two buildings on a map should be larger than a threshold.
+Following \citet{Stoter2009}, 
+we set the separation threshold $\epsilon= 0.2\,\mathrm{mm}$. 
+The real separation distance at time $t$ is
+\begin{equation}
+	\label{eq:d_epsilont}
+	d_{\epsilon, t} = \epsilon \cdot M_t.
+\end{equation}
 
 %(see \fig\ref{fig:RemoveBay} for example).
 As stated in \sect\ref{sec:Simplify}, 
@@ -430,16 +461,7 @@ kind of bay and will be removed by overgrowing.
 	\label{fig:RemoveBay}
 \end{figure*}
 
-Now we show how to define distance $\dtrm{C}$, 
-which is used to detect closeness.
-The distance between two buildings on a map should be larger than a threshold.
-Following \citet{Stoter2009}, 
-we set the separation threshold $\epsilon= 0.2\,\mathrm{mm}$. 
-The real separation distance at time $t$ is
-\begin{equation}
-\label{eq:d_epsilont}
-d_{\epsilon, t} = \epsilon \cdot M_t.
-\end{equation}
+
 
 
 

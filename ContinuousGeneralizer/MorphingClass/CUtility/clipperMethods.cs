@@ -242,7 +242,7 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
 double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "Miter", double dblMiterLimit = 2)
         {
             //double dblDisOverlap = Math.Sqrt(5) * dblEpsilon / 2;
-            double dblDisOverlap = dblEpsilon / 2;
+            double dblDisOverlap = dblMiterLimit * dblEpsilon / 2;
             var groupedcpgltlt = new List<List<CPolygon>>(cpglt.Count);
             foreach (var cpg in cpglt)
             {
@@ -463,7 +463,7 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
 
         private static CPolygon GenerateOLHCpgEbByPolyNode(PolyNode cpgnode, int intID, bool blnReverse = false)
         {
-            //CSaveFeature.SavePathEb(CHelpFunc.MakeLt(cpgnode.Contour), "OLHCpg");
+            //tiny edges cause problems for our Imai-Iri algorithm
             var cptlt = CGeoFunc.RemoveClosePointsForCptEb(ConvertPathToCptEb(cpgnode.Contour, blnReverse)).ToList();
             var holecptlt = GetOLHCptLtEb(cpgnode, blnReverse).ToLtLt();
 

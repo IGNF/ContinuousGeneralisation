@@ -94,8 +94,9 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "France_Presenting_UnitingPrevious_Erosion";
         //private static string _strDataFolderName = "France_Presenting_UnitingPrevious_Simplification";
         //private static string _strDataFolderName = "France_Presenting_RemoveBay";
-
-        private static string _strDataFolderName = "France_Problematic";
+        private static string _strDataFolderName = "France_Presenting_Grouping";
+        
+        //private static string _strDataFolderName = "France_Problematic";
         //private static string _strDataFolderName = "France_Problematic2";
         //private static string _strDataFolderName = "France_WithOneHole";
         //private static string _strDataFolderName = "France_OneSquare";
