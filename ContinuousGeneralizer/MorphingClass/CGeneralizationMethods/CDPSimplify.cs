@@ -621,20 +621,20 @@ namespace MorphingClass.CGeneralizationMethods
             //EnlargedCpg.SetAngleDiffLt();
 
 
-            CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgEb(  CHelpFunc.MakeLt(EnlargedCpg), 1 / CConstants.dblFclipper), "EnlargedCpg",
-                pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSHollow, blnVisible: false);
+            //CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgEb(CHelpFunc.MakeLt(EnlargedCpg), 1 / CConstants.dblFclipper), "EnlargedCpg",
+            //    pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSHollow, blnVisible: false);
 
             var EnlargedCEdgeHS = new HashSet<CEdge>(EnlargedCpg.CEdgeLt);
             //CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb( EnlargedCEdgeHS, 1 / CConstants.dblFclipper), "EnlargedCEdgeHS",
             //     blnVisible: false);
 
-            var simplifiedcptlt=  SimplifyAccordExistEdges(EnlargedCpg.CptLt, OriginalCEdgeLt, EnlargedCEdgeHS, strSimplification, dblThreshold).ToList();
-            
+            var simplifiedcptlt = SimplifyAccordExistEdges(EnlargedCpg.CptLt, OriginalCEdgeLt, EnlargedCEdgeHS, strSimplification, dblThreshold).ToList();
 
-            CPolygon simplifiedcpg = new CPolygon(EnlargedCpg.ID, 
-                clipperMethods.ScaleCptEb(simplifiedcptlt,1/ CConstants.dblFclipper).ToList());
-            CSaveFeature.SaveCpg(simplifiedcpg, "simplifiedcpg", 
-                pesriSimpleFillStyle:  esriSimpleFillStyle.esriSFSHollow, blnVisible:false);
+
+            //CPolygon simplifiedcpg = new CPolygon(EnlargedCpg.ID,
+            //    clipperMethods.ScaleCptEb(simplifiedcptlt, 1 / CConstants.dblFclipper).ToList());
+            //CSaveFeature.SaveCpg(simplifiedcpg, "simplifiedcpg",
+            //    pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSHollow, blnVisible: false);
 
             return simplifiedcptlt;
         }
@@ -876,14 +876,7 @@ namespace MorphingClass.CGeneralizationMethods
         private static bool IsCutValid(List<CPoint> cptlt, CEdgeGrid pEdgeGrid,   
             double dblThreshold, out int intIndexMaxDis)
         {
-            //if (cptlt.Count == 4 &&
-            //    CCmpMethods.CmpCoordDbl_VerySmall(cptlt[0].X, 44506652373093) == 0)
-            //{
-            //    int ss = 5;
-            //}
-
-
-
+            
             //the distances from all the removed points to cedgebaseline should be smaller than a threshold
             var cedgebaseline = new CEdge(cptlt[0], cptlt.GetLastT());
             //cedgebaseline.SetLengthSquareReciprocal();
@@ -1016,9 +1009,6 @@ namespace MorphingClass.CGeneralizationMethods
                     pcedge.isTraversed = true;
                     TraversedCEdgeLt.Add(pcedge);
 
-                    pcedge.PrintMySelf();
-
-
                     if (cedge.IsTouchWith(pcedge))
                     {
                         blnIntersect = true;
@@ -1037,14 +1027,6 @@ namespace MorphingClass.CGeneralizationMethods
             {
                 TraversedCEdge.isTraversed = false;
             }
-            //foreach (var item in cedgeEb)
-            //{
-            //    //item.PrintMySelf();
-            //    if (cedge.IsTouchWith(item))
-            //    {
-            //        return true;
-            //    }
-            //}
 
             return blnIntersect;
         }

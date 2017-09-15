@@ -59,9 +59,9 @@ namespace MorphingClass.CGeometry
         public CPoint CentroidCptSimple { get; set; }
 
         public List<CPolygon> SubCpgLt { get; set; }
-        public HashSet<CptEdgeDis> BridgeCptEdgeDisSS { get; set; }
+        public List<CptEdgeDis> BridgeCptEdgeDisLt { get; set; }
         
-        public Dictionary<CValPairIncr<CPolygon>, CptEdgeDis> CpipeDt { get; set; }
+        public Dictionary<CValPairIncr<CPolygon>, CptEdgeDis> BridgeCpipeDt { get; set; }
 
         //public CPolygon AssigningFace { get; set; }
         //public List<CPolygon> AssignedFaceLt { get; set; }

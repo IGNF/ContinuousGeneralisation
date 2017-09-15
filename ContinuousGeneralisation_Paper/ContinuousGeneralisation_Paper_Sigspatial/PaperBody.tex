@@ -206,8 +206,9 @@ we find a minimum spanning tree (MST) in the graph,
 taking the lengths of the line segments as the weights.
 As a results, the line segments corresponding to the edges in the MST
 are used as bridges.
-At any time $t$, we pick some of the bridges to aggregate the buildings.
-Then we grow the bridged buildings (see \fig\ref{fig:GrowAndBridge}).
+A bridge is then picked to aggregate two buildings at time $t$ 
+if they become too close.
+We grow the bridged buildings (see \fig\ref{fig:GrowAndBridge}).
 No matter a bridge appears earlier or later, 
 it has width $2\dtrm{G}$ at time $t$.
 This setting guarantees that no bridge is thin when $t=1$.
@@ -301,7 +302,7 @@ Distance $\dtrm{G}$ can be arbitrarily small according to \eq\ref{eq:d_Gt},
 but $\dtrm{E}$ is at least $\frac{l}{2} M_\mathrm{s}$. 
 In this case, $\dtrm{G}-\dtrm{E} \le 0$ when $t$ is small, 
 which violates \eq\ref{eq:d_Dt}, where $\dtrm{D}>0$.
-As a compromise, we use
+As a compromise, we set erosion distance
 \begin{equation}
 \label{eq:d_Et}
 \dtrm{E} =t \cdot \frac{l}{2} M_\mathrm{g}.
@@ -441,7 +442,7 @@ kind of bay and will be removed by overgrowing.
 		If two polygons in (d) intersect, 
 		the original buildings will be put in the same group 
 		because they will become too close at time $t$.
-		There two groups according to (d).
+		There are two groups according to (d).
 		One consists of the single middle building and 
 		the surrounding $9$ buildings comprise the other group.
 		(e) The result of growing and merging at time $t$ 
