@@ -397,10 +397,16 @@ they grow to become too close.
 We group buildings based on buffering.
 The basic idea is that 
 we buffer the original buildings with distance $\dtrm{G}$
-and an additional distance $\dtrm{C}$
-(We will talk about how to define $\dtrm{C}$ later).
+and an additional distance $d_{\epsilon, t}/2$
+(the distance between two buildings should be at least $d_{\epsilon, t}$).
 If two buffers overlap, 
 then the original buildings are put in the same group.
+However, as some parts of a building grow faster than other parts, 
+this basic idea may cause problems.
+An example is shown in \fig\ref{fig:CloseDetect}c and~d.
+In \fig\ref{fig:CloseDetect}d, 
+the buffers of building $p$ and the buffer of building $q$ overlap each other, 
+but the two buffers do not overlap with the buffer of building $r$.
 
 
 
@@ -408,7 +414,20 @@ then the original buildings are put in the same group.
 \begin{figure}[tb]
 	\centering
 	\includegraphics[]{CloseDetect}
-	\caption{bla.}
+	\caption{Group buildings based on buffering.
+		(a) original buildings.
+		(b) bridges detected to aggregate the three buildings.
+		(c) grow the original buildings with distance $\dtrm{G}$.
+		(d) buffer the grown buildings in (c) 
+		with distance $d_{\epsilon, t} /2$ using round joins.
+		(e) buffer the original buildings 
+		with distance $\alpha \dtrm{G}+d_{\epsilon, t}/2 $ 
+		using round joins, where $\alpha=2$.
+		(f) according to the buffer in (e), 
+		we put the three original buildings in the same group.
+		We aggregate the original buildings by adding the two bridges 
+		and grow the aggregated building with distance $\dtrm{G}$.
+	}
 	\label{fig:CloseDetect}
 \end{figure}
 
