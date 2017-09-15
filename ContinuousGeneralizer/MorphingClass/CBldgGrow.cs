@@ -420,7 +420,7 @@ namespace MorphingClass.CGeneralizationMethods
                 }
                 else
                 {
-                    mergedCpgLt.Add(groupedcpgCptEdgeDislt.val1[0]);
+                    mergedCpgLt.AddRange(groupedcpgCptEdgeDislt.val1);  //normally, there is only one element
                 }
             }
             return mergedCpgLt;

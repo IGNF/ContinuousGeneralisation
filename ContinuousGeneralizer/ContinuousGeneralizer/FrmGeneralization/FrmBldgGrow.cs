@@ -165,29 +165,33 @@ this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         private void btn000_Click(object sender, EventArgs e)
         {
             _dblProportion = 0;
-            //_pBldgGrow.Output(_dblProportion, this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
+            _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text,
+    this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
         private void btn025_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.25;
-            //_pBldgGrow.Output(_dblProportion, this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
+            _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text,
+    this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
         private void btn075_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.75;
-            //_pBldgGrow.Output(_dblProportion, this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
+            _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text,
+    this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
         private void btn100_Click(object sender, EventArgs e)
         {
             _dblProportion = 1;
-            //_pBldgGrow.Output(_dblProportion, this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
+            _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text,
+    this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
 
         private void btnInputedScale_Click(object sender, EventArgs e)
         {
             _dblProportion = Convert.ToDouble(this.txtProportion.Text);
-            //_pBldgGrow.Output(_dblProportion, this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
-
+            _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text,
+    this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
 
         private void btnReduce_Click(object sender, EventArgs e)
@@ -236,7 +240,7 @@ this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
 
         public void btnMultiResults_Click(object sender, EventArgs e)
         {
-            int intCount = 5;
+            int intCount = 10;
             for (int i = 1; i < intCount + 1; i++)
             {
                 _dblProportion = Convert.ToDouble(i) / intCount;

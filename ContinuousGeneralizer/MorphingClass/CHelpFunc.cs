@@ -84,7 +84,7 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "France_FourTowns";
         //private static string _strDataFolderName = "France_Part";
         //private static string _strDataFolderName = "France_FourBuildings";
-        private static string _strDataFolderName = "France_Smallpart";
+        //private static string _strDataFolderName = "France_Smallpart";
         //private static string _strDataFolderName = "France_Presenting";
         //private static string _strDataFolderName = "France_Presenting_DifferentBuffers";
         //private static string _strDataFolderName = "France_Presenting_DifferentMiterLimits";
@@ -94,7 +94,7 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "France_Presenting_UnitingPrevious_Erosion";
         //private static string _strDataFolderName = "France_Presenting_UnitingPrevious_Simplification";
         //private static string _strDataFolderName = "France_Presenting_RemoveBay";
-        //private static string _strDataFolderName = "France_Presenting_Grouping";
+        private static string _strDataFolderName = "France_Presenting_Grouping";
 
         //private static string _strDataFolderName = "France_Problematic";
         //private static string _strDataFolderName = "France_Problematic2";

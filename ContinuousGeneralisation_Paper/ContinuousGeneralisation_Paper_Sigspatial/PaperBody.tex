@@ -199,15 +199,21 @@ which buildings will finally be aggregated into the same built-up area
 (see \sect\ref{sec:Group}).
 We connect each pair of these buildings by adding a line segment linking the 
 nearest points.
-If we consider each building as a node and each line segment as an edge, 
+These line segments may cross each other or even intersect buildings.
+To make the topology simple, 
+we only select some of the line segments as bridges.  
+We consider each building as a node and each line segment as an edge, 
 then we have a graph.
 Using Prim's algorithm \citep{Prim1957}, 
 we find a minimum spanning tree (MST) in the graph,
 taking the lengths of the line segments as the weights.
 As a results, the line segments corresponding to the edges in the MST
-are used as bridges.
-A bridge is then picked to aggregate two buildings at time $t$ 
-if they become too close.
+are identified as bridges.
+
+At any time $t$, some of the identified bridges are picked to aggregate 
+buildings 
+which grow to become too close.
+The buildings and the bridges already comprise some MSTs.
 We grow the bridged buildings (see \fig\ref{fig:GrowAndBridge}).
 No matter a bridge appears earlier or later, 
 it has width $2\dtrm{G}$ at time $t$.
@@ -395,6 +401,21 @@ and an additional distance $\dtrm{C}$
 (We will talk about how to define $\dtrm{C}$ later).
 If two buffers overlap, 
 then the original buildings are put in the same group.
+
+
+
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[]{CloseDetect}
+	\caption{bla.}
+	\label{fig:CloseDetect}
+\end{figure}
+
+
+
+
+
 
 
 Now we show how to define distance $\dtrm{C}$, 
