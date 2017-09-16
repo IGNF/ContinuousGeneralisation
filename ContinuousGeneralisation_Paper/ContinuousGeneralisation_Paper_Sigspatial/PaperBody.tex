@@ -131,7 +131,7 @@ Also, we clip the building using the shape on goal map.
 Our grouping is based on growing, aggregating and some of simplifying. 
 So we present the three operators before grouping.
 
-\subsection{Growing buildings based on buffering}
+\subsection{Growing buildings by buffering}
 \label{sec:Grow}
 We grow buildings based on buffering. 
 There are two typical ways of buffering a polygon, i.e.,
@@ -177,66 +177,10 @@ smaller (more acute) than $83.6 \degree$.
 \end{figure}
 
 
-\subsection{Aggregating close buildings by adding bridges}
-\label{sec:Merge}
-
-We aggregate buildings if they become too close because of growing.
-Our basic idea is to add bridges between buildings
-(see for example \fig\ref{fig:GrowAndBridge}).
-
-\begin{figure*}[tb]
-	\centering
-	\includegraphics[draft=false]{GrowAndBridge}
-	\caption{Aggregate original buildings in the same group by introducing 
-		bridges.
-		Then grow the bridged buildings.}
-	\label{fig:GrowAndBridge}
-\end{figure*}
 
 
-At time $t=1$, we know that 
-which buildings will finally be aggregated into the same built-up area
-(see \sect\ref{sec:Group}).
-We connect each pair of these buildings by adding a line segment linking the 
-nearest points.
-These line segments may cross each other or even intersect buildings.
-To make the topology simple, 
-we only select some of the line segments as bridges.  
-We consider each building as a node and each line segment as an edge, 
-then we have a graph.
-Using Prim's algorithm \citep{Prim1957}, 
-we find a minimum spanning tree (MST) in the graph,
-taking the lengths of the line segments as the weights.
-As a results, the line segments corresponding to the edges in the MST
-are identified as bridges.
-
-At any time $t$, some of the identified bridges are picked to aggregate 
-buildings 
-which grow to become too close.
-The buildings and the bridges already comprise some MSTs.
-We grow the bridged buildings (see \fig\ref{fig:GrowAndBridge}).
-No matter a bridge appears earlier or later, 
-it has width $2\dtrm{G}$ at time $t$.
-This setting guarantees that no bridge is thin when $t=1$.
-We do not introduce bridges according to nearest points at time $t$
-because the nearest points may change (see \fig\ref{fig:NearestPoints} for 
-example).
-
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[]{NearestPoints}
-	\caption{The nearest points between a pair of buildings may change because 
-	of growing. 
-		The two squares and the two circles respectively mark
-		the nearest points before and after growing.
-	}
-	\label{fig:NearestPoints}
-\end{figure}
-
-
-\subsection{Simplifying grown buildings}
-\label{sec:Simplify}
+\subsection{Simplifying grown buildings based on dilation and erosion}
+\label{sec:DilationErosion}
 \citet{Damen2008} generalized buildings using morphological operators.
 A drawback of this method is that the directions of the buildings have to be 
 concerned.
@@ -336,8 +280,143 @@ We define
 \dtrm{D} =\min (\frac{\dtrm{G}-\dtrm{E}}{\alpha - 1}, r_\mathrm{h} M_t) .
 \]
 
-After carrying out the dilation-erosion-dilation method, 
-we simplify the buildings using Imai--Iri algorithm 
+
+
+\subsection{Iteratively aggregating close buildings by adding bridges}
+\label{sec:Aggregate}
+
+We aggregate buildings if they become too close because of growing.
+Our basic idea is to add bridges between buildings
+(see for example \fig\ref{fig:GrowAndBridge}).
+
+\begin{figure*}[tb]
+	\centering
+	\includegraphics[draft=false]{GrowAndBridge}
+	\caption{Aggregate original buildings in the same group by introducing 
+		bridges.
+		Then grow the bridged buildings.}
+	\label{fig:GrowAndBridge}
+\end{figure*}
+
+
+We grow each original building and, as illustrated in 
+\sect\ref{sec:DilationErosion}, simplify the grown building.
+If some buildings become too close after these operations,
+we aggregate them by adding bridges.
+Following \citet{Stoter2009}, 
+we define that two buildings are too close if their distance is less than
+$\epsilon= 0.2\,\mathrm{mm}$ on map.
+The real separation threshold at time $t$ is
+\begin{equation}
+\label{eq:d_epsilont}
+d_{\epsilon, t} = \epsilon \cdot M_t.
+\end{equation}
+
+Our way of detecting close buildings is simple.
+We buffer buildings with distance $d_{\epsilon, t}/2$ using round joins.
+We merge the buffers that overlap each other.
+The buildings intersect with the same merged buffer 
+are identified as a group of close buildings.
+According to the group of buildings, 
+we find the group of corresponding original buildings.
+For each pair of the original buildings in a group,
+we connect them by adding a line segment linking the nearest points.
+The line segments for the group of original buildings may cross each other or 
+even intersect buildings.
+To make the topology simple, 
+we only select some of the line segments as \emph{bridges}.  
+We consider each building as a node and each line segment as an edge, 
+then we have a graph.
+Using Prim's algorithm \citep{Prim1957}, 
+we find a minimum spanning tree (MST) in the graph,
+taking the lengths of the line segments as the weights.
+As a results, the line segments corresponding to the edges in the MST
+are identified as bridges.
+We aggregate the group of original buildings by adding these bridges.
+
+Notice that after growing the additional bridges may be too close to buildings 
+from another group.
+We iteratively aggregate buildings.
+This time we grow the original buildings with bridges.
+Similar to what we do before, we aggregate buildings by introducing bridges.
+We stop this iteration until the number of group does not decrease anymore.
+
+
+
+
+%At any time $t$, some of the bridges are picked to aggregate buildings 
+%which grow to become too close.
+%The buildings and the bridges already comprise some MSTs.
+
+
+
+%
+%Original buildings grow according to time $t$.
+%We put the original buildings in the same group if 
+%they grow so that their distance is less than $d_{\epsilon, t}$.
+%Following \citet{Stoter2009}, 
+%we set the threshold $\epsilon= 0.2\,\mathrm{mm}$ on map. 
+%The real separation threshold at time $t$ is
+%\begin{equation}
+%\label{eq:d_epsilont2}
+%d_{\epsilon, t} = \epsilon \cdot M_t.
+%\end{equation}
+%We group buildings based on buffering.
+%The basic idea is that 
+%we buffer the original buildings with distance $\dtrm{G}$
+%and an additional distance $d_{\epsilon, t}/2$
+%(the distance between two buildings should be at least $d_{\epsilon, t}$).
+%If two buffers overlap, 
+%then the original buildings are put in the same group.
+%However, as some parts of a building grow faster than other parts, 
+%this basic idea may cause problems.
+%An example is shown in \fig\ref{fig:CloseDetect}c and~d.
+%In \fig\ref{fig:CloseDetect}d, 
+%the buffers of buildings $p$ and $q$ overlap each other.
+%So we should aggregate buildings $p$ and $q$ at time $t$
+%because they will grow to become too close.
+%According to the bridges in \fig\ref{fig:CloseDetect}b, 
+%buildings $p$ and $q$ should be aggregated via building $r$.
+%Unfortunately, neither $p$ or $q$ will be too close to $r$.
+%As we use bridges to aggregate buildings 
+%(see \sect\ref{sec:Aggregate}),
+%we are not able to aggregate buildings $p$ and $q$. 
+%To avoid this situation, 
+%we buffer original buildings with distance
+%$\alpha \dtrm{G}+d_{\epsilon, t}/2$ using round joins.
+%This buffering guarantees 
+%that every part of a building grows with the same speed.
+%If the buffers of two buildings overlap with each other,
+%then the two buildings are surely aggregated into one.
+%Using this buffering, in most of cases 
+%two buildings are aggregated as soon as 
+%their separation distance is less than 
+%$2(\alpha -1) \dtrm{G}+d_{\epsilon, t}$.
+%The advantage is that we guarantee that 
+%any two buildings have separate distance less than $d_{\epsilon, t}$ will be 
+%aggregated via bridges.
+%
+%\begin{figure}[tb]
+%	\centering
+%	\includegraphics[]{NearestPoints}
+%	\caption{The nearest points between a pair of buildings may change because 
+%		of growing. 
+%		The two squares and the two circles respectively mark
+%		the nearest points before and after growing.
+%	}
+%	\label{fig:NearestPoints}
+%\end{figure}
+
+
+\subsection{Simplifying buildings using Imai--Iri algorithm}
+\label{sec:ImaiIri}
+
+We grow the bridged buildings (see \fig\ref{fig:GrowAndBridge}).
+No matter a bridge appears earlier or later, 
+it has width $2\dtrm{G}$ at time $t$.
+This setting guarantees that no bridge is thin when $t=1$.
+
+We simplify the buildings using Imai--Iri algorithm 
 \citep{ImaiIri1988}.
 First, this algorithm finds all the valid shortcuts of a polyline.
 A shortcut is valid for a segment 
@@ -371,7 +450,7 @@ If we allow this intersection,
 the building will have to be shrunk. 
 Of course, we do not want to shrink.
 \todo{a shortcut is not allowed to intersect with the building at the 
-immediately previous step?}
+	immediately previous step?}
 
 We tried simplifying using 
 the Douglas--Peucker algorithm \citep{Douglas1973}, 
@@ -379,128 +458,135 @@ but we hoped to remove more points.
 We found that the Imai--Iri 
 algorithm fit our needs better. 
 
+%\subsection{Grouping buildings based on buffering}
+%\label{sec:Group}
+%There are many research works about grouping buildings.
+%\citet{Cetinkaya2015} and \citet{Deng2017} compared some of the methods.
+%However, our two needs, 
+%the distances between buildings are always larger than a specified threshold 
+%and small bays should be removed, 
+%motivate us to develop our own grouping method.
+%
+%Original buildings grow according to time $t$.
+%We put the original buildings in the same group if 
+%they grow so that their distance is less than $d_{\epsilon, t}$.
+%Following \citet{Stoter2009}, 
+%we set the threshold $\epsilon= 0.2\,\mathrm{mm}$ on map. 
+%The real separation threshold at time $t$ is
+%%\begin{equation}
+%%\label{eq:d_epsilont}
+%%d_{\epsilon, t} = \epsilon \cdot M_t.
+%%\end{equation}
+%We group buildings based on buffering.
+%The basic idea is that 
+%we buffer the original buildings with distance $\dtrm{G}$
+%and an additional distance $d_{\epsilon, t}/2$
+%(the distance between two buildings should be at least $d_{\epsilon, t}$).
+%If two buffers overlap, 
+%then the original buildings are put in the same group.
+%However, as some parts of a building grow faster than other parts, 
+%this basic idea may cause problems.
+%An example is shown in \fig\ref{fig:CloseDetect}c and~d.
+%In \fig\ref{fig:CloseDetect}d, 
+%the buffers of buildings $p$ and $q$ overlap each other.
+%So we should aggregate buildings $p$ and $q$ at time $t$
+%because they will grow to become too close.
+%According to the bridges in \fig\ref{fig:CloseDetect}b, 
+%buildings $p$ and $q$ should be aggregated via building $r$.
+%Unfortunately, neither $p$ or $q$ will be too close to $r$.
+%As we use bridges to aggregate buildings 
+%(see \sect\ref{sec:Aggregate}),
+%we are not able to aggregate buildings $p$ and $q$. 
+%To avoid this situation, 
+%we buffer original buildings with distance
+%$\alpha \dtrm{G}+d_{\epsilon, t}/2$ using round joins.
+%This buffering guarantees 
+%that every part of a building grows with the same speed.
+%If the buffers of two buildings overlap with each other,
+%then the two buildings are surely aggregated into one.
+%Using this buffering, in most of cases 
+%two buildings are aggregated as soon as 
+%their separation distance is less than 
+%$2(\alpha -1) \dtrm{G}+d_{\epsilon, t}$.
+%The advantage is that we guarantee that 
+%any two buildings have separate distance less than $d_{\epsilon, t}$ will be 
+%aggregated via bridges.
+%
+%\begin{figure}[tb]
+%	\centering
+%	\includegraphics[]{CloseDetect}
+%	\caption{Group buildings based on buffering.
+%		(a) original buildings.
+%		(b) bridges detected to aggregate the three buildings.
+%		(c) grow the original buildings with distance $\dtrm{G}$.
+%		(d) buffer the grown buildings in (c) 
+%		with distance $d_{\epsilon, t} /2$ using round joins.
+%		(e) buffer the original buildings 
+%		with distance $\alpha \dtrm{G}+d_{\epsilon, t}/2 $ 
+%		using round joins, where $\alpha=1.5$
+%		(see \sect\ref{sec:Grow}).
+%		(f) according to the buffer in (e), 
+%		we put the three original buildings in the same group.
+%		We aggregate the original buildings by adding the two bridges 
+%		and grow the aggregated building with distance $\dtrm{G}$.
+%	}
+%	\label{fig:CloseDetect}
+%\end{figure}
 
 
-
-\subsection{Grouping buildings based on buffering}
-\label{sec:Group}
-There are many research works about grouping buildings.
-\citet{Cetinkaya2015} and \citet{Deng2017} compared some of the methods.
-However, our two needs, 
-the distances between buildings are always larger than a specified threshold 
-and small bays should be removed, 
-motivate us to develop our own grouping method.
-
-Original buildings grow according to time $t$.
-We put the original buildings in the same group if 
-they grow to become too close.
-We group buildings based on buffering.
-The basic idea is that 
-we buffer the original buildings with distance $\dtrm{G}$
-and an additional distance $d_{\epsilon, t}/2$
-(the distance between two buildings should be at least $d_{\epsilon, t}$).
-If two buffers overlap, 
-then the original buildings are put in the same group.
-However, as some parts of a building grow faster than other parts, 
-this basic idea may cause problems.
-An example is shown in \fig\ref{fig:CloseDetect}c and~d.
-In \fig\ref{fig:CloseDetect}d, 
-the buffers of building $p$ and the buffer of building $q$ overlap each other, 
-but the two buffers do not overlap with the buffer of building $r$.
-
-
-
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[]{CloseDetect}
-	\caption{Group buildings based on buffering.
-		(a) original buildings.
-		(b) bridges detected to aggregate the three buildings.
-		(c) grow the original buildings with distance $\dtrm{G}$.
-		(d) buffer the grown buildings in (c) 
-		with distance $d_{\epsilon, t} /2$ using round joins.
-		(e) buffer the original buildings 
-		with distance $\alpha \dtrm{G}+d_{\epsilon, t}/2 $ 
-		using round joins, where $\alpha=2$.
-		(f) according to the buffer in (e), 
-		we put the three original buildings in the same group.
-		We aggregate the original buildings by adding the two bridges 
-		and grow the aggregated building with distance $\dtrm{G}$.
-	}
-	\label{fig:CloseDetect}
-\end{figure}
-
-
-
-
-
-
-
-Now we show how to define distance $\dtrm{C}$, 
-which is used to detect closeness.
-The distance between two buildings on a map should be larger than a threshold.
-Following \citet{Stoter2009}, 
-we set the separation threshold $\epsilon= 0.2\,\mathrm{mm}$. 
-The real separation distance at time $t$ is
-\begin{equation}
-	\label{eq:d_epsilont}
-	d_{\epsilon, t} = \epsilon \cdot M_t.
-\end{equation}
-
-%(see \fig\ref{fig:RemoveBay} for example).
-As stated in \sect\ref{sec:Simplify}, 
-we wish to remove ``bays'' 
-which have widths less than $2 \dtrm{D}$.
-A bay may come from a complex original building,
-or from bridging some buildings.
-\fig\ref{fig:RemoveBay}e shows an example of the later case.
-To remove a bay,
-we overgrow (see \fig\ref{fig:RemoveBay}b and~e) 
-and then erode back (see \fig\ref{fig:RemoveBay}c and~f) 
-with distance $\dtrm{D}$.
-There may be some buildings in a bay (see \fig\ref{fig:RemoveBay}c),
-so we iteratively group until the number of groups does not decrease.
-For the buildings in \fig\ref{fig:RemoveBay}a,
-the final result of removing a bay is the outer polygon of 
-\fig\ref{fig:RemoveBay}h. 
-In comparison, the result is \fig\ref{fig:RemoveBay}e 
-if we do not dilate (setting $\dtrm{D}=0$) to remove a bay.
-Note that the pit we want to remove in \fig\ref{fig:RemovePitAndSpike} is a 
-kind of bay and will be removed by overgrowing.
-
-
-\begin{figure*}[tb]
-	\centering
-	\includegraphics[draft=false]{RemoveBay}
-	\caption{Group buildings iteratively.
-		(a) Original buildings.
-		(b) Dilate each original building with distance 
-		$\dtrm{G}+\dtrm{D}$.		
-		(c) Erode the dilated polygons with distance $\dtrm{D}$.
-		(d) Dilate the eroded polygons with distance $\dtrm{C}$. 
-		If two polygons in (d) intersect, 
-		the original buildings will be put in the same group 
-		because they will become too close at time $t$.
-		There are two groups according to (d).
-		One consists of the single middle building and 
-		the surrounding $9$ buildings comprise the other group.
-		(e) The result of growing and merging at time $t$ 
-		if we use $\dtrm{D}=0$.
-		The process of (f), (g), and (h) is similar to 
-		that of (b), (c), and (d).		
-		The difference is that 
-		instead of applying the operators to each single building, 
-		we do that for the buildings in the same group.
-		In (f), we manage to remove the bay in (e) by additionally dilating 
-		with distance $\dtrm{D}$.
-		There is only one group left according to (h).
-		We iteratively group buildings in this way until the number of groups 
-		does not decrease.
-	}
-	%in this example, we used _dblTotalGrow *= 5;
-	\label{fig:RemoveBay}
-\end{figure*}
+%
+%As stated in \sect\ref{sec:DilationErosion}, 
+%we wish to remove ``bays'' 
+%which have widths less than $2 \dtrm{D}$.
+%A bay may come from a complex original building,
+%or from bridging some buildings.
+%\fig\ref{fig:RemoveBay}e shows an example of the later case.
+%To remove a bay,
+%we overgrow (see \fig\ref{fig:RemoveBay}b and~e) 
+%and then erode back (see \fig\ref{fig:RemoveBay}c and~f) 
+%with distance $\dtrm{D}$.
+%There may be some buildings in a bay (see \fig\ref{fig:RemoveBay}c),
+%so we iteratively group until the number of groups does not decrease.
+%For the buildings in \fig\ref{fig:RemoveBay}a,
+%the final result of removing a bay is the outer polygon of 
+%\fig\ref{fig:RemoveBay}h. 
+%In comparison, the result is \fig\ref{fig:RemoveBay}e 
+%if we do not dilate (setting $\dtrm{D}=0$) to remove a bay.
+%Note that the pit we want to remove in \fig\ref{fig:RemovePitAndSpike} is a 
+%kind of bay and will be removed by overgrowing.
+%
+%
+%\begin{figure*}[tb]
+%	\centering
+%	\includegraphics[draft=false]{RemoveBay}
+%	\caption{Group buildings iteratively.
+%		(a) Original buildings.
+%		(b) Dilate each original building with distance 
+%		$\dtrm{G}+\dtrm{D}$.		
+%		(c) Erode the dilated polygons with distance $\dtrm{D}$.
+%		(d) Dilate the eroded polygons with distance $\dtrm{C}$. 
+%		If two polygons in (d) intersect, 
+%		the original buildings will be put in the same group 
+%		because they will become too close at time $t$.
+%		There are two groups according to (d).
+%		One consists of the single middle building and 
+%		the surrounding $9$ buildings comprise the other group.
+%		(e) The result of growing and merging at time $t$ 
+%		if we use $\dtrm{D}=0$.
+%		The process of (f), (g), and (h) is similar to 
+%		that of (b), (c), and (d).		
+%		The difference is that 
+%		instead of applying the operators to each single building, 
+%		we do that for the buildings in the same group.
+%		In (f), we manage to remove the bay in (e) by additionally dilating 
+%		with distance $\dtrm{D}$.
+%		There is only one group left according to (h).
+%		We iteratively group buildings in this way until the number of groups 
+%		does not decrease.
+%	}
+%	%in this example, we used _dblTotalGrow *= 5;
+%	\label{fig:RemoveBay}
+%\end{figure*}
 
 
 
@@ -516,9 +602,9 @@ kind of bay and will be removed by overgrowing.
 \label{sec:Goal}
 To generate the goal forms of buildings, we set time $t=1$.
 We group (see \sect\ref{sec:Group}) 
-and merge (see \sect\ref{sec:Merge}) buildings on start map.
+and merge (see \sect\ref{sec:Aggregate}) buildings on start map.
 Then we grow (see \sect\ref{sec:Grow}) 
-and simplify (see \sect\ref{sec:Simplify}) the merged buildings.
+and simplify (see \sect\ref{sec:DilationErosion}) the merged buildings.
 See for example \fig\ref{fig:Buffer_MiterLimits}, 
 the building at time $t=1$ is the goal form of the three buildings of $t=0$.
 

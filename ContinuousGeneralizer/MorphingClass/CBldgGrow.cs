@@ -355,6 +355,7 @@ namespace MorphingClass.CGeneralizationMethods
             double dblMiterLimit = 2)
         {
             double dblCloseDis = 3 * dblGrow + dblEpsilon;
+            BridgeCpipeDt = null;
             var CloseCpipeDt = BridgeCpipeDt;
             if (BridgeCpipeDt == null) //when we want to generate built-up areas at goal map, BridgeCpipeDt == null
             {

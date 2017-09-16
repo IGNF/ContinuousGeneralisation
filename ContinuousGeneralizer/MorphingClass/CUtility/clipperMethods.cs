@@ -313,37 +313,41 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
         }
 
 
-        public static List<List<CPolygon>> MergeGroupedCpgs(List<CPolygon> cpglt, List<CValPair<List<CPolygon>, List<CptEdgeDis>>> groupedcpgCptEdgeDisltlt,
+        public static List<List<CPolygon>> MergeGroupedCpgs(List<CPolygon> cpglt,
+List<CValPair<List<CPolygon>, List<CptEdgeDis>>> groupedcpgCptEdgeDisltlt,
 double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "Miter", double dblMiterLimit = 2)
         {
             //double dblDisOverlap = Math.Sqrt(5) * dblEpsilon / 2;
             double dblDisOverlap = dblEpsilon / 2;
 
 
-            int intGroupCount = 0;
+            //int intGroupCount = 0;
             int intRound = 0;
 
             //var alloverdilationPaths = new Paths();
-            //var allbackpaths = new Paths();
+            var allbackpaths = new Paths();
             var alloriginalPaths = new Paths();
             //var alloverlapGrownPaths = new Paths();
             //var allUnionPaths = new Paths();
             foreach (var groupedcpgCptEdgeDislt in groupedcpgCptEdgeDisltlt)
             {
-                //var groupedoriginalpaths = new Paths(groupedcpgCptEdgeDislt.val1.Count+ groupedcpgCptEdgeDislt.val2.Count);
+                var groupedoriginalpaths = new Paths(groupedcpgCptEdgeDislt.val1.Count + groupedcpgCptEdgeDislt.val2.Count);
                 foreach (var cpg in groupedcpgCptEdgeDislt.val1)
                 {
-                    alloriginalPaths.AddRange(cpg.GetAllPaths());
+                    groupedoriginalpaths.AddRange(cpg.GetAllPaths());
                 }
                 foreach (var cptEdgeDis in groupedcpgCptEdgeDislt.val2)
                 {
-                    alloriginalPaths.Add(GeneratePathByCEdge(cptEdgeDis.ConnectCEdge));
+                    groupedoriginalpaths.Add(GeneratePathByCEdge(cptEdgeDis.ConnectCEdge));
                 }
-
+                alloriginalPaths.AddRange(groupedoriginalpaths);
                 //alloriginalPaths.AddRange(groupedoriginalpaths);
 
-                //var overdilationPaths = Offset_Paths(groupedoriginalpaths, dblGrow + dblDilation, strBufferStyle, dblMiterLimit);
-                //var backPaths = Offset_Paths(overdilationPaths, -dblDilation, strBufferStyle, dblMiterLimit);
+                var overdilationPaths = Offset_Paths(groupedoriginalpaths, dblGrow + dblDilation, strBufferStyle, dblMiterLimit);
+                var erosionPaths = Offset_Paths(overdilationPaths, -dblDilation - dblEpsilon, strBufferStyle, dblMiterLimit);
+                var backPaths = Offset_Paths(erosionPaths, dblEpsilon, strBufferStyle, dblMiterLimit);
+
+                allbackpaths.AddRange(backPaths);
 
                 //var overlapgrownpaths = Offset_Paths(groupedoriginalpaths, dblMiterLimit * dblGrow + dblDisOverlap, "Round");
 
@@ -366,15 +370,15 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
             // var finalPolyTree = Offset_PolyTree(grownpaths, dblDisOverlap, "Round");
 
 
-            var finalPolyTree = Offset_PolyTree(alloriginalPaths, dblMiterLimit * dblGrow + dblDisOverlap, "Round");
+            var finalPolyTree = Offset_PolyTree(allbackpaths, dblDisOverlap, "Round");
             var groupedcpgltlt = GroupCpgsByOverlap(cpglt, finalPolyTree);
 
 
-            CSaveFeature.SavePathEbAsCplEb(alloriginalPaths,
-    intRound + "_alloriginalPaths", blnVisible: false);
-            CSaveFeature.SavePathEbAsCpgEb(finalPolyTree,
-intRound + "_finalPolyTree" + (dblGrow + dblDisOverlap) / CConstants.dblFclipper + "m",
-pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
+//            CSaveFeature.SavePathEbAsCplEb(alloriginalPaths,
+//    intRound + "_alloriginalPaths", blnVisible: false);
+//            CSaveFeature.SavePathEbAsCpgEb(finalPolyTree,
+//intRound + "_finalPolyTree" + (dblGrow + dblDisOverlap) / CConstants.dblFclipper + "m",
+//pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
 
 //            CSaveFeature.SavePathEbAsCpgEb(grownpaths,
 //intRound + "_grownpaths" + dblGrow / CConstants.dblFclipper + "m",
