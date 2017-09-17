@@ -334,19 +334,45 @@ As a results, the line segments corresponding to the edges in the MST
 are identified as bridges.
 We aggregate the group of original buildings by adding these bridges.
 
-Notice that after growing the additional bridges may be too close to buildings 
-from another group.
-We iteratively aggregate buildings.
-This time we grow the original buildings with bridges.
-Similar to what we do before, we aggregate buildings by introducing bridges.
-We stop this iteration until the number of group does not decrease anymore.
+Aggregated buildings may become too close after growing because of bridges.
+\fig\ref{fig:BridgeMoreBuilding} shows such an example.
+We grow and buffer buildings $p$, $q$, and~$r$.
+As the buffers of $q$ and~$r$ overlap with each other
+(see \fig\ref{fig:BridgeMoreBuilding}c),
+we aggregated buildings $q$ and~$r$ by adding a bridge.
+There are two buildings left in \fig\ref{fig:BridgeMoreBuilding}d.
+Because of the bridge, when we grow and buffer the buildings in 
+\fig\ref{fig:BridgeMoreBuilding}d, 
+the buffer of building $p$ overlap with the buffer of the bridged $q$ and $r$
+(see \fig\ref{fig:BridgeMoreBuilding}f).
+We aggregate building $p$ with bridged $q$ and $r$
+(see \fig\ref{fig:BridgeMoreBuilding}g).
+There is one building left in \fig\ref{fig:BridgeMoreBuilding}g.
+Then we grow and buffer again.
+There is one building left after this process.
+The number of buildings does not decrease comparing to last process.
+The iteration stops.
 
-\begin{figure*}[tb]
+\begin{figure}[tb]
 	\centering
 	\includegraphics[draft=false]{BridgeMoreBuilding}
-	\caption{.}
+	\caption{Iteratively aggregating close buildings by adding bridges.
+		(a) original buildings $p$, $q$, and~$r$.
+		(b) grow the original buildings with distance $\dtrm{G}$.
+		(c) buffer the grown buildings with distance $d_{\epsilon,t}/2$ using 
+		round joins.
+		(d) aggregate buildings $q$ and~$r$ by adding a bridge,
+		as their buffer overlap with each other in (c).
+		(e) grow the buildings in (d) with distance $\dtrm{G}$.
+		(f) buffer the grown buildings in (e) with distance $d_{\epsilon,t}/2$ 
+		using round joins.
+		(g) aggregate buildings $p$, $q$ and~$r$ by adding bridges.
+		(h) grow the buildings in (g) with distance $\dtrm{G}$.
+		(i) buffer the grown buildings in (h) with distance $d_{\epsilon,t}/2$ 
+		using round joins.
+	}
 	\label{fig:BridgeMoreBuilding}
-\end{figure*}
+\end{figure}
 
 
 %At any time $t$, some of the bridges are picked to aggregate buildings 
@@ -598,20 +624,15 @@ algorithm fit our needs better.
 
 
 
-
-
-
-
-
 \subsection{Generating the goal forms of buildings}
 \label{sec:Goal}
 To generate the goal forms of buildings, we set time $t=1$.
-We group (see \sect\ref{sec:Group}) 
-and merge (see \sect\ref{sec:Aggregate}) buildings on start map.
+We aggregate original buildings (see \sect\ref{sec:Aggregate}).
 Then we grow (see \sect\ref{sec:Grow}) 
-and simplify (see \sect\ref{sec:DilationErosion}) the merged buildings.
-See for example \fig\ref{fig:Buffer_MiterLimits}, 
-the building at time $t=1$ is the goal form of the three buildings of $t=0$.
+and simplify 
+(see \sects\ref{sec:DilationErosion} and~\ref{sec:ImaiIri}) the grown buildings.
+See for example \fig\ref{fig:GrowAndBridge}, 
+the building at time $t=1$ is the goal form of the three original buildings of.
 
 
 
@@ -644,9 +665,8 @@ the goal form of the group of buildings
 which include the united buildings. 
 Otherwise, the building will need to be shrunk.
 To guarantee the non-exceeding, 
-we clip the building by the goal form 
+we clip the building using the goal form 
 and remove the parts outside.
-\todo{example?}
 
 We may unite the processed merged building with several separate parts 
 because the group of buildings may be in several smaller groups
