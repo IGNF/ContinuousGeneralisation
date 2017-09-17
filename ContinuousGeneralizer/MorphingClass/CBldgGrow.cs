@@ -70,7 +70,7 @@ namespace MorphingClass.CGeneralizationMethods
         private static int _intStart = 0;
         private static int _intEnd = _intStart + 1;
 
-        
+        private Dictionary<CValPairIncr<CPolygon>, CptEdgeDis> _CloseCpipeDt;
 
         public CBldgGrow()
         {
@@ -202,7 +202,7 @@ namespace MorphingClass.CGeneralizationMethods
 
 
                 //var mergedCpgLt = MergeCloseCpgsAndAddBridges(MagnifiedCpgLt, dblTotalGrow, dblTargetDilation, dblTargetEpsilon);
-                var mergedCpgLt = MergeCloseCpgsAndAddBridges(MagnifiedCpgLt,null,
+                var mergedCpgLt = MergeCloseCpgsAndAddBridges(MagnifiedCpgLt,true,
                     dblTotalGrow, dblTargetDilation, dblTargetEpsilon,strBufferStyle, dblMiterLimit);
 
                 //dblGrow, dblDilation, dblErosion, dblEpsilon
@@ -216,17 +216,17 @@ namespace MorphingClass.CGeneralizationMethods
                         dblTotalGrow, dblTargetDilation, dblTargetErosion, dblTargetEpsilon,
                         dblHoleAreaLimitTargetScale, strSimplification, strBufferStyle, dblMiterLimit);
 
-                    if (mergedcpg.BridgeCptEdgeDisLt != null)
-                    {
-                        var BridgeCpipeDt = new Dictionary<CValPairIncr<CPolygon>, CptEdgeDis>
-                    (mergedcpg.BridgeCptEdgeDisLt.Count, new CCmpEqCpgPairIncr());
-                        foreach (var BridgeCptEdgeDis in mergedcpg.BridgeCptEdgeDisLt)
-                        {
-                            BridgeCpipeDt.Add(new CValPairIncr<CPolygon>(BridgeCptEdgeDis.FrCEdge.BelongedCpg,
-                                BridgeCptEdgeDis.ToCEdge.BelongedCpg), BridgeCptEdgeDis);
-                        }
-                        mergedcpg.BridgeCpipeDt = BridgeCpipeDt;
-                    }
+                    //if (mergedcpg.BridgeCptEdgeDisLt != null)
+                    //{
+                    //    var BridgeCpipeDt = new Dictionary<CValPairIncr<CPolygon>, CptEdgeDis>
+                    //(mergedcpg.BridgeCptEdgeDisLt.Count, new CCmpEqCpgPairIncr());
+                    //    foreach (var BridgeCptEdgeDis in mergedcpg.BridgeCptEdgeDisLt)
+                    //    {
+                    //        BridgeCpipeDt.Add(new CValPairIncr<CPolygon>(BridgeCptEdgeDis.FrCEdge.BelongedCpg,
+                    //            BridgeCptEdgeDis.ToCEdge.BelongedCpg), BridgeCptEdgeDis);
+                    //    }
+                    //    mergedcpg.BridgeCpipeDt = BridgeCpipeDt;
+                    //}
 
 
                     mergedcpg.LastTimePaths = new Paths();
@@ -349,18 +349,18 @@ namespace MorphingClass.CGeneralizationMethods
 
         #region GroupCloseCpgsAndAddBridges single bridges        
 
-        private List<CPolygon> MergeCloseCpgsAndAddBridges(List<CPolygon> cpglt, 
-            Dictionary<CValPairIncr<CPolygon>, CptEdgeDis> BridgeCpipeDt,
+        private List<CPolygon> MergeCloseCpgsAndAddBridges(List<CPolygon> cpglt, bool blnGoalMap,
             double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "Miter",
             double dblMiterLimit = 2)
-        {
-            double dblCloseDis = 3 * dblGrow + dblEpsilon;
-            BridgeCpipeDt = null;
-            var CloseCpipeDt = BridgeCpipeDt;
-            if (BridgeCpipeDt == null) //when we want to generate built-up areas at goal map, BridgeCpipeDt == null
+        {            
+            var CloseCpipeDt = _CloseCpipeDt;
+            if (blnGoalMap == true) //when we want to generate built-up areas at goal map, BridgeCpipeDt == null
             {
+                double dblCloseDis = 3 * dblGrow + Math.Sqrt(5) / 2 * dblEpsilon + dblDilation;
                 CloseCpipeDt = GetCloseCpgPairPtEdgeDisDt_EdgeRelation(cpglt, dblCloseDis);
-            }            
+                _CloseCpipeDt = CloseCpipeDt;
+            }
+
 
             var groupedcpgCptEdgeDisltlt = new List<CValPair<List<CPolygon>, List<CptEdgeDis>>>(cpglt.Count);
             foreach (var cpg in cpglt)
@@ -380,32 +380,28 @@ namespace MorphingClass.CGeneralizationMethods
                 foreach (var GroupedCpgLt in GroupedCpgLtLt)
                 {
                     var CptEdgeDisLt = new List<CptEdgeDis>(GroupedCpgLt.Count);
-                   
-                    if (GroupedCpgLt.Count>1)
-                    { 
+
+                    if (GroupedCpgLt.Count > 1)
+                    {
                         for (int i = 0; i < GroupedCpgLt.Count - 1; i++)
                         {
                             for (int j = i + 1; j < GroupedCpgLt.Count; j++)
                             {
                                 CptEdgeDis outCptEdgeDis;
-                                if (CloseCpipeDt.TryGetValue(new CValPairIncr<CPolygon>(GroupedCpgLt[i], GroupedCpgLt[j]), out outCptEdgeDis))
+                                if (CloseCpipeDt.TryGetValue(new CValPairIncr<CPolygon>(GroupedCpgLt[i], GroupedCpgLt[j]),
+                                    out outCptEdgeDis))
                                 {
                                     CptEdgeDisLt.Add(outCptEdgeDis);
                                 }
                             }
                         }
 
-                        //when we generate built-up areas for goal map, BridgeCpipeDt == null and many links are not bridges
-                        //when we generate map at time t, all the close links are bridges 
-                        if (BridgeCpipeDt == null) 
-                        {
-                            CptEdgeDisLt = GroupCpgsAndBridgesForEachCluster_Prim(CptEdgeDisLt).ToList();
-                        }
+                        CptEdgeDisLt = GroupCpgsAndBridgesForEachCluster_Prim(CptEdgeDisLt).ToList();
                     }
 
                     groupedcpgCptEdgeDisltlt.Add(new CValPair<List<CPolygon>, List<CptEdgeDis>>(GroupedCpgLt, CptEdgeDisLt));
                 }
-            } while (groupedcpgCptEdgeDisltlt.Count< intGroupCount);
+            } while (groupedcpgCptEdgeDisltlt.Count < intGroupCount);
 
 
 
@@ -414,7 +410,7 @@ namespace MorphingClass.CGeneralizationMethods
             //add merged polygons
             foreach (var groupedcpgCptEdgeDislt in groupedcpgCptEdgeDisltlt)
             {
-                if (groupedcpgCptEdgeDislt.val2.Count>0)
+                if (groupedcpgCptEdgeDislt.val2.Count > 0)
                 {
                     //merge grouped cpgs by DCEL; add SubCpgLt and BridgeCptEdgeDisSS 
                     mergedCpgLt.Add(MergeGroupedCpgsAndBridges(groupedcpgCptEdgeDislt.val2));
@@ -739,14 +735,17 @@ namespace MorphingClass.CGeneralizationMethods
         #region Output
         public void Output(double dblProportion, string strSimplification, string strBufferStyle, double dblMiterLimit)
         {
+            CConstants.dblVerySmallCoord *= CConstants. dblFclipper;
             var resultCpgEb = GetResultCpgEb(this.MergedCpgLt, dblProportion, strSimplification, strBufferStyle, dblMiterLimit);
             CSaveFeature.SaveCpgEb(resultCpgEb,
                 dblProportion + "_Growing", intBlue: 255, blnVisible: false);
+            CConstants.dblVerySmallCoord /= CConstants.dblFclipper;
         }
 
 
         public void MakeAnimations(string strSimplification, string strBufferStyle, double dblMiterLimit)
         {
+            CConstants.dblVerySmallCoord *= CConstants.dblFclipper;
             int intLayerNum = 10;
             var strLayerNameLt = new List<string>(intLayerNum + 1);
             for (int i = 0; i <= intLayerNum; i++)
@@ -768,6 +767,7 @@ namespace MorphingClass.CGeneralizationMethods
                 writer.Write(CIpeDraw.GenerateIpeContentByDataWithLayerInfo(strContent));
             }
 
+            CConstants.dblVerySmallCoord /= CConstants.dblFclipper;
             System.Diagnostics.Process.Start(@strFullName);
         }
 
@@ -792,7 +792,8 @@ namespace MorphingClass.CGeneralizationMethods
                 //add layer name and a text of patch numbers
                 strDataAllLayers += CIpeDraw.writeIpeText(strLayerNameLt[i], 320, 128);
 
-                strDataAllLayers += CToIpe.GetScaleLegend(pFLayerEnv, pIpeEnv, CHelpFunc.GetUnits(_ParameterInitialize.m_mapControl.MapUnits));
+                strDataAllLayers += CToIpe.GetScaleLegend(pFLayerEnv, pIpeEnv, 
+                    CHelpFunc.GetUnits(_ParameterInitialize.m_mapControl.MapUnits));
 
                 //add the Content of animations
                 strDataAllLayers += "<group>\n";
@@ -908,7 +909,7 @@ namespace MorphingClass.CGeneralizationMethods
             else
             {
                 //var SubCpgLt = mergedcpg.SubCpgLt;
-                var submergedcpglt = MergeCloseCpgsAndAddBridges(mergedcpg.SubCpgLt, mergedcpg.BridgeCpipeDt, 
+                var submergedcpglt = MergeCloseCpgsAndAddBridges(mergedcpg.SubCpgLt, false, 
                     dblCurrentGrow, dblCurrentDilation, dblCurrentEpsilon);
                 //var BridgeCpipeDt = mergedcpg.BridgeCpipeDt;
                 foreach (var submergedcpg in submergedcpglt)

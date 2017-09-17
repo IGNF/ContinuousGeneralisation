@@ -61,7 +61,7 @@ namespace MorphingClass.CGeometry
         public List<CPolygon> SubCpgLt { get; set; }
         public List<CptEdgeDis> BridgeCptEdgeDisLt { get; set; }
         
-        public Dictionary<CValPairIncr<CPolygon>, CptEdgeDis> BridgeCpipeDt { get; set; }
+        //public Dictionary<CValPairIncr<CPolygon>, CptEdgeDis> BridgeCpipeDt { get; set; }
 
         //public CPolygon AssigningFace { get; set; }
         //public List<CPolygon> AssignedFaceLt { get; set; }

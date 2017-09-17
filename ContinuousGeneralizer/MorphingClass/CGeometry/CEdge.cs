@@ -367,6 +367,8 @@ namespace MorphingClass.CGeometry
             }
         }
 
+
+
         public bool SetSlope()
         {
             this.dblIncrX = _ToCpt.X - _FrCpt.X;

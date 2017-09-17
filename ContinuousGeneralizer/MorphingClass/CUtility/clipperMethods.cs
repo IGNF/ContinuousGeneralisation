@@ -31,8 +31,8 @@ namespace MorphingClass.CUtility
             //Console.WriteLine("dblMiterLimit = " + dblMiterLimit);
 
             //keep in mind that the first point and the last point of a output path are not identical
-            //the direction of a path of outcome is counter-clockwise, whereas it is clockwise for a IPolygon            
-            ClipperOffset pClipperOffset = new ClipperOffset(dblMiterLimit, 0.25 * CConstants.dblFclipper);
+            //the direction of a path of outcome is counter-clockwise, whereas it is clockwise for a IPolygon and a CPolygon           
+            ClipperOffset pClipperOffset = new ClipperOffset(dblMiterLimit, 0.1 * CConstants.dblFclipper);
             switch (strBufferStyle)
             {
                 case "Miter":
@@ -64,7 +64,7 @@ namespace MorphingClass.CUtility
 
             //keep in mind that the first point and the last point of a path are not identical
             //the direction of a path of outcome is counter-clockwise, whereas it is clockwise for a IPolygon
-            ClipperOffset pClipperOffset = new ClipperOffset(dblMiterLimit, 0.25 * CConstants.dblFclipper);
+            ClipperOffset pClipperOffset = new ClipperOffset(dblMiterLimit, 0.1 * CConstants.dblFclipper);
             switch (strBufferStyle)
             {
                 case "Miter":
@@ -324,7 +324,8 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
             //int intGroupCount = 0;
             int intRound = 0;
 
-            //var alloverdilationPaths = new Paths();
+            var alloverdilationPaths = new Paths();
+            var allersionPaths = new Paths();
             var allbackpaths = new Paths();
             var alloriginalPaths = new Paths();
             //var alloverlapGrownPaths = new Paths();
@@ -338,7 +339,7 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
                 }
                 foreach (var cptEdgeDis in groupedcpgCptEdgeDislt.val2)
                 {
-                    groupedoriginalpaths.Add(GeneratePathByCEdge(cptEdgeDis.ConnectCEdge));
+                    groupedoriginalpaths.Add(GenerateRectanglePathByCEdge_CounterClockwise(cptEdgeDis.ConnectCEdge));
                 }
                 alloriginalPaths.AddRange(groupedoriginalpaths);
                 //alloriginalPaths.AddRange(groupedoriginalpaths);
@@ -347,6 +348,9 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
                 var erosionPaths = Offset_Paths(overdilationPaths, -dblDilation - dblEpsilon, strBufferStyle, dblMiterLimit);
                 var backPaths = Offset_Paths(erosionPaths, dblEpsilon, strBufferStyle, dblMiterLimit);
 
+
+                alloverdilationPaths.AddRange(overdilationPaths);
+                allersionPaths.AddRange(erosionPaths);
                 allbackpaths.AddRange(backPaths);
 
                 //var overlapgrownpaths = Offset_Paths(groupedoriginalpaths, dblMiterLimit * dblGrow + dblDisOverlap, "Round");
@@ -374,15 +378,24 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
             var groupedcpgltlt = GroupCpgsByOverlap(cpglt, finalPolyTree);
 
 
-//            CSaveFeature.SavePathEbAsCplEb(alloriginalPaths,
-//    intRound + "_alloriginalPaths", blnVisible: false);
-//            CSaveFeature.SavePathEbAsCpgEb(finalPolyTree,
-//intRound + "_finalPolyTree" + (dblGrow + dblDisOverlap) / CConstants.dblFclipper + "m",
-//pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
+            CSaveFeature.SavePathEbAsCplEb(alloriginalPaths,
+intRound + "_alloriginalPaths", blnVisible: false);
+//            CSaveFeature.SavePathEbAsCplEb(alloverdilationPaths,
+//intRound + "_alloverdilationPaths", blnVisible: false);
+//            CSaveFeature.SavePathEbAsCplEb(allersionPaths,
+//intRound + "_allersionPaths", blnVisible: false);
 
-//            CSaveFeature.SavePathEbAsCpgEb(grownpaths,
-//intRound + "_grownpaths" + dblGrow / CConstants.dblFclipper + "m",
-//pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
+            
+            CSaveFeature.SavePathEbAsCplEb(allbackpaths,
+intRound + "_allbackpaths", blnVisible: false);
+
+            CSaveFeature.SavePathEbAsCpgEb(finalPolyTree,
+intRound + "_finalPolyTree" + (dblGrow + dblDisOverlap) / CConstants.dblFclipper + "m",
+pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
+
+            //            CSaveFeature.SavePathEbAsCpgEb(grownpaths,
+            //intRound + "_grownpaths" + dblGrow / CConstants.dblFclipper + "m",
+            //pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
 
 
 
@@ -562,7 +575,7 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
 
 
 
-        public static IEnumerable<CPolygon> GenerateCpgEbByPolyTree(PolyTree polyTree, int intID = -1, bool blnReverse = false)
+        public static IEnumerable<CPolygon> GenerateCpgEbByPolyTree(PolyTree polyTree, int intID = -1, bool blnReverse = true)
         {
             foreach (var polynode in GetOneLevelPolyNode(polyTree))
             {
@@ -823,6 +836,26 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
             {
                 new IntPoint(cedge.FrCpt.X, cedge.FrCpt.Y),
                 new IntPoint(cedge.ToCpt.X, cedge.ToCpt.Y)
+            };
+        }
+
+        public static Path GenerateRectanglePathByCEdge_CounterClockwise(CEdge cedge)
+        {
+            cedge.JudgeAndSetLength();
+            var frcpt = cedge.FrCpt;
+            var tocpt = cedge.ToCpt;
+
+            double dblUnitIncrX = cedge.dblIncrX / cedge.dblLength;
+            double dblUnitIncrY = cedge.dblIncrY / cedge.dblLength;
+            double dblSmallX = CConstants.dblVerySmallCoord * dblUnitIncrY;
+            double dblSmallY = CConstants.dblVerySmallCoord * dblUnitIncrX;
+
+            return new Path
+            {
+                new IntPoint(frcpt.X-dblSmallX, frcpt.Y+dblSmallY),
+                new IntPoint(frcpt.X+dblSmallX, frcpt.Y-dblSmallY),
+                new IntPoint(tocpt.X+dblSmallX, tocpt.Y-dblSmallY),
+                new IntPoint(tocpt.X-dblSmallX, tocpt.Y+dblSmallY)
             };
         }
 

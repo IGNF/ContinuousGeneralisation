@@ -108,49 +108,49 @@ namespace ContinuousGeneralizer.FrmGeneralization
 
 
 
-        private void btn010_Click(object sender, EventArgs e)
+        public void btn010_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.1;
             _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text,
     this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
-        private void btn020_Click(object sender, EventArgs e)
+        public void btn020_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.2;
             _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text,
     this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
-        private void btn030_Click(object sender, EventArgs e)
+        public void btn030_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.3;
             _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text,
 this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
-        private void btn040_Click(object sender, EventArgs e)
+        public void btn040_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.4;
             _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text,
 this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
-        private void btn050_Click(object sender, EventArgs e)
+        public void btn050_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.5;
             _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text,
 this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
-        private void btn060_Click(object sender, EventArgs e)
+        public void btn060_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.6;
             _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text,
 this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
-        private void btn070_Click(object sender, EventArgs e)
+        public void btn070_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.7;
             _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text,
 this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
-        private void btn080_Click(object sender, EventArgs e)
+        public void btn080_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.8;
             _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text,
@@ -162,25 +162,25 @@ this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
             _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text, 
                 this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
-        private void btn000_Click(object sender, EventArgs e)
+        public void btn000_Click(object sender, EventArgs e)
         {
             _dblProportion = 0;
             _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text,
     this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
-        private void btn025_Click(object sender, EventArgs e)
+        public void btn025_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.25;
             _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text,
     this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
-        private void btn075_Click(object sender, EventArgs e)
+        public void btn075_Click(object sender, EventArgs e)
         {
             _dblProportion = 0.75;
             _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text,
     this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         }
-        private void btn100_Click(object sender, EventArgs e)
+        public void btn100_Click(object sender, EventArgs e)
         {
             _dblProportion = 1;
             _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text,
