@@ -870,29 +870,42 @@ instead of considering each building individually.
 \label{sec:CaseStudy}
 We have implemented our method based on
 C\# (Microsoft Visual Studio 2015) and ArcObjects SDK 10.4.1.
-The buffer function and clip function are from library \emph{Clipper} 
+The offsetting function and clipping function are from library \textsc{Clipper} 
 of \citet{Johnson2014}.
-An evaluation of Clipper can be found in \citet{Palfrader2015}.
+The offsetting function realizes 
+our operations of buffering, dilating, eroding, and merging.
+An evaluation of \textsc{Clipper} can be found in \citet{Palfrader2015}.
 We ran our case study under 64-bit 
 Windows 7 on a 3.3 GHz dual core CPU with 8 GB RAM.
 We measured processing time by the built-in C\# class 
 \emph{Stopwatch}.
-We tested our method on a dataset from French Mapping Agency (IGN).
-The dataset represents four towns (communes in French), i.e., Aussevielle, 
-Denguin,  Poey-de-Lescar, and Siros, in the 
-Pyr\'en\'ees-Atlantiques department, south-western France.
-The scale of the dataset is $1:15{,}000$.
-There are $2{,}590$ buildings (see \fig\ref{fig:Data}), 
-which has $19{,}255$ edges in total.
+\fig\ref{fig:Data} shows our testing data, 
+which is from the French Mapping Agency (IGN).
+The data represents the buildings of four towns (communes in French), 
+i.e., Aussevielle, Denguin,  Poey-de-Lescar, and Siros, 
+in the Pyr\'en\'ees-Atlantiques department, south-western France.
+
 Our goal scale is $1:50{,}000$.
 
 
-\begin{figure*}[tb]
+\begin{figure}[tb]
 	\centering
 	\includegraphics{Data}
-	\caption{data.}
+	\caption{Data.
+		There are $2{,}590$ buildings, 
+		which has $19{,}255$ edges in total.}
 	\label{fig:Data}
-\end{figure*}
+\end{figure}
+
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics{GoalShape}
+	\caption{Data for scale $1:15{,}000$.
+		There are $2{,}590$ buildings, 
+		which has $19{,}255$ edges in total.}
+	\label{fig:GoalShape}
+\end{figure}
 
 \todo[inline]{comparison of simplification between Douglas--Peucker and 
 	Imai--Iri}

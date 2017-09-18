@@ -176,7 +176,7 @@ namespace MorphingClass.CMorphingMethods
             var dlgTransform = SetDlgTransform(pParameterInitialize.cboTransform.Text);
             var TransSgIGeoLt = new List<IGeometry>(SgIplLt.Count);
             TransSgIGeoLt.EveryElementValue(null);
-            CHelpFunc.Displaytspb(0.5, intInterLSFaceCount, pParameterInitialize.tspbMain);
+            CHelpFunc.Displaytspb(0.5, intInterLSFaceCount);
             for (int i = 0; i < intInterLSFaceCount; i++)
             {
                 Console.WriteLine("Face Num: " + i);
@@ -190,7 +190,7 @@ namespace MorphingClass.CMorphingMethods
                         TransSgIGeoLt[intSgIndexLtLt[i][intCount++]] = TransSgCpl.JudgeAndSetAEGeometry();
                     }
                 }
-                CHelpFunc.Displaytspb(i + 1, intInterLSFaceCount, pParameterInitialize.tspbMain);
+                CHelpFunc.Displaytspb(i + 1, intInterLSFaceCount);
             }
 
             pStopwatch.Stop();

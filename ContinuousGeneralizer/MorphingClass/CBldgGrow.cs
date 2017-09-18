@@ -91,7 +91,7 @@ namespace MorphingClass.CGeneralizationMethods
             //I may need to do buffering based on Miterjoint in a more clever way
             //if the distance from the miter point to original line is larger than dblMiterLimit*dblBufferRadius, we, instead of calling
             //the normal square method, make a square so that the farthest distance to the original line exactly dblMiterLimit*dblBufferRadius
-            var pStopwatch = Stopwatch.StartNew();
+            
             var pParameterInitialize = _ParameterInitialize;
 
             var LSCpgLt = this.ObjCGeoLtLt[0].AsExpectedClass<CPolygon, object>().ToList();
@@ -103,8 +103,9 @@ namespace MorphingClass.CGeneralizationMethods
             CConstants.dblVerySmallCoord *= dblFclipper;
             int intStart = 0;
             int intEnd = intStart + intOutputMapCount;
-            CHelpFunc.Displaytspb(0.5, intEnd - intStart, pParameterInitialize.tspbMain);
+            CHelpFunc.Displaytspb(0.5, intEnd - intStart);
             double dblTargetScale = 0;
+            var pStopwatch = Stopwatch.StartNew();
             for (int i = intStart; i < intEnd; i++)
             {
                 //double dblTargetScale = dblStartScale + (i + 1) * 5;
@@ -243,9 +244,11 @@ namespace MorphingClass.CGeneralizationMethods
                     }
 
                     dblStartScale = dblTargetScale;
-                    CHelpFunc.Displaytspb(j + 1, mergedCpgLt.Count, CConstants.ParameterInitialize.tspbMain);
+                    CHelpFunc.Displaytspb(j + 1, mergedCpgLt.Count);
                 }
 
+                CHelpFunc.DisplayRunTime(pStopwatch.ElapsedMilliseconds);
+                
 
                 this.MergedCpgLt = mergedCpgLt;
 

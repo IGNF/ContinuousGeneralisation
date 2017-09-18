@@ -81,7 +81,7 @@ namespace MorphingClass.CUtility
         //private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\AreaAggregation\\" + _strDataFolderName + "\\";
 
         //private static string _strDataFolderName = "France";
-        //private static string _strDataFolderName = "France_FourTowns";
+        private static string _strDataFolderName = "France_FourTowns";
         //private static string _strDataFolderName = "France_Part";
         //private static string _strDataFolderName = "France_FourBuildings";
         //private static string _strDataFolderName = "France_Smallpart";
@@ -95,8 +95,8 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "France_Presenting_UnitingPrevious_Simplification";
         //private static string _strDataFolderName = "France_Presenting_RemoveBay";
         //private static string _strDataFolderName = "France_Presenting_Grouping";
-        private static string _strDataFolderName = "France_Presenting_BridgeMoreBuilding";
-        
+        //private static string _strDataFolderName = "France_Presenting_BridgeMoreBuilding";
+
         //private static string _strDataFolderName = "France_Problematic";
         //private static string _strDataFolderName = "France_Problematic2";
         //private static string _strDataFolderName = "France_WithOneHole";
@@ -254,12 +254,15 @@ namespace MorphingClass.CUtility
             return strPrefix + dblNumber.ToString();
         }
 
-        public static void Displaytspb(double dblValue, double dblTotal, ToolStripProgressBar tspb)
+        public static void Displaytspb(double dblValue, double dblTotal)
         {
-            tspb.Value = Convert.ToInt32(dblValue * 100 / dblTotal);
+           CConstants.ParameterInitialize.tspbMain.Value = Convert.ToInt32(dblValue * 100 / dblTotal);
         }
 
-
+        public static void DisplayRunTime(long lngTimeMs)
+        {
+            CConstants.ParameterInitialize.tsslTime.Text = "RunTime: " + lngTimeMs + "ms";
+        }
 
         public static List<object> GetObjLtByFeatureLayer(IFeatureLayer pFeatureLayer, out List<List<object>> pobjectValueLtLt, 
             string strSpecifiedFieldName = null, string strSpecifiedValue = null)

@@ -213,7 +213,7 @@ namespace MorphingClass.CMorphingMethods
                 CHelpFuncExcel.ExportDataltToExcel(dblTimeLt, intMaxBackKforI + "Timelt0", pParameterInitialize.strSavePath);
                 CHelpFuncExcel.ExportDataltToExcel(dblDistanceLt, intMaxBackKforI + "Distancelt0", pParameterInitialize.strSavePath);
 
-                CHelpFunc.Displaytspb(i + 1, intMulti, pParameterInitialize.tspbMain);
+                CHelpFunc.Displaytspb(i + 1, intMulti);
                 pParameterInitialize.txtEvaluation.Text = dblDistanceLt.GetLastT().ToString();
                 pParameterInitialize.tsslTime.Text = "Running Time: " + dblTimeLt.GetLastT().ToString();
 

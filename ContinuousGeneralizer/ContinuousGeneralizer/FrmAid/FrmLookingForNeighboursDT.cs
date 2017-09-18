@@ -237,7 +237,7 @@ namespace ContinuousGeneralizer.FrmAid
 
 
                 OutPutLtLt.Add(OutPutLt);
-                CHelpFunc.Displaytspb(i + 1, intLayerCount, ParameterInitialize.tspbMain);
+                CHelpFunc.Displaytspb(i + 1, intLayerCount);
                 pFeatureLayer = null;
                 CptLt = null;
                 OutPutLt = null;

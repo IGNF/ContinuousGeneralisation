@@ -341,16 +341,15 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
                 {
                     groupedoriginalpaths.Add(GenerateRectanglePathByCEdge_CounterClockwise(cptEdgeDis.ConnectCEdge));
                 }
-                alloriginalPaths.AddRange(groupedoriginalpaths);
-                //alloriginalPaths.AddRange(groupedoriginalpaths);
+                
 
                 var overdilationPaths = Offset_Paths(groupedoriginalpaths, dblGrow + dblDilation, strBufferStyle, dblMiterLimit);
                 var erosionPaths = Offset_Paths(overdilationPaths, -dblDilation - dblEpsilon, strBufferStyle, dblMiterLimit);
                 var backPaths = Offset_Paths(erosionPaths, dblEpsilon, strBufferStyle, dblMiterLimit);
 
-
-                alloverdilationPaths.AddRange(overdilationPaths);
-                allersionPaths.AddRange(erosionPaths);
+                //alloriginalPaths.AddRange(groupedoriginalpaths);
+                //alloverdilationPaths.AddRange(overdilationPaths);
+                //allersionPaths.AddRange(erosionPaths);
                 allbackpaths.AddRange(backPaths);
 
                 //var overlapgrownpaths = Offset_Paths(groupedoriginalpaths, dblMiterLimit * dblGrow + dblDisOverlap, "Round");
@@ -378,20 +377,18 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
             var groupedcpgltlt = GroupCpgsByOverlap(cpglt, finalPolyTree);
 
 
-            CSaveFeature.SavePathEbAsCplEb(alloriginalPaths,
-intRound + "_alloriginalPaths", blnVisible: false);
-//            CSaveFeature.SavePathEbAsCplEb(alloverdilationPaths,
-//intRound + "_alloverdilationPaths", blnVisible: false);
+//            CSaveFeature.SavePathEbAsCplEb(alloriginalPaths,
+//intRound + "_alloriginalPaths", blnVisible: false);
 //            CSaveFeature.SavePathEbAsCplEb(allersionPaths,
 //intRound + "_allersionPaths", blnVisible: false);
 
             
-            CSaveFeature.SavePathEbAsCplEb(allbackpaths,
-intRound + "_allbackpaths", blnVisible: false);
+//            CSaveFeature.SavePathEbAsCplEb(allbackpaths,
+//intRound + "_allbackpaths", blnVisible: false);
 
-            CSaveFeature.SavePathEbAsCpgEb(finalPolyTree,
-intRound + "_finalPolyTree" + (dblGrow + dblDisOverlap) / CConstants.dblFclipper + "m",
-pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
+//            CSaveFeature.SavePathEbAsCpgEb(finalPolyTree,
+//intRound + "_finalPolyTree" + (dblGrow + dblDisOverlap) / CConstants.dblFclipper + "m",
+//pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
 
             //            CSaveFeature.SavePathEbAsCpgEb(grownpaths,
             //intRound + "_grownpaths" + dblGrow / CConstants.dblFclipper + "m",
