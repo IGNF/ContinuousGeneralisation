@@ -97,12 +97,11 @@ Analytics}{November 2017}{Redondo Beach, California USA}
 To enable smooth zooming, we propose a method to continuously 
 generalize buildings from a given start map to a smaller-scale goal map, where 
 there are only built-up area polygons instead of individual building polygons.
-For the sake of convenience, 
-we name the buildings on the start map \emph{original buildings}.
+We name the buildings on the start map \emph{original buildings}.
 %
 For an intermediate scale, 
-we aggregate the original buildings that will be too close 
-by introducing bridges.
+we aggregate the original buildings that will become too close 
+by adding bridges.
 We grow (bridge) original buildings based on buffering 
 and simplify the grown buildings.
 We take into account the shapes of the buildings 
