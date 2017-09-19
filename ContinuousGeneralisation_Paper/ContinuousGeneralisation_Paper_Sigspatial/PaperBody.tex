@@ -360,6 +360,14 @@ As the number of buildings does not decrease comparing to last process (one
 building before, one building after),
 the iteration stops.
 
+When buildings are grown and aggregated iteratively, bridges are added, 
+and these bridges have a width of $2\dtrm{G}$ at time $t$.
+This setting guarantees that no bridge is thin when $t=1$.
+As we aggregated all buildings that will be too close, 
+we are able to guarantee that 
+there is no pair of buildings 
+which has separation distance less than $d_{\epsilon, t}$.
+
 \begin{figure}[tb]
 	\centering
 	\includegraphics[draft=false]{BridgeMoreBuilding}
@@ -449,12 +457,9 @@ the iteration stops.
 \subsection{Simplifying aggregated buildings using Imai--Iri algorithm}
 \label{sec:ImaiIri}
 
-When buildings are grown and aggregated iteratively, bridges are added, 
-and these bridges have a width of $2\dtrm{G}$ at time $t$.
-This setting guarantees that no bridge is thin when $t=1$.
-
-This agrregation process creates new small details that need to be removed. So, 
-the aggregated buildings are simplified using Imai--Iri algorithm 
+As the scale is decreasing ($M_t$ increases), 
+we should remove more and more details. 
+So, the aggregated and grown buildings are simplified using Imai--Iri algorithm 
 \citep{ImaiIri1988}.
 First, this algorithm finds all the valid shortcuts of a polyline.
 A shortcut is valid for a segment 
@@ -482,7 +487,7 @@ and has the least number of line segments, with error smaller than $d_{l,t}$.
 We add two more constraints for a shortcut to be valid. 
 First, a shortcut must be completely inside the grown building.
 If a shortcut is outside,
-we are not able to arrive at the shortcut by growing.
+we may be not able to arrive at the shortcut by growing.
 Second, a shortcut is not allowed to intersect the aggregated building.
 If we allow this intersection, 
 the building will have to be shrunk, which should be avoided. 
@@ -779,15 +784,16 @@ We measured processing time by the built-in C\# class
 \emph{Stopwatch}.
 \fig\ref{fig:Data} shows our testing data, 
 which is from the French Mapping Agency (IGN).
-The data represents the buildings of four towns (communes in French), 
+The data is at scale $1:15{,}000$, which means $M_\mathrm{s}=15{,}000$.
+It represents the buildings of four towns (communes in French), 
 i.e., Aussevielle, Denguin,  Poey-de-Lescar, and Siros, 
 in the Pyr\'en\'ees-Atlantiques department, south-western France.
 
-We set our goal scale at $1:50{,}000$ and $d_\mathrm{G}=25\,\mathrm{m}$
+We set our goal scale at $1:50{,}000$, which means $M_\mathrm{g}=50{,}000$,
+and $d_\mathrm{G}=25\,\mathrm{m}$
 so that we can compare our result with the exiting data.
 Also, this setting makes \eq\ref{eq:S_g} hold, 
-where $M_\mathrm{g}=50{,}000$, $d_\mathrm{G}=25\,\mathrm{m}$, 
-and $l=0.3\,\mathrm{mm}$.
+where $l=0.3\,\mathrm{mm}$.
 In \eq\ref{eq:d_Dt}, the first part is always smaller than the second part 
 according to our settings.
 As a result $\dtrm{D}=t\cdot 35\,\mathrm{m}$, 
@@ -813,22 +819,44 @@ the Douglas--Peucker algorithm.
 	\label{fig:Data}
 \end{figure}
 
-%	axis x line=bottom,
-%axis y line=left,
+
+We produced a sequence of $10$ maps, i.e., $t \in \{0.1, 0.2, \dots, 1\}$.
+This production cost $668.2\,\mathrm{s}$ in total.
+We show such a sequence of maps in \fig\ref{fig:ContinuousGeneralization} for 
+the marked region in \fig\ref{fig:GoalShape}.
+We counted the numbers of buildings in our results,
+and compared our numbers to the numbers calculated by T\"opfer's radical law
+(see \fig\ref{fig:BuilidngNumber}).
+We have unexaggerated-area symbols, 
+so for \eq2 of \citet{Topfer1966}, we used $C_\mathrm{b2}$ and $C_\mathrm{z3}$.
+As a result, we computed the number according to
+\[
+n_t=n_\mathrm{s}\frac{M_\mathrm{s}}{M_t},
+\]
+where $n_s=2{,}590$ is the number of buildings on start map
+and $n_t$ is the number of buildings on a map at scale $1:M_t$.
+According to \fig\ref{fig:BuilidngNumber}, our numbers decrease faster than 
+the numbers from the radical law.
+It seems that our result supports the fractal law proposed by \citet{Jiang2015}.
+
+
+
 \begin{figure}[tb]
 	\centering
 	\begin{tikzpicture}[]
 	\begin{axis}[
 	width= \linewidth-0.1cm,
 	axis lines = left,
-%	axis x line=center,
-%	axis y line=left,
+	%	axis x line=center,
+	%	axis y line=left,
 	xtick={0.1,0.2,...,1},
 	ytick={500,1000,...,3000},
 	xlabel={$t$},
 	ylabel={number of buildings},
-%	xlabel style={below right},
-%	ylabel style={above left},
+	xlabel style={below right},
+	%	ylabel style={at={(axis description cs:0,1.1)},rotate=270,anchor=north},
+	xlabel style={at={(axis description cs:1,0)},anchor=north},
+	%	ylabel style={above left},
 	xmin=0,
 	xmax=1.1,
 	ymin=0,
@@ -849,17 +877,26 @@ the Douglas--Peucker algorithm.
 		(0.9,59)
 		(1,56)		
 	};
-	\legend{\quad $M=200{,}000$, \quad $M=400{,}000$}
+	\legend{\quad radical law, \quad our results}
 	\end{axis}
 	\end{tikzpicture}
-	\caption{The numbers of regions where our approach was 
-		forced to use the given overestimation factors in order 
-		to 
-		find a solution without exploring more than $M \in 
-		\{200{,}000,~400{,}000\}$ nodes of the subdivision 
-		graph.}
-	\label{fig:OverestimationStatistics}
+	\caption{A comparison of the numbers of building between our results and 
+		T\"opfer's radical law.}
+	\label{fig:BuilidngNumber}
 \end{figure}
+
+\fig\ref{fig:ExperimentalComparison} shows a comparison of 
+our result at time $t=1$
+and the data from IGN at scale $1:50{,}000$.
+No small buildings are removed in our result or the IGN data.
+The boundaries of our built-up areas are more straight than that of IGN data, 
+where we have $1{,}135$ edges while the data has $4{,}968$ edges.
+From this perspective, we would say that our result is 
+more reasonable than the existing data.
+A questionnaire, however, is needed to make a more convincing comparison.
+
+%Our result at time $t=1$ have area $4{,}121{,}028.2\,\mathrm{mm}^2$.
+
 
 
 \begin{figure*}[tb]
@@ -874,31 +911,6 @@ the Douglas--Peucker algorithm.
 	}
 	\label{fig:GoalShape}
 \end{figure*}
-
-We produce a sequence of $10$ maps, which means $t \in \{0.1, 0.2, \dots, 1\}$.
-This production cost $668.2\,\mathrm{s}$ in total.
-We show such a sequence of maps in \fig\ref{fig:ContinuousGeneralization} for 
-the marked region in \fig\ref{fig:GoalShape}.
-
-\fig\ref{fig:ExperimentalComparison} shows a comparison of 
-our result at time $t=1$
-and the data from IGN at scale $1:50{,}000$.
-No small buildings are removed in our result or the IGN data.
-The boundaries of our built-up areas are more straight than that of IGN data, 
-where we have $1{,}135$ edges while the data has $4{,}968$ edges.
-From this perspective, we would say that our result is 
-more reasonable than the existing data.
-A questionnaire, however, is needed to compare our result with the data.
-
-Our result at time $t=1$ have area $4{,}121{,}028.2\,\mathrm{mm}^2$.
-
-
-
-
-
-
-
-
 
 \begin{figure*}[tb]
 	\centering
@@ -938,26 +950,22 @@ Our result at time $t=1$ have area $4{,}121{,}028.2\,\mathrm{mm}^2$.
 
 We proposed a method to continuously generalize buildings to built-up areas
 by aggregating and growing.
-Using 
+We managed to produce a sequence of maps 
+in which the buildings are always growing and, at the same time, are simplified.
+For the goal map at scale $1:50{,}000$,
+the shapes of our built-up areas are more reasonable than the data from IGN.
 
-Our intermediate results may violate more cartographic rules, but we try to 
-make the results at goal scales violate as few rules as possible.
-
+It is always interesting to know what is the quantity we should keep on a map.
+We compared the number of buildings between our results and the calculated 
+numbers from T\"opfer's radical law.
+It turned out that our numbers decreased too fast.
+We may also take into account the fractal law of \citet{Jiang2015}.
+Another interesting problem is to compare the area of the buildings.
 
 Eventually, our result is a set of settlement boundaries. An interesting 
 problem is to compare our method with \citet{Chaudhry2008}.
 
-We used radical law. We may also consider the fractal nature of maps proposed 
-by \citet{Jiang2015}.
 
-We did not include streets. We can either put them above the settlement 
-boundaries on map, or use them as restriction for building growing.
 
-Show some results obtained by ArcGIS.
-Show the data at $1:50{,}000$.
-
-A special kind of Voronoi diagram considering miter offset. A buildings is 
-allowed to grow inside its own zone.
-
-\todo[inline]{consider multi bridges; 
-	consider transparency of bridges in stead of enlarging}
+%A special kind of Voronoi diagram considering miter offset. A buildings is 
+%allowed to grow inside its own zone.
