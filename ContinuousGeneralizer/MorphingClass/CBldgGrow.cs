@@ -95,11 +95,32 @@ namespace MorphingClass.CGeneralizationMethods
             var pParameterInitialize = _ParameterInitialize;
 
             var LSCpgLt = this.ObjCGeoLtLt[0].AsExpectedClass<CPolygon, object>().ToList();
+            int intEdgeCount = 0;
+            double dblArea = 0;
+            foreach (var cpg in LSCpgLt)
+            {
+                intEdgeCount += cpg.GetEdgeCount();
+                cpg.SetAreaSimple();
+                dblArea += cpg.dblAreaSimple;
+            }
+
+
+
 
             double dblStartScale = dblLS;
             double dblFclipper = CConstants.dblFclipper;
 
             var MagnifiedCpgLt = clipperMethods.ScaleCpgEb(LSCpgLt, dblFclipper).ToList();
+
+
+
+
+
+
+
+
+
+
             CConstants.dblVerySmallCoord *= dblFclipper;
             int intStart = 0;
             int intEnd = intStart + intOutputMapCount;
@@ -175,8 +196,7 @@ namespace MorphingClass.CGeneralizationMethods
                 //dblTargetDilation = 0;
                 //double dblTargetDilation = dblTotalGrow;
                 //dblTargetDilation= dblTotalGrow / 2;
-
-                int intEdgeCount = 0;
+                
                 foreach (var MagnifiedCpg in MagnifiedCpgLt)
                 {
                     MagnifiedCpg.RemoveClosePoints();
@@ -184,9 +204,11 @@ namespace MorphingClass.CGeneralizationMethods
                     MagnifiedCpg.FormCEdgeLt();
                     MagnifiedCpg.CEdgeLt.ForEach(cedge => cedge.BelongedCpg = MagnifiedCpg);
                     MagnifiedCpg.SetExteriorPath();
-                    intEdgeCount += MagnifiedCpg.GetEdgeCount();
                     //MagnifiedCpg. = CHelpFunc.MakeLt(clipperMethods.GeneratePathByCpgExterior(MagnifiedCpg));
                 }
+
+
+
 
 
                 #region Generate buffers (commented)

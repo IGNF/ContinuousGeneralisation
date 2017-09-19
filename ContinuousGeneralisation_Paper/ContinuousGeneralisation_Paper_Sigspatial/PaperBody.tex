@@ -808,9 +808,59 @@ the Douglas--Peucker algorithm.
 	\includegraphics{Data}
 	\caption{Data.
 		There are $2{,}590$ buildings, 
-		which have $19{,}255$ edges in total.}
+		which in total have $19{,}255$ edges and have area
+		$448{,}996.8\,\mathrm{mm}^2$.}
 	\label{fig:Data}
 \end{figure}
+
+%	axis x line=bottom,
+%axis y line=left,
+\begin{figure}[tb]
+	\centering
+	\begin{tikzpicture}[]
+	\begin{axis}[
+	width= \linewidth-0.1cm,
+	axis lines = left,
+%	axis x line=center,
+%	axis y line=left,
+	xtick={0.1,0.2,...,1},
+	ytick={500,1000,...,3000},
+	xlabel={$t$},
+	ylabel={number of buildings},
+%	xlabel style={below right},
+%	ylabel style={above left},
+	xmin=0,
+	xmax=1.1,
+	ymin=0,
+	ymax=3200,
+	cycle list name=black white,
+	]
+	\addplot+ [domain=0:1,samples=11] {2590*15/(15+35* x)};
+	\addplot+  coordinates {
+		(0,2590)
+		(0.1,1963)
+		(0.2,758)
+		(0.3,304)
+		(0.4,177)
+		(0.5,122)
+		(0.6,92)
+		(0.7,73)
+		(0.8,66)
+		(0.9,59)
+		(1,56)		
+	};
+	\legend{\quad $M=200{,}000$, \quad $M=400{,}000$}
+	\end{axis}
+	\end{tikzpicture}
+	\caption{The numbers of regions where our approach was 
+		forced to use the given overestimation factors in order 
+		to 
+		find a solution without exploring more than $M \in 
+		\{200{,}000,~400{,}000\}$ nodes of the subdivision 
+		graph.}
+	\label{fig:OverestimationStatistics}
+\end{figure}
+
 
 \begin{figure*}[tb]
 	\centering
@@ -836,6 +886,19 @@ and the data from IGN at scale $1:50{,}000$.
 No small buildings are removed in our result or the IGN data.
 The boundaries of our built-up areas are more straight than that of IGN data, 
 where we have $1{,}135$ edges while the data has $4{,}968$ edges.
+From this perspective, we would say that our result is 
+more reasonable than the existing data.
+A questionnaire, however, is needed to compare our result with the data.
+
+Our result at time $t=1$ have area $4{,}121{,}028.2\,\mathrm{mm}^2$.
+
+
+
+
+
+
+
+
 
 \begin{figure*}[tb]
 	\centering
@@ -873,6 +936,9 @@ where we have $1{,}135$ edges while the data has $4{,}968$ edges.
 \section{Conclusion}
 \label{sec:Conclusion}
 
+We proposed a method to continuously generalize buildings to built-up areas
+by aggregating and growing.
+Using 
 
 Our intermediate results may violate more cartographic rules, but we try to 
 make the results at goal scales violate as few rules as possible.
