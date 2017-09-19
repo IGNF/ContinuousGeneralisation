@@ -82,6 +82,7 @@ namespace MorphingClass.CUtility
 
         //private static string _strDataFolderName = "France";
         private static string _strDataFolderName = "France_FourTowns";
+        //private static string _strDataFolderName = "France_FourTowns_Several";
         //private static string _strDataFolderName = "France_Part";
         //private static string _strDataFolderName = "France_FourBuildings";
         //private static string _strDataFolderName = "France_Smallpart";

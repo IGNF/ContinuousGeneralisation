@@ -202,10 +202,10 @@ The operations of dilation and erosion are available from library
 	\centering
 	\includegraphics[]{RemoveDentAndBump}
 	\caption{Removing a dent by dilating and then remove a bump by eroding.
-		(a) a polygon with a dent and a bump;
-		(b) dilating the polygon in (a) with distance $d$ to remove the dent;
-		(c) eroding the polygon in (b) with $2d$ to remove the bump;
-		(d) dilating the polygon in (c) with $d$ so that the result has 
+		(a) A polygon with a dent and a bump.
+		(b) Dilating the polygon in (a) with distance $d$ to remove the dent.
+		(c) Eroding the polygon in (b) with $2d$ to remove the bump.
+		(d) Dilating the polygon in (c) with $d$ so that the result has 
 		the same size as the polygon in (a).
 	}
 	\label{fig:RemoveDentAndBump}
@@ -231,7 +231,7 @@ In order to avoid this problem, we require that
 \]
 which means
 \begin{equation}
-\label{eq:d_Dt}
+\label{eq:d_DtBound}
 \dtrm{D} \le \frac{\dtrm{G}-\dtrm{E}}{\alpha - 1}.
 \end{equation}
 
@@ -256,7 +256,7 @@ Unfortunately, distance $\dtrm{G}$ can be arbitrarily small
 according to \eq\ref{eq:d_Gt}, 
 but $\dtrm{E}$ is at least $\frac{l}{2} M_\mathrm{s}$. 
 In this case, $\dtrm{G}-\dtrm{E} \le 0$ when $t$ is small, 
-which violates \eq\ref{eq:d_Dt}, where $\dtrm{D}>0$.
+which violates \eq\ref{eq:d_DtBound}, where $\dtrm{D}>0$.
 As a compromise, we set erosion distance
 \begin{equation}
 \label{eq:d_Et}
@@ -278,13 +278,14 @@ which have ``widths'' less than $2 r_\mathrm{h}$.
 Variable $r_\mathrm{h}= 2\sqrt{a_\mathrm{h}/\pi}$
 is the radius of a hole which is just large enough to be presented on map.
 Following \citep{Chaudhry2008}, we set area $a_\mathrm{h} = 8\,\mathrm{mm}^2$ 
-in the map.
+on map.
 Sometimes, our $\dtrm{D}$ is not large enough to do so 
-because of the limitation from \eq\ref{eq:d_Dt}.
+because of the limitation from \eq\ref{eq:d_DtBound}.
 We define
-\[
+\begin{equation}
+\label{eq:d_Dt}
 \dtrm{D} =\min (\frac{\dtrm{G}-\dtrm{E}}{\alpha - 1}, r_\mathrm{h} M_t) .
-\]
+\end{equation}
 
 \todo{please explain in a figure what a bay is, and what is the width of the 
 bay}
@@ -363,18 +364,18 @@ the iteration stops.
 	\centering
 	\includegraphics[draft=false]{BridgeMoreBuilding}
 	\caption{Iteratively aggregating close buildings by adding bridges.
-		(a) original buildings $p$, $q$, and~$r$.
-		(b) growing the original buildings with distance $\dtrm{G}$.
-		(c) buffering the grown buildings with distance $d_{\epsilon,t}/2$ 
+		(a) Original buildings $p$, $q$, and~$r$.
+		(b) Growing the original buildings with distance $\dtrm{G}$.
+		(c) Buffering the grown buildings with distance $d_{\epsilon,t}/2$ 
 		using round joins.
-		(d) aggregating buildings $q$ and~$r$ by adding a bridge,
+		(d) Aggregating buildings $q$ and~$r$ by adding a bridge,
 		as their buffer overlap each other in (c).
-		(e) growing the buildings in (d) with distance $\dtrm{G}$.
-		(f) buffering the grown buildings in (e) with distance 
+		(e) Growing the buildings in (d) with distance $\dtrm{G}$.
+		(f) Buffering the grown buildings in (e) with distance 
 		$d_{\epsilon,t}/2$ using round joins.
-		(g) aggregating buildings $p$, $q$ and~$r$ by adding bridges.
-		(h) growing the buildings in (g) with distance $\dtrm{G}$.
-		(i) buffering the grown buildings in (h) with distance 
+		(g) Aggregating buildings $p$, $q$ and~$r$ by adding bridges.
+		(h) Growing the buildings in (g) with distance $\dtrm{G}$.
+		(i) Buffering the grown buildings in (h) with distance 
 		$d_{\epsilon,t}/2$ using round joins.
 	}
 	\label{fig:BridgeMoreBuilding}
@@ -722,9 +723,9 @@ and remove the outside parts.
 	\caption{Merging a polygon with the polygon at the immediately previous 
 		step.
 		(a) Merging the polygons of \fig\ref{fig:Shrink_Erosion}c and 
-		\fig\ref{fig:Shrink_Erosion}g;
+		\fig\ref{fig:Shrink_Erosion}g.
 		(b) Merging the polygons of \fig\ref{fig:Shrink_Simplification}c and 
-		\fig\ref{fig:Shrink_Simplification}h;
+		\fig\ref{fig:Shrink_Simplification}h.
 	}
 	\label{fig:Shrink_Uniting}
 \end{figure}
@@ -738,8 +739,7 @@ Following the previous steps of continuous generalization may result in the
 creation of small isolated building aggregates that do not belong to the goal 
 map polygon because of their isolation.
 That is why we eliminate a building aggregate if the area of this building is 
-smaller than a 
-threshold.
+smaller than a threshold.
 Following \citet{Stoter2009} and \citet{Chaudhry2008}, 
 we set this threshold as $a=0.16\,\mathrm{mm}^2$ on map.
 The real threshold at time $t$ is
@@ -750,7 +750,13 @@ For a group of buildings that will be aggregated into one built-up area at time
 $t=1$, we consider the area sum of all the buildings at time $t$, 
 instead of considering each building individually.
 
-
+As mentioned in \sect\ref{sec:DilationErosion}, 
+we remove holes that have area less than 
+$a_\mathrm{h} = 8\,\mathrm{mm}^2$ on map.
+The real area threshold for a hole at time $t$ is
+\[
+a_{\mathrm{h},t}=a_\mathrm{h}\cdot M_t^2.
+\]
 
 %\subsection{Running time analysis}
 %Although a version with a 
@@ -782,7 +788,7 @@ so that we can compare our result with the exiting data.
 Also, this setting makes \eq\ref{eq:S_g} hold, 
 where $M_\mathrm{g}=50{,}000$, $d_\mathrm{G}=25\,\mathrm{m}$, 
 and $l=0.3\,\mathrm{mm}$.
-In \eq\ref{eq:d_Dtmin}, the first part is always smaller than the second part 
+In \eq\ref{eq:d_Dt}, the first part is always smaller than the second part 
 according to our settings.
 As a result $\dtrm{D}=t\cdot 35\,\mathrm{m}$, 
 where $\dtrm{E}=t\cdot 7.5\,\mathrm{m}$ 
@@ -797,7 +803,6 @@ Using the Imai--Iri algorithm, we have $1{,}102$ edges left.
 In comparison, there are $1{,}597$ edges left if we simplify using
 the Douglas--Peucker algorithm.
 
-
 \begin{figure}[tb]
 	\centering
 	\includegraphics{Data}
@@ -807,7 +812,6 @@ the Douglas--Peucker algorithm.
 	\label{fig:Data}
 \end{figure}
 
-
 \begin{figure*}[tb]
 	\centering
 	\includegraphics{GoalShape}
@@ -815,23 +819,52 @@ the Douglas--Peucker algorithm.
 		and goal shapes of the built-up areas (without removing small holes), 
 		at scale $1:50{,}000$.
 		There are $56$ built-up areas, which have $1{,}102$ edges in total.
+		We show a sequence of maps in \fig\ref{fig:ContinuousGeneralization} 
+		for the region marked by the dashed circle.
 	}
 	\label{fig:GoalShape}
+\end{figure*}
+
+We produce a sequence of $10$ maps, which means $t \in \{0.1, 0.2, \dots, 1\}$.
+This production cost $668.2\,\mathrm{s}$ in total.
+We show such a sequence of maps in \fig\ref{fig:ContinuousGeneralization} for 
+the marked region in \fig\ref{fig:GoalShape}.
+
+\fig\ref{fig:ExperimentalComparison} shows a comparison of 
+our result at time $t=1$
+and the data from IGN at scale $1:50{,}000$.
+No small buildings are removed in our result or the IGN data.
+The boundaries of our built-up areas are more straight than that of IGN data, 
+where we have $1{,}135$ edges while the data has $4{,}968$ edges.
+
+\begin{figure*}[tb]
+	\centering
+	\includegraphics{ContinuousGeneralization}
+	\caption{A sequence of maps at time $t \in \{0, 0.1, 0.2, \dots, 1\}$
+		for the region marked in \fig\ref{fig:GoalShape}.
+	}
+	\label{fig:ContinuousGeneralization}
 \end{figure*}
 
 \begin{figure*}[tb]
 	\centering
 	\includegraphics{ExperimentalComparison}
-	\caption{.
+	\caption{A comparison of our result and the existing data at scale 
+	$1:50{,}000$.
+		The brighter gray polygons represent the original buildings.
+		The darker gray polygons are our result at time $t=1$.
+		The gray polylines represent the data of the built-up areas at scale 
+		$1:50{,}000$ from IGN, where some built-up areas are split because some 
+		streets cross these areas.
 	}
 	\label{fig:ExperimentalComparison}
 \end{figure*}
 
 
-The area on start map is $some number\,\text{mm}^2$.
-Our area on map is $some number\,\text{mm}^2$.
-According to \eq4 of paper \citet{Topfer1966}, 
-the area on map should be $some number\,\text{mm}^2$
+%The area on start map is $some number\,\text{mm}^2$.
+%Our area on map is $some number\,\text{mm}^2$.
+%According to \eq4 of paper \citet{Topfer1966}, 
+%the area on map should be $some number\,\text{mm}^2$
 
 %Although a version with a 
 %lower running time exists \citep[see][]{Chan1992}, we implemented the basic 
