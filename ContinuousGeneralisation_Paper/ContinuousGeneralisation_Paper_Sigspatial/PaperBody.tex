@@ -117,23 +117,20 @@ when $t$ increases from~$0$ to~$1$.
 For the sake of convenience, we define parameter
 $M_t= M_\mathrm{s} + t \cdot (M_\mathrm{g}-M_\mathrm{s})$.
 
-We find original buildings which will grow to become too close at time $t$
-and aggregate them by introducing bridges.
+The continuous generalization is carried by dilating the original buildings. When dilated buildings become too close at time $t$
+and we aggregate them by introducing bridges.
 We grow the (bridged) original buildings by buffering with miter joins.
-We simplify the grown buildings with two steps.
-The first one is to use dilation and erosion to remove pits and spikes.
-The second step is to remove vertices using Imai--Iri algorithm.
+At each time, the grown buildings need to be simplified to look like buildings and this simplification is carried out in two steps:
+the first one is to use dilation and erosion to remove pits and spikes; the second step is to remove vertices using Imai--Iri algorithm.
 To make sure that buildings never shrink when $t$ is increasing,
-For a building, we merge its shape at time $t$ 
+for a building, we merge its shape at time $t$ 
 and its shape at the immediately previous step (before $t$). 
-Also, we clip the building using the shape on goal map.
+Also, we clip the building using the shape on goal map to ensure some continuity.
 
-Our aggregating relies on growing and dilation-erosion-based simplifying. 
-So we present the two operators before aggregating.
+The two main operators of the proposed method, building growth and dilation-erosion-based simplification, are presented in the following subsections: 
 
 \subsection{Growing buildings by buffering}
 \label{sec:Grow}
-We grow buildings based on buffering. 
 We denote by $d_\mathrm{G}$ the growth for goal map.
 At time $t$, the growth is
 \begin{equation}
@@ -181,13 +178,13 @@ smaller (more acute) than $83.6 \degree$.
 
 \subsection{Simplifying grown buildings based on dilation and erosion}
 \label{sec:DilationErosion}
-\citet{Damen2008} generalized buildings using morphological operators.
-A drawback of this method is that the directions of the buildings have to be 
-concerned.
+As mentioned earlier, building simplification methods have already been proposed. \citet{Damen2008} generalized buildings using morphological operators.
+A drawback of this method is that the orientation of the buildings have to be 
+identified.
 \citet{Meijers2016} simplified buildings 
 based on offset curves generated from straight skeletons.
 Our method is similar to \citet{Meijers2016}.
-We dilate and erode to remove ``dents'' and ``bumps'' of buildings
+Our proposition is to dilate and erode the buildings, to remove ``dents'' and ``bumps'' that can occur when buildings grow.
 (see \fig\ref{fig:RemovePitAndSpike}).
 The operations of dilation and erosion are available from library 
 \textsc{Clipper} \citep{Johnson2014}.
@@ -210,7 +207,7 @@ We dilate with distance $\dtrm{D}$ ($\dtrm{D}>0$),
 erode with $\dtrm{D}+\dtrm{E} (\dtrm{E}>0)$,
 and dilate back with $\dtrm{E}$.
 A problem we may have is that 
-a building may be broken by eroding
+a building may be split into several parts by erosion
 (see \fig\ref{fig:ErosionBreak} for example).
 The reason is that 
 some parts of a building may be increased (by growing and dilating) 
@@ -243,7 +240,7 @@ which means
 
 We would like to use $\dtrm{E}=\frac{l}{2} \cdot M_t$ so that
 any pits and spikes narrower than $l$ will be removed. 
-We set $l=0.3\,\mathrm{mm}$, 
+We set $l=0.3\,\mathrm{mm}$ in the map, 
 which was used as a length threshold by, for example, 
 \citet{Regnauld2001}.
 Unfortunately, distance $\dtrm{G}$ can be arbitrarily small 
@@ -271,7 +268,7 @@ We wish to remove ``bays''
 which have ``widths'' less than $2 r_\mathrm{h}$. 
 Variable $r_\mathrm{h}= 2\sqrt{a_\mathrm{h}/\pi}$
 is the radius of a hole which is just large enough to be presented on map.
-Following \citep{Chaudhry2008}, we set area $a_\mathrm{h} = 8\,\mathrm{mm}^2$.
+Following \citep{Chaudhry2008}, we set area $a_\mathrm{h} = 8\,\mathrm{mm}^2$ in the map.
 Sometimes, our $\dtrm{D}$ is not large enough to do so 
 because of the limitation from \eq\ref{eq:d_Dt}.
 We define
@@ -279,7 +276,7 @@ We define
 \dtrm{D} =\min (\frac{\dtrm{G}-\dtrm{E}}{\alpha - 1}, r_\mathrm{h} M_t) .
 \]
 
-
+\todo{please explain in a figure what a bay is, and what is the width of the bay}
 
 \subsection{Iteratively aggregating close buildings by adding bridges}
 \label{sec:Aggregate}
@@ -330,26 +327,25 @@ As a results, the line segments corresponding to the edges in the MST
 are identified as bridges.
 We aggregate the group of original buildings by adding these bridges.
 
-Aggregated buildings may become too close after growing because of bridges.
-Therefore we have to iterate the process of aggregating.
+Aggregated buildings may become too close because of the additional bridges.
+Therefore we have to iterate the aggregation process.
 \fig\ref{fig:BridgeMoreBuilding} shows such an example.
-We grow and buffer buildings $p$, $q$, and~$r$.
+For example, we grow and buffer buildings $p$, $q$, and~$r$.
 As the buffers of $q$ and~$r$ overlap
 (see \fig\ref{fig:BridgeMoreBuilding}c),
 we aggregate buildings $q$ and~$r$ by adding a bridge
 (see \fig\ref{fig:BridgeMoreBuilding}d).
 There are two buildings left in \fig\ref{fig:BridgeMoreBuilding}d.
-We grow and buffer the buildings in 
+We then grow and buffer the buildings in 
 \fig\ref{fig:BridgeMoreBuilding}d, 
 the buffer of building $p$ overlap the buffer of the bridge for $q$ and $r$
 (see \fig\ref{fig:BridgeMoreBuilding}f).
-We aggregate building $p$ with bridged $q$ and $r$
-(see \fig\ref{fig:BridgeMoreBuilding}g).
-There is one building left in \fig\ref{fig:BridgeMoreBuilding}g.
-Then we grow and buffer again.
-There is one building left after this process.
-The number of buildings does not decrease comparing to last process.
-The iteration stops.
+Finally, building $p$ is aggregated with bridged $q$ and $r$
+(see \fig\ref{fig:BridgeMoreBuilding}g), and
+there is only one building left in \fig\ref{fig:BridgeMoreBuilding}g.
+Then we grow and buffer again to get the final geometry of the group.
+As the number of buildings does not decrease comparing to last process (one building before, one building after),
+the iteration stops.
 
 \begin{figure}[tb]
 	\centering
@@ -437,15 +433,14 @@ The iteration stops.
 %\end{figure}
 
 
-\subsection{Simplifying buildings using Imai--Iri algorithm}
+\subsection{Simplifying aggregated buildings using Imai--Iri algorithm}
 \label{sec:ImaiIri}
 
-We grow the bridged buildings (see \fig\ref{fig:GrowAndBridge}).
-No matter a bridge appears earlier or later, 
-it has width $2\dtrm{G}$ at time $t$.
+When buildings are grown and aggregated iteratively, bridges are added, 
+and these bridges have a width of $2\dtrm{G}$ at time $t$.
 This setting guarantees that no bridge is thin when $t=1$.
 
-We simplify the grown buildings using Imai--Iri algorithm 
+This agrregation process creates new small details that need to be removed. So, the aggregated buildings are simplified using Imai--Iri algorithm 
 \citep{ImaiIri1988}.
 First, this algorithm finds all the valid shortcuts of a polyline.
 A shortcut is valid for a segment 
@@ -476,16 +471,12 @@ If a shortcut is outside,
 we are not able to arrive at the shortcut by growing.
 Second, a shortcut is not allowed to intersect the aggregated building.
 If we allow this intersection, 
-the building will have to be shrunk. 
-Of course, we do not want to shrink.
-\todo{a shortcut is not allowed to intersect the building at the 
-	immediately previous step?}
+the building will have to be shrunk, which should be avoided. 
 
-We tried simplifying using 
-the Douglas--Peucker algorithm \citep{Douglas1973}, 
-but we hoped to remove more points. 
-We found that the Imai--Iri 
-algorithm fit our needs better. 
+
+The classical way to filter points in a polyline or polygon is the Douglas--Peucker algorithm \citep{Douglas1973}, 
+but it did not filter enough the geometry, or damaged too much the shapes when the threshold was bigger, so the Imai--Iri 
+algorithm was chosen as a better fit. 
 
 %\subsection{Grouping buildings based on buffering}
 %\label{sec:Group}
@@ -620,25 +611,25 @@ algorithm fit our needs better.
 
 
 
-
-
-\subsection{Generating the goal shapes of buildings}
-\label{sec:Goal}
-To generate the goal shapes of buildings, we set time $t=1$.
-We aggregate original buildings (see \sect\ref{sec:Aggregate}).
-Then we grow (see \sect\ref{sec:Grow}) 
-and simplify 
-(see \sects\ref{sec:DilationErosion} and~\ref{sec:ImaiIri}) the grown buildings.
-See for example \fig\ref{fig:GrowAndBridge}, 
-the building at time $t=1$ is the goal shape of the three original buildings.
-
-
+%
+%
+%\subsection{Generating the goal shapes of buildings}
+%\label{sec:Goal}
+%To generate the goal shapes of buildings, we set time $t=1$.
+%We aggregate original buildings (see \sect\ref{sec:Aggregate}).
+%Then we grow (see \sect\ref{sec:Grow}) 
+%and simplify 
+%(see \sects\ref{sec:DilationErosion} and~\ref{sec:ImaiIri}) the grown buildings.
+%See for example \fig\ref{fig:GrowAndBridge}, 
+%the building at time $t=1$ is the goal shape of the three original buildings.
+%
+%
 
 
 \subsection{Generating buildings on intermediate-scale maps}
 \label{sec:Unite}
 
-Both the erosion and line simplification may result in shrinking of a 
+Both the erosion and line simplification may result in shrinking a 
 building.
 \fig\ref{fig:Shrink_Erosion} and \fig\ref{fig:Shrink_Simplification} show such 
 examples respectively.
@@ -653,17 +644,17 @@ the dark-gray part included in the result at $t=0.6$,
 but not in the result at $t=0.7$.
 In other words, the result at $t=0.7$ shrinks at the dark-gray part.
 To prevent the shrinking at $t=0.7$, we merge the result at $t=0.7$ with the 
-result of immediately previous step, i.e., $t=0.6$.
+result of the immediate previous step, i.e., $t=0.6$.
 The merged result is shown in \fig\ref{fig:Shrink_Uniting}a.
 Similarly, \fig\ref{fig:Shrink_Uniting}b shows the merged result of buildings 
 in \fig\ref{fig:Shrink_Simplification}c and~h.
 
-A building on an intermediate map should never exceed
+Added to this shrinking problem, a building aggregate on an intermediate map should never exceed
 the goal shape of the aggregated building. 
-Otherwise, the building will need to be shrunk.
-To guarantee the non-exceeding, 
+Otherwise, the building will need to be shrunk to ensure continuity with the goal built-up polygon.
+To guarantee this consistency, 
 we clip the building using the goal shape 
-and remove the parts outside.
+and remove the outside parts.
 
 \begin{figure}[tb]
 	\centering
@@ -725,7 +716,8 @@ and remove the parts outside.
 
 \subsection{Eliminating small buildings}
 \label{sec:Eliminate}
-We eliminate a building if the area of this building is smaller than a 
+Following the previous steps of continuous generalization may result in the creation of small isolated building aggregates that do not belong to the goal map polygon because of their isolation.
+That is why we eliminate a building aggregate if the area of this building is smaller than a 
 threshold.
 Following \citet{Stoter2009} and \citet{Chaudhry2008}, 
 we set this threshold as $a=0.16\,\mathrm{mm}^2$ on map.
@@ -734,7 +726,7 @@ The real threshold at time $t$ is
 a_t=a\cdot M_t^2.
 \]
 For a group of buildings that will be aggregated into one built-up area at time 
-$t=1$, we consider the area sum of all the buildings, 
+$t=1$, we consider the area sum of all the buildings at time $t$, 
 instead of considering each building individually.
 
 
