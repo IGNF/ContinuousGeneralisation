@@ -117,25 +117,32 @@ when $t$ increases from~$0$ to~$1$.
 For the sake of convenience, we define parameter
 $M_t= M_\mathrm{s} + t \cdot (M_\mathrm{g}-M_\mathrm{s})$.
 
-The continuous generalization is carried by dilating the original buildings. When dilated buildings become too close at time $t$
+The continuous generalization is carried by dilating the original buildings. 
+When dilated buildings become too close at time $t$
 and we aggregate them by introducing bridges.
 We grow the (bridged) original buildings by buffering with miter joins.
-At each time, the grown buildings need to be simplified to look like buildings and this simplification is carried out in two steps:
-the first one is to use dilation and erosion to remove pits and spikes; the second step is to remove vertices using Imai--Iri algorithm.
+At each time, the grown buildings need to be simplified to look like buildings 
+and this simplification is carried out in two steps:
+the first one is to use dilation and erosion 
+to remove ``dents'' and ``bumps''; 
+the second step is to remove vertices using Imai--Iri algorithm.
 To make sure that buildings never shrink when $t$ is increasing,
 for a building, we merge its shape at time $t$ 
 and its shape at the immediately previous step (before $t$). 
-Also, we clip the building using the shape on goal map to ensure some continuity.
+Also, we clip the building using the shape on goal map to ensure some 
+continuity.
 
-The two main operators of the proposed method, building growth and dilation-erosion-based simplification, are presented in the following subsections: 
+The two main operators of the proposed method, building growth and 
+dilation-erosion-based simplification, are presented in the following 
+subsections: 
 
 \subsection{Growing buildings by buffering}
 \label{sec:Grow}
 We denote by $d_\mathrm{G}$ the growth for goal map.
 At time $t$, the growth is
 \begin{equation}
-	\label{eq:d_Gt}
-	\dtrm{G} = t \cdot d_\mathrm{G}.
+\label{eq:d_Gt}
+\dtrm{G} = t \cdot d_\mathrm{G}.
 \end{equation}
 
 There are two typical ways of buffering a polygon, i.e.,
@@ -178,20 +185,22 @@ smaller (more acute) than $83.6 \degree$.
 
 \subsection{Simplifying grown buildings based on dilation and erosion}
 \label{sec:DilationErosion}
-As mentioned earlier, building simplification methods have already been proposed. \citet{Damen2008} generalized buildings using morphological operators.
+As mentioned earlier, building simplification methods have already been 
+proposed. \citet{Damen2008} generalized buildings using morphological operators.
 A drawback of this method is that the orientation of the buildings have to be 
 identified.
 \citet{Meijers2016} simplified buildings 
 based on offset curves generated from straight skeletons.
 Our method is similar to \citet{Meijers2016}.
-Our proposition is to dilate and erode the buildings, to remove ``dents'' and ``bumps'' that can occur when buildings grow.
-(see \fig\ref{fig:RemovePitAndSpike}).
+Our proposition is to dilate and erode the buildings, to remove dents and 
+bumps that can occur when buildings grow.
+(see \fig\ref{fig:RemoveDentAndBump}).
 The operations of dilation and erosion are available from library 
 \textsc{Clipper} \citep{Johnson2014}.
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics[]{RemovePitAndSpike}
+	\includegraphics[]{RemoveDentAndBump}
 	\caption{Removing a dent by dilating and then remove a bump by eroding.
 		(a) a polygon with a dent and a bump;
 		(b) dilating the polygon in (a) with distance $d$ to remove the dent;
@@ -199,7 +208,7 @@ The operations of dilation and erosion are available from library
 		(d) dilating the polygon in (c) with $d$ so that the result has 
 		the same size as the polygon in (a).
 	}
-	\label{fig:RemovePitAndSpike}
+	\label{fig:RemoveDentAndBump}
 \end{figure}
 
 At time $t$, we grow buildings with distance $\dtrm{G}$.
@@ -239,7 +248,7 @@ which means
 \end{figure}
 
 We would like to use $\dtrm{E}=\frac{l}{2} \cdot M_t$ so that
-any pits and spikes narrower than $l$ will be removed. 
+any dents and bumps narrower than $l$ will be removed. 
 We set $l=0.3\,\mathrm{mm}$ in the map, 
 which was used as a length threshold by, for example, 
 \citet{Regnauld2001}.
@@ -268,7 +277,8 @@ We wish to remove ``bays''
 which have ``widths'' less than $2 r_\mathrm{h}$. 
 Variable $r_\mathrm{h}= 2\sqrt{a_\mathrm{h}/\pi}$
 is the radius of a hole which is just large enough to be presented on map.
-Following \citep{Chaudhry2008}, we set area $a_\mathrm{h} = 8\,\mathrm{mm}^2$ in the map.
+Following \citep{Chaudhry2008}, we set area $a_\mathrm{h} = 8\,\mathrm{mm}^2$ 
+in the map.
 Sometimes, our $\dtrm{D}$ is not large enough to do so 
 because of the limitation from \eq\ref{eq:d_Dt}.
 We define
@@ -276,7 +286,8 @@ We define
 \dtrm{D} =\min (\frac{\dtrm{G}-\dtrm{E}}{\alpha - 1}, r_\mathrm{h} M_t) .
 \]
 
-\todo{please explain in a figure what a bay is, and what is the width of the bay}
+\todo{please explain in a figure what a bay is, and what is the width of the 
+bay}
 
 \subsection{Iteratively aggregating close buildings by adding bridges}
 \label{sec:Aggregate}
@@ -344,7 +355,8 @@ Finally, building $p$ is aggregated with bridged $q$ and $r$
 (see \fig\ref{fig:BridgeMoreBuilding}g), and
 there is only one building left in \fig\ref{fig:BridgeMoreBuilding}g.
 Then we grow and buffer again to get the final geometry of the group.
-As the number of buildings does not decrease comparing to last process (one building before, one building after),
+As the number of buildings does not decrease comparing to last process (one 
+building before, one building after),
 the iteration stops.
 
 \begin{figure}[tb]
@@ -440,7 +452,8 @@ When buildings are grown and aggregated iteratively, bridges are added,
 and these bridges have a width of $2\dtrm{G}$ at time $t$.
 This setting guarantees that no bridge is thin when $t=1$.
 
-This agrregation process creates new small details that need to be removed. So, the aggregated buildings are simplified using Imai--Iri algorithm 
+This agrregation process creates new small details that need to be removed. So, 
+the aggregated buildings are simplified using Imai--Iri algorithm 
 \citep{ImaiIri1988}.
 First, this algorithm finds all the valid shortcuts of a polyline.
 A shortcut is valid for a segment 
@@ -474,8 +487,10 @@ If we allow this intersection,
 the building will have to be shrunk, which should be avoided. 
 
 
-The classical way to filter points in a polyline or polygon is the Douglas--Peucker algorithm \citep{Douglas1973}, 
-but it did not filter enough the geometry, or damaged too much the shapes when the threshold was bigger, so the Imai--Iri 
+The classical way to filter points in a polyline or polygon is the 
+Douglas--Peucker algorithm \citep{Douglas1973}, 
+but it did not filter enough the geometry, or damaged too much the shapes when 
+the threshold was bigger, so the Imai--Iri 
 algorithm was chosen as a better fit. 
 
 %\subsection{Grouping buildings based on buffering}
@@ -619,7 +634,8 @@ algorithm was chosen as a better fit.
 %We aggregate original buildings (see \sect\ref{sec:Aggregate}).
 %Then we grow (see \sect\ref{sec:Grow}) 
 %and simplify 
-%(see \sects\ref{sec:DilationErosion} and~\ref{sec:ImaiIri}) the grown buildings.
+%(see \sects\ref{sec:DilationErosion} and~\ref{sec:ImaiIri}) the grown 
+%buildings.
 %See for example \fig\ref{fig:GrowAndBridge}, 
 %the building at time $t=1$ is the goal shape of the three original buildings.
 %
@@ -649,9 +665,11 @@ The merged result is shown in \fig\ref{fig:Shrink_Uniting}a.
 Similarly, \fig\ref{fig:Shrink_Uniting}b shows the merged result of buildings 
 in \fig\ref{fig:Shrink_Simplification}c and~h.
 
-Added to this shrinking problem, a building aggregate on an intermediate map should never exceed
+Added to this shrinking problem, a building aggregate on an intermediate map 
+should never exceed
 the goal shape of the aggregated building. 
-Otherwise, the building will need to be shrunk to ensure continuity with the goal built-up polygon.
+Otherwise, the building will need to be shrunk to ensure continuity with the 
+goal built-up polygon.
 To guarantee this consistency, 
 we clip the building using the goal shape 
 and remove the outside parts.
@@ -702,7 +720,7 @@ and remove the outside parts.
 	\centering
 	\includegraphics[]{Shrink_Uniting}
 	\caption{Merging a polygon with the polygon at the immediately previous 
-	step.
+		step.
 		(a) Merging the polygons of \fig\ref{fig:Shrink_Erosion}c and 
 		\fig\ref{fig:Shrink_Erosion}g;
 		(b) Merging the polygons of \fig\ref{fig:Shrink_Simplification}c and 
@@ -716,8 +734,11 @@ and remove the outside parts.
 
 \subsection{Eliminating small buildings}
 \label{sec:Eliminate}
-Following the previous steps of continuous generalization may result in the creation of small isolated building aggregates that do not belong to the goal map polygon because of their isolation.
-That is why we eliminate a building aggregate if the area of this building is smaller than a 
+Following the previous steps of continuous generalization may result in the 
+creation of small isolated building aggregates that do not belong to the goal 
+map polygon because of their isolation.
+That is why we eliminate a building aggregate if the area of this building is 
+smaller than a 
 threshold.
 Following \citet{Stoter2009} and \citet{Chaudhry2008}, 
 we set this threshold as $a=0.16\,\mathrm{mm}^2$ on map.
@@ -730,127 +751,6 @@ $t=1$, we consider the area sum of all the buildings at time $t$,
 instead of considering each building individually.
 
 
-
-%\subsection{Parameters for growing and simplifying}
-%
-%
-%
-%
-%If we insist on that we should observe 
-%the growing, say, $x \% (0<x<100)$ of the time at least, then we should make 
-%sure that
-%\begin{equation}
-%\label{eq:a_limit}
-%\frac{d_\mathrm{G}}{d_\mathrm{G}+d_\epsilon} \ge x \%.
-%\end{equation}
-%Using $d_\mathrm{G}$ and $d_\epsilon$ from Eqs.~\ref{eq:d_G} 
-%and~\ref{eq:d_epsilon}, we transform Eq.~\ref{eq:a_limit} to
-%\begin{equation}
-%a \ge \Big(\frac{2 \epsilon S_g x}{\lambda (100-x) (S_g-S_s)}\Big)^2
-%\end{equation}
-%We also require 
-%that $S_g \ge 2 S_s$, which means $S_s \le \frac{1}{2} S_g$.
-%On one hand, we should have a large $x$ so that we will see the 
-%growing most of the time.
-%On the other hand, we wish to keep bridges short as bridges are intrusions to 
-%our map, which means we should have a small $x$ and a large $\lambda$ so that 
-%we will have a small 
-%$a$ (according to Eq.~\ref{eq:a_limit}), a small $d_\mathrm{G}$ (according to 
-%Eq.~\ref{eq:d_G}), and finally a small $l_b$ (according to 
-%Eq.~\ref{eq:BridgeLength}). Also we should have a small $x$ and a large 
-%$\lambda$ as our $a$ is already much larger than $0.16\,\mathrm{mm}^2$ on 
-%map, which is the area limit used by \citet{Stoter2009}. As a result, we 
-%set 
-%$\lambda=0.8$ and $x=\frac{2}{3} \cdot 100$.
-%Using these setting, we have
-%\begin{equation}
-%a \ge 4.
-%\end{equation}
-%according to Eq.~\ref{eq:a_limit}.
-%
-%
-%
-%
-%Therefore, we may grow up to distance 
-%\[
-%D_\mathrm{G} = d_\mathrm{G} + d_\epsilon.
-%\]
-%Fig.~\ref{fig:ExtraGrowth} shows such an enlargement and simplification, 
-%where  
-%variable $d_\mathrm{e} (\le d_\epsilon)$ is the extra growing distance.
-%
-%
-%\citet{Chaudhry2008} thought that a hole of a settlement should be at least 
-%$0.5\,\mathrm{km}^2$ for a map at scale $1:250{,}000$, 
-%which means that the hole is at least $8\,\mathrm{mm}^2$ on map. 
-%Following their setting, we shrink a hole and 
-%eliminate the hole once its size is smaller than $8\,\mathrm{mm}^2$ on map.
-
-
-
-
-
-
-
-%
-%A hole has area less than $\pi D_\mathrm{G}^2$ can be filled by growing. 
-%A hole has area 
-%slightly more than $\pi D_\mathrm{G}^2$ will become a very small hole after 
-%growing with 
-%distance $D_\mathrm{G}$. In order to avoid small holes, we do not fill a hole 
-%unless the 
-%area of the hole on the start map is smaller than $\pi D_\mathrm{G}^2$. Note 
-%that we do 
-%not fill a hole even if the hole has a large area because a large hole may be 
-%split into several small holes by filling. 
-%Although our intermediate results may violate the rule that a hole should be 
-%at 
-%least some size, we try to avoid the violation for a map at a goal scale.
-%\citet{Chaudhry2008} thought that a hole of a settlement should be at 
-%least 
-%$0.5$ km$^2$ for a map at scale $1:250{,}000$, which means that the hole is 
-%at 
-%least $8\,\mathrm{mm}^2$ on the map. Following their setting, we wish to have 
-%$\pi 
-%D_\mathrm{G}^2 \ge 8 S_g^2$.
-%
-%
-%Now we discuss how to set the parameters according to our requirements. 
-%First, 
-%we wish to increase $d_\mathrm{G}/d_\epsilon$. Most part of a building will 
-%grow $d_\mathrm{G}$. Only a small part will continue growing after the 
-%building 
-%has grown $d_\mathrm{G}$. To ensure that we can see the growing most of the 
-%time, we want to have a large $d_\mathrm{G}/d_\epsilon$.
-%
-%
-%
-%
-%
-%We cannot fulfill all the requirements. 
-
-%\begin{figure*}[tb]
-%	\centering
-%	\includegraphics{ExtraGrowth}
-%	\caption{In the left figure, the green polygon represents a building, and 
-%		the gray polygon is the enlargement of the building. In the right 
-%		figure, the gray polygon has been simplified to a rectangle. In order 
-%to 
-%		fill the rectangle, most parts of the (green) building needs to grow 
-%with
-%		distance $d_\mathrm{G}$, but the pit needs to grow with $d_G + 
-%		d_\mathrm{e}$, 
-%		where $d_\mathrm{e}$ is the extra growing distance.}
-%	\label{fig:ExtraGrowth}
-%\end{figure*}
-
-
-%\begin{figure*}[tb]
-%	\centering
-%	\includegraphics{GrowingExample}
-%	\caption{GrowingExample.}
-%	\label{fig:GrowingExample}
-%\end{figure*}
 
 %\subsection{Running time analysis}
 %Although a version with a 
