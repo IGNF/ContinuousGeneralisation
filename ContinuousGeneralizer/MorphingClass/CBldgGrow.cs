@@ -176,7 +176,7 @@ namespace MorphingClass.CGeneralizationMethods
                 //double dblTargetDilation = dblTotalGrow;
                 //dblTargetDilation= dblTotalGrow / 2;
 
-
+                int intEdgeCount = 0;
                 foreach (var MagnifiedCpg in MagnifiedCpgLt)
                 {
                     MagnifiedCpg.RemoveClosePoints();
@@ -184,7 +184,7 @@ namespace MorphingClass.CGeneralizationMethods
                     MagnifiedCpg.FormCEdgeLt();
                     MagnifiedCpg.CEdgeLt.ForEach(cedge => cedge.BelongedCpg = MagnifiedCpg);
                     MagnifiedCpg.SetExteriorPath();
-
+                    intEdgeCount += MagnifiedCpg.GetEdgeCount();
                     //MagnifiedCpg. = CHelpFunc.MakeLt(clipperMethods.GeneratePathByCpgExterior(MagnifiedCpg));
                 }
 
@@ -247,6 +247,10 @@ namespace MorphingClass.CGeneralizationMethods
                     CHelpFunc.Displaytspb(j + 1, mergedCpgLt.Count);
                 }
 
+                int intEdgecountbeforesimplification = CDPSimplify._intEdgeCountBefore;
+                int intEdgecountaftersimplification = CDPSimplify._intEdgeCountAfter;
+                CDPSimplify._intEdgeCountBefore = 0;
+                CDPSimplify._intEdgeCountAfter = 0;
                 CHelpFunc.DisplayRunTime(pStopwatch.ElapsedMilliseconds);
                 
 
@@ -719,13 +723,13 @@ namespace MorphingClass.CGeneralizationMethods
             if (mergedcpg.HoleCpgLt != null && mergedcpg.HoleCpgLt.Count > 0)
             {
                 //get the BufferDilateErodeSimplify holes
-                mergedcpg.SetAreaSimple();
+                //mergedcpg.SetAreaSimple();
                 foreach (var holecpg in mergedcpg.HoleCpgLt)
                 {
-                    if (holecpg.dblAreaSimple < dblHoleAreaLimit)
-                    {
-                        continue;
-                    }
+                    //if (holecpg.dblAreaSimple < dblHoleAreaLimit)
+                    //{
+                    //    continue;
+                    //}
 
                     var holeClipCpgEb = clipperMethods.DilateErodeOffsetSimplifyOneComponent(holecpg,
                         dblGrow, dblDilation, dblErosion, dblEpsilon,
@@ -735,6 +739,7 @@ namespace MorphingClass.CGeneralizationMethods
             }
         }
 
+        //Stopwatch _pstopwatch = new Stopwatch();
         #region Output
         public void Output(double dblProportion, string strSimplification, string strBufferStyle, double dblMiterLimit)
         {

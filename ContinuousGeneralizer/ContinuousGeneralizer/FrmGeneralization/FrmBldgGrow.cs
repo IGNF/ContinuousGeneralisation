@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -241,11 +242,13 @@ this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
         public void btnMultiResults_Click(object sender, EventArgs e)
         {
             int intCount = 10;
+            var pStopwatch = Stopwatch.StartNew();
             for (int i = 1; i < intCount + 1; i++)
             {
                 _dblProportion = Convert.ToDouble(i) / intCount;
                 _pBldgGrow.Output(_dblProportion, this.cboSimplification.Text, this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
             }
+            CHelpFunc.DisplayRunTime(pStopwatch.ElapsedMilliseconds);
         }
 
         private void btnDetailToIpe_Click(object sender, EventArgs e)

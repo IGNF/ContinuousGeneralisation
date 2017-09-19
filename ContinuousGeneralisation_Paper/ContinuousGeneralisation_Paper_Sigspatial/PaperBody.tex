@@ -885,7 +885,25 @@ The data represents the buildings of four towns (communes in French),
 i.e., Aussevielle, Denguin,  Poey-de-Lescar, and Siros, 
 in the Pyr\'en\'ees-Atlantiques department, south-western France.
 
-Our goal scale is $1:50{,}000$.
+We set our goal scale at $1:50{,}000$ and $d_\mathrm{G}=25\,\mathrm{m}$
+so that we can compare our result with the exiting data.
+Also, this setting makes \eq\ref{eq:S_g} hold, 
+where $M_\mathrm{g}=50{,}000$, $d_\mathrm{G}=25\,\mathrm{m}$, 
+and $l=0.3\,\mathrm{mm}$.
+In \eq\ref{eq:d_Dtmin}, the first part is always smaller than the second part 
+according to our settings.
+As a result $\dtrm{D}=t\cdot 35\,\mathrm{m}$, 
+where $\dtrm{E}=t\cdot 7.5\,\mathrm{m}$ 
+according to \eq\ref{eq:d_Et} and $\alpha=1.5$.
+
+Our program took $93.6\,\mathrm{s}$ 
+to compute the goal shapes of the built-up areas.
+\fig\ref{fig:GoalShape} shows the bridged buildings and the goal shapes.
+In \fig\ref{fig:GoalShape}b,
+the $56$ built-up areas have $2{,}095$ edges before line simplification.
+Using the Imai--Iri algorithm, we have $1{,}102$ edges left.
+In comparison, there are $1{,}597$ edges left if we simplify using
+the Douglas--Peucker algorithm.
 
 
 \begin{figure}[tb]
@@ -893,7 +911,7 @@ Our goal scale is $1:50{,}000$.
 	\includegraphics{Data}
 	\caption{Data.
 		There are $2{,}590$ buildings, 
-		which has $19{,}255$ edges in total.}
+		which have $19{,}255$ edges in total.}
 	\label{fig:Data}
 \end{figure}
 
@@ -901,14 +919,21 @@ Our goal scale is $1:50{,}000$.
 \begin{figure}[tb]
 	\centering
 	\includegraphics{GoalShape}
-	\caption{Data for scale $1:15{,}000$.
-		There are $2{,}590$ buildings, 
-		which has $19{,}255$ edges in total.}
+	\caption{Some results for time $t=1$, at scale $1:50{,}000$.
+		(a) Bridged buildings.
+		(b) Goal shapes of the built-up areas, without removing small holes.
+		There are $56$ built-up areas, which have $1{,}102$ edges in total.
+	}
 	\label{fig:GoalShape}
 \end{figure}
 
-\todo[inline]{comparison of simplification between Douglas--Peucker and 
-	Imai--Iri}
+\begin{figure}[tb]
+	\centering
+	\includegraphics{ExperimentalComparison}
+	\caption{.
+	}
+	\label{fig:ExperimentalComparison}
+\end{figure}
 
 
 The area on start map is $some number\,\text{mm}^2$.

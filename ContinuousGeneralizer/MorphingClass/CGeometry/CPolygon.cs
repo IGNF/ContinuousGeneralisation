@@ -174,7 +174,7 @@ namespace MorphingClass.CGeometry
 
         public override int GetEdgeCount()
         {
-            var intEdgeCount = this.CEdgeLt.Count;
+            var intEdgeCount = this.CptLt.Count-1;
             
             if (this.HoleCpgLt != null)
             {

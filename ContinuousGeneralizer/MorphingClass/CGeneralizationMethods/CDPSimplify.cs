@@ -26,7 +26,9 @@ namespace MorphingClass.CGeneralizationMethods
     /// <remarks>Douglas-Peucker线综合算法</remarks>
     public class CDPSimplify : CMorphingBaseCpl
     {
-      //510546
+        //510546
+        public static int _intEdgeCountBefore = 0;
+        public static int _intEdgeCountAfter = 0;
 
         Stopwatch _pStopwatch = new Stopwatch();
         public CDPSimplify()
@@ -627,9 +629,9 @@ namespace MorphingClass.CGeneralizationMethods
             var EnlargedCEdgeHS = new HashSet<CEdge>(EnlargedCpg.CEdgeLt);
             //CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb( EnlargedCEdgeHS, 1 / CConstants.dblFclipper), "EnlargedCEdgeHS",
             //     blnVisible: false);
-
+            _intEdgeCountBefore += EnlargedCpg.CptLt.Count - 1;
             var simplifiedcptlt = SimplifyAccordExistEdges(EnlargedCpg.CptLt, OriginalCEdgeLt, EnlargedCEdgeHS, strSimplification, dblThreshold).ToList();
-
+            _intEdgeCountAfter += simplifiedcptlt.Count - 1;
 
             //CPolygon simplifiedcpg = new CPolygon(EnlargedCpg.ID,
             //    clipperMethods.ScaleCptEb(simplifiedcptlt, 1 / CConstants.dblFclipper).ToList());
@@ -768,8 +770,8 @@ namespace MorphingClass.CGeneralizationMethods
                 case "Non":
                     return cptlt;
                 case "DP":
-                    throw new ArgumentException("need to be implemented");
-                    //return DPSimplifyAccordExistEdges(cptlt, OriginalCEdgeLt, EnlargedCEdgeHS, dblThreshold);
+                    //throw new ArgumentException("need to be implemented");
+                    return DPSimplifyAccordExistEdges(cptlt, OriginalCEdgeLt, EnlargedCEdgeHS, dblThreshold);
                 case "Imai-Iri":
                     return ImaiIriSimplifyAccordExistEdges(cptlt, OriginalCEdgeLt, EnlargedCEdgeHS, dblThreshold);
                 default:
@@ -794,8 +796,6 @@ namespace MorphingClass.CGeneralizationMethods
             {
                 throw new ArgumentOutOfRangeException("There is no points for simplification!");
             }
-
-         
 
             var allcedgelt = new List<CEdge>(OriginalCEdgeLt);
             allcedgelt.AddRange(EnlargedCEdgeHS);
@@ -940,38 +940,42 @@ namespace MorphingClass.CGeneralizationMethods
 
         ////*******************check the codes below***************************
         ////****************** should we keep at least three points?
-        ///// <summary>
-        ///// for an exterior ring, cptlt should be clockwise; for a hole, cptlt should be counter clockwise
-        ///// </summary>
-        //private static IEnumerable<CPoint> DPSimplifyAccordExistEdges(List<CPoint> cptlt,
-        //    List<CEdge> OriginalCEdgeLt, HashSet<CEdge> EnlargedCEdgeHS, double dblThreshold)
-        //{
-        //    if (cptlt.Count <= 2)
-        //    {
-        //        throw new ArgumentOutOfRangeException("There is no points for simplification!");
-        //    }
+        /// <summary>
+        /// for an exterior ring, cptlt should be clockwise; for a hole, cptlt should be counter clockwise
+        /// </summary>
+        private static IEnumerable<CPoint> DPSimplifyAccordExistEdges(List<CPoint> cptlt,
+            List<CEdge> OriginalCEdgeLt, HashSet<CEdge> EnlargedCEdgeHS, double dblThreshold)
+        {
+            if (cptlt.Count <= 2)
+            {
+                throw new ArgumentOutOfRangeException("There is no points for simplification!");
+            }
 
-        //    var IndexSk = new Stack<CValPair<int, int>>();
-        //    IndexSk.Push(new CValPair<int, int>(0, cptlt.Count - 1));
+            var allcedgelt = new List<CEdge>(OriginalCEdgeLt);
+            allcedgelt.AddRange(EnlargedCEdgeHS);
+            var pEdgeGrid = new CEdgeGrid(allcedgelt);
 
-        //    do
-        //    {
-        //        var StartEndVP = IndexSk.Pop();
+            var IndexSk = new Stack<CValPair<int, int>>();
+            IndexSk.Push(new CValPair<int, int>(0, cptlt.Count - 1));
 
-        //        var subcptlt = cptlt.GetRange(StartEndVP.val1, StartEndVP.val2 - StartEndVP.val1 + 1);
-        //        int intIndexMaxdis;
-        //        if (subcptlt.Count <= 2 || IsCutValid(subcptlt, OriginalCEdgeLt, dblThreshold, out intIndexMaxdis))
-        //        {
-        //            yield return cptlt[StartEndVP.val1];
-        //        }
-        //        else
-        //        {
-        //            IndexSk.Push(new CValPair<int, int>(intIndexMaxdis + StartEndVP.val1, StartEndVP.val2));
-        //            IndexSk.Push(new CValPair<int, int>(StartEndVP.val1, intIndexMaxdis + StartEndVP.val1));
-        //        }
-        //    } while (IndexSk.Count > 0);
-        //    yield return cptlt.GetLastT();
-        //}
+            do
+            {
+                var StartEndVP = IndexSk.Pop();
+
+                var subcptlt = cptlt.GetRange(StartEndVP.val1, StartEndVP.val2 - StartEndVP.val1 + 1);
+                int intIndexMaxdis;
+                if (subcptlt.Count <= 2 || IsCutValid(subcptlt, pEdgeGrid, dblThreshold, out intIndexMaxdis))
+                {
+                    yield return cptlt[StartEndVP.val1];
+                }
+                else
+                {
+                    IndexSk.Push(new CValPair<int, int>(intIndexMaxdis + StartEndVP.val1, StartEndVP.val2));
+                    IndexSk.Push(new CValPair<int, int>(StartEndVP.val1, intIndexMaxdis + StartEndVP.val1));
+                }
+            } while (IndexSk.Count > 0);
+            yield return cptlt.GetLastT();
+        }
 
         private static bool BlnIntersect(CEdge cedge, IEnumerable<CEdge> cedgeEb)
         {
