@@ -66,7 +66,7 @@ namespace ContinuousGeneralizer
             frmCurrent.Show();
             frmCurrent.btnRun_Click(sender, e);
             //frmCurrent.btn020_Click(sender, e);
-            frmCurrent.btnMultiResults_Click(sender, e);
+            //frmCurrent.btnMultiResults_Click(sender, e);
 
             //frmCurrent.btn090_Click(sender, e);
         }

@@ -81,14 +81,10 @@ namespace MorphingClass.CAid
             int intLegendInt = CMath.GetNumberTidy(dblLegend16);
             double dblLegentInt = intLegendInt * dblFactorIpeToLayer;
 
-
             ////add legend (unit and a sample line), draw a line with length 16 in ipe
-            //string strData = CIpeDraw.writeIpeText(dblLegend16 + " " + ParameterInitialize.m_mapControl.MapUnits.ToString(), 320, 80) +
-            //    CIpeDraw.drawIpeEdge(320, 64, 336, 64);
             return CIpeDraw.writeIpeText(intLegendInt + " " + strMapUnits, 320, 32) +
-     CIpeDraw.drawIpeEdge(320, 16, 320 + dblLegentInt, 16) +
-     CIpeDraw.drawIpeEdge(320, 16, 320, 20) + CIpeDraw.drawIpeEdge(320 + dblLegentInt, 16, 320 + dblLegentInt, 20);
-
+                   CIpeDraw.drawIpePath(new double[] { 320, 320, 320 + dblLegentInt, 320 + dblLegentInt },
+                                        new double[] { 20, 16, 16, 20 });
         }
 
         public static string GetDataOfFeatureLayer(IFeatureLayer pFLayer, IEnvelope pFLayerEnv,

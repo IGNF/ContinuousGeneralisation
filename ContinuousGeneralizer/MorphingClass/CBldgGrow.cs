@@ -95,14 +95,14 @@ namespace MorphingClass.CGeneralizationMethods
             var pParameterInitialize = _ParameterInitialize;
 
             var LSCpgLt = this.ObjCGeoLtLt[0].AsExpectedClass<CPolygon, object>().ToList();
-            int intEdgeCount = 0;
-            double dblArea = 0;
-            foreach (var cpg in LSCpgLt)
-            {
-                intEdgeCount += cpg.GetEdgeCount();
-                cpg.SetAreaSimple();
-                dblArea += cpg.dblAreaSimple;
-            }
+            //int intEdgeCount = 0;
+            //double dblArea = 0;
+            //foreach (var cpg in LSCpgLt)
+            //{
+            //    intEdgeCount += cpg.GetEdgeCount();
+            //    cpg.SetAreaSimple();
+            //    dblArea += cpg.dblAreaSimple;
+            //}
 
 
 
@@ -111,16 +111,6 @@ namespace MorphingClass.CGeneralizationMethods
             double dblFclipper = CConstants.dblFclipper;
 
             var MagnifiedCpgLt = clipperMethods.ScaleCpgEb(LSCpgLt, dblFclipper).ToList();
-
-
-
-
-
-
-
-
-
-
             CConstants.dblVerySmallCoord *= dblFclipper;
             int intStart = 0;
             int intEnd = intStart + intOutputMapCount;
@@ -922,11 +912,11 @@ namespace MorphingClass.CGeneralizationMethods
             double dblCurrentGrow = dblProportion * _dblTotalGrow * CConstants.dblFclipper;
             double dblCurrentEpsilon = Math.Min(dblCurrentGrow / dblMiterLimit, _dblEpsilon * dblCurrentScale * CConstants.dblFclipper);
             double dblCurrentErosion = _dblErosion * dblCurrentScale * CConstants.dblFclipper;
-            //dblCurrentErosion = 0;
+
             //double dblCurrentDilation = Math.Max(dblCurrentEpsilon / 2, dblProportion * _dblDilation * dblCurrentScale * CConstants.dblFclipper);
             double dblCurrentDilation = (dblCurrentGrow - dblMiterLimit * dblCurrentErosion) / (dblMiterLimit - 1);
+            dblCurrentErosion = 0;
             //dblCurrentDilation = 0;
-            //dblCurrentDilation = dblCurrentGrow;
 
             var clipPathsFirstLevel = clipperMethods.GenerateClipPathsByCpgEb(mergedcpg.ClipCpgLt);
             var LastAndClippedPath = new Paths();

@@ -547,28 +547,9 @@ string strSymbolLayerPath = null, bool blnVisible = true)
                 intRed, intGreen, intBlue, dblWidth, _intColor, _intColor, _intColor, strSymbolLayerPath, blnVisible);
 
             return pFLayer;
-        }
+        }        
 
-        public static IFeatureLayer SavePathEbAsCpgEb(PolyTree polytree, string strFileName,
-List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
-int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
-int intOutlineRed = _intColor, int intOutlineGreen = _intColor, int intOutlineBlue = _intColor,
-esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, string strSymbolLayerPath = null, bool blnVisible = true)
-        {
-            if (polytree.ChildCount == 0)
-            {
-                return null;
-            }
-
-            var cpgeb = clipperMethods.ScaleCpgEb(clipperMethods.GenerateCpgEbByPolyTree(polytree), 1 / CConstants.dblFclipper);
-            IFeatureLayer pFLayer = SaveCpgEb(cpgeb, strFileName, pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt,
-                intRed, intGreen, intBlue, dblWidth, intOutlineRed, intOutlineGreen, intOutlineBlue, 
-                pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
-
-            return pFLayer;
-        }
-
-        public static IFeatureLayer SavePolyTreeAsCpgEb(IEnumerable<Path> PathEb, string strFileName,
+        public static IFeatureLayer SavePathEbAsCpgEb(IEnumerable<Path> PathEb, string strFileName,
 List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
 int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
 int intOutlineRed = _intColor, int intOutlineGreen = _intColor, int intOutlineBlue = _intColor,
@@ -580,6 +561,25 @@ esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, str
             }
 
             var cpgeb = clipperMethods.ScaleCpgEb(clipperMethods.ConvertPathsToCpgEb(PathEb, true, true), 1 / CConstants.dblFclipper);
+            IFeatureLayer pFLayer = SaveCpgEb(cpgeb, strFileName, pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt,
+                intRed, intGreen, intBlue, dblWidth, intOutlineRed, intOutlineGreen, intOutlineBlue,
+                pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
+
+            return pFLayer;
+        }
+
+        public static IFeatureLayer SavePolyTreeAsCpgEb(PolyTree polytree, string strFileName,
+List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
+int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
+int intOutlineRed = _intColor, int intOutlineGreen = _intColor, int intOutlineBlue = _intColor,
+esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, string strSymbolLayerPath = null, bool blnVisible = true)
+        {
+            if (polytree.ChildCount == 0)
+            {
+                return null;
+            }
+
+            var cpgeb = clipperMethods.ScaleCpgEb(clipperMethods.GenerateCpgEbByPolyTree(polytree), 1 / CConstants.dblFclipper);
             IFeatureLayer pFLayer = SaveCpgEb(cpgeb, strFileName, pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt,
                 intRed, intGreen, intBlue, dblWidth, intOutlineRed, intOutlineGreen, intOutlineBlue,
                 pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);

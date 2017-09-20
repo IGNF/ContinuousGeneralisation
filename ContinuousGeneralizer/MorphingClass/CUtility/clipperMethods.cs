@@ -377,23 +377,6 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
             var groupedcpgltlt = GroupCpgsByOverlap(cpglt, finalPolyTree);
 
 
-//            CSaveFeature.SavePathEbAsCplEb(alloriginalPaths,
-//intRound + "_alloriginalPaths", blnVisible: false);
-//            CSaveFeature.SavePathEbAsCplEb(allersionPaths,
-//intRound + "_allersionPaths", blnVisible: false);
-
-            
-//            CSaveFeature.SavePathEbAsCplEb(allbackpaths,
-//intRound + "_allbackpaths", blnVisible: false);
-
-//            CSaveFeature.SavePathEbAsCpgEb(finalPolyTree,
-//intRound + "_finalPolyTree" + (dblGrow + dblDisOverlap) / CConstants.dblFclipper + "m",
-//pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
-
-            //            CSaveFeature.SavePathEbAsCpgEb(grownpaths,
-            //intRound + "_grownpaths" + dblGrow / CConstants.dblFclipper + "m",
-            //pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
-
 
 
             return groupedcpgltlt;
@@ -472,8 +455,8 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
 
 
 
-        public static Paths DilateErodeOffsetCpgExterior_Paths(CPolygon Cpg, double dblGrow, double dblDilation, double dblErosion,
-    string strBufferStyle, double dblMiterLimit)
+        public static Paths DilateErodeOffsetCpgExterior_Paths(CPolygon Cpg, 
+            double dblGrow, double dblDilation, double dblErosion, string strBufferStyle, double dblMiterLimit)
         {
             double dblHoleIndicator = 1;
             if (Cpg.IsHole == true)
@@ -549,6 +532,21 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
             var erosionpaths = Offset_Paths(overdilationPaths,
                     dblHoleIndicator * (-dblDilation - dblErosion), strBufferStyle, dblMiterLimit);
             var normalPolyTree = Offset_PolyTree(erosionpaths, dblHoleIndicator * dblErosion, strBufferStyle, dblMiterLimit);
+
+
+
+            CSaveFeature.SavePathEbAsCpgEb(CHelpFunc.MakeLt(Cpg.ExteriorPath),
+                 "originalpaths" ,
+                pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
+            CSaveFeature.SavePathEbAsCpgEb(overdilationPaths,
+                 "overdilationPaths" + (dblGrow + dblDilation) / CConstants.dblFclipper + "m",
+                pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
+            CSaveFeature.SavePathEbAsCpgEb(erosionpaths,
+                 "erosionpaths" + (dblGrow - dblErosion) / CConstants.dblFclipper + "m",
+                pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
+            CSaveFeature.SavePolyTreeAsCpgEb(normalPolyTree,
+                 "normalPolyTree" + dblGrow  / CConstants.dblFclipper + "m",
+                pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
 
 
             return normalPolyTree;

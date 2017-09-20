@@ -89,7 +89,7 @@ we continuously generalize a start map, of buildings,
 to a smaller-scale goal map.
 The generalization consists of aggregating, growing, and simplifying.
 We aggregate original buildings which will be too close at an output scale 
-by introducing bridges.
+by adding bridges.
 We grow (bridged) original buildings by buffering,
 where we use so-called \emph{miter} joins to keep the right angles of buildings.
 Because of using this kind of joins instead of \emph{round} ones,
@@ -119,7 +119,7 @@ $M_t= M_\mathrm{s} + t \cdot (M_\mathrm{g}-M_\mathrm{s})$.
 
 The continuous generalization is carried by dilating the original buildings. 
 When dilated buildings become too close at time $t$
-and we aggregate them by introducing bridges.
+and we aggregate them by adding bridges.
 We grow the (bridged) original buildings by buffering with miter joins.
 At each time, the grown buildings need to be simplified to look like buildings 
 and this simplification is carried out in two steps:
@@ -193,10 +193,8 @@ identified.
 based on offset curves generated from straight skeletons.
 Our method is similar to \citet{Meijers2016}.
 Our proposition is to dilate and erode the buildings, to remove dents and 
-bumps that can occur when buildings grow.
+bumps that can occur when buildings grow
 (see \fig\ref{fig:RemoveDentAndBump}).
-The operations of dilation and erosion are available from library 
-\textsc{Clipper} \citep{Johnson2014}.
 
 \begin{figure}[tb]
 	\centering
@@ -273,12 +271,22 @@ As a result, we need to make sure that
 M_\mathrm{g} < \frac{2 d_\mathrm{G}}{l}.
 \end{equation}
 
-We wish to remove ``bays'' 
-which have ``widths'' less than $2 r_\mathrm{h}$. 
+ 
+A ``bay'' may appear when we grow a bridged building
+(see \fig\ref{fig:RemoveBay}b).
+We remove such a bay by dilating (see \fig\ref{fig:RemoveBay}c)
+and then eroding (see \fig\ref{fig:RemoveBay}d) with distance $\dtrm{D}$.
+We define the width of a bay as the diameter of the largest circle 
+that can be placed in the bay.
+If the width of a bay is smaller than $2\dtrm{D}$, 
+then the bay can be removed by dilating and eroding with distance $\dtrm{D}$.
+We wish to remove bays 
+which have widths less than $2 r_\mathrm{h}$.
 Variable $r_\mathrm{h}= 2\sqrt{a_\mathrm{h}/\pi}$
-is the radius of a hole which is just large enough to be presented on map.
-Following \citep{Chaudhry2008}, we set area $a_\mathrm{h} = 8\,\mathrm{mm}^2$ 
-on map.
+is the radius of a hole 
+which is just large enough to be presented on map.
+Following \citep{Chaudhry2008}, 
+we set area $a_\mathrm{h} = 8\,\mathrm{mm}^2$ on map.
 Sometimes, our $\dtrm{D}$ is not large enough to do so 
 because of the limitation from \eq\ref{eq:d_DtBound}.
 We define
@@ -287,8 +295,21 @@ We define
 \dtrm{D} =\min (\frac{\dtrm{G}-\dtrm{E}}{\alpha - 1}, r_\mathrm{h} M_t) .
 \end{equation}
 
-\todo{please explain in a figure what a bay is, and what is the width of the 
-bay}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[]{RemoveBay}
+	\caption{Removing a bay by dilating and eroding.
+		(a) An aggregated building by adding bridges 
+		(see \sect\ref{sec:Aggregate}).
+		(b) Growing the aggregated building with distance~$\dtrm{G}$,
+		where the marked a region is a bay.
+		(c) Dilating the grown building with~$\dtrm{D}$.
+		(d) Eroding the dilated building with~$\dtrm{D}$.
+	}
+	\label{fig:RemoveBay}
+\end{figure}
+
 
 \subsection{Iteratively aggregating close buildings by adding bridges}
 \label{sec:Aggregate}
@@ -311,7 +332,7 @@ d_{\epsilon, t} = \epsilon \cdot M_t.
 \begin{figure*}[tb]
 	\centering
 	\includegraphics[draft=false]{GrowAndBridge}
-	\caption{Aggregating original buildings in the same group by introducing 
+	\caption{Aggregating original buildings in the same group by adding 
 		bridges.
 		Then grow the bridged buildings.}
 	\label{fig:GrowAndBridge}
@@ -803,8 +824,7 @@ according to \eq\ref{eq:d_Et} and $\alpha=1.5$.
 Our program took $93.6\,\mathrm{s}$ 
 to compute the goal shapes of the built-up areas.
 \fig\ref{fig:GoalShape} shows the bridged buildings and the goal shapes.
-In \fig\ref{fig:GoalShape}b,
-the $56$ built-up areas have $2{,}095$ edges before line simplification.
+The $56$ built-up areas have $2{,}095$ edges before line simplification.
 Using the Imai--Iri algorithm, we have $1{,}102$ edges left.
 In comparison, there are $1{,}597$ edges left if we simplify using
 the Douglas--Peucker algorithm.
@@ -815,7 +835,7 @@ the Douglas--Peucker algorithm.
 	\caption{Data.
 		There are $2{,}590$ buildings, 
 		which in total have $19{,}255$ edges and have area
-		$448{,}996.8\,\mathrm{mm}^2$.}
+		$448{,}996.8\,\mathrm{m}^2$.}
 	\label{fig:Data}
 \end{figure}
 
@@ -845,6 +865,7 @@ It seems that our result supports the fractal law proposed by \citet{Jiang2015}.
 	\centering
 	\begin{tikzpicture}[]
 	\begin{axis}[
+	height=5cm,
 	width= \linewidth-0.1cm,
 	axis lines = left,
 	%	axis x line=center,
@@ -895,7 +916,7 @@ From this perspective, we would say that our result is
 more reasonable than the existing data.
 A questionnaire, however, is needed to make a more convincing comparison.
 
-%Our result at time $t=1$ have area $4{,}121{,}028.2\,\mathrm{mm}^2$.
+%Our result at time $t=1$ have area $4{,}121{,}028.2\,\mathrm{m}^2$.
 
 
 
