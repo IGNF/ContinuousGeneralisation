@@ -145,10 +145,10 @@ At time $t$, the growth is
 \dtrm{G} = t \cdot d_\mathrm{G}.
 \end{equation}
 
-There are two typical ways of buffering a polygon, i.e.,
-using round joins or using miter joins 
-(see \fig\ref{fig:Buffer_TwoKinds}).
-We choose the second way in order to
+There are three typical joins for buffering a polygon, i.e.,
+round, miter, and square joins
+(see \fig\ref{fig:Buffer_ThreeKinds}).
+We choose the miter joins to grow in order to
 preserve the right angles of buildings.
 If an angle is acute, however, 
 an excessively long \emph{spike} will be produced.
@@ -167,9 +167,9 @@ smaller (more acute) than $83.6 \degree$.
 
 \begin{figure}[tb]
 	\centering
-	\includegraphics{Buffer_TwoKinds}
-	\caption{Buffering a polygon using round joins and using miter joins.}
-	\label{fig:Buffer_TwoKinds}
+	\includegraphics{Buffer_ThreeKinds}
+	\caption{Buffering a polygon using round, miter, and square joins.}
+	\label{fig:Buffer_ThreeKinds}
 \end{figure}
 
 \begin{figure}[tb]
@@ -303,7 +303,7 @@ We define
 		(a) An aggregated building by adding bridges 
 		(see \sect\ref{sec:Aggregate}).
 		(b) Growing the aggregated building with distance~$\dtrm{G}$,
-		where the marked a region is a bay.
+		where the region marked by the dashed circle is a bay.
 		(c) Dilating the grown building with~$\dtrm{D}$.
 		(d) Eroding the dilated building with~$\dtrm{D}$.
 	}
@@ -339,7 +339,8 @@ d_{\epsilon, t} = \epsilon \cdot M_t.
 \end{figure*}
 
 Our way of detecting close buildings is simple.
-We buffer buildings with distance $d_{\epsilon, t}/2$ using round joins.
+We buffer buildings with distance $d_{\epsilon, t}/2$ using round joins
+(see \fig\ref{fig:Buffer_ThreeKinds}b).
 We merge the buffers that overlap each other.
 The buildings intersect the same merged buffer 
 are identified as a group of close buildings.
