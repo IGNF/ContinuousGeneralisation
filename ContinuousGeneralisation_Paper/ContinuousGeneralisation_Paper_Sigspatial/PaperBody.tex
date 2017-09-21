@@ -514,6 +514,7 @@ Second, a shortcut is not allowed to intersect the aggregated building.
 If we allow this intersection, 
 the building will have to be shrunk, which should be avoided. 
 
+\todo{not intersecting buildings from a previous step?}
 
 The classical way to filter points in a polyline or polygon is the 
 Douglas--Peucker algorithm \citep{Douglas1973}, 
@@ -774,7 +775,7 @@ The real threshold at time $t$ is
 a_t=a\cdot M_t^2.
 \]
 For a group of buildings that will be aggregated into one built-up area at time 
-$t=1$, we consider the area sum of all the buildings at time $t$, 
+$t=1$, we consider the area sum of all the buildings at any time $t$, 
 instead of considering each building individually.
 
 As mentioned in \sect\ref{sec:DilationErosion}, 
@@ -795,8 +796,8 @@ a_{\mathrm{h},t}=a_\mathrm{h}\cdot M_t^2.
 \label{sec:CaseStudy}
 We have implemented our method based on
 C\# (Microsoft Visual Studio 2015) and ArcObjects SDK 10.4.1.
-The offsetting function and clipping function are from library \textsc{Clipper} 
-of \citet{Johnson2014}.
+The offsetting function and clipping function 
+are available from library \textsc{Clipper} of \citet{Johnson2014}.
 The offsetting function realizes 
 our operations of buffering, dilating, eroding, and merging.
 An evaluation of \textsc{Clipper} can be found in \citet{Palfrader2015}.
@@ -804,12 +805,29 @@ We ran our case study under 64-bit
 Windows 7 on a 3.3 GHz dual core CPU with 8 GB RAM.
 We measured processing time by the built-in C\# class 
 \emph{Stopwatch}.
-\fig\ref{fig:Data} shows our testing data, 
-which is from the French Mapping Agency (IGN).
+Our testing data is from the French Mapping Agency (IGN);
+see \fig\ref{fig:Data}.
 The data is at scale $1:15{,}000$, which means $M_\mathrm{s}=15{,}000$.
-It represents the buildings of four towns (communes in French), 
+It represents the buildings of four towns, 
 i.e., Aussevielle, Denguin,  Poey-de-Lescar, and Siros, 
 in the Pyr\'en\'ees-Atlantiques department, south-western France.
+IGN also stores a dataset at scale $1:50{,}000$.
+This dataset was basically obtained from the data at scale $1:15{,}000$ 
+by buffering with distance $25\,\mathrm{m}$.
+Sometimes distance $50\,\mathrm{m}$ was also used when buffering
+in order to identify towns.
+A town is defined by \citet{Boffet2000} that the longest edge in an MST of the 
+buildings should be shorter than $100\,\mathrm{m}$.
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics{Data}
+	\caption{Data.
+		There are $2{,}590$ buildings, 
+		which in total have $19{,}255$ edges and have area
+		$448{,}996.8\,\mathrm{m}^2$.}
+	\label{fig:Data}
+\end{figure}
 
 We set our goal scale at $1:50{,}000$, which means $M_\mathrm{g}=50{,}000$,
 and $d_\mathrm{G}=25\,\mathrm{m}$
@@ -827,18 +845,21 @@ to compute the goal shapes of the built-up areas.
 \fig\ref{fig:GoalShape} shows the bridged buildings and the goal shapes.
 The $56$ built-up areas have $2{,}095$ edges before line simplification.
 Using the Imai--Iri algorithm, we have $1{,}102$ edges left.
-In comparison, there are $1{,}597$ edges left if we simplify using
+In comparison, there are $1{,}597$ edges left when we simplified using
 the Douglas--Peucker algorithm.
 
-\begin{figure}[tb]
+\begin{figure*}[tb]
 	\centering
-	\includegraphics{Data}
-	\caption{Data.
-		There are $2{,}590$ buildings, 
-		which in total have $19{,}255$ edges and have area
-		$448{,}996.8\,\mathrm{m}^2$.}
-	\label{fig:Data}
-\end{figure}
+	\includegraphics{GoalShape}
+	\caption{Bridged original buildings 
+		and goal shapes of the built-up areas (without removing small holes), 
+		at scale $1:50{,}000$.
+		There are $56$ built-up areas, which have $1{,}102$ edges in total.
+		We show a sequence of maps in \fig\ref{fig:ContinuousGeneralization} 
+		for the region marked by the dashed circle.
+	}
+	\label{fig:GoalShape}
+\end{figure*}
 
 
 We produced a sequence of $10$ maps, i.e., $t \in \{0.1, 0.2, \dots, 1\}$.
@@ -849,8 +870,8 @@ We counted the numbers of buildings in our results,
 and compared our numbers to the numbers calculated by T\"opfer's radical law
 (see \fig\ref{fig:BuilidngNumber}).
 We have unexaggerated-area symbols, 
-so for \eq2 of \citet{Topfer1966}, we used $C_\mathrm{b2}$ and $C_\mathrm{z3}$.
-As a result, we computed the number according to
+so for \eq2 of \citet{Topfer1966} we used $C_\mathrm{b2}$ and $C_\mathrm{z3}$.
+As a result, we computed the numbers according to
 \[
 n_t=n_\mathrm{s}\frac{M_\mathrm{s}}{M_t},
 \]
@@ -860,7 +881,14 @@ According to \fig\ref{fig:BuilidngNumber}, our numbers decrease faster than
 the numbers from the radical law.
 It seems that our result supports the fractal law proposed by \citet{Jiang2015}.
 
-
+\begin{figure*}[tb]
+	\centering
+	\includegraphics{ContinuousGeneralization}
+	\caption{A sequence of maps at time $t \in \{0, 0.1, 0.2, \dots, 1\}$
+		for the region marked in \fig\ref{fig:GoalShape}.
+	}
+	\label{fig:ContinuousGeneralization}
+\end{figure*}
 
 \begin{figure}[tb]
 	\centering
@@ -886,6 +914,7 @@ It seems that our result supports the fractal law proposed by \citet{Jiang2015}.
 	cycle list name=black white,
 	]
 	\addplot+ [domain=0:1,samples=11] {2590*15/(15+35* x)};
+%	\addplot+ [domain=0:1,samples=11] {2590* (15/(15+35* x))^1.5};
 	\addplot+  coordinates {
 		(0,2590)
 		(0.1,1963)
@@ -907,10 +936,12 @@ It seems that our result supports the fractal law proposed by \citet{Jiang2015}.
 	\label{fig:BuilidngNumber}
 \end{figure}
 
+
+
 \fig\ref{fig:ExperimentalComparison} shows a comparison of 
 our result at time $t=1$
-and the data from IGN at scale $1:50{,}000$.
-No small buildings are removed in our result or the IGN data.
+and the data at scale $1:50{,}000$.
+No small building is removed in our result or the existing data.
 The boundaries of our built-up areas are more straight than that of IGN data, 
 where we have $1{,}135$ edges while the data has $4{,}968$ edges.
 From this perspective, we would say that our result is 
@@ -923,31 +954,9 @@ A questionnaire, however, is needed to make a more convincing comparison.
 
 \begin{figure*}[tb]
 	\centering
-	\includegraphics{GoalShape}
-	\caption{Bridged original buildings 
-		and goal shapes of the built-up areas (without removing small holes), 
-		at scale $1:50{,}000$.
-		There are $56$ built-up areas, which have $1{,}102$ edges in total.
-		We show a sequence of maps in \fig\ref{fig:ContinuousGeneralization} 
-		for the region marked by the dashed circle.
-	}
-	\label{fig:GoalShape}
-\end{figure*}
-
-\begin{figure*}[tb]
-	\centering
-	\includegraphics{ContinuousGeneralization}
-	\caption{A sequence of maps at time $t \in \{0, 0.1, 0.2, \dots, 1\}$
-		for the region marked in \fig\ref{fig:GoalShape}.
-	}
-	\label{fig:ContinuousGeneralization}
-\end{figure*}
-
-\begin{figure*}[tb]
-	\centering
 	\includegraphics{ExperimentalComparison}
 	\caption{A comparison of our result and the existing data at scale 
-	$1:50{,}000$.
+		$1:50{,}000$.
 		The brighter gray polygons represent the original buildings.
 		The darker gray polygons are our result at time $t=1$.
 		The gray polylines represent the data of the built-up areas at scale 
@@ -967,6 +976,193 @@ A questionnaire, however, is needed to make a more convincing comparison.
 %lower running time exists \citep[see][]{Chan1992}, we implemented the basic 
 %version
 
+
+
+
+
+
+
+
+
+
+%\section{Case Study}
+%\label{sec:CaseStudy}
+%We have implemented our method based on
+%C\# (Microsoft Visual Studio 2015) and ArcObjects SDK 10.4.1.
+%The offsetting function and clipping function are from library 
+%\textsc{Clipper} 
+%of \citet{Johnson2014}.
+%The offsetting function realizes 
+%our operations of buffering, dilating, eroding, and merging.
+%An evaluation of \textsc{Clipper} can be found in \citet{Palfrader2015}.
+%We ran our case study under 64-bit 
+%Windows 7 on a 3.3 GHz dual core CPU with 8 GB RAM.
+%We measured processing time by the built-in C\# class 
+%\emph{Stopwatch}.
+%\fig\ref{fig:Data} shows our testing data, 
+%which is from the French Mapping Agency (IGN).
+%The data is at scale $1:15{,}000$, which means $M_\mathrm{s}=15{,}000$.
+%It represents the buildings of four towns (communes in French), 
+%i.e., Aussevielle, Denguin,  Poey-de-Lescar, and Siros, 
+%in the Pyr\'en\'ees-Atlantiques department, south-western France.
+%
+%We set our goal scale at $1:50{,}000$, which means $M_\mathrm{g}=50{,}000$,
+%and $d_\mathrm{G}=25\,\mathrm{m}$
+%so that we can compare our result with the exiting data.
+%Also, this setting makes \eq\ref{eq:S_g} hold, 
+%where $l=0.3\,\mathrm{mm}$.
+%In \eq\ref{eq:d_Dt}, the first part is always smaller than the second part 
+%according to our settings.
+%As a result $\dtrm{D}=t\cdot 35\,\mathrm{m}$, 
+%where $\dtrm{E}=t\cdot 7.5\,\mathrm{m}$ 
+%according to \eq\ref{eq:d_Et} and $\alpha=1.5$.
+%
+%Our program took $93.6\,\mathrm{s}$ 
+%to compute the goal shapes of the built-up areas.
+%\fig\ref{fig:GoalShape} shows the bridged buildings and the goal shapes.
+%The $56$ built-up areas have $2{,}095$ edges before line simplification.
+%Using the Imai--Iri algorithm, we have $1{,}102$ edges left.
+%In comparison, there are $1{,}597$ edges left if we simplify using
+%the Douglas--Peucker algorithm.
+%
+%\begin{figure}[tb]
+%	\centering
+%	\includegraphics{Data}
+%	\caption{Data.
+%		There are $2{,}590$ buildings, 
+%		which in total have $19{,}255$ edges and have area
+%		$448{,}996.8\,\mathrm{m}^2$.}
+%	\label{fig:Data}
+%\end{figure}
+%
+%
+%We produced a sequence of $10$ maps, i.e., $t \in \{0.1, 0.2, \dots, 1\}$.
+%This production cost $668.2\,\mathrm{s}$ in total.
+%We show such a sequence of maps in \fig\ref{fig:ContinuousGeneralization} for 
+%the marked region in \fig\ref{fig:GoalShape}.
+%We counted the numbers of buildings in our results,
+%and compared our numbers to the numbers calculated by T\"opfer's radical law
+%(see \fig\ref{fig:BuilidngNumber}).
+%We have unexaggerated-area symbols, 
+%so for \eq2 of \citet{Topfer1966}, we used $C_\mathrm{b2}$ and $C_\mathrm{z3}$.
+%As a result, we computed the number according to
+%\[
+%n_t=n_\mathrm{s}\frac{M_\mathrm{s}}{M_t},
+%\]
+%where $n_s=2{,}590$ is the number of buildings on start map
+%and $n_t$ is the number of buildings on a map at scale $1:M_t$.
+%According to \fig\ref{fig:BuilidngNumber}, our numbers decrease faster than 
+%the numbers from the radical law.
+%It seems that our result supports the fractal law proposed by 
+%\citet{Jiang2015}.
+%
+%
+%
+%\begin{figure}[tb]
+%	\centering
+%	\begin{tikzpicture}[]
+%	\begin{axis}[
+%	height=5cm,
+%	width= \linewidth-0.1cm,
+%	axis lines = left,
+%	%	axis x line=center,
+%	%	axis y line=left,
+%	xtick={0.1,0.2,...,1},
+%	ytick={500,1000,...,3000},
+%	xlabel={$t$},
+%	ylabel={number of buildings},
+%	xlabel style={below right},
+%	%	ylabel style={at={(axis description cs:0,1.1)},rotate=270,anchor=north},
+%	xlabel style={at={(axis description cs:1,0)},anchor=north},
+%	%	ylabel style={above left},
+%	xmin=0,
+%	xmax=1.1,
+%	ymin=0,
+%	ymax=3200,
+%	cycle list name=black white,
+%	]
+%	\addplot+ [domain=0:1,samples=11] {2590*15/(15+35* x)};
+%	\addplot+  coordinates {
+%		(0,2590)
+%		(0.1,1963)
+%		(0.2,758)
+%		(0.3,304)
+%		(0.4,177)
+%		(0.5,122)
+%		(0.6,92)
+%		(0.7,73)
+%		(0.8,66)
+%		(0.9,59)
+%		(1,56)		
+%	};
+%	\legend{\quad radical law, \quad our results}
+%	\end{axis}
+%	\end{tikzpicture}
+%	\caption{A comparison of the numbers of building between our results and 
+%		T\"opfer's radical law.}
+%	\label{fig:BuilidngNumber}
+%\end{figure}
+%
+%\fig\ref{fig:ExperimentalComparison} shows a comparison of 
+%our result at time $t=1$
+%and the data from IGN at scale $1:50{,}000$.
+%No small buildings are removed in our result or the IGN data.
+%The boundaries of our built-up areas are more straight than that of IGN data, 
+%where we have $1{,}135$ edges while the data has $4{,}968$ edges.
+%From this perspective, we would say that our result is 
+%more reasonable than the existing data.
+%A questionnaire, however, is needed to make a more convincing comparison.
+%
+%%Our result at time $t=1$ have area $4{,}121{,}028.2\,\mathrm{m}^2$.
+%
+%
+%
+%\begin{figure*}[tb]
+%	\centering
+%	\includegraphics{GoalShape}
+%	\caption{Bridged original buildings 
+%		and goal shapes of the built-up areas (without removing small holes), 
+%		at scale $1:50{,}000$.
+%		There are $56$ built-up areas, which have $1{,}102$ edges in total.
+%		We show a sequence of maps in \fig\ref{fig:ContinuousGeneralization} 
+%		for the region marked by the dashed circle.
+%	}
+%	\label{fig:GoalShape}
+%\end{figure*}
+%
+%\begin{figure*}[tb]
+%	\centering
+%	\includegraphics{ContinuousGeneralization}
+%	\caption{A sequence of maps at time $t \in \{0, 0.1, 0.2, \dots, 1\}$
+%		for the region marked in \fig\ref{fig:GoalShape}.
+%	}
+%	\label{fig:ContinuousGeneralization}
+%\end{figure*}
+%
+%\begin{figure*}[tb]
+%	\centering
+%	\includegraphics{ExperimentalComparison}
+%	\caption{A comparison of our result and the existing data at scale 
+%	$1:50{,}000$.
+%		The brighter gray polygons represent the original buildings.
+%		The darker gray polygons are our result at time $t=1$.
+%		The gray polylines represent the data of the built-up areas at scale 
+%		$1:50{,}000$ from IGN, where some built-up areas are split because some 
+%		streets cross these areas.
+%	}
+%	\label{fig:ExperimentalComparison}
+%\end{figure*}
+%
+%
+%%The area on start map is $some number\,\text{mm}^2$.
+%%Our area on map is $some number\,\text{mm}^2$.
+%%According to \eq4 of paper \citet{Topfer1966}, 
+%%the area on map should be $some number\,\text{mm}^2$
+%
+%%Although a version with a 
+%%lower running time exists \citep[see][]{Chan1992}, we implemented the basic 
+%%version
+
 \section{Conclusion}
 \label{sec:Conclusion}
 
@@ -978,8 +1174,8 @@ For the goal map at scale $1:50{,}000$,
 the shapes of our built-up areas are more reasonable than the data from IGN.
 
 It is always interesting to know what is the quantity we should keep on a map.
-We compared the number of buildings between our results and the calculated 
-numbers from T\"opfer's radical law.
+We compared the numbers of buildings of our results 
+with the numbers calculated by T\"opfer's radical law.
 It turned out that our numbers decreased too fast.
 We may also take into account the fractal law of \citet{Jiang2015}.
 Another interesting problem is to compare the area of the buildings.

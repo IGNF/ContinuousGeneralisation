@@ -210,9 +210,8 @@ namespace MorphingClass.CGeneralizationMethods
                 //var offsetpaths = clipperMethods.Offset_Paths(allpaths,
                 //dblTotalGrow, strBufferStyle, dblMiterLimit);
 
-                //CSaveFeature.SavePathEb(offsetpaths, "offsetpaths");
+                //CSaveFeature.SavePathEbAsCpgEb(offsetpaths, "offsetpaths");
                 #endregion
-
 
                 //var mergedCpgLt = MergeCloseCpgsAndAddBridges(MagnifiedCpgLt, dblTotalGrow, dblTargetDilation, dblTargetEpsilon);
                 var mergedCpgLt = MergeCloseCpgsAndAddBridges(MagnifiedCpgLt,true,
@@ -915,7 +914,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             //double dblCurrentDilation = Math.Max(dblCurrentEpsilon / 2, dblProportion * _dblDilation * dblCurrentScale * CConstants.dblFclipper);
             double dblCurrentDilation = (dblCurrentGrow - dblMiterLimit * dblCurrentErosion) / (dblMiterLimit - 1);
-            dblCurrentErosion = 0;
+            //dblCurrentErosion = 0;
             //dblCurrentDilation = 0;
 
             var clipPathsFirstLevel = clipperMethods.GenerateClipPathsByCpgEb(mergedcpg.ClipCpgLt);
