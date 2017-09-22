@@ -795,28 +795,27 @@ a_{\mathrm{h},t}=a_\mathrm{h}\cdot M_t^2.
 \section{Case Study}
 \label{sec:CaseStudy}
 We have implemented our method based on
-C\# (Microsoft Visual Studio 2015) and ArcObjects SDK 10.4.1.
+C\# (Microsoft Visual Studio 2015) and ArcObjects SDK 10.4.1. The code is available in open source on Github \footnote{https://github.com/IGNF/Continuous-Generalisation}.
 The offsetting function and clipping function 
 are available from library \textsc{Clipper} of \citet{Johnson2014}.
-The offsetting function realizes 
-our operations of buffering, dilating, eroding, and merging.
+The offsetting function is used for the buffering, dilation, erodion, and merge operations.
 An evaluation of \textsc{Clipper} can be found in \citet{Palfrader2015}.
 We ran our case study under 64-bit 
 Windows 7 on a 3.3 GHz dual core CPU with 8 GB RAM.
 We measured processing time by the built-in C\# class 
 \emph{Stopwatch}.
-Our testing data is from the French Mapping Agency (IGN);
+Our testing data is extracted from a dataset produced the French Mapping Agency (IGN);
 see \fig\ref{fig:Data}.
 The data is at scale $1:15{,}000$, which means $M_\mathrm{s}=15{,}000$.
 It represents the buildings of four towns, 
 i.e., Aussevielle, Denguin,  Poey-de-Lescar, and Siros, 
-in the Pyr\'en\'ees-Atlantiques department, south-western France.
+in the Pyr\'en\'ees-Atlantiques county, south-western France.
 IGN also stores a dataset at scale $1:50{,}000$.
 This dataset was basically obtained from the data at scale $1:15{,}000$ 
 by buffering with distance $25\,\mathrm{m}$.
 Sometimes distance $50\,\mathrm{m}$ was also used when buffering
 in order to identify towns.
-A town is defined by \citet{Boffet2000} that the longest edge in an MST of the 
+A town is defined by \citet{Boffet2000} as follows: the longest edge in an MST of the 
 buildings should be shorter than $100\,\mathrm{m}$.
 
 \begin{figure}[tb]
@@ -863,7 +862,7 @@ the Douglas--Peucker algorithm.
 
 
 We produced a sequence of $10$ maps, i.e., $t \in \{0.1, 0.2, \dots, 1\}$.
-This production cost $668.2\,\mathrm{s}$ in total.
+This production costs $668.2\,\mathrm{s}$ in total.
 We show such a sequence of maps in \fig\ref{fig:ContinuousGeneralization} for 
 the marked region in \fig\ref{fig:GoalShape}.
 We counted the numbers of buildings in our results,
@@ -1174,14 +1173,11 @@ For the goal map at scale $1:50{,}000$,
 the shapes of our built-up areas are more reasonable than the data from IGN.
 
 It is always interesting to know what is the quantity we should keep on a map.
-We compared the numbers of buildings of our results 
-with the numbers calculated by T\"opfer's radical law.
-It turned out that our numbers decreased too fast.
-We may also take into account the fractal law of \citet{Jiang2015}.
+We compared the numbers of buildings of our results, and it is consistent with the fractak radical law from \citet{Jiang2015}.
 Another interesting problem is to compare the area of the buildings.
-
 Eventually, our result is a set of settlement boundaries. An interesting 
 problem is to compare our method with \citet{Chaudhry2008}.
+This method is supposed to provide a smooth transition between representations with individual buildings and representations with built-up areas, but the only way to verify that smoothness is achieved is to carry out a user survey where our approach is compared to non continuous generalization approaches.
 
 
 
