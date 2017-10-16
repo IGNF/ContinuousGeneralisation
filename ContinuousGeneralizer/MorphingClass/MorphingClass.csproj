@@ -177,13 +177,13 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ILOG.Concert">
+    <Reference Include="ILOG.Concert, Version=12.7.1.0, Culture=neutral, PublicKeyToken=7906592bc7cc7340, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Citations\Cplex\ILOG.Concert.dll</HintPath>
-      <Private>False</Private>
     </Reference>
-    <Reference Include="ILOG.CPLEX">
+    <Reference Include="ILOG.CPLEX, Version=12.7.1.0, Culture=neutral, PublicKeyToken=7906592bc7cc7340, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Citations\Cplex\ILOG.CPLEX.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -201,6 +201,7 @@
     <Compile Include="CAid\CMatchAndMergePolylines.cs" />
     <Compile Include="CAid\CMergeAndSplitPolylines.cs" />
     <Compile Include="CAid\CIdentifyCorrCpgAddRegionNum.cs" />
+    <Compile Include="CAid\CSelectRandomly.cs" />
     <Compile Include="CAid\CTemporary.cs" />
     <Compile Include="CAid\CToIpe.cs" />
     <Compile Include="CAid\CUnifyIndicesPolylines.cs" />
@@ -241,15 +242,15 @@
     <Compile Include="CEvaluationMethods\CLengthDiff.cs" />
     <Compile Include="CEvaluationMethods\CTranslation.cs" />
     <Compile Include="CEvaluationMethods\CTranslationEvaluation.cs" />
-    <Compile Include="CGeneralizationMethods\CAreaAgg_Base.cs" />
-    <Compile Include="CGeneralizationMethods\CAreaAgg_Greedy.cs" />
-    <Compile Include="CGeneralizationMethods\CAreaAgg_ILP.cs" />
+    <Compile Include="CAreaAgg_Base.cs" />
+    <Compile Include="CAreaAgg_Greedy.cs" />
+    <Compile Include="CAreaAgg_ILP.cs" />
     <Compile Include="CGeneralizationMethods\CBezierDetectPoint.cs" />
-    <Compile Include="CGeneralizationMethods\CAreaAgg_AStar.cs" />
+    <Compile Include="CAreaAgg_AStar.cs" />
     <Compile Include="CGeneralizationMethods\CDPSimplify.cs" />
     <Compile Include="CGeneralizationMethods\CGDNWDD.cs" />
     <Compile Include="CGeneralizationMethods\CHWPGRN.cs" />
-    <Compile Include="CBldgGrow.cs" />
+    <Compile Include="CGeneralizationMethods\CBldgGrow.cs" />
     <Compile Include="CGeneralizationMethods\CplexServer.cs" />
     <Compile Include="CGeneralizationMethods\CVetexCover.cs" />
     <Compile Include="CGeometry\CCphRecord.cs" />
@@ -328,6 +329,7 @@
     <Compile Include="CMorphingMethods\CRIBSBLG.cs" />
     <Compile Include="CMorphingMethods\CRIBSBLGOptCor.cs" />
     <Compile Include="CMorphingMethods\CVertexInsertionM.cs" />
+    <Compile Include="CUtility\CBin.cs" />
     <Compile Include="CUtility\CCheckRange.cs" />
     <Compile Include="CUtility\CColor.cs" />
     <Compile Include="CUtility\CConstants.cs" />

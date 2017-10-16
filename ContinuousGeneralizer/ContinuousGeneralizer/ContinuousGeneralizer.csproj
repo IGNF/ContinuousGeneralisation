@@ -171,15 +171,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="ILOG.Concert, Version=12.6.2.0, Culture=neutral, PublicKeyToken=7906592bc7cc7340, processorArchitecture=MSIL">
+    <Reference Include="ILOG.Concert, Version=12.7.1.0, Culture=neutral, PublicKeyToken=7906592bc7cc7340, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Citations\Cplex\ILOG.Concert.dll</HintPath>
-      <Private>False</Private>
     </Reference>
-    <Reference Include="ILOG.CPLEX, Version=12.6.2.0, Culture=neutral, PublicKeyToken=7906592bc7cc7340, processorArchitecture=MSIL">
+    <Reference Include="ILOG.CPLEX, Version=12.7.1.0, Culture=neutral, PublicKeyToken=7906592bc7cc7340, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Citations\Cplex\ILOG.CPLEX.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -235,6 +233,12 @@
     </Compile>
     <Compile Include="FrmAid\FrmGaussianPerturbation.Designer.cs">
       <DependentUpon>FrmGaussianPerturbation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmAid\FrmSelectRandomly.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmAid\FrmSelectRandomly.Designer.cs">
+      <DependentUpon>FrmSelectRandomly.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmAid\FrmStatisticsOfDataSets.cs">
       <SubType>Form</SubType>
@@ -721,6 +725,9 @@
     <EmbeddedResource Include="FrmAid\FrmGaussianPerturbation.resx">
       <DependentUpon>FrmGaussianPerturbation.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FrmAid\FrmSelectRandomly.resx">
+      <DependentUpon>FrmSelectRandomly.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmAid\FrmStatisticsOfDataSets.resx">
       <DependentUpon>FrmStatisticsOfDataSets.cs</DependentUpon>
     </EmbeddedResource>
@@ -1010,8 +1017,8 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>call "$(DevEnvDir)..\tools\vsvars32.bat"
+editbin /largeaddressaware $(TargetPath)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

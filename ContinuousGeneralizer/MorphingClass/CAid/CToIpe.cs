@@ -42,6 +42,8 @@ namespace MorphingClass.CAid
             //CIpeDraw.drawIpeEdge(320, 16, 320, 20) + CIpeDraw.drawIpeEdge(320 + dblLegentInt, 16, 320 + dblLegentInt, 20);
             var strData = GetScaleLegend(pFLayerEnv, pIpeEnv, CHelpFunc.GetUnits(ParameterInitialize.m_mapControl.MapUnits));
 
+            var ss = ParameterInitialize.m_mapControl.SpatialReference;
+            //var tt = ParameterInitialize.m_mapControl.
             for (int i = 0; i < pFLayerLt.Count; i++)
             {
                 var pFLayer = pFLayerLt[i] as IFeatureLayer;
@@ -78,6 +80,10 @@ namespace MorphingClass.CAid
         {
             double dblFactorIpeToLayer = pIpeEnv.Height / pFLayerEnv.Height;
             double dblLegend16 = 16 / dblFactorIpeToLayer;
+            if (dblLegend16<1)
+            {
+                dblLegend16 = 1;
+            }
             int intLegendInt = CMath.GetNumberTidy(dblLegend16);
             double dblLegentInt = intLegendInt * dblFactorIpeToLayer;
 

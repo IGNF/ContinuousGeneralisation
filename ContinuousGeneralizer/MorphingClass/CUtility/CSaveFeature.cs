@@ -211,11 +211,16 @@ IWorkspace pWorkspace, IMapControl4 pm_mapControl, List<string> pstrFieldNameLt 
         {
             //创建要素空间
             IFeatureWorkspace pFeatureWorkspace = (IFeatureWorkspace)pWorkspace;
-            IGeometryDefEdit pGeometryDefEdit = new GeometryDefClass();
+            IGeometryDef geometryDef = new GeometryDefClass();
+            IGeometryDefEdit pGeometryDefEdit = (IGeometryDefEdit)geometryDef;
             //_esriGeometryType could be: esriGeometryPoint, esriGeometryMultipoint, 
             //esriGeometryPolyline, esriGeometryPolygon, and esriGeometryMultiPatch.
             pGeometryDefEdit.GeometryType_2 = pesriGeometryType;
             pGeometryDefEdit.SpatialReference_2 = pm_mapControl.SpatialReference;
+            // Set the grid count to 1 and the grid size to 0 to allow ArcGIS to
+            // determine a valid grid size.
+            pGeometryDefEdit.GridCount_2 = 1;
+            pGeometryDefEdit.set_GridSize(0, 0);
 
             //新建字段
             IFieldsEdit pFieldsEdit = new FieldsClass();
@@ -223,7 +228,7 @@ IWorkspace pWorkspace, IMapControl4 pm_mapControl, List<string> pstrFieldNameLt 
             IFieldEdit pField;
             pField = new FieldClass();
             pField.Type_2 = esriFieldType.esriFieldTypeGeometry;
-            pField.GeometryDef_2 = pGeometryDefEdit;
+            pField.GeometryDef_2 = geometryDef;
             pField.Name_2 = "Shape";
             pFieldsEdit.AddField((IField)pField);
             //添加其它字段

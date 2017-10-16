@@ -67,6 +67,7 @@ namespace ContinuousGeneralizer
             this.mnuUnifyIndicesPolylines = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuIdentifyCorrCpgAddRegionNum = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCompareExcel = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuSelectRandomly = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOrdinal = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSimultaneity = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuApLALMulti = new System.Windows.Forms.ToolStripMenuItem();
@@ -290,7 +291,8 @@ namespace ContinuousGeneralizer
             this.mnuMergeAndSplitPolylines,
             this.mnuUnifyIndicesPolylines,
             this.mnuIdentifyCorrCpgAddRegionNum,
-            this.mnuCompareExcel});
+            this.mnuCompareExcel,
+            this.mnuSelectRandomly});
             this.mnuLookingForNeighboursDT.Name = "mnuLookingForNeighboursDT";
             this.mnuLookingForNeighboursDT.Size = new System.Drawing.Size(52, 20);
             this.mnuLookingForNeighboursDT.Text = "Aid(&T)";
@@ -448,6 +450,13 @@ namespace ContinuousGeneralizer
             this.mnuCompareExcel.Size = new System.Drawing.Size(258, 22);
             this.mnuCompareExcel.Text = "CompareExcel";
             this.mnuCompareExcel.Click += new System.EventHandler(this.mnuCompareExcel_Click);
+            // 
+            // mnuSelectRandomly
+            // 
+            this.mnuSelectRandomly.Name = "mnuSelectRandomly";
+            this.mnuSelectRandomly.Size = new System.Drawing.Size(258, 22);
+            this.mnuSelectRandomly.Text = "SelectRandomly";
+            this.mnuSelectRandomly.Click += new System.EventHandler(this.mnuSelectRandomly_Click);
             // 
             // mnuOrdinal
             // 
@@ -1238,7 +1247,7 @@ namespace ContinuousGeneralizer
             // 
             this.Blank.AccessibleDescription = "s";
             this.Blank.Name = "Blank";
-            this.Blank.Size = new System.Drawing.Size(376, 19);
+            this.Blank.Size = new System.Drawing.Size(407, 19);
             this.Blank.Spring = true;
             // 
             // tsslMessage
@@ -1453,6 +1462,7 @@ namespace ContinuousGeneralizer
         private System.Windows.Forms.ToolStripMenuItem kARSToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mnuExtractPossibleFiles;
         private ESRI.ArcGIS.Controls.AxMapControl axMapControl;
+        private System.Windows.Forms.ToolStripMenuItem mnuSelectRandomly;
     }
 }
 

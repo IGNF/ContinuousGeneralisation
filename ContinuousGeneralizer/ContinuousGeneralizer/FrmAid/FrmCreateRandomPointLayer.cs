@@ -80,7 +80,7 @@ namespace ContinuousGeneralizer.FrmAid
 
             double dblScaleX = dblMaxX - dblMinX;
             double dblScaleY = dblMaxY - dblMinY;
-            Random rand = new Random();
+            var rand = new Random();
 
             int intActualNum = intPointNum;
             for (int k = 0; k < intNumberofSets; k++)

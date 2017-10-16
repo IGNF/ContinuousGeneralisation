@@ -49,11 +49,19 @@ namespace MorphingClass.CUtility
         //    CalDistanceParameters<T, T>(pTLt);
         //}
 
-        public static void CalDistanceParameters<T, CGeo>(List<T> pTLt) 
+        public static void CalDistanceParameters<T, CGeo>(List<T> pTLt, bool blnCalDistanceParameters = true) 
             where T : CPolyBase<CGeo>
             where CGeo : class
         {
-            double dblMidLength = CalMidLength<T, CGeo>(pTLt);
+            double dblMidLength = 0;
+            if (blnCalDistanceParameters == true)
+            {
+                dblMidLength = CalMidLength<T, CGeo>(pTLt);
+            }
+            else
+            {
+                dblMidLength = 1;
+            }
             
             CConstants.dblMidLength = dblMidLength;
             //CConstants.dblSmallDis = dblMidLength / CConstants.dblSmallDisDenominator;

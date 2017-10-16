@@ -58,13 +58,14 @@ namespace ContinuousGeneralizer
             //    throw;
             //}
 
+            //var frmCurrent = new FrmSelectRandomly(_DataRecords);
             //var frmCurrent = new FrmToIpe(_DataRecords);
-            var frmCurrent = new FrmBldgGrow(_DataRecords);
-            //var frmCurrent = new FrmAreaAgg(_DataRecords);
+            //var frmCurrent = new FrmBldgGrow(_DataRecords);
+            var frmCurrent = new FrmAreaAgg(_DataRecords);
             //var frmCurrent = new FrmCGABM(_DataRecords);
             //var frmCurrent = new FrmExtractPossibleFiles();
             frmCurrent.Show();
-            frmCurrent.btnRun_Click(sender, e);
+            //frmCurrent.btnRun_Click(sender, e);
             //frmCurrent.btn020_Click(sender, e);
             //frmCurrent.btnMultiResults_Click(sender, e);
 
@@ -668,6 +669,34 @@ namespace ContinuousGeneralizer
 
         private void mnuAnyTest_Click(object sender, EventArgs e)
         {
+            int intNum = 999;
+            var intltltltltlt = new List<List<List<List<List<int>>>>>(intNum);
+            for (int i = 0; i < intNum; i++)
+            {
+                var intltltltlt = new List<List<List<List<int>>>>(intNum);
+                for (int j = 0; j < intNum; j++)
+                {
+                    var intltltlt= new List<List<List<int>>>(intNum);
+                    for (int k = 0; k < intNum; k++)
+                    {
+                        var intltlt = new List<List<int>>(intNum);
+                        for (int l = 0; l < intNum; l++)
+                        {
+                            var intlt = new List<int>(intNum);
+                            for (int m = 0; m < intNum; m++)
+                            {
+                                intlt.Add(m);
+                            }
+                            intltlt.Add(intlt);
+                        }
+                        intltltlt.Add(intltlt);
+                    }
+                    intltltltlt.Add(intltltlt);
+                }
+                intltltltltlt.Add(intltltltlt);
+            }
+
+
             tspbMain.Value = 15;
 
             //var cptlt= CHelpFunc .GetTestCptEb().ToList();
@@ -1245,53 +1274,10 @@ namespace ContinuousGeneralizer
             frmExtractPossibleFiles.Show();
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        private void mnuSelectRandomly_Click(object sender, EventArgs e)
+        {
+            FrmSelectRandomly frmSelectRandomly = new FrmSelectRandomly(_DataRecords);
+            frmSelectRandomly.Show();
+        }
     }
 }

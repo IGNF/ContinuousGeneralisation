@@ -130,6 +130,7 @@ namespace MorphingClass.CGeometry
             return this.CpgSS.Min;
         }
 
+
         public CPatch GetSmallestNeighbor()
         {
             if (CConstants.strMethod != "Greedy")

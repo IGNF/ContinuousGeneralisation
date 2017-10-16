@@ -56,7 +56,7 @@ namespace MorphingClass.CMorphingMethods.CMorphingMethodsBase
         /// <param name="strSpecifiedValue"></param>
         public virtual void Construct<T, CGeo>(CParameterInitialize ParameterInitialize, int intLayerCount = 2, 
             int intStartLayer = 0, bool blnIGeoToCGeo = true, double  dblFactor=1, string strSpecifiedFieldName = null, 
-            string strSpecifiedValue = null, bool blnCreateFileGdbWorkspace = false) 
+            string strSpecifiedValue = null, bool blnCreateFileGdbWorkspace = false, bool blnCalDistanceParameters=true) 
             where T : CPolyBase<CGeo>
             where CGeo:class
         {
@@ -110,7 +110,8 @@ namespace MorphingClass.CMorphingMethods.CMorphingMethodsBase
             }
 
             //we compute the parameters of distance according to the features in the first layer
-            CGeoFunc.CalDistanceParameters<T, CGeo>(pFirstLayerObjCGeoLt.AsExpectedClass<T, object>().ToList());
+            CGeoFunc.CalDistanceParameters<T, CGeo>
+                (pFirstLayerObjCGeoLt.AsExpectedClass<T, object>().ToList(), blnCalDistanceParameters);
 
 
 

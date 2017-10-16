@@ -33,8 +33,8 @@ namespace ContinuousGeneralizer.FrmMorphing
         private CFrmOperation _FrmOperation;
 
         private CAreaAgg_Base _pCAreaAgg_Base;
-        private CAreaAgg_AStar _pAreaAgg_AStar;
-
+        private CAreaAgg_AStar _pCAreaAgg_AStar;
+        private CAreaAgg_ILP _pCAreaAgg_ILP;
 
         private double _dblProportion = 0.5;
 
@@ -68,7 +68,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.cboShapeConstraint = this.cboShapeConstraint;
             ParameterInitialize.chkSmallest = this.chkSmallest;
 
-            this.cboShapeConstraint.SelectedIndex = 2;
+            this.cboShapeConstraint.SelectedIndex = 1;
 
             //进行Load操作，初始化变量
             _FrmOperation = new CFrmOperation(ref ParameterInitialize);
@@ -95,17 +95,17 @@ namespace ContinuousGeneralizer.FrmMorphing
         {
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
             //var objDataLtLt = new List<List<object>>();
-            var objResultSD = new SortedDictionary<string, List<object>>();
-            var StrObjLtSD = new CStrObjLtSD(CAreaAgg_AStar.strKeyLt);
+            //var objResultSD = new SortedDictionary<string, List<object>>();
+            var StrObjLtSD = new CStrObjLtSD(CAreaAgg_Base.strKeyLt);
             //读取数据
-            _pAreaAgg_AStar = new CAreaAgg_AStar(ParameterInitialize);
-            _pAreaAgg_AStar.AreaAgg_AStar(Convert.ToInt32(txtNodes.Text), "AStar");
+            _pCAreaAgg_AStar = new CAreaAgg_AStar(ParameterInitialize);
+            _pCAreaAgg_AStar.AreaAggregation(Convert.ToInt32(txtNodes.Text));
 
-            this.txtEvaluation.Text = _pAreaAgg_AStar.dblCost.ToString();
-            StrObjLtSD.Merge(_pAreaAgg_AStar.StrObjLtSD);
+            this.txtEvaluation.Text = _pCAreaAgg_AStar.dblCost.ToString();
+            StrObjLtSD.Merge(_pCAreaAgg_AStar.StrObjLtSD);
             CAreaAgg_Base.SaveData(StrObjLtSD, ParameterInitialize, "AStar", Convert.ToInt32(txtNodes.Text));
 
-            _pCAreaAgg_Base = _pAreaAgg_AStar as CAreaAgg_Base;
+            _pCAreaAgg_Base = _pCAreaAgg_AStar as CAreaAgg_Base;
             MessageBox.Show("Done!");
         }
 
@@ -160,20 +160,20 @@ namespace ContinuousGeneralizer.FrmMorphing
             var StrObjLtSD = new CStrObjLtSD(CAreaAgg_AStar.strKeyLt);
             for (int i = 0; i < intSpecifiedIDLt.Count; i++)
             { 
-                _pAreaAgg_AStar = new CAreaAgg_AStar(ParameterInitialize, "RegionNum", intSpecifiedIDLt[i].ToString());
-                _pAreaAgg_AStar.AreaAgg_AStar(Convert.ToInt32(txtNodes.Text), "AStar");
+                _pCAreaAgg_AStar = new CAreaAgg_AStar(ParameterInitialize, "RegionNum", intSpecifiedIDLt[i].ToString());
+                _pCAreaAgg_AStar.AreaAggregation(Convert.ToInt32(txtNodes.Text));
 
                 if (chkOutput.Checked==true)
                 {
                     btnMultiResults_Click(sender, e);
                 }                
 
-                StrObjLtSD.Merge(_pAreaAgg_AStar.StrObjLtSD);                
+                StrObjLtSD.Merge(_pCAreaAgg_AStar.StrObjLtSD);                
             }
 
             CAreaAgg_AStar.SaveData(StrObjLtSD, ParameterInitialize, "AStar", Convert.ToInt32(txtNodes.Text));
 
-            _pCAreaAgg_Base = _pAreaAgg_AStar as CAreaAgg_Base;
+            _pCAreaAgg_Base = _pCAreaAgg_AStar as CAreaAgg_Base;
             MessageBox.Show("Done!");
         }
 
@@ -183,18 +183,17 @@ namespace ContinuousGeneralizer.FrmMorphing
         {
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
             var StrObjLtSD = new CStrObjLtSD(CAreaAgg_AStar.strKeyLt);
-            Cplex cplex = new Cplex();
 
             //读取数据
-            _pAreaAgg_AStar = new CAreaAgg_AStar(ParameterInitialize);
-            _pAreaAgg_AStar.AreaAgg_AStar(Convert.ToInt32(txtNodes.Text), "ILP");
+            _pCAreaAgg_ILP = new CAreaAgg_ILP(ParameterInitialize);
+            _pCAreaAgg_ILP.AreaAggregation();
 
-            this.txtEvaluation.Text = _pAreaAgg_AStar.dblCost.ToString();
-            StrObjLtSD.Merge(_pAreaAgg_AStar.StrObjLtSD);
+            //this.txtEvaluation.Text = _pCAreaAgg_ILP.dblCost.ToString();
+            StrObjLtSD.Merge(_pCAreaAgg_ILP.StrObjLtSD);
             CAreaAgg_AStar.SaveData(StrObjLtSD, ParameterInitialize, "ILP", Convert.ToInt32(txtNodes.Text));
 
 
-            _pCAreaAgg_Base = _pAreaAgg_AStar as CAreaAgg_Base;
+            _pCAreaAgg_Base = _pCAreaAgg_ILP as CAreaAgg_Base;
             MessageBox.Show("Done!");
         }
 
@@ -281,12 +280,12 @@ namespace ContinuousGeneralizer.FrmMorphing
 
             for (int i = 0; i < intSpecifiedIDLt.Count; i++)
             {
-                _pAreaAgg_AStar = new CAreaAgg_AStar(ParameterInitialize, "RegionNum", intSpecifiedIDLt[i].ToString());
-                _pAreaAgg_AStar.AreaAgg_AStar(Convert.ToInt32(txtNodes.Text), "ILP");
-                StrObjLtSD.Merge(_pAreaAgg_AStar.StrObjLtSD);
+                _pCAreaAgg_AStar = new CAreaAgg_AStar(ParameterInitialize, "RegionNum", intSpecifiedIDLt[i].ToString());
+                _pCAreaAgg_AStar.AreaAggregation(Convert.ToInt32(txtNodes.Text));
+                StrObjLtSD.Merge(_pCAreaAgg_AStar.StrObjLtSD);
             }
 
-            _pCAreaAgg_Base = _pAreaAgg_AStar as CAreaAgg_Base;
+            _pCAreaAgg_Base = _pCAreaAgg_AStar as CAreaAgg_Base;
             CAreaAgg_AStar.SaveData(StrObjLtSD, ParameterInitialize, "ILP", Convert.ToInt32(txtNodes.Text));
             MessageBox.Show("Done!");
         }
@@ -295,15 +294,18 @@ namespace ContinuousGeneralizer.FrmMorphing
 
         private void btnRunILP_Extend_Click(object sender, EventArgs e)
         {
-            CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
-            var StrObjLtSD = new CStrObjLtSD(CAreaAgg_AStar.strKeyLt);
+            throw new ArgumentException("need to be implemented!");
 
-            //读取数据
-            _pAreaAgg_AStar = new CAreaAgg_AStar(ParameterInitialize);
-            _pAreaAgg_AStar.AreaAgg_AStar(Convert.ToInt32(txtNodes.Text), "ILP_Extend");
 
-            this.txtEvaluation.Text = _pAreaAgg_AStar.dblCost.ToString();
-            StrObjLtSD.Merge(_pAreaAgg_AStar.StrObjLtSD);
+            //CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
+            //var StrObjLtSD = new CStrObjLtSD(CAreaAgg_AStar.strKeyLt);
+
+            ////读取数据
+            //_pCAreaAgg_AStar = new CAreaAgg_AStar(ParameterInitialize);
+            //_pCAreaAgg_AStar.AreaAggregation(Convert.ToInt32(txtNodes.Text), "ILP_Extend");
+
+            //this.txtEvaluation.Text = _pCAreaAgg_AStar.dblCost.ToString();
+            //StrObjLtSD.Merge(_pCAreaAgg_AStar.StrObjLtSD);
             //CAreaAgg_AStar.SaveData(StrObjLtSD, ParameterInitialize, Convert.ToInt32(txtNodes.Text));
 
             
@@ -316,25 +318,32 @@ namespace ContinuousGeneralizer.FrmMorphing
         {
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
             int intQuitCount = Convert.ToInt32(txtNodes.Text);
-            int intTwiceCount = intQuitCount *2;
-            int intUnlimited = 2000000000;
+            int intTwiceCount = intQuitCount * 2;
+            //int intUnlimited = 2000000000;
 
+            //0: NonShape
             //1: MinimizeInteriorBoundaries
             //2: MaximizeMinComp
             //3: MaximizeMinComp_Combine
+            //4: MaximizeAvgComp_EdgeNumber
+            //5: MaximizeAvgComp_Combine
             //true: involving smallest
             //false: all
             //RunBasic(ParameterInitialize, "AStar", intQuitCount, 3, false);
             //RunBasic(ParameterInitialize, "AStar", intQuitCount, 3, true);
             //RunBasic(ParameterInitialize, "AStar", intQuitCount, 1, false);
             //RunBasic(ParameterInitialize, "AStar", intQuitCount, 1, true);
-            RunBasic(ParameterInitialize, "AStar", intQuitCount, 2, true);
+            RunAStar(ParameterInitialize, intQuitCount, 1, true);
+            RunAStar(ParameterInitialize, intQuitCount, 4, true);
+
 
             //RunBasic(ParameterInitialize, "AStar", intTwiceCount, 3, false);
             //RunBasic(ParameterInitialize, "AStar", intTwiceCount, 3, true);
             //RunBasic(ParameterInitialize, "AStar", intTwiceCount, 1, false);
             //RunBasic(ParameterInitialize, "AStar", intTwiceCount, 1, true);
-            RunBasic(ParameterInitialize, "AStar", intTwiceCount, 2, true);
+            RunAStar(ParameterInitialize, intTwiceCount, 4, true);
+
+
 
             //RunBasic(ParameterInitialize, "AStar", intUnlimited, 3, false);
             //RunBasic(ParameterInitialize, "AStar", intUnlimited, 3, true);
@@ -346,7 +355,7 @@ namespace ContinuousGeneralizer.FrmMorphing
 
             //RunBasic(ParameterInitialize, "ILP", intUnlimited, 1, false);
             //RunBasic(ParameterInitialize, "ILP", intUnlimited, 1, true);
-
+            RunILP(ParameterInitialize, true);
 
             //RunBasic(ParameterInitialize, "AStar", intQuitCount, 1, false);
             //RunBasic(ParameterInitialize, "AStar", intQuitCount, 1, true);
@@ -367,18 +376,34 @@ namespace ContinuousGeneralizer.FrmMorphing
             MessageBox.Show("Done!");
         }
 
-        private void RunBasic(CParameterInitialize ParameterInitialize,string strMethod, int intQuitCount, int cboShapeConstraintSelectedIndex, bool chkSmallestChecked)
+        private void RunAStar(CParameterInitialize ParameterInitialize, 
+            int intQuitCount, int cboShapeConstraintSelectedIndex, bool chkSmallestChecked)
         {
             ParameterInitialize.cboShapeConstraint.SelectedIndex = cboShapeConstraintSelectedIndex;
             ParameterInitialize.chkSmallest.Checked = chkSmallestChecked;
 
-            _pAreaAgg_AStar = new CAreaAgg_AStar(ParameterInitialize);
-            _pAreaAgg_AStar.AreaAgg_AStar(intQuitCount, strMethod);
-            CAreaAgg_AStar.SaveData(_pAreaAgg_AStar.StrObjLtSD, ParameterInitialize, strMethod, intQuitCount);
+            var objResultSD = new SortedDictionary<string, List<object>>();
+            var StrObjLtSD = new CStrObjLtSD(CAreaAgg_Base.strKeyLt);
 
-            //ParameterInitialize.chkSmallest = this.chkSmallest;
-            //this.cboShapeConstraint.SelectedIndex = 1;
+            _pCAreaAgg_AStar = new CAreaAgg_AStar(ParameterInitialize);
+            _pCAreaAgg_AStar.AreaAggregation(intQuitCount);
+            StrObjLtSD.Merge(_pCAreaAgg_AStar.StrObjLtSD);
+            CAreaAgg_Base.SaveData(StrObjLtSD, ParameterInitialize, "AStar", intQuitCount);
         }
+
+        private void RunILP(CParameterInitialize ParameterInitialize, bool chkSmallestChecked)
+        {
+            ParameterInitialize.chkSmallest.Checked = chkSmallestChecked;
+
+            var objResultSD = new SortedDictionary<string, List<object>>();
+            var StrObjLtSD = new CStrObjLtSD(CAreaAgg_Base.strKeyLt);
+
+            _pCAreaAgg_ILP = new CAreaAgg_ILP(ParameterInitialize);
+            _pCAreaAgg_ILP.AreaAggregation();
+            StrObjLtSD.Merge(_pCAreaAgg_ILP.StrObjLtSD);
+            CAreaAgg_Base.SaveData(StrObjLtSD, ParameterInitialize, "ILP");
+        }
+
 
         private void btnResultFolder_Click(object sender, EventArgs e)
         {

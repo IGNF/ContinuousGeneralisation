@@ -800,7 +800,8 @@ The code is available in open source on
 Github\footnote{\url{https://github.com/IGNF/Continuous-Generalisation}}.
 The offsetting function and clipping function 
 are available from library \textsc{Clipper} of \citet{Johnson2014}.
-The offsetting function is used for the buffering, dilation, erodion, and merge operations.
+The offsetting function is used for the buffering, dilation, 
+erosion, and merge operations.
 An evaluation of \textsc{Clipper} can be found in \citet{Palfrader2015}.
 We ran our case study under 64-bit 
 Windows 7 on a 3.3 GHz dual core CPU with 8 GB RAM.
@@ -893,51 +894,54 @@ It seems that our result supports the fractal law proposed by \citet{Jiang2015}.
 	\label{fig:ContinuousGeneralization}
 \end{figure*}
 
-\begin{figure}[tb]
-	\centering
-	\begin{tikzpicture}[]
-	\begin{axis}[
-	height=5cm,
-	width= \linewidth-0.1cm,
-	axis lines = left,
-	%	axis x line=center,
-	%	axis y line=left,
-	xtick={0.1,0.2,...,1},
-	ytick={500,1000,...,3000},
-	xlabel={$t$},
-	ylabel={number of buildings},
-	xlabel style={below right},
-	%	ylabel style={at={(axis description cs:0,1.1)},rotate=270,anchor=north},
-	xlabel style={at={(axis description cs:1,0)},anchor=north},
-	%	ylabel style={above left},
-	xmin=0,
-	xmax=1.1,
-	ymin=0,
-	ymax=3200,
-	cycle list name=black white,
-	]
-	\addplot+ [domain=0:1,samples=11] {2590*15/(15+35* x)};
-%	\addplot+ [domain=0:1,samples=11] {2590* (15/(15+35* x))^1.5};
-	\addplot+  coordinates {
-		(0,2590)
-		(0.1,1963)
-		(0.2,758)
-		(0.3,304)
-		(0.4,177)
-		(0.5,122)
-		(0.6,92)
-		(0.7,73)
-		(0.8,66)
-		(0.9,59)
-		(1,56)		
-	};
-	\legend{\quad radical law, \quad our results}
-	\end{axis}
-	\end{tikzpicture}
-	\caption{A comparison of the numbers of building between our results and 
-		T\"opfer's radical law.}
-	\label{fig:BuilidngNumber}
-\end{figure}
+%\begin{figure}[tb]
+%	\centering
+%	\begin{tikzpicture}[]
+%	\begin{axis}[
+%	height=5cm,
+%	width= \linewidth-0.1cm,
+%	axis lines = left,
+%	%	axis x line=center,
+%	%	axis y line=left,
+%	xtick={0.1,0.2,...,1},
+%	ytick={500,1000,...,3000},
+%	xlabel={$t$},
+%	ylabel={number of buildings},
+%	xlabel style={below right},
+%	%	ylabel style={at={(axis description 
+%%cs:0,1.1)},rotate=270,anchor=north},
+%	xlabel style={at={(axis description cs:1,0)},anchor=north},
+%	%	ylabel style={above left},
+%	xmin=0,
+%	xmax=1.1,
+%	ymin=0,
+%	ymax=3200,
+%	cycle list name=black white,
+%	]
+%	\addplot+ [domain=0:1,samples=11] {2590*15/(15+35* x)};
+%%	\addplot+ [domain=0:1,samples=11] {2590* (15/(15+35* 
+%%x))^1.5};
+%	\addplot+  coordinates {
+%		(0,2590)
+%		(0.1,1963)
+%		(0.2,758)
+%		(0.3,304)
+%		(0.4,177)
+%		(0.5,122)
+%		(0.6,92)
+%		(0.7,73)
+%		(0.8,66)
+%		(0.9,59)
+%		(1,56)		
+%	};
+%	\legend{\quad radical law, \quad our results}
+%	\end{axis}
+%	\end{tikzpicture}
+%	\caption{A comparison of the numbers of building between our 
+%results and 
+%		T\"opfer's radical law.}
+%	\label{fig:BuilidngNumber}
+%\end{figure}
 
 
 

@@ -46,7 +46,8 @@ namespace MorphingClass.CCorrepondObjects
         {
         }
 
-        public CCorrCphs(CPatch pCph1, CPatch pCph2, List<CEdge> pSharedCEdgeLt = null, double dblSharedSegLength = 0, int intShredEdgeCount = 0)
+        public CCorrCphs(CPatch pCph1, CPatch pCph2, List<CEdge> pSharedCEdgeLt = null, 
+            double fdblSharedSegLength = 0, int fintSharedCEdgeCount = 0)
         {
             this.GID = _intStaticGID++;
 
@@ -60,8 +61,13 @@ namespace MorphingClass.CCorrepondObjects
             }
             //this.SharedCEdgeLt = new List<CEdge>();
             //this.SharedCEdgeLt.AddRange(pSharedCEdgeLt);
-            this.dblSharedSegLength = dblSharedSegLength;
-            this.intSharedCEdgeCount = intSharedCEdgeCount;
+            this.dblSharedSegLength = fdblSharedSegLength;
+            this.intSharedCEdgeCount = fintSharedCEdgeCount;
+
+            //if (intSharedCEdgeCount == 0 || dblSharedSegLength == 0)
+            //{
+            //    throw new ArgumentException("this should not happen!");
+            //}
 
             if (pCph1.GID <= pCph2.GID)
             {
@@ -79,7 +85,8 @@ namespace MorphingClass.CCorrepondObjects
 
         //public int CompareTo(CCorrCphs other)
         //{
-        //    return CCmpMethods.CmpDual(this, other, corrcphs => corrcphs.FrCph.GID, corrcphs => corrcphs.ToCph.GID, CConstants.ComparerInt);
+        //    return CCmpMethods.CmpDual(this, other, corrcphs => 
+        //      corrcphs.FrCph.GID, corrcphs => corrcphs.ToCph.GID, CConstants.ComparerInt);
 
         //    //return CCmpMethods.Cmp(this.FrCph.CpgSS, ToCpgSS, cpg => cpg.GID);
         //}

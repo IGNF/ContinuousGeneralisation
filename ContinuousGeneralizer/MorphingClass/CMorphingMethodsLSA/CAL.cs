@@ -13,6 +13,7 @@ using MorphingClass.CEvaluationMethods;
 using MorphingClass.CUtility;
 using MorphingClass.CGeometry;
 using MorphingClass.CMorphingAlgorithms;
+using MorphingClass.CMorphingMethods.CMorphingMethodsBase;
 
 using VBClass;
 using CPlusClass;
@@ -24,13 +25,12 @@ namespace MorphingClass.CMorphingMethodsLSA
     /// 基于最小二乘原理的Morphing方法，以角度和边长为参数(Least Squares Alogrithm_Coordinate, Angle and Length)
     /// </summary>
     /// <remarks>顾及长度和角度，以坐标为平差参数进行平差，标准间接平差</remarks>
-    public class CAL
+    public class CAL : CMorphingBaseCpl
     {
         private CDataRecords _DataRecords;                    //数据记录
         private double _dblTX;
         
         
-        private CPAL _pCAL = new CPAL();
 
         private double _dblMaxLengthV;
         private double _dblMinLengthV;
@@ -49,10 +49,17 @@ namespace MorphingClass.CMorphingMethodsLSA
 
         }
 
-        public CAL(CDataRecords pDataRecords, double dblTX)
+        public CAL(CParameterInitialize ParameterInitialize, double dblTX)
         {
-            _DataRecords = pDataRecords;
             _dblTX = dblTX;
+
+            Construct<CPolyline, CPolyline>(ParameterInitialize, blnIGeoToCGeo: false);
+            
+            //this.FrCptLtLt = CHelpFunc.GetCptEbEbByIColEb(this.ObjIGeoLtLt[0]).ToLtLt();
+            //this.ToCptLtLt = CHelpFunc.GetCptEbEbByIColEb(this.ObjIGeoLtLt[1]).ToLtLt();
+
+            this.ObjIGeoLtLt = null;  //to save memory
+
             //CalParameters();
             //_dblMaxELength = pDataRecords.ParameterResult.FromCpl.GetMaxELength() / 100; 
         }
@@ -68,65 +75,65 @@ namespace MorphingClass.CMorphingMethodsLSA
 
         private void CalParameters()
         {
-            _DataRecords.ParameterInitialize.tsslMessage.Text = "Calculating Parameters......";
-            _DataRecords.ParameterInitialize.ststMain.Refresh();
+            //_DataRecords.ParameterInitialize.tsslMessage.Text = "Calculating Parameters......";
+            //_DataRecords.ParameterInitialize.ststMain.Refresh();
 
-            CPolyline cpl = GetTargetcpl(0.005, _DataRecords.ParameterResult.FromCpl);
+            //CPolyline cpl = GetTargetcpl(0.005, _DataRecords.ParameterResult.FromCpl);
 
-            double dblMaxLengthV = 0;
-            double dblMinLengthV = cpl.pPolyline.Length;
-            double dblMaxAngleV = 0;
-            double dblMinAngleV = Math.PI;
-            for (int j = 2; j < 200; j++)
-            {
-                cpl=GetTargetcpl(j*0.005,cpl);
+            //double dblMaxLengthV = 0;
+            //double dblMinLengthV = cpl.pPolyline.Length;
+            //double dblMaxAngleV = 0;
+            //double dblMinAngleV = Math.PI;
+            //for (int j = 2; j < 200; j++)
+            //{
+            //    cpl=GetTargetcpl(j*0.005,cpl);
 
-                for (int i = 0; i < cpl.SubCPlLt.Count; i++)
-                {
-                    if (cpl.SubCPlLt[i].dblLengthV == 0)  //如果是0，肯定是固定边引起的，不参与计算
-                    {
-                        continue;
-                    }
+            //    for (int i = 0; i < cpl.SubCPlLt.Count; i++)
+            //    {
+            //        if (cpl.SubCPlLt[i].dblLengthV == 0)  //如果是0，肯定是固定边引起的，不参与计算
+            //        {
+            //            continue;
+            //        }
 
-                    if (Math.Abs(cpl.SubCPlLt[i].dblLengthV) > dblMaxLengthV)
-                    {
-                        dblMaxLengthV = Math.Abs(cpl.SubCPlLt[i].dblLengthV);
-                    }
-                    if (Math.Abs(cpl.SubCPlLt[i].dblLengthV) < dblMinLengthV)
-                    {
-                        dblMinLengthV = Math.Abs(cpl.SubCPlLt[i].dblLengthV);
-                    }
-                }
+            //        if (Math.Abs(cpl.SubCPlLt[i].dblLengthV) > dblMaxLengthV)
+            //        {
+            //            dblMaxLengthV = Math.Abs(cpl.SubCPlLt[i].dblLengthV);
+            //        }
+            //        if (Math.Abs(cpl.SubCPlLt[i].dblLengthV) < dblMinLengthV)
+            //        {
+            //            dblMinLengthV = Math.Abs(cpl.SubCPlLt[i].dblLengthV);
+            //        }
+            //    }
 
-                for (int i = 1; i < cpl.CptLt.Count - 1; i++)
-                {
-                    if (cpl.CptLt[i].dblAngleV == 0)  //如果是0，肯定是固定角引起的，不参与计算
-                    {
-                        continue;
-                    }
+            //    for (int i = 1; i < cpl.CptLt.Count - 1; i++)
+            //    {
+            //        if (cpl.CptLt[i].dblAngleV == 0)  //如果是0，肯定是固定角引起的，不参与计算
+            //        {
+            //            continue;
+            //        }
 
-                    if (Math.Abs(cpl.CptLt[i].dblAngleV) > dblMaxAngleV)
-                    {
-                        dblMaxAngleV = Math.Abs(cpl.CptLt[i].dblAngleV);
-                    }
-                    if (Math.Abs(cpl.CptLt[i].dblAngleV) < dblMinAngleV)
-                    {
-                        dblMinAngleV = Math.Abs(cpl.CptLt[i].dblAngleV);
-                    }
-                }
-            }
+            //        if (Math.Abs(cpl.CptLt[i].dblAngleV) > dblMaxAngleV)
+            //        {
+            //            dblMaxAngleV = Math.Abs(cpl.CptLt[i].dblAngleV);
+            //        }
+            //        if (Math.Abs(cpl.CptLt[i].dblAngleV) < dblMinAngleV)
+            //        {
+            //            dblMinAngleV = Math.Abs(cpl.CptLt[i].dblAngleV);
+            //        }
+            //    }
+            //}
 
-            //double dblLengthInterval=(dblMaxLengthV-dblMinLengthV)/
-            _dblMaxLengthV = dblMaxLengthV;
-            _dblMinLengthV = dblMinLengthV;
-            _dblDiffLengthV = dblMaxLengthV - dblMinLengthV;
+            ////double dblLengthInterval=(dblMaxLengthV-dblMinLengthV)/
+            //_dblMaxLengthV = dblMaxLengthV;
+            //_dblMinLengthV = dblMinLengthV;
+            //_dblDiffLengthV = dblMaxLengthV - dblMinLengthV;
 
-            _dblMaxAngleV = dblMaxAngleV;
-            _dblMinAngleV = dblMinAngleV;
-            _dblDiffAngleV = dblMaxAngleV - dblMinAngleV;
+            //_dblMaxAngleV = dblMaxAngleV;
+            //_dblMinAngleV = dblMinAngleV;
+            //_dblDiffAngleV = dblMaxAngleV - dblMinAngleV;
 
-            _DataRecords.ParameterInitialize.tsslMessage.Text = "Ready!";
-            _DataRecords.ParameterInitialize.ststMain.Refresh();            
+            //_DataRecords.ParameterInitialize.tsslMessage.Text = "Ready!";
+            //_DataRecords.ParameterInitialize.ststMain.Refresh();            
         }
 
         /// <summary>
@@ -274,7 +281,7 @@ namespace MorphingClass.CMorphingMethodsLSA
         /// <returns>在处理面状要素时，本程序将原面状要素的边界切开，按线状要素处理，处理完后再重新生成面状要素</returns>
         public CPolyline GetTargetcpl(double dblProportion, CPolyline lastcpl)
         {
-            this.intIterationNum = Convert.ToInt32(_DataRecords.ParameterInitialize .txtIterationNum  .Text ); 
+            //this.intIterationNum = Convert.ToInt32(_DataRecords.ParameterInitialize .txtIterationNum  .Text ); 
 
             if (dblProportion == 0)
             {
@@ -455,8 +462,6 @@ namespace MorphingClass.CMorphingMethodsLSA
             {
                 weight[intUnknownLength + i] = 39.48;
             }
-
-
 
 
             double[] xout = new double[intPtNum];

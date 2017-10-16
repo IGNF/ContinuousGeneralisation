@@ -30,9 +30,20 @@ namespace MorphingClass.CUtility
             return intValue;
         }
 
+        /// <summary>
+        /// return the value consisting of first digit and zeros
+        /// </summary>
+        /// <param name="dblValue"></param>
+        /// <returns></returns>
         public static int GetNumberTidy(double dblValue)
         {
-            double dblAbs = Math.Abs(dblValue);
+            if (dblValue<1)
+            {
+                throw new ArgumentException("dblValue must be larger than or equal to 1");
+            }
+
+            //double dblAbs = Math.Abs(dblValue);
+            double dblAbs = dblValue;
             int intCount = 0;
             while (dblAbs >= 10)
             {
