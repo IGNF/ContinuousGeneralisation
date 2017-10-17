@@ -26,61 +26,86 @@ Delaunay triangulations and binary line generalized tree (BLG-tree)
 and simulated annealing \citep{Li2017_Annealing}.
 From a point to its corresponding point,
 a straight-line trajectory is often used to interpolate.
+\citet{Peng2013_LSA} defined trajectories based on least-square 
+adjustment in order to obtain more reasonable intermediate-scale 
+polylines.
 Using morphing, \citet{Peng2016_Admin} continuously generalized 
-administrative boundaries based on compatible triangulations. When the number 
-of line features is different in the start and goal maps, a continuous 
-selection is required and \citet{Chimani2014_Eat} proposed to generate a 
+administrative boundaries based on compatible triangulations. 
+When the numbers of line features are different 
+on the start and goal maps, 
+a continuous selection is required and 
+\citet{Chimani2014_Eat} proposed to generate a 
 selection sequence applicable for road network.
 They removed one road at each step while keeping the remaining roads connected.
 
-These methods are interesting but only work on lines and our problem of 
-building polygon interpolation cannot be achieved by similar morphings. 
-Regarding the continuous generalization of polygon map features,
-\citet{Danciger2009} proposed to grow polygons when a map was zoomed out. Their 
-method 
-preserves polygons' topology, area-ratios, and relative positions.  In the case 
-where the goal map is an aggregated version of start land-cover map, 
-\citet{Peng2017_AStar} computed optimal aggregation sequences for land-cover 
-areas.
+These methods are interesting but only work on lines and 
+our problem of building polygon interpolation 
+cannot be achieved by similar morphings. 
+Regarding the continuous generalization of polygon features,
+\citet{Danciger2009} proposed to grow polygons 
+when a map was zoomed out. 
+Their method preserves polygons' topology, area-ratios, and 
+relative positions.  
+In the case where the goal map is an aggregated version of 
+start land-cover map, 
+\citet{Peng2017_AStar} computed optimal aggregation sequences 
+for land-cover areas.
 
-Buildings are important elements on maps, many methods have been proposed to 
-generalize them but not necessarily in a continuous way.
-For example, \citet{haunertwolff2010} simplified a set of buildings 
-based an integer program.
-Their simplification minimizes the number of edges of all the buildings 
-and guarantees that the errors are smaller than a user-defined tolerance.
-At the same time, no topological conflict is introduced by the simplification.
-\citet{Buchin2011_Simp} simplified buildings based on an edge-move operation.
-One advantage is that their method preserves orientations of the edges.
+Buildings are important elements on maps, 
+many methods have been proposed to generalize them 
+but not necessarily in a continuous way.
+For example, \citet{haunertwolff2010} simplified a set of 
+buildings based an integer program.
+Their simplification minimizes the number of edges of 
+all the buildings and guarantees that 
+the errors are smaller than a user-defined tolerance.
+At the same time, no topological conflict 
+is introduced by the simplification.
+\citet{Buchin2011_Simp} simplified buildings based on 
+edge-move operations.
+Their method preserves orientations of edges.
 
 When users zoom out on digital maps, 
-buildings become smaller and the distances between buildings decrease. So 
-simplification is not the only necessary operation, and buildings can also be 
-aggregated to legible enough \cite{Weibel1997}. Several methods were proposed 
-to aggregate buildings while preserving the shape of buildings (right angles 
-remain) \cite{Regnauld2001}, \cite{RegnauldRevell07}, \cite{Damen2008}. These 
-algorithms can be used as inspirations to define a continuous transformation of 
-buildings.
+buildings become smaller and 
+the distances between buildings decrease. 
+So simplification is not the only necessary operation, 
+and buildings can also be 
+aggregated to legible enough \cite{Weibel1997}. 
+Several methods were proposed 
+to aggregate buildings while preserving their shape 
+(right angles remain) 
+\cite{Regnauld2001,RegnauldRevell07,Damen2008}. 
+These algorithms can be used as inspirations 
+to define a continuous transformation of buildings.
 
-Algorithms were also proposed to create built-up area polygons (that appear in 
-our goal map) from individual building polygons (that appear in our start map). 
-For instance, \citet{Chaudhry2008} identified the boundaries of urban 
-settlement by calculating `citiness' based on buildings. But the method cannot 
-be adapted to provide a continuous transformation from the buildings to the 
-built-up area.
+Algorithms were also proposed to create 
+built-up area polygons (that appear in our goal map) from 
+individual building polygons (that appear in our start map). 
+For instance, \citet{Chaudhry2008} identified the boundaries of 
+urban settlement by calculating `citiness' based on buildings. 
+But the method cannot be adapted 
+to provide a continuous transformation 
+from the buildings to the built-up area.
 
-Finally, some papers directly tackle the continuous transformation of buildings 
-when scale is reduced. \citet{Li2017_Building} morphed between two buildings at 
-different scales.
-They managed to preserve the orthogonal characteristics of buildings, but their 
-algorithm cannot be used in our case as the goal map does not contain buildings 
-anymore. \citet{Touya17b} proposed a progressive transformation of buildings 
-into a built-up area, where buildings are progressively replaced by the shape 
-of the block they belong to. However, this last algorithm is not continuous 
-enough, as each iteration directly transforms a set of buildings in a block 
-into a polygon that covers the whole block. So there is no existing solution 
-for the continuous generalization of building polygons into built-up area 
-polygons.
+Finally, some papers directly tackle 
+the continuous transformation of buildings 
+when scale is reduced. 
+\citet{Li2017_Building} morphed between two buildings 
+at different scales.
+They managed to preserve the orthogonal characteristics of 
+buildings, but their algorithm cannot be used in our case 
+as our goal map does not contain buildings anymore.
+\citet{Touya17b} proposed a progressive transformation of 
+buildings into a built-up area, 
+where buildings are progressively replaced 
+by the shape of the block they belong to. 
+However, this last algorithm is not continuous enough, 
+as each iteration directly transforms 
+a set of buildings in a block into a polygon 
+that covers the whole block. 
+So there is no existing solution 
+for the continuous generalization of building polygons 
+into built-up area polygons.
 
 
 Our contributions are as follows.
@@ -88,8 +113,8 @@ In \sect\ref{sec:Methodology},
 we continuously generalize a start map, of buildings, 
 to a smaller-scale goal map.
 The generalization consists of aggregating, growing, and simplifying.
-We aggregate original buildings which will be too close at an output scale 
-by adding bridges.
+We aggregate original buildings which will be too close 
+at an output scale by adding bridges.
 We grow (bridged) original buildings by buffering,
 where we use so-called \emph{miter} joins to keep the right angles of buildings.
 Because of using this kind of joins instead of \emph{round} ones,
@@ -357,7 +382,8 @@ then we have a graph.
 Using Prim's algorithm \citep{Prim1957}, 
 we find a minimum spanning tree (MST) in the graph,
 taking the lengths of the line segments as the weights.
-As a results, the line segments corresponding to the edges in the MST
+As a result, the line segments corresponding to the edges in the 
+MST
 are identified as bridges.
 We aggregate the group of original buildings by adding these bridges.
 
@@ -678,8 +704,8 @@ algorithm was chosen as a better fit.
 \subsection{Generating buildings on intermediate-scale maps}
 \label{sec:Unite}
 
-Both the erosion and line simplification may result in shrinking a 
-building.
+Both the erosion and line simplification may result in 
+shrinking a building.
 \fig\ref{fig:Shrink_Erosion} and \fig\ref{fig:Shrink_Simplification} show such 
 examples respectively.
 To avoid these kinds of shrinking,
@@ -791,14 +817,22 @@ a_{\mathrm{h},t}=a_\mathrm{h}\cdot M_t^2.
 \]
 
 \subsection{Running time}
-
-
-
-
-Although a version with a 
-lower running time exists \citep[see][]{Chan1992}, we 
-implemented the basic 
-version.
+Suppose that our input has $n$ edges in total.
+Operations like growing, dilation, erosion, merge, and clip 
+cost time $O(n^2)$ \citep{Greiner1998Clipping,Palfrader2015}.
+Although we iteratively aggregate (see \sect\ref{sec:Aggregate}),
+it is unlikely that we need to repeat the aggregation more than 
+twice.
+Therefore, let us say that the iterative aggregation does not
+take extra running time.
+Simplifying polygons using Imai--Iri algorithm needs time
+$O(n^3)$.
+The improved version of Imai--Iri algorithm by 
+\citet{Chan1996} does not help in our case
+because we have more constraints when simplifying
+(see \sect\ref{sec:ImaiIri}).
+As a result, the simplification dominates our running time,
+which is in $O(n^3)$.
 
 
 \section{Case Study}
@@ -813,7 +847,6 @@ are available from library \textsc{Clipper} of
 \citet{Vatti1992Clip}.
 The offsetting function is used for the buffering, dilation, 
 erosion, and merge operations.
-An evaluation of \textsc{Clipper} can be found in \citet{Palfrader2015}.
 We ran our case study under~64-bit 
 Windows~7 on a~$3.3\,$GHz dual core CPU with~$8\,$GB RAM.
 We measured processing time by the built-in C\# class 

@@ -83,18 +83,20 @@ We name the buildings on the start map \emph{original buildings}.
 For an intermediate scale, 
 we aggregate the original buildings that will become too close 
 by adding bridges.
-We grow (bridge) original buildings based on buffering, 
-and we also simplify the grown buildings.
+We grow (bridged) original buildings based on buffering, 
+and simplify the grown buildings.
 We take into account the shapes of the buildings 
 both at the previous map and goal map to make sure that 
 the buildings are always growing.
+The running time of our method is in $O(n^3)$,
+where $n$ is the number of edges of all the original buildings.
 %
 \newline\indent
 The advantages of our method are as follows. 
 First, the buildings grow continuously 
 and, at the same time, are simplified.
-Second, right angles of buildings are preserved during growing: the merged 
-buildings still look like buildings. 
+Second, right angles of buildings are preserved during growing: 
+the merged buildings still look like buildings. 
 Third, the distances between buildings are 
 always larger than a specified threshold.
 We do a case study to show the performances of our method.
