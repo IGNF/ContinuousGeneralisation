@@ -535,18 +535,18 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
 
 
 
-            CSaveFeature.SavePathEbAsCpgEb(CHelpFunc.MakeLt(Cpg.ExteriorPath),
-                 "originalpaths" ,
-                pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
-            CSaveFeature.SavePathEbAsCpgEb(overdilationPaths,
-                 "overdilationPaths" + (dblGrow + dblDilation) / CConstants.dblFclipper + "m",
-                pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
-            CSaveFeature.SavePathEbAsCpgEb(erosionpaths,
-                 "erosionpaths" + (dblGrow - dblErosion) / CConstants.dblFclipper + "m",
-                pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
-            CSaveFeature.SavePolyTreeAsCpgEb(normalPolyTree,
-                 "normalPolyTree" + dblGrow  / CConstants.dblFclipper + "m",
-                pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
+            //CSaveFeature.SavePathEbAsCpgEb(CHelpFunc.MakeLt(Cpg.ExteriorPath),
+            //     "originalpaths" ,
+            //    pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
+            //CSaveFeature.SavePathEbAsCpgEb(overdilationPaths,
+            //     "overdilationPaths" + (dblGrow + dblDilation) / CConstants.dblFclipper + "m",
+            //    pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
+            //CSaveFeature.SavePathEbAsCpgEb(erosionpaths,
+            //     "erosionpaths" + (dblGrow - dblErosion) / CConstants.dblFclipper + "m",
+            //    pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
+            //CSaveFeature.SavePolyTreeAsCpgEb(normalPolyTree,
+            //     "normalPolyTree" + dblGrow  / CConstants.dblFclipper + "m",
+            //    pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
 
 
             return normalPolyTree;
