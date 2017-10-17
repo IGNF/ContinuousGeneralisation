@@ -1,5 +1,6 @@
 \documentclass[
 sigconf,
+screen, %hyperlinks are colored
 %authorversion,
 %authordraft %Whether author’s draft mode is enabled
 ]{acmart}
@@ -32,34 +33,8 @@ sigconf,
 \newcommand{\eqs}{Equations~}
 \newcommand{\sects}{Sections~}
 \newcommand{\tabs}{Tables~}
-\newcommand{\dtrm}[2][]{d_{\mathrm{#2}, t\ifthenelse{\equal{#1}{}}{}{_#1}}}
-
-% Copyright
-%\setcopyright{none}
-%\setcopyright{acmcopyright}
-%\setcopyright{acmlicensed}
-\setcopyright{rightsretained}
-%\setcopyright{usgov}
-%\setcopyright{usgovmixed}
-%\setcopyright{cagov}
-%\setcopyright{cagovmixed}
-
-
-% DOI
-%\acmDOI{10.475/123_4}
-
-% ISBN
-%\acmISBN{123-4567-24-567/08/06}
-
-%Conference
-\acmConference[UrbanGIS'17]{International Workshop on Smart Cities and Urban 
-Analytics}{November 2017}{Redondo Beach, California USA} 
-\acmYear{2017}
-\copyrightyear{2017}
-
-%\acmPrice{15.00}
-
-%\acmSubmissionID{123-A12-B3}
+\newcommand{\dtrm}[2][]{d_{\mathrm{#2}, 
+t\ifthenelse{\equal{#1}{}}{}{_#1}}}
 
 \begin{document}
 \title{Continuously Generalizing Buildings to Built-up Areas\\ 
@@ -141,6 +116,21 @@ We do a case study to show the performances of our method.
 \end{CCSXML}
 
 \ccsdesc[500]{Applied computing~Cartography}
+
+\copyrightyear{2017}
+\acmYear{2017}
+\setcopyright{othergov}
+\acmConference[UrbanGIS'17]{UrbanGIS'17:3rd ACM SIGSPATIAL 
+	Workshop on Smart Cities and Urban Analytics }{November 
+	7--10, 
+	2017}{Redondo Beach, CA, USA}
+\acmBooktitle{UrbanGIS'17: UrbanGIS'17:3rd ACM SIGSPATIAL 
+	Workshop on Smart Cities and Urban Analytics , November 
+	7--10, 
+	2017, Redondo Beach, CA, USA}
+\acmPrice{15.00}
+\acmDOI{10.1145/3152178.3152188}
+\acmISBN{978-1-4503-5495-0/17/11}
 
 
 \keywords{multiple representation, zooming, simplification, buffer}
