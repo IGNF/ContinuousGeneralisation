@@ -20,7 +20,7 @@ while the start map is morphed to the goal map.
 In order to morph, correspondences between two maps need to be defined.
 For example, corresponding points between a pair of polylines have been 
 investigated based on 
-dynamic programming \citep{mnwb-mpstc-08}, 
+dynamic programming \citep{Noellenburg2008}, 
 Delaunay triangulations and binary line generalized tree (BLG-tree)  
 \citep{Deng2015},
 and simulated annealing \citep{Li2017_Annealing}.
@@ -329,14 +329,14 @@ The real separation threshold at time $t$ is
 d_{\epsilon, t} = \epsilon \cdot M_t.
 \end{equation}
 
-\begin{figure*}[tb]
+\begin{figure}[tb]
 	\centering
-	\includegraphics[draft=false]{GrowAndBridge}
+	\includegraphics[]{GrowAndBridge}
 	\caption{Aggregating original buildings in the same group by adding 
 		bridges.
 		Then grow the bridged buildings.}
 	\label{fig:GrowAndBridge}
-\end{figure*}
+\end{figure}
 
 Our way of detecting close buildings is simple.
 We buffer buildings with distance $d_{\epsilon, t}/2$ using round joins
@@ -412,7 +412,8 @@ which has separation distance less than $d_{\epsilon, t}$.
 \end{figure}
 
 
-%At any time $t$, some of the bridges are picked to aggregate buildings 
+%At any time $t$, some of the bridges are picked to aggregate 
+%buildings 
 %which grow to become too close.
 %The buildings and the bridges already comprise some MSTs.
 
@@ -433,10 +434,12 @@ which has separation distance less than $d_{\epsilon, t}$.
 %The basic idea is that 
 %we buffer the original buildings with distance $\dtrm{G}$
 %and an additional distance $d_{\epsilon, t}/2$
-%(the distance between two buildings should be at least $d_{\epsilon, t}$).
+%(the distance between two buildings should be at least 
+%$d_{\epsilon, t}$).
 %If two buffers overlap, 
 %then the original buildings are put in the same group.
-%However, as some parts of a building grow faster than other parts, 
+%However, as some parts of a building grow faster than other 
+%parts, 
 %this basic idea may cause problems.
 %An example is shown in \fig\ref{fig:CloseDetect}c and~d.
 %In \fig\ref{fig:CloseDetect}d, 
@@ -461,7 +464,8 @@ which has separation distance less than $d_{\epsilon, t}$.
 %their separation distance is less than 
 %$2(\alpha -1) \dtrm{G}+d_{\epsilon, t}$.
 %The advantage is that we guarantee that 
-%any two buildings have separate distance less than $d_{\epsilon, t}$ will be 
+%any two buildings have separate distance less than 
+%$d_{\epsilon, t}$ will be 
 %aggregated via bridges.
 %
 %\begin{figure}[tb]
@@ -485,8 +489,8 @@ So, the aggregated and grown buildings are simplified using Imai--Iri algorithm
 \citep{ImaiIri1988}.
 First, this algorithm finds all the valid shortcuts of a polyline.
 A shortcut is valid for a segment 
-if the distance between the segment and the shortcut is at most a specified 
-value
+if the distance between the segment and the shortcut 
+is at most a specified value
 (see \fig\ref{fig:ImaiIri_Shortcut}).
 We set the value also as $l$.
 That is, at time $t$, the threshold distance is
@@ -766,7 +770,7 @@ and remove the outside parts.
 Following the previous steps of continuous generalization may result in the 
 creation of small isolated building aggregates that do not belong to the goal 
 map polygon because of their isolation.
-That is why we eliminate a building aggregate if the area of this building is 
+That is why we eliminate a building aggregate if its area is 
 smaller than a threshold.
 Following \citet{Stoter2009} and \citet{Chaudhry2008}, 
 we set this threshold as $a=0.16\,\mathrm{mm}^2$ on map.
@@ -786,10 +790,15 @@ The real area threshold for a hole at time $t$ is
 a_{\mathrm{h},t}=a_\mathrm{h}\cdot M_t^2.
 \]
 
-%\subsection{Running time analysis}
-%Although a version with a 
-%lower running time exists \citep[see][]{Chan1992}, we implemented the basic 
-%version.
+\subsection{Running time}
+
+
+
+
+Although a version with a 
+lower running time exists \citep[see][]{Chan1992}, we 
+implemented the basic 
+version.
 
 
 \section{Case Study}
@@ -799,29 +808,33 @@ C\# (Microsoft Visual Studio 2015) and ArcObjects SDK 10.4.1.
 The code is available in open source on 
 Github\footnote{\url{https://github.com/IGNF/Continuous-Generalisation}}.
 The offsetting function and clipping function 
-are available from library \textsc{Clipper} of \citet{Johnson2014}.
+are available from library \textsc{Clipper} of 
+\citet{Johnson2014}, which is based on the clipping algorithm of
+\citet{Vatti1992Clip}.
 The offsetting function is used for the buffering, dilation, 
 erosion, and merge operations.
 An evaluation of \textsc{Clipper} can be found in \citet{Palfrader2015}.
-We ran our case study under 64-bit 
-Windows 7 on a 3.3 GHz dual core CPU with 8 GB RAM.
+We ran our case study under~64-bit 
+Windows~7 on a~$3.3\,$GHz dual core CPU with~$8\,$GB RAM.
 We measured processing time by the built-in C\# class 
 \emph{Stopwatch}.
 Our testing data is extracted from a dataset produced 
 by the French Mapping Agency (IGN);
 see \fig\ref{fig:Data}.
-The data is at scale $1:15{,}000$, which means $M_\mathrm{s}=15{,}000$.
+The data is at scal~$1:15{,}000$, 
+which means~$M_\mathrm{s}=15{,}000$.
 It represents the buildings of four towns, 
 i.e., Aussevielle, Denguin,  Poey-de-Lescar, and Siros, 
 in the Pyr\'en\'ees-Atlantiques county, south-western France.
-IGN also stores a dataset at scale $1:50{,}000$.
-This dataset was basically obtained from the data at scale $1:15{,}000$ 
-by buffering with distance $25\,\mathrm{m}$,
-where sometimes distance $50\,\mathrm{m}$ was also used
+IGN also stores a dataset at scale~$1:50{,}000$.
+This dataset was basically obtained 
+from the data at scale~$1:15{,}000$ 
+by buffering with distance~$25\,\mathrm{m}$,
+where sometimes distance~$50\,\mathrm{m}$ was also used
 in order to identify towns.
 A restriction for the town from \citet{Boffet2000} is that 
 the longest edge in an MST of the buildings 
-should be shorter than $100\,\mathrm{m}$.
+should be shorter than~$100\,\mathrm{m}$.
 
 \begin{figure}[tb]
 	\centering
@@ -833,63 +846,93 @@ should be shorter than $100\,\mathrm{m}$.
 	\label{fig:Data}
 \end{figure}
 
-We set our goal scale at $1:50{,}000$, which means $M_\mathrm{g}=50{,}000$,
-and $d_\mathrm{G}=25\,\mathrm{m}$
+We set our goal scale at~$1:50{,}000$, 
+which means~$M_\mathrm{g}=50{,}000$,
+and~$d_\mathrm{G}=25\,\mathrm{m}$
 so that we can compare our result with the exiting data.
 Also, this setting makes \eq\ref{eq:S_g} hold, 
-where $l=0.3\,\mathrm{mm}$.
+where~$l=0.3\,\mathrm{mm}$.
 In \eq\ref{eq:d_Dt}, the first part is always smaller than the second part 
 according to our settings.
-As a result $\dtrm{D}=t\cdot 35\,\mathrm{m}$, 
-where $\dtrm{E}=t\cdot 7.5\,\mathrm{m}$ 
+As a result~$\dtrm{D}=t\cdot 35\,\mathrm{m}$, 
+where~$\dtrm{E}=t\cdot 7.5\,\mathrm{m}$ 
 according to \eq\ref{eq:d_Et} and $\alpha=1.5$.
 
-Our program took $93.6\,\mathrm{s}$ 
+Our program took~$93.6\,\mathrm{s}$ 
 to compute the goal shapes of the built-up areas.
-\fig\ref{fig:GoalShape} shows the bridged buildings and the goal shapes.
-The $56$ built-up areas have $2{,}095$ edges before line simplification.
-Using the Imai--Iri algorithm, we have $1{,}102$ edges left.
-In comparison, there are $1{,}597$ edges left when we simplified using
+\fig\ref{fig:ExperimentalComparison} shows the bridged buildings 
+and the goal shapes.
+The~$56$ built-up areas have~$2{,}095$ edges before line 
+simplification.
+Using the Imai--Iri algorithm, we have~$1{,}102$ edges left.
+In comparison, there are~$1{,}597$ edges left when we simplified 
+using
 the Douglas--Peucker algorithm.
+
+%\begin{figure*}[tb]
+%	\centering
+%	\includegraphics{GoalShape}
+%	\caption{Bridged original buildings 
+%		and goal shapes of the built-up areas (without removing 
+%small holes), 
+%		at scale~$1:50{,}000$.
+%		There are~$56$ built-up areas, which have~$1{,}102$ 
+%		edges in total.
+%		We show a sequence of maps in 
+%\fig\ref{fig:ContinuousGeneralization} 
+%		for the region marked by the dashed circle.
+%	}
+%	\label{fig:GoalShape}
+%\end{figure*}
 
 \begin{figure*}[tb]
 	\centering
-	\includegraphics{GoalShape}
-	\caption{Bridged original buildings 
-		and goal shapes of the built-up areas (without removing small holes), 
-		at scale $1:50{,}000$.
-		There are $56$ built-up areas, which have $1{,}102$ edges in total.
-		We show a sequence of maps in \fig\ref{fig:ContinuousGeneralization} 
+	\includegraphics{ExperimentalComparison}
+	\caption{Bridged original buildings,
+		goal shapes at scale~$1:50{,}000$ (darker polygons), 
+		and the built-up areas at scale~$1:50{,}000$ 
+		from IGN (transparent polygons).
+		Some built-up areas from IGN are split 
+		because of streets' crossing.
+		There are~$56$ goal shapes, which have~$1{,}135$ 
+		edges in total.
+		We show a sequence of maps in 
+		\fig\ref{fig:ContinuousGeneralization} 
 		for the region marked by the dashed circle.
 	}
-	\label{fig:GoalShape}
+	\label{fig:ExperimentalComparison}
 \end{figure*}
 
 
-We produced a sequence of $10$ maps, i.e., $t \in \{0.1, 0.2, \dots, 1\}$.
-This production costs $668.2\,\mathrm{s}$ in total.
+We produced a sequence of~$10$ maps,
+i.e.,~$t \in \{0.1, 0.2, \dots, 1\}$.
+This production costs~$668.2\,\mathrm{s}$ in total.
 We show such a sequence of maps in \fig\ref{fig:ContinuousGeneralization} for 
-the marked region in \fig\ref{fig:GoalShape}.
+the marked region in \fig\ref{fig:ExperimentalComparison}.
 We counted the numbers of buildings in our results,
 and compared our numbers to the numbers calculated by T\"opfer's radical law
-(see \fig\ref{fig:BuilidngNumber}).
+(see \fig\ref{fig:NumberOfBuildings}).
 We have unexaggerated-area symbols, 
-so for \eq2 of \citet{Topfer1966} we used $C_\mathrm{b2}$ and $C_\mathrm{z3}$.
+so for \eq2 of \citet{Topfer1966} 
+we used~$C_\mathrm{b2}$ and~$C_\mathrm{z3}$.
 As a result, we computed the numbers according to
 \[
 n_t=n_\mathrm{s}\frac{M_\mathrm{s}}{M_t},
 \]
-where $n_s=2{,}590$ is the number of buildings on start map
-and $n_t$ is the number of buildings on a map at scale $1:M_t$.
-According to \fig\ref{fig:BuilidngNumber}, our numbers decrease faster than 
+where~$n_s=2{,}590$ is the number of buildings on start map
+and~$n_t$ is the number of buildings on a map at scale~$1:M_t$.
+According to \fig\ref{fig:NumberOfBuildings}, 
+our numbers decrease faster than 
 the numbers from the radical law.
 It seems that our result supports the fractal law proposed by \citet{Jiang2015}.
 
 \begin{figure*}[tb]
 	\centering
 	\includegraphics{ContinuousGeneralization}
-	\caption{A sequence of maps at time $t \in \{0, 0.1, 0.2, \dots, 1\}$
-		for the region marked in \fig\ref{fig:GoalShape}.
+	\caption{A sequence of maps at time~$t \in \{0, 0.1, 0.2, 
+	\dots, 1\}$
+		for the region marked in 
+		\fig\ref{fig:ExperimentalComparison}.
 	}
 	\label{fig:ContinuousGeneralization}
 \end{figure*}
@@ -897,61 +940,20 @@ It seems that our result supports the fractal law proposed by \citet{Jiang2015}.
 \begin{figure}[tb]
 	\centering
 	\includegraphics{NumberOfBuildings}
-%	\begin{tikzpicture}[]
-%	\begin{axis}[
-%	height=5cm,
-%	width= \linewidth-0.1cm,
-%	axis lines = left,
-%	%	axis x line=center,
-%	%	axis y line=left,
-%	xtick={0.1,0.2,...,1},
-%	ytick={500,1000,...,3000},
-%	xlabel={$t$},
-%	ylabel={number of buildings},
-%	xlabel style={below right},
-%	%	ylabel style={at={(axis description 
-%%cs:0,1.1)},rotate=270,anchor=north},
-%	xlabel style={at={(axis description cs:1,0)},anchor=north},
-%	%	ylabel style={above left},
-%	xmin=0,
-%	xmax=1.1,
-%	ymin=0,
-%	ymax=3200,
-%	cycle list name=black white,
-%	]
-%	\addplot+ [domain=0:1,samples=11] {2590*15/(15+35* x)};
-%%	\addplot+ [domain=0:1,samples=11] {2590* (15/(15+35* 
-%%x))^1.5};
-%	\addplot+  coordinates {
-%		(0,2590)
-%		(0.1,1963)
-%		(0.2,758)
-%		(0.3,304)
-%		(0.4,177)
-%		(0.5,122)
-%		(0.6,92)
-%		(0.7,73)
-%		(0.8,66)
-%		(0.9,59)
-%		(1,56)		
-%	};
-%	\legend{\quad radical law, \quad our results}
-%	\end{axis}
-%	\end{tikzpicture}
 	\caption{A comparison of the numbers of building between our 
 results and 
 		T\"opfer's radical law.}
-	\label{fig:BuilidngNumber}
+	\label{fig:NumberOfBuildings}
 \end{figure}
 
 
 
 \fig\ref{fig:ExperimentalComparison} shows a comparison of 
 our result at time $t=1$
-and the data at scale $1:50{,}000$.
+and the data at scale~$1:50{,}000$.
 No small building is removed in our result or the existing data.
 The boundaries of our built-up areas are more straight than that of IGN data, 
-where we have $1{,}135$ edges while the data has $4{,}968$ edges.
+where we have~$1{,}135$ edges while the data has~$4{,}968$ edges.
 From this perspective, we would say that our result is 
 more reasonable than the existing data.
 A questionnaire, however, is needed to make a more convincing comparison.
@@ -960,19 +962,21 @@ A questionnaire, however, is needed to make a more convincing comparison.
 
 
 
-\begin{figure*}[tb]
-	\centering
-	\includegraphics{ExperimentalComparison}
-	\caption{A comparison of our result and the existing data at scale 
-		$1:50{,}000$.
-		The brighter gray polygons represent the original buildings.
-		The darker gray polygons are our result at time $t=1$.
-		The gray polylines represent the data of the built-up areas at scale 
-		$1:50{,}000$ from IGN, where some built-up areas are split because some 
-		streets cross these areas.
-	}
-	\label{fig:ExperimentalComparison}
-\end{figure*}
+%\begin{figure*}[tb]
+%	\centering
+%	\includegraphics{ExperimentalComparison}
+%	\caption{A comparison of our result and 
+%		the existing data at scale~$1:50{,}000$.
+%		The brighter gray polygons represent the original 
+%buildings.
+%		The darker gray polygons are our result at time~$t=1$.
+%		The gray polylines represent the data of the built-up 
+%		areas at scale~$1:50{,}000$ from IGN, 
+%		where some built-up areas are split 
+%		because some streets cross these areas.
+%	}
+%	\label{fig:ExperimentalComparison}
+%\end{figure*}
 
 
 %Although a version with a 
@@ -987,7 +991,7 @@ We proposed a method to continuously generalize buildings to built-up areas
 by aggregating and growing.
 We managed to produce a sequence of maps 
 in which the buildings are always growing and, at the same time, are simplified.
-For the goal map at scale $1:50{,}000$,
+For the goal map at scale~$1:50{,}000$,
 the shapes of our built-up areas are more reasonable than the data from IGN.
 
 It is always interesting to know what is the quantity we should keep on a map.
