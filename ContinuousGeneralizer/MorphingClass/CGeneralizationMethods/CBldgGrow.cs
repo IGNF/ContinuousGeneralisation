@@ -371,7 +371,7 @@ namespace MorphingClass.CGeneralizationMethods
             double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "Miter",
             double dblMiterLimit = 2)
         {            
-            var CloseCpipeDt = _CloseCpipeDt;
+            var CloseCpipeDt = _CloseCpipeDt; //links between every pair of close buildings, not only the bridges in MST
             if (blnGoalMap == true) //when we want to generate built-up areas at goal map, BridgeCpipeDt == null
             {
                 double dblCloseDis = 3 * dblGrow + Math.Sqrt(5) / 2 * dblEpsilon + dblDilation;
@@ -379,7 +379,7 @@ namespace MorphingClass.CGeneralizationMethods
                 _CloseCpipeDt = CloseCpipeDt;
             }
 
-
+            //Initialize groups of buildings; each group contains one building
             var groupedcpgCptEdgeDisltlt = new List<CValPair<List<CPolygon>, List<CptEdgeDis>>>(cpglt.Count);
             foreach (var cpg in cpglt)
             {
@@ -406,6 +406,7 @@ namespace MorphingClass.CGeneralizationMethods
                             for (int j = i + 1; j < GroupedCpgLt.Count; j++)
                             {
                                 CptEdgeDis outCptEdgeDis;
+                                //CloseCpipeDt: links between every pair of close buildings, not only the bridges in MST
                                 if (CloseCpipeDt.TryGetValue(new CValPairIncr<CPolygon>(GroupedCpgLt[i], GroupedCpgLt[j]),
                                     out outCptEdgeDis))
                                 {
@@ -657,8 +658,8 @@ namespace MorphingClass.CGeneralizationMethods
             }
 
 
-            //CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(AllCEdgeLt, 1 / CConstants.dblFclipper),
-            //    "TestEdgeLt" + CHelpFunc.GetTimeStampWithPrefix());
+            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(AllCEdgeLt, 1 / CConstants.dblFclipper),
+                "MergedToConstructDCEL", blnVisible: false);
 
 
             CDCEL pDCEL = new CGeometry.CDCEL(AllCEdgeLt);
@@ -928,7 +929,7 @@ namespace MorphingClass.CGeneralizationMethods
             else
             {
                 //var SubCpgLt = mergedcpg.SubCpgLt;
-                var submergedcpglt = MergeCloseCpgsAndAddBridges(mergedcpg.SubCpgLt, false, 
+                var submergedcpglt = MergeCloseCpgsAndAddBridges(mergedcpg.SubCpgLt, false,  //---Merge---//
                     dblCurrentGrow, dblCurrentDilation, dblCurrentEpsilon);
                 //var BridgeCpipeDt = mergedcpg.BridgeCpipeDt;
                 foreach (var submergedcpg in submergedcpglt)
@@ -939,9 +940,9 @@ namespace MorphingClass.CGeneralizationMethods
                 }
             }
 
-            //CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(
-            //    clipperMethods.ConvertPathsToCEdgeEb(LastAndClippedPath, true), 1 / CConstants.dblFclipper),
-            //    "LastAndClippedPath" + CHelpFunc.GetTimeStampWithPrefix());
+            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(
+                clipperMethods.ConvertPathsToCEdgeEb(LastAndClippedPath, true), 1 / CConstants.dblFclipper),
+                "GrownPathsWithoutMergeOrClip", blnVisible: false);
 
             LastAndClippedPath.AddRange(mergedcpg.LastTimePaths);
             var unitedPaths = clipperMethods.Clip_Paths(LastAndClippedPath, true, mergedcpg.LastTimePaths, true, ClipType.ctUnion);
@@ -952,6 +953,10 @@ namespace MorphingClass.CGeneralizationMethods
 
             mergedcpg.LastTimePaths = Clipper.PolyTreeToPaths(clippedPolyTree);
             var GrownAndClippedCpg = clipperMethods.GenerateCpgEbByPolyTree(clippedPolyTree, mergedcpg.ID, true);
+
+            CSaveFeature.SavePolyTreeAsCpgEb(clippedPolyTree, "GrownMergeClipPolyTree",
+                pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
+
             return GrownAndClippedCpg;
         }
 

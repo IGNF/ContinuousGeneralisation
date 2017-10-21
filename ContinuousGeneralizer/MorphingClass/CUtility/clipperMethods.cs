@@ -376,6 +376,8 @@ double dblGrow, double dblDilation, double dblEpsilon, string strBufferStyle = "
             var finalPolyTree = Offset_PolyTree(allbackpaths, dblDisOverlap, "Round");
             var groupedcpgltlt = GroupCpgsByOverlap(cpglt, finalPolyTree);
 
+            CSaveFeature.SavePolyTreeAsCpgEb(finalPolyTree, "PolyTreeForGrouping",
+                pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
 
 
 

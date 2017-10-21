@@ -357,11 +357,11 @@ we aggregate them by adding bridges
 (see for example \fig\ref{fig:GrowAndBridge}).
 Following \citet{Stoter2009}, 
 we define that two buildings are too close if their distance is less than
-$\epsilon= 0.2\,\mathrm{mm}$ on map.
+$\varepsilon= 0.2\,\mathrm{mm}$ on map.
 The real separation threshold at time $t$ is
 \begin{equation}
 \label{eq:d_epsilont}
-d_{\epsilon, t} = \epsilon \cdot M_t.
+d_{\varepsilon, t} = \varepsilon \cdot M_t.
 \end{equation}
 
 \begin{figure}[tb]
@@ -374,28 +374,28 @@ d_{\epsilon, t} = \epsilon \cdot M_t.
 \end{figure}
 
 Our way of detecting close buildings is simple.
-We buffer buildings with distance $d_{\epsilon, t}/2$ using round joins
+We buffer buildings with distance $d_{\varepsilon, t}/2$ using 
+round joins
 (see \fig\ref{fig:Buffer_ThreeKinds}b).
 We merge the buffers that overlap each other.
-The buildings intersect the same merged buffer 
+The original buildings intersecting the same merged buffer 
 are identified as a group of close buildings.
-The corresponding original buildings 
-are identified as a group of original close buildings.
 For each pair of the original buildings in the same group,
 we connect them by adding a line segment linking the nearest points.
-The line segments for a group of original buildings may cross each other or 
+The line segments may cross each other or 
 even intersect buildings.
 To make the topology simple, 
 we only select some of the line segments as \emph{bridges}.  
-We consider each building as a node and each line segment as an edge, 
+We consider each building as a node and 
+each line segment as an edge, 
 then we have a graph.
 Using Prim's algorithm \citep{Prim1957}, 
 we find a minimum spanning tree (MST) in the graph,
 taking the lengths of the line segments as the weights.
-As a result, the line segments corresponding to the edges in the 
-MST
-are identified as bridges.
-We aggregate the group of original buildings by adding these bridges.
+As a result, the line segments corresponding to the edges 
+in the MST are identified as bridges.
+We aggregate the group of original buildings 
+by adding these bridges.
 
 Aggregated buildings may become too close because of the additional bridges.
 Therefore we have to iterate the aggregation process.
@@ -424,7 +424,7 @@ This setting guarantees that no bridge is thin when $t=1$.
 As we aggregated all buildings that will be too close, 
 we are able to guarantee that 
 there is no pair of buildings 
-which has separation distance less than $d_{\epsilon, t}$.
+which has separation distance less than $d_{\varepsilon, t}$.
 
 \begin{figure}[tb]
 	\centering
@@ -432,17 +432,18 @@ which has separation distance less than $d_{\epsilon, t}$.
 	\caption{Iteratively aggregating close buildings by adding bridges.
 		(a) Original buildings $p$, $q$, and~$r$.
 		(b) Growing the original buildings with distance $\dtrm{G}$.
-		(c) Buffering the grown buildings with distance $d_{\epsilon,t}/2$ 
+		(c) Buffering the grown buildings with distance 
+		$d_{\varepsilon,t}/2$ 
 		using round joins.
 		(d) Aggregating buildings $q$ and~$r$ by adding a bridge,
 		as their buffer overlap each other in (c).
 		(e) Growing the buildings in (d) with distance $\dtrm{G}$.
 		(f) Buffering the grown buildings in (e) with distance 
-		$d_{\epsilon,t}/2$ using round joins.
+		$d_{\varepsilon,t}/2$ using round joins.
 		(g) Aggregating buildings $p$, $q$ and~$r$ by adding bridges.
 		(h) Growing the buildings in (g) with distance $\dtrm{G}$.
 		(i) Buffering the grown buildings in (h) with distance 
-		$d_{\epsilon,t}/2$ using round joins.
+		$d_{\varepsilon,t}/2$ using round joins.
 	}
 	\label{fig:BridgeMoreBuilding}
 \end{figure}
@@ -458,20 +459,21 @@ which has separation distance less than $d_{\epsilon, t}$.
 %
 %Original buildings grow according to time $t$.
 %We put the original buildings in the same group if 
-%they grow so that their distance is less than $d_{\epsilon, t}$.
+%they grow so that their distance is less than $d_{\varepsilon, 
+%t}$.
 %Following \citet{Stoter2009}, 
-%we set the threshold $\epsilon= 0.2\,\mathrm{mm}$ on map. 
+%we set the threshold $\varepsilon= 0.2\,\mathrm{mm}$ on map. 
 %The real separation threshold at time $t$ is
 %\begin{equation}
 %\label{eq:d_epsilont2}
-%d_{\epsilon, t} = \epsilon \cdot M_t.
+%d_{\varepsilon, t} = \varepsilon \cdot M_t.
 %\end{equation}
 %We group buildings based on buffering.
 %The basic idea is that 
 %we buffer the original buildings with distance $\dtrm{G}$
-%and an additional distance $d_{\epsilon, t}/2$
+%and an additional distance $d_{\varepsilon, t}/2$
 %(the distance between two buildings should be at least 
-%$d_{\epsilon, t}$).
+%$d_{\varepsilon, t}$).
 %If two buffers overlap, 
 %then the original buildings are put in the same group.
 %However, as some parts of a building grow faster than other 
@@ -490,7 +492,7 @@ which has separation distance less than $d_{\epsilon, t}$.
 %we are not able to aggregate buildings $p$ and $q$. 
 %To avoid this situation, 
 %we buffer original buildings with distance
-%$\alpha \dtrm{G}+d_{\epsilon, t}/2$ using round joins.
+%$\alpha \dtrm{G}+d_{\varepsilon, t}/2$ using round joins.
 %This buffering guarantees 
 %that every part of a building grows with the same speed.
 %If the buffers of two buildings overlap each other,
@@ -498,10 +500,10 @@ which has separation distance less than $d_{\epsilon, t}$.
 %Using this buffering, in most of cases 
 %two buildings are aggregated as soon as 
 %their separation distance is less than 
-%$2(\alpha -1) \dtrm{G}+d_{\epsilon, t}$.
+%$2(\alpha -1) \dtrm{G}+d_{\varepsilon, t}$.
 %The advantage is that we guarantee that 
 %any two buildings have separate distance less than 
-%$d_{\epsilon, t}$ will be 
+%$d_{\varepsilon, t}$ will be 
 %aggregated via bridges.
 %
 
@@ -596,40 +598,8 @@ The merged result is shown in \fig\ref{fig:Shrink_Uniting}a.
 Similarly, \fig\ref{fig:Shrink_Uniting}b shows the merged result of buildings 
 in \fig\ref{fig:Shrink_Simplification}c 
 and~\fig\ref{fig:Shrink_Simplification}h.
-
-This merge can also avoid bridge's disappearing.
-Recall that we always add a bridge linking the nearest points of 
-two buildings in order to aggregate.
-It can happen that 
-the pair of nearest points change during growing.
-\fig\ref{fig:NearestPoints} shows such an example.
-For this example, at the beginning a bridge will added 
-to link the pair of points marked by the squares. 
-Later at some point, a bridge will be added 
-to link the two points marked by the circles, 
-while the first bridge will disappear.
-This disappearing annoys users.
-Fortunately, the merge operation makes the first bridge stay.
-
-\begin{figure}[tb]
-	\centering
-	\includegraphics[]{NearestPoints}
-	\caption{The nearest points between a pair of buildings	
-		change because of growing. 
-		The two squares and the two circles respectively mark
-		the nearest points before and after growing.
-	}
-	\label{fig:NearestPoints}
-\end{figure}
-
-Added to this shrinking problem, 
-a building aggregate on an intermediate map should never exceed
-the goal shape of the aggregated building. 
-Otherwise, the building will need to be shrunk 
-to ensure continuity with the goal built-up polygon.
-To guarantee this consistency, 
-we clip the building using the goal shape 
-and remove the outside parts.
+This merge also avoids bridges' shrinking.
+\fig\ref{fig:BridgeDisappearing} shows such an example.
 
 \begin{figure}[tb]
 	\centering
@@ -637,12 +607,15 @@ and remove the outside parts.
 	\caption{A building shrinks because of dilation and erosion, 
 		where $t_1=0.6$, $t_2=0.7$, and $t_3=1$.
 		The gray polygons represent the original building.
-		(a) Growing and Dilating the building with distances $\dtrm[1]{G}$ and 
+		(a) Growing and Dilating the building with distances 
+		$\dtrm[1]{G}$ and 
 		$\dtrm[1]{D}$, respectively;
-		(b) Eroding the polygon in~(a) with $\dtrm[1]{D} + \dtrm[1]{E}$;
+		(b) Eroding the polygon in~(a) with $\dtrm[1]{D} + 
+		\dtrm[1]{E}$;
 		(c) Dilating the polygon in~(b) with $\dtrm[1]{E}$.
 		(d) The goal shape.
-		The process of (e), (f), and~(g) is the same as the process of (a), 
+		The process of (e), (f), and~(g) is the same as the 
+		process of (a), 
 		(b), and~(c).
 		The darker gray piece in (g) shows 
 		the part which is included in the polygon of~(c), 
@@ -661,7 +634,8 @@ and remove the outside parts.
 		the process of (e), (f), and~(g) are the same as 
 		the processes in \fig\ref{fig:Shrink_Erosion}.
 		(d) The goal shape.
-		(h) Simplifying the polygon in~(g) using the Imai--Iri algorithm.
+		(h) Simplifying the polygon in~(g) using the Imai--Iri 
+		algorithm.
 		Note that $d_{l,t_1}<d_{l,t_2}$ (see \eq\ref{eq:d_lt}),
 		which is why the Imai--Iri algorithm does not 
 		remove any vertex of the polygon in~(c),
@@ -676,15 +650,67 @@ and remove the outside parts.
 \begin{figure}[tb]
 	\centering
 	\includegraphics[]{Shrink_Uniting}
-	\caption{Merging a polygon with the polygon at the immediately previous 
+	\caption{Merging a polygon with the polygon at the 
+	immediately previous 
 		step.
-		(a) Merging the polygons of \fig\ref{fig:Shrink_Erosion}c and 
+		(a) Merging the polygons of 
+		\fig\ref{fig:Shrink_Erosion}c and 
 		\fig\ref{fig:Shrink_Erosion}g.
-		(b) Merging the polygons of \fig\ref{fig:Shrink_Simplification}c and 
+		(b) Merging the polygons of 
+		\fig\ref{fig:Shrink_Simplification}c and 
 		\fig\ref{fig:Shrink_Simplification}h.
 	}
 	\label{fig:Shrink_Uniting}
 \end{figure}
+
+\begin{figure}[tb]
+	\centering
+	\includegraphics[]{BridgeDisappearing}
+	\caption{Avoiding shrinking resulted by moved bridges,
+		where~$t_1=0.5$ and~$t_2=0.6$.
+		(a) Original buildings.
+		(b) Growing buildings with distance~$\dtrm[1]{G}$ and 
+		dilating with~$d_{\varepsilon,t_1}/2$;
+		buildings~$p$ and~$q$ are identified as in the same 
+		group.
+		(c) Aggregating~$p$ and~$q$	by adding a bridge.
+		(d) Growing the (bridged) buildings in (c)
+		with distance~$\dtrm[1]{G}$.
+		(f) Growing original buildings with 
+		distance~$\dtrm[2]{G}$ and 
+		dilating with~$d_{\varepsilon,t_2}/2$;
+		all the three buildings are in the same group
+		(g) Aggregating	by adding bridges according to the MST.
+		(h) Growing the bridged building in~(g)
+		with distance~$\dtrm[2]{G}$. 
+		The bridge in~(d) shrinks comparing to~(h).
+		(e) Avoiding this shrinking at time~$t_2$ 
+		by merging buildings of~(d) and~(h).
+	}
+	\label{fig:BridgeDisappearing}
+\end{figure}
+
+%\begin{figure}[tb]
+%	\centering
+%	\includegraphics[]{NearestPoints}
+%	\caption{The nearest points between a pair of buildings	
+%		change because of growing. 
+%		The two squares and the two circles respectively mark
+%		the nearest points before and after growing.
+%	}
+%	\label{fig:NearestPoints}
+%\end{figure}
+
+Added to this shrinking problem, 
+a building aggregate on an intermediate map should never exceed
+the goal shape of the aggregated building. 
+Otherwise, the building will need to be shrunk 
+to ensure continuity with the goal built-up polygon.
+To guarantee this consistency, 
+we clip the building using the goal shape 
+and remove the outside parts.
+
+
 
 
 
@@ -718,19 +744,18 @@ a_{\mathrm{h},t}=a_\mathrm{h}\cdot M_t^2.
 Suppose that our input has $n$ edges in total.
 Operations like growing, dilation, erosion, merge, and clip 
 cost time $O(n^2)$ \citep{Greiner1998Clipping,Palfrader2015}.
-Although we iteratively aggregate (see \sect\ref{sec:Aggregate}),
-it is unlikely that we need to repeat the aggregation more than 
-twice.
-Therefore, let us say that the iterative aggregation does not
-take extra running time.
+We iteratively aggregate in \sect\ref{sec:Aggregate}.
+In the worst case, we need to repeat $O(n)$ times,
+which increases our running time to $O(n^3)$.
+It is unlikely that we need to repeat the aggregation more than 
+twice, though.
 Simplifying polygons using Imai--Iri algorithm needs time
 $O(n^3)$.
 The improved version of Imai--Iri algorithm by 
 \citet{Chan1996} does not help in our case
 because we have more constraints when simplifying
 (see \sect\ref{sec:ImaiIri}).
-As a result, the simplification dominates our running time,
-which is in $O(n^3)$.
+As a result, the running time of our method is in $O(n^3)$.
 
 
 \section{Case Study}
@@ -838,7 +863,8 @@ We show such a sequence of maps in \fig\ref{fig:ContinuousGeneralization} for
 the marked region in \fig\ref{fig:ExperimentalComparison}.
 We counted the numbers of buildings in our results,
 and compared them to the numbers calculated by T\"opfer's 
-radical law (see \fig\ref{fig:NumberOfBuildings}).
+radical law (see \fig\ref{fig:NumberOfBuildings})
+and our \emph{areal law}.
 We have unexaggerated-area symbols, 
 so for \eq2 of \citet{Topfer1966} 
 we used~$C_\mathrm{b2}$ and~$C_\mathrm{z3}$.
@@ -848,18 +874,21 @@ n_t=n_\mathrm{s}\frac{M_\mathrm{s}}{M_t},
 \]
 where~$n_s=2{,}590$ is the number of buildings on start map
 and~$n_t$ is the number of buildings on a map at scale~$1:M_t$.
+For the areal law, we argue that the number of buildings in a 
+unit area on map should be fixed, which leads to
+\[
+n'_t=n_\mathrm{s}\left( \frac{M_\mathrm{s}}{M_t}\right) ^2.
+\]
 According to \fig\ref{fig:NumberOfBuildings}, 
 our numbers decrease faster than 
-the numbers from the radical law.
-It seems that our result supports the fractal law proposed by \citet{Jiang2015}.
+the numbers of both the radical law and the areal law.
 
 \begin{figure*}[tb]
 	\centering
 	\includegraphics{ContinuousGeneralization}
-	\caption{A sequence of maps at time~$t \in \{0, 0.1, 0.2, 
-	\dots, 1\}$
-		for the region marked in 
-		\fig\ref{fig:ExperimentalComparison}.
+	\caption{A sequence of maps 
+		at time~$t \in \{0, 0.1, 0.2, \dots, 1\}$ for the region 
+		marked in \fig\ref{fig:ExperimentalComparison}.
 	}
 	\label{fig:ContinuousGeneralization}
 \end{figure*}
@@ -867,9 +896,9 @@ It seems that our result supports the fractal law proposed by \citet{Jiang2015}.
 \begin{figure}[tb]
 	\centering
 	\includegraphics{NumberOfBuildings}
-	\caption{A comparison of the numbers of building between our 
-results and 
-		T\"opfer's radical law.}
+	\caption{A comparison of the numbers of buildings 
+		between our result, areal law, 
+		and T\"opfer's radical law.}
 	\label{fig:NumberOfBuildings}
 \end{figure}
 
@@ -885,9 +914,10 @@ in which the buildings are always growing and, at the same time, are simplified.
 For the goal map at scale~$1:50{,}000$,
 the shapes of our built-up areas are more reasonable than the data from IGN.
 
-It is always interesting to know what is the quantity we should keep on a map.
-We compared the numbers of buildings of our results, and it is consistent with 
-the fractal law from \citet{Jiang2015}.
+It is always interesting to know the quantity we should keep on 
+a map.
+We compared the numbers of buildings, and it is more consistent 
+with the areal law than T\"opfer's radical law.
 Another interesting problem is to compare the area of the buildings.
 Eventually, our result is a set of settlement boundaries. An interesting 
 problem is to compare our method with \citet{Chaudhry2008}.

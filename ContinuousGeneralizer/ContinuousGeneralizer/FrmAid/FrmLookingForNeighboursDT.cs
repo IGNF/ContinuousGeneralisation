@@ -204,7 +204,10 @@ namespace ContinuousGeneralizer.FrmAid
                 //long lngMemory2 = GC.GetTotalMemory(true);
                 
                 lngMemoryDT = 0; lngMemoryDTProcess = 0; intOutPut = 0; lngTimeForSearching = 0; lngTimeForDT = 0;
-                CptLt = LookingForNeighboursDT(pFeatureLayer, dblThreshold,-1, ref lngTimeForSearching, ref lngTimeForDT, ref lngMemory, ref lngMemoryDT, ref lngMemoryDTProcess, ref intOutPut, strTINPath);   //*******************Action*******************//
+
+                //------------------------------------Action------------------------------------//
+                CptLt = LookingForNeighboursDT(pFeatureLayer, dblThreshold,-1, ref lngTimeForSearching, ref lngTimeForDT, 
+                    ref lngMemory, ref lngMemoryDT, ref lngMemoryDTProcess, ref intOutPut, strTINPath);   
                 //long lngMemory3 = GC.GetTotalMemory(true);
                 OutPutLt.Add(Convert.ToDouble(lngTimeForSearching + lngTimeForDT) / 1000);
                 OutPutLt.Add(Convert.ToDouble(lngTimeForDT) / 1000);
@@ -251,7 +254,9 @@ namespace ContinuousGeneralizer.FrmAid
         }
 
 
-        private List<CPoint> LookingForNeighboursDT(IFeatureLayer pFeatureLayer, double dblThreshold, int intPtNumLast, ref long lngTimeForSearching, ref long lngTimeForDT, ref long lngMemory, ref long lngMemoryDT, ref long lngMemoryDTProcess, ref int intOutPut, string strTINPath)
+        private List<CPoint> LookingForNeighboursDT(IFeatureLayer pFeatureLayer, double dblThreshold, int intPtNumLast, 
+            ref long lngTimeForSearching, ref long lngTimeForDT, ref long lngMemory, ref long lngMemoryDT, 
+            ref long lngMemoryDTProcess, ref int intOutPut, string strTINPath)
         {
             lngMemory = GC.GetTotalMemory(true);
             //lngMemoryDT = GC.GetTotalMemory(true);
@@ -350,7 +355,8 @@ namespace ContinuousGeneralizer.FrmAid
 
 
         //Breadth First Search
-        private SCG.LinkedList<int> BSF(CPoint Originalcpt, ref List<CPoint> cptlt, ref SCG.LinkedList<int> intTargetLLt, ref SCG.LinkedList<int> intAllLLt, double dblThreshold, ref int intOutPut)
+        private SCG.LinkedList<int> BSF(CPoint Originalcpt, ref List<CPoint> cptlt, ref SCG.LinkedList<int> intTargetLLt, 
+            ref SCG.LinkedList<int> intAllLLt, double dblThreshold, ref int intOutPut)
         {
             SCG.LinkedList<int> intnewLLt = new SCG.LinkedList<int>();
             //double dblThresholdDT = (1 + Math.Sqrt(2)) / 2 * dblThreshold;
