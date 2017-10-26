@@ -49,12 +49,12 @@ namespace MorphingClass.CMorphingMethods.CMorphingMethodsBase
         }
 
 
-        public  List<CPolyline> GenerateInterpolatedLt(double dblPropotion)
+        public  List<CPolyline> GenerateInterpolatedCplLt(double dblPropotion)
         {
-            return GenerateInterpolatedLt(dblPropotion, _CorrCptsLtLt);
+            return GenerateInterpolatedCplLt(dblPropotion, _CorrCptsLtLt);
         }
 
-        public  List<CPolyline> GenerateInterpolatedLt(double dblPropotion, List<List<CCorrCpts>> pCorrCptsLtLt)
+        public  List<CPolyline> GenerateInterpolatedCplLt(double dblPropotion, List<List<CCorrCpts>> pCorrCptsLtLt)
         {
             List<CPolyline> pInterpolatedCPlLt = new List<CPolyline>(pCorrCptsLtLt.Count);
 

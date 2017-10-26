@@ -1247,7 +1247,7 @@ namespace ContinuousGeneralizer
             // 
             this.Blank.AccessibleDescription = "s";
             this.Blank.Name = "Blank";
-            this.Blank.Size = new System.Drawing.Size(407, 19);
+            this.Blank.Size = new System.Drawing.Size(276, 19);
             this.Blank.Spring = true;
             // 
             // tsslMessage
@@ -1274,7 +1274,7 @@ namespace ContinuousGeneralizer
             // 
             this.tsslTime.AutoSize = false;
             this.tsslTime.Name = "tsslTime";
-            this.tsslTime.Size = new System.Drawing.Size(200, 19);
+            this.tsslTime.Size = new System.Drawing.Size(300, 19);
             this.tsslTime.Text = "Running Time";
             // 
             // tspbMain

@@ -51,7 +51,7 @@ namespace MorphingClass.CCorrepondObjects
 
         public CMoveVector SetMoveVector()
         {
-            this.pMoveVector = CGeoFunc.CalMoveVector(this.FrCpt, this.ToCpt);
+            this.pMoveVector = CalMoveVector(this.FrCpt, this.ToCpt);
             return this.pMoveVector;
         }
 
@@ -65,5 +65,10 @@ namespace MorphingClass.CCorrepondObjects
             return CGeoFunc.GetInterpolatedIpt(this.FrCpt, this.pMoveVector, dblProportion);
         }
 
+        public static CMoveVector CalMoveVector(CPoint frcpt, CPoint tocpt)
+        {
+            CMoveVector pMoveVector = new CMoveVector(frcpt.ID, tocpt.X - frcpt.X, tocpt.Y - frcpt.Y);
+            return pMoveVector;
+        }
     }
 }

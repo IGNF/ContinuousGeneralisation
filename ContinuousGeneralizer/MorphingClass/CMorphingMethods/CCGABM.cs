@@ -1097,35 +1097,18 @@ namespace MorphingClass.CMorphingMethods
             //double dblIgnorableDis = 0.0001 * dblTargetScale / 100000000000;
             //
 
-            CSaveFeature pCsfFade = new CSaveFeature(esriGeometryType.esriGeometryPolyline, 
-                "Fade" + pParameterInitialize.strSaveFolderName + "_" + dblProportion.ToString());
-            CSaveFeature pCsfNormal = new CSaveFeature(esriGeometryType.esriGeometryPolyline, 
-                "Normal" + pParameterInitialize.strSaveFolderName + "_" + dblProportion.ToString());
 
-
-            Stopwatch pStopwatch = Stopwatch.StartNew();
-            var normaldisplayIplEb = GenerateInterpolatedIPl(dblProportion, _CorrCptsLtLt).ToList<IPolyline5>();
+            var pStopwatch = Stopwatch.StartNew();
+            var normaldisplayCplLt = GenerateInterpolatedCplLt(dblProportion);
+            var fadeddisplayCplLt= GenerateInterpolatedCplLt(dblProportion, _SgCorrCptsLtLt);
             pStopwatch.Stop();
-            //pParameterResult.DisplayCPlLt = normaldisplaycpllt;
 
-            pCsfNormal.SaveIGeosToLayer(normaldisplayIplEb);
-            normaldisplayIplEb = null;
-            pCsfNormal = null;
-            //foreach (var pCorrCptsLt in _CorrCptsLtLt)
-            //{
-            //    var ipl = GenerateInterpolatedIPl(pCorrCptsLt, dblProportion);
-            //    pCsfNormal.SaveFeaturesToLayer (
-            //}
+            var pStopwatchSave = Stopwatch.StartNew();
+            CSaveFeature.SaveCplEb(fadeddisplayCplLt, dblProportion.ToString() + "_Lower");
+            CSaveFeature.SaveCplEb(normaldisplayCplLt, dblProportion.ToString() + "_Higher");
+            pStopwatchSave.Stop();
 
-            //the polylines should be faded out
-            pStopwatch.Start();
-            var fadeddisplayIplEb = GenerateInterpolatedIPl(dblProportion, _SgCorrCptsLtLt).ToList<IPolyline5>();
-
-            pStopwatch.Stop();
-            pCsfFade.SaveIGeosToLayer(fadeddisplayIplEb);
-            pParameterInitialize.tsslTime.Text = pStopwatch.ElapsedMilliseconds.ToString();
-            //pParameterResult.FadedDisplayCPlLt = fadeddisplaycpllt;
-
+            CHelpFunc.DisplayRunTime(pStopwatch.ElapsedMilliseconds,"Generate", pStopwatchSave.ElapsedMilliseconds, "ToShape");
         }
 
 

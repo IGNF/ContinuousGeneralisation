@@ -341,11 +341,7 @@ namespace MorphingClass.CUtility
             cpl.SetCptBelongedCpl();
         }
 
-        public static CMoveVector CalMoveVector(CPoint frcpt, CPoint tocpt)
-        {
-            CMoveVector pMoveVector = new CMoveVector(frcpt.ID, tocpt.X - frcpt.X, tocpt.Y - frcpt.Y);
-            return pMoveVector;
-        }
+
 
         //public static void CalAbsRatioLengthsFromStart(List<CPoint> cptlt, ref double[] adblAbsLengthFromStart, ref double[] adblRatioLengthFromStart)
         //{

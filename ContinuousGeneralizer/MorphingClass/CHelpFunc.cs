@@ -52,14 +52,13 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "Tianjin-Animation"; 
         //private static string _strDataFolderName = "MainlandChina-Animation-complicated";
         //private static string _strDataFolderName = "MainlandChina-Shanghai";
-        //private static string _strDataFolderName = "MainlandChina";
+        private static string _strDataFolderName = "MainlandChina";
         //private static string _strDataFolderName = "CompatibleTriangulation";
-        //private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\Administrative Boundary\\" + _strDataFolderName + "\\";
-        //C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralisation_Data
+        private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\Administrative Boundary\\" + _strDataFolderName + "\\";
 
         //private static string _strDataFolderName = "LinearMorphingBothInjected";
         //private static string _strDataFolderName = "CompatibleTriangulation3";
-        //private static string _strPath = 
+        //private static string _strPath =
         //"C:\\Study\\Data\\Morphing Data\\Representation In Article\\ContinuousGeneralizationOfAdministrativeBoundariesBasedonMorphing\\" + _strDataFolderName + "\\";
 
         //private static string _strDataFolderName = "AreaAggregation";
@@ -100,7 +99,7 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "France_Presenting_UnitingPrevious_Erosion";
         //private static string _strDataFolderName = "France_Presenting_UnitingPrevious_Simplification";
         //private static string _strDataFolderName = "France_Presenting_RemoveBay";
-        private static string _strDataFolderName = "France_Presenting_Grouping";
+        //private static string _strDataFolderName = "France_Presenting_Grouping";
         //private static string _strDataFolderName = "France_Presenting_BridgeMoreBuilding";
 
         //private static string _strDataFolderName = "France_Problematic";
@@ -110,8 +109,8 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "France_TwoSquares_Faraway";
         //private static string _strDataFolderName = "France_TwoSquares_SingleBridge";
         //private static string _strDataFolderName = "France_TwoSquares_Overlap";
-        private static string _strPath =
-        "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\BuildingGrowing\\" + _strDataFolderName + "\\";
+        //private static string _strPath =
+        //"C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\BuildingGrowing\\" + _strDataFolderName + "\\";
 
         //private static string _strDataFolderName = "An Approximate Morphing between Polylines";
         //private static string _strPath = 
@@ -271,9 +270,26 @@ namespace MorphingClass.CUtility
            CConstants.ParameterInitialize.tspbMain.Value = Convert.ToInt32(dblValue * 100 / dblTotal);
         }
 
-        public static void DisplayRunTime(long lngTimeMs)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="lngTimeMs"></param>
+        /// <param name="strName"></param>
+        /// <param name="lngTimeMs2"></param>
+        /// <param name="strName2"></param>
+        /// <remarks>set CConstants.ParameterInitialize = ParameterInitialize in CMorphingBase.cs</remarks>
+        public static void DisplayRunTime(long lngTimeMs, string strName = "", long lngTimeMs2 = 0, string strName2 = "")
         {
-            CConstants.ParameterInitialize.tsslTime.Text = "RunTime: " + lngTimeMs + "ms";
+            if (strName == "")
+            {
+                strName = "RunTime";
+            }
+            CConstants.ParameterInitialize.tsslTime.Text = strName + ": " + lngTimeMs + " ms";
+
+            if (lngTimeMs2 != 0)
+            {
+                CConstants.ParameterInitialize.tsslTime.Text += "; " + strName2 + ": " + lngTimeMs2 + " ms";
+            }
         }
 
         public static List<object> GetObjLtByFeatureLayer(IFeatureLayer pFeatureLayer, out List<List<object>> pobjectValueLtLt, 
@@ -1119,7 +1135,7 @@ namespace MorphingClass.CUtility
             }
 
             CMorphingBaseCpl pMorphingBaseCpl = pDataRecords.ParameterResult.pMorphingBaseCpl;
-            List<CPolyline> pInterpolatedCPlLt = pMorphingBaseCpl.GenerateInterpolatedLt(dblProportion);
+            List<CPolyline> pInterpolatedCPlLt = pMorphingBaseCpl.GenerateInterpolatedCplLt(dblProportion);
 
             CParameterInitialize pParameterInitialize = pDataRecords.ParameterInitialize;
             CHelpFunc.SaveCPlLt(pInterpolatedCPlLt, pParameterInitialize.strSaveFolderName + "____" + dblProportion.ToString(), pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
