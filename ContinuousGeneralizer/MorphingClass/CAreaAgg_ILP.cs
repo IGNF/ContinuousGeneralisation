@@ -75,7 +75,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             System.Console.WriteLine();
             System.Console.WriteLine();
-            System.Console.WriteLine("Crg:  ID  " + LSCrg.ID + ";    n  " + LSCrg.CphTypeIndexSD_Area_CphGID.Count + ";    m  " +
+            System.Console.WriteLine("Crg:  ID  " + LSCrg.ID + ";    n  " + LSCrg.GetCphCount() + ";    m  " +
                 LSCrg.AdjCorrCphsSD.Count + "  " + _ParameterInitialize.strAreaAggregation + "================================="
                 + LSCrg.ID + "  " + _ParameterInitialize.strAreaAggregation + "==============================");
 
@@ -120,29 +120,34 @@ namespace MorphingClass.CGeneralizationMethods
                     //***********Gap for ILP************
 
                     #region Display x, y, z, and s
-                    //for (int i = 0; i < var3[0].GetLength(0); i++)
-                    //{
+                    for (int i = 0; i < var3[0].GetLength(0); i++)
+                    {
 
-                    //    Console.WriteLine("Variable x; Time: " + (i + 1).ToString());
+                        Console.WriteLine("Variable x; Time: " + (i + 1).ToString());
 
-                    //    foreach (var x1 in var3[0][i])
-                    //    {
-                    //        //CPatch 
-
-
-
-                    //        double[] x = cplex.GetValues(x1);
+                        foreach (var x1 in var3[0][i])
+                        {
+                            //CPatch 
 
 
-                    //        foreach (var x0 in x)
-                    //        {
-                    //            Console.Write(x0 + "     ");
-                    //        }
-                    //        Console.WriteLine();
 
-                    //    }
-                    //    Console.WriteLine();
-                    //}
+                            double[] x = cplex.GetValues(x1);
+
+
+                            foreach (var x0 in x)
+                            {
+                                int intWrite = 0;  //avoid some values like 0.999999997 or 2E-09
+                                if (x0>0.5)
+                                {
+                                    intWrite = 1;
+                                }
+                                Console.Write(intWrite + "     ");
+                            }
+                            Console.WriteLine();
+
+                        }
+                        Console.WriteLine();
+                    }
 
                     #region Display y and z
                     //if (var4[0] != null)
@@ -318,9 +323,10 @@ namespace MorphingClass.CGeneralizationMethods
             out IIntVar[][][][][] var4, out IRange[][] rng,
             CRegion lscrg, CRegion sscrg, double[,] adblTD, string strAreaAggregation)
         {
-            var aCph = lscrg.CphTypeIndexSD_Area_CphGID.Keys.ToArray();
+            var aCph = lscrg.GetCphCol().ToArray();
             int intCpgCount = lscrg.GetCphCount();
-            double dblILPSmallValue = 0.000000001;
+            //double dblILPSmallValue = 0.000000001;
+            double dblILPSmallValue = 0;
 
             IIntVar[][][] x = new IIntVar[intCpgCount][][];
             for (int i = 0; i < intCpgCount; i++)
@@ -339,11 +345,14 @@ namespace MorphingClass.CGeneralizationMethods
             var z = Generate4DNumVar(model, intCpgCount - 2, intCpgCount, intCpgCount, intCpgCount);
 
 
+            var c= Generate4DNumVar(model, intCpgCount - 2, intCpgCount, intCpgCount, intCpgCount);
+
             var3 = new IIntVar[1][][][];
-            var4 = new IIntVar[2][][][][];
+            var4 = new IIntVar[3][][][][];
             var3[0] = x;
             var4[0] = y;
             var4[1] = z;
+            var4[2] = c;
 
             //add minimizations
             ILinearNumExpr pTypeCostExpr = model.LinearNumExpr();
@@ -363,34 +372,6 @@ namespace MorphingClass.CGeneralizationMethods
                     }
                 }
             }
-
-    //        //this is actually for t=1, whose compactness is known
-    //        double dblCompCostFirstPart = 0;
-    //        ILinearNumExpr pCompCostSecondPartExpr = model.LinearNumExpr();
-    //        var pAdjCorrCphsSD = lscrg.AdjCorrCphsSD;
-    //        double dblConst = 1;
-
-    //        for (int i = 0; i < intCpgCount - 2; i++)   //i represents indices
-    //        {
-    //            double dblNminusT = intCpgCount - i - 2;
-    //            //double dblTemp = (intCpgCount - i) * dblConst;
-    //            dblCompCostFirstPart += lscrg.dblInteriorSegLength;
-    //            double dblSecondPartDenominator = 2;
-
-    //            //we don't need to divide the value by 2 because every boundary is only counted once
-    //            foreach (var pCorrCphs in pAdjCorrCphsSD.Keys)
-    //            {
-    //                for (int l = 0; l < intCpgCount; l++)
-    //                {
-    //                    pCompCostSecondPartExpr.AddTerm(pCorrCphs.dblSharedSegLength / dblSecondPartDenominator,
-    //z[i][pCorrCphs.FrCph.ID][pCorrCphs.ToCph.ID][l]);
-    //                    pCompCostSecondPartExpr.AddTerm(pCorrCphs.dblSharedSegLength / dblSecondPartDenominator ,
-    //z[i][pCorrCphs.ToCph.ID][pCorrCphs.FrCph.ID][l]);
-    //                }
-    //            }
-    //            //var pSecondPartExpr =  model.Prod(pCompCostSecondPartExpr, 1 / dblSecondPartDenominator);
-
-    //        }
 
 
             //this is actually for t=1, whose compactness is known
@@ -438,7 +419,7 @@ namespace MorphingClass.CGeneralizationMethods
             }
 
 
-            //constraints
+            //for showing slacks
             IList<IRange> IRangeLt = new List<IRange>();
 
             //a polygon $p$ is assigned to exactly one polygon at a step $t$
@@ -451,7 +432,7 @@ namespace MorphingClass.CGeneralizationMethods
                     {
                         pOneCenterExpr.AddTerm(x[i][j][l], 1.0);
                     }
-                    IRangeLt.Add(model.AddEq(pOneCenterExpr, 1.0, "AssignToOnlyOneCenter"));
+                    model.AddEq(pOneCenterExpr, 1.0, "AssignToOnlyOneCenter");
                 }
             }
 
@@ -462,32 +443,9 @@ namespace MorphingClass.CGeneralizationMethods
                 {
                     for (int l = 0; l < intCpgCount; l++)
                     {
-                        IRangeLt.Add(model.AddLe(model.Sum(x[i][j][l], model.Negative(x[i][l][l])),
-                            dblILPSmallValue, "AssignedIsCenter__" + i + "__" + j + "__" + l));
-                    }
-                }
-            }
-
-
-            //polygon $p$ can be assigned to center $o$ if at least one of $p$'s neighbors has already been assigned to center $o$            
-            for (int i = 1; i < intCpgCount - 1; i++)   //i represents indices
-            {
-                for (int j = 0; j < intCpgCount; j++)
-                {
-                    for (int k = 0; k < intCpgCount; k++)
-                    {
-                        if (j == k)  //the considered point is free to be assigned to itself
-                        {
-                            continue;
-                        }
-
-                        ILinearNumExpr pContiguityExpr = model.LinearNumExpr();
-                        //pContiguityExpr.AddTerm(x[i][j][k], 1.0);  //including polygon j itself
-                        foreach (var pAdjacentCph in aCph[j].AdjacentCphSS)
-                        {
-                            pContiguityExpr.AddTerm(x[i][pAdjacentCph.ID][k], 1.0);
-                        }
-                        IRangeLt.Add(model.AddLe(model.Sum(x[i][j][k], model.Negative(pContiguityExpr)), dblILPSmallValue, "Contiguity"));
+                        model.AddLe(x[i][j][l], x[i][l][l]);
+                        //model.AddLe(model.Sum(x[i][j][l], model.Negative(x[i][l][l])),
+                        //    dblILPSmallValue, "AssignedIsCenter__" + i + "__" + j + "__" + l);
                     }
                 }
             }
@@ -500,7 +458,7 @@ namespace MorphingClass.CGeneralizationMethods
                 {
                     pOneAggregationExpr.AddTerm(x[i][j][j], 1.0);
                 }
-                IRangeLt.Add(model.AddEq(pOneAggregationExpr, intCpgCount - i, "CountCenters"));
+                model.AddEq(pOneAggregationExpr, intCpgCount - i, "CountCenters");
             }
 
             //a center can disappear, but will never reappear afterwards
@@ -508,14 +466,15 @@ namespace MorphingClass.CGeneralizationMethods
             {
                 for (int j = 0; j < intCpgCount; j++)
                 {
-                    IRangeLt.Add(model.AddGe(model.Sum(x[i][j][j], model.Negative(x[i + 1][j][j])), -dblILPSmallValue, "SteadyCenters"));
+                    model.AddGe(x[i][j][j], x[i + 1][j][j], "SteadyCenters");
+                    //model.AddGe(model.Sum(x[i][j][j], model.Negative(x[i + 1][j][j])), -dblILPSmallValue, "SteadyCenters");
                 }
             }
 
 
             //to make sure that the final aggregated polygon has the same color as the target polygon
             ILinearNumExpr pFinalStateExpr = model.LinearNumExpr();
-            int intTypeIndexGoal = sscrg.CphTypeIndexSD_Area_CphGID.Keys.First().intTypeIndex;
+            int intTypeIndexGoal = sscrg.GetSoloCphTypeIndex();
             for (int i = 0; i < intCpgCount; i++)
             {
                 if (aCph[i].intTypeIndex == intTypeIndexGoal)
@@ -523,7 +482,7 @@ namespace MorphingClass.CGeneralizationMethods
                     pFinalStateExpr.AddTerm(x[intCpgCount - 1][i][i], 1.0);
                 }
             }
-            IRangeLt.Add(model.AddEq(pFinalStateExpr, 1.0, "EnsureTarget"));
+            model.AddEq(pFinalStateExpr, 1.0, "EnsureTarget");
 
 
             //to restrict *y*
@@ -537,16 +496,13 @@ namespace MorphingClass.CGeneralizationMethods
 
                         for (int l = 0; l < intCpgCount; l++)
                         {
-                            //if (k != l)
-                            //{
-            IRangeLt.Add(model.AddGe(model
-                .Sum(y[i][j][k][l], model.Negative(x[i][j][k]), model.Negative(x[i + 1][j][l])), -1.0 - dblILPSmallValue, "RestrictY"));
+                            var LieYRight = model.LinearIntExpr(-1);
+                            LieYRight.AddTerm(x[i][j][k], 1);
+                            LieYRight.AddTerm(x[i + 1][j][l], 1);
 
-
-            IRangeLt.Add(model.AddLe(model
-                .Sum(y[i][j][k][l], model.Negative(x[i][j][k])), dblILPSmallValue, "RestrictY2"));
-            IRangeLt.Add(model.AddLe(model
-                .Sum(y[i][j][k][l], model.Negative(x[i + 1][j][l])), dblILPSmallValue, "RestrictY3"));
+                            model.AddGe(y[i][j][k][l], LieYRight, "RestrictY1");
+                            model.AddLe(y[i][j][k][l], x[i][j][k], "RestrictY2");
+                            model.AddLe(y[i][j][k][l], x[i + 1][j][l], "RestrictY3");
                         }
                     }
                 }
@@ -562,22 +518,59 @@ namespace MorphingClass.CGeneralizationMethods
                     {
                         for (int l = 0; l < intCpgCount; l++)
                         {
-            IRangeLt.Add(model.AddGe(model
-                .Sum(z[i][j][k][l], model.Negative(x[i + 1][j][l]), model.Negative(x[i + 1][k][l])), -1.0 - dblILPSmallValue, "RestrictZ"));
+                            var LieZRight = model.LinearIntExpr(-1);
+                            LieZRight.AddTerm(x[i + 1][j][l], 1);
+                            LieZRight.AddTerm(x[i + 1][k][l], 1);
 
-            //ILinearNumExpr pZExpr = model.LinearNumExpr();
-            //pZExpr.AddTerm(z[i][j][k][l], 2);
-            //IRangeLt.Add(model.AddGe(model
-            //    .Sum(model.Negative(pZExpr), x[i + 1][j][l], x[i + 1][k][l]), -dblILPSmallValue, "RestrictZ2"));
+                            model.AddGe(z[i][j][k][l], LieZRight, "RestrictZ1");
+                            model.AddLe(z[i][j][k][l], x[i + 1][j][l], "RestrictZ2");
+                            model.AddLe(z[i][j][k][l], x[i + 1][k][l], "RestrictZ3");
+                        }
+                    }
+                }
+            }
+
+            //to restrict *c*
+            double dblCpgCountReciprocal = 1 / Convert.ToDouble(intCpgCount);
+            for (int i = 0; i < intCpgCount - 2; i++)   //i represents indices
+            {
+                for (int j = 0; j < intCpgCount; j++)
+                {
+                    //for (int k = j; k < intCpgCount; k++)  // pay attention
+                    for (int k = 0; k < intCpgCount; k++)
+                    {
+                        for (int l = 0; l < intCpgCount; l++)
+                        {
+                            if (k==l)
+                            {
+                                continue;
+                            }
+
+                            model.AddLe(c[i][j][k][l], x[i][j][k], "RestrictC1");
+
+                            var pLieContiguityExpr = model.LinearIntExpr();
+                            var pContiguityExpr2 = model.LinearNumExpr(-1);
+                            //pContiguityExpr.AddTerm(x[i][j][k], 1.0);  //including polygon j itself
+                            foreach (var pAdjacentCph in aCph[j].AdjacentCphSS)
+                            {
+                                pLieContiguityExpr.AddTerm(x[i][pAdjacentCph.ID][l], 1);
+                                pContiguityExpr2.AddTerm(x[i][pAdjacentCph.ID][l], dblCpgCountReciprocal);
+                            }
+                            model.AddLe(c[i][j][k][l],pLieContiguityExpr, "Contiguity");
+
+                            pContiguityExpr2.AddTerm(x[i][j][k], 1.0);
+                            model.AddGe(c[i][j][k][l], pContiguityExpr2,  "Contiguity2");
 
 
-            IRangeLt.Add(model.
-AddLe(model.Sum(z[i][j][k][l], model.Negative(x[i + 1][j][l])), dblILPSmallValue, "RestrictZ1"));
-            IRangeLt.Add(model.
-                AddLe(model.Sum(z[i][j][k][l], model.Negative(x[i + 1][k][l])), dblILPSmallValue, "RestrictZ2"));
+                            var pContiguityExprRight3 = model.LinearIntExpr();
+                            for (int m = 0; m < intCpgCount; m++)
+                            {
+                                pContiguityExprRight3.AddTerm(c[i][m][k][l], 1);
+                            }
 
-            ////z[i][j][k][l]=z[i][k][j][l]
-            //IRangeLt.Add(model.AddEq(model.Sum(z[i][j][k][l], model.Negative(z[i][k][j][l])), 0.0, "RestrictZ3"));
+
+                            model.AddLe(y[i][k][k][l], pContiguityExprRight3, "Contiguity3");
+
                         }
                     }
                 }
@@ -592,15 +585,14 @@ AddLe(model.Sum(z[i][j][k][l], model.Negative(x[i + 1][j][l])), dblILPSmallValue
                 {
                     for (int k = 0; k < intCpgCount; k++)
                     {
-                        ILinearNumExpr pAssignTogetherExprPre = model.LinearNumExpr();
-                        ILinearNumExpr pAssignTogetherExprAfter = model.LinearNumExpr();
+                        var pAssignTogetherExprPre = model.LinearIntExpr();
+                        var pAssignTogetherExprAfter = model.LinearIntExpr();
                         for (int l = 0; l < intCpgCount; l++)
                         {
-                            pAssignTogetherExprPre.AddTerm(z[i][j][k][l], 1.0);
-                            pAssignTogetherExprAfter.AddTerm(z[i + 1][j][k][l], 1.0);
+                            pAssignTogetherExprPre.AddTerm(z[i][j][k][l], 1);
+                            pAssignTogetherExprAfter.AddTerm(z[i + 1][j][k][l], 1);
                         }
-                        IRangeLt.Add(model.AddLe(model
-                            .Sum(pAssignTogetherExprPre, model.Negative(pAssignTogetherExprAfter)), dblILPSmallValue, "AssignTogether"));
+                        model.AddLe(pAssignTogetherExprPre, pAssignTogetherExprAfter,  "AssignTogether");
                     }
                 }
             }
@@ -618,13 +610,13 @@ AddLe(model.Sum(z[i][j][k][l], model.Negative(x[i + 1][j][l])), dblILPSmallValue
                 //there is only one smallest patch will be involved in each aggregation step
                 for (int i = 0; i < intCpgCount - 1; i++)   //i represents indices
                 {
-                    ILinearNumExpr pOneSmallestExpr = model.LinearNumExpr();
+                    var pOneSmallestExpr = model.LinearIntExpr();
                     for (int j = 0; j < intCpgCount; j++)
                     {
-                        pOneSmallestExpr.AddTerm(w[i][j], 1.0);
+                        pOneSmallestExpr.AddTerm(w[i][j], 1);
                     }
 
-                    IRangeLt.Add(model.AddEq(pOneSmallestExpr, 1.0, "OneSmallest"));
+                    model.AddEq(pOneSmallestExpr, 1.0, "OneSmallest");
                 }
 
                 //forces that the aggregation must involve the smallest patch.
@@ -632,21 +624,20 @@ AddLe(model.Sum(z[i][j][k][l], model.Negative(x[i + 1][j][l])), dblILPSmallValue
                 {
                     for (int j = 0; j < intCpgCount; j++)
                     {
-                        ILinearNumExpr pInvolveSmallestExpr = model.LinearNumExpr();
+                        var pInvolveSmallestExpr = model.LinearIntExpr();
                         for (int k = 0; k < intCpgCount; k++)
                         {
                             for (int l = 0; l < intCpgCount; l++)
                             {
                                 if (l != j)
                                 {
-                                    pInvolveSmallestExpr.AddTerm(y[i][k][j][l], 1.0);
-                                    pInvolveSmallestExpr.AddTerm(y[i][k][l][j], 1.0);
+                                    pInvolveSmallestExpr.AddTerm(y[i][k][j][l], 1);
+                                    pInvolveSmallestExpr.AddTerm(y[i][k][l][j], 1);
                                 }
                             }
                         }
 
-                        IRangeLt.Add(model.AddLe(model
-                            .Sum(w[i][j], model.Negative(pInvolveSmallestExpr)), dblILPSmallValue, "InvolveSmallest"));
+                        model.AddLe(w[i][j], pInvolveSmallestExpr, "InvolveSmallest");
                     }
                 }
 
@@ -663,8 +654,9 @@ AddLe(model.Sum(z[i][j][k][l], model.Negative(x[i + 1][j][l])), dblILPSmallValue
                             var pProdExpr = model.Prod(pSumExpr, dblW);  //W(2-w_{t,o}-x_{t,r,r})
 
                             //A_{t,o}-A_{t,r}-W(2-w_{t,o}-x_{t,r,r}) <= 0
-                            IRangeLt.Add(model.AddLe(model
-                                .Sum(aAreaExpr[j], model.Negative(aAreaExpr[k]), model.Negative(pProdExpr)), dblILPSmallValue, "IndeedSmallest"));
+                            model.AddLe(model
+                                .Sum(aAreaExpr[j], model.Negative(aAreaExpr[k]), model.Negative(pProdExpr)), 
+                                dblILPSmallValue, "IndeedSmallest");
                         }
                     }
                 }

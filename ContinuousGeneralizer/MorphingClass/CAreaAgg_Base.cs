@@ -31,7 +31,7 @@ namespace MorphingClass.CGeneralizationMethods
 {
     public class CAreaAgg_Base : CMorphingBaseCpg
     {
-        public static double dblLamda = 0.5;
+        public static double dblLamda = 0.5; // 1-dblLamda is for type; dblLamda is for shape
         //public static double dblLamda2 = 1 - dblLamda1;
 
         //for some prompt settings
@@ -44,11 +44,8 @@ namespace MorphingClass.CGeneralizationMethods
         protected static int _intEnd; //=this.SSCrgLt.Count
         protected void UpdateStartEnd()
         {
-            //_intStart = 506;
-            //_intEnd = _intStart + 1;
-
-            dblLamda = 0.5;
-            //dblLamda2 = 1 - dblLamda1;
+            _intStart = 22;
+            _intEnd = _intStart + 1;
         }
 
         public List<CRegion> InitialCrgLt { set; get; }
@@ -768,6 +765,8 @@ namespace MorphingClass.CGeneralizationMethods
             }
             int intOutputStepNum = intTotalCphCount - pInitialCrgLt.Count;
 
+            var startCpgEb = GenerateStartCpgEb(pInitialCrgLt);
+
             List<int> intTypeIndexLt;
             List<IPolygon4> passiveIpgLt;
             var newIpgLt = GenerateAggregatedIpgLt(pInitialCrgLt, intOutputStepNum, pParameterInitialize.strAreaAggregation,
@@ -777,8 +776,10 @@ namespace MorphingClass.CGeneralizationMethods
             var strLayerNameLt = GetLayerNames(intTotalCphCount, pInitialCrgLt.Count);
             string strIpeCont = CIpeDraw.GetDataOfLayerNames(strLayerNameLt);
             strIpeCont += CIpeDraw.GetDataOfViewsAreaAgg(strLayerNameLt);
-            strIpeCont += strDataOfCphs(newIpgLt, passiveIpgLt, 
-                pFillSymbolLt, strLayerNameLt, pFLayer, pFLayerEnv, CConstants.pIpeEnv, strBoundWidth);
+            strIpeCont += strDataOfBaseLayer(pInitialCrgLt, _TypePVSD, _intTypeSymbolSD,
+                strLayerNameLt, pFLayerEnv, CConstants.pIpeEnv, strBoundWidth);
+            strIpeCont += strDataOfCphs(startCpgEb, newIpgLt, passiveIpgLt, 
+                pFillSymbolLt, strLayerNameLt, pFLayerEnv, CConstants.pIpeEnv, strBoundWidth);
 
             string strFullName = pParameterInitialize.strSavePath + "\\" + CHelpFunc.GetTimeStamp() + ".ipe";
             using (var writer = new System.IO.StreamWriter(strFullName, true))
@@ -787,6 +788,20 @@ namespace MorphingClass.CGeneralizationMethods
             }
 
             System.Diagnostics.Process.Start(@strFullName);
+        }
+
+        private static IEnumerable<CPolygon> GenerateStartCpgEb(List<CRegion> pInitialCrgLt)
+        {
+            foreach (var crg in pInitialCrgLt)
+            {
+                foreach (var cph in crg.GetCphCol())
+                {
+                    foreach (var cpg in cph.CpgSS)
+                    {
+                        yield return cpg;
+                    }
+                }
+            }
         }
 
         private static List<IPolygon4> GenerateAggregatedIpgLt(List<CRegion> pInitialCrgLt, int intOutputStepNum,
@@ -846,24 +861,59 @@ namespace MorphingClass.CGeneralizationMethods
             return pFillSymbolLt;
         }
 
-        private static string strDataOfCphs(List<IPolygon4> IpgLt, 
-            List<IPolygon4> passiveIpgLt, List<IFillSymbol> pFillSymbolLt, List<string> strLayerNameLt, 
-            IFeatureLayer pFLayer, IEnvelope pFLayerEnv, CEnvelope pIpeEnv, string strBoundWidth)
+
+        private static string strDataOfBaseLayer(List<CRegion> pInitialCrgLt, 
+            CValMap_SD<int, int> pTypePVSD, SortedDictionary<int, ISymbol> pintTypeSymbolSD,
+List<string> strLayerNameLt,
+ IEnvelope pFLayerEnv, CEnvelope pIpeEnv, string strBoundWidth)
+        {
+            //for the first layer, we add all the patches
+            string strIpeContAllLayers = CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[0], "removable", 320, 64);
+            strIpeContAllLayers += CIpeDraw.writeIpeText(strLayerNameLt[0], 320, 128);  //write the number of patches
+            strIpeContAllLayers += "<group>\n";
+            foreach (var crg in pInitialCrgLt)
+            {
+                foreach (var kvp in crg.CphTypeIndexSD_Area_CphGID)
+                {
+                    int intType;
+                    pTypePVSD.SD_R.TryGetValue(kvp.Value, out intType);
+                    ISymbol pSymbol;
+                    pintTypeSymbolSD.TryGetValue(intType, out pSymbol);
+                    var pfillSymbol=pSymbol as IFillSymbol;
+                    strIpeContAllLayers += CToIpe.TranCpgToIpe(kvp.Key.GetSoloCpg(), 
+                        pfillSymbol, pFLayerEnv, pIpeEnv, strBoundWidth);
+                }
+            }
+            strIpeContAllLayers += "</group>\n";            
+            
+
+            return strIpeContAllLayers;
+        }
+
+        private static string strDataOfCphs(IEnumerable<CPolygon> startCpgEb, List<IPolygon4> IpgLt, 
+            List<IPolygon4> passiveIpgLt, List<IFillSymbol> pFillSymbolLt, List<string> strLayerNameLt,
+            IEnvelope pFLayerEnv, CEnvelope pIpeEnv, string strBoundWidth)
         {
             var passiveColor = new CColor(0, 0, 255);
             var resultColor = new CColor(0, 0, 255);
             //var resultColor = new CColor(45, 121, 147);
 
-            //for the first layer, we add all the patches
-            string strIpeContAllLayers = CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[0], "removable", 320, 64);
-            strIpeContAllLayers += CIpeDraw.writeIpeText(strLayerNameLt[0], 320, 128)  //write the number of patches
-               + "<group>\n" + CToIpe.GetDataOfFeatureLayer(pFLayer, pFLayerEnv, pIpeEnv, strBoundWidth) + "</group>\n";
+            ////for the first layer, we add all the patches
+            //string strIpeContAllLayers = CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[0], "removable", 320, 64);
+            //strIpeContAllLayers += CIpeDraw.writeIpeText(strLayerNameLt[0], 320, 128);  //write the number of patches
+            //strIpeContAllLayers += "<group>\n";
+            //foreach (var cpg in startCpgEb)
+            //{
+            //    strIpeContAllLayers+= CIpeDraw.DrawCpg(cpg, pFLayerEnv, pIpeEnv, resultColor, strBoundWidth);
+            //}
+            //strIpeContAllLayers += "</group>\n";            
 
-            strIpeContAllLayers += CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[1], "removable", 320, 64);
+
+           var strIpeContAllLayers = CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[1], "removable", 320, 64);
             strIpeContAllLayers += 
                 "<group>\n" +
-                CToIpe.TranIpgBoundToIpe(IpgLt[0], pFLayerEnv, pIpeEnv, resultColor, "normal", "normal") +
-                CToIpe.TranIpgBoundToIpe(passiveIpgLt[0], pFLayerEnv, pIpeEnv, passiveColor, "heavier", "normal") +
+                CToIpe.TranIpgBoundToIpe(IpgLt[0], pFLayerEnv, pIpeEnv, resultColor) +
+                CToIpe.TranIpgBoundToIpe(passiveIpgLt[0], pFLayerEnv, pIpeEnv, passiveColor, "heavier") +
                 "</group>\n";
 
 
@@ -879,7 +929,7 @@ namespace MorphingClass.CGeneralizationMethods
                 //add a text of patch numbers
                 strIpeContAllLayers += CIpeDraw.writeIpeText(strLayerNameLt[i], 320, 128);
 
-                //add the data
+                //add the data=================================================================
                 strIpeContAllLayers += CToIpe.TranIpgToIpe(
                     IpgLt[i/2 - 1], pFillSymbolLt[i / 2 - 1], pFLayerEnv, pIpeEnv, strBoundWidth);
                 
@@ -887,8 +937,8 @@ namespace MorphingClass.CGeneralizationMethods
                 strIpeContAllLayers += CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[i+1], "removable", 320, 64);
                 strIpeContAllLayers +=
                     "<group>\n" +
-                    CToIpe.TranIpgBoundToIpe(IpgLt[i / 2], pFLayerEnv, pIpeEnv, resultColor, "normal", "normal") +
-                    CToIpe.TranIpgBoundToIpe(passiveIpgLt[i / 2], pFLayerEnv, pIpeEnv, passiveColor, "heavier", "normal") +               
+                    CToIpe.TranIpgBoundToIpe(IpgLt[i / 2], pFLayerEnv, pIpeEnv, resultColor) +
+                    CToIpe.TranIpgBoundToIpe(passiveIpgLt[i / 2], pFLayerEnv, pIpeEnv, passiveColor, "heavier") +               
                     "</group>\n";
                 i++;
             }

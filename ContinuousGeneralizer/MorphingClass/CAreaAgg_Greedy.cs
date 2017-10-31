@@ -71,7 +71,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             
             Console.WriteLine();
-            Console.WriteLine("Crg:  ID  " + LSCrg.ID + ";    n  " + LSCrg.CphTypeIndexSD_Area_CphGID.Count + ";    m  " +
+            Console.WriteLine("Crg:  ID  " + LSCrg.ID + ";    n  " + LSCrg.GetCphCount() + ";    m  " +
                     LSCrg.AdjCorrCphsSD.Count + "   " + CConstants.strShapeConstraint + "   " + strAreaAggregation);
 
             long lngStartMemory = GC.GetTotalMemory(true);

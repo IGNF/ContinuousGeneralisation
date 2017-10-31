@@ -22,7 +22,7 @@ namespace MorphingClass.CAid
     {
 
         public static void SaveToIpe(List<IFeatureLayer> pFLayerLt, IEnvelope pFLayerEnv, CEnvelope pIpeEnv,
-            bool blnGroup, string strBoundWidth, CParameterInitialize ParameterInitialize, bool IncreaseHeight = true)
+            bool blnGroup, string strBoundWidth, CParameterInitialize ParameterInitialize, bool blnLayerToLeft = true)
         {
             //save path
             //CHelpFunc.SetSavePath(ParameterInitialize);
@@ -42,7 +42,7 @@ namespace MorphingClass.CAid
             //CIpeDraw.drawIpeEdge(320, 16, 320, 20) + CIpeDraw.drawIpeEdge(320 + dblLegentInt, 16, 320 + dblLegentInt, 20);
             var strData = GetScaleLegend(pFLayerEnv, pIpeEnv, CHelpFunc.GetUnits(ParameterInitialize.m_mapControl.MapUnits));
 
-            var ss = ParameterInitialize.m_mapControl.SpatialReference;
+
             //var tt = ParameterInitialize.m_mapControl.
             for (int i = 0; i < pFLayerLt.Count; i++)
             {
@@ -60,10 +60,10 @@ namespace MorphingClass.CAid
                     strData += "</group>\n";
                 }
 
-                if (IncreaseHeight == true)
+                if (blnLayerToLeft == true)
                 {
-                    pIpeEnv.YMin += pIpeEnv.Height;
-                    pIpeEnv.YMax += pIpeEnv.Height;
+                    pIpeEnv.XMin -= pIpeEnv.Width;
+                    pIpeEnv.XMax -= pIpeEnv.Width;
                 }
             }
 
@@ -94,7 +94,7 @@ namespace MorphingClass.CAid
         }
 
         public static string GetDataOfFeatureLayer(IFeatureLayer pFLayer, IEnvelope pFLayerEnv,
-            CEnvelope pIpeEnv, string strBoundWidth, bool blnDrawBound = false)
+            CEnvelope pIpeEnv, string strBoundWidth = "normal", bool blnDrawBound = false)
         {
             string str = "";
             if (blnDrawBound == true)
@@ -137,7 +137,7 @@ namespace MorphingClass.CAid
         /// Save a feature layer of IPolyline to Ipe
         /// </summary>
         private static string TranIptToIpe(IFeature pFeature, IFeatureRenderer pRenderer, IEnvelope pFLayerEnv,
-            CEnvelope pIpeEnv, string strBoundWidth)
+            CEnvelope pIpeEnv, string strBoundWidth = "normal")
         {
             var pMarkerSymbol = pRenderer.SymbolByFeature[pFeature] as IMarkerSymbol;
             var pMarkerSymbolRgbColor = pMarkerSymbol.Color as IRgbColor;
@@ -156,7 +156,7 @@ namespace MorphingClass.CAid
         /// Save a feature layer of IPolyline to Ipe
         /// </summary>
         private static string TranIplToIpe(IFeature pFeature, IFeatureRenderer pRenderer, IEnvelope pFLayerEnv,
-            CEnvelope pIpeEnv, string strBoundWidth)
+            CEnvelope pIpeEnv, string strBoundWidth = "normal")
         {
             var pLineSymbol = pRenderer.SymbolByFeature[pFeature] as ILineSymbol;
             var pLineSymbolRgbColor = pLineSymbol.Color as IRgbColor;
@@ -178,17 +178,26 @@ namespace MorphingClass.CAid
         /// Save a feature layer of IPolygon to Ipe
         /// </summary>
         private static string TranIpgToIpe(IFeature pFeature, IFeatureRenderer pRenderer,
-            IEnvelope pFLayerEnv, CEnvelope pIpeEnv, string strBoundWidth)
+            IEnvelope pFLayerEnv, CEnvelope pIpeEnv, string strBoundWidth = "normal")
         {
             var pFillSymbol = pRenderer.SymbolByFeature[pFeature] as IFillSymbol;
-            return TranIpgToIpe((IPolygon4)pFeature.Shape, pFillSymbol, pFLayerEnv, pIpeEnv, strBoundWidth);
+            return TranCpgToIpe(new CPolygon(0, (IPolygon4)pFeature.Shape), pFillSymbol, pFLayerEnv, pIpeEnv, strBoundWidth);
         }
 
         /// <summary>
         /// Save a feature layer of IPolygon to Ipe
         /// </summary>
         public static string TranIpgToIpe(IPolygon4 ipg, IFillSymbol pFillSymbol,
-            IEnvelope pFLayerEnv, CEnvelope pIpeEnv, string strBoundWidth)
+            IEnvelope pFLayerEnv, CEnvelope pIpeEnv, string strBoundWidth = "normal")
+        {
+            return TranCpgToIpe(new CPolygon(0, ipg), pFillSymbol, pFLayerEnv, pIpeEnv, strBoundWidth);
+        }
+
+        /// <summary>
+        /// Save a feature layer of IPolygon to Ipe
+        /// </summary>
+        public static string TranCpgToIpe(CPolygon cpg, IFillSymbol pFillSymbol,
+            IEnvelope pFLayerEnv, CEnvelope pIpeEnv, string strBoundWidth = "normal")
         {
             //get the color of the filled part
             //we are not allowed to directly use "var pFillRgbColor = pFillSymbol.Color as IRgbColor;"
@@ -198,7 +207,7 @@ namespace MorphingClass.CAid
             pFillSymbolColor.RGB = pFillSymbol.Color.RGB;
             CColor cColor = new CUtility.CColor(pFillSymbolColor as IRgbColor);
             var pSimpleFillSymbol = pFillSymbol as ISimpleFillSymbol;
-            if (pSimpleFillSymbol!=null)
+            if (pSimpleFillSymbol != null)
             {
                 if (pSimpleFillSymbol.Style == esriSimpleFillStyle.esriSFSHollow ||
                     pSimpleFillSymbol.Style == esriSimpleFillStyle.esriSFSNull)
@@ -213,10 +222,7 @@ namespace MorphingClass.CAid
             if (strBoundWidth == "")
             {
                 strBoundWidth = pFillSymbol.Outline.Width.ToString();
-            }
-
-            //get the feature
-            CPolygon cpg = new CPolygon(0, ipg);
+            }            
 
             //append the string
             return CIpeDraw.DrawCpg(cpg, pFLayerEnv, pIpeEnv, new CColor(pOutlineRgbColor), cColor, strBoundWidth);
@@ -226,7 +232,8 @@ namespace MorphingClass.CAid
         /// Save a feature layer of IPolygon to Ipe
         /// </summary>
         public static string TranIpgBoundToIpe(IPolygon ipg,
-            IEnvelope pFLayerEnv, CEnvelope pIpeEnv, CColor StrokeColor, string strBoundWidth, string strDash)
+            IEnvelope pFLayerEnv, CEnvelope pIpeEnv, CColor StrokeColor, 
+            string strBoundWidth = "normal", string strDash = "normal")
         {
             ////get the color of the filled part
             ////we are not allowed to directly use "var pFillRgbColor = pFillSymbol.Color as IRgbColor;"

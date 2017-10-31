@@ -108,7 +108,7 @@ namespace MorphingClass.CGeneralizationMethods
 
 
             Console.WriteLine();
-            Console.WriteLine("Crg:  ID  " + LSCrg.ID + ";    n  " + LSCrg.CphTypeIndexSD_Area_CphGID.Count + ";    m  " +
+            Console.WriteLine("Crg:  ID  " + LSCrg.ID + ";    n  " + LSCrg.GetCphCount() + ";    m  " +
                     LSCrg.AdjCorrCphsSD.Count + "   " + intQuitCount + "   " + 
                     CConstants.strShapeConstraint + "   " + strAreaAggregation);
 
@@ -196,7 +196,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             //a region represents a node in graph, ExistingCrgSD stores all the nodes
             //we use this dictionary to make sure that if the two patches have the same cpgs, then they have the same GID
-            var ExistingCphSDLt = new List<SortedDictionary<CPatch, CPatch>>(LSCrg.CphTypeIndexSD_Area_CphGID.Count + 1);  
+            var ExistingCphSDLt = new List<SortedDictionary<CPatch, CPatch>>(LSCrg.GetCphCount() + 1);  
             for (int i = 0; i < ExistingCphSDLt.Capacity; i++)
             {
                 var Element = new SortedDictionary<CPatch, CPatch>(CPatch.pCmpCPatch_CpgGID);
@@ -676,9 +676,6 @@ namespace MorphingClass.CGeneralizationMethods
 
         private double BalancedEstType(CRegion crg, int intFinalTypeIndex, double[,] padblTD, int intEstSteps)
         {
-            var pCphTypeIndexSD = crg.CphTypeIndexSD_Area_CphGID;
-
-
             int intOverestimationCount = Math.Min(intEstSteps, crg.GetCphCount());
             var pCphTypeIndexEt = crg.CphTypeIndexSD_Area_CphGID.GetEnumerator();
             double dblCostEst = 0;

@@ -68,7 +68,9 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.cboShapeConstraint = this.cboShapeConstraint;
             ParameterInitialize.chkSmallest = this.chkSmallest;
 
-            this.cboShapeConstraint.SelectedIndex = 1;
+            ParameterInitialize.cboShapeConstraint.SelectedIndex = 1;
+            ParameterInitialize.chkSmallest.Checked = false;
+
 
             //进行Load操作，初始化变量
             _FrmOperation = new CFrmOperation(ref ParameterInitialize);
@@ -87,7 +89,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             this.txtEvaluation.Text = pCAreaAgg_Greedy.dblCost.ToString();
             StrObjLtSD.Merge(pCAreaAgg_Greedy.StrObjLtSD);
             CAreaAgg_Base.SaveData(StrObjLtSD, ParameterInitialize, "Greedy", Convert.ToInt32(txtNodes.Text));
-
+            _pCAreaAgg_Base = pCAreaAgg_Greedy as CAreaAgg_Base;
             MessageBox.Show("Done!");
         }
 
@@ -393,6 +395,7 @@ namespace ContinuousGeneralizer.FrmMorphing
 
         private void RunILP(CParameterInitialize ParameterInitialize, bool chkSmallestChecked)
         {
+            ParameterInitialize.cboShapeConstraint.SelectedIndex = 1;
             ParameterInitialize.chkSmallest.Checked = chkSmallestChecked;
 
             var objResultSD = new SortedDictionary<string, List<object>>();
@@ -544,10 +547,11 @@ namespace ContinuousGeneralizer.FrmMorphing
 
         private void btnMultiResults_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < 11; i++)
+            var dblMultiCount = Convert.ToDouble(this.txtMultiResults.Text);
+            for (int i = 0; i < dblMultiCount; i++)
             {
-                _dblProportion = i * 0.1;
-                i++;
+                _dblProportion = i / (dblMultiCount - 1);
+                //i++;
                 _pCAreaAgg_Base.Output(_dblProportion);
             }
         }

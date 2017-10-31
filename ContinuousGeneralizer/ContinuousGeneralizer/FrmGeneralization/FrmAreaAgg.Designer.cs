@@ -85,6 +85,7 @@
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.timerAdd = new System.Windows.Forms.Timer(this.components);
+            this.txtMultiResults = new System.Windows.Forms.TextBox();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -97,7 +98,7 @@
             // btnAdd
             // 
             this.btnAdd.Font = new System.Drawing.Font("SimSun", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnAdd.Location = new System.Drawing.Point(245, 179);
+            this.btnAdd.Location = new System.Drawing.Point(245, 209);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(35, 29);
             this.btnAdd.TabIndex = 80;
@@ -108,7 +109,7 @@
             // btnReduce
             // 
             this.btnReduce.Font = new System.Drawing.Font("SimSun", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnReduce.Location = new System.Drawing.Point(6, 179);
+            this.btnReduce.Location = new System.Drawing.Point(6, 209);
             this.btnReduce.Name = "btnReduce";
             this.btnReduce.Size = new System.Drawing.Size(35, 29);
             this.btnReduce.TabIndex = 79;
@@ -118,7 +119,7 @@
             // 
             // btnSaveInterpolation
             // 
-            this.btnSaveInterpolation.Location = new System.Drawing.Point(8, 147);
+            this.btnSaveInterpolation.Location = new System.Drawing.Point(7, 178);
             this.btnSaveInterpolation.Name = "btnSaveInterpolation";
             this.btnSaveInterpolation.Size = new System.Drawing.Size(162, 25);
             this.btnSaveInterpolation.TabIndex = 70;
@@ -128,13 +129,14 @@
             // 
             // pbScale
             // 
-            this.pbScale.Location = new System.Drawing.Point(62, 179);
+            this.pbScale.Location = new System.Drawing.Point(62, 209);
             this.pbScale.Name = "pbScale";
             this.pbScale.Size = new System.Drawing.Size(162, 29);
             this.pbScale.TabIndex = 71;
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.txtMultiResults);
             this.groupBox2.Controls.Add(this.btnDetailToIpe);
             this.groupBox2.Controls.Add(this.btnMultiResults);
             this.groupBox2.Controls.Add(this.btnAdd);
@@ -158,14 +160,14 @@
             this.groupBox2.Controls.Add(this.btn090);
             this.groupBox2.Location = new System.Drawing.Point(11, 558);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(288, 221);
+            this.groupBox2.Size = new System.Drawing.Size(288, 269);
             this.groupBox2.TabIndex = 74;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Display";
             // 
             // btnDetailToIpe
             // 
-            this.btnDetailToIpe.Location = new System.Drawing.Point(172, 148);
+            this.btnDetailToIpe.Location = new System.Drawing.Point(174, 178);
             this.btnDetailToIpe.Name = "btnDetailToIpe";
             this.btnDetailToIpe.Size = new System.Drawing.Size(106, 25);
             this.btnDetailToIpe.TabIndex = 82;
@@ -175,7 +177,7 @@
             // 
             // btnMultiResults
             // 
-            this.btnMultiResults.Location = new System.Drawing.Point(174, 85);
+            this.btnMultiResults.Location = new System.Drawing.Point(6, 116);
             this.btnMultiResults.Name = "btnMultiResults";
             this.btnMultiResults.Size = new System.Drawing.Size(106, 25);
             this.btnMultiResults.TabIndex = 81;
@@ -185,7 +187,7 @@
             // 
             // txtProportion
             // 
-            this.txtProportion.Location = new System.Drawing.Point(116, 116);
+            this.txtProportion.Location = new System.Drawing.Point(116, 150);
             this.txtProportion.Name = "txtProportion";
             this.txtProportion.Size = new System.Drawing.Size(108, 20);
             this.txtProportion.TabIndex = 68;
@@ -194,7 +196,7 @@
             // 
             // btnInputedScale
             // 
-            this.btnInputedScale.Location = new System.Drawing.Point(6, 116);
+            this.btnInputedScale.Location = new System.Drawing.Point(6, 147);
             this.btnInputedScale.Name = "btnInputedScale";
             this.btnInputedScale.Size = new System.Drawing.Size(104, 25);
             this.btnInputedScale.TabIndex = 67;
@@ -380,7 +382,7 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.txtEvaluation);
-            this.groupBox3.Location = new System.Drawing.Point(12, 785);
+            this.groupBox3.Location = new System.Drawing.Point(12, 833);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(288, 53);
             this.groupBox3.TabIndex = 75;
@@ -683,11 +685,20 @@
             this.timerAdd.Interval = 500;
             this.timerAdd.Tick += new System.EventHandler(this.timerAdd_Tick);
             // 
+            // txtMultiResults
+            // 
+            this.txtMultiResults.Location = new System.Drawing.Point(116, 119);
+            this.txtMultiResults.Name = "txtMultiResults";
+            this.txtMultiResults.Size = new System.Drawing.Size(108, 20);
+            this.txtMultiResults.TabIndex = 83;
+            this.txtMultiResults.Text = "11";
+            this.txtMultiResults.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
             // FrmAreaAgg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(309, 853);
+            this.ClientSize = new System.Drawing.Size(309, 898);
             this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox2);
@@ -770,5 +781,6 @@
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.Button btnDetailToIpe;
         private System.Windows.Forms.Timer timerAdd;
+        private System.Windows.Forms.TextBox txtMultiResults;
     }
 }

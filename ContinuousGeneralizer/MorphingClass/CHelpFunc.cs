@@ -52,16 +52,16 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "Tianjin-Animation"; 
         //private static string _strDataFolderName = "MainlandChina-Animation-complicated";
         //private static string _strDataFolderName = "MainlandChina-Shanghai";
-        private static string _strDataFolderName = "MainlandChina";
+        //private static string _strDataFolderName = "MainlandChina";
         //private static string _strDataFolderName = "CompatibleTriangulation";
-        private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\Administrative Boundary\\" + _strDataFolderName + "\\";
+        //private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\Administrative Boundary\\" + _strDataFolderName + "\\";
 
         //private static string _strDataFolderName = "LinearMorphingBothInjected";
         //private static string _strDataFolderName = "CompatibleTriangulation3";
         //private static string _strPath =
         //"C:\\Study\\Data\\Morphing Data\\Representation In Article\\ContinuousGeneralizationOfAdministrativeBoundariesBasedonMorphing\\" + _strDataFolderName + "\\";
 
-        //private static string _strDataFolderName = "AreaAggregation";
+        private static string _strDataFolderName = "AreaAggregation";
         //private static string _strDataFolderName = "AreaAggregation_85_Hole";        
         //private static string _strDataFolderName = "AreaAggregation_543";
         //private static string _strDataFolderName = "AreaAggregation_544";
@@ -81,8 +81,8 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "AreaAggregation-Computable";
         //private static string _strDataFolderName = "AreaAggregation-Uncomputable";
         //private static string _strDataFolderName = "AreaAggregation-Mostpatches";
-        //        private static string _strPath =
-        //"C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\AreaAggregation\\" + _strDataFolderName + "\\";
+        private static string _strPath =
+"C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\AreaAggregation\\" + _strDataFolderName + "\\";
 
         //private static string _strDataFolderName = "France";
         //private static string _strDataFolderName = "France_FourTowns";

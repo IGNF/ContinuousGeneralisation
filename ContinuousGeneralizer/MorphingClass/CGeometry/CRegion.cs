@@ -456,6 +456,13 @@ namespace MorphingClass.CGeometry
             }
 
             this.AdjCorrCphsSD = pAdjCorrCphsSD;
+
+            //foreach (var pAdjCorrCphs in pAdjCorrCphsSD)
+            //{
+            //    Console.WriteLine("frcph:  " + (pAdjCorrCphs.Key.FrCph.ID+1).ToString() 
+            //        + "     tocph:  " + (pAdjCorrCphs.Key.ToCph.ID + 1).ToString() +
+            //        "     Interiorlength:  " + pAdjCorrCphs.Key.dblSharedSegLength);
+            //}
             return ExistingCorrCphsSD0;
         }
 

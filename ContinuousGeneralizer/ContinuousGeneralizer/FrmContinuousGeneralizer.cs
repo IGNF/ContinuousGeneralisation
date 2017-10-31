@@ -61,8 +61,8 @@ namespace ContinuousGeneralizer
             //var frmCurrent = new FrmSelectRandomly(_DataRecords);
             //var frmCurrent = new FrmToIpe(_DataRecords);
             //var frmCurrent = new FrmBldgGrow(_DataRecords);
-            //var frmCurrent = new FrmAreaAgg(_DataRecords);
-            var frmCurrent = new FrmCGABM(_DataRecords);
+            var frmCurrent = new FrmAreaAgg(_DataRecords);
+            //var frmCurrent = new FrmCGABM(_DataRecords);
             //var frmCurrent = new FrmExtractPossibleFiles();
             frmCurrent.Show();
             //frmCurrent.btnRun_Click(sender, e);
