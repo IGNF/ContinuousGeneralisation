@@ -108,11 +108,16 @@ namespace MorphingClass.CGeneralizationMethods
                 // Step 9
                 //1170 is from _All_MinimizeInteriorBoundaries_200000000
                 //126 is from _Smallest_MinimizeInteriorBoundaries_200000
-                cplex.SetParam(Cplex.DoubleParam.TiLim, 126);  
+                cplex.SetParam(Cplex.DoubleParam.TiLim, 126);
+
                 //cplex.SetParam(Cplex.IntParam.ParallelMode, 1);
                 //cplex.SetParam(Cplex.ParallelMode.Deterministic,cplex.pa);
                 //cplex.SetParam(Cplex.StringParam.RootAlgorithm,)
-                //ILOG.Concert.
+
+                //avoid that optimal solutions from CPELX are not optimal
+                //see https://www-01.ibm.com/support/docview.wss?uid=swg1RS02094
+                cplex.SetParam(Cplex.IntParam.AuxRootThreads, -1);
+                cplex.SetParam(Cplex.IntParam.Reduce, 0);
 
                 if (cplex.Solve())
                 {
@@ -353,6 +358,12 @@ namespace MorphingClass.CGeneralizationMethods
             var4[0] = y;
             var4[1] = z;
             var4[2] = c;
+
+
+            //model.AddEq(x[2][0][3], 1.0, "X1");
+            //model.AddEq(x[2][1][3], 1.0, "X2");
+            //model.AddEq(x[2][2][2], 1.0, "X3");
+            //model.AddEq(x[2][3][3], 1.0, "X4");
 
             //add minimizations
             ILinearNumExpr pTypeCostExpr = model.LinearNumExpr();
@@ -621,20 +632,27 @@ namespace MorphingClass.CGeneralizationMethods
 
                 //forces that the aggregation must involve the smallest patch.
                 for (int i = 0; i < intCpgCount - 1; i++)   //i represents indices
-                {
+                {                    
                     for (int j = 0; j < intCpgCount; j++)
                     {
                         var pInvolveSmallestExpr = model.LinearIntExpr();
                         for (int k = 0; k < intCpgCount; k++)
                         {
-                            for (int l = 0; l < intCpgCount; l++)
+                            if (j != k)
                             {
-                                if (l != j)
-                                {
-                                    pInvolveSmallestExpr.AddTerm(y[i][k][j][l], 1);
-                                    pInvolveSmallestExpr.AddTerm(y[i][k][l][j], 1);
-                                }
+                                pInvolveSmallestExpr.AddTerm(y[i][j][j][k], 1);
+                                pInvolveSmallestExpr.AddTerm(y[i][k][k][j], 1);
                             }
+
+
+                            //for (int l = 0; l < intCpgCount; l++)
+                            //{
+                            //    if (l != j)
+                            //    {
+                            //        pInvolveSmallestExpr.AddTerm(y[i][k][j][l], 1);
+                            //        pInvolveSmallestExpr.AddTerm(y[i][k][l][j], 1);
+                            //    }
+                            //}
                         }
 
                         model.AddLe(w[i][j], pInvolveSmallestExpr, "InvolveSmallest");
@@ -650,13 +668,12 @@ namespace MorphingClass.CGeneralizationMethods
                     {
                         for (int k = 0; k < intCpgCount; k++)
                         {
-                            var pSumExpr = model.Sum(model.Negative(model.Sum(w[i][j], x[i][k][k])), 2.0);  //(2-w_{t,o}-x_{t,r,r})
+                            var pSumExpr = model.Sum(2.0, model.Negative(model.Sum(w[i][j], x[i][k][k])));  //(2-w_{t,o}-x_{t,r,r})
                             var pProdExpr = model.Prod(pSumExpr, dblW);  //W(2-w_{t,o}-x_{t,r,r})
 
-                            //A_{t,o}-A_{t,r}-W(2-w_{t,o}-x_{t,r,r}) <= 0
+                            //A_{t,o}-A_{t,r}<= W(2-w_{t,o}-x_{t,r,r})
                             model.AddLe(model
-                                .Sum(aAreaExpr[j], model.Negative(aAreaExpr[k]), model.Negative(pProdExpr)), 
-                                dblILPSmallValue, "IndeedSmallest");
+                                .Sum(aAreaExpr[j], model.Negative(aAreaExpr[k])), pProdExpr, "IndeedSmallest");
                         }
                     }
                 }

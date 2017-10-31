@@ -69,7 +69,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.chkSmallest = this.chkSmallest;
 
             ParameterInitialize.cboShapeConstraint.SelectedIndex = 1;
-            ParameterInitialize.chkSmallest.Checked = false;
+            //ParameterInitialize.chkSmallest.Checked = false;
 
 
             //进行Load操作，初始化变量
