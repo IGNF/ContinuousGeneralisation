@@ -44,7 +44,7 @@ namespace MorphingClass.CGeneralizationMethods
         protected static int _intEnd; //=this.SSCrgLt.Count
         protected void UpdateStartEnd()
         {
-            _intStart = 53;
+            _intStart = 358;
             _intEnd = _intStart + 1;
         }
 
