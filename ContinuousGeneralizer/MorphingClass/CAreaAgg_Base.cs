@@ -44,8 +44,8 @@ namespace MorphingClass.CGeneralizationMethods
         protected static int _intEnd; //=this.SSCrgLt.Count
         protected void UpdateStartEnd()
         {
-            //_intStart = 181;
-            //_intEnd = _intStart + 1;
+            _intStart = 53;
+            _intEnd = _intStart + 1;
         }
 
         public List<CRegion> InitialCrgLt { set; get; }
@@ -546,7 +546,7 @@ namespace MorphingClass.CGeneralizationMethods
             strData += GetSumWithSpecifiedStyle(StrObjLtSD, "CostType", "{0,4}", 1);
             strData += GetSumWithSpecifiedStyle(StrObjLtSD, "CostComp", "{0,4}", 1);
             strData += GetSumWithSpecifiedStyle(StrObjLtSD, "WeightedSum", "{0,4}", 1);
-            strData += GetSumWithSpecifiedStyle(StrObjLtSD, "Time(ms)", "{0,4}", 1, 60000);  //all the time
+            strData += GetSumWithSpecifiedStyle(StrObjLtSD, "Time(ms)", "{0,4}", 1, 60000);  //all the time, minuts in statistics
             //strData += ;
 
             //to generate coordinates like (1,6), where x is for the index of overestimation factor, 

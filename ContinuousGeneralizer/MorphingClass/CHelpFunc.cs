@@ -61,7 +61,7 @@ namespace MorphingClass.CUtility
         //private static string _strPath =
         //"C:\\Study\\Data\\Morphing Data\\Representation In Article\\ContinuousGeneralizationOfAdministrativeBoundariesBasedonMorphing\\" + _strDataFolderName + "\\";
 
-        private static string _strDataFolderName = "AreaAggregation";
+        //private static string _strDataFolderName = "AreaAggregation";
         //private static string _strDataFolderName = "AreaAggregation_85_Hole";        
         //private static string _strDataFolderName = "AreaAggregation_543";
         //private static string _strDataFolderName = "AreaAggregation_544";
@@ -81,8 +81,8 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "AreaAggregation-Computable";
         //private static string _strDataFolderName = "AreaAggregation-Uncomputable";
         //private static string _strDataFolderName = "AreaAggregation-Mostpatches";
-        private static string _strPath =
-"C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\AreaAggregation\\" + _strDataFolderName + "\\";
+        //        private static string _strPath =
+        //"C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\AreaAggregation\\" + _strDataFolderName + "\\";
 
         //private static string _strDataFolderName = "France";
         //private static string _strDataFolderName = "France_FourTowns";
@@ -116,10 +116,10 @@ namespace MorphingClass.CUtility
         //private static string _strPath = 
         //    "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\" + _strDataFolderName + "\\";
 
-        //        private static string _strDataFolderName = "bayern20171011";
+        private static string _strDataFolderName = "bayern20171011";
 
-        //        private static string _strPath =
-        //"C:\\MyWork\\Study_Archive\\Data\\PointData\\PointData\\" + _strDataFolderName + "\\";
+        private static string _strPath =
+"C:\\MyWork\\Study_Archive\\Data\\PointData\\PointData\\" + _strDataFolderName + "\\";
 
         public static IEnumerable<CPoint> GetTestCptEb()
         {
