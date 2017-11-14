@@ -26,11 +26,16 @@ namespace ContinuousGeneralizer.FrmAid
 {
     public partial class FrmGaussianPerturbation: Form
     {
+        private CDataRecords _DataRecords;                    //数据记录
         private CFrmOperation _FrmOperation;
 
+        /// <summary>属性：数据记录</summary>
+        public CDataRecords DataRecords
+        {
+            get { return _DataRecords; }
+            set { _DataRecords = value; }
+        }
 
-        CDataRecords _DataRecords;
-        protected object _Missing = Type.Missing;
 
         public FrmGaussianPerturbation()
         {
@@ -44,21 +49,18 @@ namespace ContinuousGeneralizer.FrmAid
         {
             InitializeComponent();
             _DataRecords = pDataRecords;
-            //m_mapControl = m_MapControl;
-            //_tsslTime = tsslTime;
+            pDataRecords.ParameterInitialize.frmCurrentForm = this;
         }
 
         private void FrmGaussianPerturbation_Load(object sender, EventArgs e)
         {
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
-            
-            
-            
-            ParameterInitialize.cboLayer = this.cboLayer;
+            ParameterInitialize.cboLayerLt = new List<ComboBox>(2);
+            ParameterInitialize.cboLayerLt.Add(this.cboLayer);
+            CConstants.strMethod = "GaussianPerturbation";
 
             //进行Load操作，初始化变量
             _FrmOperation = new CFrmOperation(ref ParameterInitialize);
-            throw new ArgumentException("improve loading layesr!");
         }
 
         public void btnRun_Click(object sender, EventArgs e)
@@ -99,7 +101,8 @@ namespace ContinuousGeneralizer.FrmAid
             long lngStartTime = System.Environment.TickCount; //记录开始时间
 
 
-            if ((pFeatureLayer.FeatureClass != null) && (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint))
+            if ((pFeatureLayer.FeatureClass != null) && 
+                (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint))
             {
                 List<CPoint> cptlt = CHelpFunc.GetCPtLtFromPointFeatureLayer(pFeatureLayer);
                 if (dblFactor == -1)

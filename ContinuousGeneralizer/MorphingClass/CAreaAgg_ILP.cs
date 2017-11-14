@@ -107,8 +107,8 @@ namespace MorphingClass.CGeneralizationMethods
 
                 // Step 9
                 //1170 is from _All_MinimizeInteriorBoundaries_200000000
-                //126 is from _Smallest_MinimizeInteriorBoundaries_200000
-                cplex.SetParam(Cplex.DoubleParam.TiLim, 126);
+                //160 is from _Smallest_MinimizeInteriorBoundaries_200000
+                cplex.SetParam(Cplex.DoubleParam.TiLim, 160);
 
                 //cplex.SetParam(Cplex.IntParam.ParallelMode, 1);
                 //cplex.SetParam(Cplex.ParallelMode.Deterministic,cplex.pa);
@@ -117,7 +117,7 @@ namespace MorphingClass.CGeneralizationMethods
                 //avoid that optimal solutions from CPELX are not optimal
                 //see https://www-01.ibm.com/support/docview.wss?uid=swg1RS02094
                 cplex.SetParam(Cplex.IntParam.AuxRootThreads, -1);
-                cplex.SetParam(Cplex.IntParam.Reduce, 0);
+                cplex.SetParam(Cplex.IntParam.Reduce, 0);  //really work for me
 
                 if (cplex.Solve())
                 {
