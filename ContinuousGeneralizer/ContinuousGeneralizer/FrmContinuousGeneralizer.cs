@@ -58,11 +58,12 @@ namespace ContinuousGeneralizer
             //    throw;
             //}
 
+            //var frmCurrent = new FrmStatisticsOfDataSets(_DataRecords);
             //var frmCurrent = new FrmSelectRandomly(_DataRecords);
             //var frmCurrent = new FrmToIpe(_DataRecords);
             //var frmCurrent = new FrmBldgGrow(_DataRecords);
-            var frmCurrent = new FrmAreaAgg(_DataRecords);
-            //var frmCurrent = new FrmCGABM(_DataRecords);
+            //var frmCurrent = new FrmAreaAgg(_DataRecords);
+            var frmCurrent = new FrmCGABM(_DataRecords);
             //var frmCurrent = new FrmExtractPossibleFiles();
             frmCurrent.Show();
             //frmCurrent.btnRun_Click(sender, e);
@@ -112,6 +113,16 @@ namespace ContinuousGeneralizer
             this.MouseWheel += new MouseEventHandler(this.axMapControl_MouseWheel);
         }
 
+        //public void Enable3DAnalysis()
+        //{
+        //    ESRI.ArcGIS.esriSystem.IExtensionManagerAdmin iExtensionManagerAdmin = new ESRI.ArcGIS.esriSystem.ExtensionManagerClass();
+        //    UID iUid3D = new UIDClass();
+        //    iUid3D.Value = "{94305472-592E-11D4-80EE-00C04FA0ADF8}";
+        //    object o = new object();
+        //    iExtensionManagerAdmin.AddExtension(iUid3D, ref o);
+        //    IExtensionConfig iExtensionConfig = (IExtensionConfig)(iExtensionManagerAdmin as IExtensionManager).FindExtension(iUid3D);
+        //    iExtensionConfig.State = esriExtensionState.esriESEnabled;
+        //}
 
         private void frmContinuousGeneralizer_Load(object sender, EventArgs e)
         {
@@ -1279,5 +1290,7 @@ namespace ContinuousGeneralizer
             FrmSelectRandomly frmSelectRandomly = new FrmSelectRandomly(_DataRecords);
             frmSelectRandomly.Show();
         }
+
+   
     }
 }

@@ -109,7 +109,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             double dblStartScale = dblLS;
             double dblFclipper = CConstants.dblFclipper;
-
+            CConstants.dblFScale= CConstants.dblFclipper;
             var MagnifiedCpgLt = clipperMethods.ScaleCpgEb(LSCpgLt, dblFclipper).ToList();
             CConstants.dblVerySmallCoord *= dblFclipper;
             int intStart = 0;

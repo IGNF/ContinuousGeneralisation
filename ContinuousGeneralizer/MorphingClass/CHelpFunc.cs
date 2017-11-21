@@ -51,10 +51,11 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "MainlandChina-Animation";
         //private static string _strDataFolderName = "Tianjin-Animation"; 
         //private static string _strDataFolderName = "MainlandChina-Animation-complicated";
-        //private static string _strDataFolderName = "MainlandChina-Shanghai";
+        private static string _strDataFolderName = "MainlandChina-Shanghai";
         //private static string _strDataFolderName = "MainlandChina";
         //private static string _strDataFolderName = "CompatibleTriangulation";
-        //private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\Administrative Boundary\\" + _strDataFolderName + "\\";
+        //private static string _strDataFolderName = "CompatibleTriangulation_Simple";
+        private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\Administrative Boundary\\" + _strDataFolderName + "\\";
 
         //private static string _strDataFolderName = "LinearMorphingBothInjected";
         //private static string _strDataFolderName = "CompatibleTriangulation3";
@@ -87,6 +88,7 @@ namespace MorphingClass.CUtility
         //private static string _strDataFolderName = "France";
         //private static string _strDataFolderName = "France_FourTowns";
         //private static string _strDataFolderName = "France_FourTowns_Several";
+        //private static string _strDataFolderName = "France_FourTownsLengthy";
         //private static string _strDataFolderName = "France_Part";
         //private static string _strDataFolderName = "France_FourBuildings";
         //private static string _strDataFolderName = "France_Smallpart";
@@ -116,10 +118,10 @@ namespace MorphingClass.CUtility
         //private static string _strPath = 
         //    "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\" + _strDataFolderName + "\\";
 
-        private static string _strDataFolderName = "bayern20171011";
+        //        private static string _strDataFolderName = "bayern20171011";
 
-        private static string _strPath =
-"C:\\MyWork\\Study_Archive\\Data\\PointData\\PointData\\" + _strDataFolderName + "\\";
+        //        private static string _strPath =
+        //"C:\\MyWork\\Study_Archive\\Data\\PointData\\PointData\\" + _strDataFolderName + "\\";
 
         public static IEnumerable<CPoint> GetTestCptEb()
         {

@@ -397,13 +397,26 @@ namespace MorphingClass.CGeometry
             }
         }
 
-        public IEnumerable<CPoint> GetOuterCptEb(bool clockwise = true, bool blnIdentical = true)
+        public void SetOuterFaceCptlt(bool clockwise = true, bool blnIdentical = true, CPoint StartPositionCpt = null)
+        {
+            this.CptLt = GetOuterCptEb(clockwise, blnIdentical, StartPositionCpt).ToList();
+
+        }
+
+        public IEnumerable<CPoint> GetOuterCptEb(bool clockwise = true, bool blnIdentical = true, CPoint StartPositionCpt=null)
         {
             var pOuterCmptCEdge = _OuterCmptCEdge;
             if (pOuterCmptCEdge == null)
             {
-                throw new ArgumentException("Super face does not have a outer ring!");
+                throw new ArgumentException("Super face does not have an outer ring!");
             }
+
+            if (StartPositionCpt != null)
+            {
+                pOuterCmptCEdge = TraverseToGetCorrectCEdgeComponent(pOuterCmptCEdge, StartPositionCpt);
+            }
+
+
 
             if (clockwise == true)   //for an outer path, the edges are stored counter-clockwise in DCEL
             {
@@ -426,7 +439,27 @@ namespace MorphingClass.CGeometry
             }
         }
 
-       
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cedgeComponent"></param>
+        /// <param name="blnNext"></param>
+        /// <returns></returns>
+        private static CEdge TraverseToGetCorrectCEdgeComponent(CEdge cedgeComponent, CPoint cpt)
+        {
+            var currentcedge = cedgeComponent;
+            do
+            {                
+                if (CCmpMethods.CmpCptYX(currentcedge.FrCpt, cpt)==0)
+                {
+                    return currentcedge;
+                }
+
+                currentcedge = currentcedge.cedgeNext;
+            } while (currentcedge.GID != cedgeComponent.GID);
+            throw new ArgumentException("we cannot find an appropriate edge!");
+        }
 
         /// <summary>
         /// 

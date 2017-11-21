@@ -20,8 +20,9 @@ namespace MorphingClass.CCorrepondObjects
         private CPolygon _ToCpg;
         private CTriangulation _FrCtgl;
         private CTriangulation _ToCtgl;
+        private bool _blnSave;
         private int _intN;  // the number of edges of the regular polygon
-        private CParameterInitialize _pParameterInitialize;
+
         //private CDCEL _FrRglDCEL;
 
         public CCptbCtgl(CTriangulation frctgl, CTriangulation toctgl, int intID = -1)
@@ -32,13 +33,12 @@ namespace MorphingClass.CCorrepondObjects
             _intID = intID;
         }
 
-        public CCptbCtgl(CPolygon frcpg, CPolygon tocpg, CParameterInitialize parameterInitialize, int intID = -1)
+        public CCptbCtgl(CPolygon frcpg, CPolygon tocpg, bool blnSave = false, int intID = -1)
         {
-            _pParameterInitialize = parameterInitialize;
 
             _FrCpg = frcpg;
             _ToCpg = tocpg;
-
+            _blnSave = blnSave;
 
 
 
@@ -46,15 +46,27 @@ namespace MorphingClass.CCorrepondObjects
 
             _FrCtgl = new CTriangulation(frcpg);
             _FrCtgl.Triangulate();
-            //_FrCtgl.GenerateITinEdgeLt(true);
-            //_FrCtgl.SaveDataAreaITinEdgeLt(parameterInitialize, "Larger");
+
+
+
             //_FrCtgl.CompareCptltAndNode();
 
             _ToCtgl = new CTriangulation(tocpg);
             _ToCtgl.Triangulate();
-            //_ToCtgl.GenerateITinEdgeLt(true);
-            //_ToCtgl.SaveDataAreaITinEdgeLt(parameterInitialize, "Smaller");
+
             //_ToCtgl.CompareCptltAndNode();
+
+
+
+            //if (blnSave == true)
+            //{
+            //    _FrCtgl.GenerateITinEdgeLt(true);
+            //    _FrCtgl.SaveDataAreaITinEdgeLt("Larger");
+
+            //    _ToCtgl.GenerateITinEdgeLt(true);
+            //    _ToCtgl.SaveDataAreaITinEdgeLt("Smaller");
+            //}
+
             _intID = intID;
         }
 
@@ -67,24 +79,39 @@ namespace MorphingClass.CCorrepondObjects
         {
             CTriangulation frctgl = _FrCtgl;
             CTriangulation toctgl = _ToCtgl;
+            bool blnSave = _blnSave;
             _intN = frctgl.CptLt.Count;
 
             CDCEL FrRglDCEL;
             CDCEL ToRglDCEL;
-            ConstructRglDCEL(frctgl, toctgl, out FrRglDCEL, out ToRglDCEL);
+            ConstructRglDCEL(frctgl, toctgl, out FrRglDCEL, out ToRglDCEL, blnSave);
 
-            CombineAndTriangulateDCEL(ref FrRglDCEL, ref ToRglDCEL);  //in FrRglDCEL, cptlt, cpt.AxisAngleCEdgeLt, HalfEdgeLt and CEdgelt has been updated. FaceCpgLt should not be used before updating
-            FrRglDCEL.SaveCEdgeLt(_pParameterInitialize, "CombinedAndTriangulatedDCEL" + _intID);
+            //in FrRglDCEL, cptlt, cpt.AxisAngleCEdgeLt, HalfEdgeLt and CEdgelt has been updated. 
+            //FaceCpgLt should not be used before updating
+            CombineAndTriangulateDCEL(ref FrRglDCEL, ref ToRglDCEL,blnSave);  
+
+            //if (blnSave==true)
+            //{
+            //    CSaveFeature.SaveCEdgeEb(FrRglDCEL.CEdgeLt, "CombinedAndTriangulatedDCEL", blnVisible: false);
+            //}
+           
 
             RefineOriginalCtgl(frctgl, FrRglDCEL, CEnumScale.Larger);    //CptLt, CEdgeLt, HalfEdgeLt, FaceCpgLt are updated
             RefineOriginalCtgl(toctgl, FrRglDCEL, CEnumScale.Smaller);   //CptLt, CEdgeLt, HalfEdgeLt, FaceCpgLt are updated
 
+            if (blnSave == true)
+            {
+                CSaveFeature.SaveCEdgeEb(frctgl.CEdgeLt, "RefinedFrCtgl", blnVisible: false);
+                CSaveFeature.SaveCptEb(frctgl.CptLt, "RefinedToCpt", blnVisible: false);
 
-            frctgl.SaveCEdgeLt(_pParameterInitialize, "FrCptbCtgl" + _intID);
-            toctgl.SaveCEdgeLt(_pParameterInitialize, "ToCptbCtgl" + _intID);
+                CSaveFeature.SaveCEdgeEb(toctgl.CEdgeLt, "RefinedToCtgl", blnVisible: false);
+                CSaveFeature.SaveCptEb(toctgl.CptLt, "RefinedToCpt", blnVisible: false);
+            }
+
         }
 
-        private void ConstructRglDCEL(CTriangulation frctgl, CTriangulation toctgl, out CDCEL FrRglDCEL, out CDCEL ToRglDCEL)
+        private void ConstructRglDCEL(CTriangulation frctgl, CTriangulation toctgl, 
+            out CDCEL FrRglDCEL, out CDCEL ToRglDCEL, bool blnSave=false)
         {
             if (frctgl.pTinAdvanced2.DataNodeCount!=toctgl.pTinAdvanced2.DataNodeCount)
             {
@@ -92,42 +119,55 @@ namespace MorphingClass.CCorrepondObjects
             }
 
             IEnvelope ipgEnv = frctgl.CPg.pPolygon.Envelope;
-            double dblMoveHight = 5 * ipgEnv.Height;
+            double dblMoveHight = 2 * ipgEnv.Height;
             IEnvelope pEnv = new EnvelopeClass();
             pEnv.PutCoords(ipgEnv.XMin, ipgEnv.YMin + dblMoveHight, ipgEnv.XMax, ipgEnv.YMax + dblMoveHight);
 
-            FrRglDCEL = ConstructRglDCEL(frctgl, pEnv, CEnumScale.Larger);
-            ToRglDCEL = ConstructRglDCEL(toctgl, pEnv, CEnumScale.Smaller);  //note that we use the same Extent with the Fr one
+            FrRglDCEL = ConstructRglDCEL(frctgl, pEnv, CEnumScale.Larger, blnSave);
+            //note that we use the same Extent with the Fr one
+            ToRglDCEL = ConstructRglDCEL(toctgl, pEnv, CEnumScale.Smaller, blnSave);  
 
         }
 
 
-        private CDCEL ConstructRglDCEL(CTriangulation ctgl, IEnvelope pEnv, CEnumScale enumScale)
+        private CDCEL ConstructRglDCEL(CTriangulation ctgl, IEnvelope pEnv, CEnumScale enumScale, bool blnSave = false)
         {
-            var realcedgelt = ctgl.GenerateDataAreaCEdgeLt();
-            ctgl.SaveCEdgeLt(_pParameterInitialize, enumScale.ToString() + "RealCDT" + _intID);
+            var realIndCEdgelt = ctgl.GenerateRealTinCEdgeLt();
+            if (blnSave == true)
+            {
+                CSaveFeature.SaveCEdgeEb(realIndCEdgelt, enumScale.ToString() + "RealIndCDT", blnVisible: false);
+                CSaveFeature.SaveCptEb(ctgl.CptLt, enumScale.ToString() + "RealCpt", blnVisible: false);
+            }
 
 
-            var rglcpg = CGeoFunc.CreateRegularCpg(pEnv, ctgl.pTinAdvanced2.DataNodeCount);
+            var RglCpg = CGeoFunc.CreateRegularCpg(pEnv, ctgl.pTinAdvanced2.DataNodeCount);
 
             //rglcpg.CEdgeLt[0].PrintMySelf();
             //rglcpg.CptLt [0].PrintMySelf();
             //rglcpg.CptLt[1].PrintMySelf();
-            rglcpg.CptLt.SetIndexID();
-            var rglCEdgeLt = new List<CEdge>(ctgl.pTinAdvanced2.DataEdgeCount);
+            RglCpg.CptLt.SetIndexID();
+            var RglCEdgeLt = new List<CEdge>(ctgl.pTinAdvanced2.DataEdgeCount);
 
-            foreach (var realcedge in realcedgelt)
+            foreach (var realcedge in realIndCEdgelt)
             {
                 realcedge.enumScale = enumScale;   //set the scale of the original edge
-                CEdge rglcedge = new CEdge(rglcpg.CptLt[realcedge.FrCpt.indexID], rglcpg.CptLt[realcedge.ToCpt.indexID]);
-                rglcedge.ParentCEdge = realcedge;  //"rglcedge" and "originalcedge" have the same direction //why do we set parent edge----------------------------------
+                CEdge rglcedge = new CEdge(RglCpg.CptLt[realcedge.FrCpt.indexID], RglCpg.CptLt[realcedge.ToCpt.indexID]);
+
+                //"rglcedge" and "originalcedge" have the same direction 
+                //why do we set parent edge----------------------------------
+                rglcedge.ParentCEdge = realcedge;  
                 realcedge.CorrRglCEdge = rglcedge;
-                rglCEdgeLt.Add(rglcedge);
+                RglCEdgeLt.Add(rglcedge);
             }
-            //CSaveFeature.SaveCGeoEb(rglCEdgeLt, esriGeometryType.esriGeometryPolyline, enumScale.ToString() + "RglCDT" + _intID, _pParameterInitialize.pWorkspace, _pParameterInitialize.m_mapControl);
+
+            if (blnSave == true)
+            {
+                CSaveFeature.SaveCEdgeEb(RglCEdgeLt, enumScale.ToString() + "RglIndCDT" + _intID, blnVisible: false);
+                CSaveFeature.SaveCptEb(RglCpg.CptLt, enumScale.ToString() + "RglCpt", blnVisible: false);
+            }
 
 
-            CDCEL pDCEL = new CDCEL(rglCEdgeLt);
+            CDCEL pDCEL = new CDCEL(RglCEdgeLt);
             pDCEL.ConstructDCEL();
 
             foreach (var cedge in pDCEL.HalfEdgeLt)
@@ -143,15 +183,29 @@ namespace MorphingClass.CCorrepondObjects
 
         #region CombineAndTriangulateDCEL
 
-        private void CombineAndTriangulateDCEL(ref CDCEL FrRglDCEL, ref CDCEL ToRglDCEL)
+        private void CombineAndTriangulateDCEL(ref CDCEL FrRglDCEL, ref CDCEL ToRglDCEL, bool blnSave = false)
         {
             //CombineCoStartEdges(ref FrRglDCEL,ref ToRglDCEL );
             //set tempID to identify the same edges, which is faster than comparing coordinates of the ends of edges 
 
             InsertCEdgeBySmallersIntoFrRglDCEL(ref FrRglDCEL, ref ToRglDCEL);
-            GetCorrRglSubCEdgeLtForParentCEdge(ref FrRglDCEL);  //we do this before we triangulate all the faces, because we just want to know the breaks of the original edges.
+
+            //we do this before we triangulate all the faces, 
+            //because we just want to know the breaks of the original edges.
+            GetCorrRglSubCEdgeLtForParentCEdge(ref FrRglDCEL);
+            if (blnSave == true)
+            {
+                CSaveFeature.SaveCptEb(FrRglDCEL.CptLt, "OverlapRglCDTCpt", blnVisible: false);
+                CSaveFeature.SaveCEdgeEb(FrRglDCEL.CEdgeLt, "OverlapRglCDT", blnVisible: false);
+            }
             TriangulateFaces(ref FrRglDCEL);
-            UpdateAxisAngleCEdgeLtAndHalfCEdgeLt(ref FrRglDCEL);
+            UpdateAxisAngleCEdgeLtAndHalfCEdgeLt(ref FrRglDCEL, blnSave);
+
+            if (blnSave == true)
+            {
+                //CSaveFeature.SaveCptEb(FrRglDCEL.CptLt, "OverlapRglCDTCpt");
+                CSaveFeature.SaveCEdgeEb(FrRglDCEL.CEdgeLt, "CombinedAndTriangulatedDCEL", blnVisible: false);
+            }
         }
 
         #region InsertCEdgeBySmallersIntoFrRglDCEL
@@ -201,8 +255,8 @@ namespace MorphingClass.CCorrepondObjects
                 //var ToCptIndexIDToLastCEdge = ToLastCEdge.ToCpt.indexID;      //ToCpt IndexID
 
 
-
-                //var SmallerAxisAngleCEdge = FrLastCEdge;  //this is prepare for that ToIncidentCEdge.dblAxisAngle < FrIncidentCEdge.dblAxisAngle
+                //this is prepare for that ToIncidentCEdge.dblAxisAngle < FrIncidentCEdge.dblAxisAngle
+                //var SmallerAxisAngleCEdge = FrLastCEdge;  
                 //var intCompare = CCmpMethods.Cmp(ToCurrentCEdge.dblAxisAngle, FrCurrentCEdge.dblAxisAngle);
                 //if (intCompare == -1)
 
@@ -211,12 +265,19 @@ namespace MorphingClass.CCorrepondObjects
                 CEdge ToStopCEdge = ToIncidentCEdge;
 
                 var SmallerAxisAngleCEdge = FrIncidentCEdge;
-                if (ToIncidentCEdge.dblAxisAngle < FrIncidentCEdge.dblAxisAngle)  // we can compare directly because the two regular polygons have the same coordiantes
+                // we can compare directly because the two regular polygons have the same coordiantes
+                if (ToIncidentCEdge.dblAxisAngle < FrIncidentCEdge.dblAxisAngle)  
                 {
                     //ToCurrentCEdge.PrintMySelf();
                     //FrCurrentCEdge.PrintMySelf();
-                    //FrIncidentCEdge = SmallerAxisAngleCEdge;  //we assign FrIncidentCEdge so that we can know when to stop in the do-while loop, otherwise it would be complicated since a to-edge has been inserted in FrRglDCEL
-                    FrStopCEdge = ToIncidentCEdge;  //in this case we will insert ToIncidentCEdge into the DCEL, then FrLastCEdge.GetLargerAxisAngleCEdge().dblAxisAngle == ToIncidentCEdge.dblAxisAngle
+
+                    //we assign FrIncidentCEdge so that we can know when to stop in the do-while loop, 
+                    //otherwise it would be complicated since a to-edge has been inserted in FrRglDCEL
+                    //FrIncidentCEdge = SmallerAxisAngleCEdge;
+
+                    //in this case we will insert ToIncidentCEdge into the DCEL, 
+                    //then FrLastCEdge.GetLargerAxisAngleCEdge().dblAxisAngle == ToIncidentCEdge.dblAxisAngle
+                    FrStopCEdge = ToIncidentCEdge;  
                     SmallerAxisAngleCEdge = FrLastCEdge;
                 }
                 //if (intCompare == -1)
@@ -233,8 +294,16 @@ namespace MorphingClass.CCorrepondObjects
                 var FrCurrentCEdge = FrIncidentCEdge;
                 var ToCurrentCEdge = ToIncidentCEdge;
                 //var SmallerAxisAngleCEdge = FrIncidentCEdge.GetSmallerAxisAngleCEdge();
-                bool blnToCurrentCEdgeChanged = false;  //We will use "IncidentCEdge.dblAxisAngle == CurrentCEdge.dblAxisAngle" to know whether the do-while loop should be stopped. But at the beginning, IncidentCEdge == CurrentCEdge, so we should make sure that CurrentCEdge is at least changed once
-                bool blnFrCurrentCEdgeChanged = false;  //We will use "IncidentCEdge.dblAxisAngle == CurrentCEdge.dblAxisAngle" to know whether the do-while loop should be stopped. But at the beginning, IncidentCEdge == CurrentCEdge, so we should make sure that CurrentCEdge is at least changed once
+
+                //We will use "IncidentCEdge.dblAxisAngle == CurrentCEdge.dblAxisAngle" to know 
+                //whether the do-while loop should be stopped. But at the beginning, IncidentCEdge == CurrentCEdge, 
+                //so we should make sure that CurrentCEdge is at least changed once
+                bool blnToCurrentCEdgeChanged = false;
+
+                //We will use "IncidentCEdge.dblAxisAngle == CurrentCEdge.dblAxisAngle" to know 
+                //whether the do-while loop should be stopped. But at the beginning, IncidentCEdge == CurrentCEdge, 
+                //so we should make sure that CurrentCEdge is at least changed once
+                bool blnFrCurrentCEdgeChanged = false;  
 
                 do
                 {
@@ -248,7 +317,8 @@ namespace MorphingClass.CCorrepondObjects
                     //intCompare = CCmpMethods.Cmp(ToCurrentCEdge.dblAxisAngle, FrCurrentCEdge.dblAxisAngle);
 
                     //if (intCompare == -1)
-                    if (ToCurrentCEdge.dblAxisAngle < FrCurrentCEdge.dblAxisAngle)  // we can compare directly because the two regular polygons have the same coordiantes
+                    // we can compare directly because the two regular polygons have the same coordiantes
+                    if (ToCurrentCEdge.dblAxisAngle < FrCurrentCEdge.dblAxisAngle)
                     {
                         ToCurrentCEdge = InsertCEdge(ToCurrentCEdge, ref SmallerAxisAngleCEdge, ref IntersectCptLt, ref indexID);
                         blnToCurrentCEdgeChanged = true;
@@ -279,14 +349,21 @@ namespace MorphingClass.CCorrepondObjects
                     //FrCptIndexIDToCurrentCEdge = ToCurrentCEdge.FrCpt.indexID;      //FrCpt IndexID
                     //ToCptIndexIDToCurrentCEdge = ToCurrentCEdge.ToCpt.indexID;      //ToCpt IndexID
 
-                } while (((FrCurrentCEdge.dblAxisAngle == FrStopCEdge.dblAxisAngle && blnFrCurrentCEdgeChanged == true)  //if ToCurrentCEdge or FrCurrentCEdge reaches the StopCEdge, then the do-while loop is done.   we can use "==" directly because we didn't recompute the axis angle, instead we assign it
+                    //if ToCurrentCEdge or FrCurrentCEdge reaches the StopCEdge, then the do-while loop is done.   
+                    //we can use "==" directly because we didn't recompute the axis angle, instead we assign it
+                } while (((FrCurrentCEdge.dblAxisAngle == FrStopCEdge.dblAxisAngle && blnFrCurrentCEdgeChanged == true)  
                        || (ToCurrentCEdge.dblAxisAngle == ToStopCEdge.dblAxisAngle && blnToCurrentCEdgeChanged == true))
-                       == false);  //at the beginning, if ToCurrentCEdge.dblAxisAngle > FrCurrentCEdge.dblAxisAngle, then ToCurrentCEdge is still the ToIncidentCEdge, so CCmpMethods.Cmp(ToIncidentCEdge.dblAxisAngle, ToCurrentCEdge.dblAxisAngle) == 0
+                       == false);
+                //at the beginning, if ToCurrentCEdge.dblAxisAngle > FrCurrentCEdge.dblAxisAngle, 
+                //then ToCurrentCEdge is still the ToIncidentCEdge, 
+                //so CCmpMethods.Cmp(ToIncidentCEdge.dblAxisAngle, ToCurrentCEdge.dblAxisAngle) == 0
 
                 //insert the residual to-edges. the residual to-edges are thoses edges have axis angles larger than all the from-edges
-                if (ToCurrentCEdge.dblAxisAngle != ToStopCEdge.dblAxisAngle)   //we have to consider that ToCurrentCEdge may not be ToIncidentCEdge
+                //we have to consider that ToCurrentCEdge may not be ToIncidentCEdge
+                if (ToCurrentCEdge.dblAxisAngle != ToStopCEdge.dblAxisAngle)   
                 {
-                    //in this case, the reason that the previous do-while loop stopped is that FrCurrentCEdge.dblAxisAngle == FrStopCEdge.dblAxisAngle. 
+                    //in this case, the reason that the previous do-while loop stopped is that 
+                    //FrCurrentCEdge.dblAxisAngle == FrStopCEdge.dblAxisAngle. 
                     //Note that, SmallerAxisAngleCEdge == FrStopCEdge.GetSmallerAxisAngleCEdge()
                     //SmallerAxisAngleCEdge = SmallerAxisAngleCEdge.GetLargerAxisAngleCEdge();
 
@@ -301,26 +378,33 @@ namespace MorphingClass.CCorrepondObjects
             FrRglDCEL.CptLt.AddRange(IntersectCptLt);
         }
 
-        private CEdge InsertCEdge(CEdge ToCurrentCEdge, ref CEdge SmallerAxisAngleCEdge, ref List<CPoint> IntersectCptLt, ref int indexID)
+        private CEdge InsertCEdge(CEdge ToCurrentCEdge, ref CEdge SmallerAxisAngleCEdge, 
+            ref List<CPoint> IntersectCptLt, ref int indexID)
         {
             //var FrCptIndexIDToCurrentCEdge = ToCurrentCEdge.FrCpt.indexID;      //FrCpt IndexID
             //var ToCptIndexIDToCurrentCEdge = ToCurrentCEdge.ToCpt.indexID;      //ToCpt IndexID
 
-
-            var NextToCurrentCEdge = ToCurrentCEdge.GetLargerAxisAngleCEdge();  //we have to do this first, because ToCurrentCEdge.GetLargerAxisAngleCEdge() will be changed by inserting
+            //we have to do this first, because ToCurrentCEdge.GetLargerAxisAngleCEdge() will be changed by inserting
+            var NextToCurrentCEdge = ToCurrentCEdge.GetLargerAxisAngleCEdge();  
             //var FrCptIndexIDNextToCurrentCEdge = NextToCurrentCEdge.FrCpt.indexID;      //FrCpt IndexID
             //var ToCptIndexIDNextToCurrentCEdge = NextToCurrentCEdge.ToCpt.indexID;      //ToCpt IndexID
 
             //var FrCptIndexIDSmallerAxisAngleCEdge = SmallerAxisAngleCEdge.FrCpt.indexID;      //FrCpt IndexID
             //var ToCptIndexIDSmallerAxisAngleCEdge = SmallerAxisAngleCEdge.ToCpt.indexID;      //ToCpt IndexID
 
-            var newToCurrentCEdge = CreateNewCEdge(ToCurrentCEdge, ToCurrentCEdge.FrCpt, ToCurrentCEdge.ToCpt);  //the reason we create a new edge is that if we use this original ToCurrentCEdge, the CDCEL relationship of this edge will be changed. In this case, when we traverse around ToCurrentCEdge.ToCpt, we cannot trace the to-edges coming after ToCurrentCEdge 
+            //the reason we create a new edge is that if we use this original ToCurrentCEdge, 
+            //the CDCEL relationship of this edge will be changed. 
+            //In this case, when we traverse around ToCurrentCEdge.ToCpt, 
+            //we cannot trace the to-edges coming after ToCurrentCEdge 
+            var newToCurrentCEdge = CreateNewCEdge(ToCurrentCEdge, ToCurrentCEdge.FrCpt, ToCurrentCEdge.ToCpt);  
             CDCEL.InsertCEdgeBySmaller(SmallerAxisAngleCEdge, newToCurrentCEdge);
             //ShowEdgeRelationship(newToCurrentCEdge);
 
 
             TraverseDCEL(newToCurrentCEdge, ref IntersectCptLt, ref indexID);
-            SmallerAxisAngleCEdge = SmallerAxisAngleCEdge.GetLargerAxisAngleCEdge();   //SmallerAxisAngleCEdge = newToCurrentCEdge cannot be used because ToCurrentCEdge may be split, and we need the split sub cedge to be inserted
+            //SmallerAxisAngleCEdge = newToCurrentCEdge cannot be used because ToCurrentCEdge may be split, 
+            //and we need the split sub cedge to be inserted
+            SmallerAxisAngleCEdge = SmallerAxisAngleCEdge.GetLargerAxisAngleCEdge();   
             return NextToCurrentCEdge;
         }
 
@@ -383,8 +467,10 @@ namespace MorphingClass.CCorrepondObjects
 
                         
 
-                        //Console.WriteLine("subcedge    :" + "FrCpt:  " + subcedge.FrCpt.X + "  " + subcedge.FrCpt.Y + ";       ToCpt:  " + subcedge.ToCpt.X + "  " + subcedge.ToCpt.Y);
-                        //Console.WriteLine("currentcedge:" + "FrCpt:  " + currentcedge.FrCpt.X + "  " + currentcedge.FrCpt.Y + ";       ToCpt:  " + currentcedge.ToCpt.X + "  " + currentcedge.ToCpt.Y);
+                        //Console.WriteLine("subcedge    :" + "FrCpt:  " + subcedge.FrCpt.X + "  " + subcedge.FrCpt.Y 
+                        //+ ";       ToCpt:  " + subcedge.ToCpt.X + "  " + subcedge.ToCpt.Y);
+                        //Console.WriteLine("currentcedge:" + "FrCpt:  " + currentcedge.FrCpt.X + "  " + currentcedge.FrCpt.Y 
+                        //+ ";       ToCpt:  " + currentcedge.ToCpt.X + "  " + currentcedge.ToCpt.Y);
                         //Console.WriteLine("Intersection:" + pIntersection.IntersectCpt.X + "  " + pIntersection.IntersectCpt.Y);
                         Console.WriteLine("---------------  --------End-------------  -------------");
                         //MessageBox.Show("Impossible case in: " + this.ToString() + ".cs   " + "TraverseDCEL");
@@ -427,7 +513,8 @@ namespace MorphingClass.CCorrepondObjects
         private CEdge CreateNewCEdge(CEdge originalcedge, CPoint frcpt, CPoint tocpt)
         {
             var cedge = new CEdge(frcpt, tocpt);
-            cedge.dblAxisAngle = originalcedge.dblAxisAngle;  //we set the AxisAngle because we may want to maintain the AxisAngleCEdgeLt of a vertex
+            //we set the AxisAngle because we may want to maintain the AxisAngleCEdgeLt of a vertex
+            cedge.dblAxisAngle = originalcedge.dblAxisAngle;  
             cedge.CreateTwinCEdge();
             cedge.ParentCEdge = originalcedge.ParentCEdge;
             cedge.cedgeTwin.ParentCEdge = originalcedge.ParentCEdge;
@@ -443,7 +530,11 @@ namespace MorphingClass.CCorrepondObjects
                 if (currentcedge.dblAxisAngle < MinAxisAngleCEdge.dblAxisAngle)
                 {
                     MinAxisAngleCEdge = currentcedge;
-                    break;  //notice that we traverse along an angle-increasing direction, so if we find an edge with a smaller AxisAngle, then this edge must be real MinAxisAngleCEdge
+
+                    //notice that we traverse along an angle-increasing direction, 
+                    //so if we find an edge with a smaller AxisAngle, 
+                    //then this edge must be real MinAxisAngleCEdge
+                    break;  
                 }
                 currentcedge = currentcedge.GetLargerAxisAngleCEdge();
             }
@@ -454,7 +545,8 @@ namespace MorphingClass.CCorrepondObjects
 
         private void GetCorrRglSubCEdgeLtForParentCEdge(ref CDCEL FrRglDCEL)
         {
-            //for each edge, we test whether it is the first sub edge of its parent edge. If it is, we can find all the sub edges of a parent edge by traversing along the direction
+            //for each edge, we test whether it is the first sub edge of its parent edge. 
+            //If so, we can find all the sub edges of a parent edge by traversing along the direction
             foreach (var cpt in FrRglDCEL.CptLt)
             {
                 //find the edge with min axisangle
@@ -464,7 +556,9 @@ namespace MorphingClass.CCorrepondObjects
                 do
                 {
                     var ParentCEdge = CoStartCEdge.ParentCEdge;
-                    if (CoStartCEdge.FrCpt.indexID == ParentCEdge.FrCpt.indexID)  //we cannot compare coordinates here because cedge is from regular polygon while ParentCEdge is from real polygon
+                    //we cannot compare coordinates here because cedge is from regular polygon 
+                    //while ParentCEdge is from real polygon
+                    if (CoStartCEdge.FrCpt.indexID == ParentCEdge.FrCpt.indexID)  
                     {
                         var SubCEdge = CoStartCEdge;
                         ParentCEdge.CorrRglSubCEdgeLt = new List<CEdge>(); //at least one sub edge
@@ -472,11 +566,15 @@ namespace MorphingClass.CCorrepondObjects
                         {
                             SubCEdge.SetLength();   //set length
                             ParentCEdge.CorrRglSubCEdgeLt.Add(SubCEdge);
-                            SubCEdge = SubCEdge.cedgeNext.cedgeTwin.cedgeNext;  //we know that only four edges share an intersection, resulted by the intersection of two edges
+
+                            //we know that only four edges share an intersection, resulted by the intersection of two edges
+                            SubCEdge = SubCEdge.cedgeNext.cedgeTwin.cedgeNext;  
                         } while (SubCEdge.FrCpt.isSteiner == true);
 
-                        //notice that an edge from toctgl of a pair of corresponding edges was removed before, therefore we didn't refer to the parent edge of removed edge. 
-                        //as a result, ParentCEdge.CorrRglSubCEdgeLt of that edge is null. to keep consistent, we set ParentCEdge.CorrRglSubCEdgeLt of an edge from frctgl to null if there is only one sub edge
+                        //notice that an edge from toctgl of a pair of corresponding edges was removed before, 
+                        //therefore we didn't refer to the parent edge of removed edge. 
+                        //as a result, ParentCEdge.CorrRglSubCEdgeLt of that edge is null. to keep consistent, 
+                        //we set ParentCEdge.CorrRglSubCEdgeLt of an edge from frctgl to null if there is only one sub edge
                         if (ParentCEdge.CorrRglSubCEdgeLt.Count < 2)
                         {
                             ParentCEdge.CorrRglSubCEdgeLt = null;
@@ -514,7 +612,8 @@ namespace MorphingClass.CCorrepondObjects
                         CoStartCEdge.cedgeNext.isTraversed = true;
                         CoStartCEdge.cedgeNext.cedgeNext.isTraversed = true;
 
-                        CEdge SmallerAxisAngleCEdge = CoStartCEdge;  //we define lastPreCEdge so that we will know where we should insert
+                        //we define lastPreCEdge so that we will know where we should insert
+                        CEdge SmallerAxisAngleCEdge = CoStartCEdge;  
                         CEdge currentcedge = CoStartCEdge.cedgeNext.cedgeNext;
                         while (CoStartCEdge.FrCpt.indexID != currentcedge.ToCpt.indexID)
                         {
@@ -537,7 +636,7 @@ namespace MorphingClass.CCorrepondObjects
             }
         }
 
-        private void UpdateAxisAngleCEdgeLtAndHalfCEdgeLt(ref CDCEL FrRglDCEL)
+        private void UpdateAxisAngleCEdgeLtAndHalfCEdgeLt(ref CDCEL FrRglDCEL, bool blnSave=false)
         {
             SetCEdgesIsTraversedFalse(ref FrRglDCEL);
             var HalfCEdgeLt = FrRglDCEL.HalfEdgeLt.GetRange(0, 2 * _intN); //the first 2*_intN half edges are maintained
@@ -564,7 +663,7 @@ namespace MorphingClass.CCorrepondObjects
 
             HalfCEdgeLt.SetIndexID();
 
-            FrRglDCEL.HalfEdgeLt = HalfCEdgeLt;
+            FrRglDCEL.HalfEdgeLt = HalfCEdgeLt;            
             FrRglDCEL.UpdateCEdgeLtByHalfCEdgeLt();
         }
 
@@ -595,6 +694,9 @@ namespace MorphingClass.CCorrepondObjects
         /// <remarks >at the beginning of this method, there is not DCEL in ctgl</remarks>
         private void RefineOriginalCtgl(CTriangulation ctgl, CDCEL FrRglDCEL, CEnumScale enumScale)
         {
+            //FrRglDCEL.ShowEdgeRelationshipAroundAllCpt();
+
+
             //generate new vertices without coordinates, we have to do this because we may refer some vertices we do not know yet
             int intIntersectionNumber = FrRglDCEL.CptLt.Count - _intN;
             var IntersectCptLt = new List<CPoint>(intIntersectionNumber);
@@ -622,8 +724,10 @@ namespace MorphingClass.CCorrepondObjects
                         dblCurrentLenght += realcedge.CorrRglSubCEdgeLt[i].dblLength;
                         double dblProportion = dblCurrentLenght / dblRglLength;
 
-                        ctgl.CptLt[realcedge.CorrRglSubCEdgeLt[i].ToCpt.indexID].X = CGeoFunc.GetInbetweenDbl(realcedge.FrCpt.X, realcedge.ToCpt.X, dblProportion);
-                        ctgl.CptLt[realcedge.CorrRglSubCEdgeLt[i].ToCpt.indexID].Y = CGeoFunc.GetInbetweenDbl(realcedge.FrCpt.Y, realcedge.ToCpt.Y, dblProportion);
+                        ctgl.CptLt[realcedge.CorrRglSubCEdgeLt[i].ToCpt.indexID].X =
+                            CGeoFunc.GetInbetweenDbl(realcedge.FrCpt.X, realcedge.ToCpt.X, dblProportion);
+                        ctgl.CptLt[realcedge.CorrRglSubCEdgeLt[i].ToCpt.indexID].Y =
+                            CGeoFunc.GetInbetweenDbl(realcedge.FrCpt.Y, realcedge.ToCpt.Y, dblProportion);
                     }
                 }
             }
@@ -655,35 +759,18 @@ namespace MorphingClass.CCorrepondObjects
             ctgl.HalfEdgeLt = realhalfcedgelt;
             ctgl.UpdateCEdgeLtByHalfCEdgeLt();
 
-            //set incident edge for edges
-            for (int i = 0; i < ctgl.CptLt.Count; i++)
-            {
-                CEdge realhalfcedge = realhalfcedgelt[FrRglDCEL.CptLt[i].IncidentCEdge.indexID];  //notice that realhalfcedge is not necessary the IncidentCEdge
-                var MinAxisAngleCEdge = FindMinAxisAngleCEdgeAroundCpt(realhalfcedge);
-                MinAxisAngleCEdge.isIncidentCEdgeForCpt = true;
-                ctgl.CptLt[i].IncidentCEdge = MinAxisAngleCEdge;
-            }
+
+            var CoStartHalfCEdgeDt = CDCEL.IdentifyCoStartCEdge(realhalfcedgelt);
+            CDCEL.OrderCEdgeLtAccordAxisAngle(CoStartHalfCEdgeDt);
+
+            //ctgl.ShowEdgeRelationshipAllCEdges();
+
+
 
             //generate FaceCptLt
             ctgl.ConstructFaceLt();
         }
 
-
-
-
-
-
-        public CPolygon FrCpg
-        {
-            get { return _FrCpg; }
-            set { _FrCpg = value; }
-        }
-
-        public CPolygon ToCpg
-        {
-            get { return _ToCpg; }
-            set { _ToCpg = value; }
-        }
 
         public CTriangulation FrCtgl
         {

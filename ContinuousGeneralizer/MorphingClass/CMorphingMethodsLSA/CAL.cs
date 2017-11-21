@@ -342,9 +342,11 @@ namespace MorphingClass.CMorphingMethodsLSA
             for (int i = 0; i < pCorrCptsLt.Count - 2; i++)
             {
                 //较大比例尺线状要素上的夹角
-                double dblfrAngle = CGeoFunc.CalAngle_Counterclockwise(pCorrCptsLt[i].FrCpt, pCorrCptsLt[i + 1].FrCpt, pCorrCptsLt[i + 2].FrCpt);
+                double dblfrAngle = CGeoFunc.CalAngle_Counterclockwise(pCorrCptsLt[i].FrCpt, 
+                    pCorrCptsLt[i + 1].FrCpt, pCorrCptsLt[i + 2].FrCpt);
                 //较小比例尺线状要素上的夹角
-                double dbltoAngle = CGeoFunc.CalAngle_Counterclockwise(pCorrCptsLt[i].ToCpt, pCorrCptsLt[i + 1].ToCpt, pCorrCptsLt[i + 2].ToCpt);
+                double dbltoAngle = CGeoFunc.CalAngle_Counterclockwise(pCorrCptsLt[i].ToCpt, 
+                    pCorrCptsLt[i + 1].ToCpt, pCorrCptsLt[i + 2].ToCpt);
 
                 //double dble = Math.E;
                 //double dbla = (dbltoAngle - dblfrAngle) * dble / (dble - 1);
@@ -421,7 +423,8 @@ namespace MorphingClass.CMorphingMethodsLSA
             List<int> intKnownAngleLt = new List<int>();
             for (int i = 0; i < intKnownLocationLt.Count - 2; i++)
             {
-                if ((intKnownLocationLt[i + 1] - intKnownLocationLt[i]) == 1 && (intKnownLocationLt[i + 2] - intKnownLocationLt[i + 1]) == 1)
+                if ((intKnownLocationLt[i + 1] - intKnownLocationLt[i]) == 1 && 
+                    (intKnownLocationLt[i + 2] - intKnownLocationLt[i + 1]) == 1)
                 {
                     intKnownAngleLt.Add(intKnownLocationLt[i]);
                 }
@@ -466,7 +469,8 @@ namespace MorphingClass.CMorphingMethodsLSA
 
             double[] xout = new double[intPtNum];
             double[] yout = new double[intPtNum];
-            //CPlusClass.Matrix.leastSquaresAdjust(intPtNum, adblx, adbly, isFixed, adblLength0, adblAngle0, weight, dblTX, intIterationNum, xout, yout);
+            //CPlusClass.Matrix.leastSquaresAdjust(intPtNum, adblx, adbly, isFixed, 
+            //adblLength0, adblAngle0, weight, dblTX, intIterationNum, xout, yout);
 
             //MessageBox.Show("" + xout[5]);
 

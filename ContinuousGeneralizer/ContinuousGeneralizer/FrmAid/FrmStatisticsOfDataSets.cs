@@ -70,11 +70,36 @@ namespace ContinuousGeneralizer.FrmAid
         public void btnRun_Click(object sender, EventArgs e)
         {
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
+            //switch (ParameterInitialize.pFLayerLt[0].FeatureClass.FeatureType       )
+            //{
+            //    default:
+            //}
 
-            CStatisticsOfDataSets pStatisticsOfDataSets = new CStatisticsOfDataSets(ParameterInitialize);
-            pStatisticsOfDataSets.StatisticsOfDataSets();
+            //switch(ParameterInitialize.pFLayerLt[0].FeatureClass.ShapeType
+            //    )
 
-            MessageBox.Show("Done!");
+            //esriGeometryType.
+
+            var pFLayer = (IFeatureLayer)ParameterInitialize.m_mapFeature.
+                    get_Layer(ParameterInitialize.cboLayerLt[0].SelectedIndex);  //larger-scale layer
+
+            switch (pFLayer.FeatureClass.ShapeType)
+            {                
+                case esriGeometryType.esriGeometryPolyline:
+                    var pStatisticsOfDataSetsCpl = new CStatisticsOfDataSetsCpl(ParameterInitialize);
+                    pStatisticsOfDataSetsCpl.StatisticsOfDataSets();
+                    break;                
+                case esriGeometryType.esriGeometryPolygon:
+                    var pStatisticsOfDataSetsCpg = new CStatisticsOfDataSetsCpg(ParameterInitialize);
+                    pStatisticsOfDataSetsCpg.StatisticsOfDataSets();
+                    break;
+                default:
+                    break;
+            }
+
+
+
+            //MessageBox.Show("Done!");
         }
 
     }

@@ -537,6 +537,17 @@ string strSymbolLayerPath = null, bool blnVisible = true)
                 esriSimpleFillStyle.esriSFSSolid, strSymbolLayerPath, blnVisible);
         }
 
+        public static IFeatureLayer SaveCptEb(IEnumerable<CPoint> CGeoEb, string strFileName,
+List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
+int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
+string strSymbolLayerPath = null, bool blnVisible = true)
+        {
+            return SaveCGeoEb(CGeoEb, esriGeometryType.esriGeometryPoint, strFileName,
+                pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt,
+                intRed, intGreen, intBlue, dblWidth, _intColor, _intColor, _intColor,
+                esriSimpleFillStyle.esriSFSSolid, strSymbolLayerPath, blnVisible);
+        }
+
         public static IFeatureLayer SavePathEbAsCplEb(IEnumerable<Path> PathEb, string strFileName,
 List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
 int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,

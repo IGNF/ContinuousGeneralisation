@@ -202,11 +202,12 @@
     <Compile Include="CAid\CMergeAndSplitPolylines.cs" />
     <Compile Include="CAid\CIdentifyCorrCpgAddRegionNum.cs" />
     <Compile Include="CAid\CSelectRandomly.cs" />
+    <Compile Include="CAid\CStatisticsOfDataSetsCpg.cs" />
     <Compile Include="CAid\CTemporary.cs" />
     <Compile Include="CAid\CToIpe.cs" />
     <Compile Include="CAid\CUnifyIndicesPolylines.cs" />
     <Compile Include="CAid\CUnifyDirectionsPolylines.cs" />
-    <Compile Include="CAid\CStatisticsOfDataSets.cs" />
+    <Compile Include="CAid\CStatisticsOfDataSetsCpl.cs" />
     <Compile Include="CAid\CTopologyChecker.cs" />
     <Compile Include="CCommon\ControlsSynchronizer.cs" />
     <Compile Include="CCommon\ExportActiveViewCS_Net .cs" />

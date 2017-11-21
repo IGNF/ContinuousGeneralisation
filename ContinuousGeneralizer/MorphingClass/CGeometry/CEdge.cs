@@ -476,9 +476,11 @@ namespace MorphingClass.CGeometry
         public void PrintMySelf()
         {
             Console.WriteLine("-----------------------Print an Edge--------------------------");
-            Console.WriteLine(string.Format(CConstants.strFmtIDs6, "ID:", this.ID, ";    indexID:", this.indexID, ";    GID:", this.GID));
+            Console.WriteLine(string.Format(CConstants.strFmtIDs6 + "{6,7}{7,22}", 
+                "ID:", this.ID, ";    indexID:", this.indexID, ";    GID:", this.GID, ";    Angle:", this.dblAxisAngle));
             this.FrCpt.PrintMySelf();
             this.ToCpt.PrintMySelf();
+
             if (this.cedgePrev != null)
             {
                 Console.WriteLine("Previous GID: " + this.cedgePrev.GID + "    Next GID: " + this.cedgeNext.GID + "    Twin GID:" + this.cedgeTwin.GID);

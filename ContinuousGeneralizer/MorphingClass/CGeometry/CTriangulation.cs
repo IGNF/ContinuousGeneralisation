@@ -200,7 +200,7 @@ namespace MorphingClass.CGeometry
         /// </summary>
         /// <returns>the boundary edges are stored in the front of the returned list.</returns>
         /// <remarks>this method may be only used for the construction of compatible triangulations</remarks>
-        public List<CEdge> GenerateDataAreaCEdgeLt()
+        public List<CEdge> GenerateRealTinCEdgeLt()
         {
             var vertexlt = this.CptLt;
             vertexlt.SetIndexID();
@@ -319,12 +319,12 @@ namespace MorphingClass.CGeometry
         {
             var ITinEdgeLt = _pTinEdgeLt;
             var CEdgeLt = new List<CEdge>(ITinEdgeLt.Count);
-            foreach (var pTinEdge in pTinEdgeLt)
+            foreach (var pTinEdge in ITinEdgeLt)
             {
                 CEdgeLt.Add(new CEdge(pTinEdge));
             }
 
-            CSaveFeature.SaveCGeoEb(CEdgeLt, esriGeometryType.esriGeometryPolyline, "TIN_"+strName);
+            CSaveFeature.SaveCEdgeEb(CEdgeLt, "TIN_"+strName);
         }
 
         public void CompareCptltAndNode()

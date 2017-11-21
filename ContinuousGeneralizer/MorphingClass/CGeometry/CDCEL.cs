@@ -98,6 +98,7 @@ namespace MorphingClass.CGeometry
             }
 
             var CoStartHalfCEdgeDt = IdentifyCoStartCEdge(fHalfEdgeLt);
+            OrderCEdgeLtAccordAxisAngle(CoStartHalfCEdgeDt);
             ConstrcutRelationshipBetweenEdges(CoStartHalfCEdgeDt);
 
             //foreach (var halfedge in fHalfEdgeLt)
@@ -112,7 +113,7 @@ namespace MorphingClass.CGeometry
             return fHalfEdgeLt;
         }
 
-        private Dictionary<CPoint, List<CEdge>> IdentifyCoStartCEdge(List<CEdge> fHalfEdgeLt)
+        public static Dictionary<CPoint, List<CEdge>> IdentifyCoStartCEdge(List<CEdge> fHalfEdgeLt)
         {
             var CoStartHalfCEdgeDt = new Dictionary<CPoint, List<CEdge>>(new CCmpEqCptXY());
             foreach (CEdge cedge in fHalfEdgeLt)
@@ -133,13 +134,24 @@ namespace MorphingClass.CGeometry
             return CoStartHalfCEdgeDt;
         }
 
-        private void ConstrcutRelationshipBetweenEdges(Dictionary<CPoint, List<CEdge>> CoStartHalfCEdgeDt)
+        public static void OrderCEdgeLtAccordAxisAngle(Dictionary<CPoint, List<CEdge>> CoStartHalfCEdgeDt)
+        {
+            foreach (var kvp in CoStartHalfCEdgeDt)
+            {
+                var AxisAngleCEdgeLt = kvp.Value.OrderBy(cedge => cedge.dblAxisAngle).ToList();
+                var sharedcpt = kvp.Key;
+                sharedcpt.AxisAngleCEdgeLt = AxisAngleCEdgeLt;   //we save this so that we may use it in combine triangulations
+                sharedcpt.IncidentCEdge = AxisAngleCEdgeLt[0];
+                sharedcpt.IncidentCEdge.isIncidentCEdgeForCpt = true;
+            }
+        }
+
+        public static void ConstrcutRelationshipBetweenEdges(Dictionary<CPoint, List<CEdge>> CoStartHalfCEdgeDt)
         {
             //vertexLt = new List<CPoint>(CoStartCEdgeSD.Count);
             foreach (var kvp in CoStartHalfCEdgeDt)
             {
-                var AxisAngleCEdgeLt = kvp.Value.OrderBy(cedge => cedge.dblAxisAngle).ToList();
-                var AxisAngleCEdgeEt = AxisAngleCEdgeLt.GetEnumerator();
+                var AxisAngleCEdgeEt = kvp.Key. AxisAngleCEdgeLt.GetEnumerator();
                 AxisAngleCEdgeEt.MoveNext();
                 CEdge SmallerAxisAngleCEdge = AxisAngleCEdgeEt.Current;
                 SmallerAxisAngleCEdge.FrCpt = kvp.Key;  //SmallerAxisAngleCEdge may be from LS or SS, so we set its FrCpt as a Cpt from LS
@@ -149,14 +161,9 @@ namespace MorphingClass.CGeometry
                     InsertCEdgeBySmaller(SmallerAxisAngleCEdge, AxisAngleCEdgeEt.Current);
                     SmallerAxisAngleCEdge = AxisAngleCEdgeEt.Current;
                 }
-
-                var sharedcpt = kvp.Key;
-                sharedcpt.AxisAngleCEdgeLt = AxisAngleCEdgeLt;   //we save this so that we may use it in combine triangulations
-                sharedcpt.IncidentCEdge = AxisAngleCEdgeLt[0];
-                sharedcpt.IncidentCEdge.isIncidentCEdgeForCpt = true;
-                //vertexLt.Add(sharedcpt);
             }
         }
+        
 
         /// <summary>
         /// 
@@ -190,7 +197,8 @@ namespace MorphingClass.CGeometry
             var LargerAxisAngleCEdge = SmallerAxisAngleCEdge.GetLargerAxisAngleCEdge();
 
             //maintain the IncidentCEdge information
-            if (LargerAxisAngleCEdge.isIncidentCEdgeForCpt == true && newcedge.dblAxisAngle < LargerAxisAngleCEdge.dblAxisAngle)  //newcedge.dblAxisAngle may just larger than all the Costarted edges
+            //newcedge.dblAxisAngle may just larger than all the Costarted edges
+            if (LargerAxisAngleCEdge.isIncidentCEdgeForCpt == true && newcedge.dblAxisAngle < LargerAxisAngleCEdge.dblAxisAngle)
             {
                 LargerAxisAngleCEdge.isIncidentCEdgeForCpt = false;
                 newcedge.isIncidentCEdgeForCpt = true;
@@ -217,7 +225,8 @@ namespace MorphingClass.CGeometry
 
         #region Construct Vertex List
         /// <summary>Construct Vertex List</summary>
-        /// <remarks>this mehtod will not change the order of vertices of regular polygon in the construction of compatible triangulations</remarks>
+        /// <remarks>this mehtod will not change the order of vertices of regular polygon 
+        /// in the construction of compatible triangulations</remarks>
         private List<CPoint> ConstructVertexLt(List<CEdge> halfcedgelt)
         {
             var fcptlt = new List<CPoint>();
@@ -765,13 +774,12 @@ namespace MorphingClass.CGeometry
             }
         }
 
+
         public void ShowEdgeRelationshipAroundAllCpt()
         {
-            //_vertex
             var cptlt = this.CptLt;
-
             Console.WriteLine("-------------------------------start Around All Cpt------------------------------");
-            foreach (var cpt in this.CptLt)
+            foreach (var cpt in cptlt)
             {
                 ShowEdgeRelationshipAroundCpt(cpt);
             }
@@ -792,6 +800,16 @@ namespace MorphingClass.CGeometry
             Console.WriteLine("-------------------------------end Around Cpt------------------------------");
         }
 
+        public void ShowEdgeRelationshipAllCEdges()
+        {
+            var halfcedgelt = this.HalfEdgeLt;
+            for (int i = 0; i < halfcedgelt.Count; i++)
+            {
+                ShowEdgeRelationship(halfcedgelt[i]);
+                i++;
+            }
+        }
+
         public static void ShowEdgeRelationship(CEdge cedge)
         {
             Console.WriteLine("-----------------start show edge--------------------");
@@ -806,19 +824,22 @@ namespace MorphingClass.CGeometry
 
         private static void WriteInformationForCEdge(CEdge cedge, string strName)
         {
-            Console.WriteLine(strName + ":  " + cedge.FrCpt.indexID + "   " + cedge.ToCpt.indexID + "   AxisAngle:" + cedge.dblAxisAngle + "   FrX:" + cedge.FrCpt.X + "   FrY:" + cedge.FrCpt.Y + "   ToX:" + cedge.ToCpt.X + "   ToY:" + cedge.ToCpt.Y);
+            Console.WriteLine(strName +"(indexID "+ cedge.indexID+ ")" + ":  " + cedge.FrCpt.indexID + "   " + cedge.ToCpt.indexID 
+                + "   AxisAngle:" + cedge.dblAxisAngle 
+                + "   FrX:" + cedge.FrCpt.X + "   FrY:" + cedge.FrCpt.Y 
+                + "   ToX:" + cedge.ToCpt.X + "   ToY:" + cedge.ToCpt.Y);
         }
 
 
-        /// <summary>
-        /// we have to run GenerateDataAreaCEdgeLt first
-        /// </summary>
-        /// <param name="pParameterInitialize"></param>
-        /// <param name="str"></param>
-        public void SaveCEdgeLt(CParameterInitialize pParameterInitialize, string str)
-        {
-            CSaveFeature.SaveCGeoEb(this.CEdgeLt, esriGeometryType.esriGeometryPolyline, str);
-        }
+        ///// <summary>
+        ///// we have to run GenerateDataAreaCEdgeLt first
+        ///// </summary>
+        ///// <param name="pParameterInitialize"></param>
+        ///// <param name="str"></param>
+        //public void SaveCEdgeLt(string str)
+        //{
+        //    CSaveFeature.SaveCEdgeEb(this.CEdgeLt, str);
+        //}
 
 
         /// <summary></summary>

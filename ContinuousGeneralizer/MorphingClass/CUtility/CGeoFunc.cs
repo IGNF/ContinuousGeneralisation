@@ -2157,7 +2157,7 @@ namespace MorphingClass.CUtility
 
         public static CPolygon CreateRegularCpg(IEnvelope pEnv, int intNumber = 3)
         {
-            return CreateRegularCpg(pEnv.XMin, pEnv.YMin, pEnv.Width, intNumber);
+            return CreateRegularCpg(pEnv.XMin, pEnv.YMin, pEnv.Width / 2, intNumber);
         }
 
         public static double CalCompRegularPolygon(int intEdgeNum)
@@ -2191,7 +2191,8 @@ namespace MorphingClass.CUtility
             for (int i = 0; i < intNumber; i++)
             {
                 dblAxisAngle += dblAngleInterval;
-                cptlt.Add(new CPoint(i + 1, dblCentreX + dblRadius * Math.Cos(dblAxisAngle), dblCentreY + dblRadius * Math.Sin(dblAxisAngle)));
+                cptlt.Add(new CPoint(i + 1, dblCentreX + dblRadius * Math.Cos(dblAxisAngle),
+                    dblCentreY + dblRadius * Math.Sin(dblAxisAngle)));
             }
 
             return new CPolygon(-1, cptlt);

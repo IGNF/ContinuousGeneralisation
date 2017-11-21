@@ -202,6 +202,17 @@ namespace MorphingClass.CMorphingMethods
 
 
         #region CTTransform (compatible triangulation)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pParameterInitialize"></param>
+        /// <param name="InterLSIplLt"></param>
+        /// <param name="InterSSIplLt"></param>
+        /// <param name="SgIplLt"></param>
+        /// <returns></returns>
+        /// <remarks>InterLSIplLt and InterSSIplLt can be clockwise of counterclockwise.
+        /// we will construct DCEL, in which the directions will be counterclockwise.
+        /// InterLSIplLt and InterSSIplLt should have the same direction and the corresponding start points</remarks>
         private IEnumerable<CPolyline> CTTransform(CParameterInitialize pParameterInitialize, List<IPolyline5> InterLSIplLt, List<IPolyline5> InterSSIplLt, List<IPolyline5> SgIplLt)
         {
             CConstants.dblVerySmallCoord /= 10;  //this assignment should equal to _dblVerySmallDenominator = 10000000
@@ -213,19 +224,27 @@ namespace MorphingClass.CMorphingMethods
 
             CDCEL pInterLSDCEL = new CDCEL(InterLSCplLt);
             pInterLSDCEL.ConstructDCEL();
+            pInterLSDCEL.FaceCpgLt[1].SetOuterFaceCptlt(false, true, InterLSCplLt[0].CptLt[0]);
 
             CDCEL pInterSSDCEL = new CDCEL(InterSSCplLt);
             pInterSSDCEL.ConstructDCEL();
+            pInterSSDCEL.FaceCpgLt[1].SetOuterFaceCptlt(false, true, InterSSCplLt[0].CptLt[0]);
 
-            
             //I need to check if we realy need a counter clockwise direction
-            var pInterLSCptLt = pInterLSDCEL.FaceCpgLt[1].GetOuterCptEb(false).ToList();  //there are only two faces: the super face and a normal face
-            //I need to check if we realy need a counter clockwise direction
-            pInterSSDCEL.FaceCpgLt[1].GetOuterCptEb(false).ToList();  //there are only two faces: the super face and a normal face
+            var pInterLSCptLt = pInterLSDCEL.FaceCpgLt[1].GetOuterCptEb(false,false).ToList();  //there are only two faces: the super face and a normal face
+            ////I need to check if we realy need a counter clockwise direction
+            //pInterSSDCEL.FaceCpgLt[1].GetOuterCptEb(false).ToList();  //there are only two faces: the super face and a normal face
 
-            var pInterLSCptSD = pInterLSCptLt.ToSD(cpt => cpt, new CCmpCptYX_VerySmall()); //we maintaine this SD so that for a point from single polyline, we can know whether this single point overlaps a point of a larger-scale polyline
 
-            CCptbCtgl pCptbCtgl = new CCptbCtgl(pInterLSDCEL.FaceCpgLt[1], pInterSSDCEL.FaceCpgLt[1], pParameterInitialize);
+
+            //we maintaine this SD so that for a point from single polyline, 
+            //we can know whether this single point overlaps a point of a larger-scale polyline
+            var pInterLSCptSD = pInterLSCptLt.ToSD(cpt => cpt, new CCmpCptYX_VerySmall()); 
+
+            //bool blnSave = false;
+            //blnSave = true;
+
+            CCptbCtgl pCptbCtgl = new CCptbCtgl(pInterLSDCEL.FaceCpgLt[1], pInterSSDCEL.FaceCpgLt[1], true);
             pCptbCtgl.ConstructCcptbCtgl();
             var TransSgCPlLt = new List<CPolyline>(SgIplLt.Count);
             foreach (var SgCpl in SgCplEb)
@@ -454,7 +473,9 @@ namespace MorphingClass.CMorphingMethods
             }
             else
             {
-                CareCEdgeLt = GetCareCEdgeLt(pFrCpt.ClosestLeftCIntersection.CEdge2, true);  //we have already computed FirstSgCEdge.FrCpt.ClosestLeftCIntersection.CEdge2 when we computed the affine point for the first point
+                //we have already computed FirstSgCEdge.FrCpt.ClosestLeftCIntersection.CEdge2 
+                //when we computed the affine point for the first point
+                CareCEdgeLt = GetCareCEdgeLt(pFrCpt.ClosestLeftCIntersection.CEdge2, true);  
             }
 
             return CareCEdgeLt;

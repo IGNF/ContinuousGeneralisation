@@ -32,7 +32,17 @@ namespace MorphingClass.CUtility
         public static double dblThreeSecondPI { set; get; } = 3*Math.PI / 2;
         public static double dblFiveDegreeRad { set; get; } = Math.PI / 36;
         public static double dblFclipper { set; get; } = 100000000;
-        public static double dblRationVerySmallFclipper { set; get; } = dblVerySmallCoord/ dblFclipper;
+
+        /// <summary>
+        /// This varialbe is used for dblRationVerySmallFclipper.
+        /// This varialbe should be set when we scale, e.g., using clipper.
+        /// </summary>
+        public static double dblFScale { set; get; } = 1;
+        /// <summary>
+        /// This varialbe will be modified when we set dblVerySmallCoord.
+        /// We use this varialbe because the coordinates might be too large for calculating hash codes?
+        /// </summary>
+        public static double dblRationVerySmallFclipper { set; get; } = dblVerySmallCoord/ dblFScale;
 
         private static double _dblTwoSqrtPI = 2 * Math .Sqrt ( Math.PI);
         private static double _dblHalfDoubleMax = double.MaxValue / 2;
@@ -81,28 +91,6 @@ namespace MorphingClass.CUtility
             set { _strFmtIDs6 = value; }
         }
 
-        ///// <summary>属性：</summary>
-        //public static double dblVerySmall
-        //{
-        //    get { return _dblVerySmall; }
-        //    set
-        //    {
-        //        double X = _dblMidLength;
-        //        double y = value;
-
-        //        double XX = X * X;
-        //        double XXX = XX * X;
-        //        double XXXX = XX * XX;
-        //        double yy = y * y;
-        //        double yyy = yy * y;
-        //        double yyyy = yy * yy;
-
-        //        _dblVerySmall = y;
-        //        _dblVerySmallSquare = 2 * X * y + yy;
-        //        _dblVerySmallPower3 = 3 * XX * y + 3 * X * yy + yyy;
-        //        _dblVerySmallPower4 = 4 * XXX * y + 6 * XX * yy + 4 * X * yyy + yyyy;
-        //    }
-        //}
 
         public static double dblVerySmallCoord
         {
@@ -124,7 +112,7 @@ namespace MorphingClass.CUtility
                 _dblVerySmallPower3 = 3 * XX * y + 3 * X * yy + yyy;
                 _dblVerySmallPower4 = 4 * XXX * y + 6 * XX * yy + 4 * X * yyy + yyyy;
 
-                dblRationVerySmallFclipper = y / dblFclipper;
+                dblRationVerySmallFclipper = y / dblFScale;
             }
         }
 

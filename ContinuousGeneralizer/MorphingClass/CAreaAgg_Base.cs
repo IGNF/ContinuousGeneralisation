@@ -44,8 +44,8 @@ namespace MorphingClass.CGeneralizationMethods
         protected static int _intEnd; //=this.SSCrgLt.Count
         protected void UpdateStartEnd()
         {
-            _intStart = 358;
-            _intEnd = _intStart + 1;
+            //_intStart = 53;
+            //_intEnd = _intStart + 1;
         }
 
         public List<CRegion> InitialCrgLt { set; get; }
@@ -608,6 +608,8 @@ namespace MorphingClass.CGeneralizationMethods
                 "n",
                 "m",
                 "EstSteps",
+                "CostType",
+                "CostComp",
                 "RatioTypeCE",
                 "RatioCompCE",
                 //"RatioCompType",
@@ -631,7 +633,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             //{index[,length][:formatString]}; 
             //length: If positive, the parameter is right-aligned; if negative, it is left-aligned.
-            //const string format = "{0,6}";
+            //const string format = "{i,j}"; i: the i-th argument, j:j positions
             string strData = "";
 
             foreach (var objDataLt in objDataLtEb)
@@ -641,27 +643,16 @@ namespace MorphingClass.CGeneralizationMethods
                 {
                     int intIndex = intIndexLt[i];
 
-                    if (i == 1 || i == 2) // for n and m
-                    {
-                        strData += (" & " + string.Format("{0,2}", objDataLt[intIndex].ToString()));
-                    }
-                    else if (i == 3)  //for overestimation facotr
+                    if (i == 1 || i == 2 || i == 3) // for n and m, EstSteps
                     {
                         strData += (" & " + string.Format("{0,3}", objDataLt[intIndex].ToString()));
                     }
-                    else if (i == 4)
-                    {
-                        strData += (" & " + string.Format("{0,5}", Convert.ToDouble(objDataLt[intIndex]).ToString("0.000")));
-                    }
-                    else if (i == 5)
+                    else if (i == 4 || i == 4 || i == 5 || i == 6 || i == 7)
                     {
                         strData += (" & " + string.Format("{0,7}", Convert.ToDouble(objDataLt[intIndex]).ToString("0.000")));
                     }
-                    else  //for time
-                    {
-                        strData += (" & " + string.Format("{0,5}", Convert.ToDouble(objDataLt[intIndex]).ToString("0.000")));
-                    }
                 }
+                // for time
                 strData += (" & " + string.Format("{0,5}", 
                     (Convert.ToDouble(objDataLt[intIndexLt.GetLastT()]) / 1000).ToString("0.0")));
                 strData += ("\\" + "\\" + "\n");

@@ -1247,7 +1247,7 @@ namespace ContinuousGeneralizer
             // 
             this.Blank.AccessibleDescription = "s";
             this.Blank.Name = "Blank";
-            this.Blank.Size = new System.Drawing.Size(276, 19);
+            this.Blank.Size = new System.Drawing.Size(307, 19);
             this.Blank.Spring = true;
             // 
             // tsslMessage
