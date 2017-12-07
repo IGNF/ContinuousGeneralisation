@@ -279,24 +279,24 @@ namespace MorphingClass.CAid
         //    return KeySymbolSD;
         //}
 
-        public static SortedDictionary<int, ISymbol> GetKeySymbolSD(IFeatureLayer pFLayer, List<List<object>> pObjValueLtLt, int intKeyIndex)
+        public static Dictionary<int, ISymbol> GetKeySymbolDt(IFeatureLayer pFLayer, List<List<object>> pObjValueLtLt, int intKeyIndex)
         {
             IFeatureClass pFeatureClass = pFLayer.FeatureClass;
             int intFeatureCount = pFeatureClass.FeatureCount(null);
             IFeatureCursor pFeatureCursor = pFeatureClass.Search(null, false);    //注意此处的参数(****,false)！！！            
             var pRenderer = (pFLayer as IGeoFeatureLayer).Renderer;
-            var KeySymbolSD = new SortedDictionary<int, ISymbol>();
+            var KeySymbolDt = new Dictionary<int, ISymbol>();
             for (int i = 0; i < intFeatureCount; i++)
             {
                 //at the last round of this loop, pFeatureCursor.NextFeature() will return null
                 IFeature pFeature = pFeatureCursor.NextFeature();
                 var TKey = Convert.ToInt32(pObjValueLtLt[i][intKeyIndex]);
-                if (KeySymbolSD.ContainsKey(TKey) == false)
+                if (KeySymbolDt.ContainsKey(TKey) == false)
                 {
-                    KeySymbolSD.Add(TKey, pRenderer.SymbolByFeature[pFeature]);
+                    KeySymbolDt.Add(TKey, pRenderer.SymbolByFeature[pFeature]);
                 }
             }
-            return KeySymbolSD;
+            return KeySymbolDt;
         }
 
 

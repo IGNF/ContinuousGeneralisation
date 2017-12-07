@@ -44,7 +44,7 @@ namespace MorphingClass.CGeneralizationMethods
         protected static int _intEnd; //=this.SSCrgLt.Count
         protected void UpdateStartEnd()
         {
-            //_intStart = 53;
+            //_intStart = 354;
             //_intEnd = _intStart + 1;
         }
 
@@ -53,12 +53,12 @@ namespace MorphingClass.CGeneralizationMethods
         public List<CRegion> SSCrgLt { set; get; }
 
         protected double[,] _adblTD;
-        protected CValMap_SD<int, int> _TypePVSD;
-        protected SortedDictionary<int, ISymbol> _intTypeSymbolSD;
+        protected CValMap_Dt<int, int> _TypePVDt;
+        protected Dictionary<int, ISymbol> _intTypeSymbolDt;
 
 
         public double dblCost { set; get; }
-        public CStrObjLtSD StrObjLtSD { set; get; }
+        public CStrObjLtDt StrObjLtDt { set; get; }
 
         //if we change the list, we may need to change the comparer named CAACCmp
         public static IList<string> strKeyLt = new List<string>
@@ -71,15 +71,15 @@ namespace MorphingClass.CGeneralizationMethods
             "#Edges",            
             "EstType",
             "CostType",
-            "RatioTypeCE",
+            "R_TypeCE",
             "EstComp",
             "CostComp",
-            "RatioCompCE",
-            "RatioTypeComp",
-            "WeightedSum",
-            "TimeFirst(ms)",
-            "TimeLast(ms)",
-            "Time(ms)",
+            "R_CompCE",
+            "R_TypeComp",
+            "Cost",
+            "Time_F(ms)",  //time for the first attempt
+            "Time_L(ms)",  //time for the last attempt
+            "Time(ms)",    //total time
             "Memory(MB)"
         };
 
@@ -121,18 +121,18 @@ namespace MorphingClass.CGeneralizationMethods
 
             //set an index for each type, so that we can access a type distance directly
             //var intTypeIndexSD = new SortedDictionary<int, int>();
-            var pTypePVSD = new CValMap_SD<int, int>();
+            var pTypePVDt = new CValMap_Dt<int, int>();
             int intTypeIndex = 0;
             for (int i = 0; i < intDataRow; i++)
             {
                 int intType = Convert.ToInt32(aObj[i + 1][0]);
-                if (pTypePVSD.SD.ContainsKey(intType) == false)
+                if (pTypePVDt.Dt.ContainsKey(intType) == false)
                 {
-                    pTypePVSD.SD.Add(intType, intTypeIndex++);
+                    pTypePVDt.Dt.Add(intType, intTypeIndex++);
                 }
             }
-            pTypePVSD.CreateSD_R();
-            _TypePVSD = pTypePVSD;
+            pTypePVDt.CreateSD_R();
+            _TypePVDt = pTypePVDt;
 
             var adblTypeDistance = new double[intDataRow, intDataCol];
             for (int i = 0; i < intDataRow; i++)
@@ -177,31 +177,31 @@ namespace MorphingClass.CGeneralizationMethods
             var intLSTypeATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[0], "OBJART");
             var intSSTypeATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[1], "OBJART");
             //var CgbEb=pLSCPgLk.AsExpectedClass<CGeometricBase<CPolygon>, CGeometricBase<CPolygon>>();
-            CHelpFunc.GetCgbTypeAndTypeIndex(pLSCPgLt.AsExpectedClass<CPolygon, CPolygon>(), _ObjValueLtLtLt[0], 0, _TypePVSD);
-            CHelpFunc.GetCgbTypeAndTypeIndex(pSSCPgLt.AsExpectedClass<CPolygon, CPolygon>(), _ObjValueLtLtLt[1], 0, _TypePVSD);
+            CHelpFunc.GetCgbTypeAndTypeIndex(pLSCPgLt.AsExpectedClass<CPolygon, CPolygon>(), _ObjValueLtLtLt[0], 0, _TypePVDt);
+            CHelpFunc.GetCgbTypeAndTypeIndex(pSSCPgLt.AsExpectedClass<CPolygon, CPolygon>(), _ObjValueLtLtLt[1], 0, _TypePVDt);
 
             //RegionNumATIndex: the index of RegionNum in the attribute table 
             var intLSRegionNumATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[0], "RegionNum");
             var intSSRegionNumATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[1], "RegionNum");
-            //private CValMap_SD<int, int> _RegionPVSD;
-            var pRegionPVSD = new CValMap_SD<int, int>();
+            //private CValMap_Dt<int, int> _RegionPVDt;
+            var pRegionPVDt = new CValMap_Dt<int, int>();
             int intRegionIndex = 0;
             for (int i = 0; i < pObjValueLtLtLt[1].Count; i++)
             {
                 int intRegionNum = Convert.ToInt32(pObjValueLtLtLt[1][i][intSSRegionNumATIndex]);
-                if (pRegionPVSD.SD.ContainsKey(intRegionNum) == false)
+                if (pRegionPVDt.Dt.ContainsKey(intRegionNum) == false)
                 {
-                    pRegionPVSD.SD.Add(intRegionNum, intRegionIndex++);
+                    pRegionPVDt.Dt.Add(intRegionNum, intRegionIndex++);
                 }
             }
 
             //ssign the polygons as well as attributes from a featureLayer into regions, without considering costs
             this.LSCrgLt = GenerateCrgLt(pLSCPgLt, pSSCPgLt.Count, 
-                pObjValueLtLtLt[0], intLSTypeATIndex, intLSRegionNumATIndex, _TypePVSD, pRegionPVSD);
+                pObjValueLtLtLt[0], intLSTypeATIndex, intLSRegionNumATIndex, _TypePVDt, pRegionPVDt);
             this.SSCrgLt = GenerateCrgLt(pSSCPgLt, pSSCPgLt.Count, 
-                pObjValueLtLtLt[1], intSSTypeATIndex, intSSRegionNumATIndex, _TypePVSD, pRegionPVSD);
+                pObjValueLtLtLt[1], intSSTypeATIndex, intSSRegionNumATIndex, _TypePVDt, pRegionPVDt);
 
-            _intTypeSymbolSD = CToIpe.GetKeySymbolSD(_ParameterInitialize.pFLayerLt[0], pObjValueLtLtLt[0], intLSTypeATIndex);
+            _intTypeSymbolDt = CToIpe.GetKeySymbolDt(_ParameterInitialize.pFLayerLt[0], pObjValueLtLtLt[0], intLSTypeATIndex);
 
 
             using (var writer = new System.IO.StreamWriter(_ParameterInitialize.strSavePathBackSlash +
@@ -213,7 +213,7 @@ namespace MorphingClass.CGeneralizationMethods
             //apply A* algorithm to each region
             this.InitialCrgLt = new List<CRegion>(pSSCPgLt.Count);
             //var ResultCrgLt = new List<CRegion>(pSSCPgLt.Count);
-            this.StrObjLtSD = new CStrObjLtSD(CAreaAgg_AStar.strKeyLt, pSSCPgLt.Count);
+            this.StrObjLtDt = new CStrObjLtDt(CAreaAgg_AStar.strKeyLt, pSSCPgLt.Count);
 
             _intStart = 0;
             _intEnd = this.SSCrgLt.Count;
@@ -224,18 +224,18 @@ namespace MorphingClass.CGeneralizationMethods
 
         #region Common
 
-        protected void AddLineToStrObjLtSD(CStrObjLtSD StrObjLtSD, CRegion LSCrg)
+        protected void AddLineToStrObjLtDt(CStrObjLtDt StrObjLtDt, CRegion LSCrg)
         {
-            var et = StrObjLtSD.GetEnumerator();
+            var et = StrObjLtDt.GetEnumerator();
             while (et.MoveNext())
             {
                 et.Current.Value.Add(-1);
             }
 
-            StrObjLtSD.SetLastObj("ID", LSCrg.ID);
-            StrObjLtSD.SetLastObj("n", LSCrg.CphTypeIndexSD_Area_CphGID.Count);
-            StrObjLtSD.SetLastObj("m", LSCrg.AdjCorrCphsSD.Count);
-            StrObjLtSD.SetLastObj("EstSteps", 1000000);  //default value
+            StrObjLtDt.SetLastObj("ID", LSCrg.ID);
+            StrObjLtDt.SetLastObj("n", LSCrg.CphTypeIndexSD_Area_CphGID.Count);
+            StrObjLtDt.SetLastObj("m", LSCrg.AdjCorrCphsSD.Count);
+            StrObjLtDt.SetLastObj("EstSteps", -1);  //default value
         }
 
 
@@ -247,12 +247,12 @@ namespace MorphingClass.CGeneralizationMethods
         /// <param name="pObjValueLtLt"></param>
         /// <param name="intTypeATIndex"></param>
         /// <param name="intRegionNumATIndex"></param>
-        /// <param name="pTypePVSD"></param>
-        /// <param name="pRegionPVSD"></param>
+        /// <param name="pTypePVDt"></param>
+        /// <param name="pRegionPVDt"></param>
         /// <returns></returns>
         protected List<CRegion> GenerateCrgLt(List<CPolygon> pCpgLt, int intCrgNum, 
             List<List<object>> pObjValueLtLt, int intTypeATIndex, int intRegionNumATIndex, 
-            CValMap_SD<int, int> pTypePVSD, CValMap_SD<int, int> pRegionPVSD)
+            CValMap_Dt<int, int> pTypePVDt, CValMap_Dt<int, int> pRegionPVDt)
         {
             var pCrgLt = new List<CRegion>(intCrgNum);
             pCrgLt.EveryElementNew();
@@ -262,12 +262,12 @@ namespace MorphingClass.CGeneralizationMethods
                 //get the type index
                 int intType = Convert.ToInt32(pObjValueLtLt[i][intTypeATIndex]);
                 int intTypeIndex;
-                pTypePVSD.SD.TryGetValue(intType, out intTypeIndex);
+                pTypePVDt.Dt.TryGetValue(intType, out intTypeIndex);
 
                 //get the RegionNum index
                 var intRegionNum = Convert.ToInt32(pObjValueLtLt[i][intRegionNumATIndex]);
                 int intRegionIndex;
-                pRegionPVSD.SD.TryGetValue(intRegionNum, out intRegionIndex);
+                pRegionPVDt.Dt.TryGetValue(intRegionNum, out intRegionIndex);
 
                 //add the Cph into the corresponding Region
                 pCrgLt[intRegionIndex].AddCph(new CPatch(pCpgLt[i], -1, intTypeIndex), intTypeIndex);
@@ -291,7 +291,7 @@ namespace MorphingClass.CGeneralizationMethods
         #region Output
 
 
-        protected void RecordResultForCrg(CStrObjLtSD StrObjLtSD, CRegion LSCrg, CRegion FinalOneCphCrg, int intSSTypeIndex)
+        protected void RecordResultForCrg(CStrObjLtDt StrObjLtDt, CRegion LSCrg, CRegion FinalOneCphCrg, int intSSTypeIndex)
         {
             if (FinalOneCphCrg.GetSoloCphTypeIndex() != intSSTypeIndex)
             {
@@ -306,42 +306,42 @@ namespace MorphingClass.CGeneralizationMethods
             double dblRoundedCostEstComp = Math.Round(LSCrg.dblCostEstComp, _intDigits);
             double dblRoundedCostExactComp = Math.Round(FinalOneCphCrg.dblCostExactComp, _intDigits);
 
-            double dblRatioTypeCE = 1;
-            double dblRatioCompCE = 1;
-            double dblRatioTypeComp = 1;
+            double dblR_TypeCE = 1;
+            double dblR_CompCE = 1;
+            double dblR_TypeComp = 1;
 
             if (LSCrg.GetCphCount() > 1)
             {
-                if (LSCrg.dblCostEstType > 0)  //if LSCrg.dblCostEstType == 0, then we define dblRatioTypeCE = 1
+                if (LSCrg.dblCostEstType > 0)  //if LSCrg.dblCostEstType == 0, then we define dblR_TypeCE = 1
                 {
-                    dblRatioTypeCE = Math.Round(FinalOneCphCrg.dblCostExactType / LSCrg.dblCostEstType, _intDigits);
+                    dblR_TypeCE = Math.Round(FinalOneCphCrg.dblCostExactType / LSCrg.dblCostEstType, _intDigits);
                 }
 
                 if (LSCrg.dblCostEstComp > 0)
                 {
-                    dblRatioCompCE = Math.Round(FinalOneCphCrg.dblCostExactComp / LSCrg.dblCostEstComp, _intDigits);
+                    dblR_CompCE = Math.Round(FinalOneCphCrg.dblCostExactComp / LSCrg.dblCostEstComp, _intDigits);
                 }
                 
-                dblRatioTypeComp = Math.Round(FinalOneCphCrg.dblCostExactType / FinalOneCphCrg.dblCostExactComp, _intDigits);
+                dblR_TypeComp = Math.Round(FinalOneCphCrg.dblCostExactType / FinalOneCphCrg.dblCostExactComp, _intDigits);
             }
 
             if (CConstants.strMethod == "Greedy")
             {
                 dblRoundedCostEstimatedType = -1;
-                dblRatioTypeCE = -1;
+                dblR_TypeCE = -1;
                 dblRoundedCostEstComp = -1;
-                dblRatioCompCE = -1;
+                dblR_CompCE = -1;
             }
 
-            StrObjLtSD.SetLastObj("#Nodes", CRegion._intNodeCount);
-            StrObjLtSD.SetLastObj("EstType", dblRoundedCostEstimatedType);
-            StrObjLtSD.SetLastObj("CostType", dblRoundedCostExactType);
-            StrObjLtSD.SetLastObj("RatioTypeCE", dblRatioTypeCE);
-            StrObjLtSD.SetLastObj("EstComp", dblRoundedCostEstComp);
-            StrObjLtSD.SetLastObj("CostComp", dblRoundedCostExactComp);
-            StrObjLtSD.SetLastObj("RatioCompCE", dblRatioCompCE);
-            StrObjLtSD.SetLastObj("RatioTypeComp", dblRatioTypeComp);
-            StrObjLtSD.SetLastObj("WeightedSum", Math.Round(FinalOneCphCrg.dblCostExact, _intDigits));
+            StrObjLtDt.SetLastObj("#Nodes", CRegion._intNodeCount);
+            StrObjLtDt.SetLastObj("EstType", dblRoundedCostEstimatedType);
+            StrObjLtDt.SetLastObj("CostType", dblRoundedCostExactType);
+            StrObjLtDt.SetLastObj("R_TypeCE", dblR_TypeCE);
+            StrObjLtDt.SetLastObj("EstComp", dblRoundedCostEstComp);
+            StrObjLtDt.SetLastObj("CostComp", dblRoundedCostExactComp);
+            StrObjLtDt.SetLastObj("R_CompCE", dblR_CompCE);
+            StrObjLtDt.SetLastObj("R_TypeComp", dblR_TypeComp);
+            StrObjLtDt.SetLastObj("Cost", Math.Round(FinalOneCphCrg.dblCostExact, _intDigits));
 
         }
 
@@ -421,11 +421,11 @@ namespace MorphingClass.CGeneralizationMethods
             //SortedDictionary<int, ISymbol> intTypeFillSymbolSD
             OutputCrgLt.AddRange(CrgSS);
 
-            OutputMap(OutputCrgLt, this._TypePVSD, dblProportion, intOutputStepNum + 1, pParameterInitialize);
+            OutputMap(OutputCrgLt, this._TypePVDt, dblProportion, intOutputStepNum + 1, pParameterInitialize);
         }
 
 
-        public static void OutputMap(IEnumerable<CRegion> OutputCrgLt, CValMap_SD<int, int> pTypePVSD, double dblProportion,
+        public static void OutputMap(IEnumerable<CRegion> OutputCrgLt, CValMap_Dt<int, int> pTypePVDt, double dblProportion,
             int intTime, CParameterInitialize pParameterInitialize)
         {
             List<string> pstrFieldNameLt;
@@ -442,7 +442,7 @@ namespace MorphingClass.CGeneralizationMethods
                     IpgLt.Add(CphTypeIndexKVP.Key.JudgeAndMergeCpgSSToIpg());
                     var pobjectValueLt = new List<object>(2);
                     int intType;
-                    pTypePVSD.SD_R.TryGetValue(CphTypeIndexKVP.Value, out intType);
+                    pTypePVDt.Dt_R.TryGetValue(CphTypeIndexKVP.Value, out intType);
                     pobjectValueLt.Add(intType);
                     pobjectValueLt.Add(crg.ID);
                     pobjectValueLtLt.Add(pobjectValueLt);
@@ -472,11 +472,11 @@ namespace MorphingClass.CGeneralizationMethods
 
 
 
-        public static void SaveData(CStrObjLtSD StrObjLtSD, 
+        public static void SaveData(CStrObjLtDt StrObjLtDt, 
             CParameterInitialize pParameterInitialize, string strMethod, int intQuitCount=0)
         {
-            int intAtrNum = StrObjLtSD.Count;
-            int intCrgNum = StrObjLtSD.Values.First().Count;
+            int intAtrNum = StrObjLtDt.Count;
+            int intCrgNum = StrObjLtDt.Values.First().Count;
 
             var pobjDataLtLt = new List<IList<object>>(intCrgNum);
             var TempobjDataLtLt = new List<IList<object>>(intAtrNum);
@@ -485,7 +485,7 @@ namespace MorphingClass.CGeneralizationMethods
             foreach (var strKey in strKeyLt)
             {
                 List<object> valuelt;
-                StrObjLtSD.TryGetValue(strKey, out valuelt);
+                StrObjLtDt.TryGetValue(strKey, out valuelt);
                 TempobjDataLtLt.Add(valuelt);
             }
 
@@ -507,15 +507,15 @@ namespace MorphingClass.CGeneralizationMethods
                 CConstants.strShapeConstraint + "_" + intQuitCount, pParameterInitialize.strSavePath, CAreaAgg_AStar.strKeyLt);
             ExportForLatex(objDataLtSS, CAreaAgg_Base.strKeyLt, pParameterInitialize.strSavePath);
             ExportIDOverEstimation(objDataLtSS, pParameterInitialize.strSavePath);
-            ExportStatistic(StrObjLtSD, pParameterInitialize.strSavePath);
+            ExportStatistic(StrObjLtDt, pParameterInitialize.strSavePath);
         }
 
-        public static void ExportStatistic(CStrObjLtSD StrObjLtSD, string strSavePath)
+        public static void ExportStatistic(CStrObjLtDt StrObjLtDt, string strSavePath)
         {
             string strData = "";
 
             List<object> objEstStepsLt;
-            StrObjLtSD.TryGetValue("EstSteps", out objEstStepsLt);
+            StrObjLtDt.TryGetValue("EstSteps", out objEstStepsLt);
             double dblLogEstStepsSum = 0;
             int intOverEstCount = 0;
             //the capacity must be larger than 20
@@ -541,12 +541,12 @@ namespace MorphingClass.CGeneralizationMethods
 
             strData += ("& " + string.Format("{0,3}", intOverEstCount));
             strData += (" & " + string.Format("{0,3}", dblLogEstStepsSum));  //repetitions
-            strData += GetSumWithSpecifiedStyle(StrObjLtSD, "#Nodes", "{0,8}", 0);
-            strData += GetSumWithSpecifiedStyle(StrObjLtSD, "#Edges", "{0,10}", 0);            
-            strData += GetSumWithSpecifiedStyle(StrObjLtSD, "CostType", "{0,4}", 1);
-            strData += GetSumWithSpecifiedStyle(StrObjLtSD, "CostComp", "{0,4}", 1);
-            strData += GetSumWithSpecifiedStyle(StrObjLtSD, "WeightedSum", "{0,4}", 1);
-            strData += GetSumWithSpecifiedStyle(StrObjLtSD, "Time(ms)", "{0,4}", 1, 60000);  //all the time, minuts in statistics
+            strData += GetSumWithSpecifiedStyle(StrObjLtDt, "#Nodes", "{0,8}", 0);
+            strData += GetSumWithSpecifiedStyle(StrObjLtDt, "#Edges", "{0,10}", 0);            
+            strData += GetSumWithSpecifiedStyle(StrObjLtDt, "CostType", "{0,4}", 1);
+            strData += GetSumWithSpecifiedStyle(StrObjLtDt, "CostComp", "{0,4}", 1);
+            strData += GetSumWithSpecifiedStyle(StrObjLtDt, "Cost", "{0,4}", 1);
+            strData += GetSumWithSpecifiedStyle(StrObjLtDt, "Time(ms)", "{0,4}", 1, 60000);  //all the time, minuts in statistics
             //strData += ;
 
             //to generate coordinates like (1,6), where x is for the index of overestimation factor, 
@@ -563,11 +563,11 @@ namespace MorphingClass.CGeneralizationMethods
             }
         }
 
-        private static string GetSumWithSpecifiedStyle(CStrObjLtSD StrObjLtSD, 
+        private static string GetSumWithSpecifiedStyle(CStrObjLtDt StrObjLtDt, 
             string strKey, string strformat, int intRound, double dblTimeUnit = 1)
         {
             List<object> objLt;
-            StrObjLtSD.TryGetValue(strKey, out objLt);
+            StrObjLtDt.TryGetValue(strKey, out objLt);
             double dblSum = 0;
             for (int i = 0; i < objLt.Count; i++)
             {
@@ -610,10 +610,10 @@ namespace MorphingClass.CGeneralizationMethods
                 "EstSteps",
                 "CostType",
                 "CostComp",
-                "RatioTypeCE",
-                "RatioCompCE",
-                //"RatioCompType",
-                //"WeightedSum",
+                "R_TypeCE",
+                "R_CompCE",
+                //"R_CompType",
+                //"Cost",
                 "Time(ms)"  //we will output time with unit second
             };
 
@@ -670,7 +670,7 @@ namespace MorphingClass.CGeneralizationMethods
             string strData = "";
             foreach (var objDataLt in objDataLtEb)
             {
-                if (Convert.ToInt32(objDataLt[3]) > 1)
+                if (Convert.ToDouble(objDataLt[3]) > 1)
                 {
                     strData += "intSpecifiedIDLt.Add(" + objDataLt[0] + ");\n";
                 }
@@ -716,7 +716,7 @@ namespace MorphingClass.CGeneralizationMethods
 
                 var pobjectValueLt = new List<object>(2);
                 int intType;
-                _TypePVSD.SD_R.TryGetValue(TypeIndexLt[i], out intType);
+                _TypePVDt.Dt_R.TryGetValue(TypeIndexLt[i], out intType);
                 pobjectValueLt.Add(intType);
                 pobjectValueLt.Add(-1);
                 pobjectValueLtLt.Add(pobjectValueLt);
@@ -762,12 +762,12 @@ namespace MorphingClass.CGeneralizationMethods
             List<IPolygon4> passiveIpgLt;
             var newIpgLt = GenerateAggregatedIpgLt(pInitialCrgLt, intOutputStepNum, pParameterInitialize.strAreaAggregation,
                 out passiveIpgLt, out intTypeIndexLt);
-            var pFillSymbolLt = GetFillSymbolLt(intTypeIndexLt, _TypePVSD, _intTypeSymbolSD);
+            var pFillSymbolLt = GetFillSymbolLt(intTypeIndexLt, _TypePVDt, _intTypeSymbolDt);
 
             var strLayerNameLt = GetLayerNames(intTotalCphCount, pInitialCrgLt.Count);
             string strIpeCont = CIpeDraw.GetDataOfLayerNames(strLayerNameLt);
             strIpeCont += CIpeDraw.GetDataOfViewsAreaAgg(strLayerNameLt);
-            strIpeCont += strDataOfBaseLayer(pInitialCrgLt, _TypePVSD, _intTypeSymbolSD,
+            strIpeCont += strDataOfBaseLayer(pInitialCrgLt, _TypePVDt, _intTypeSymbolDt,
                 strLayerNameLt, pFLayerEnv, CConstants.pIpeEnv, strBoundWidth);
             strIpeCont += strDataOfCphs(startCpgEb, newIpgLt, passiveIpgLt, 
                 pFillSymbolLt, strLayerNameLt, pFLayerEnv, CConstants.pIpeEnv, strBoundWidth);
@@ -836,16 +836,16 @@ namespace MorphingClass.CGeneralizationMethods
         }
 
         private static List<IFillSymbol> GetFillSymbolLt(List<int> intTypeIndexLt,
-            CValMap_SD<int, int> pTypePVSD, SortedDictionary<int, ISymbol> pintTypeSymbolSD)
+            CValMap_Dt<int, int> pTypePVDt, Dictionary<int, ISymbol> pintTypeSymbolDt)
         {
             var pFillSymbolLt = new List<IFillSymbol>(intTypeIndexLt.Count);
             foreach (var intTypeIndex in intTypeIndexLt)
             {
                 //get fillsymbol of the polygon
                 int intType;
-                pTypePVSD.SD_R.TryGetValue(intTypeIndex, out intType);
+                pTypePVDt.Dt_R.TryGetValue(intTypeIndex, out intType);
                 ISymbol pSymbol;
-                pintTypeSymbolSD.TryGetValue(intType, out pSymbol);
+                pintTypeSymbolDt.TryGetValue(intType, out pSymbol);
                 pFillSymbolLt.Add(pSymbol as IFillSymbol);
             }
 
@@ -854,7 +854,7 @@ namespace MorphingClass.CGeneralizationMethods
 
 
         private static string strDataOfBaseLayer(List<CRegion> pInitialCrgLt, 
-            CValMap_SD<int, int> pTypePVSD, SortedDictionary<int, ISymbol> pintTypeSymbolSD,
+            CValMap_Dt<int, int> pTypePVDt, Dictionary<int, ISymbol> pintTypeSymbolDt,
 List<string> strLayerNameLt,
  IEnvelope pFLayerEnv, CEnvelope pIpeEnv, string strBoundWidth)
         {
@@ -867,9 +867,9 @@ List<string> strLayerNameLt,
                 foreach (var kvp in crg.CphTypeIndexSD_Area_CphGID)
                 {
                     int intType;
-                    pTypePVSD.SD_R.TryGetValue(kvp.Value, out intType);
+                    pTypePVDt.Dt_R.TryGetValue(kvp.Value, out intType);
                     ISymbol pSymbol;
-                    pintTypeSymbolSD.TryGetValue(intType, out pSymbol);
+                    pintTypeSymbolDt.TryGetValue(intType, out pSymbol);
                     var pfillSymbol=pSymbol as IFillSymbol;
                     strIpeContAllLayers += CToIpe.TranCpgToIpe(kvp.Key.GetSoloCpg(), 
                         pfillSymbol, pFLayerEnv, pIpeEnv, strBoundWidth);

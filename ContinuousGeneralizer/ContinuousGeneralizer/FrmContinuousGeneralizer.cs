@@ -62,8 +62,8 @@ namespace ContinuousGeneralizer
             //var frmCurrent = new FrmSelectRandomly(_DataRecords);
             //var frmCurrent = new FrmToIpe(_DataRecords);
             //var frmCurrent = new FrmBldgGrow(_DataRecords);
-            //var frmCurrent = new FrmAreaAgg(_DataRecords);
-            var frmCurrent = new FrmCGABM(_DataRecords);
+            var frmCurrent = new FrmAreaAgg(_DataRecords);
+            //var frmCurrent = new FrmCGABM(_DataRecords);
             //var frmCurrent = new FrmExtractPossibleFiles();
             frmCurrent.Show();
             //frmCurrent.btnRun_Click(sender, e);
@@ -72,8 +72,7 @@ namespace ContinuousGeneralizer
 
             //frmCurrent.btn090_Click(sender, e);
         }
-
-        private object _Missing = Type.Missing;
+        
         private CDataRecords _DataRecords = new CDataRecords();
         private ESRI.ArcGIS.Controls.IMapControl4 m_mapControl = null;
         private ESRI.ArcGIS.Controls.IPageLayoutControl2 m_pageLayoutControl = null;

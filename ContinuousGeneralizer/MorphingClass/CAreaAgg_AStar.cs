@@ -69,7 +69,7 @@ namespace MorphingClass.CGeneralizationMethods
                 //}
                 
 
-                AStar(LSCrgLt[i], SSCrgLt[i], this.StrObjLtSD, _ParameterInitialize.strAreaAggregation, this._adblTD, intQuitCount);
+                AStar(LSCrgLt[i], SSCrgLt[i], this.StrObjLtDt, _ParameterInitialize.strAreaAggregation, this._adblTD, intQuitCount);
 
 
 
@@ -86,7 +86,7 @@ namespace MorphingClass.CGeneralizationMethods
 
 
         #region AStar
-        public CRegion AStar(CRegion LSCrg, CRegion SSCrg, CStrObjLtSD StrObjLtSD, string strAreaAggregation, 
+        public CRegion AStar(CRegion LSCrg, CRegion SSCrg, CStrObjLtDt StrObjLtDt, string strAreaAggregation, 
             double[,] padblTD, int intQuitCount = 200000)
         {
             var ExistingCorrCphsSD0 = LSCrg.SetInitialAdjacency();  //also count the number of edges
@@ -104,7 +104,7 @@ namespace MorphingClass.CGeneralizationMethods
             //CRegion._intStartStaticGIDAll = CRegion._intStaticGID;
 
 
-            AddLineToStrObjLtSD(StrObjLtSD, LSCrg);
+            AddLineToStrObjLtDt(StrObjLtDt, LSCrg);
 
 
             Console.WriteLine();
@@ -117,9 +117,9 @@ namespace MorphingClass.CGeneralizationMethods
             pStopwatchOverHead.Stop();
 
             Stopwatch pStopwatchLast=new Stopwatch ();
-            bool blnRecordTimeFirst = false;
-            long lngTimeFirst = 0;
-            long lngTimeLast = 0;
+            bool blnRecordTime_F = false;
+            long lngTime_F = 0;
+            long lngTime_L = 0;
             long lngTimeAll = lngTimeOverHead;
             CRegion resultcrg = new CRegion(-2);
             do
@@ -135,19 +135,19 @@ namespace MorphingClass.CGeneralizationMethods
                     LSCrg.cenumColor = CEnumColor.white;
 
                     resultcrg = ComputeAccordEstSteps(LSCrg, SSCrg, strAreaAggregation, ExistingCorrCphsSD,
-                        intEstSteps, StrObjLtSD, padblTD, intQuitCount);
+                        intEstSteps, StrObjLtDt, padblTD, intQuitCount);
                 }
                 catch (System.OutOfMemoryException ex)
                 {
                     Console.WriteLine(ex.Message);
                 }
 
-                if (blnRecordTimeFirst == false)
+                if (blnRecordTime_F == false)
                 {
-                    lngTimeFirst = pStopwatchLast.ElapsedMilliseconds + lngTimeOverHead;
-                    blnRecordTimeFirst = true;
+                    lngTime_F = pStopwatchLast.ElapsedMilliseconds + lngTimeOverHead;
+                    blnRecordTime_F = true;
                 }
-                lngTimeLast = pStopwatchLast.ElapsedMilliseconds + lngTimeOverHead;
+                lngTime_L = pStopwatchLast.ElapsedMilliseconds + lngTimeOverHead;
                 lngTimeAll += pStopwatchLast.ElapsedMilliseconds;
 
                 if (resultcrg.ID != -2)
@@ -162,7 +162,7 @@ namespace MorphingClass.CGeneralizationMethods
                 
                 intRound++;
             } while (true);
-            StrObjLtSD.SetLastObj("EstSteps", intEstSteps);
+            StrObjLtDt.SetLastObj("EstSteps", intEstSteps);
             Console.WriteLine("d: " + resultcrg.d 
                 + "            Type: " + resultcrg.dblCostExactType 
                 + "            Compactness: " + resultcrg.dblCostExactComp);
@@ -171,11 +171,11 @@ namespace MorphingClass.CGeneralizationMethods
             //int intExploredRegionAll = CRegion._intStaticGID - CRegion._intStartStaticGIDLast;  
             double dblConsumedMemoryInMB = CHelpFunc.GetConsumedMemoryInMB(false);
 
-            StrObjLtSD.SetLastObj("#Edges", CRegion._intEdgeCount);
-            StrObjLtSD.SetLastObj("TimeFirst(ms)", lngTimeFirst);
-            StrObjLtSD.SetLastObj("TimeLast(ms)", lngTimeLast);
-            StrObjLtSD.SetLastObj("Time(ms)", lngTimeAll);
-            StrObjLtSD.SetLastObj("Memory(MB)", CHelpFunc.GetConsumedMemoryInMB(false, lngStartMemory));
+            StrObjLtDt.SetLastObj("#Edges", CRegion._intEdgeCount);
+            StrObjLtDt.SetLastObj("Time_F(ms)", lngTime_F);
+            StrObjLtDt.SetLastObj("Time_L(ms)", lngTime_L);
+            StrObjLtDt.SetLastObj("Time(ms)", lngTimeAll);
+            StrObjLtDt.SetLastObj("Memory(MB)", CHelpFunc.GetConsumedMemoryInMB(false, lngStartMemory));
 
             Console.WriteLine("EstSteps:" + intEstSteps + "      We have visited " + 
                 CRegion._intNodeCount + " Nodes and " + CRegion._intEdgeCount + " Edges.");
@@ -184,7 +184,7 @@ namespace MorphingClass.CGeneralizationMethods
         }
 
         private CRegion ComputeAccordEstSteps(CRegion LSCrg, CRegion SSCrg, string strAreaAggregation,
-            SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, int intEstSteps, CStrObjLtSD StrObjLtSD, 
+            SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, int intEstSteps, CStrObjLtDt StrObjLtDt, 
             double[,] padblTD, int intQuitCount = 200000)
         {
             int intRegionID = LSCrg.ID;  //all the regions generated in this function will have the same intRegionID
@@ -232,7 +232,7 @@ namespace MorphingClass.CGeneralizationMethods
                 //List<CRegion> crgcol = new List<CRegion>();
                 //crgcol.Add(u);
 
-                //OutputMap(crgcol, this._TypePVSD, u.d, intCount, pParameterInitialize);
+                //OutputMap(crgcol, this._TypePVDt, u.d, intCount, pParameterInitialize);
 
                 //MessageBox.Show("click for next!");
 
@@ -293,7 +293,7 @@ namespace MorphingClass.CGeneralizationMethods
                 }                
             }
 
-            RecordResultForCrg(StrObjLtSD, LSCrg, FinalOneCphCrg, SSCrg.GetSoloCphTypeIndex());
+            RecordResultForCrg(StrObjLtDt, LSCrg, FinalOneCphCrg, SSCrg.GetSoloCphTypeIndex());
             return FinalOneCphCrg;
         }
 

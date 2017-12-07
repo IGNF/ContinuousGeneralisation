@@ -49,25 +49,41 @@ namespace MorphingClass.CGeneralizationMethods
 
 
         #region ILP
-        public void AreaAggregation()
+        public void AreaAggregation(List<int> intSpecifiedIDLt=null)
         {
             SetupBasic();
 
-
+            int intOutOfMemory = 0;
             CRegion._lngEstCountEdgeNumber = 0;
             CRegion._lngEstCountEdgeLength = 0;
             CRegion._lngEstCountEqual = 0;
 
-            for (int i = _intStart; i < _intEnd; i++)
+            if (intSpecifiedIDLt==null)  //this is the usual case
             {
-                ILP(LSCrgLt[i], SSCrgLt[i], this.StrObjLtSD, this._adblTD, _ParameterInitialize.strAreaAggregation);
+                for (int i = _intStart; i < _intEnd; i++)
+                {
+                    ILP(LSCrgLt[i], SSCrgLt[i], 
+                        this.StrObjLtDt, this._adblTD, _ParameterInitialize.strAreaAggregation, ref intOutOfMemory);
+                    CHelpFunc.Displaytspb(i+1, _intEnd- _intStart+1);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < intSpecifiedIDLt.Count; i++)
+                {
+                    ILP(LSCrgLt[intSpecifiedIDLt[i]], SSCrgLt[intSpecifiedIDLt[i]], 
+                        this.StrObjLtDt, this._adblTD, _ParameterInitialize.strAreaAggregation, ref intOutOfMemory);
+                    CHelpFunc.Displaytspb(i+1, intSpecifiedIDLt.Count);
+                }
             }
 
+            Console.WriteLine("The number of regions that caused the exception out of memory: " + intOutOfMemory);
         }
 
 
 
-        public CRegion ILP(CRegion LSCrg, CRegion SSCrg, CStrObjLtSD StrObjLtSD, double[,] adblTD, string strAreaAggregation)
+        public CRegion ILP(CRegion LSCrg, CRegion SSCrg, CStrObjLtDt StrObjLtDt, 
+            double[,] adblTD, string strAreaAggregation, ref int intOutOfMemory)
         {
             long lngStartMemory = GC.GetTotalMemory(true);
 
@@ -82,7 +98,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             Stopwatch pStopwatch = new Stopwatch();
             pStopwatch.Start();
-            AddLineToStrObjLtSD(StrObjLtSD, LSCrg);
+            AddLineToStrObjLtDt(StrObjLtDt, LSCrg);
 
             //double dblMemoryInMB2 = CHelpFunc.GetConsumedMemoryInMB(true);
             Cplex cplex = new Cplex();
@@ -90,7 +106,7 @@ namespace MorphingClass.CGeneralizationMethods
             //double dblMemoryInMB3 = CHelpFunc.GetConsumedMemoryInMB(true);
 
             CRegion crg = new CRegion(-1);
-            bool blnSoloved = true;
+            bool blnSolved = true;
             try
             {
                 //Step 3
@@ -107,8 +123,9 @@ namespace MorphingClass.CGeneralizationMethods
 
                 // Step 9
                 //1170 is from _All_MinimizeInteriorBoundaries_200000000
-                //160 is from _Smallest_MinimizeInteriorBoundaries_200000
-                cplex.SetParam(Cplex.DoubleParam.TiLim, 160);
+                //160s is from _Smallest_MinimizeInteriorBoundaries_200000
+                //600s: 10min
+                cplex.SetParam(Cplex.DoubleParam.TiLim, 600);
 
                 //cplex.SetParam(Cplex.IntParam.ParallelMode, 1);
                 //cplex.SetParam(Cplex.ParallelMode.Deterministic,cplex.pa);
@@ -279,41 +296,52 @@ namespace MorphingClass.CGeneralizationMethods
                 cplex.Output().WriteLine("Solution value = "
                 + cplex.ObjValue);
                 string strStatus = cplex.GetStatus().ToString();
-                //StrObjLtSD.SetLastObj("#Edges", strStatus);
-                StrObjLtSD.SetLastObj("WeightedSum", cplex.ObjValue);
-
+                //StrObjLtDt.SetLastObj("#Edges", strStatus);
+                StrObjLtDt.SetLastObj("Cost", cplex.ObjValue);
+                
                 if (strStatus == "Optimal")
                 {
-                    StrObjLtSD.SetLastObj("EstSteps", 0);
+                    StrObjLtDt.SetLastObj("EstSteps", 0.ToString("F4"));
                 }
                 else if (strStatus == "Feasible")
                 {
-                    StrObjLtSD.SetLastObj("EstSteps", 10000);
+                    StrObjLtDt.SetLastObj("EstSteps", (cplex.MIPRelativeGap * 100 ).ToString("F4"));
+                }
+                else
+                {
+                    StrObjLtDt.SetLastObj("EstSteps", 200.ToString("F4"));
                 }
             }
             catch (ILOG.Concert.Exception e)
             {
-                blnSoloved = false;
+                if (e.Message== "CPLEX Error  1001: Out of memory.\n")
+                {
+                    intOutOfMemory++;
+                }
+                blnSolved = false;
                 System.Console.WriteLine("Concert exception '" + e + "' caught");
             }
             catch (System.OutOfMemoryException e2)
             {
-                blnSoloved = false;
+                //it seems this never happens!
+                blnSolved = false;
                 System.Console.WriteLine("System exception '" + e2);
             }
             finally
             {
                 double dblMemoryInMB = CHelpFunc.GetConsumedMemoryInMB(false, lngStartMemory);
-                if (blnSoloved == false)
+                if (blnSolved == false)
                 {
                     crg.ID = -2;
+                    StrObjLtDt.SetLastObj("EstSteps", 200.ToString("F4"));
                     System.Console.WriteLine("We have used memory " + dblMemoryInMB + "MB.");
                     Console.WriteLine("Crg:  ID  " + LSCrg.ID + ";    n  " + LSCrg.GetCphCount() + ";    m  " +
                         LSCrg.AdjCorrCphsSD.Count + "  could not be solved by ILP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 }
-                StrObjLtSD.SetLastObj("TimeLast(ms)", pStopwatch.ElapsedMilliseconds);
-                StrObjLtSD.SetLastObj("Time(ms)", pStopwatch.ElapsedMilliseconds);
-                StrObjLtSD.SetLastObj("Memory(MB)", dblMemoryInMB);
+                StrObjLtDt.SetLastObj("Time_L(ms)", pStopwatch.ElapsedMilliseconds);
+                StrObjLtDt.SetLastObj("Time(ms)", pStopwatch.ElapsedMilliseconds);
+                StrObjLtDt.SetLastObj("Memory(MB)", dblMemoryInMB);
+                
                 cplex.End();
             }
 

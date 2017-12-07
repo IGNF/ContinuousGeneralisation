@@ -57,16 +57,6 @@ namespace MorphingClass.CCorrepondObjects
             //_ToCtgl.CompareCptltAndNode();
 
 
-
-            //if (blnSave == true)
-            //{
-            //    _FrCtgl.GenerateITinEdgeLt(true);
-            //    _FrCtgl.SaveDataAreaITinEdgeLt("Larger");
-
-            //    _ToCtgl.GenerateITinEdgeLt(true);
-            //    _ToCtgl.SaveDataAreaITinEdgeLt("Smaller");
-            //}
-
             _intID = intID;
         }
 
@@ -89,11 +79,6 @@ namespace MorphingClass.CCorrepondObjects
             //in FrRglDCEL, cptlt, cpt.AxisAngleCEdgeLt, HalfEdgeLt and CEdgelt has been updated. 
             //FaceCpgLt should not be used before updating
             CombineAndTriangulateDCEL(ref FrRglDCEL, ref ToRglDCEL,blnSave);  
-
-            //if (blnSave==true)
-            //{
-            //    CSaveFeature.SaveCEdgeEb(FrRglDCEL.CEdgeLt, "CombinedAndTriangulatedDCEL", blnVisible: false);
-            //}
            
 
             RefineOriginalCtgl(frctgl, FrRglDCEL, CEnumScale.Larger);    //CptLt, CEdgeLt, HalfEdgeLt, FaceCpgLt are updated

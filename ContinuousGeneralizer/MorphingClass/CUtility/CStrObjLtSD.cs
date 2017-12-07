@@ -18,9 +18,9 @@ using ESRI.ArcGIS.SystemUI;
 
 namespace MorphingClass.CUtility
 {
-    public class CStrObjLtSD:SortedDictionary<string ,List<object>>
+    public class CStrObjLtDt: Dictionary<string ,List<object>>
     {
-        public CStrObjLtSD(IEnumerable<string> strKeyEb, int intCount=0 )
+        public CStrObjLtDt(IEnumerable<string> strKeyEb, int intCount=0 )
         {
             var strKeyEt = strKeyEb.GetEnumerator();
             while (strKeyEt.MoveNext())
@@ -51,15 +51,17 @@ namespace MorphingClass.CUtility
             objlt.SetLastT(obj);
         }
 
-        public void Merge(CStrObjLtSD StrObjLtSD)
+        public void Merge(CStrObjLtDt StrObjLtDt)
         {
             var et1 = this.GetEnumerator();
-            var et2 = StrObjLtSD.GetEnumerator();
+            var et2 = StrObjLtDt.GetEnumerator();
 
             while (et1.MoveNext() && et2.MoveNext())
             {
                 et1.Current.Value.AddRange(et2.Current.Value);
             }
+
+            
         }
     }
 }

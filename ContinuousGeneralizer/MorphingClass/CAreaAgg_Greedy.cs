@@ -53,13 +53,13 @@ namespace MorphingClass.CGeneralizationMethods
 
             for (int i = _intStart; i < _intEnd; i++)
             {
-                Greedy(LSCrgLt[i], SSCrgLt[i], this.StrObjLtSD, this._adblTD, _ParameterInitialize.strAreaAggregation);
+                Greedy(LSCrgLt[i], SSCrgLt[i], this.StrObjLtDt, this._adblTD, _ParameterInitialize.strAreaAggregation);
             }
 
         }
 
 
-        public CRegion Greedy(CRegion LSCrg, CRegion SSCrg, CStrObjLtSD StrObjLtSD, double[,] adblTD, string strAreaAggregation)
+        public CRegion Greedy(CRegion LSCrg, CRegion SSCrg, CStrObjLtDt StrObjLtDt, double[,] adblTD, string strAreaAggregation)
         {
             var ExistingCorrCphsSD0 = LSCrg.SetInitialAdjacency();  //also count the number of edges
 
@@ -67,7 +67,7 @@ namespace MorphingClass.CGeneralizationMethods
             pStopwatchOverHead.Start();            
 
 
-            AddLineToStrObjLtSD(StrObjLtSD, LSCrg);
+            AddLineToStrObjLtDt(StrObjLtDt, LSCrg);
 
             
             Console.WriteLine();
@@ -89,7 +89,7 @@ namespace MorphingClass.CGeneralizationMethods
                 LSCrg.cenumColor = CEnumColor.white;
 
                 resultcrg = Compute(LSCrg, SSCrg, SSCrg.GetSoloCphTypeIndex(), 
-                    strAreaAggregation, ExistingCorrCphsSD, StrObjLtSD, adblTD);
+                    strAreaAggregation, ExistingCorrCphsSD, StrObjLtDt, adblTD);
             }
             catch (System.OutOfMemoryException ex)
             {
@@ -98,18 +98,18 @@ namespace MorphingClass.CGeneralizationMethods
             lngTime = pStopwatchLast.ElapsedMilliseconds + lngTimeOverHead;
 
 
-            StrObjLtSD.SetLastObj("EstSteps", 0);
+            StrObjLtDt.SetLastObj("EstSteps", 0);
             Console.WriteLine("d: " + resultcrg.d
                 + "            Type: " + resultcrg.dblCostExactType
                 + "            Compactness: " + resultcrg.dblCostExactComp);
 
             //int intExploredRegionAll = CRegion._intStaticGID - CRegion._intStartStaticGIDLast;  //we don't need to +1 because +1 is already included in _intStaticGID
 
-            StrObjLtSD.SetLastObj("#Edges", CRegion._intEdgeCount);
-            StrObjLtSD.SetLastObj("TimeFirst(ms)", lngTime);
-            StrObjLtSD.SetLastObj("TimeLast(ms)", lngTime);
-            StrObjLtSD.SetLastObj("Time(ms)", lngTime);
-            StrObjLtSD.SetLastObj("Memory(MB)", CHelpFunc.GetConsumedMemoryInMB(false, lngStartMemory));
+            StrObjLtDt.SetLastObj("#Edges", CRegion._intEdgeCount);
+            StrObjLtDt.SetLastObj("Time_F(ms)", lngTime);
+            StrObjLtDt.SetLastObj("Time_L(ms)", lngTime);
+            StrObjLtDt.SetLastObj("Time(ms)", lngTime);
+            StrObjLtDt.SetLastObj("Memory(MB)", CHelpFunc.GetConsumedMemoryInMB(false, lngStartMemory));
 
             Console.WriteLine("We have visited " + 
                 CRegion._intNodeCount + " Nodes and " + CRegion._intEdgeCount + " Edges.");
@@ -118,7 +118,7 @@ namespace MorphingClass.CGeneralizationMethods
         }
 
         private CRegion Compute(CRegion lscrg, CRegion sscrg, int intFinalTypeIndex, string strAreaAggregation,
-            SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, CStrObjLtSD StrObjLtSD, double[,] padblTD)
+            SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, CStrObjLtDt StrObjLtDt, double[,] padblTD)
         {
             CRegion._intNodeCount = 1;
             CRegion._intEdgeCount = 0;
@@ -208,7 +208,7 @@ namespace MorphingClass.CGeneralizationMethods
                 currentCrg = newcrg;
             }
 
-            RecordResultForCrg(StrObjLtSD, lscrg, currentCrg, intFinalTypeIndex);
+            RecordResultForCrg(StrObjLtDt, lscrg, currentCrg, intFinalTypeIndex);
 
             return currentCrg;
         }
