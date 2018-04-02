@@ -149,8 +149,8 @@ namespace ContinuousGeneralizer
         private ESRI.ArcGIS.Controls.IMapControl4 m_mapControl = null;
         private ESRI.ArcGIS.Controls.IPageLayoutControl2 m_pageLayoutControl = null;
         private MorphingClass.CCommon.ControlsSynchronizer m_controlsSynchronizer = null;
-        
-        
+
+
 
         //private IMapDocument pMapDocument;
 
@@ -219,7 +219,8 @@ namespace ContinuousGeneralizer
             m_menuLayer = new ToolbarMenuClass();
             //添加自定义菜单项到TOCCOntrol的Map菜单中
             //打开文档菜单
-            m_menuMap.AddItem(new MorphingClass.CCommon.OpenNewMapDocument(m_controlsSynchronizer), -1, 0, false, esriCommandStyles.esriCommandStyleIconAndText);
+            m_menuMap.AddItem(new MorphingClass.CCommon.OpenNewMapDocument(m_controlsSynchronizer), -1, 0, false,
+                esriCommandStyles.esriCommandStyleIconAndText);
             //添加数据菜单
             m_menuMap.AddItem(new ControlsAddDataCommandClass(), -1, 1, false, esriCommandStyles.esriCommandStyleIconAndText);
             //打开全部图层菜单
@@ -351,7 +352,8 @@ namespace ContinuousGeneralizer
             //如果当前视图为MapControl时，提示用户另存为操作将丢失PageLayoutControl中的设置
             if (m_controlsSynchronizer.ActiveControl is IMapControl4)
             {
-                if (MessageBox.Show("另存为地图文档将丢失制版视图的设置\r\n您要继续吗?", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                if (MessageBox.Show("另存为地图文档将丢失制版视图的设置\r\n您要继续吗?", "提示",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                     return;
             }
             //调用另存为命令
@@ -396,8 +398,8 @@ namespace ContinuousGeneralizer
             double dblY = Math.Round(e.mapY, 6);
 
             //显示当前坐标
-            CoordinateLabel.Text = " Coordinate:  X = " + dblX.ToString() + "  Y = " + dblY.ToString() + "  " + this.axMapControl.MapUnits.ToString();
-            //CoordinateLabel.Text = " 当前坐标 X = " + e.mapX.ToString() + " Y = " + e.mapY.ToString() + " " + this.axMapControl1.MapUnits.ToString().Substring(4);
+            CoordinateLabel.Text = " Coordinate:  X = " + dblX.ToString() + "  Y = " + dblY.ToString()
+                + "  " + this.axMapControl.MapUnits.ToString();
 
             //对全局变量进行赋值，以用在其它地方
             m_dblX = dblX;
@@ -411,12 +413,15 @@ namespace ContinuousGeneralizer
         /// <param name="e">鼠标在窗体"FrmContinuousGeneralizer"上的像素坐标（不包括上层边缘。。。）</param>
         public void axMapControl_MouseWheel(object sender, MouseEventArgs e)
         {
-            System.Drawing.Point MouseScreenPoint = this.PointToScreen(e.Location);                   //将鼠标在窗体"FrmContinuousGeneralizer"上的像素坐标转换为屏幕坐标
-            System.Drawing.Point axMapControlScreenPoint = axMapControl.PointToScreen(axMapControl.Location);   //将控件“axMapControl”左上角的坐标转换为屏幕坐标
+            //将鼠标在窗体"FrmContinuousGeneralizer"上的像素坐标转换为屏幕坐标
+            System.Drawing.Point MouseScreenPoint = this.PointToScreen(e.Location);
+            //将控件“axMapControl”左上角的坐标转换为屏幕坐标               
+            System.Drawing.Point axMapControlScreenPoint = axMapControl.PointToScreen(axMapControl.Location);
 
             //放到屏幕坐标系下面进行比较，看判断鼠标是否在空间“axMapControl”中
-            if (((MouseScreenPoint.X) < axMapControlScreenPoint.X) || (MouseScreenPoint.Y) < axMapControlScreenPoint.Y ||
-                ((MouseScreenPoint.X) > (axMapControlScreenPoint.X + axMapControl.Width)) || ((MouseScreenPoint.Y) > (axMapControlScreenPoint.Y + axMapControl.Height)))
+            if ((MouseScreenPoint.X < axMapControlScreenPoint.X) || MouseScreenPoint.Y < axMapControlScreenPoint.Y ||
+                (MouseScreenPoint.X > (axMapControlScreenPoint.X + axMapControl.Width)) ||
+                (MouseScreenPoint.Y > (axMapControlScreenPoint.Y + axMapControl.Height)))
             {
                 return;
             }
@@ -580,7 +585,8 @@ namespace ContinuousGeneralizer
             if (item == esriTOCControlItem.esriTOCControlItemLayer)
             {
                 //动态添加OpenAttributeTable菜单项
-                m_menuLayer.AddItem(new ContinuousGeneralizer.CCommon.OpenAttributeTable(ref m_mapControl, layer), -1, 2, true, esriCommandStyles.esriCommandStyleTextOnly);
+                m_menuLayer.AddItem(new ContinuousGeneralizer.CCommon.OpenAttributeTable(ref m_mapControl, layer), -1, 2, true, 
+                    esriCommandStyles.esriCommandStyleTextOnly);
                 m_menuLayer.PopupMenu(e.x, e.y, m_tocControl.hWnd);
                 //移除OpenAttributeTable菜单项，以防止重复添加
                 m_menuLayer.Remove(2);
@@ -659,7 +665,8 @@ namespace ContinuousGeneralizer
             //        //取得图例
             //        ILegendClass pLegendClass = ((ILegendGroup)unk).get_Class((int)data);
             //        //创建符号选择器SymbolSelector实例
-            //        ContinuousGeneralizer.FrmGISCommand.FrmSymbolSelector SymbolSelectorFrm = new ContinuousGeneralizer.FrmGISCommand.FrmSymbolSelector(pLegendClass, layer);
+            //        ContinuousGeneralizer.FrmGISCommand.FrmSymbolSelector SymbolSelectorFrm = 
+            //            new ContinuousGeneralizer.FrmGISCommand.FrmSymbolSelector(pLegendClass, layer);
             //        if (SymbolSelectorFrm.ShowDialog() == DialogResult.OK)
             //        {
             //            //局部更新主Map控件
@@ -709,7 +716,8 @@ namespace ContinuousGeneralizer
             CHelpFuncExcel.KillExcel();
         }
 
-        private double ComputeWeight(double dblArea1, double dblPrmt1, double dblArea2, double dblPrmt2, double dblSumPrmt, double dblTotalArea)
+        private double ComputeWeight(double dblArea1, double dblPrmt1, double dblArea2, double dblPrmt2,
+            double dblSumPrmt, double dblTotalArea)
         {
             double dblSumArea = dblArea1 + dblArea2;
             double dblWeight = (dblArea1 * Math.Abs(Math.Sqrt(dblArea1) / dblPrmt1 - Math.Sqrt(dblSumArea) / dblSumPrmt)
@@ -723,7 +731,8 @@ namespace ContinuousGeneralizer
 
         }
 
-        private double ComputeFu(double dblArea1, double dblPrmt1, double dblArea2, double dblPrmt2, double dblArea3, double dblPrmt3, double dblSumPrmt, double dblTotalArea)
+        private double ComputeFu(double dblArea1, double dblPrmt1, double dblArea2, double dblPrmt2,
+            double dblArea3, double dblPrmt3, double dblSumPrmt, double dblTotalArea)
         {
             double dblSumArea = dblArea1 + dblArea2 + dblArea3;
             double dblWeight = (dblArea1 * Math.Abs(Math.Sqrt(dblArea1) / dblPrmt1 - Math.Sqrt(dblSumArea) / dblSumPrmt)
@@ -757,7 +766,7 @@ namespace ContinuousGeneralizer
                 var intltltltlt = new List<List<List<List<int>>>>(intNum);
                 for (int j = 0; j < intNum; j++)
                 {
-                    var intltltlt= new List<List<List<int>>>(intNum);
+                    var intltltlt = new List<List<List<int>>>(intNum);
                     for (int k = 0; k < intNum; k++)
                     {
                         var intltlt = new List<List<int>>(intNum);
@@ -1361,6 +1370,6 @@ namespace ContinuousGeneralizer
             frmSelectRandomly.Show();
         }
 
-   
+
     }
 }

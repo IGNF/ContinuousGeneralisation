@@ -32,7 +32,7 @@ namespace MorphingClass.CCorrepondObjects
         //    _intID = intID;
         //}
 
-        public CCptbCtgl(CPolygon frcpg, CPolygon tocpg, bool blnMaxCommonChords, bool blnSave = false, int intID = -1)
+        public CCptbCtgl(CPolygon frcpg, CPolygon tocpg, bool blnMaxCommonChords = true, bool blnSave = false, int intID = -1)
         {
             _blnSave = blnSave;
 

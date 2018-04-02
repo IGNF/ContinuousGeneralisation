@@ -34,7 +34,8 @@ namespace MorphingClass.CMorphingMethods
 
         protected
 
-        delegate IEnumerable<CPolyline> DlgTransform(CParameterInitialize pParameterInitialize, List<IPolyline5> pInterLSIPlLt, List<IPolyline5> pInterSSIPlLt, List<IPolyline5> pSgIPlLt);
+        delegate IEnumerable<CPolyline> DlgTransform(CParameterInitialize pParameterInitialize, 
+            List<IPolyline5> pInterLSIPlLt, List<IPolyline5> pInterSSIPlLt, List<IPolyline5> pSgIPlLt);
 
         protected int _intLS = 0;
         protected int _intSS = 1;
@@ -153,10 +154,12 @@ namespace MorphingClass.CMorphingMethods
             var pInterLSObjValueLtLt = pObjValueLtLtLt[_intInterLS];  //the value table of LSLayer
             for (int i = 0; i < pInterLSObjValueLtLt.Count; i++)
             {
-                InterLSIplLtLt[(int)pInterLSObjValueLtLt[i][intInterLSFaceNumIndex1]].Add(InterLSIplLt[i]);   //pLSObjValueLtLt[i][intInterLSFaceNumIndex1] is the index of a face
-                InterLSIplLtLt[(int)pInterLSObjValueLtLt[i][intInterLSFaceNumIndex2]].Add(InterLSIplLt[i]);   //pLSObjValueLtLt[i][intInterLSFaceNumIndex1] is the index of a face
+                //pLSObjValueLtLt[i][intInterLSFaceNumIndex1] is the index of a face
+                InterLSIplLtLt[(int)pInterLSObjValueLtLt[i][intInterLSFaceNumIndex1]].Add(InterLSIplLt[i]);   
+                InterLSIplLtLt[(int)pInterLSObjValueLtLt[i][intInterLSFaceNumIndex2]].Add(InterLSIplLt[i]);
 
-                InterSSIplLtLt[(int)pInterLSObjValueLtLt[i][intInterLSFaceNumIndex1]].Add(InterSSIplLt[i]);   //we use the same index, i.e.,pLSObjValueLtLt[i][intInterLSFaceNumIndex1], as we use for LS
+                //we use the same index, i.e.,pLSObjValueLtLt[i][intInterLSFaceNumIndex1], as we use for LS
+                InterSSIplLtLt[(int)pInterLSObjValueLtLt[i][intInterLSFaceNumIndex1]].Add(InterSSIplLt[i]);   
                 InterSSIplLtLt[(int)pInterLSObjValueLtLt[i][intInterLSFaceNumIndex2]].Add(InterSSIplLt[i]);
             }
 
@@ -169,8 +172,11 @@ namespace MorphingClass.CMorphingMethods
 
             for (int i = 0; i < pSgObjValueLtLt.Count; i++)
             {
-                SgIplLtLt[(int)pSgObjValueLtLt[i][intSgFaceNumIndex]].Add(SgIplLt[i]);   //pLSObjValueLtLt[i][intInterLSFaceNumIndex1] is the index of a face
-                intSgIndexLtLt[(int)pSgObjValueLtLt[i][intSgFaceNumIndex]].Add(i);   //we record the index of every polyline so that later we can store the transformed polylines with the same orders as SgIplLt
+                //pLSObjValueLtLt[i][intInterLSFaceNumIndex1] is the index of a face
+                SgIplLtLt[(int)pSgObjValueLtLt[i][intSgFaceNumIndex]].Add(SgIplLt[i]);
+                //we record the index of every polyline 
+                //so that later we can store the transformed polylines with the same orders as SgIplLt 
+                intSgIndexLtLt[(int)pSgObjValueLtLt[i][intSgFaceNumIndex]].Add(i);   
             }
 
             var dlgTransform = SetDlgTransform(pParameterInitialize.cboTransform.Text);
@@ -195,7 +201,8 @@ namespace MorphingClass.CMorphingMethods
 
             pStopwatch.Stop();
             pParameterInitialize.tsslTime.Text = pStopwatch.ElapsedMilliseconds.ToString();
-            CSaveFeature.SaveIGeoEb(TransSgIGeoLt, esriGeometryType.esriGeometryPolyline, "TransSgCPlLt" + pParameterInitialize.strSaveFolderName,
+            CSaveFeature.SaveIGeoEb(TransSgIGeoLt, esriGeometryType.esriGeometryPolyline, 
+                "TransSgCPlLt" + pParameterInitialize.strSaveFolderName,
                  this.strFieldNameLtLt[_intSg], this.esriFieldTypeLtLt[_intSg], _ObjValueLtLtLt[_intSg]);
         }
 
@@ -213,7 +220,8 @@ namespace MorphingClass.CMorphingMethods
         /// <remarks>InterLSIplLt and InterSSIplLt can be clockwise of counterclockwise.
         /// we will construct DCEL, in which the directions will be counterclockwise.
         /// InterLSIplLt and InterSSIplLt should have the same direction and the corresponding start points</remarks>
-        private IEnumerable<CPolyline> CTTransform(CParameterInitialize pParameterInitialize, List<IPolyline5> InterLSIplLt, List<IPolyline5> InterSSIplLt, List<IPolyline5> SgIplLt)
+        private IEnumerable<CPolyline> CTTransform(CParameterInitialize pParameterInitialize, 
+            List<IPolyline5> InterLSIplLt, List<IPolyline5> InterSSIplLt, List<IPolyline5> SgIplLt)
         {
             CConstants.dblVerySmallCoord /= 10;  //this assignment should equal to _dblVerySmallDenominator = 10000000
 
@@ -231,7 +239,8 @@ namespace MorphingClass.CMorphingMethods
             pInterSSDCEL.FaceCpgLt[1].SetOuterFaceCptlt(false, true, InterSSCplLt[0].CptLt[0]);
 
             //I need to check if we realy need a counter clockwise direction
-            var pInterLSCptLt = pInterLSDCEL.FaceCpgLt[1].GetOuterCptEb(false,false).ToList();  //there are only two faces: the super face and a normal face
+            //there are only two faces: the super face and a normal face
+            var pInterLSCptLt = pInterLSDCEL.FaceCpgLt[1].GetOuterCptEb(false,false).ToList();  
             ////I need to check if we realy need a counter clockwise direction
             //pInterSSDCEL.FaceCpgLt[1].GetOuterCptEb(false).ToList();  //there are only two faces: the super face and a normal face
 
@@ -270,7 +279,8 @@ namespace MorphingClass.CMorphingMethods
 
         //    foreach (var SgCpl in pSgCPlLt)
         //    {
-        //        int intIndex = DetectFaceForSg(SgCpl, pInterLSDCEL).indexID;   //comparing to the method which traverses along DCEL, this method only needs to detect the face once 
+        //        //comparing to the method which traverses along DCEL, this method only needs to detect the face once 
+        //        int intIndex = DetectFaceForSg(SgCpl, pInterLSDCEL).indexID;   
         //        InsideSameLSFaceSgCplLtLt[intIndex].Add(SgCpl);
         //    }
 
@@ -280,7 +290,9 @@ namespace MorphingClass.CMorphingMethods
         private CPolygon DetectFaceForSg(CPolyline SgCpl, CDCEL pInterLSDCEL)
         {
             var identitycpt = CGeoFunc.GetInbetweenCpt(SgCpl.CptLt[0], SgCpl.CptLt[1], 0.5);
-            return pInterLSDCEL.DetectCloestLeftCorrectCEdge(identitycpt).cpgIncidentFace;   //comparing to the method which traverses along DCEL, this method only needs to detect the face once 
+
+            //comparing to the method which traverses along DCEL, this method only needs to detect the face once 
+            return pInterLSDCEL.DetectCloestLeftCorrectCEdge(identitycpt).cpgIncidentFace;   
         }
 
         //private void SgCplTraverse(CTriangulation pFrCtgl, List <CEdge > SgCEdgeLt, ref int intIndex)
@@ -292,7 +304,8 @@ namespace MorphingClass.CMorphingMethods
             AffineCptLt.Add(CalFirstAffineCpt(pCptbCtgl, SgCpl.CptLt[0], pInterLSCptSD));   //the first vertex
 
             SgCpl.JudgeAndFormCEdgeLt();
-            var CareCEdgeLt = FindCareCEdgeLtForFirstCEdge(pFrCtgl, SgCpl.CEdgeLt[0], pInterLSCptSD);  //CareCEdge is an edge that current edge may cross with
+            //CareCEdge is an edge that current edge may cross with
+            var CareCEdgeLt = FindCareCEdgeLtForFirstCEdge(pFrCtgl, SgCpl.CEdgeLt[0], pInterLSCptSD);  
             int intEdgeCount = 0;
             var CurrentCEdge = SgCpl.CEdgeLt[intEdgeCount++];
             do
@@ -306,15 +319,25 @@ namespace MorphingClass.CMorphingMethods
                     {
                         case CEnumIntersectionType.NoNo:
                             break;
-                        case CEnumIntersectionType.FrFr:  //this case is actually only for the fisrt vertex of a SgCpl, because for other intersections which coincide a triangulation node, we would not add the two neighbour edges in to CareCEdgeLt
+                            //this case is actually only for the fisrt vertex of a SgCpl, 
+                            //because for other intersections which coincide a triangulation node, 
+                            //we would not add the two neighbour edges in to CareCEdgeLt
+                        case CEnumIntersectionType.FrFr:  
                             CareCEdgeLt = GetCareCEdgeLtCptCoincident(carecedge.FrCpt, CurrentCEdge);
                             isFoundExit = true;
                             break;
-                        case CEnumIntersectionType.FrIn:  //this case is actually only for the fisrt vertex of a SgCpl, because for other intersections which coincide a triangulation node, we would not add the two neighbour edges in to CareCEdgeLt
-                            CareCEdgeLt = GetCareCEdgeLt(carecedge.cedgeTwin, false);  //this can happen, when the first SgCpt is on an triangle edge of FrCtgl
+                            //this case is actually only for the fisrt vertex of a SgCpl, 
+                            //because for other intersections which coincide a triangulation node, 
+                            //we would not add the two neighbour edges in to CareCEdgeLt
+                        case CEnumIntersectionType.FrIn:
+                            //this can happen, when the first SgCpt is on an triangle edge of FrCtgl
+                            CareCEdgeLt = GetCareCEdgeLt(carecedge.cedgeTwin, false);  
                             isFoundExit = true;
                             break;
-                        case CEnumIntersectionType.FrTo:  //this case is actually only for the fisrt vertex of a SgCpl, because for other intersections which coincide a triangulation node, we would not add the two neighbour edges in to CareCEdgeLt
+                            //this case is actually only for the fisrt vertex of a SgCpl, 
+                            //because for other intersections which coincide a triangulation node, 
+                            //we would not add the two neighbour edges in to CareCEdgeLt
+                        case CEnumIntersectionType.FrTo:  
                             CareCEdgeLt = GetCareCEdgeLtCptCoincident(carecedge.ToCpt, CurrentCEdge);  //this can happen
                             isFoundExit = true;
                             break;
@@ -363,7 +386,8 @@ namespace MorphingClass.CMorphingMethods
                             intEdgeCount++;
                             isFoundExit = true;
                             break;
-                        case CEnumIntersectionType.Overlap:  //maybe we can just ignore overlap, because if there is overlap, then there is also other cases
+                        //maybe we can just ignore overlap, because if there is overlap, then there is also other cases
+                        case CEnumIntersectionType.Overlap:  
                             MessageBox.Show("we didn't consider Overlap when GenerateCorrSgCpl in:" + this.ToString() + ".cs   ");
                             break;
                         default:
@@ -420,20 +444,6 @@ namespace MorphingClass.CMorphingMethods
             {
                 AffineCpt = CalFirstSingleAffineCpt(SgCpt, pFrCtgl, pToCtgl);
             }
-
-
-            //switch (SgCpt.BelongedCPolyline.enumScale)   //we must calculate first affine vertex from Larger or Single seperately, because a vertex from Larger may not have a CloestLeftCEdge
-            //{
-            //    case CEnumScale.Larger:
-            //        AffineCpt = pToCtgl.CptLt[SgCpt.indexID];
-            //        break;
-            //    case CEnumScale.Single:
-            //        AffineCpt = CalFirstSingleAffineCpt(SgCpt, pFrCtgl, pToCtgl);
-            //        break;
-            //    default:
-            //        MessageBox.Show("impossible case in: " + this.ToString() + ".cs   " + "CalAffineCpt");
-            //        break;
-            //}
             return AffineCpt;
         }
 
@@ -446,21 +456,24 @@ namespace MorphingClass.CMorphingMethods
         private CPoint CalAffineCpt(CPoint SgCpt, CEdge CareCEdge, CTriangulation pFrCtgl, CTriangulation pToCtgl)
         {
             var CurrentCEdge = CareCEdge;
-            var trianglecpt = new CPoint[3];
+            var atrianglecpt = new CPoint[3];
             for (int i = 0; i < 3; i++)
             {
-                trianglecpt[i] = CurrentCEdge.FrCpt;
+                atrianglecpt[i] = CurrentCEdge.FrCpt;
                 CurrentCEdge = CurrentCEdge.cedgeNext;
             }
 
             double dblLamda1, dblLamda2, dblLamda3;
-            CGeoFunc.CalBarycentricCoordinates(SgCpt, trianglecpt[0], trianglecpt[1], trianglecpt[2], out dblLamda1, out dblLamda2, out dblLamda3);
-            CPoint AffineCpt = CGeoFunc.CalCartesianCoordinates(pToCtgl.CptLt[trianglecpt[0].indexID], pToCtgl.CptLt[trianglecpt[1].indexID],
-                                                                         pToCtgl.CptLt[trianglecpt[2].indexID], dblLamda1, dblLamda2, dblLamda3, SgCpt.ID);
+            CGeoFunc.CalBarycentricCoordinates(SgCpt, atrianglecpt[0], atrianglecpt[1], atrianglecpt[2], 
+                out dblLamda1, out dblLamda2, out dblLamda3);
+            CPoint AffineCpt = CGeoFunc.CalCartesianCoordinates(
+                pToCtgl.CptLt[atrianglecpt[0].indexID], pToCtgl.CptLt[atrianglecpt[1].indexID], pToCtgl.CptLt[atrianglecpt[2].indexID], 
+                dblLamda1, dblLamda2, dblLamda3, SgCpt.ID);
             return AffineCpt;
         }
 
-        private List<CEdge> FindCareCEdgeLtForFirstCEdge(CTriangulation pFrCtgl, CEdge FirstSgCEdge, SortedDictionary<CPoint, CPoint> pInterLSCptSD)
+        private List<CEdge> FindCareCEdgeLtForFirstCEdge(CTriangulation pFrCtgl, 
+            CEdge FirstSgCEdge, SortedDictionary<CPoint, CPoint> pInterLSCptSD)
         {
             var pFrCpt = FirstSgCEdge.FrCpt;
             List<CEdge> CareCEdgeLt = new List<CEdge>();
@@ -517,120 +530,9 @@ namespace MorphingClass.CMorphingMethods
         #endregion
 
         #region RSTransform (rubber sheeting)
-        //private List<CPolyline> ByRubbersheeting(CParameterInitialize pParameterInitialize, List<CPolyline> pInterLSCPlLt, List<CPolyline> pInterSSCPlLt, List<CPolyline> pSgCPlLt)
 
-        public void ByRubbersheeting()
-        {
-            //_intInterLS = 0;
-            //_intInterSS = 1;
-            //_intSg = 2;
-
-
-            //CParameterInitialize pParameterInitialize = _ParameterInitialize;
-            //var pstrFieldNameLtLt = this.strFieldNameLtLt;
-            //var pObjValueLtLtLt = this.ObjValueLtLtLt;
-
-            //var InterLSIplLt = this.ObjIGeoLtLt[_intInterLS].AsExpectedClass<IPolyline5, object>().ToList();
-            //var InterSSIplLt = this.ObjIGeoLtLt[_intInterSS].AsExpectedClass<IPolyline5, object>().ToList();
-            //var SgIplLt = this.ObjIGeoLtLt[_intSg].AsExpectedClass<IPolyline5, object>().ToList();
-
-            //var intInterLSFaceNumIndex1 = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[_intInterLS], "FaceNum1");
-            //var intInterLSFaceNumIndex2 = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[_intInterLS], "FaceNum2");
-            ////var intInterSSFaceNumIndex1=CSaveFeature .FindFieldNameIndex (pstrFieldNameLtLt[_intInterSS],"FaceNum1");
-            ////var intInterSSFaceNumIndex2=CSaveFeature .FindFieldNameIndex (pstrFieldNameLtLt[_intInterSS],"FaceNum2");
-            //var intSgFaceNumIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[_intSg], "FaceNum");
-
-            ////count the faces
-            //var intInterLSFaceNumSS = new SortedSet<int>();
-            //foreach (var objlt in pObjValueLtLtLt[_intInterLS])
-            //{
-            //    intInterLSFaceNumSS.Add((int)objlt[intInterLSFaceNumIndex1]);
-            //    intInterLSFaceNumSS.Add((int)objlt[intInterLSFaceNumIndex2]);
-            //}
-            //var intInterLSFaceCount = intInterLSFaceNumSS.Count;
-
-            ////record the ipolylines into corresponding faces (lists)
-            //var InterLSIplLtLt = new List<List<IPolyline5>>(intInterLSFaceCount);
-            //var InterSSIplLtLt = new List<List<IPolyline5>>(intInterLSFaceCount);
-
-            //InterLSIplLtLt.EveryElementNew();
-            //InterSSIplLtLt.EveryElementNew();
-
-
-            //var pInterLSObjValueLtLt = pObjValueLtLtLt[_intInterLS];  //the value table of LSLayer
-            //for (int i = 0; i < pInterLSObjValueLtLt.Count; i++)
-            //{
-            //    InterLSIplLtLt[(int)pInterLSObjValueLtLt[i][intInterLSFaceNumIndex1]].Add(InterLSIplLt[i]);   //pLSObjValueLtLt[i][intInterLSFaceNumIndex1] is the index of a face
-            //    InterLSIplLtLt[(int)pInterLSObjValueLtLt[i][intInterLSFaceNumIndex2]].Add(InterLSIplLt[i]);   //pLSObjValueLtLt[i][intInterLSFaceNumIndex1] is the index of a face
-
-
-            //    //var test = pInterLSObjValueLtLt[i];
-            //    //var test2 = test[intInterLSFaceNumIndex2];
-            //    //var test3 = InterLSIplLtLt[(int)test2];
-
-            //    InterSSIplLtLt[(int)pInterLSObjValueLtLt[i][intInterLSFaceNumIndex1]].Add(InterSSIplLt[i]);   //we use the same index, i.e.,pLSObjValueLtLt[i][intInterLSFaceNumIndex1], as we use for LS
-            //    InterSSIplLtLt[(int)pInterLSObjValueLtLt[i][intInterLSFaceNumIndex2]].Add(InterSSIplLt[i]);
-            //}
-
-            //var SgIplLtLt = new List<List<IPolyline5>>(intInterLSFaceCount);
-            //var intSgIndexLtLt = new List<List<int>>(intInterLSFaceCount);
-            //SgIplLtLt.EveryElementNew();
-            //intSgIndexLtLt.EveryElementNew();
-
-            //var pSgObjValueLtLt = pObjValueLtLtLt[_intSg];  //the value table of LSLayer
-
-            //for (int i = 0; i < pSgObjValueLtLt.Count; i++)
-            //{
-            //    SgIplLtLt[(int)pSgObjValueLtLt[i][intSgFaceNumIndex]].Add(SgIplLt[i]);   //pLSObjValueLtLt[i][intInterLSFaceNumIndex1] is the index of a face
-            //    intSgIndexLtLt[(int)pSgObjValueLtLt[i][intSgFaceNumIndex]].Add(i);   //we record the index of every polyline so that later we can store the transformed polylines with the same orders as SgIplLt
-            //}
-
-            ////CSaveFeature pSFTTransSg = new CSaveFeature(esriGeometryType.esriGeometryPolyline, "TransSgCPlLt" + pParameterInitialize.strSaveFolder, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
-
-            //var TransSgIGeoLt = new List<IGeometry>(SgIplLt.Count);
-            //TransSgIGeoLt.EveryElementNull();
-            //for (int i = 0; i < intInterLSFaceCount; i++)
-            //{
-            //    Console.WriteLine("Face Num: " + i);
-            //    if (SgIplLtLt[i].Count != 0)
-            //    {
-            //        var TransSgCplEb = RubbersheetingTrans(pParameterInitialize, InterLSIplLtLt[i], InterSSIplLtLt[i], SgIplLtLt[i]);
-
-            //        int intCount = 0;
-            //        foreach (var TransSgCpl in TransSgCplEb)
-            //        {
-            //            TransSgIGeoLt[intSgIndexLtLt[i][intCount++]] = TransSgCpl.JudgeAndSetAEGeometry();
-            //        }
-            //    }
-            //    CHelpFunc.Displaytspb(i + 1, intInterLSFaceCount, pParameterInitialize.tspbMain);
-            //}
-
-            //CHelpFunc.SaveIGeoLt(TransSgIGeoLt, esriGeometryType.esriGeometryPolyline, "TransSgCPlLt" + pParameterInitialize.strSaveFolder, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl, this.strFieldNameLtLt[_intSg], this.esriFieldTypeLtLt[_intSg], _ObjValueLtLtLt[_intSg]);
-
-
-
-
-
-
-
-
-
-
-
-
-            #region old codes (handle all the polygons together)
-
-            //CDCEL pInterLSDCEL, pInterLSMixSgDCEL;
-            //ConstructDCELs(pParameterInitialize, pInterLSCPlLt, pSgCPlLt, out pInterLSDCEL, out pInterLSMixSgDCEL);
-            //List<CPolyline> TransSgCPlLt = RubberSheetingTransformation(pInterLSMixSgDCEL.HalfEdgeLt, pSgCPlLt, pInterLSDCEL.FaceCpgLt);
-            //return TransSgCPlLt;
-            #endregion
-
-
-        }
-
-
-        private IEnumerable<CPolyline> RSTransform(CParameterInitialize pParameterInitialize, List<IPolyline5> InterLSIplLt, List<IPolyline5> InterSSIplLt, List<IPolyline5> SgIplLt)
+        private IEnumerable<CPolyline> RSTransform(CParameterInitialize pParameterInitialize, 
+            List<IPolyline5> InterLSIplLt, List<IPolyline5> InterSSIplLt, List<IPolyline5> SgIplLt)
         {
             var pInterLSCplLt = CHelpFunc.GenerateCGeoEbAccordingToGeoEb<CPolyline>(InterLSIplLt).ToList();
             var pInterSSCplLt = CHelpFunc.GenerateCGeoEbAccordingToGeoEb<CPolyline>(InterSSIplLt).ToList();
@@ -752,7 +654,8 @@ namespace MorphingClass.CMorphingMethods
         }
 
         #region We don't need anymore (for RubberSheeting)
-        private List<CPolyline> RubberSheetingTransformation(List<CEdge> LSMixSgHalfEdgeLt, List<CPolyline> SgCPlLt, List<CPolygon> LSFaceLt)
+        private List<CPolyline> RubberSheetingTransformation(List<CEdge> LSMixSgHalfEdgeLt, 
+            List<CPolyline> SgCPlLt, List<CPolygon> LSFaceLt)
         {
             List<List<CEdge>> InsideSameFaceHalfCEdgeLtLt;
             var InsideSameFaceCptLtLt = FindCptOfSingleInLSFace(LSMixSgHalfEdgeLt, LSFaceLt, out InsideSameFaceHalfCEdgeLtLt);
@@ -769,7 +672,8 @@ namespace MorphingClass.CMorphingMethods
             return CGeoFunc.GenerateCplLtByCorrCpt(SgCPlLt);
         }
 
-        private List<List<CPoint>> FindCptOfSingleInLSFace(List<CEdge> LSMixSgHalfEdgeLt, List<CPolygon> LSFaceLt, out List<List<CEdge>> InsideSameFaceHalfCEdgeLtLt)
+        private List<List<CPoint>> FindCptOfSingleInLSFace(List<CEdge> LSMixSgHalfEdgeLt, 
+            List<CPolygon> LSFaceLt, out List<List<CEdge>> InsideSameFaceHalfCEdgeLtLt)
         {
             foreach (CEdge cedge in LSMixSgHalfEdgeLt)
             {
@@ -797,7 +701,9 @@ namespace MorphingClass.CMorphingMethods
                 CPolygon LSFace = null;  //from the Larger-Scale map
                 RecursivelyCollectingVertices(cedge, ref InsideSameFaceCptLt, ref InsideSameFaceHalfCEdgeLt, ref LSFace);
 
-                if (InsideSameFaceCptLt.Count > 0)   //InsideSameFaceCptLt.Count can certainly be used here. LSFace == null cannot be used, because when an edge belongs to an Larger-Scale polyline we still get a LSFace
+                //InsideSameFaceCptLt.Count can certainly be used here. LSFace == null cannot be used, 
+                //because when an edge belongs to an Larger-Scale polyline we still get a LSFace
+                if (InsideSameFaceCptLt.Count > 0)   
                 {
                     InsideSameFaceCptLtLt[LSFace.indexID] = InsideSameFaceCptLt;
                     InsideSameFaceHalfCEdgeLtLt[LSFace.indexID] = InsideSameFaceHalfCEdgeLt;
@@ -812,7 +718,8 @@ namespace MorphingClass.CMorphingMethods
         /// Recursively Collect Vertices belong to the same LSFace
         /// </summary>
         /// <remarks>the ends of the single polylines are included</remarks>
-        private void RecursivelyCollectingVertices(CEdge LSMixSgHalfEdge, ref List<CPoint> InsideSameFaceCptLt, ref List<CEdge> InsideSameFaceHalfCEdgeLt, ref CPolygon LSFace)
+        private void RecursivelyCollectingVertices(CEdge LSMixSgHalfEdge, 
+            ref List<CPoint> InsideSameFaceCptLt, ref List<CEdge> InsideSameFaceHalfCEdgeLt, ref CPolygon LSFace)
         {
             if (LSMixSgHalfEdge.isTraversed == false)
             {
@@ -825,27 +732,31 @@ namespace MorphingClass.CMorphingMethods
                         InsideSameFaceCptLt.Add(LSMixSgHalfEdge.FrCpt);
                         LSMixSgHalfEdge.FrCpt.isAdded = true;
                     }
-                    RecursivelyCollectingVertices(LSMixSgHalfEdge.cedgeTwin, ref InsideSameFaceCptLt, ref InsideSameFaceHalfCEdgeLt, ref LSFace);   //twin                    
+                    RecursivelyCollectingVertices(LSMixSgHalfEdge.cedgeTwin, 
+                        ref InsideSameFaceCptLt, ref InsideSameFaceHalfCEdgeLt, ref LSFace);   //twin                    
                 }
                 else if (LSMixSgHalfEdge.BelongedCpl.enumScale == CEnumScale.Larger)  //the polygon is found
                 {
-                    LSFace = LSMixSgHalfEdge.cpgIncidentFace2;    //any cpgIncidentFace2 of the edges is available, because they are the same
+                    LSFace = LSMixSgHalfEdge.cpgIncidentFace2;   //any cpgIncidentFace2 of the edges is available, because they are the same
                     if (LSFace.OuterCmptCEdge == null)   //only the SuperFace dosen't have OuterComponent
                     {
                         return;  //we return here to avoid a very deep recursion, which may lead to StackOverflowException
                     }
                 }
 
-                RecursivelyCollectingVertices(LSMixSgHalfEdge.cedgeNext, ref InsideSameFaceCptLt, ref InsideSameFaceHalfCEdgeLt, ref LSFace);   //next
-                CollectingVerticesInnerOuterComponents(LSMixSgHalfEdge.cpgIncidentFace, ref InsideSameFaceCptLt, ref InsideSameFaceHalfCEdgeLt, ref LSFace);   //other components
+                RecursivelyCollectingVertices(LSMixSgHalfEdge.cedgeNext, ref InsideSameFaceCptLt, ref InsideSameFaceHalfCEdgeLt, ref LSFace);
+                CollectingVerticesInnerOuterComponents(LSMixSgHalfEdge.cpgIncidentFace, 
+                    ref InsideSameFaceCptLt, ref InsideSameFaceHalfCEdgeLt, ref LSFace);   //other components
             }
         }
 
-        private void CollectingVerticesInnerOuterComponents(CPolygon LSMoreDetailedFace, ref List<CPoint> InsideSameFaceCptLt, ref List<CEdge> InsideSameFaceHalfCEdgeLt, ref CPolygon LSFace)
+        private void CollectingVerticesInnerOuterComponents(CPolygon LSMoreDetailedFace, 
+            ref List<CPoint> InsideSameFaceCptLt, ref List<CEdge> InsideSameFaceHalfCEdgeLt, ref CPolygon LSFace)
         {
             if (LSMoreDetailedFace.OuterCmptCEdge != null)
             {
-                RecursivelyCollectingVertices(LSMoreDetailedFace.OuterCmptCEdge, ref InsideSameFaceCptLt, ref InsideSameFaceHalfCEdgeLt, ref LSFace);
+                RecursivelyCollectingVertices(LSMoreDetailedFace.OuterCmptCEdge, 
+                    ref InsideSameFaceCptLt, ref InsideSameFaceHalfCEdgeLt, ref LSFace);
             }
             if (LSMoreDetailedFace.InnerCmptCEdgeLt != null)
             {
@@ -864,7 +775,10 @@ namespace MorphingClass.CMorphingMethods
         {
             foreach (CPoint cpt in InsideSameFaceCptLt)
             {
-                if (cpt.BelongedCpl.enumScale != CEnumScale.Larger) //If an end of a single polyline is at the same time a vertex of a larger-scale polyline (this single polyline dosen't represent a hole), then MoveVectorPtLt has already been calculated from the corresponding polylines
+                //If an end of a single polyline is at the same time a vertex of a larger-scale polyline 
+                //(this single polyline dosen't represent a hole), 
+                //then MoveVectorPtLt has already been calculated from the corresponding polylines
+                if (cpt.BelongedCpl.enumScale != CEnumScale.Larger)
                 {
                     CalSgMoveVectorIDW(cpt, LSFace);
                 }
@@ -879,7 +793,8 @@ namespace MorphingClass.CMorphingMethods
 
             if (LSFace.OuterCmptCEdge != null)
             {
-                CalSgMoveVectorIDW(cpt, LSFace.OuterCmptCEdge, ref dblIntegralWeightedMoveX, ref dblIntegralWeightedMoveY, ref dblIntegralWeight);
+                CalSgMoveVectorIDW(cpt, LSFace.OuterCmptCEdge, 
+                    ref dblIntegralWeightedMoveX, ref dblIntegralWeightedMoveY, ref dblIntegralWeight);
             }
 
             if (LSFace.InnerCmptCEdgeLt != null)
@@ -893,10 +808,12 @@ namespace MorphingClass.CMorphingMethods
             double dblMoveX = dblIntegralWeightedMoveX / dblIntegralWeight;
             double dblMoveY = dblIntegralWeightedMoveY / dblIntegralWeight;
 
-            CCorrCpts CorrCpt = new CCorrCpts(cpt, dblMoveX, dblMoveY);   // notice that the CorrCpt will be recorded into cpt by the construction of CCorrCpts
+            // notice that the CorrCpt will be recorded into cpt by the construction of CCorrCpts
+            CCorrCpts CorrCpt = new CCorrCpts(cpt, dblMoveX, dblMoveY);   
         }
 
-        private void CalSgMoveVectorIDW(CPoint cpt, CEdge cedge, ref double dblIntegralWeightedMoveX, ref double dblIntegralWeightedMoveY, ref double dblIntegralWeight)
+        private void CalSgMoveVectorIDW(CPoint cpt, CEdge cedge, 
+            ref double dblIntegralWeightedMoveX, ref double dblIntegralWeightedMoveY, ref double dblIntegralWeight)
         {
             double dblDisSquare = CGeoFunc.CalDisSquare(cpt, cedge.FrCpt);
             double dblWeight = 1 / (dblDisSquare);
@@ -929,31 +846,6 @@ namespace MorphingClass.CMorphingMethods
                 default: throw new ArgumentException("An undefined method! ");
             }
         }
-
-        //private void ConstructDCELs(CParameterInitialize pParameterInitialize, List<CPolyline> pInterLSCPlLt, List<CPolyline> pSgCPlLt, out CDCEL pInterLSDCEL, out CDCEL pInterLSMixSgDCEL)
-        //{
-        //    pInterLSDCEL = new CDCEL(pInterLSCPlLt);
-        //    pInterLSDCEL.ConstructDCEL();
-        //    pInterLSDCEL.ExportEdgeAttributes(2);
-        //    //List<CPoint> FieldCptLt = GenerateFieldCpt(pInterLSDCEL);            
-        //    pInterLSDCEL.ClearEdgeAttributes();
-
-        //    List<CPolyline> BSMixSgCPlLt = new List<CPolyline>(pInterLSCPlLt.Count + pSgCPlLt.Count);
-        //    BSMixSgCPlLt.AddRange(pInterLSCPlLt);
-        //    BSMixSgCPlLt.AddRange(pSgCPlLt);
-        //    pInterLSMixSgDCEL = new CDCEL(BSMixSgCPlLt);
-        //    pInterLSMixSgDCEL.ConstructDCEL();  //note the little trick that LSCPlLt is added before SgCPlLt. later we will keep only one vertex at an intersection, the little trick make sure that this kept vertex is from LSCPlLt.
-        //    pInterLSMixSgDCEL.ExportEdgeAttributes(1);
-        //    pInterLSMixSgDCEL.UpdateCplltEnds();
-
-        //    pSgCPlLt.ForEach(cpl => cpl.enumScale = CEnumScale.Single);
-        //    pSgCPlLt.ForEach(cpl => cpl.SetCptBelongedPolyline());
-        //    pInterLSCPlLt.ForEach(cpl => cpl.enumScale = CEnumScale.Larger);
-        //    pInterLSCPlLt.ForEach(cpl => cpl.SetCptBelongedPolyline());   //we also use a little trick here. we first do "SetCptBelongedCpl" for "SgCPlLt", then do it for "InterLSCPlLt", so that the shared point will use a BSCPl as its Belonged CPl
-        //    CHelpFunc.SetCEdgeCEdgeTwinBelongedCpl(ref pInterLSCPlLt);
-        //    CHelpFunc.SetCEdgeCEdgeTwinBelongedCpl(ref pSgCPlLt);
-        //}
-
 
 
         #region Simplify Transformed single polylines
@@ -1014,10 +906,13 @@ namespace MorphingClass.CMorphingMethods
                 intTransSgInnerPtNum += (cpl.CptLt.Count - 2);
             }
             int intSgRealPtNum = intSgInnerPtNum + intSgIntersection;
-            int intTransSgRealPtNum = intTransSgInnerPtNum + intSgIntersection;   //intSgRealPtNum doesn't count the points on the LSCpls. pSgCPlLt and TransSgCPlLt have the same number of intersections
+
+            //intSgRealPtNum doesn't count the points on the LSCpls. pSgCPlLt and TransSgCPlLt have the same number of intersections
+            int intTransSgRealPtNum = intTransSgInnerPtNum + intSgIntersection;   
             int intRemainPtNum = Convert.ToInt32(Convert.ToDouble(intSgRealPtNum) / dblLSToSSRatio);
 
-            int intDeletePtNum = intTransSgRealPtNum - intRemainPtNum;   //notice that intRemainPtNum is according to intSgRealPtNum, but intDeletePtNum is according to intTransSgRealPtNum
+            //notice that intRemainPtNum is according to intSgRealPtNum, but intDeletePtNum is according to intTransSgRealPtNum
+            int intDeletePtNum = intTransSgRealPtNum - intRemainPtNum;   
             return intDeletePtNum;
         }
 
@@ -1028,7 +923,8 @@ namespace MorphingClass.CMorphingMethods
         /// <param name="pBSAtBdLt"></param>
         /// <param name="pSSAtBdLt"></param>
         /// <param name="ParameterThreshold"></param>
-        /// <remarks>the number of Administrative Boundaries in pBSAtBdLt and that in pSSAtBdLt are the same. Besides, the topological structrues are the same</remarks>
+        /// <remarks>the number of Administrative Boundaries in pBSAtBdLt and that in pSSAtBdLt are the same. 
+        /// Besides, the topological structrues are the same</remarks>
         private double CalRatioofPtNum(List<CPolyline> pLSCPlLt, List<CPolyline> pSSCPlLt)
         {
             int intBSInnerPtNum = 0;
