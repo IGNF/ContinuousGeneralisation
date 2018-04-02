@@ -16,8 +16,7 @@ namespace MorphingClass.CCorrepondObjects
 {
     public class CCptbCtgl : CBasicBase  //CCompatibleTriangulation
     {
-        private CPolygon _FrCpg;
-        private CPolygon _ToCpg;
+        private IEnvelope _pEnvRgl;  //specify a place to present the regular polygon
         private CTriangulation _FrCtgl;
         private CTriangulation _ToCtgl;
         private bool _blnSave;
@@ -25,22 +24,23 @@ namespace MorphingClass.CCorrepondObjects
 
         //private CDCEL _FrRglDCEL;
 
-        public CCptbCtgl(CTriangulation frctgl, CTriangulation toctgl, int intID = -1)
+        //public CCptbCtgl(CTriangulation frctgl, CTriangulation toctgl, int intID = -1)
+        //{
+        //    _FrCtgl = frctgl;
+        //    _ToCtgl = toctgl;
+
+        //    _intID = intID;
+        //}
+
+        public CCptbCtgl(CPolygon frcpg, CPolygon tocpg, bool blnMaxCommonChords, bool blnSave = false, int intID = -1)
         {
-            _FrCtgl = frctgl;
-            _ToCtgl = toctgl;
-
-            _intID = intID;
-        }
-
-        public CCptbCtgl(CPolygon frcpg, CPolygon tocpg, bool blnSave = false, int intID = -1)
-        {
-
-            _FrCpg = frcpg;
-            _ToCpg = tocpg;
             _blnSave = blnSave;
 
-
+            frcpg.JudgeAndSetPolygon();
+            IEnvelope ipgEnv = frcpg.pPolygon.Envelope;
+            double dblMoveHight = 2 * ipgEnv.Height;
+            _pEnvRgl = new EnvelopeClass();
+            _pEnvRgl.PutCoords(ipgEnv.XMin, ipgEnv.YMin + dblMoveHight, ipgEnv.XMax, ipgEnv.YMax + dblMoveHight);
 
 
 
@@ -74,12 +74,12 @@ namespace MorphingClass.CCorrepondObjects
 
             CDCEL FrRglDCEL;
             CDCEL ToRglDCEL;
-            ConstructRglDCEL(frctgl, toctgl, out FrRglDCEL, out ToRglDCEL, blnSave);
+            ConstructRglDCEL(frctgl, toctgl, out FrRglDCEL, out ToRglDCEL, _pEnvRgl, blnSave);
 
             //in FrRglDCEL, cptlt, cpt.AxisAngleCEdgeLt, HalfEdgeLt and CEdgelt has been updated. 
             //FaceCpgLt should not be used before updating
-            CombineAndTriangulateDCEL(ref FrRglDCEL, ref ToRglDCEL,blnSave);  
-           
+            CombineAndTriangulateDCEL(ref FrRglDCEL, ref ToRglDCEL, blnSave);
+
 
             RefineOriginalCtgl(frctgl, FrRglDCEL, CEnumScale.Larger);    //CptLt, CEdgeLt, HalfEdgeLt, FaceCpgLt are updated
             RefineOriginalCtgl(toctgl, FrRglDCEL, CEnumScale.Smaller);   //CptLt, CEdgeLt, HalfEdgeLt, FaceCpgLt are updated
@@ -92,25 +92,19 @@ namespace MorphingClass.CCorrepondObjects
                 CSaveFeature.SaveCEdgeEb(toctgl.CEdgeLt, "RefinedToCtgl", blnVisible: false);
                 CSaveFeature.SaveCptEb(toctgl.CptLt, "RefinedToCpt", blnVisible: false);
             }
-
         }
 
         private void ConstructRglDCEL(CTriangulation frctgl, CTriangulation toctgl, 
-            out CDCEL FrRglDCEL, out CDCEL ToRglDCEL, bool blnSave=false)
+            out CDCEL FrRglDCEL, out CDCEL ToRglDCEL, IEnvelope pEnvRgl, bool blnSave=false)
         {
             if (frctgl.pTinAdvanced2.DataNodeCount!=toctgl.pTinAdvanced2.DataNodeCount)
             {
                 throw new ArgumentException("The numbers of points are not the same!");
             }
 
-            IEnvelope ipgEnv = frctgl.CPg.pPolygon.Envelope;
-            double dblMoveHight = 2 * ipgEnv.Height;
-            IEnvelope pEnv = new EnvelopeClass();
-            pEnv.PutCoords(ipgEnv.XMin, ipgEnv.YMin + dblMoveHight, ipgEnv.XMax, ipgEnv.YMax + dblMoveHight);
-
-            FrRglDCEL = ConstructRglDCEL(frctgl, pEnv, CEnumScale.Larger, blnSave);
+            FrRglDCEL = ConstructRglDCEL(frctgl, pEnvRgl, CEnumScale.Larger, blnSave);
             //note that we use the same Extent with the Fr one
-            ToRglDCEL = ConstructRglDCEL(toctgl, pEnv, CEnumScale.Smaller, blnSave);  
+            ToRglDCEL = ConstructRglDCEL(toctgl, pEnvRgl, CEnumScale.Smaller, blnSave);  
 
         }
 

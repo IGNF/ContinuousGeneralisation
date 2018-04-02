@@ -88,7 +88,7 @@ namespace MorphingClass.CAid
             double dblLegentInt = intLegendInt * dblFactorIpeToLayer;
 
             ////add legend (unit and a sample line), draw a line with length 16 in ipe
-            return CIpeDraw.writeIpeText(intLegendInt + " " + strMapUnits, 320, 32) +
+            return CIpeDraw.writeIpeText("$" + intLegendInt + @"\,$" + strMapUnits, 320, 32) +
                    CIpeDraw.drawIpePath(new double[] { 320, 320, 320 + dblLegentInt, 320 + dblLegentInt },
                                         new double[] { 20, 16, 16, 20 });
         }

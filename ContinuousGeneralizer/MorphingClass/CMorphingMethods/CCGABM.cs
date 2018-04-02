@@ -244,7 +244,7 @@ namespace MorphingClass.CMorphingMethods
             //bool blnSave = false;
             //blnSave = true;
 
-            CCptbCtgl pCptbCtgl = new CCptbCtgl(pInterLSDCEL.FaceCpgLt[1], pInterSSDCEL.FaceCpgLt[1], true);
+            CCptbCtgl pCptbCtgl = new CCptbCtgl(pInterLSDCEL.FaceCpgLt[1], pInterSSDCEL.FaceCpgLt[1], true, true);
             pCptbCtgl.ConstructCcptbCtgl();
             var TransSgCPlLt = new List<CPolyline>(SgIplLt.Count);
             foreach (var SgCpl in SgCplEb)

@@ -39,89 +39,9 @@ namespace MorphingClass.CUtility
 
     public static class CHelpFunc
     {
-        //private static string _strDataFolderName = "Jiangxi";
-        //private static string _strDataFolderName = "CompatibleTriangulationTestVerySimple";
-        //private static string _strDataFolderName = "JiangxiOneCounty";
-        //private static string _strDataFolderName = "railÃ·¼¯ÏßTest";
-        //private static string _strPath = "C:\\Study\\Data\\Morphing Data\\Rail Data\\" + _strDataFolderName + "\\";
+        private static string _strPath;
 
-        //private static string _strDataFolderName = "MainlandChina-Yunnan";
-        //private static string _strDataFolderName = "MainlandChina-Guangxi";
-        //private static string _strDataFolderName = "MainlandChina-Tianjin";
-        //private static string _strDataFolderName = "MainlandChina-Animation";
-        //private static string _strDataFolderName = "Tianjin-Animation"; 
-        //private static string _strDataFolderName = "MainlandChina-Animation-complicated";
-        //private static string _strDataFolderName = "MainlandChina-Shanghai";
-        //private static string _strDataFolderName = "MainlandChina";
-        //private static string _strDataFolderName = "CompatibleTriangulation";
-        //private static string _strDataFolderName = "CompatibleTriangulation_Simple";
-        //private static string _strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\Administrative Boundary\\" + _strDataFolderName + "\\";
 
-        //private static string _strDataFolderName = "LinearMorphingBothInjected";
-        //private static string _strDataFolderName = "CompatibleTriangulation3";
-        //private static string _strPath =
-        //"C:\\Study\\Data\\Morphing Data\\Representation In Article\\ContinuousGeneralizationOfAdministrativeBoundariesBasedonMorphing\\" + _strDataFolderName + "\\";
-
-        private static string _strDataFolderName = "AreaAggregation";
-        //private static string _strDataFolderName = "AreaAggregation_85_Hole";        
-        //private static string _strDataFolderName = "AreaAggregation_543";
-        //private static string _strDataFolderName = "AreaAggregation_544";
-        //private static string _strDataFolderName = "AreaAggregation-Simulation";
-        //private static string _strDataFolderName = "AreaAggregation-531";
-        //private static string _strDataFolderName = "AreaAggregation-664-easy";
-        //private static string _strDataFolderName = "AreaAggregation-716-VeryEasy";
-        //private static string _strDataFolderName = "AreaAggregation_Problematic";
-        //private static string _strDataFolderName = "AreaAggregation_Some";
-        //private static string _strDataFolderName = "AreaAggregation_Some2";
-        //private static string _strDataFolderName = "AreaAggregation-590";
-        //private static string _strDataFolderName = "AreaAggregation-Simplest";
-        //private static string _strDataFolderName = "AreaAggregation_SmallInstances";
-
-        //private static string _strDataFolderName = "AreaAggregation_Simplest_Two";
-        //private static string _strDataFolderName = "AreaAggregation_Simplest_Three";
-        //private static string _strDataFolderName = "AreaAggregation-Computable";
-        //private static string _strDataFolderName = "AreaAggregation-Uncomputable";
-        //private static string _strDataFolderName = "AreaAggregation-Mostpatches";
-        private static string _strPath =
-"C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\AreaAggregation\\" + _strDataFolderName + "\\";
-
-        //private static string _strDataFolderName = "France";
-        //private static string _strDataFolderName = "France_FourTowns";
-        //private static string _strDataFolderName = "France_FourTowns_Several";
-        //private static string _strDataFolderName = "France_FourTownsLengthy";
-        //private static string _strDataFolderName = "France_Part";
-        //private static string _strDataFolderName = "France_FourBuildings";
-        //private static string _strDataFolderName = "France_Smallpart";
-        //private static string _strDataFolderName = "France_Presenting";
-        //private static string _strDataFolderName = "France_Presenting_DifferentBuffers";
-        //private static string _strDataFolderName = "France_Presenting_DifferentMiterLimits";
-        //private static string _strDataFolderName = "France_Presenting_AddBridges";
-        //private static string _strDataFolderName = "France_Presenting_ErodeBreak";
-        //private static string _strDataFolderName = "France_Presenting_RemoveSpikeAndPit";
-        //private static string _strDataFolderName = "France_Presenting_UnitingPrevious_Erosion";
-        //private static string _strDataFolderName = "France_Presenting_UnitingPrevious_Simplification";
-        //private static string _strDataFolderName = "France_Presenting_RemoveBay";
-        //private static string _strDataFolderName = "France_Presenting_Grouping";
-        //private static string _strDataFolderName = "France_Presenting_BridgeMoreBuilding";
-
-        //private static string _strDataFolderName = "France_Problematic";
-        //private static string _strDataFolderName = "France_Problematic2";
-        //private static string _strDataFolderName = "France_WithOneHole";
-        //private static string _strDataFolderName = "France_OneSquare";
-        //private static string _strDataFolderName = "France_TwoSquares_Faraway";
-        //private static string _strDataFolderName = "France_TwoSquares_SingleBridge";
-        //private static string _strDataFolderName = "France_TwoSquares_Overlap";
-        //private static string _strPath =
-        //"C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\BuildingGrowing\\" + _strDataFolderName + "\\";
-
-        //private static string _strDataFolderName = "An Approximate Morphing between Polylines";
-        //private static string _strPath = 
-        //    "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\" + _strDataFolderName + "\\";
-
-        //        private static string _strDataFolderName = "bayern20171011";
-
-        //        private static string _strPath =
-        //"C:\\MyWork\\Study_Archive\\Data\\PointData\\PointData\\" + _strDataFolderName + "\\";
 
         public static IEnumerable<CPoint> GetTestCptEb()
         {
@@ -134,14 +54,11 @@ namespace MorphingClass.CUtility
         public static string strPath
         {
             get { return _strPath; }
-            //set { _strPath = value; }
+            set { _strPath = value; }
         }
 
-        public static string strDataFolderName
-        {
-            get { return _strDataFolderName; }
-            //set { _strDataFolderName = value; }
-        }
+        public static string strDataFolderName { get; set; }
+
 
         public static bool InBoundOrReport<T>(T value, T lowerbound, T upperbound, IComparer<T> cmp = null)
         {

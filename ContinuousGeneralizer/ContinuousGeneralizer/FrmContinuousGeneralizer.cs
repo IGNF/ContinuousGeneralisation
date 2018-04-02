@@ -44,26 +44,97 @@ namespace ContinuousGeneralizer
 {
     public partial class FrmContinuousGeneralizer : Form
     {
+        private void SetPathForData()
+        {
+            //CHelpFunc.strDataFolderName = "Jiangxi";
+            //CHelpFunc.strDataFolderName = "CompatibleTriangulationTestVerySimple";
+            //CHelpFunc.strDataFolderName = "JiangxiOneCounty";
+            //CHelpFunc.strDataFolderName = "railÃ·¼¯ÏßTest";
+            //CHelpFunc.strPath = "C:\\Study\\Data\\Morphing Data\\Rail Data\\" 
+            //+ CHelpFunc.strDataFolderName + "\\";
+
+            //CHelpFunc.strDataFolderName = "MainlandChina-Yunnan";
+            //CHelpFunc.strDataFolderName = "MainlandChina-Guangxi";
+            //CHelpFunc.strDataFolderName = "MainlandChina-Tianjin";
+            //CHelpFunc.strDataFolderName = "MainlandChina-Animation";
+            //CHelpFunc.strDataFolderName = "Tianjin-Animation"; 
+            //CHelpFunc.strDataFolderName = "MainlandChina-Animation-complicated";
+            //CHelpFunc.strDataFolderName = "MainlandChina-Shanghai";
+            //CHelpFunc.strDataFolderName = "MainlandChina";
+            CHelpFunc.strDataFolderName = "CompatibleTriangulation";
+            //CHelpFunc.strDataFolderName = "CompatibleTriangulation_Simple";
+            CHelpFunc.strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\Administrative Boundary\\"
+            + CHelpFunc.strDataFolderName + "\\";
+
+            //CHelpFunc.strDataFolderName = "LinearMorphingBothInjected";
+            //CHelpFunc.strDataFolderName = "CompatibleTriangulation3";
+            //CHelpFunc.strPath =
+            //"C:\\Study\\Data\\Morphing Data\\Representation In Article\\ContinuousGeneralizationOfAdministrativeBoundariesBasedonMorphing\\" 
+            //+ CHelpFunc.strDataFolderName + "\\";
+
+            //CHelpFunc.strDataFolderName = "AreaAggregation";
+            //CHelpFunc.strDataFolderName = "AreaAggregation-664-easy";
+            //CHelpFunc.strDataFolderName = "AreaAggregation-716-VeryEasy";
+            //CHelpFunc.strDataFolderName = "AreaAggregation_Problematic";
+            //CHelpFunc.strDataFolderName = "AreaAggregation_Some";
+            //CHelpFunc.strDataFolderName = "AreaAggregation_Some2";
+            //CHelpFunc.strDataFolderName = "AreaAggregation-Simplest";
+            //CHelpFunc.strDataFolderName = "AreaAggregation_Simplest_Two";
+            //CHelpFunc.strDataFolderName = "AreaAggregation_Simplest_Three";
+            //CHelpFunc.strDataFolderName = "AreaAggregation-Mostpatches";
+            //        CHelpFunc.strPath =
+            //"C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\AreaAggregation\\"
+            //+ CHelpFunc.strDataFolderName + "\\";
+
+            //CHelpFunc.strDataFolderName = "France";
+            //CHelpFunc.strD = "France_FourTowns";
+            //CHelpFunc.strDataFolderName = "France_FourTowns_Several";
+            //CHelpFunc.strDataFolderName = "France_FourTownsLengthy";
+            //CHelpFunc.strDataFolderName = "France_Part";
+            //CHelpFunc.strDataFolderName = "France_FourBuildings";
+            //CHelpFunc.strDataFolderName = "France_Smallpart";
+            //CHelpFunc.strDataFolderName = "France_Presenting";
+            //CHelpFunc.strDataFolderName = "France_Presenting_DifferentBuffers";
+            //CHelpFunc.strDataFolderName = "France_Presenting_DifferentMiterLimits";
+            //CHelpFunc.strDataFolderName = "France_Presenting_AddBridges";
+            //CHelpFunc.strDataFolderName = "France_Presenting_ErodeBreak";
+            //CHelpFunc.strDataFolderName = "France_Presenting_RemoveSpikeAndPit";
+            //CHelpFunc.strDataFolderName = "France_Presenting_UnitingPrevious_Erosion";
+            //CHelpFunc.strDataFolderName = "France_Presenting_UnitingPrevious_Simplification";
+            //CHelpFunc.strDataFolderName = "France_Presenting_RemoveBay";
+            //CHelpFunc.strDataFolderName = "France_Presenting_Grouping";
+            //CHelpFunc.strDataFolderName = "France_Presenting_BridgeMoreBuilding";
+
+            //CHelpFunc.strDataFolderName = "France_Problematic";
+            //CHelpFunc.strDataFolderName = "France_Problematic2";
+            //CHelpFunc.strDataFolderName = "France_WithOneHole";
+            //CHelpFunc.strDataFolderName = "France_OneSquare";
+            //CHelpFunc.strDataFolderName = "France_TwoSquares_Faraway";
+            //CHelpFunc.strDataFolderName = "France_TwoSquares_SingleBridge";
+            //CHelpFunc.strDataFolderName = "France_TwoSquares_Overlap";
+            //CHelpFunc.strPath =
+            //"C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\BuildingGrowing\\"
+            //+ CHelpFunc.strDataFolderName + "\\";
+
+            //CHelpFunc.strDataFolderName = "An Approximate Morphing between Polylines";
+            //CHelpFunc.strPath = 
+            //    "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\" + _strDataFolderName + "\\";
+
+            //        private static string _strDataFolderName = "bayern20171011";
+
+            //        CHelpFunc.strPath =
+            //"C:\\MyWork\\Study_Archive\\Data\\PointData\\PointData\\" + _strDataFolderName + "\\";
+        }
+
+
         private void FrmContinuousGeneralizer_Shown(object sender, EventArgs e)
         {
-            //Geoprocessor gp = null;
-
-            //try
-            //{
-            //    gp = new Geoprocessor();
-            //}
-            //catch (System.Exception ex)
-            //{
-
-            //    throw;
-            //}
-
             //var frmCurrent = new FrmStatisticsOfDataSets(_DataRecords);
             //var frmCurrent = new FrmSelectRandomly(_DataRecords);
             //var frmCurrent = new FrmToIpe(_DataRecords);
             //var frmCurrent = new FrmBldgGrow(_DataRecords);
-            var frmCurrent = new FrmAreaAgg(_DataRecords);
-            //var frmCurrent = new FrmCGABM(_DataRecords);
+            //var frmCurrent = new FrmAreaAgg(_DataRecords);
+            var frmCurrent = new FrmCGABM(_DataRecords);
             //var frmCurrent = new FrmExtractPossibleFiles();
             frmCurrent.Show();
             //frmCurrent.btnRun_Click(sender, e);
@@ -72,7 +143,8 @@ namespace ContinuousGeneralizer
 
             //frmCurrent.btn090_Click(sender, e);
         }
-        
+
+
         private CDataRecords _DataRecords = new CDataRecords();
         private ESRI.ArcGIS.Controls.IMapControl4 m_mapControl = null;
         private ESRI.ArcGIS.Controls.IPageLayoutControl2 m_pageLayoutControl = null;
@@ -183,8 +255,7 @@ namespace ContinuousGeneralizer
             pDataRecords.ParameterInitialize.txtT = this.txtT;
             _DataRecords = pDataRecords;
 
-
-
+            SetPathForData();
             openMapDoc.OnCreate(m_controlsSynchronizer.MapControl.Object);
             openMapDoc.OnClickAutomatic(CHelpFunc.strPath + CHelpFunc.strDataFolderName + ".mxd");
 

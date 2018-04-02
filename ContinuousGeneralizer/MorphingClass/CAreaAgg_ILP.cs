@@ -53,6 +53,7 @@ namespace MorphingClass.CGeneralizationMethods
         {
             SetupBasic();
 
+            int intOutOfMemorySetting = 0;
             int intOutOfMemory = 0;
             CRegion._lngEstCountEdgeNumber = 0;
             CRegion._lngEstCountEdgeLength = 0;
@@ -62,8 +63,8 @@ namespace MorphingClass.CGeneralizationMethods
             {
                 for (int i = _intStart; i < _intEnd; i++)
                 {
-                    ILP(LSCrgLt[i], SSCrgLt[i], 
-                        this.StrObjLtDt, this._adblTD, _ParameterInitialize.strAreaAggregation, ref intOutOfMemory);
+                    ILP(LSCrgLt[i], SSCrgLt[i], this.StrObjLtDt, this._adblTD, 
+                        _ParameterInitialize.strAreaAggregation, ref intOutOfMemorySetting, ref intOutOfMemory);
                     CHelpFunc.Displaytspb(i+1, _intEnd- _intStart+1);
                 }
             }
@@ -71,19 +72,20 @@ namespace MorphingClass.CGeneralizationMethods
             {
                 for (int i = 0; i < intSpecifiedIDLt.Count; i++)
                 {
-                    ILP(LSCrgLt[intSpecifiedIDLt[i]], SSCrgLt[intSpecifiedIDLt[i]], 
-                        this.StrObjLtDt, this._adblTD, _ParameterInitialize.strAreaAggregation, ref intOutOfMemory);
+                    ILP(LSCrgLt[intSpecifiedIDLt[i]], SSCrgLt[intSpecifiedIDLt[i]], this.StrObjLtDt, this._adblTD, 
+                        _ParameterInitialize.strAreaAggregation, ref intOutOfMemorySetting, ref intOutOfMemory);
                     CHelpFunc.Displaytspb(i+1, intSpecifiedIDLt.Count);
                 }
             }
 
+            Console.WriteLine("\nThe number of regions that caused the exception out of memory during setting: " + intOutOfMemorySetting);
             Console.WriteLine("The number of regions that caused the exception out of memory: " + intOutOfMemory);
         }
 
 
 
         public CRegion ILP(CRegion LSCrg, CRegion SSCrg, CStrObjLtDt StrObjLtDt, 
-            double[,] adblTD, string strAreaAggregation, ref int intOutOfMemory)
+            double[,] adblTD, string strAreaAggregation, ref int intOutOfMemorySetting, ref int intOutOfMemory)
         {
             long lngStartMemory = GC.GetTotalMemory(true);
 
@@ -107,6 +109,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             CRegion crg = new CRegion(-1);
             bool blnSolved = true;
+            bool blnSetting = false;
             try
             {
                 //Step 3
@@ -115,7 +118,7 @@ namespace MorphingClass.CGeneralizationMethods
                 IIntVar[][][][] var3;
                 IIntVar[][][][][] var4;
                 IRange[][] rng;
-
+                
                 PopulateByRow(cplex, out var2, out var3, out var4, out rng, LSCrg, SSCrg, adblTD, strAreaAggregation);
                 double dblMemoryInMB4 = CHelpFunc.GetConsumedMemoryInMB(true);
                 // Step 11
@@ -125,7 +128,8 @@ namespace MorphingClass.CGeneralizationMethods
                 //1170 is from _All_MinimizeInteriorBoundaries_200000000
                 //160s is from _Smallest_MinimizeInteriorBoundaries_200000
                 //600s: 10min
-                cplex.SetParam(Cplex.DoubleParam.TiLim, 600);
+                cplex.SetParam(Cplex.DoubleParam.TiLim, 160);
+                //cplex.SetParam(Cplex.DoubleParam.TiLim, 600);
 
                 //cplex.SetParam(Cplex.IntParam.ParallelMode, 1);
                 //cplex.SetParam(Cplex.ParallelMode.Deterministic,cplex.pa);
@@ -135,6 +139,8 @@ namespace MorphingClass.CGeneralizationMethods
                 //see https://www-01.ibm.com/support/docview.wss?uid=swg1RS02094
                 cplex.SetParam(Cplex.IntParam.AuxRootThreads, -1);
                 cplex.SetParam(Cplex.IntParam.Reduce, 0);  //really work for me
+                cplex.SetParam(Cplex.DoubleParam.CutLo, 0);
+                blnSetting = true;
 
                 if (cplex.Solve())
                 {
@@ -142,34 +148,34 @@ namespace MorphingClass.CGeneralizationMethods
                     //***********Gap for ILP************
 
                     #region Display x, y, z, and s
-                    for (int i = 0; i < var3[0].GetLength(0); i++)
-                    {
+                    //for (int i = 0; i < var3[0].GetLength(0); i++)
+                    //{
 
-                        Console.WriteLine("Variable x; Time: " + (i + 1).ToString());
+                    //    Console.WriteLine("Variable x; Time: " + (i + 1).ToString());
 
-                        foreach (var x1 in var3[0][i])
-                        {
-                            //CPatch 
-
-
-
-                            double[] x = cplex.GetValues(x1);
+                    //    foreach (var x1 in var3[0][i])
+                    //    {
+                    //        //CPatch 
 
 
-                            foreach (var x0 in x)
-                            {
-                                int intWrite = 0;  //avoid some values like 0.999999997 or 2E-09
-                                if (x0>0.5)
-                                {
-                                    intWrite = 1;
-                                }
-                                Console.Write(intWrite + "     ");
-                            }
-                            Console.WriteLine();
 
-                        }
-                        Console.WriteLine();
-                    }
+                    //        double[] x = cplex.GetValues(x1);
+
+
+                    //        foreach (var x0 in x)
+                    //        {
+                    //            int intWrite = 0;  //avoid some values like 0.999999997 or 2E-09
+                    //            if (x0>0.5)
+                    //            {
+                    //                intWrite = 1;
+                    //            }
+                    //            Console.Write(intWrite + "     ");
+                    //        }
+                    //        Console.WriteLine();
+
+                    //    }
+                    //    Console.WriteLine();
+                    //}
 
                     #region Display y and z
                     //if (var4[0] != null)
@@ -291,10 +297,8 @@ namespace MorphingClass.CGeneralizationMethods
                 }
 
                 Console.WriteLine("");
-                cplex.Output().WriteLine("Solution status = "
-                + cplex.GetStatus());
-                cplex.Output().WriteLine("Solution value = "
-                + cplex.ObjValue);
+                cplex.Output().WriteLine("Solution status = " + cplex.GetStatus());
+                cplex.Output().WriteLine("Solution value = " + cplex.ObjValue);
                 string strStatus = cplex.GetStatus().ToString();
                 //StrObjLtDt.SetLastObj("#Edges", strStatus);
                 StrObjLtDt.SetLastObj("Cost", cplex.ObjValue);
@@ -305,15 +309,22 @@ namespace MorphingClass.CGeneralizationMethods
                 }
                 else if (strStatus == "Feasible")
                 {
+                    //|best integer-best bound(node)|  / 1e-10 + |best integer|
+                    //|cplex.ObjValue-cplex.BestObjValue|  /  1e-10 + |cplex.ObjValue|
                     StrObjLtDt.SetLastObj("EstSteps", (cplex.MIPRelativeGap * 100 ).ToString("F4"));
                 }
                 else
                 {
-                    StrObjLtDt.SetLastObj("EstSteps", 200.ToString("F4"));
+                    StrObjLtDt.SetLastObj("EstSteps", 20000.ToString("F4"));
                 }
             }
             catch (ILOG.Concert.Exception e)
             {
+                if (blnSetting == false)
+                {
+                    intOutOfMemorySetting++;
+                }
+
                 if (e.Message== "CPLEX Error  1001: Out of memory.\n")
                 {
                     intOutOfMemory++;
@@ -321,9 +332,8 @@ namespace MorphingClass.CGeneralizationMethods
                 blnSolved = false;
                 System.Console.WriteLine("Concert exception '" + e + "' caught");
             }
-            catch (System.OutOfMemoryException e2)
-            {
-                //it seems this never happens!
+            catch (System.OutOfMemoryException e2) //it seems this never happens!
+            {                
                 blnSolved = false;
                 System.Console.WriteLine("System exception '" + e2);
             }
@@ -333,7 +343,7 @@ namespace MorphingClass.CGeneralizationMethods
                 if (blnSolved == false)
                 {
                     crg.ID = -2;
-                    StrObjLtDt.SetLastObj("EstSteps", 200.ToString("F4"));
+                    StrObjLtDt.SetLastObj("EstSteps", 20000.ToString("F4"));
                     System.Console.WriteLine("We have used memory " + dblMemoryInMB + "MB.");
                     Console.WriteLine("Crg:  ID  " + LSCrg.ID + ";    n  " + LSCrg.GetCphCount() + ";    m  " +
                         LSCrg.AdjCorrCphsSD.Count + "  could not be solved by ILP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -455,6 +465,7 @@ namespace MorphingClass.CGeneralizationMethods
                     model.Prod(1 - CAreaAgg_Base.dblLamda, Ftp), model.Prod(CAreaAgg_Base.dblLamda, Fcp)));
                 //model.AddMinimize(Fcp);
                 //model.AddMaximize(Fcp);
+                //model.AddObjective()
             }
 
 

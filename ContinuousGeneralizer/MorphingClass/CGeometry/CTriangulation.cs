@@ -22,7 +22,6 @@ namespace MorphingClass.CGeometry
         /// if we really want to construct a CDT of a mix of polygon (polyline) and points, please add polygon (polyline) first, then add points.
         /// because if we add points first, the triangulatiosn has already be constructed, and then if an tin edge intersect an edge of polygon (polyline), then both edges are simply split</remarks>
         private CPolygon _CPg;
-        private ITinEdit _pTinEdit;
         private ITinAdvanced2 _pTinAdvanced2;
         private List<ITinEdge> _pTinEdgeLt;
         private int _intN;
@@ -112,8 +111,7 @@ namespace MorphingClass.CGeometry
             //    }
             //}
 
-
-            _pTinEdit = TinEdit;
+            
 
             return TinEdit;
         }
@@ -391,30 +389,9 @@ namespace MorphingClass.CGeometry
 
 
 
-
-
-
-        public CPolygon CPg
-        {
-            get { return _CPg; }
-            set { _CPg = value; }
-        }
-
-
-        public ITinEdit pTinEdit
-        {
-            get { return _pTinEdit; }
-            set { _pTinEdit = value; }
-        }
-
-        public List<ITinEdge> pTinEdgeLt
-        {
-            get { return _pTinEdgeLt; }
-            set { _pTinEdgeLt = value; }
-        }
-
         public ITinAdvanced2 pTinAdvanced2
         {
+
             get { return _pTinAdvanced2; }
             set { _pTinAdvanced2 = value; }
         }

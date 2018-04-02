@@ -44,8 +44,8 @@ namespace MorphingClass.CGeneralizationMethods
         protected static int _intEnd; //=this.SSCrgLt.Count
         protected void UpdateStartEnd()
         {
-            //_intStart = 354;
-            //_intEnd = _intStart + 1;
+            _intStart = 612;
+            _intEnd = _intStart + 1;
         }
 
         public List<CRegion> InitialCrgLt { set; get; }
@@ -670,7 +670,7 @@ namespace MorphingClass.CGeneralizationMethods
             string strData = "";
             foreach (var objDataLt in objDataLtEb)
             {
-                if (Convert.ToDouble(objDataLt[3]) > 1)
+                if (Convert.ToDouble(objDataLt[3]) > 0)
                 {
                     strData += "intSpecifiedIDLt.Add(" + objDataLt[0] + ");\n";
                 }
@@ -745,7 +745,8 @@ namespace MorphingClass.CGeneralizationMethods
             var pParameterInitialize = _ParameterInitialize;
             var pFLayer = pParameterInitialize.pFLayerLt[0];
             var pFLayerEnv = pFLayer.AreaOfInterest;
-            string strBoundWidth = "0.05";
+            //string strBoundWidth = "0.05";
+            string strBoundWidth = "normal";
 
 
             var pInitialCrgLt = this.InitialCrgLt;
@@ -885,8 +886,11 @@ List<string> strLayerNameLt,
             List<IPolygon4> passiveIpgLt, List<IFillSymbol> pFillSymbolLt, List<string> strLayerNameLt,
             IEnvelope pFLayerEnv, CEnvelope pIpeEnv, string strBoundWidth)
         {
-            var passiveColor = new CColor(0, 0, 255);
-            var resultColor = new CColor(0, 0, 255);
+            var passiveColor = new CColor(255, 153, 0);  //orange
+            var resultColor = new CColor(255, 153, 0);
+            string strActive = "heavier";
+            string strPassive = "fat";
+            
             //var resultColor = new CColor(45, 121, 147);
 
             ////for the first layer, we add all the patches
@@ -900,11 +904,11 @@ List<string> strLayerNameLt,
             //strIpeContAllLayers += "</group>\n";            
 
 
-           var strIpeContAllLayers = CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[1], "removable", 320, 64);
+            var strIpeContAllLayers = CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[1], "removable", 320, 64);
             strIpeContAllLayers += 
                 "<group>\n" +
-                CToIpe.TranIpgBoundToIpe(IpgLt[0], pFLayerEnv, pIpeEnv, resultColor) +
-                CToIpe.TranIpgBoundToIpe(passiveIpgLt[0], pFLayerEnv, pIpeEnv, passiveColor, "heavier") +
+                CToIpe.TranIpgBoundToIpe(IpgLt[0], pFLayerEnv, pIpeEnv, resultColor, strActive) +
+                CToIpe.TranIpgBoundToIpe(passiveIpgLt[0], pFLayerEnv, pIpeEnv, passiveColor, strPassive) +
                 "</group>\n";
 
 
@@ -928,8 +932,8 @@ List<string> strLayerNameLt,
                 strIpeContAllLayers += CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[i+1], "removable", 320, 64);
                 strIpeContAllLayers +=
                     "<group>\n" +
-                    CToIpe.TranIpgBoundToIpe(IpgLt[i / 2], pFLayerEnv, pIpeEnv, resultColor) +
-                    CToIpe.TranIpgBoundToIpe(passiveIpgLt[i / 2], pFLayerEnv, pIpeEnv, passiveColor, "heavier") +               
+                    CToIpe.TranIpgBoundToIpe(IpgLt[i / 2], pFLayerEnv, pIpeEnv, resultColor, strActive) +
+                    CToIpe.TranIpgBoundToIpe(passiveIpgLt[i / 2], pFLayerEnv, pIpeEnv, passiveColor, strPassive) +               
                     "</group>\n";
                 i++;
             }
