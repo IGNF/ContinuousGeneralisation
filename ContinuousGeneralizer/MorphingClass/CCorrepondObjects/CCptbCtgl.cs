@@ -32,33 +32,215 @@ namespace MorphingClass.CCorrepondObjects
         //    _intID = intID;
         //}
 
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="frcpg">counter clockwise</param>
+        /// <param name="tocpg">counter clockwise</param>
+        /// <param name="blnMaxCommonChords"></param>
+        /// <param name="blnSave"></param>
+        /// <param name="intID"></param>
         public CCptbCtgl(CPolygon frcpg, CPolygon tocpg, bool blnMaxCommonChords = true, bool blnSave = false, int intID = -1)
         {
             _blnSave = blnSave;
 
+            frcpg.JudgeAndFormCEdgeLt();
+            tocpg.JudgeAndFormCEdgeLt();
             frcpg.JudgeAndSetPolygon();
             IEnvelope ipgEnv = frcpg.pPolygon.Envelope;
             double dblMoveHight = 2 * ipgEnv.Height;
             _pEnvRgl = new EnvelopeClass();
             _pEnvRgl.PutCoords(ipgEnv.XMin, ipgEnv.YMin + dblMoveHight, ipgEnv.XMax, ipgEnv.YMax + dblMoveHight);
+            
 
-
+            List<CPolyline> outfrcpllt;
+            List<CPolyline> outtocpllt;
+            SeparateCpgsByDynamic(frcpg, tocpg, out outfrcpllt, out outtocpllt);
 
             _FrCtgl = new CTriangulation(frcpg);
-            _FrCtgl.Triangulate();
-
+            _FrCtgl.Triangulate(outfrcpllt, "Fr", blnSave);
 
 
             //_FrCtgl.CompareCptltAndNode();
 
             _ToCtgl = new CTriangulation(tocpg);
-            _ToCtgl.Triangulate();
+            _ToCtgl.Triangulate(outtocpllt, "To", blnSave);
 
             //_ToCtgl.CompareCptltAndNode();
 
 
             _intID = intID;
         }
+
+        private void SeparateCpgsByDynamic(CPolygon frcpg, CPolygon tocpg,
+            out List<CPolyline> outfrcpllt, out List<CPolyline> outtocpllt)
+        {
+            int intCount = frcpg.CptLt.Count - 1;
+            var ablnValidChords = GetCoValidChords(frcpg, tocpg);
+
+            var Table = new CTable(intCount, intCount, true);
+            var aCell = Table.aCell;
+
+
+
+            for (int i = 0; i < intCount - 1; i++)
+            {
+                int j = i + 1;
+                aCell[i, j] = new CCell(i, j, 1, 0, i, j);
+            }
+
+            //when k=2, we are dealing with triangles
+            for (int k = 2; k < intCount; k++)
+            {
+                for (int i = 0; i < intCount - k; i++)
+                {
+                    int j = i + k;
+
+                    if (ablnValidChords[i, j] == false)
+                    {
+                        aCell[i, j] = new CCell(0, 0, double.NegativeInfinity, 0, i, j);
+                    }
+                    else
+                    {
+                        var maxCell = new CCell();
+                        for (int l = i + 1; l < j; l++)
+                        {
+                            double dblCost = aCell[i, l].dblCost + aCell[l, j].dblCost + 1;
+                            //when two separations have the same cost, we pick the one which splits the curve more balancedly
+                            double dblCostHelp = -Math.Abs(l - Convert.ToDouble(i + j) / 2);
+
+                            var newcell = new CCell(l, l, dblCost, dblCostHelp, i, j);
+                            maxCell = CHelpFunc.Max(maxCell, newcell, cell => cell.dblCost, cell => cell.dblCostHelp);
+                        }
+                        aCell[i, j] = maxCell;
+                    }
+                }
+            }
+
+            var intCommonNum = Convert.ToInt32(aCell[0, intCount - 1].dblCost);
+            //Table.PrintaCell();
+
+            outfrcpllt = GenerateInteriorCplLt(aCell, frcpg.CptLt);
+            outtocpllt = GenerateInteriorCplLt(aCell, tocpg.CptLt);
+            
+
+            if (_blnSave == true)
+            {
+                CSaveFeature.SaveCplEb(outfrcpllt, "frcommonchords", blnVisible: false);
+                CSaveFeature.SaveCplEb(outtocpllt, "tocommonchords", blnVisible: false);
+            }
+        }
+
+        private List<CPolyline> GenerateInteriorCplLt(CCell[,] aCell, List<CPoint> OriginalCptLt)
+        {
+            var intCount = OriginalCptLt.Count - 1; //intCount is the number of vertices without duplicates
+            var intCommonNum = Convert.ToInt32(aCell[0, intCount - 1].dblCost);
+            var outcpllt = new List<CGeometry.CPolyline>(intCommonNum);
+
+            var CellStack = new Stack<CCell>();
+            CellStack.Push(aCell[0, intCount - 1]);
+            while (CellStack.Count > 0)
+            {
+                var currentCell = CellStack.Pop();
+                int intIndex = currentCell.intBackK1;
+                var backcell1 = aCell[currentCell.intRowIndex, intIndex];
+                var backcell2 = aCell[intIndex, currentCell.intColIndex];
+
+                HandleOneCell(backcell2, CellStack, OriginalCptLt, ref outcpllt);
+                HandleOneCell(backcell1, CellStack, OriginalCptLt, ref outcpllt);
+            }
+
+            return outcpllt;
+        }
+
+        private void HandleOneCell(CCell cell, Stack<CCell> CellStack, List<CPoint> OriginalCptLt, ref List<CPolyline> cpllt)
+        {
+            int intIndexDiff = cell.intColIndex - cell.intRowIndex; //it holds cell.intColIndex > cell.intRowIndex
+            if (intIndexDiff >= 2)
+            {
+                cpllt.Add(new CPolyline(-1, 
+                    CHelpFunc.MakeLt(OriginalCptLt[cell.intRowIndex], OriginalCptLt[cell.intColIndex])));
+
+                if (intIndexDiff>2)
+                {
+                    CellStack.Push(cell);
+                }
+            }
+        }
+
+        /// <summary>
+        /// common valid chords; the original edges of the polygons are also valid
+        /// </summary>
+        /// <param name="frcpg"></param>
+        /// <param name="tocpg"></param>
+        /// <returns></returns>
+        private bool[,] GetCoValidChords(CPolygon frcpg, CPolygon tocpg)
+        {
+            var FrValidChords = GetValidChords(frcpg);
+            var ToValidChords = GetValidChords(tocpg);            
+            
+
+            int intCount = frcpg.CptLt.Count-1;
+            var ablnValidChords = new bool[intCount, intCount];
+            for (int i = 0; i < intCount; i++)
+            {
+                for (int j = 0; j < intCount; j++)
+                {                    
+                    ablnValidChords[i, j] = FrValidChords[i, j] && ToValidChords[i, j];                    
+                }
+            }
+
+            //ablnValidChords[0, intCount - 1] represents an edge, but not a chord. Therefore,
+            ablnValidChords[0, intCount - 1] = true;
+            return ablnValidChords;
+        }
+
+        private bool[,] GetValidChords(CPolygon cpg)
+        {
+            var cpgcptlt = cpg.CptLt;
+            var intCptNum = cpgcptlt.Count-1;
+            var ablnValidChords = new bool[intCptNum, intCptNum];
+            var fEdgeGrid = new CEdgeGrid(cpg.CEdgeLt);
+
+
+            for (int i = 0; i < intCptNum - 1; i++)
+            {
+                ablnValidChords[i, i + 1] = true;
+                for (int j = i + 2; j < intCptNum; j++)
+                {
+                    var subcptlt = cpgcptlt.GetRange(i, j - i + 1);
+                    //if the baseline is outside of the polygon, then the baseline is not a valid choice
+                    if (CGeoFunc.IsClockwise(subcptlt, false) == true)
+                    {
+                        ablnValidChords[i, j] = false;
+                    }
+                    else
+                    {
+                        var newcedge = new CEdge(cpgcptlt[i], cpgcptlt[j]);
+                        
+
+                        if (fEdgeGrid.BlnIntersect(newcedge, false, true, true) == false)
+                        {
+                            ablnValidChords[i, j] = true;
+                        }
+                    }
+                }
+            }
+
+            //Console.WriteLine("Valid cuts:");
+            //for (int i = 0; i < intCptNum; i++)
+            //{
+            //    for (int j = 0; j < intCptNum; j++)
+            //    {
+            //        Console.Write(ablnValidChords[i, j] + "       ");
+            //    }
+            //    Console.WriteLine();
+            //}
+            return ablnValidChords;
+        }
+
+
 
         /// <summary>
         /// 
@@ -87,7 +269,7 @@ namespace MorphingClass.CCorrepondObjects
             if (blnSave == true)
             {
                 CSaveFeature.SaveCEdgeEb(frctgl.CEdgeLt, "RefinedFrCtgl", blnVisible: false);
-                CSaveFeature.SaveCptEb(frctgl.CptLt, "RefinedToCpt", blnVisible: false);
+                CSaveFeature.SaveCptEb(frctgl.CptLt, "RefinedFrCpt", blnVisible: false);
 
                 CSaveFeature.SaveCEdgeEb(toctgl.CEdgeLt, "RefinedToCtgl", blnVisible: false);
                 CSaveFeature.SaveCptEb(toctgl.CptLt, "RefinedToCpt", blnVisible: false);
@@ -118,8 +300,8 @@ namespace MorphingClass.CCorrepondObjects
                 CSaveFeature.SaveCptEb(ctgl.CptLt, enumScale.ToString() + "RealCpt", blnVisible: false);
             }
 
-
-            var RglCpg = CGeoFunc.CreateRegularCpg(pEnv, ctgl.pTinAdvanced2.DataNodeCount);
+            //RglCpg is counter clockwise
+            var RglCpg = CGeoFunc.CreateRegularCpg(pEnv, ctgl.pTinAdvanced2.DataNodeCount,false);
 
             //rglcpg.CEdgeLt[0].PrintMySelf();
             //rglcpg.CptLt [0].PrintMySelf();
@@ -195,22 +377,9 @@ namespace MorphingClass.CCorrepondObjects
             var IntersectCptLt = new List<CPoint>();
             int indexID = FrRglDCEL.CptLt.Count;
 
-            //int indexIDNextto74 = 0;
-            //_FrRglDCEL = FrRglDCEL;
-            //indexIDNextto74 = _FrRglDCEL.HalfEdgeLt[74].cedgeNext.indexID;
-            int intCount = 0;
+
             while (frcptEt.MoveNext() && tocptEt.MoveNext())
             {
-                //if (intCount == 13)
-                //{
-                //    int ss = 5;
-                //}
-                //if (intCount == 14)
-                //{
-                //    int st = 5;
-                //}
-                //Console.WriteLine("point number: " + intCount++);
-
                 var CoStartCpt = frcptEt.Current;
                 var FrIncidentCEdge = frcptEt.Current.IncidentCEdge;
                 var ToIncidentCEdge = tocptEt.Current.IncidentCEdge;
@@ -345,8 +514,6 @@ namespace MorphingClass.CCorrepondObjects
                     //FrCurrentCEdge.dblAxisAngle == FrStopCEdge.dblAxisAngle. 
                     //Note that, SmallerAxisAngleCEdge == FrStopCEdge.GetSmallerAxisAngleCEdge()
                     //SmallerAxisAngleCEdge = SmallerAxisAngleCEdge.GetLargerAxisAngleCEdge();
-
-
                     do
                     {
                         ToCurrentCEdge = InsertCEdge(ToCurrentCEdge, ref SmallerAxisAngleCEdge, ref IntersectCptLt, ref indexID);
@@ -357,6 +524,14 @@ namespace MorphingClass.CCorrepondObjects
             FrRglDCEL.CptLt.AddRange(IntersectCptLt);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ToCurrentCEdge">this is the edge to be inserted</param>
+        /// <param name="SmallerAxisAngleCEdge"></param>
+        /// <param name="IntersectCptLt"></param>
+        /// <param name="indexID"></param>
+        /// <returns></returns>
         private CEdge InsertCEdge(CEdge ToCurrentCEdge, ref CEdge SmallerAxisAngleCEdge, 
             ref List<CPoint> IntersectCptLt, ref int indexID)
         {
@@ -402,7 +577,7 @@ namespace MorphingClass.CCorrepondObjects
                 //int intFrCurrentindexID = currentcedge.FrCpt.indexID;
                 //int intToCurrentindexID = currentcedge.ToCpt.indexID;
 
-                CIntersection pIntersection = subcedge.IntersectWith(currentcedge);
+                var pIntersection = subcedge.IntersectWith(currentcedge);
                 //subcedge.ToCpt.PrintMySelf();
                 //currentcedge.ToCpt.PrintMySelf();
 

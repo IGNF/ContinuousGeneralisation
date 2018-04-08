@@ -85,19 +85,25 @@ namespace MorphingClass.CMorphingMethods
                 int indexID1 = pInterLSCPlLt[i].CEdgeLt[0].cpgIncidentFace.indexID;
                 int indexID2 = pInterLSCPlLt[i].CEdgeLt[0].cedgeTwin.cpgIncidentFace.indexID;
 
+                //we store the smaller index at "FaceNum_1", and store the larger index at "FaceNum_2"
                 int intSmallerindexID;
                 int intLargerindexID;
-                CHelpFunc.CompareAndOrder(indexID1, indexID2, ID => ID, out intSmallerindexID, out intLargerindexID);  //we store the smaller index at "FaceNum_1", and store the larger index at "FaceNum_2"
+                CHelpFunc.CompareAndOrder(indexID1, indexID2, ID => ID, out intSmallerindexID, out intLargerindexID);  
 
                 InterLSobjlt1.Add(intSmallerindexID);
                 InterLSobjlt2.Add(intLargerindexID);
             }
 
-            //it should be true that a polyline of pInterSSCPlLt has the same indices of faces as the corresponding polyline of pInterLSCPlLt does
-            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intInterLS].FeatureClass, esriFieldType.esriFieldTypeInteger, "FaceNum1", InterLSobjlt1);
-            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intInterLS].FeatureClass, esriFieldType.esriFieldTypeInteger, "FaceNum2", InterLSobjlt2);
-            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intInterSS].FeatureClass, esriFieldType.esriFieldTypeInteger, "FaceNum1", InterLSobjlt1);
-            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intInterSS].FeatureClass, esriFieldType.esriFieldTypeInteger, "FaceNum2", InterLSobjlt2);
+            //it should be true that a polyline of pInterSSCPlLt has the same indices of faces 
+            //as the corresponding polyline of pInterLSCPlLt does
+            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intInterLS].FeatureClass, 
+                esriFieldType.esriFieldTypeInteger, "FaceNum1", InterLSobjlt1);
+            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intInterLS].FeatureClass, 
+                esriFieldType.esriFieldTypeInteger, "FaceNum2", InterLSobjlt2);
+            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intInterSS].FeatureClass, 
+                esriFieldType.esriFieldTypeInteger, "FaceNum1", InterLSobjlt1);
+            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intInterSS].FeatureClass, 
+                esriFieldType.esriFieldTypeInteger, "FaceNum2", InterLSobjlt2);
 
 
             List<object> Sgobjlt = new List<object>(pSgCPlLt.Count);
@@ -105,7 +111,8 @@ namespace MorphingClass.CMorphingMethods
             {
                 Sgobjlt.Add(DetectFaceForSg(pSgCPlLt[i], pInterLSDCEL).indexID);
             }
-            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intSg].FeatureClass, esriFieldType.esriFieldTypeInteger, "FaceNum", Sgobjlt);
+            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intSg].FeatureClass, 
+                esriFieldType.esriFieldTypeInteger, "FaceNum", Sgobjlt);
 
         }
         #endregion
@@ -210,7 +217,7 @@ namespace MorphingClass.CMorphingMethods
 
         #region CTTransform (compatible triangulation)
         /// <summary>
-        /// 
+        /// Transform interior polylines in one province
         /// </summary>
         /// <param name="pParameterInitialize"></param>
         /// <param name="InterLSIplLt"></param>
@@ -225,30 +232,25 @@ namespace MorphingClass.CMorphingMethods
         {
             CConstants.dblVerySmallCoord /= 10;  //this assignment should equal to _dblVerySmallDenominator = 10000000
 
+            
             var InterLSCplLt = CHelpFunc.GenerateCGeoEbAccordingToGeoEb<CPolyline>(InterLSIplLt).ToList();
             var InterSSCplLt = CHelpFunc.GenerateCGeoEbAccordingToGeoEb<CPolyline>(InterSSIplLt).ToList();
             var SgCplEb = CHelpFunc.GenerateCGeoEbAccordingToGeoEb<CPolyline>(SgIplLt);
 
-
+            //there are only two faces: the super face and a normal face. Face *.FaceCpgLt[1] is the normal face
             CDCEL pInterLSDCEL = new CDCEL(InterLSCplLt);
             pInterLSDCEL.ConstructDCEL();
             pInterLSDCEL.FaceCpgLt[1].SetOuterFaceCptlt(false, true, InterLSCplLt[0].CptLt[0]);
 
+            //there are only two faces: the super face and a normal face. Face *.FaceCpgLt[1] is the normal face
             CDCEL pInterSSDCEL = new CDCEL(InterSSCplLt);
             pInterSSDCEL.ConstructDCEL();
             pInterSSDCEL.FaceCpgLt[1].SetOuterFaceCptlt(false, true, InterSSCplLt[0].CptLt[0]);
-
-            //I need to check if we realy need a counter clockwise direction
-            //there are only two faces: the super face and a normal face
-            var pInterLSCptLt = pInterLSDCEL.FaceCpgLt[1].GetOuterCptEb(false,false).ToList();  
-            ////I need to check if we realy need a counter clockwise direction
-            //pInterSSDCEL.FaceCpgLt[1].GetOuterCptEb(false).ToList();  //there are only two faces: the super face and a normal face
-
-
+            
 
             //we maintaine this SD so that for a point from single polyline, 
             //we can know whether this single point overlaps a point of a larger-scale polyline
-            var pInterLSCptSD = pInterLSCptLt.ToSD(cpt => cpt, new CCmpCptYX_VerySmall()); 
+            var pInterLSCptSD = pInterSSDCEL.FaceCpgLt[1].CptLt.ToSD(cpt => cpt, new CCmpCptYX_VerySmall()); 
 
             //bool blnSave = false;
             //blnSave = true;
@@ -300,6 +302,8 @@ namespace MorphingClass.CMorphingMethods
         {
             CTriangulation pFrCtgl = pCptbCtgl.FrCtgl;
             CTriangulation pToCtgl = pCptbCtgl.ToCtgl;
+
+
             var AffineCptLt = new List<CPoint>(SgCpl.CptLt.Count);
             AffineCptLt.Add(CalFirstAffineCpt(pCptbCtgl, SgCpl.CptLt[0], pInterLSCptSD));   //the first vertex
 

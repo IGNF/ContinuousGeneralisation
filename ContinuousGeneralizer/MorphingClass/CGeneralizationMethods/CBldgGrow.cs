@@ -658,8 +658,8 @@ namespace MorphingClass.CGeneralizationMethods
             }
 
 
-            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(AllCEdgeLt, 1 / CConstants.dblFclipper),
-                "MergedToConstructDCEL", blnVisible: false);
+            //CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(AllCEdgeLt, 1 / CConstants.dblFclipper),
+            //    "MergedToConstructDCEL", blnVisible: false);
 
 
             CDCEL pDCEL = new CGeometry.CDCEL(AllCEdgeLt);
@@ -940,9 +940,9 @@ namespace MorphingClass.CGeneralizationMethods
                 }
             }
 
-            CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(
-                clipperMethods.ConvertPathsToCEdgeEb(LastAndClippedPath, true), 1 / CConstants.dblFclipper),
-                "GrownPathsWithoutMergeOrClip", blnVisible: false);
+            //CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb(
+            //    clipperMethods.ConvertPathsToCEdgeEb(LastAndClippedPath, true), 1 / CConstants.dblFclipper),
+            //    "GrownPathsWithoutMergeOrClip", blnVisible: false);
 
             LastAndClippedPath.AddRange(mergedcpg.LastTimePaths);
             var unitedPaths = clipperMethods.Clip_Paths(LastAndClippedPath, true, mergedcpg.LastTimePaths, true, ClipType.ctUnion);
@@ -954,8 +954,8 @@ namespace MorphingClass.CGeneralizationMethods
             mergedcpg.LastTimePaths = Clipper.PolyTreeToPaths(clippedPolyTree);
             var GrownAndClippedCpg = clipperMethods.GenerateCpgEbByPolyTree(clippedPolyTree, mergedcpg.ID, true);
 
-            CSaveFeature.SavePolyTreeAsCpgEb(clippedPolyTree, "GrownMergeClipPolyTree",
-                pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
+            //CSaveFeature.SavePolyTreeAsCpgEb(clippedPolyTree, "GrownMergeClipPolyTree",
+            //    pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSNull, blnVisible: false);
 
             return GrownAndClippedCpg;
         }

@@ -28,7 +28,8 @@ namespace MorphingClass.CGeometry
             _CEdge2 = cedge2;
         }
 
-        public CIntersection(CEdge cedge1, CEdge cedge2, CPoint pIntersectCpt, CEdge pOverlapCEdge, CEnumIntersectionType penumIntersectionType)
+        public CIntersection(CEdge cedge1, CEdge cedge2, CPoint pIntersectCpt, CEdge pOverlapCEdge, 
+            CEnumIntersectionType penumIntersectionType)
         {
             _CEdge1 = cedge1;
             _CEdge2 = cedge2;
@@ -186,7 +187,8 @@ namespace MorphingClass.CGeometry
             }
         }
 
-        private CEnumIntersectionType DetectIntersectionParralel(CEdge cedge1, CEdge cedge2, out CPoint IntersectCpt, out CEdge overlapcedge)
+        private CEnumIntersectionType DetectIntersectionParralel(CEdge cedge1, CEdge cedge2, 
+            out CPoint IntersectCpt, out CEdge overlapcedge)
         {
             CEdge auxCEdge1 = cedge1;
             bool blnReversed1 = false;
@@ -204,7 +206,8 @@ namespace MorphingClass.CGeometry
                 blnReversed2 = true;
             }
 
-            CEnumIntersectionType penumIntersectionType = DetectIntersectionParralelIncrease(auxCEdge1, auxCEdge2, out IntersectCpt, out overlapcedge);
+            CEnumIntersectionType penumIntersectionType = 
+                DetectIntersectionParralelIncrease(auxCEdge1, auxCEdge2, out IntersectCpt, out overlapcedge);
             if (penumIntersectionType == CEnumIntersectionType.FrTo || penumIntersectionType == CEnumIntersectionType.ToFr)   //besides, penumIntersectionType coud be CEnumIntersectionType.NoNo or CEnumIntersectionType.Overlap
             {
                 string substr1 = penumIntersectionType.ToString().Substring(0, 2);
@@ -242,7 +245,8 @@ namespace MorphingClass.CGeometry
         }
 
 
-        private CEnumIntersectionType DetectIntersectionParralelIncrease(CEdge cedge1, CEdge cedge2, out CPoint IntersectCpt, out CEdge overlapcedge)
+        private CEnumIntersectionType DetectIntersectionParralelIncrease(CEdge cedge1, CEdge cedge2, 
+            out CPoint IntersectCpt, out CEdge overlapcedge)
         {
             if (CCmpMethods.CmpCptXY(cedge1.ToCpt, cedge2.ToCpt) <= 0)   //we compare both x and y so that we can handle two edges which have no slope
             {
@@ -250,12 +254,14 @@ namespace MorphingClass.CGeometry
             }
             else
             {
-                CEnumIntersectionType enumIntersectionType = DetectIntersectionParralelIncreaseCEdge2Righter(cedge2, cedge1, out IntersectCpt, out overlapcedge);
+                CEnumIntersectionType enumIntersectionType = 
+                    DetectIntersectionParralelIncreaseCEdge2Righter(cedge2, cedge1, out IntersectCpt, out overlapcedge);
                 return ReverseIntersectionType(enumIntersectionType);
             }
         }
 
-        private CEnumIntersectionType DetectIntersectionParralelIncreaseCEdge2Righter(CEdge cedge1, CEdge cedge2, out CPoint IntersectCpt, out CEdge overlapcedge)
+        private CEnumIntersectionType DetectIntersectionParralelIncreaseCEdge2Righter(CEdge cedge1, CEdge cedge2, 
+            out CPoint IntersectCpt, out CEdge overlapcedge)
         {
             IntersectCpt = null;
             overlapcedge = null;
@@ -396,7 +402,8 @@ namespace MorphingClass.CGeometry
 
             //we test both x and y. if we only test one coordinate, we may get wrong result.
             //      for example, there is an intersection that is actually in an edge, and this edge is almost vertical.
-            //      if we only test the x coordinate, then we will get that the intersection is the end (on the boundary) of this edge because we use dblVerysmall to judge
+            //      if we only test the x coordinate, then we will get that the intersection is the end (on the boundary) of this edge 
+            //         because we use dblVerysmall to judge
 
             //cedge.SetLength();
             int intCompareX = CCmpMethods.CmpThreeCoord(cpt.X, cedge.FrCpt.X, cedge.ToCpt.X);
@@ -455,7 +462,11 @@ namespace MorphingClass.CGeometry
         }
 
 
-
+        /// <summary>
+        /// The concept of touch is simpler than the type of intersection
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>It turns out that we do not really need this function</remarks>
         public bool IsTouch()
         {
             CEdge cedge1 = _CEdge1;
@@ -474,8 +485,9 @@ namespace MorphingClass.CGeometry
                 //if (CCmpMethods.Cmp(cedge1.dblSlope, cedge2.dblSlope)==0)  //parallel
                 if (CCmpMethods.CmpDbl_ConstVerySmall(cedge1.dblSlope, cedge2.dblSlope) == 0)  //parallel
                 {
-                    if (CCmpMethods.CmpCoordDbl_VerySmall(cedge1.dblYIntercept, cedge2.dblYIntercept) == 0)   //parallel and with the same YIntercept
+                    if (CCmpMethods.CmpCoordDbl_VerySmall(cedge1.dblYIntercept, cedge2.dblYIntercept) == 0)
                     {
+                        //parallel and with the same YIntercept
                         return IsTouchParralel(cedge1, cedge2, out IntersectCpt);
                     }
                     else    //parallel but not with the same YIntercept
@@ -623,7 +635,7 @@ namespace MorphingClass.CGeometry
         /// COULD BE: NoNo, FrFr, FrIn, FrTo, InFr, InIn, InTo, ToFr, ToIn, ToTo, Overlap
         /// </summary>
         /// <remarks >NoNo: no intersection
-        ///                   InIn: cross </remarks>
+        ///           InIn: cross </remarks>
         public CEnumIntersectionType enumIntersectionType
         {
             get { return _enumIntersectionType; }

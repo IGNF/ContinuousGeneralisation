@@ -59,11 +59,12 @@ namespace ContinuousGeneralizer
             //CHelpFunc.strDataFolderName = "MainlandChina-Animation";
             //CHelpFunc.strDataFolderName = "Tianjin-Animation"; 
             //CHelpFunc.strDataFolderName = "MainlandChina-Animation-complicated";
-            //CHelpFunc.strDataFolderName = "MainlandChina-Shanghai";
+            CHelpFunc.strDataFolderName = "MainlandChina-Shanghai";
             //CHelpFunc.strDataFolderName = "MainlandChina";
-            CHelpFunc.strDataFolderName = "CompatibleTriangulation";
+            //CHelpFunc.strDataFolderName = "CompatibleTriangulation";
             //CHelpFunc.strDataFolderName = "CompatibleTriangulation_Simple";
-            CHelpFunc.strPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\Administrative Boundary\\"
+            CHelpFunc.strPath =
+            "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\Administrative Boundary\\"
             + CHelpFunc.strDataFolderName + "\\";
 
             //CHelpFunc.strDataFolderName = "LinearMorphingBothInjected";
@@ -87,7 +88,7 @@ namespace ContinuousGeneralizer
             //+ CHelpFunc.strDataFolderName + "\\";
 
             //CHelpFunc.strDataFolderName = "France";
-            //CHelpFunc.strD = "France_FourTowns";
+            //CHelpFunc.strDataFolderName = "France_FourTowns";
             //CHelpFunc.strDataFolderName = "France_FourTowns_Several";
             //CHelpFunc.strDataFolderName = "France_FourTownsLengthy";
             //CHelpFunc.strDataFolderName = "France_Part";

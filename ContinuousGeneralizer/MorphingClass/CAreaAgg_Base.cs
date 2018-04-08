@@ -539,7 +539,7 @@ namespace MorphingClass.CGeneralizationMethods
                 }
             }
 
-            strData += ("& " + string.Format("{0,3}", intOverEstCount));
+            strData += ("& " + string.Format("{0,3}", intOverEstCount)); //symbol "&" is for the use in Latex
             strData += (" & " + string.Format("{0,3}", dblLogEstStepsSum));  //repetitions
             strData += GetSumWithSpecifiedStyle(StrObjLtDt, "#Nodes", "{0,8}", 0);
             strData += GetSumWithSpecifiedStyle(StrObjLtDt, "#Edges", "{0,10}", 0);            

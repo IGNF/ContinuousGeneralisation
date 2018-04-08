@@ -17,34 +17,78 @@ namespace MorphingClass.CUtility
         {
         }
 
-        public CTable(int intRow, int intCol)
+        public CTable(int fintRow, int fintCol, bool blnSetRowColIndex = false)
         {
-            this.intRow = intRow;
-            this.intCol = intCol;
-            this.aCell = new CCell[intRow, intCol];
+            var newaCell = new CCell[fintRow, fintCol];
+            if (blnSetRowColIndex == true)
+            {
+                for (int i = 0; i < fintRow; i++)
+                {
+                    for (int j = 0; j < fintCol; j++)
+                    {
+                        newaCell[i, j] = new CCell();
+                        newaCell[i, j].intRowIndex = i;
+                        newaCell[i, j].intColIndex = j;
+                    }
+                }
+            }
+
+            this.intRow = fintRow;
+            this.intCol = fintCol;
+            this.aCell = new CCell[fintRow, fintCol];
         }
 
-        public double dblEvaluation
+        public double dblCost
         {
-            get { return this.aCell[this.intRow - 1, this.intCol - 1].dblEvaluation; }
+            get { return this.aCell[this.intRow - 1, this.intCol - 1].dblCost; }
         }
+
+        public void PrintaCell()
+        {
+            Console.WriteLine("\n The cost of a table for dynamic programming:");
+            for (int i = 0; i < this.intRow; i++)
+            {
+                for (int j = 0; j < this.intCol; j++)
+                {
+                    if (this.aCell[i, j] != null)
+                    {
+                        Console.Write(string.Format("{0,9}", this.aCell[i, j].dblCost) + "," + 
+                            string.Format("{0,2}", this.aCell[i, j].intBackK1) + "    ");
+                    }
+                    else
+                    {
+                        Console.Write(string.Format("{0,9}", -1) + "," +
+                            string.Format("{0,2}", -1) + "    ");
+                    }
+                }
+                Console.WriteLine();
+            }
+        }
+
     }
 
     public class CCell
     {
         public int intBackK1 { get; set; }
         public int intBackK2 { get; set; }
-        public double dblEvaluation { get; set; }
+        public double dblCost { get; set; }
+        public double dblCostHelp { get; set; }
+        public int intRowIndex { get; set; }
+        public int intColIndex { get; set; }
 
         public CCell()
         {
         }
 
-        public CCell(int intK1, int intK2, double dblCost)
+        public CCell(int intK1, int intK2, double fdblCost,  double fdblCostHelp = 0, 
+            int fintRowIndex=-1, int fintColIndex = -1)
         {
             this.intBackK1 = intK1;
             this.intBackK2 = intK2;
-            this.dblEvaluation = dblCost;
+            this.dblCost = fdblCost;
+            this.dblCostHelp = fdblCostHelp;
+            this.intRowIndex = fintRowIndex;
+            this.intColIndex = fintColIndex;
         }
     }
 }

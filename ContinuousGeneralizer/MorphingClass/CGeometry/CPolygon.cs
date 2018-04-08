@@ -400,7 +400,6 @@ namespace MorphingClass.CGeometry
         public void SetOuterFaceCptlt(bool clockwise = true, bool blnIdentical = true, CPoint StartPositionCpt = null)
         {
             this.CptLt = GetOuterCptEb(clockwise, blnIdentical, StartPositionCpt).ToList();
-
         }
 
         public IEnumerable<CPoint> GetOuterCptEb(bool clockwise = true, bool blnIdentical = true, CPoint StartPositionCpt=null)

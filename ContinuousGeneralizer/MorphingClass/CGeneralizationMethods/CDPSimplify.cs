@@ -875,8 +875,7 @@ namespace MorphingClass.CGeneralizationMethods
 
         private static bool IsCutValid(List<CPoint> cptlt, CEdgeGrid pEdgeGrid,   
             double dblThreshold, out int intIndexMaxDis)
-        {
-            
+        {            
             //the distances from all the removed points to cedgebaseline should be smaller than a threshold
             var cedgebaseline = new CEdge(cptlt[0], cptlt.GetLastT());
             //cedgebaseline.SetLengthSquareReciprocal();
@@ -896,16 +895,14 @@ namespace MorphingClass.CGeneralizationMethods
             }
 
             //we don't test the four edges
-            cedgebaseline.FrCpt.InCEdge.isTraversed = true;
-            cedgebaseline.FrCpt.OutCEdge.isTraversed = true;
-            cedgebaseline.ToCpt.InCEdge.isTraversed = true;
-            cedgebaseline.ToCpt.OutCEdge.isTraversed = true;
-            var blnIntersect = BlnIntersect(cedgebaseline, pEdgeGrid);
-
-            cedgebaseline.FrCpt.InCEdge.isTraversed = false;
-            cedgebaseline.FrCpt.OutCEdge.isTraversed = false;
-            cedgebaseline.ToCpt.InCEdge.isTraversed = false;
-            cedgebaseline.ToCpt.OutCEdge.isTraversed = false;
+            var IgnoreCEdgeSS = new SortedSet<CEdge>
+            {
+                cedgebaseline.FrCpt.InCEdge,
+                cedgebaseline.FrCpt.OutCEdge,
+                cedgebaseline.ToCpt.InCEdge,
+                cedgebaseline.ToCpt.OutCEdge
+            };
+            var blnIntersect = pEdgeGrid.BlnIntersect(cedgebaseline, true, true, true, IgnoreCEdgeSS);
 
             return !blnIntersect;
 
@@ -923,19 +920,6 @@ namespace MorphingClass.CGeneralizationMethods
                 return false;
             }
         }
-
-        //private static bool BlnIntersect(CEdge cedge, List<CEdge> OriginalCEdgeLt, List<CPoint> cptlt)
-        //{
-        //    var ConflictCEdgeLt = new List<CEdge>(OriginalCEdgeLt);
-        //    for (int i = 1; i < cptlt.Count - 2; i++)
-        //    {
-        //        ConflictCEdgeLt.Add(cptlt[i].CEdge);
-        //    }
-
-        //    return BlnIntersect(cedge, ConflictCEdgeLt);
-        //}
-
-
 
 
         ////*******************check the codes below***************************
@@ -975,64 +959,6 @@ namespace MorphingClass.CGeneralizationMethods
                 }
             } while (IndexSk.Count > 0);
             yield return cptlt.GetLastT();
-        }
-
-        private static bool BlnIntersect(CEdge cedge, IEnumerable<CEdge> cedgeEb)
-        {
-            foreach (var item in cedgeEb)
-            {
-                //item.PrintMySelf();
-                if (cedge.IsTouchWith(item))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private static bool BlnIntersect(CEdge cedge, CEdgeGrid pEdgeGrid)
-        {
-            var intRowColVpLt = pEdgeGrid.FindRowColVpLt(cedge);
-            var TraversedCEdgeLt = new List<CEdge>();
-            bool blnIntersect = false;
-            foreach (var RowColVp in intRowColVpLt)
-            {
-                if (RowColVp.val1<0 || RowColVp.val1>= pEdgeGrid.intRowCount ||
-                   RowColVp.val2 < 0 || RowColVp.val2 >= pEdgeGrid.intColCount )
-                {
-                    continue; 
-                }
-
-                foreach (var pcedge in pEdgeGrid.aCEdgeLtCell[RowColVp.val1, RowColVp.val2])
-                {
-                    if (pcedge.isTraversed == true)
-                    {
-                        continue;
-                    }
-                    pcedge.isTraversed = true;
-                    TraversedCEdgeLt.Add(pcedge);
-
-                    if (cedge.IsTouchWith(pcedge))
-                    {
-                        blnIntersect = true;
-                        break;
-                    }
-                }
-
-                if (blnIntersect == true)
-                {
-                    break;
-                }
-            }
-
-            //Set the TraversedCEdge to false
-            foreach (CEdge TraversedCEdge in TraversedCEdgeLt)
-            {
-                TraversedCEdge.isTraversed = false;
-            }
-
-            return blnIntersect;
         }
 
 

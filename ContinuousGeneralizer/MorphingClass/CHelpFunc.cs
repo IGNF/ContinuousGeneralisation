@@ -64,7 +64,7 @@ namespace MorphingClass.CUtility
         {
             if (cmp == null) { cmp = SCG.Comparer<T>.Default; }
             //var tst = cmp.Compare(value, lowerbound);
-            if (cmp.Compare(value, lowerbound) == -1 ||cmp.Compare(value, upperbound) == 1  )
+            if (cmp.Compare(value, lowerbound) == -1 || cmp.Compare(value, upperbound) == 1)
             {
                 throw new ArgumentException("incorrect value!");
             }
@@ -74,7 +74,7 @@ namespace MorphingClass.CUtility
 
         public static void testmemory()
         {
-            System.Collections.Generic.IList<System.Collections.Generic.IList<double>> intltlt = new List<System.Collections.Generic.IList<double>>();
+            SCG.IList<SCG.IList<double>> intltlt = new List<SCG.IList<double>>();
 
             //while (intltlt.Count < 40)
             //{
@@ -107,7 +107,7 @@ namespace MorphingClass.CUtility
             return intlt;
         }
 
-        public static double GetConsumedMemoryInMB(bool blnforceFullCollection, long lngStartMemoryInByte=0)
+        public static double GetConsumedMemoryInMB(bool blnforceFullCollection, long lngStartMemoryInByte = 0)
         {
             return Math.Round(Convert.ToDouble(GC.GetTotalMemory(blnforceFullCollection) - lngStartMemoryInByte) / 1048576, 3);
         }
@@ -160,7 +160,7 @@ namespace MorphingClass.CUtility
             var strHour = JudgeAndAddZero(DateTime.Now.Hour);
             var strMinute = JudgeAndAddZero(DateTime.Now.Minute);
             var strSecond = JudgeAndAddZero(DateTime.Now.Second);
-            var strMillisecond = JudgeAndAddZero(DateTime.Now.Millisecond,3);
+            var strMillisecond = JudgeAndAddZero(DateTime.Now.Millisecond, 3);
             return DateTime.Now.Year.ToString() + strMonth + strDay + "_" + strHour + strMinute + strSecond + strMillisecond;
         }
 
@@ -186,7 +186,7 @@ namespace MorphingClass.CUtility
 
         public static void Displaytspb(double dblValue, double dblTotal)
         {
-           CConstants.ParameterInitialize.tspbMain.Value = Convert.ToInt32(dblValue * 100 / dblTotal);
+            CConstants.ParameterInitialize.tspbMain.Value = Convert.ToInt32(dblValue * 100 / dblTotal);
         }
 
         /// <summary>
@@ -211,7 +211,7 @@ namespace MorphingClass.CUtility
             }
         }
 
-        public static List<object> GetObjLtByFeatureLayer(IFeatureLayer pFeatureLayer, out List<List<object>> pobjectValueLtLt, 
+        public static List<object> GetObjLtByFeatureLayer(IFeatureLayer pFeatureLayer, out List<List<object>> pobjectValueLtLt,
             string strSpecifiedFieldName = null, string strSpecifiedValue = null)
         {
             IFeatureClass pFeatureClass = pFeatureLayer.FeatureClass;
@@ -222,19 +222,19 @@ namespace MorphingClass.CUtility
 
 
             int intSpecifiedFieldIndex = -1;
-            if (strSpecifiedFieldName!=null )
+            if (strSpecifiedFieldName != null)
             {
-               intSpecifiedFieldIndex = pFeatureClass.FindField(strSpecifiedFieldName);
-               pobjectValueLtLt = new List<List<object>>();
+                intSpecifiedFieldIndex = pFeatureClass.FindField(strSpecifiedFieldName);
+                pobjectValueLtLt = new List<List<object>>();
             }
-           
-            var ObjShapeLt = new List<object>(intFeatureCount);            
+
+            var ObjShapeLt = new List<object>(intFeatureCount);
             for (int i = 0; i < intFeatureCount; i++)
             {
                 IFeature pFeature = pFeatureCursor.NextFeature();
-                if (strSpecifiedFieldName!=null)  //to only get the specified feature
+                if (strSpecifiedFieldName != null)  //to only get the specified feature
                 {
-                    if (pFeature.get_Value(intSpecifiedFieldIndex).ToString()!=strSpecifiedValue)
+                    if (pFeature.get_Value(intSpecifiedFieldIndex).ToString() != strSpecifiedValue)
                     {
                         continue;
                     }
@@ -242,8 +242,8 @@ namespace MorphingClass.CUtility
 
                 TestIGeoAccordingToInput(pFeature.Shape, i);
                 ObjShapeLt.Add(pFeature.Shape);
-                
-                var ObjValueLt = new List<object>(intFieldCount-2);  //we don't need the first two values, i.e., Id and shape
+
+                var ObjValueLt = new List<object>(intFieldCount - 2);  //we don't need the first two values, i.e., Id and shape
                 for (int j = 2; j < intFieldCount; j++)
                 {
                     ObjValueLt.Add(pFeature.get_Value(j));
@@ -265,8 +265,8 @@ namespace MorphingClass.CUtility
         public static IEnumerable<T> GenerateCGeoEbAccordingToGeoEb<T>(IEnumerable<IGeometry> IGeoEb)
         {
             var IGeoEt = IGeoEb.GetEnumerator();
-            int intCount=0;
-            while (IGeoEt.MoveNext ())
+            int intCount = 0;
+            while (IGeoEt.MoveNext())
             {
                 yield return (T)GenerateCGeoAccordingToInput(IGeoEt.Current, intCount++);
             }
@@ -284,7 +284,7 @@ namespace MorphingClass.CUtility
                     var ipg = pGeo as IPolygon4;
                     if (ipg.Length <= 0)
                     {
-                        throw new ArgumentNullException("Polygon "+ intIndex+ " has length 0!");
+                        throw new ArgumentNullException("Polygon " + intIndex + " has length 0!");
                     }
 
                     var pArea = ipg as IArea;
@@ -305,7 +305,7 @@ namespace MorphingClass.CUtility
             }
         }
 
-        public static object GenerateCGeoAccordingToInput(IGeometry pGeo, int intIndex = -2, double dblFactor = 1) 
+        public static object GenerateCGeoAccordingToInput(IGeometry pGeo, int intIndex = -2, double dblFactor = 1)
         {
             object obj = null;
             switch (pGeo.GeometryType)
@@ -318,7 +318,7 @@ namespace MorphingClass.CUtility
                     break;
                 case esriGeometryType.esriGeometryPolyline:            //polyline******************
                     obj = new CPolyline(intIndex, (IPolyline5)pGeo);
-                    break;               
+                    break;
                 default:
                     break;
             }
@@ -445,8 +445,8 @@ namespace MorphingClass.CUtility
         /// </summary>
         /// <returns></returns>
         /// <remarks >we allow at most three items here. the number of items could be increased if necessary</remarks>
-        public static List<T> MakeLt<T>(T item1=null, T item2=null, T item3=null)
-           where T:class
+        public static List<T> MakeLt<T>(T item1 = null, T item2 = null, T item3 = null)
+           where T : class
         {
             List<T> TLt = new List<T>();
 
@@ -474,7 +474,7 @@ namespace MorphingClass.CUtility
         //public static IEnumerable<T> MakeEb<T>(int intCount, T item1, T item2 = null, T item3 = null, T item4 = null, T item5 = null, T item6 = null)
         //   where T : class
         //{
-            
+
         //    if (intCount >= 1)
         //    {
         //        yield return item1;
@@ -510,7 +510,7 @@ namespace MorphingClass.CUtility
         public static List<CPoint> GetCPtLtByIPl(IPolyline5 ipl)
         {
             IGeometryCollection pGeoCol = ipl as IGeometryCollection;
-            if (pGeoCol.GeometryCount>1)
+            if (pGeoCol.GeometryCount > 1)
             {
                 throw new ArgumentException("I didn't consider the problem of multiple polylines!");
             }
@@ -534,8 +534,8 @@ namespace MorphingClass.CUtility
                 throw new ArgumentException("I have not considered such a complicated case! This includes the case that a hole contains other holes! ");
             }
 
-            IRing2 pExteriorRing = (ipg.ExteriorRingBag as IGeometryCollection).get_Geometry(0) as IRing2;            
-            return  GetCptEbByICol(pExteriorRing as IPointCollection4, dblFactor).ToList();            
+            IRing2 pExteriorRing = (ipg.ExteriorRingBag as IGeometryCollection).get_Geometry(0) as IRing2;
+            return GetCptEbByICol(pExteriorRing as IPointCollection4, dblFactor).ToList();
         }
 
         public static IEnumerable<List<CPoint>> GetIpgInteriorCptLtEb(IPolygon4 ipg, double dblFactor = 1)
@@ -548,11 +548,11 @@ namespace MorphingClass.CUtility
 
             IRing2 pExteriorRing = (ipg.ExteriorRingBag as IGeometryCollection).get_Geometry(0) as IRing2;
             IGeometryCollection pGeoColInteriorRing = (IGeometryCollection)ipg.get_InteriorRingBag(pExteriorRing);
-            
+
             for (int i = 0; i < pGeoColInteriorRing.GeometryCount; i++)
             {
-               yield return GetCptEbByICol(pGeoColInteriorRing.get_Geometry(i) as IPointCollection4, dblFactor).ToList();
-            }            
+                yield return GetCptEbByICol(pGeoColInteriorRing.get_Geometry(i) as IPointCollection4, dblFactor).ToList();
+            }
         }
 
 
@@ -596,10 +596,26 @@ namespace MorphingClass.CUtility
 
         public static List<CPoint> CopyCptLt(List<CPoint> cptlt)
         {
-            List<CPoint> copiedcptlt = new List<CPoint>(cptlt.Count );
+            List<CPoint> copiedcptlt = new List<CPoint>(cptlt.Count);
             cptlt.ForEach(cpt => copiedcptlt.Add(cpt.Copy()));
-            
+
             return copiedcptlt;
+        }
+
+
+        public static SortedDictionary<CPoint, CPoint> TestCloseCpts(List<CPoint> cptlt)
+        {
+            var cptSD = cptlt.ToSD(cpt => cpt, CCmpCptYX_VerySmall.sComparer);
+
+            if (cptSD.Count == cptlt.Count)
+            {
+                return cptSD;
+            }
+            else
+            {
+                throw new ArgumentException("some points are too close to each other!");
+                //return false;
+            }
         }
 
         public static IMap GetAllLayers(IMapControl4 m_mapControl, List<bool> blnVisibleLt = null)
@@ -620,7 +636,7 @@ namespace MorphingClass.CUtility
             return mapFeature;
         }
 
-        private static void RecursivelyGetLayers(ILayer pLayer, ref IMap mapFeature, 
+        private static void RecursivelyGetLayers(ILayer pLayer, ref IMap mapFeature,
             List<bool> blnVisibleLt, bool blnVisible)
         {
             if (pLayer is IGroupLayer || pLayer is ICompositeLayer)
@@ -629,7 +645,7 @@ namespace MorphingClass.CUtility
                 for (int j = pComLayer.Count - 1; j >= 0; j--)
                 {
                     ILayer psubLayer = pComLayer.get_Layer(j);
-                    if (pLayer.Visible==false) //if any level is invisible, the lower levels are invisible
+                    if (pLayer.Visible == false) //if any level is invisible, the lower levels are invisible
                     {
                         blnVisible = false;
                     }
@@ -715,9 +731,9 @@ namespace MorphingClass.CUtility
         /// <param name="objltlt"></param>
         /// <param name="intValueIndex"></param>
         /// <param name="intTypeIndexSD"></param>
-        public static void GetCgbTypeAndTypeIndex(IEnumerable<CPolygon> TEb, List<List<object>> objltlt, 
+        public static void GetCgbTypeAndTypeIndex(IEnumerable<CPolygon> TEb, List<List<object>> objltlt,
             int intValueIndex, CValMap_Dt<int, int> TypePVDt)
-            //where CGeo : class
+        //where CGeo : class
         {
             IEnumerator<CPolygon> TEt = TEb.GetEnumerator();
             //IEnumerator<object> objEt = objEb.GetEnumerator();
@@ -771,7 +787,7 @@ namespace MorphingClass.CUtility
         //            //MessageBox.Show("failed to get type index for a type!   In: " + "CHelpFunc.cs");
         //        }
         //    }
-        
+
 
 
         public static IEnumerable<object> JudgeAndSetAEGeometry<T>(IEnumerable<T> pCGeoEb)
@@ -820,7 +836,7 @@ namespace MorphingClass.CUtility
                     cpllt2.Add(CtrlCpl);
                 }
             }
-            
+
             SaveCPlLt(cpllt2, strFileName + "_UnPrecise", pWorkspace, m_mapControl, intRed: 255);
             SaveCPlLt(cpllt1, strFileName + "_Precise", pWorkspace, m_mapControl, intRed: 255);
         }
@@ -853,7 +869,7 @@ namespace MorphingClass.CUtility
             return cpllt;
         }
 
-        
+
 
         /// <summary>
         /// 保存线数据
@@ -864,9 +880,9 @@ namespace MorphingClass.CUtility
         /// <param name="m_mapControl">地图控件</param>
         public static IFeatureLayer SaveCPlLt(List<CPolyline> cpllt, string strFileName, IWorkspace pWorkspace, IMapControl4 m_mapControl, int intRed = 0, int intGreen = 0, int intBlue = 0, double dblWidth = 1)
         {
-            return CSaveFeature.SaveCGeoEb(cpllt, esriGeometryType.esriGeometryPolyline, strFileName, null ,null ,null, intRed, intGreen, intBlue, dblWidth);
+            return CSaveFeature.SaveCGeoEb(cpllt, esriGeometryType.esriGeometryPolyline, strFileName, null, null, null, intRed, intGreen, intBlue, dblWidth);
         }
-        
+
 
         public static void PrintStart(string strName)
         {
@@ -1194,7 +1210,8 @@ namespace MorphingClass.CUtility
         }
 
 
-        public static void CompareAndOrder<T, TOrder>(T T1, T T2, Func<T, TOrder> orderFunc, out T minT, out T maxT, IComparer<TOrder> cmp = null)
+        public static void CompareAndOrder<T, TOrder>(T T1, T T2, Func<T, TOrder> orderFunc,
+            out T minT, out T maxT, IComparer<TOrder> cmp = null)
         {
             if (cmp == null) { cmp = SCG.Comparer<TOrder>.Default; }
             if (cmp.Compare(orderFunc(T1), orderFunc(T2)) <= 0)
@@ -1237,11 +1254,49 @@ namespace MorphingClass.CUtility
             else
             {
                 return T2;
-            }            
+            }
         }
 
 
+        public static T Max<T, TOrder>(T T1, T T2, Func<T, TOrder> orderFunc, Func<T, TOrder> orderFunc2 = null,
+             IComparer<TOrder> cmp = null, IComparer<TOrder> cmp2 = null)
+        {
+            if (cmp == null) { cmp = SCG.Comparer<TOrder>.Default; }
+            int intResult1 = cmp.Compare(orderFunc(T1), orderFunc(T2));
+            if (intResult1 > 0)
+            {
+                return T1;
+            }
+            else if (intResult1 < 0)
+            {
+                return T2;
+            }
+            else
+            {
+                if (orderFunc2 == null)
+                {
+                    return T1;
+                }
+                else
+                {
+                    if (cmp2 == null) { cmp2 = SCG.Comparer<TOrder>.Default; }
+                    int intResult2 = cmp2.Compare(orderFunc2(T1), orderFunc2(T2));
+                    if (intResult2 > 0)
+                    {
+                        return T1;
+                    }
+                    else if (intResult2 < 0)
+                    {
+                        return T2;
+                    }
+                    else
+                    {
+                        return T1;
+                    }
+                }
+            }
+        }
 
-        
+
     }
 }

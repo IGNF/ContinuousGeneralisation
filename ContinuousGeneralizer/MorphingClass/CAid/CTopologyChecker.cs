@@ -53,7 +53,8 @@ namespace MorphingClass.CAid
             for (int i = 0; i < 10; i++)
             {
                 CConstants.dblVerySmallCoord = dblVerySmall / Math.Pow(10, i - 5);
-                List<CIntersection> IntersectionLt = CGeoFunc.DetectIntersections(pAllReadCEdgeLt, true, true, true);
+                var fEdgeGrid = new CEdgeGrid(pAllReadCEdgeLt);
+                var IntersectionLt = fEdgeGrid.DetectIntersectionsOfExistingEdges(true, true, true);
 
                 foreach (var cedge in pAllReadCEdgeLt)
                 {

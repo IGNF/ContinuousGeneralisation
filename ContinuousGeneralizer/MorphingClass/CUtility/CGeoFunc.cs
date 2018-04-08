@@ -49,7 +49,7 @@ namespace MorphingClass.CUtility
         //    CalDistanceParameters<T, T>(pTLt);
         //}
 
-        public static void CalDistanceParameters<T, CGeo>(List<T> pTLt, bool blnCalDistanceParameters = true) 
+        public static void CalDistanceParameters<T, CGeo>(List<T> pTLt, bool blnCalDistanceParameters = true)
             where T : CPolyBase<CGeo>
             where CGeo : class
         {
@@ -62,7 +62,7 @@ namespace MorphingClass.CUtility
             {
                 dblMidLength = 1;
             }
-            
+
             CConstants.dblMidLength = dblMidLength;
             //CConstants.dblSmallDis = dblMidLength / CConstants.dblSmallDisDenominator;
             CConstants.dblVerySmallCoord = dblMidLength / CConstants.dblVerySmallDenominator;
@@ -73,7 +73,7 @@ namespace MorphingClass.CUtility
         /// <param name="CPlLt">大比例尺线段数组</param>
         /// <returns>极小值</returns>
         /// <remarks>计算方法：所有线段长度中值，然后再除以1000</remarks>
-        public static double CalMidLength<T, CGeo>(List<T> pTLt) 
+        public static double CalMidLength<T, CGeo>(List<T> pTLt)
             where T : CPolyBase<CGeo>
             where CGeo : class
         {
@@ -96,9 +96,9 @@ namespace MorphingClass.CUtility
 
         public static double CalLengthForCptEb(IEnumerable<CPoint> cptEb)
         {
-            var cptEt = cptEb.GetEnumerator();            
+            var cptEt = cptEb.GetEnumerator();
             cptEt.MoveNext();
-            var lastcpt=cptEt.Current;
+            var lastcpt = cptEt.Current;
 
             double dblLength = 0;
             while (cptEt.MoveNext())
@@ -174,7 +174,7 @@ namespace MorphingClass.CUtility
 
 
 
-       
+
 
 
 
@@ -258,7 +258,7 @@ namespace MorphingClass.CUtility
         /// <returns></returns>
         public static double CalHeightCptCEdge(CPoint cpt, CEdge cedge)
         {
-            if (cedge.blnHasSlope==true)
+            if (cedge.blnHasSlope == true)
             {
                 return Math.Abs(cedge.dblYIntercept + cedge.dblSlope * cpt.X - cpt.Y) * cedge.dblValueForDis;
             }
@@ -282,7 +282,7 @@ namespace MorphingClass.CUtility
         }
 
 
-        public static CptEdgeDis CalDisBetweenCptCEdge(CPoint cpt, CEdge cedge, bool blnHeight = false, CEdge thisCEdge=null)
+        public static CptEdgeDis CalDisBetweenCptCEdge(CPoint cpt, CEdge cedge, bool blnHeight = false, CEdge thisCEdge = null)
         {
             cedge.JudgeAndSetLength();
             CPoint projection;
@@ -518,7 +518,7 @@ namespace MorphingClass.CUtility
         public static CPoint QueryCPointByLength(CPoint querycpt, int intTargetIndex, List<CPoint> targetcptlt)
         {
             double dblRatioOnTargetEdge = (querycpt.dblRatioLengthFromStart - targetcptlt[intTargetIndex - 1].dblRatioLengthFromStart) / (targetcptlt[intTargetIndex].dblRatioLengthFromStart - targetcptlt[intTargetIndex - 1].dblRatioLengthFromStart);
-            return  GetInbetweenCpt(targetcptlt[intTargetIndex - 1], targetcptlt[intTargetIndex], dblRatioOnTargetEdge);
+            return GetInbetweenCpt(targetcptlt[intTargetIndex - 1], targetcptlt[intTargetIndex], dblRatioOnTargetEdge);
 
         }
 
@@ -546,7 +546,7 @@ namespace MorphingClass.CUtility
             }
         }
 
-        
+
 
         //public static void RemoveStandardVectorCpt(List<CPolyline> cpllt, CPoint StandardVectorCpt)
         //{
@@ -577,7 +577,7 @@ namespace MorphingClass.CUtility
         public static double CalInbetweenCptProportion(CPoint cpt, CPoint frcpt, CPoint tocpt)
         {
             double dblXDiff = tocpt.X - frcpt.X;
-            if (CCmpMethods.CmpCoordDbl_VerySmall(dblXDiff,0)!=0)
+            if (CCmpMethods.CmpCoordDbl_VerySmall(dblXDiff, 0) != 0)
             {
                 return ((cpt.X - frcpt.X) / dblXDiff);
             }
@@ -1000,7 +1000,7 @@ namespace MorphingClass.CUtility
 
         /// <summary>计算向量与坐标横轴的夹角[0, 2*Pi)</summary>
         /// <returns>夹角弧度值</returns>
-        /// <remarks>为什么不用Math.Atan2，因为该值的范围是[-Pi, Pi]</remarks>
+        /// <remarks>Math.Atan2, [-Pi, Pi]</remarks>
         public static double CalAxisAngle(double dblX, double dblY)
         {
             return CheckPlus2PI(Math.Atan2(dblY, dblX));
@@ -1008,6 +1008,8 @@ namespace MorphingClass.CUtility
 
         public static double CheckPlus2PI(double dblAxisAngle)
         {
+            dblAxisAngle= CCmpMethods.SnapValueToTarget(dblAxisAngle, 0, CConstants.dblVerySmallConst);
+
             if (dblAxisAngle < 0)
             {
                 dblAxisAngle += CConstants.dblTwoPI;
@@ -1317,13 +1319,13 @@ namespace MorphingClass.CUtility
 
         //public static void Test<T, CGeo>(CPolyBase<CGeo> cpg) where CGeo : class
         //{
-            
+
         //}
 
-        public static List<CEdge> GetCEdgeLtFromCpbLt<Cpb, CGeo>(IEnumerable<Cpb> fcpbeb) 
+        public static List<CEdge> GetCEdgeLtFromCpbLt<Cpb, CGeo>(IEnumerable<Cpb> fcpbeb)
             where Cpb : CPolyBase<CGeo>
-            where CGeo: class
-        {            
+            where CGeo : class
+        {
             List<CEdge> CEdgeLt = new List<CEdge>();
             foreach (var cpb in fcpbeb)
             {
@@ -1638,7 +1640,7 @@ namespace MorphingClass.CUtility
         }
         #endregion
 
-        
+
 
 
         public static CEdge DetectCloestLeftCEdge(CPoint rayfrcpt, CEdgeGrid pEdgeGrid)
@@ -1734,7 +1736,7 @@ namespace MorphingClass.CUtility
             var adjustedintersectionrightmost = adjustedraycedge.IntersectWith(pIntersectionRightMost.CEdge2);
             var adjustedintersection = adjustedraycedge.IntersectWith(pIntersection.CEdge2);
 
-            if (adjustedintersectionrightmost.IntersectCpt.X>adjustedintersection.IntersectCpt.X)
+            if (adjustedintersectionrightmost.IntersectCpt.X > adjustedintersection.IntersectCpt.X)
             {
                 return pIntersectionRightMost;
             }
@@ -1769,7 +1771,7 @@ namespace MorphingClass.CUtility
             {
                 return null;
             }
-            
+
         }
 
 
@@ -1782,79 +1784,6 @@ namespace MorphingClass.CUtility
             }
 
             return pRingCol as IRing2;
-        }
-
-        ///// <summary>Detect intersections of edges</summary>
-        ///// <remarks>
-        ///// enumIntersectionType can be -1, 0, 1, 2, 3, 4
-        ///// -1, not intersection; 3, intersection
-        ///// one has to specify type 0, types 1 & 2, and type 4 respectively by blnTouchBothEnds, blnTouchEndEdge, and blnOverlap
-        ///// </remarks>
-        //public static List<CIntersection> DetectIntersections(List<CPolyline> cpllt, bool blnTouchBothEnds, bool blnTouchEndEdge, bool blnOverlap)
-        //{
-        //    List<CEdge> CEdgeLt = new List<CEdge>(cpllt.GetCountCpt<CPolyline, CPolyline>() - cpllt.Count);
-        //    foreach (CPolyline cpl in cpllt)
-        //    {
-        //        CEdgeLt.AddRange(cpl.CEdgeLt);
-        //    }
-
-        //    return DetectIntersections(CEdgeLt, blnTouchBothEnds, blnTouchEndEdge, blnOverlap);
-        //}
-
-        /// <summary>Detect intersections of edges</summary>
-        /// <remarks>
-        /// enumIntersectionType can be -1, 0, 1, 2, 3, 4
-        /// -1, not intersection; 3, intersection
-        /// one has to specify type 0, types 1 & 2, and type 4 respectively by blnTouchBothEnds, blnTouchEndEdge, and blnOverlap
-        /// </remarks>
-        public static List<CIntersection> DetectIntersections(List<CEdge> cedgelt,
-            bool blnTouchBothEnds = false, bool blnTouchEndEdge = false, bool blnOverlap = false)
-        {
-            List<CIntersection> IntersectionLt = new List<CIntersection>();
-            foreach (CEdge cedge in cedgelt)
-            {
-                cedge.isTraversed = false;
-                cedge.IntersectLt = new List<CIntersection>();
-            }
-
-            var pEdgeGrid = new CEdgeGrid(cedgelt);   //put edges in the cells of a grid
-            foreach (CEdge cedge in cedgelt)
-            {
-                cedge.isTraversed = true;
-                var TraversedCEdgeLt = new List<CEdge>();
-
-                foreach (var RowColVp in cedge.RowColVpLt)
-                {
-                    foreach (var pcedge in pEdgeGrid.aCEdgeLtCell[RowColVp.val1, RowColVp.val2])
-                    {
-                        if (pcedge.isTraversed == true)
-                        {
-                            continue;
-                        }
-
-                        pcedge.isTraversed = true;
-                        TraversedCEdgeLt.Add(pcedge);   
-
-                        CIntersection pIntersection = cedge.IntersectWith(pcedge);
-                        if (pIntersection.JudgeIntersect(blnTouchBothEnds, blnTouchEndEdge, blnOverlap))
-                        {
-                            IntersectionLt.Add(pIntersection);  //record the intersection in the whole Lt
-                            cedge.IntersectLt.Add(pIntersection);  //record the intersection in the CEdge
-                                                                   //add the intersection to the other edge
-                            pcedge.IntersectLt.Add(pIntersection.ReverseIntersection());
-                        }
-
-                    }
-                }
-
-                //Set the TraversedCEdge to false
-                foreach (CEdge TraversedCEdge in TraversedCEdgeLt)
-                {
-                    TraversedCEdge.isTraversed = false;
-                }
-            }
-
-            return IntersectionLt;
         }
 
         /// <summary>Detect intersections of edges</summary>
@@ -1904,7 +1833,7 @@ namespace MorphingClass.CUtility
                                 pcedge.isTraversed = true;
                                 // we will set IsTraversed of these TraversedCEdge to false 
                                 //after looking for intersection for this cedge
-                                TraversedCEdgeLt.Add(pcedge);    
+                                TraversedCEdgeLt.Add(pcedge);
 
                                 CEdgeRelation pEdgeRelation = new CEdgeRelation(cedge, pcedge);
                                 pEdgeRelation.DetectRelation();
@@ -1954,7 +1883,7 @@ namespace MorphingClass.CUtility
         //Compute the dot product AB . AC
         public static double DotProduct(CPoint A, CPoint B, CPoint C)
         {
-            return DotProduct(B.X - A.X, B.Y - A.Y, C.X - A.X, C.Y - A.Y);            
+            return DotProduct(B.X - A.X, B.Y - A.Y, C.X - A.X, C.Y - A.Y);
         }
 
         public static double DotProduct(double dblVecX1, double dblVecY1, double dblVecX2, double dblVecY2)
@@ -1991,7 +1920,7 @@ namespace MorphingClass.CUtility
             List<List<CEdge>> cedgeltlt = new List<List<CEdge>>();
             foreach (var cpteb in cptebeb)
             {
-                cedgeltlt.Add(FormCEdgeEb(cpteb).ToList ());
+                cedgeltlt.Add(FormCEdgeEb(cpteb).ToList());
             }
             return cedgeltlt;
         }
@@ -2155,9 +2084,9 @@ namespace MorphingClass.CUtility
         }
 
 
-        public static CPolygon CreateRegularCpg(IEnvelope pEnv, int intNumber = 3)
+        public static CPolygon CreateRegularCpg(IEnvelope pEnv, int intNumber = 3, bool blnClockwise=true)
         {
-            return CreateRegularCpg(pEnv.XMin, pEnv.YMin, pEnv.Width / 2, intNumber);
+            return CreateRegularCpg(pEnv.XMin, pEnv.YMin, pEnv.Width / 2, intNumber, blnClockwise);
         }
 
         public static double CalCompRegularPolygon(int intEdgeNum)
@@ -2182,7 +2111,8 @@ namespace MorphingClass.CUtility
         //    return CreateRegularCpg(centrecpt.X, centrecpt.Y, dblRadius, intNumber);
         //}
 
-        public static CPolygon CreateRegularCpg(double dblCentreX = 0, double dblCentreY = 0, double dblRadius = 1, int intNumber = 3)
+        public static CPolygon CreateRegularCpg(double dblCentreX = 0, double dblCentreY = 0, 
+            double dblRadius = 1, int intNumber = 3, bool blnClockwise = true)
         {
             double dblAngleInterval = CConstants.dblTwoPI / intNumber;
             double dblAxisAngle = Math.PI / 2;
@@ -2190,7 +2120,15 @@ namespace MorphingClass.CUtility
             cptlt.Add(new CPoint(0, dblCentreX, dblCentreY + dblRadius));
             for (int i = 0; i < intNumber; i++)
             {
-                dblAxisAngle += dblAngleInterval;
+                if (blnClockwise == true)
+                {
+                    dblAxisAngle -= dblAngleInterval;
+                }
+                else
+                {
+                    dblAxisAngle += dblAngleInterval;
+                }
+
                 cptlt.Add(new CPoint(i + 1, dblCentreX + dblRadius * Math.Cos(dblAxisAngle),
                     dblCentreY + dblRadius * Math.Sin(dblAxisAngle)));
             }
@@ -2207,7 +2145,7 @@ namespace MorphingClass.CUtility
         /// <param name="intID"></param>
         /// <returns></returns>
         /// <remarks>there should be no holes in the merged polygons; any of the merged polygons should touch at least another one</remarks>
-        public static CPolygon MergeCpgLtDCEL(IEnumerable <CPolygon> CpgEb, int intID = -1)
+        public static CPolygon MergeCpgLtDCEL(IEnumerable<CPolygon> CpgEb, int intID = -1)
         {
             var CEdgeLt = GetCEdgeLtFromCpbLt<CPolygon, CPolygon>(CpgEb);
 
@@ -2360,7 +2298,7 @@ namespace MorphingClass.CUtility
                 succpt = cptlt[llcpt.indexID + 1];
             }
 
-            return IsClockwise( precpt, llcpt,  succpt);            
+            return IsClockwise(precpt, llcpt, succpt);
         }
 
         public static bool IsClockwise(CPoint precpt, CPoint midcpt, CPoint succpt)
@@ -2375,7 +2313,7 @@ namespace MorphingClass.CUtility
             {
                 return false;
             }
-            else
+            else //it's impossible that dblAngle == Math.PI
             {
                 throw new ArgumentException("what happened about the angle?");
             }

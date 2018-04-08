@@ -148,7 +148,8 @@ namespace MorphingClass.CGeometry
         //public CPoint QueryPointByDistances(double distanceAlongCurve, bool basRatioAlong, double distanceFromCurve, bool bRightSide)
         //{
         //    ILine pNomalLine = new LineClass();
-        //    this._pLine.QueryNormal(esriSegmentExtension.esriExtendEmbedded, distanceAlongCurve, basRatioAlong, distanceFromCurve, pNomalLine);
+        //    this._pLine.QueryNormal(esriSegmentExtension.esriExtendEmbedded, 
+        //distanceAlongCurve, basRatioAlong, distanceFromCurve, pNomalLine);
         //    //this.SetEmpty();
         //    IPoint outpoint = new PointClass();
         //    if (bRightSide == true)
@@ -208,9 +209,14 @@ namespace MorphingClass.CGeometry
             return pIntersection.JudgeIntersect(blnTouchBothEnds, blnTouchEndEdge, blnOverlap);
         }
 
+        /// <summary>
+        /// It turns out that we do not really need this function
+        /// </summary>
+        /// <param name="pcedge"></param>
+        /// <returns></returns>
         public bool IsTouchWith(CEdge pcedge)
         {
-            var pIntersection = new CIntersection(this, pcedge);
+           var pIntersection = new CIntersection(this, pcedge);
            return pIntersection.IsTouch();
         }
 
@@ -483,7 +489,8 @@ namespace MorphingClass.CGeometry
 
             if (this.cedgePrev != null)
             {
-                Console.WriteLine("Previous GID: " + this.cedgePrev.GID + "    Next GID: " + this.cedgeNext.GID + "    Twin GID:" + this.cedgeTwin.GID);
+                Console.WriteLine("Previous GID: " + this.cedgePrev.GID + 
+                    "    Next GID: " + this.cedgeNext.GID + "    Twin GID:" + this.cedgeTwin.GID);
             }
             Console.WriteLine("***********************End Print an Edge**************************");
             Console.WriteLine("");

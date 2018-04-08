@@ -28,7 +28,9 @@ namespace MorphingClass.CMorphingMethods
         //protected CEvaluation _Evaluation = new CEvaluation();
 
         protected int _intMaxBackKforI = 5;
-        protected int _intMulti = 1;  //sometimes we need to look for the smallest sufficient look-back parameter, so we need to test a series (_intMulti) look-back parameters
+        //sometimes we need to look for the smallest sufficient look-back parameter, 
+        //so we need to test a series (_intMulti) look-back parameters
+        protected int _intMulti = 1;  
         protected int _intIncrease = 1;
         protected List < List<CPoint>> FrCptLtLt { get; set; }
         protected List<List<CPoint>>  ToCptLtLt { get; set; }
@@ -68,9 +70,11 @@ namespace MorphingClass.CMorphingMethods
             var pObjValueLtLtLt = this.ObjValueLtLtLt;
 
             //var intFieldIndex = pParameterInitialize.pFLayerLt[0].FeatureClass.FindField(pParameterInitialize.txtAttributeOfKnown.Text);
-            //if (intFieldIndex == -1)  //try to add an attribute, if this attribute is already existed, then do nothing, otherwise, add this attribute and set value to -1
+            //try to add an attribute, if this attribute is already existed, then do nothing, otherwise, add this attribute and set value to -1
+            //if (intFieldIndex == -1)  
             //{
-            //    intFieldIndex = CSaveFeature.AddField(pParameterInitialize.pFLayerLt[0].FeatureClass, esriFieldType.esriFieldTypeDouble, pParameterInitialize.txtAttributeOfKnown.Text);
+            //    intFieldIndex = CSaveFeature.AddField(pParameterInitialize.pFLayerLt[0].FeatureClass, 
+            //      esriFieldType.esriFieldTypeDouble, pParameterInitialize.txtAttributeOfKnown.Text);
             //    //CSaveFeature.SetFieldValue(pParameterInitialize.pFLayerLt[0].FeatureClass, intFieldIndex, -1);
 
             //    this.strFieldNameLtLt[0].Add(pParameterInitialize.txtAttributeOfKnown.Text);
@@ -92,7 +96,8 @@ namespace MorphingClass.CMorphingMethods
             //delegation of morphing method
             DlgCreateTable dlgCreateTable = SetDlgCreateTable(pParameterInitialize.cboMorphingMethod.Text);
             _pEvaluation = new CEvaluation(pParameterInitialize.cboEvaluationMethod.SelectedIndex);
-            var StandardVectorCpt = SetStandardVectorCpt(pParameterInitialize.cboStandardVector.SelectedIndex, pFrCptLtLt[0].First(), pToCptLtLt[0].First());
+            var StandardVectorCpt = SetStandardVectorCpt(pParameterInitialize.cboStandardVector.SelectedIndex, 
+                pFrCptLtLt[0].First(), pToCptLtLt[0].First());
 
             long lngStartTime1 = System.Environment.TickCount;  //lngTime1
 
@@ -125,11 +130,6 @@ namespace MorphingClass.CMorphingMethods
 
             for (int i = 0; i < intMulti; i++)
             {
-                //CSaveFeature CsfCtrlpl = new CSaveFeature(esriGeometryType.esriGeometryPolyline, pParameterInitialize.strMorphingMethod + "CtrlLine" + "_" + intMaxBackKforI, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl, blnVisible: false);
-                //CSaveFeature CsfCorrpl = new CSaveFeature(esriGeometryType.esriGeometryPolyline, pParameterInitialize.strMorphingMethod + "CorrLine" + "_" + intMaxBackKforI, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl, blnVisible: false);
-                //CSaveFeature CsfInter1 = new CSaveFeature(esriGeometryType.esriGeometryPolyline, "Inter" + pParameterInitialize.pFLayerLt[1].Name + "_" + intMaxBackKforI, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl, blnVisible: false);
-                //CSaveFeature CsfInter0 = new CSaveFeature(esriGeometryType.esriGeometryPolyline, "Inter" + pParameterInitialize.pFLayerLt[0].Name + "_" + intMaxBackKforI, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl, blnVisible: false);
-                //CExcelSaver pExcelSaver = new CExcelSaver(pParameterInitialize.strSavePathBackSlash + "TimeRecorder_" + intMaxBackKforI);
 
                 //Stopwatch pStopwatch2 = Stopwatch.StartNew();
                 double dblTotalDistance = 0;
@@ -160,7 +160,7 @@ namespace MorphingClass.CMorphingMethods
                         {
                             //Console.WriteLine("intMulti= " + i + ",  Line ID:" + j + ",  Segment ID:" + k);
                             var Table = dlgCreateTable(frcptltlt[k], tocptltlt[k], intMaxBackKforI, intMaxBackKforJ);
-                            dblDistance += Table.dblEvaluation;
+                            dblDistance += Table.dblCost;
 
                             //Console.WriteLine("cost:  " + dblDistance);
                             TableLt.Add(Table);
@@ -172,18 +172,20 @@ namespace MorphingClass.CMorphingMethods
 
                         CGeoFunc.RemoveStandardVectorCpt(pFrCptLtLt [j], StandardVectorCpt);
                         List<CCorrCpts> CtrlCptsLt;
-                        var pCorrCptsLt = GetCorrespondences(TableLt, frcptltlt, tocptltlt, pFrCptLtLt[j].Count, pToCptLtLt[j].Count, out CtrlCptsLt);
+                        var pCorrCptsLt = GetCorrespondences(TableLt, frcptltlt, 
+                            tocptltlt, pFrCptLtLt[j].Count, pToCptLtLt[j].Count, out CtrlCptsLt);
                         pCorrCptsLtLt.Add(pCorrCptsLt);
                         pCtrlCptsLtLt.Add(CtrlCptsLt);
 
-
-                        CHelpFunc.SetMoveVectorForCorrCptsLt(pCorrCptsLt);   //this will also set MoveVector for CtrlCptsLt
+                        //this will also set MoveVector for CtrlCptsLt
                         //CsfInter0.SaveIGeoEbToLayer(CHelpFunc.MakeEb(1, GenerateInterpolatedIPl(pCorrCptsLt, 0)));
                         //CsfInter1.SaveIGeoEbToLayer(CHelpFunc.MakeEb(1, GenerateInterpolatedIPl(pCorrCptsLt, 1)));
                         //CsfCtrlpl.SaveIGeoEbToLayer(GenerateCorrIPlEb(CtrlCptsLt));
                         //CsfCorrpl.SaveIGeoEbToLayer(GenerateCorrIPlEb(pCorrCptsLt));
-                        
-                        //if the look-back parameter is larger than the points number of a pair of polylines, than we don't need to try a larger look-back parameter
+                        CHelpFunc.SetMoveVectorForCorrCptsLt(pCorrCptsLt);
+
+                        //if the look-back parameter is larger than the points number of a pair of polylines, 
+                        //than we don't need to try a larger look-back parameter
                         //Therefore, we record the distance for the two polylines
                         //if (intMaxBackKforI >= (pFrCptLtLt[j].Count - 1) && intMaxBackKforJ >= (pToCptLtLt[j].Count - 1))
                         //{
@@ -200,7 +202,8 @@ namespace MorphingClass.CMorphingMethods
                         //        }
                         //    }
                         //}
-                        //pExcelSaver.WriteLine(CHelpFunc.MakeEb<object>(5, j, pLSCPlLt[j].CptLt.Count, pSSCPlLt[j].CptLt.Count, dblDistance, pStopwatch2.ElapsedMilliseconds));
+                        //pExcelSaver.WriteLine(CHelpFunc.MakeEb<object>(5, j, 
+                        //pLSCPlLt[j].CptLt.Count, pSSCPlLt[j].CptLt.Count, dblDistance, pStopwatch2.ElapsedMilliseconds));
                     }
                     dblTotalDistance += dblDistance;
                 }
@@ -224,8 +227,10 @@ namespace MorphingClass.CMorphingMethods
 
             double dblStandardLength = CGeoFunc.CalDis(0, 0, StandardVectorCpt.X, StandardVectorCpt.Y);
             intMaxBackKforI--;
-            CHelpFunc.SaveCtrlLine(pCtrlCptsLtLt, intMaxBackKforI + "_" + CConstants.strMethod + "CtrlLine", dblStandardLength, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
-            CHelpFunc.SaveCorrLine(pCorrCptsLtLt, intMaxBackKforI + "_" + CConstants.strMethod + "CorrLine", pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
+            CHelpFunc.SaveCtrlLine(pCtrlCptsLtLt, intMaxBackKforI + "_" + CConstants.strMethod + "CtrlLine", 
+                dblStandardLength, pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
+            CHelpFunc.SaveCorrLine(pCorrCptsLtLt, intMaxBackKforI + "_" + CConstants.strMethod + "CorrLine", 
+                pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
 
             CHelpFunc.SetMoveVectorForCorrCptsLtLt(_CorrCptsLtLt);
 
@@ -236,32 +241,6 @@ namespace MorphingClass.CMorphingMethods
             _ParameterResult = ParameterResult;
             return ParameterResult;
         }
-
-
-
-
-        ///// <summary>创建T矩阵</summary>
-        ///// <param name="frcpl">大比例尺线状要素</param>
-        ///// <param name="tocpl">小比例尺线状要素</param> 
-        ///// <param name="CFrEdgeLt">大比例尺线段（可能只是线状要素的一部分）</param>  
-        /////  <param name="CToEdgeLt">小比例尺线段（可能只是线状要素的一部分）</param> 
-        ///// <param name="intMaxBackKforI">回溯系数</param> 
-        ///// <returns>对应线段</returns>
-        //public C5.LinkedList<CCorrespondSegment> DWByOptCor(CPolyline frcpl, CPolyline tocpl, List<CPolyline> CFrEdgeLt, List<CPolyline> CToEdgeLt, int intMaxBackKforI)
-        //{
-        //    List<CPolyline> frlastcpllt = new List<CPolyline>(frcpl.CptLt.Count - 1);
-        //    List<CPolyline> tolastcpllt = new List<CPolyline>(frcpl.CptLt.Count - 1);
-        //    CTable Table = CreatT(frcpl, tocpl, CFrEdgeLt, CToEdgeLt, ref frlastcpllt, ref tolastcpllt, intMaxBackKforI);  //创建T矩阵
-        //    C5.LinkedList<CCorrespondSegment> pCorrespondSegmentLk = GetCorrespondences(T, frcpl, tocpl, CFrEdgeLt, CToEdgeLt, frlastcpllt, tolastcpllt);
-
-        //    return pCorrespondSegmentLk;
-
-        //}
-
-
-
-
-
 
 
 
@@ -292,12 +271,13 @@ namespace MorphingClass.CMorphingMethods
                 {
                     int intBackKforJ = Math.Min(j, intMaxBackKforJ);   //程序刚开始执行时，之前已遍历过线段数较少，可能小于intMaxBackKforI
 
-                    CCell minCCell = new CCell();
-                    minCCell.dblEvaluation = CConstants.dblHalfDoubleMax;
-
-                    minCCell = CHelpFunc.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 0, 1, 0, 1), minCCell, table => table.dblEvaluation);  //including 0 to 1, 1 to 0, 1 to 1
-                    minCCell = CHelpFunc.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 2, intBackKforI, 1, 1), minCCell, table => table.dblEvaluation); //including 2 to 1 until intBackKforI to 1
-                    minCCell = CHelpFunc.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 1, 1, 2, intBackKforJ), minCCell, table => table.dblEvaluation); //including 1 to 2 until 1 to intBackKforJ
+                    var minCCell = new CCell(0,0, CConstants.dblHalfDoubleMax);
+                    minCCell = CHelpFunc.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 0, 1, 0, 1), 
+                        minCCell, ccell => ccell.dblCost);  //including 0 to 1, 1 to 0, 1 to 1
+                    minCCell = CHelpFunc.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 2, intBackKforI, 1, 1), 
+                        minCCell, ccell => ccell.dblCost); //including 2 to 1 until intBackKforI to 1
+                    minCCell = CHelpFunc.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 1, 1, 2, intBackKforJ), 
+                        minCCell, ccell => ccell.dblCost); //including 1 to 2 until 1 to intBackKforJ
 
                     Table.aCell[i, j] = minCCell;
                 }
@@ -322,8 +302,10 @@ namespace MorphingClass.CMorphingMethods
             int intFrPtNum = frcptlt.Count;
             int intToPtNum = tocptlt.Count;
 
-            AdjustMaxBackK(ref intMaxBackKforI, intMaxBackKforI, intFrPtNum, intToPtNum);  //if we used a relatively small intMaxBackKforJ, then we check whether this intMaxBackKforJ would be enough to avoid point-segment correspondences
-            AdjustMaxBackK(ref intMaxBackKforJ, intMaxBackKforI, intToPtNum, intFrPtNum);  //if we used a relatively small intMaxBackKforJ, then we check whether this intMaxBackKforJ would be enough to avoid point-segment correspondences
+            //if we used a relatively small intMaxBackKforJ, 
+            //then we check whether this intMaxBackKforJ would be enough to avoid point-segment correspondences
+            AdjustMaxBackK(ref intMaxBackKforI, intMaxBackKforI, intFrPtNum, intToPtNum);  
+            AdjustMaxBackK(ref intMaxBackKforJ, intMaxBackKforI, intToPtNum, intFrPtNum);
 
             //T is the two dimensional table, which will be returned as the result.
             //T.aCell[i, j].dblEvaluation is actually the cost till the ends of i segments on polyline frcpl and j segments on polyline tocpl
@@ -338,11 +320,11 @@ namespace MorphingClass.CMorphingMethods
             //The first 10 segments of frcpl have to correspond to the first point of tocpl.
             for (int i = 1; i < intFrPtNum; i++)
             {
-                Table.aCell[i, 0].dblEvaluation = Table.aCell[i, 0].dblEvaluation + CConstants.dblHalfDoubleMax;  //CConstants.dblHalfDoubleMax is a very large number
+                Table.aCell[i, 0].dblCost = Table.aCell[i, 0].dblCost + CConstants.dblHalfDoubleMax;  //CConstants.dblHalfDoubleMax is a very large number
             }
             for (int j = 1; j < intToPtNum; j++)
             {
-                Table.aCell[0, j].dblEvaluation = Table.aCell[0, j].dblEvaluation + CConstants.dblHalfDoubleMax;  //CConstants.dblHalfDoubleMax is a very large number
+                Table.aCell[0, j].dblCost = Table.aCell[0, j].dblCost + CConstants.dblHalfDoubleMax;  //CConstants.dblHalfDoubleMax is a very large number
             }
 
             //compute other rows and columns of table Table
@@ -353,12 +335,13 @@ namespace MorphingClass.CMorphingMethods
                 {
                     int intBackKforJ = Math.Min(j, intMaxBackKforJ);   //at some beginning steps, the number of traversed segments is smaller than the look-back parameter
 
-                    CCell minCCell = new CCell();
-                    minCCell.dblEvaluation = CConstants.dblHalfDoubleMax;  //CConstants.dblHalfDoubleMax is a very large number
-
-                    minCCell = CHelpFunc.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 1, 1, 1, 1), minCCell, table => table.dblEvaluation);  //only including 1 segment to 1 segment
-                    minCCell = CHelpFunc.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 2, intBackKforI, 1, 1), minCCell, table => table.dblEvaluation); //including 2 segments to 1 segment until intBackKforI segments to 1 segment
-                    minCCell = CHelpFunc.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 1, 1, 2, intBackKforJ), minCCell, table => table.dblEvaluation); //including 1 segment to 2 segments until 1 segment to intBackKforJ segments
+                    var minCCell = new CCell(0, 0, CConstants.dblHalfDoubleMax);
+                    minCCell = CHelpFunc.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 1, 1, 1, 1), 
+                        minCCell, ccell => ccell.dblCost);  //only including 1 segment to 1 segment
+                    minCCell = CHelpFunc.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 2, intBackKforI, 1, 1), 
+                        minCCell, ccell => ccell.dblCost); //including 2 segments to 1 segment until intBackKforI segments to 1 segment
+                    minCCell = CHelpFunc.Min(TraverseBack(ref Table, i, j, frcptlt, tocptlt, 1, 1, 2, intBackKforJ), 
+                        minCCell, ccell => ccell.dblCost); //including 1 segment to 2 segments until 1 segment to intBackKforJ segments
 
                     Table.aCell[i, j] = minCCell;
                 }
@@ -417,12 +400,12 @@ namespace MorphingClass.CMorphingMethods
             //we do this because when the look-back parameter is not enough, we have to "allow" 0-1 matching 
             for (int i = 1; i < intFrPtNum; i++)
             {
-                Table.aCell[i, 0].dblEvaluation = Table.aCell[i, 0].dblEvaluation + CConstants.dblHalfDoubleMax;
+                Table.aCell[i, 0].dblCost = Table.aCell[i, 0].dblCost + CConstants.dblHalfDoubleMax;
             }
 
             for (int j = 1; j < intToPtNum; j++)
             {
-                Table.aCell[0, j].dblEvaluation = Table.aCell[0, j].dblEvaluation + CConstants.dblHalfDoubleMax;
+                Table.aCell[0, j].dblCost = Table.aCell[0, j].dblCost + CConstants.dblHalfDoubleMax;
             }
 
             for (int i = 1; i < intFrPtNum; i++)               //计算各空格值
@@ -486,27 +469,29 @@ namespace MorphingClass.CMorphingMethods
         /// <param name="intMinBackKforJ">We will traverse back one segment by one segment from intJ-intMinBackKforJ to intJ-intMaxBackKforJ</param>
         /// <param name="intMaxBackKforJ">We will traverse back one segment by one segment from intJ-intMinBackKforJ to intJ-intMaxBackKforJ</param>
         /// <returns>the CCell with minimum dblEvaluation among all the CTables</returns>
-        private CCell TraverseBack(ref CTable T, int intI, int intJ, List<CPoint> frcptlt, List<CPoint> tocptlt, int intMinBackKforI, int intMaxBackKforI, int intMinBackKforJ, int intMaxBackKforJ)
+        private CCell TraverseBack(ref CTable T, int intI, int intJ, List<CPoint> frcptlt, List<CPoint> tocptlt, 
+            int intMinBackKforI, int intMaxBackKforI, int intMinBackKforJ, int intMaxBackKforJ)
         {
-            CCell minCCell = new CCell();
-            minCCell.dblEvaluation = CConstants.dblHalfDoubleMax;
+            var minCCell = new CCell(0, 0, CConstants.dblHalfDoubleMax);
             if (intMinBackKforI == 0)   //we do this separately because we don't need to traverse when k1==0
             {
-                minCCell = CHelpFunc.Min(CalCell(ref T, intI, intJ, 0, 1, frcptlt, tocptlt), minCCell, table => table.dblEvaluation);
+                minCCell = CHelpFunc.Min(CalCell(ref T, intI, intJ, 0, 1, frcptlt, tocptlt), minCCell, ccell => ccell.dblCost);
                 intMinBackKforI++;
             }
 
             if (intMinBackKforJ == 0)   //we do this separately because we don't need to traverse when k2==0
             {
-                minCCell = CHelpFunc.Min(CalCell(ref T, intI, intJ, 1, 0, frcptlt, tocptlt), minCCell, table => table.dblEvaluation);
+                minCCell = CHelpFunc.Min(CalCell(ref T, intI, intJ, 1, 0, frcptlt, tocptlt), minCCell, ccell => ccell.dblCost);
                 intMinBackKforJ++;
             }
 
             for (int k1 = intMinBackKforI; k1 <= intMaxBackKforI; k1++)
             {
-                for (int k2 = intMinBackKforJ; k2 <= intMaxBackKforJ; k2++)   //k1 and k2 can be 0 at the same time because we have already set T.aCell[i, j].dblEvaluation = double.MaxValue. So it doesn't matter
+                for (int k2 = intMinBackKforJ; k2 <= intMaxBackKforJ; k2++)   
                 {
-                    minCCell = CHelpFunc.Min(CalCell(ref T, intI, intJ, k1, k2, frcptlt, tocptlt), minCCell, table => table.dblEvaluation);
+                    //k1 and k2 can be 0 at the same time because we have already set T.aCell[i, j].dblEvaluation = double.MaxValue. 
+                    //So it doesn't matter
+                    minCCell = CHelpFunc.Min(CalCell(ref T, intI, intJ, k1, k2, frcptlt, tocptlt), minCCell, ccell => ccell.dblCost);
                 }
             }
 
@@ -516,7 +501,8 @@ namespace MorphingClass.CMorphingMethods
 
         private CCell CalCell(ref CTable T, int intI, int intJ, int k1, int k2, List<CPoint> frcptlt, List<CPoint> tocptlt)
         {
-            double dblEvaluation = T.aCell[intI - k1, intJ - k2].dblEvaluation + CalDistance(frcptlt.GetRange(intI - k1, k1 + 1), tocptlt.GetRange(intJ - k2, k2 + 1));
+            double dblEvaluation = T.aCell[intI - k1, intJ - k2].dblCost + 
+                CalDistance(frcptlt.GetRange(intI - k1, k1 + 1), tocptlt.GetRange(intJ - k2, k2 + 1));
             var ccell = new CCell(k1, k2, dblEvaluation);
             //tableij.CorrCptsLt = CorrCptsLtij; //to use memory as little as possible, we don't record CorrCptsLtij
 
@@ -532,7 +518,8 @@ namespace MorphingClass.CMorphingMethods
         {
             CLIA pLIA = new CLIA(subfrcptlt, subtocptlt, true);  //linear interpolation between subfrcptlt and subtocptlt
 
-            double dblEvaluation = _pEvaluation.CalEvaluationCorr(pLIA.CLI(), _pEvaluation.dlgEvaluationMethod, pLIA.dblFrTotalLength, pLIA.dblToTotalLength);
+            double dblEvaluation = _pEvaluation.CalEvaluationCorr(pLIA.CLI(), 
+                _pEvaluation.dlgEvaluationMethod, pLIA.dblFrTotalLength, pLIA.dblToTotalLength);
 
             return dblEvaluation;
         }
@@ -540,7 +527,8 @@ namespace MorphingClass.CMorphingMethods
 
         /// <summary>以回溯的方式寻找对应线段</summary>
         /// <returns>对应线段数组</returns>
-        protected List<CCorrCpts> GetCorrespondences(List<CTable> TableLt, List<List<CPoint>> frcptltlt, List<List<CPoint>> tocptltlt, int inFrCptNum, int intToCptNum, out List<CCorrCpts> CtrlCptsLt)
+        protected List<CCorrCpts> GetCorrespondences(List<CTable> TableLt, 
+            List<List<CPoint>> frcptltlt, List<List<CPoint>> tocptltlt, int inFrCptNum, int intToCptNum, out List<CCorrCpts> CtrlCptsLt)
         {
 
             List<CCorrCpts> CorrCptsLt = new List<CCorrCpts>(inFrCptNum + intToCptNum - 2);
@@ -646,7 +634,8 @@ namespace MorphingClass.CMorphingMethods
         }
 
 
-        private void SetCptLtLtLt(bool blnSplit, List<List<CPoint>> frcptltlt, List<List<CPoint>> tocptltlt, ref List<List<List<CPoint>>> frcptltltlt, ref List<List<List<CPoint>>> tocptltltlt)
+        private void SetCptLtLtLt(bool blnSplit, List<List<CPoint>> frcptltlt, List<List<CPoint>> tocptltlt, 
+            ref List<List<List<CPoint>>> frcptltltlt, ref List<List<List<CPoint>>> tocptltltlt)
         {
             if (blnSplit == true)
             {
@@ -668,7 +657,8 @@ namespace MorphingClass.CMorphingMethods
             }
         }
 
-        private void SplitByCoincidentPoints(List<List<CPoint>> frcptltlt, List<List<CPoint>> tocptltlt, ref List<List<List<CPoint>>> frcptltltlt, ref List<List<List<CPoint>>> tocptltltlt)
+        private void SplitByCoincidentPoints(List<List<CPoint>> frcptltlt, List<List<CPoint>> tocptltlt, 
+            ref List<List<List<CPoint>>> frcptltltlt, ref List<List<List<CPoint>>> tocptltltlt)
         {
             for (int i = 0; i < frcptltlt.Count; i++)
             {
@@ -681,7 +671,8 @@ namespace MorphingClass.CMorphingMethods
         }
 
 
-        private void SplitByCoincidentPoints(List<CPoint> frcptlt, List<CPoint> tocptlt, out List<List<CPoint>> frcptltlt, out List<List<CPoint>> tocptltlt)
+        private void SplitByCoincidentPoints(List<CPoint> frcptlt, List<CPoint> tocptlt, 
+            out List<List<CPoint>> frcptltlt, out List<List<CPoint>> tocptltlt)
         {
             //look for points having the same coordinates
             var tocptltWithoutEnds = new List<CPoint>();
@@ -778,7 +769,8 @@ namespace MorphingClass.CMorphingMethods
 
         private void AdjustMaxBackK(ref int intMaxBackIorJ, int intMaxBack, int intThisPtNum, int intOtherPtNum)
         {
-            intMaxBackIorJ = Math.Max(intMaxBackIorJ, Convert.ToInt32(Math.Ceiling(Convert.ToDouble(intThisPtNum - 1) / Convert.ToDouble(intOtherPtNum - 1))));
+            intMaxBackIorJ = Math.Max(intMaxBackIorJ, 
+                Convert.ToInt32(Math.Ceiling(Convert.ToDouble(intThisPtNum - 1) / Convert.ToDouble(intOtherPtNum - 1))));
 
             if (intMaxBackIorJ > intMaxBack)
             {

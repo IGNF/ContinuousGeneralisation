@@ -376,7 +376,8 @@ namespace MorphingClass.CUtility
         //}
 
 
-        public static SortedDictionary<T_key, T_value> ToSD<T_key, T_value>(this IEnumerable<T_value> self, Func<T_value, T_key> orderFunc, IComparer<T_key> pCmp)
+        public static SortedDictionary<T_key, T_value> ToSD<T_key, T_value>(
+            this IEnumerable<T_value> self, Func<T_value, T_key> orderFunc, IComparer<T_key> pCmp)
         {
             if (self == null) throw new ArgumentNullException("self");
             SortedDictionary<T_key, T_value> resultsd = new SortedDictionary<T_key, T_value>(pCmp);

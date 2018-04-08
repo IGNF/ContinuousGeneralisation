@@ -197,7 +197,8 @@ namespace MorphingClass.CGeometry
             var LargerAxisAngleCEdge = SmallerAxisAngleCEdge.GetLargerAxisAngleCEdge();
 
             //maintain the IncidentCEdge information
-            //newcedge.dblAxisAngle may just larger than all the Costarted edges
+            //newcedge.dblAxisAngle may just larger than all the Costarted edges,
+            //because SmallerAxisAngleCEdge may be the edge with largest AxisAngle
             if (LargerAxisAngleCEdge.isIncidentCEdgeForCpt == true && newcedge.dblAxisAngle < LargerAxisAngleCEdge.dblAxisAngle)
             {
                 LargerAxisAngleCEdge.isIncidentCEdgeForCpt = false;

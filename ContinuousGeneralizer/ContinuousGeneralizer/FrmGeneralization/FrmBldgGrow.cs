@@ -241,7 +241,7 @@ this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text));
 
         public void btnMultiResults_Click(object sender, EventArgs e)
         {
-            int intCount = 20;
+            int intCount = 10;
             var pStopwatch = Stopwatch.StartNew();
             for (int i = 1; i < intCount + 1; i++)
             {
