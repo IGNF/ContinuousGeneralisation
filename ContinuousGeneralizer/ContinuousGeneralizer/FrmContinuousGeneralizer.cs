@@ -62,7 +62,7 @@ namespace ContinuousGeneralizer
             CHelpFunc.strDataFolderName = "MainlandChina-Shanghai";
             //CHelpFunc.strDataFolderName = "MainlandChina";
             //CHelpFunc.strDataFolderName = "CompatibleTriangulation";
-            //CHelpFunc.strDataFolderName = "CompatibleTriangulation_Simple";
+            //CHelpFunc.strDataFolderName = "CT_Common";
             CHelpFunc.strPath =
             "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\Administrative Boundary\\"
             + CHelpFunc.strDataFolderName + "\\";

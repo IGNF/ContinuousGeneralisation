@@ -588,7 +588,6 @@ namespace ContinuousGeneralizer
             this.axMapControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.axMapControl.Location = new System.Drawing.Point(3, 3);
             this.axMapControl.Name = "axMapControl";
-            this.axMapControl.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axMapControl.OcxState")));
             this.axMapControl.Size = new System.Drawing.Size(897, 585);
             this.axMapControl.TabIndex = 7;
             this.axMapControl.OnMouseMove += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseMoveEventHandler(this.axMapControl_OnMouseMove);
@@ -647,7 +646,6 @@ namespace ContinuousGeneralizer
             this.axPageLayoutControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.axPageLayoutControl.Location = new System.Drawing.Point(3, 3);
             this.axPageLayoutControl.Name = "axPageLayoutControl";
-            this.axPageLayoutControl.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axPageLayoutControl.OcxState")));
             this.axPageLayoutControl.Size = new System.Drawing.Size(897, 608);
             this.axPageLayoutControl.TabIndex = 0;
             // 
@@ -676,7 +674,6 @@ namespace ContinuousGeneralizer
             this.axTOCControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.axTOCControl.Location = new System.Drawing.Point(3, 3);
             this.axTOCControl.Name = "axTOCControl";
-            this.axTOCControl.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axTOCControl.OcxState")));
             this.axTOCControl.Size = new System.Drawing.Size(234, 427);
             this.axTOCControl.TabIndex = 0;
             this.axTOCControl.OnMouseDown += new ESRI.ArcGIS.Controls.ITOCControlEvents_Ax_OnMouseDownEventHandler(this.axTOCControl_OnMouseDown);
@@ -687,7 +684,6 @@ namespace ContinuousGeneralizer
             this.axMapControlEagleEye.Dock = System.Windows.Forms.DockStyle.Fill;
             this.axMapControlEagleEye.Location = new System.Drawing.Point(0, 0);
             this.axMapControlEagleEye.Name = "axMapControlEagleEye";
-            this.axMapControlEagleEye.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axMapControlEagleEye.OcxState")));
             this.axMapControlEagleEye.Size = new System.Drawing.Size(248, 177);
             this.axMapControlEagleEye.TabIndex = 0;
             this.axMapControlEagleEye.OnMouseDown += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseDownEventHandler(this.axMapControlEagleEye_OnMouseDown);

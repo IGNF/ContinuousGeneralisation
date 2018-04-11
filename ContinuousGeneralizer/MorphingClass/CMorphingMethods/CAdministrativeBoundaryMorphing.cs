@@ -199,7 +199,7 @@ namespace MorphingClass.CMorphingMethods
             }
 
             //LookingForNeighboursByGrids
-            C5.LinkedList<CCorrCpts> CorrCptsLt = CGeoFunc.LookingForNeighboursByGrids(SgCptLt, BSCptLt, CConstants.dblVerySmallCoord);
+            var CorrCptsLt = CGeoFunc.LookingForNeighboursByGrids(SgCptLt, BSCptLt, CConstants.dblVerySmallCoord);
 
             //FindFrcpt2AndTocpt2
             foreach (CCorrCpts CorrCpt in CorrCptsLt)
@@ -486,7 +486,7 @@ namespace MorphingClass.CMorphingMethods
                 BSEndPtLt.Add(pBSAtBdLt[i].CptLt[pBSAtBdLt[i].CptLt.Count - 1]);
             }
 
-            C5.LinkedList<CCorrCpts> CorrCptsLt = CGeoFunc.LookingForNeighboursByGrids(BSEndPtLt, CConstants.dblVerySmallCoord);
+            var CorrCptsLt = CGeoFunc.LookingForNeighboursByGrids(BSEndPtLt, CConstants.dblVerySmallCoord);
             int intIntersection = CGeoFunc.GetNumofIntersections(CorrCptsLt);
 
             //do we need this?*******************************************************************************

@@ -118,62 +118,59 @@ namespace MorphingClass.CGeneralizationMethods
         /// <param name="dblRemainPoints"></param>
         /// <param name="dblVerySmall"></param>
         /// <remarks>there are three ways to calculate the threshold.</remarks>
-        private double CalThresholdDis(double dblThresholdDis, double dblRemainPointsRatio, double dblRemainPoints, double dblDeleteNum)
+        private double CalThresholdDis(double dblThresholdDis, 
+            double dblRemainPointsRatio, double dblRemainPoints, double dblDeleteNum)
         {
             int intRemainPoints = Convert.ToInt16(dblRemainPoints);
 
             //get threshold
             double dblTDis = 0;
-            if (dblThresholdDis != -1 && dblRemainPointsRatio == -1 && intRemainPoints == -1 && dblDeleteNum == -1)  // By ThresholdDis
+            if (dblThresholdDis != -1 && dblRemainPointsRatio == -1 && intRemainPoints == -1 && dblDeleteNum == -1)  
             {
+                // By ThresholdDis
                 dblTDis = dblThresholdDis;
             }
             else
             {
-                if (dblThresholdDis == -1 && dblRemainPointsRatio == -1 && intRemainPoints == -1 && dblDeleteNum != -1)
-                {
-                    
-                }
-                int intInnerPtNum = 0;
+                int intEdgeNum = 0;
                 List<CPolyline> cptllt = _CPlLt;
-                List<CPoint> EndPtLt = new List<CPoint>(cptllt.Count * 2);
                 for (int i = 0; i < cptllt.Count; i++)
                 {
-                    intInnerPtNum += (cptllt[i].CptLt.Count - 2);
-
-                    EndPtLt.Add(cptllt[i].CptLt[0]);
-                    EndPtLt.Add(cptllt[i].CptLt[cptllt[i].CptLt.Count - 1]);
+                    intEdgeNum += (cptllt[i].CptLt.Count - 1);
                 }
 
-                C5.LinkedList<CCorrCpts> CorrCptsLt = CGeoFunc.LookingForNeighboursByGrids(EndPtLt, CConstants.dblVerySmallCoord);
-                int intSgIntersection = CGeoFunc.GetNumofIntersections(CorrCptsLt);
-                int intAloneEnds = CGeoFunc.GetNumofAloneEnds(EndPtLt, CorrCptsLt);
-                int intRealPtNum = intInnerPtNum + intSgIntersection + intAloneEnds;
-
-                int intDeletePtNum = -1;
-                if (dblThresholdDis == -1 && dblRemainPointsRatio != -1 && intRemainPoints == -1 && dblDeleteNum == -1)  // By RemainPointsRatio
+                int intDeleteEdgeNum = -1;
+                if (dblThresholdDis == -1 && dblRemainPointsRatio != -1 && intRemainPoints == -1 && dblDeleteNum == -1)  
                 {
-                    intDeletePtNum = Convert.ToInt32(intRealPtNum * (1 - dblRemainPointsRatio));
+                    // By RemainPointsRatio
+                    intDeleteEdgeNum = Convert.ToInt32(intEdgeNum * (1 - dblRemainPointsRatio));
                 }
-                else if (dblThresholdDis == -1 && dblRemainPointsRatio == -1 && intRemainPoints != -1 && dblDeleteNum == -1)  // By RemainPoints
+                else if (dblThresholdDis == -1 && dblRemainPointsRatio == -1 && intRemainPoints != -1 && dblDeleteNum == -1)  
                 {
-                    intDeletePtNum = intRealPtNum - intRemainPoints;
+                    // By RemainPoints
+                    intDeleteEdgeNum = intEdgeNum - intRemainPoints;
                 }
-                else if (dblThresholdDis == -1 && dblRemainPointsRatio == -1 && intRemainPoints == -1 && dblDeleteNum != -1)  // By RemainPoints
+                else if (dblThresholdDis == -1 && dblRemainPointsRatio == -1 && intRemainPoints == -1 && dblDeleteNum != -1)  
                 {
-                    intDeletePtNum = Convert.ToInt32(dblDeleteNum);
+                    // By RemainPoints
+                    intDeleteEdgeNum = Convert.ToInt32(dblDeleteNum);
                 } 
                 else
                 {
                     throw new ArgumentOutOfRangeException("invalid parameters!");
                 }
 
-                dblTDis = CalTDisByDeletePtNum(cptllt, intInnerPtNum, intDeletePtNum);
+                dblTDis = CalTDisByDeletePtNum(cptllt, intDeleteEdgeNum);
                 //GetTDis(intDeletePtNum, dblMaxDisLt);
             }
             return dblTDis;
         }
 
+        /// <summary>
+        /// find the farthest point for each contructured baseline
+        /// </summary>
+        /// <param name="dcpl"></param>
+        /// <param name="pVtPl"></param>
         public void DivideCplByDP(CPolyline dcpl, CVirtualPolyline pVtPl)
         {
             List<CPoint> dcptlt = dcpl.CptLt;
@@ -189,9 +186,11 @@ namespace MorphingClass.CGeneralizationMethods
                     int intMaxDisID = -1;
                     double dblFromDis = 0;
                     subVtPl.SetBaseLine(dcptlt[subVtPl.intFrID], dcptlt[subVtPl.intToID]);
+                    subVtPl.pBaseLine.SetSlope();
+                    subVtPl.pBaseLine.SetDenominatorForDis();
                     for (int i = subVtPl.intFrID + 1; i < subVtPl.intToID; i++)
                     {
-                        throw new ArgumentException("make sure you have set length for pBaseLine!");
+                        //throw new ArgumentException("make sure you have set length for pBaseLine!");
                         dblFromDis = subVtPl.pBaseLine.QueryPtHeight(dcptlt[i]);
                         if (dblFromDis > dblMaxDis)
                         {
@@ -208,39 +207,12 @@ namespace MorphingClass.CGeneralizationMethods
 
                     subVtPl.pBaseLine = null; //to use as little memory as possible
                 }
-            } while (pVtPlSk.Count > 0);
-
-
-
-            ////找到距离基础边最远的点
-            ////CEdge pEdge = new CEdge(dcptlt[pVtPl.intFrID], dcptlt[pVtPl.intToID]);            
-            //double dblMaxDis = -1;
-            //int intMaxDisID = -1;
-            //double dblFromDis = 0;
-            //for (int i = pVtPl.intFrID + 1; i < pVtPl.intToID; i++)
-            //{
-            //    dblFromDis = pVtPl.pBaseLine.QueryPtHeight(dcptlt[i]);
-            //    if (dblFromDis > dblMaxDis)
-            //    {
-            //        dblMaxDis = dblFromDis;
-            //        intMaxDisID = i;
-            //    }
-            //}
-            //pVtPl.pBaseLine = null; //to use as little memory as possible
-
-            ////分别对左右子边执行分割操作
-            //pVtPl.intMaxDisID = intMaxDisID;
-            //pVtPl.dblMaxDis = dblMaxDis;
-            //pVtPl.DivideByID(intMaxDisID);
-
-            ////move upward this part, set a maxdis for all sub branches*************************************************************************
-            //DivideCplByDP(dcpl, pVtPl.CLeftPolyline);
-            //DivideCplByDP(dcpl, pVtPl.CRightPolyline);
+            } while (pVtPlSk.Count > 0);            
         }
 
-        private double CalTDisByDeletePtNum<T>(List<T> CPlLt, int intInnerPtNum, int intDeletePtNum) where T : CPolyline
+        private double CalTDisByDeletePtNum<T>(List<T> CPlLt, int intDeletePtNum) where T : CPolyline
         {
-            var dblMaxDisLt = new List<double>(intInnerPtNum);
+            var dblMaxDisLt = new List<double>();
             for (int i = 0; i < CPlLt.Count; i++)
             {
                dblMaxDisLt.AddRange(CollectMaxDis(CPlLt[i].pVirtualPolyline));
@@ -256,7 +228,8 @@ namespace MorphingClass.CGeneralizationMethods
         /// <summary>
         /// Recursively Collect MaxDis (height) of the points to their base lines
         /// </summary>
-        /// <remarks>if the height of a point is smaller than the height of a lower-level height, the larger lower-level will be used</remarks>
+        /// <remarks>if the height of a point is smaller than the height of a lower-level height, 
+        /// the larger lower-level will be used</remarks>
         private List<double> CollectMaxDis(CVirtualPolyline pVtPl)
         {
             int intCount = pVtPl.intToID - pVtPl.intFrID - 1;
@@ -285,7 +258,10 @@ namespace MorphingClass.CGeneralizationMethods
                 {
                     currentVtpl = pVtPlSk.Pop();
 
-                    //double dblMaxDis = Math.Max(currentVtpl.dblMaxDis, Math.Max(currentVtpl.CLeftPolyline.dblMaxDisLargerThanChildren, currentVtpl.CRightPolyline.dblMaxDisLargerThanChildren));  //get the max distance by considering lower-level
+                    //get the max distance by considering lower-level
+                    //double dblMaxDis = Math.Max(currentVtpl.dblMaxDis, 
+                    //Math.Max(currentVtpl.CLeftPolyline.dblMaxDisLargerThanChildren, 
+                    //currentVtpl.CRightPolyline.dblMaxDisLargerThanChildren));  
                     //currentVtpl.dblMaxDisLargerThanChildren = dblMaxDis;
 
                     double dblMaxDis = currentVtpl.dblMaxDis;
@@ -350,7 +326,8 @@ namespace MorphingClass.CGeneralizationMethods
             } while (pVtPlSk.Count >0);
         }
 
-        private void RecursivelyGetNewCptLtPG(CPolyline cpl, CVirtualPolyline pVtPl, ref List<CPoint> newcptlt, double dblTDis, int intDepth)
+        private void RecursivelyGetNewCptLtPG(CPolyline cpl, CVirtualPolyline pVtPl, 
+            ref List<CPoint> newcptlt, double dblTDis, int intDepth)
         {
             if (pVtPl.CLeftPolyline == null)
             {
@@ -530,7 +507,8 @@ namespace MorphingClass.CGeneralizationMethods
         /// <param name="newcptlt"></param>
         /// <param name="dblPropotion"></param>
         /// <remarks>Notice that this function gets the vertices without the first and last ones</remarks>
-        private void RecursivelyMovePt(CPolyline cpl, CVirtualPolyline pVtPl, ref CEdge newBaseLine, ref List<CPoint> newcptlt, double dblPropotion)
+        private void RecursivelyMovePt(CPolyline cpl, CVirtualPolyline pVtPl, 
+            ref CEdge newBaseLine, ref List<CPoint> newcptlt, double dblPropotion)
         {
             if (pVtPl.CLeftPolyline != null)
             {
@@ -547,7 +525,8 @@ namespace MorphingClass.CGeneralizationMethods
                 else
                 {
                     newBaseLine.SetAxisAngle();
-                    newcpt = newBaseLine.QueryMovedPt(pVtPl.dblRatioforMovePt, pVtPl.dblLengthforMovePt, pVtPl.dblAngleDiffforMovePt, dblPropotion, cpl.CptLt[pVtPl.intMaxDisID].ID);
+                    newcpt = newBaseLine.QueryMovedPt(pVtPl.dblRatioforMovePt, pVtPl.dblLengthforMovePt, 
+                        pVtPl.dblAngleDiffforMovePt, dblPropotion, cpl.CptLt[pVtPl.intMaxDisID].ID);
                     newLeftBaseLine = new CEdge(newBaseLine.FrCpt, newcpt);
                     newRightBaseLine = new CEdge(newcpt, newBaseLine.ToCpt);
                 }
@@ -619,18 +598,19 @@ namespace MorphingClass.CGeneralizationMethods
             EnlargedCpg.FormCEdgeLt();
             //EnlargedCpg.SetCEdgeLtLength();
             EnlargedCpg.SetCEdgeToCpts();
-            //EnlargedCpg.SetCEdgeLtAxisAngle();
-            //EnlargedCpg.SetAngleDiffLt();
+        //EnlargedCpg.SetCEdgeLtAxisAngle();
+        //EnlargedCpg.SetAngleDiffLt();
 
 
-            //CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgEb(CHelpFunc.MakeLt(EnlargedCpg), 1 / CConstants.dblFclipper), "EnlargedCpg",
-            //    pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSHollow, blnVisible: false);
+        //CSaveFeature.SaveCpgEb(clipperMethods.ScaleCpgEb(CHelpFunc.MakeLt(EnlargedCpg), 1 / CConstants.dblFclipper), 
+        //"EnlargedCpg", pesriSimpleFillStyle: esriSimpleFillStyle.esriSFSHollow, blnVisible: false);
 
             var EnlargedCEdgeHS = new HashSet<CEdge>(EnlargedCpg.CEdgeLt);
             //CSaveFeature.SaveCEdgeEb(clipperMethods.ScaleCEdgeEb( EnlargedCEdgeHS, 1 / CConstants.dblFclipper), "EnlargedCEdgeHS",
             //     blnVisible: false);
             _intEdgeCountBefore += EnlargedCpg.CptLt.Count - 1;
-            var simplifiedcptlt = SimplifyAccordExistEdges(EnlargedCpg.CptLt, OriginalCEdgeLt, EnlargedCEdgeHS, strSimplification, dblThreshold).ToList();
+            var simplifiedcptlt = SimplifyAccordExistEdges(EnlargedCpg.CptLt, OriginalCEdgeLt, 
+                EnlargedCEdgeHS, strSimplification, dblThreshold).ToList();
             _intEdgeCountAfter += simplifiedcptlt.Count - 1;
 
             //CPolygon simplifiedcpg = new CPolygon(EnlargedCpg.ID,
@@ -878,9 +858,6 @@ namespace MorphingClass.CGeneralizationMethods
         {            
             //the distances from all the removed points to cedgebaseline should be smaller than a threshold
             var cedgebaseline = new CEdge(cptlt[0], cptlt.GetLastT());
-            //cedgebaseline.SetLengthSquareReciprocal();
-            cedgebaseline.SetSlope();
-            cedgebaseline.SetDenominatorForDis();
             var IndexDisVP = ComputeMaxIndexDisVP(cedgebaseline, cptlt, 1, cptlt.Count - 1);
             intIndexMaxDis = IndexDisVP.val1;
             if (IndexDisVP.val2 >= dblThreshold)
@@ -963,10 +940,13 @@ namespace MorphingClass.CGeneralizationMethods
 
 
         /// <summary>
-        /// you must setlength before using this function
+        /// 
         /// </summary>
         private static CValPair<int, double> ComputeMaxIndexDisVP(CEdge cedge, List<CPoint> cptlt, int intStart, int intEnd)
         {
+            cedge.SetSlope();
+            cedge.SetDenominatorForDis();
+
             var MaxDisVP = new CValPair<int, double>();
             MaxDisVP.val1 = intStart;
             MaxDisVP.val2 = 0;

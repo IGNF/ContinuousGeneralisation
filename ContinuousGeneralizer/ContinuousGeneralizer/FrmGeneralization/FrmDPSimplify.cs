@@ -69,11 +69,10 @@ namespace ContinuousGeneralizer.FrmGeneralization
                 return;
             }
             
-            CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
             double dblParameter = Convert.ToDouble(txtParameter.Text);
             if (rdoDistance.Checked == true)
             {
-                _pDPSimplify.DPSimplify(dblParameter, -1, -1,-1);
+                _pDPSimplify.DPSimplify(dblParameter, -1, -1, -1);
             }
             else if (rdoRemainRatio.Checked == true)
             {
@@ -92,11 +91,7 @@ namespace ContinuousGeneralizer.FrmGeneralization
 
             //we are saving memory here, one can do better
             var CResultsPlLt = _pDPSimplify.ParameterResult.CResultPlLt;
-            //_pDPSimplify = null;
-            CHelpFunc.SaveCPlLt(CResultsPlLt, "DPSimplify" + "_" + dblParameter.ToString(), ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
-            
-
-            //_DataRecords.ParameterResult = _pDPSimplify.ParameterResult;
+            CSaveFeature.SaveCplEb(CResultsPlLt, "DPSimplify_" + dblParameter.ToString());
 
         }
 
@@ -125,7 +120,8 @@ namespace ContinuousGeneralizer.FrmGeneralization
             }
 
             //_pDPSimplify.DPSimplify(-1, 0.8, -1);
-            CHelpFunc.SaveCPlLt(_pDPSimplify.ParameterResult.CResultPlLt, "DPMorph" + "_" + dblParameter.ToString() + "_" + dblProportion.ToString(), ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+            CHelpFunc.SaveCPlLt(_pDPSimplify.ParameterResult.CResultPlLt, "DPMorph" + "_" + dblParameter.ToString() 
+                + "_" + dblProportion.ToString(), ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
 
 
             _DataRecords.ParameterResult = _pDPSimplify.ParameterResult;

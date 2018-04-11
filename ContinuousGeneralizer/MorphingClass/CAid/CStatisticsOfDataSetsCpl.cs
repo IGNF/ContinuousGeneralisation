@@ -59,7 +59,7 @@ namespace MorphingClass.CAid
                 AllPtLt.AddRange(cptlt);
             }
 
-            C5.LinkedList<CCorrCpts> CorrCptsLt = CGeoFunc.LookingForNeighboursByGrids(EndPtLt, CConstants.dblVerySmallCoord);
+            var CorrCptsLt = CGeoFunc.LookingForNeighboursByGrids(EndPtLt, CConstants.dblVerySmallCoord);
             int intIntersection = CGeoFunc.GetNumofIntersections(CorrCptsLt);
             int intAlonePt = CGeoFunc.CountAlonePt(EndPtLt);
             int intRealPtNum = intInnerPtNum + intIntersection + intAlonePt;

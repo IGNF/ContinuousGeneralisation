@@ -12,7 +12,7 @@ using ESRI.ArcGIS.Controls;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Editor;
 
-using C5;
+//using C5;
 using SCG = System.Collections.Generic;
 
 using MorphingClass.CEntity;
@@ -866,98 +866,109 @@ namespace MorphingClass.CMorphingMethods
             List<CPolyline> pSgCPlLt = this.ObjCGeoLtLt[_intSg].AsExpectedClass<CPolyline, object>().ToList();
             List<CPolyline> TransSgCPlLt = this.ObjCGeoLtLt[_intTransSg].AsExpectedClass<CPolyline, object>().ToList();
 
-            double dblLSToSSRatio = CalRatioofPtNum(pLSCPlLt, pSSCPlLt);
+            double dblLSToSSRatio = CalRatioEdgeNum(pLSCPlLt, pSSCPlLt);
 
-            var LScptSS = new SortedSet<CPoint>(new CCmpCptYX_VerySmall());
-            foreach (var LSCPl in pLSCPlLt)
-            {
-                foreach (var cpt in LSCPl.CptLt)
-                {
-                    LScptSS.Add(cpt);
-                }
-            }
-
-            //count the number of intersections
-            int intSgInnerPtNum = 0;
-            List<CPoint> SgEndPtLt = new List<CPoint>(pSgCPlLt.Count * 2);
+            int intSgEdgeNum = 0;            
             foreach (CPolyline cpl in pSgCPlLt)
             {
-                intSgInnerPtNum += (cpl.CptLt.Count - 2);
-
-                var FrCpt = cpl.CptLt.First();
-                if (LScptSS.Contains(FrCpt) == false)
-                {
-                    SgEndPtLt.Add(FrCpt);
-                }
-
-                var ToCpt = cpl.CptLt.GetLastT();
-                if (LScptSS.Contains(ToCpt) == false)
-                {
-                    SgEndPtLt.Add(ToCpt);
-                }
+                intSgEdgeNum += (cpl.CptLt.Count - 1);
             }
-            C5.LinkedList<CCorrCpts> CorrCptsLt = CGeoFunc.LookingForNeighboursByGrids(SgEndPtLt, CConstants.dblVerySmallCoord);
-            int intSgIntersection = CGeoFunc.GetNumofIntersections(CorrCptsLt);
 
-            //do we need this?*******************************************************************************
-            //int intAloneEnds = CGeoFunc.GetNumofAloneEnds(EndPtLt, CorrCptsLt);
-            //int intRealPtNum = intInnerPtNum + intSgIntersection + intAloneEnds;
+            int intRemainEdgeNum = Convert.ToInt32(Convert.ToDouble(intSgEdgeNum) / dblLSToSSRatio);
 
-
-            int intTransSgInnerPtNum = 0;
+            int intTransSgEdgeNum = 0;
             foreach (var cpl in TransSgCPlLt)
             {
-                intTransSgInnerPtNum += (cpl.CptLt.Count - 2);
+                intTransSgEdgeNum += (cpl.CptLt.Count - 1);
             }
-            int intSgRealPtNum = intSgInnerPtNum + intSgIntersection;
 
-            //intSgRealPtNum doesn't count the points on the LSCpls. pSgCPlLt and TransSgCPlLt have the same number of intersections
-            int intTransSgRealPtNum = intTransSgInnerPtNum + intSgIntersection;   
-            int intRemainPtNum = Convert.ToInt32(Convert.ToDouble(intSgRealPtNum) / dblLSToSSRatio);
+            int intDeleteNum = intTransSgEdgeNum - intRemainEdgeNum;
+            return intDeleteNum;
 
-            //notice that intRemainPtNum is according to intSgRealPtNum, but intDeletePtNum is according to intTransSgRealPtNum
-            int intDeletePtNum = intTransSgRealPtNum - intRemainPtNum;   
-            return intDeletePtNum;
+
+
+
+
+
+
+
+
+
+
+
+            //var LScptSS = new SortedSet<CPoint>(new CCmpCptYX_VerySmall());
+            //foreach (var LSCPl in pLSCPlLt)
+            //{
+            //    foreach (var cpt in LSCPl.CptLt)
+            //    {
+            //        LScptSS.Add(cpt);
+            //    }
+            //}
+
+            ////count the number of intersections
+            //int intSgInnerPtNum = 0;
+            //List<CPoint> SgEndPtLt = new List<CPoint>(pSgCPlLt.Count * 2);
+            //foreach (CPolyline cpl in pSgCPlLt)
+            //{
+            //    intSgInnerPtNum += (cpl.CptLt.Count - 2);
+
+            //    var FrCpt = cpl.CptLt.First();
+            //    if (LScptSS.Contains(FrCpt) == false)
+            //    {
+            //        SgEndPtLt.Add(FrCpt);
+            //    }
+
+            //    var ToCpt = cpl.CptLt.GetLastT();
+            //    if (LScptSS.Contains(ToCpt) == false)
+            //    {
+            //        SgEndPtLt.Add(ToCpt);
+            //    }
+            //}
+            //var CorrCptsLt = CGeoFunc.LookingForNeighboursByGrids(SgEndPtLt, CConstants.dblVerySmallCoord);
+            //int intSgIntersection = CGeoFunc.GetNumofIntersections(CorrCptsLt);
+
+            ////do we need this?*******************************************************************************
+            ////int intAloneEnds = CGeoFunc.GetNumofAloneEnds(EndPtLt, CorrCptsLt);
+            ////int intRealPtNum = intInnerPtNum + intSgIntersection + intAloneEnds;
+
+
+            //int intTransSgInnerPtNum = 0;
+            //foreach (var cpl in TransSgCPlLt)
+            //{
+            //    intTransSgInnerPtNum += (cpl.CptLt.Count - 2);
+            //}
+            //int intSgRealPtNum = intSgInnerPtNum + intSgIntersection;
+
+            ////intSgRealPtNum doesn't count the points on the LSCpls. pSgCPlLt and TransSgCPlLt have the same number of intersections
+            //int intTransSgRealPtNum = intTransSgInnerPtNum + intSgIntersection;   
+            //int intRemainPtNum = Convert.ToInt32(Convert.ToDouble(intSgRealPtNum) / dblLSToSSRatio);
+
+            ////notice that intRemainPtNum is according to intSgRealPtNum, but intDeletePtNum is according to intTransSgRealPtNum
+            //int intDeletePtNum = intTransSgRealPtNum - intRemainPtNum;   
+            //return intDeletePtNum;
         }
 
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="pBSAtBdLt"></param>
-        /// <param name="pSSAtBdLt"></param>
+        /// <param name="pLSCPlLt"></param>
+        /// <param name="pSSCPlLt"></param>
         /// <param name="ParameterThreshold"></param>
-        /// <remarks>the number of Administrative Boundaries in pBSAtBdLt and that in pSSAtBdLt are the same. 
+        /// <remarks>the number of Administrative Boundaries in pLSCPlLt and that in pSSCPlLt are the same. 
         /// Besides, the topological structrues are the same</remarks>
-        private double CalRatioofPtNum(List<CPolyline> pLSCPlLt, List<CPolyline> pSSCPlLt)
+        private double CalRatioEdgeNum(List<CPolyline> pLSCPlLt, List<CPolyline> pSSCPlLt)
         {
-            int intBSInnerPtNum = 0;
-            int intSSInnerPtNum = 0;
-
-            List<CPoint> BSEndPtLt = new List<CPoint>(pLSCPlLt.Count * 2);
-            //List<CPoint> SSEndPtLt = new List<CPoint>();
+            int intLSEdgeNum = 0;
+            int intSSEdgeNum = 0;
+            
             for (int i = 0; i < pLSCPlLt.Count; i++)
             {
-                intBSInnerPtNum += (pLSCPlLt[i].CptLt.Count - 2);
-                intSSInnerPtNum += (pSSCPlLt[i].CptLt.Count - 2);
-
-                BSEndPtLt.Add(pLSCPlLt[i].CptLt[0]);
-                BSEndPtLt.Add(pLSCPlLt[i].CptLt[pLSCPlLt[i].CptLt.Count - 1]);
+                intLSEdgeNum += (pLSCPlLt[i].CptLt.Count - 1);
+                intSSEdgeNum += (pSSCPlLt[i].CptLt.Count - 1);                
             }
 
-            C5.LinkedList<CCorrCpts> CorrCptsLt = CGeoFunc.LookingForNeighboursByGrids(BSEndPtLt, CConstants.dblVerySmallCoord);
-            int intIntersection = CGeoFunc.GetNumofIntersections(CorrCptsLt);
-
-            //do we need this?*******************************************************************************
-            //int intAloneEnds = CGeoFunc.GetNumofAloneEnds(EndPtLt, CorrCptsLt);
-            //int intRealPtNum = intInnerPtNum + intSgIntersection + intAloneEnds;
-
-            //notice that there are the same intersections of the larger-scale polylines and the smaller-scale polylines
-            int intBSRealPtNum = intBSInnerPtNum + intIntersection;
-            int intSSRealPtNum = intSSInnerPtNum + intIntersection;
-
-            double dblRatioofPtNum = Convert.ToDouble(intBSRealPtNum) / Convert.ToDouble(intSSRealPtNum);
-            return dblRatioofPtNum;
+            return Convert.ToDouble(intLSEdgeNum) / Convert.ToDouble(intSSEdgeNum);
         }
 
 

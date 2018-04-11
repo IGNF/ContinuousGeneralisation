@@ -73,6 +73,7 @@ namespace MorphingClass.CCorrepondObjects
             _intID = intID;
         }
 
+        #region SeparateCpgsByDynamic
         private void SeparateCpgsByDynamic(CPolygon frcpg, CPolygon tocpg,
             out List<CPolyline> outfrcpllt, out List<CPolyline> outtocpllt)
         {
@@ -123,7 +124,7 @@ namespace MorphingClass.CCorrepondObjects
 
             outfrcpllt = GenerateInteriorCplLt(aCell, frcpg.CptLt);
             outtocpllt = GenerateInteriorCplLt(aCell, tocpg.CptLt);
-            
+
 
             if (_blnSave == true)
             {
@@ -159,10 +160,10 @@ namespace MorphingClass.CCorrepondObjects
             int intIndexDiff = cell.intColIndex - cell.intRowIndex; //it holds cell.intColIndex > cell.intRowIndex
             if (intIndexDiff >= 2)
             {
-                cpllt.Add(new CPolyline(-1, 
+                cpllt.Add(new CPolyline(-1,
                     CHelpFunc.MakeLt(OriginalCptLt[cell.intRowIndex], OriginalCptLt[cell.intColIndex])));
 
-                if (intIndexDiff>2)
+                if (intIndexDiff > 2)
                 {
                     CellStack.Push(cell);
                 }
@@ -178,16 +179,16 @@ namespace MorphingClass.CCorrepondObjects
         private bool[,] GetCoValidChords(CPolygon frcpg, CPolygon tocpg)
         {
             var FrValidChords = GetValidChords(frcpg);
-            var ToValidChords = GetValidChords(tocpg);            
-            
+            var ToValidChords = GetValidChords(tocpg);
 
-            int intCount = frcpg.CptLt.Count-1;
+
+            int intCount = frcpg.CptLt.Count - 1;
             var ablnValidChords = new bool[intCount, intCount];
             for (int i = 0; i < intCount; i++)
             {
                 for (int j = 0; j < intCount; j++)
-                {                    
-                    ablnValidChords[i, j] = FrValidChords[i, j] && ToValidChords[i, j];                    
+                {
+                    ablnValidChords[i, j] = FrValidChords[i, j] && ToValidChords[i, j];
                 }
             }
 
@@ -199,7 +200,7 @@ namespace MorphingClass.CCorrepondObjects
         private bool[,] GetValidChords(CPolygon cpg)
         {
             var cpgcptlt = cpg.CptLt;
-            var intCptNum = cpgcptlt.Count-1;
+            var intCptNum = cpgcptlt.Count - 1;
             var ablnValidChords = new bool[intCptNum, intCptNum];
             var fEdgeGrid = new CEdgeGrid(cpg.CEdgeLt);
 
@@ -218,7 +219,7 @@ namespace MorphingClass.CCorrepondObjects
                     else
                     {
                         var newcedge = new CEdge(cpgcptlt[i], cpgcptlt[j]);
-                        
+
 
                         if (fEdgeGrid.BlnIntersect(newcedge, false, true, true) == false)
                         {
@@ -227,18 +228,10 @@ namespace MorphingClass.CCorrepondObjects
                     }
                 }
             }
-
-            //Console.WriteLine("Valid cuts:");
-            //for (int i = 0; i < intCptNum; i++)
-            //{
-            //    for (int j = 0; j < intCptNum; j++)
-            //    {
-            //        Console.Write(ablnValidChords[i, j] + "       ");
-            //    }
-            //    Console.WriteLine();
-            //}
             return ablnValidChords;
         }
+        #endregion
+
 
 
 
@@ -357,7 +350,7 @@ namespace MorphingClass.CCorrepondObjects
             if (blnSave == true)
             {
                 CSaveFeature.SaveCptEb(FrRglDCEL.CptLt, "OverlapRglCDTCpt", blnVisible: false);
-                CSaveFeature.SaveCEdgeEb(FrRglDCEL.CEdgeLt, "OverlapRglCDT", blnVisible: false);
+                //CSaveFeature.SaveCEdgeEb(FrRglDCEL.CEdgeLt, "OverlapRglCDT", blnVisible: false);
             }
             TriangulateFaces(ref FrRglDCEL);
             UpdateAxisAngleCEdgeLtAndHalfCEdgeLt(ref FrRglDCEL, blnSave);

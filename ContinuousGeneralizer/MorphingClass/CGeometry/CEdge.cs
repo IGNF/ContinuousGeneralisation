@@ -170,7 +170,14 @@ namespace MorphingClass.CGeometry
         /// </summary>
         public double QueryPtHeight(CPoint querycpt)
         {
-            return CGeoFunc.CalHeightCptCEdge(querycpt, this);
+            if (this.blnHasSlope == true)
+            {
+                return Math.Abs(this.dblYIntercept + this.dblSlope * querycpt.X - querycpt.Y) * this.dblValueForDis;
+            }
+            else
+            {
+                return Math.Abs(querycpt.X - this.FrCpt.X);
+            }
         }
 
         //public double DistanceTo(CEdge querycedge, bool blnCheckIntersect = true)

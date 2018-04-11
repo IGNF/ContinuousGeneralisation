@@ -95,14 +95,14 @@ namespace ContinuousGeneralizer.FrmAid
 
             if ((pFeatureLayer.FeatureClass != null) && (pFeatureLayer.FeatureClass.ShapeType == esriGeometryType.esriGeometryPoint))
             {
-                List<CPoint> cptlt = CHelpFunc.GetCPtLtFromPointFeatureLayer(pFeatureLayer);
-               C5 .LinkedList <CCorrCpts> CorrCptsLk= CGeoFunc.LookingForNeighboursByGrids(cptlt, 0);
-               foreach (CPoint  cpt in cptlt)
+                var cptlt = CHelpFunc.GetCPtLtFromPointFeatureLayer(pFeatureLayer);
+                var CorrCptsLt = CGeoFunc.LookingForNeighboursByGrids(cptlt, 0);
+               foreach (var cpt in cptlt)
                {
                    cpt.isCtrl = true;
                    cpt.isTraversed = false;
                }
-               foreach (CCorrCpts pCorrCpts in CorrCptsLk)
+               foreach (var pCorrCpts in CorrCptsLt)
                {
                    if (pCorrCpts.FrCpt .isTraversed ==false && pCorrCpts.ToCpt .isTraversed ==false)
                    {
@@ -117,8 +117,8 @@ namespace ContinuousGeneralizer.FrmAid
                    pCorrCpts.ToCpt.isTraversed = true;
                }
 
-               List<CPoint> resultcptlt = new List<CPoint>(cptlt.Count );
-               foreach (CPoint cpt in cptlt)
+                var resultcptlt = new List<CPoint>(cptlt.Count );
+               foreach (var cpt in cptlt)
                {
                    if (cpt.isCtrl == true)
                    {
