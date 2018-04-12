@@ -59,7 +59,8 @@ namespace MorphingClass.CUtility
         /// Compare two doubles
         /// </summary>
         /// <returns>1, if the first parameter larger than the second one; -1, smaller; 0, equal</returns>
-        /// <remarks>please notice that the default value of _dblVerySmall is 0.0000000000000001, but we usually set a new _dblVerySmall with respect to the data</remarks>
+        /// <remarks>please notice that the default value of _dblVerySmall is 0.0000000000000001, 
+        /// but we usually set a new _dblVerySmall with respect to the data</remarks>
         public static int CmpCoordDbl_VerySmall(double dbl1, double dbl2)
         {
            return  CmpDblRange(dbl1, dbl2, CConstants.dblVerySmallCoord);
@@ -75,7 +76,8 @@ namespace MorphingClass.CUtility
         /// </summary>
         /// <returns>1, if the first parameter larger than the second one; -1, smaller; 0, equal</returns>
         /// <remarks>First comapre FrCpts. If the two cedges have the same FrCpts, then compare ToCpts. 
-        /// If they neither have the same FrCpts nor have the same ToCpts, then compare FrCpt with ToCpt as well as ToCpt with FrCpt to find whether they are equal</remarks>
+        /// If they neither have the same FrCpts nor have the same ToCpts, 
+        /// then compare FrCpt with ToCpt as well as ToCpt with FrCpt to find whether they are equal</remarks>
         public static int CmpCEdgeCoord(CEdge cedge1, CEdge cedge2, bool blnMayFlip = false)
         {
             CPoint frcpt1;
@@ -155,7 +157,8 @@ namespace MorphingClass.CUtility
         /// Compare two points, by coordinates
         /// </summary>
         /// <returns>1, if the first parameter larger than the second one; -1, smaller; 0, equal</returns>
-        /// <remarks>First comapre y coordinates. If the two points have the same y coordinates, then compare x coordinates</remarks>
+        /// <remarks>First comapre y coordinates. 
+        /// If the two points have the same y coordinates, then compare x coordinates</remarks>
         public static int CmpCptYX(CPoint cpt1, CPoint cpt2, bool blnVerySmall = true)
         {
             IComparer<double> cmp = null;
@@ -205,34 +208,20 @@ namespace MorphingClass.CUtility
 
             if (intResult == 0)
             {
-                intResult = CCmpMethods.CmpWithSameElements(crg1.GetCphCol(), crg2.GetCphCol(), cph => cph);  //this will compare the GID of every CPatch in the two SortedDictionary
+                //this will compare the GID of every CPatch in the two SortedDictionary
+                intResult = CCmpMethods.CmpWithSameElements(crg1.GetCphCol(), crg2.GetCphCol(), cph => cph);  
             }
 
             if (intResult == 0)
             {
-                intResult = CCmpMethods.CmpWithSameElements(crg1.GetCphTypeIndexCol(), crg2.GetCphTypeIndexCol(), intTypeIndex => intTypeIndex);
+                intResult = CCmpMethods.CmpWithSameElements(crg1.GetCphTypeIndexCol(), crg2.GetCphTypeIndexCol(), 
+                    intTypeIndex => intTypeIndex);
             }
             return intResult;
         }
 
-        //public static int CmpCRegion_CphGID(CRegion crg1, CRegion crg2)
-        //{
-        //    int intResult = crg1.CphTypeIndexSD_Area_CphGID.Count.CompareTo(crg2.CphTypeIndexSD_Area_CphGID.Count);
-
-        //    if (intResult == 0)
-        //    {
-        //        intResult = crg1.intSumCphGID.CompareTo(crg2.intSumCphGID);
-        //    }
-
-        //    if (intResult == 0)
-        //    {
-        //        intResult = CCmpMethods.CmpWithSameElements(crg1.CphTypeIndexSD_Area_CphGID, crg2.CphTypeIndexSD_Area_CphGID, CphTypeIndexKVP => CphTypeIndexKVP.Key);  //this will compare the GID of every CPatch in the two SortedDictionary
-        //    }
-
-        //    return intResult;
-        //}
-
-        public static int CmpColConsideringCount<T, TOrder>(ICollection<T> pCol1, ICollection<T> pCol2, Func<T, TOrder> orderFunc = null, IComparer<TOrder> cmp = null, bool blnReverse = false)
+        public static int CmpColConsideringCount<T, TOrder>(ICollection<T> pCol1, ICollection<T> pCol2, 
+            Func<T, TOrder> orderFunc = null, IComparer<TOrder> cmp = null, bool blnReverse = false)
         {
             int intResult = pCol1.Count.CompareTo(pCol2.Count);
 
@@ -248,7 +237,8 @@ namespace MorphingClass.CUtility
             return intResult;
         }
 
-        public static int CmpWithSameElements<T, TOrder>(IEnumerable<T> TEb1, IEnumerable<T> TEb2, Func<T, TOrder> orderFunc, IComparer<TOrder> cmp = null, bool blnReverse = false)
+        public static int CmpWithSameElements<T, TOrder>(IEnumerable<T> TEb1, IEnumerable<T> TEb2, 
+            Func<T, TOrder> orderFunc, IComparer<TOrder> cmp = null, bool blnReverse = false)
         {
             
             if (cmp == null) { cmp = Comparer<TOrder>.Default; }
@@ -274,7 +264,8 @@ namespace MorphingClass.CUtility
         }
 
 
-        //public static int Cmp<T, TOrder>(IEnumerable<T> TEb1, IEnumerable<T> TEb2, Func<T, TOrder> orderFunc, IComparer<TOrder> cmp = null, bool blnReverse = false)
+        //public static int Cmp<T, TOrder>(IEnumerable<T> TEb1, IEnumerable<T> TEb2, 
+        //Func<T, TOrder> orderFunc, IComparer<TOrder> cmp = null, bool blnReverse = false)
         //{
         //    if (cmp == null) { cmp = Comparer<TOrder>.Default; }
 
@@ -493,7 +484,8 @@ namespace MorphingClass.CUtility
         ///// <param name="orderFunc2"></param>
         ///// <param name="cmp"></param>
         ///// <returns></returns>
-        //public static int CmpDual<T, TOrder>(T T1, T T2, Func<T, TOrder> orderFunc1, Func<T, TOrder> orderFunc2, IComparer<TOrder> cmp = null)
+        //public static int CmpDual<T, TOrder>(T T1, T T2, 
+        //Func<T, TOrder> orderFunc1, Func<T, TOrder> orderFunc2, IComparer<TOrder> cmp = null)
         //{
         //    if (cmp == null) { cmp = Comparer<TOrder>.Default; }
             

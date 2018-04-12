@@ -18,7 +18,8 @@ namespace MorphingClass.CGeometry.CGeometryBase
         /// Whether the last vertex is the first vertex: My Cpg (yes, clockwise), Ipolygon (yes, clockwise), clipper (no, counter), Ipe (no)
         /// </summary>
         /// <remarks>
-        /// for a polygon, the first point and the last point in cptlt must have the same coordinates, which is the same as in IPolygon
+        /// for a polygon, the first point and the last point in cptlt must have the same coordinates, 
+        /// which is the same as in IPolygon. Also the first point and the last point will have the same GID
         /// for polygons, exterior rings have a clockwise orientation; Interior Rings have a counterclockwise orientation
         /// the first point and the last point of a output path are not identical
             //the direction of a path of outcome is counter-clockwise, whereas it is clockwise for a IPolygon

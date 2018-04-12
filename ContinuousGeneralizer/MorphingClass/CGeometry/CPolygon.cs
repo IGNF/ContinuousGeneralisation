@@ -76,24 +76,6 @@ namespace MorphingClass.CGeometry
         public bool IsSubCpg { get; set; }
         //public bool IsOriginal { get; set; } = true;
 
-        //private Func<IEnumerable<List<CPoint>>> getHoleCptLtEb;
-
-        /// <summary>
-        /// Initializes a new instance of a triangle
-        /// </summary>
-        //public CPolygon(int intID=-2)
-        //    : this(intID, CHelpFunc.MakeLt<CPoint>(0))
-        //{
-        //}
-
-        ///// <summary>
-        ///// Initializes a new instance of a triangle
-        ///// </summary>
-        //public CPolygon()
-        //    : this(-2, CHelpFunc.MakeLt<List<CPoint>>(0))
-        //{
-        //}
-
 
 
         public CPolygon(int intID, IPolygon4 pPolygon, double dblFactor = 1)
@@ -117,7 +99,8 @@ namespace MorphingClass.CGeometry
         }
 
         /// <summary>
-        /// Initializes a new instance of a CPolygon, the first point and the last point in cptlt must have the same coordinates
+        /// Initializes a new instance of a CPolygon, 
+        /// the first point and the last point in cptlt must have the same coordinates
         /// </summary>
         public CPolygon(int intID = -2, List<CPoint> cptlt = null, List<CPolygon> holecpglt = null)
         {
@@ -145,11 +128,7 @@ namespace MorphingClass.CGeometry
             }
 
         }
-
-        //public CPolygon(int intID = -2, List<CPoint> cptlt = null, List<CPolygon> holecpglt = null, Func<IEnumerable<List<CPoint>>> getHoleCptLtEb = null) : this(intID, cptlt, holecpglt)
-        //{
-        //    this.getHoleCptLtEb = getHoleCptLtEb;
-        //}
+        
 
         public override void JudgeAndFormCEdgeLt()
         {

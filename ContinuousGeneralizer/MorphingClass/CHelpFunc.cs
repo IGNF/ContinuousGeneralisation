@@ -531,7 +531,8 @@ namespace MorphingClass.CUtility
             //ipg.Close();
             if (ipg.ExteriorRingCount != 1)
             {
-                throw new ArgumentException("I have not considered such a complicated case! This includes the case that a hole contains other holes! ");
+                throw new ArgumentException(
+                    "I have not considered such a complicated case! A hole contains other holes! ");
             }
 
             IRing2 pExteriorRing = (ipg.ExteriorRingBag as IGeometryCollection).get_Geometry(0) as IRing2;
@@ -543,7 +544,8 @@ namespace MorphingClass.CUtility
             //ipg.Close();
             if (ipg.ExteriorRingCount != 1)
             {
-                throw new ArgumentException("I have not considered such a complicated case! This includes the case that a hole contains other holes! ");
+                throw new ArgumentException(
+                    "I have not considered such a complicated case! A hole contains other holes! ");
             }
 
             IRing2 pExteriorRing = (ipg.ExteriorRingBag as IGeometryCollection).get_Geometry(0) as IRing2;
@@ -606,7 +608,6 @@ namespace MorphingClass.CUtility
         public static SortedDictionary<CPoint, CPoint> TestCloseCpts(List<CPoint> cptlt)
         {
             var cptSD = cptlt.ToSD(cpt => cpt, CCmpCptYX_VerySmall.sComparer);
-
             if (cptSD.Count == cptlt.Count)
             {
                 return cptSD;
@@ -857,10 +858,10 @@ namespace MorphingClass.CUtility
 
         public static List<CPolyline> GenerateCplLt(List<List<CCorrCpts>> CorrCptsLtLt)
         {
-            List<CPolyline> cpllt = new List<CPolyline>(CorrCptsLtLt.GetCountItem());
-            foreach (List<CCorrCpts> CorrCptsLt in CorrCptsLtLt)
+            var cpllt = new List<CPolyline>(CorrCptsLtLt.GetCountItem());
+            foreach (var CorrCptsLt in CorrCptsLtLt)
             {
-                foreach (CCorrCpts CorrCpts in CorrCptsLt)
+                foreach (var CorrCpts in CorrCptsLt)
                 {
                     cpllt.Add(new CPolyline(CorrCpts));
                 }
@@ -869,16 +870,26 @@ namespace MorphingClass.CUtility
             return cpllt;
         }
 
+        public static List<CPolyline> GenerateCplLtByCEdgeLt(List<CEdge> CEdgeLt)
+        {
+            var cpllt = new List<CPolyline>(CEdgeLt.Count);
+            for (int i = 0; i < CEdgeLt.Count; i++)
+            {
+                cpllt.Add(new CPolyline(i, CEdgeLt[i]));
+            }
+
+            return cpllt;
+        }
 
 
-        /// <summary>
-        /// 保存线数据
-        /// </summary>
-        /// <param name="cpllt">线数组</param>
-        /// <param name="strFileName">保存的文件名</param>
-        /// <param name="strPath">保存路径</param>
-        /// <param name="m_mapControl">地图控件</param>
-        public static IFeatureLayer SaveCPlLt(List<CPolyline> cpllt, string strFileName, IWorkspace pWorkspace, IMapControl4 m_mapControl, int intRed = 0, int intGreen = 0, int intBlue = 0, double dblWidth = 1)
+    /// <summary>
+    /// 保存线数据
+    /// </summary>
+    /// <param name="cpllt">线数组</param>
+    /// <param name="strFileName">保存的文件名</param>
+    /// <param name="strPath">保存路径</param>
+    /// <param name="m_mapControl">地图控件</param>
+    public static IFeatureLayer SaveCPlLt(List<CPolyline> cpllt, string strFileName, IWorkspace pWorkspace, IMapControl4 m_mapControl, int intRed = 0, int intGreen = 0, int intBlue = 0, double dblWidth = 1)
         {
             return CSaveFeature.SaveCGeoEb(cpllt, esriGeometryType.esriGeometryPolyline, strFileName, null, null, null, intRed, intGreen, intBlue, dblWidth);
         }

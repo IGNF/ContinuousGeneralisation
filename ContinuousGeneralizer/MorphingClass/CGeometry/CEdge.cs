@@ -13,7 +13,6 @@ namespace MorphingClass.CGeometry
     //public class CEdge : LineClass  PolylineClass
     public class CEdge : CLineBase<CEdge>
     {
-        public static CCmpCEdgeCoordinates pCmpCEdgeCoordinates = new CCmpCEdgeCoordinates();
         public double dblLength { get; set; } = CConstants.dblSpecialValue;
         public double dblLengthSquare { get; set; }
         public double dblLengthSquareReciprocal { get; set; }

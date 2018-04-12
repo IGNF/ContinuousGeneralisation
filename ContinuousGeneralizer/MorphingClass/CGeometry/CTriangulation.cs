@@ -27,29 +27,39 @@ namespace MorphingClass.CGeometry
         private CPolygon _CPg;
         private ITinAdvanced2 _pTinAdvanced2;
         private List<ITinEdge> _pTinEdgeLt;
-        private int _intExteriorEdgeNum;
 
-        //the dictionary of Cpts of this triangulation, cptSD only contains the meeting point of the start and end of the polygon once
+        //the dictionary of Cpts of this triangulation, 
+        //cptSD only contains the meeting point of the start and end of the polygon once
         //we maintaine this SD so that for a point from single polyline, 
         //we can know whether this single point overlaps a point of a larger-scale polyline
-        public SortedDictionary<CPoint, CPoint> cptSD { set; get; } 
+        public SortedDictionary<CPoint, CPoint> cptSD { set; get; }  //using CCmpCptYX_VerySmall.sComparer
+        public List<CEdge> ConstructingCEdgeLt { set; get; }
 
         public CTriangulation(CPolygon cpg)
         {
             _CPg = cpg;
-            var cptlt = new List<CPoint>();
-            cptlt.AddRange(cpg.CptLt);  //_CptLt might change in future by, e.g., constructing compatible triangulations
+            var cptlt = new List<CPoint>(cpg.CptLt);
             cptlt.RemoveLastT();  // the last one has the same coordinates with the first one
             this.cptSD = CHelpFunc.TestCloseCpts(cptlt);
-
-            _intExteriorEdgeNum = this.cptSD.Count;
             this.CptLt = cptlt;
+
+            //cpg.JudgeAndFormCEdgeLt();
+            //this.ConstructingCEdgeLt.AddRange(cpg.CEdgeLt);
+        }
+
+        public CTriangulation(CPolygon cpg, List<CPoint> fcptlt)
+        {
+            _CPg = cpg;
+            var cptlt = new List<CPoint>(fcptlt);
+            this.cptSD = CHelpFunc.TestCloseCpts(cptlt);
+            this.CptLt = cptlt;
+
+            //cpg.JudgeAndFormCEdgeLt();
+            //this.ConstructingCEdgeLt.AddRange(cpg.CEdgeLt);
         }
 
 
-
-
-        public ITinEdit Triangulate(List<CPolyline> ConstraintCpllt=null, string strIdentity = null, bool blnSave=false)
+        public ITinEdit Triangulate(List<CPolyline> ConstraintCpllt=null, string strIdentity = "", bool blnSave=false)
         {
             var cpg = _CPg;
             //cpg.pPolygon = null;
@@ -84,7 +94,7 @@ namespace MorphingClass.CGeometry
 
             if (blnSave==true)
             {
-                TinEdit.SaveAs(CConstants.ParameterInitialize.strSavePathBackSlash + strIdentity + "TinBeforeSettingDataArea");
+                TinEdit.SaveAs(CConstants.ParameterInitialize.strSavePathBackSlash + "TinBeforeSettingDataArea" + strIdentity );
             }
 
             //we are not allowed to use AddShapeZ. 
@@ -98,7 +108,7 @@ namespace MorphingClass.CGeometry
 
             if (blnSave == true)
             {
-                TinEdit.SaveAs(CConstants.ParameterInitialize.strSavePathBackSlash + strIdentity + "TinAfterSettingDataArea");
+                TinEdit.SaveAs(CConstants.ParameterInitialize.strSavePathBackSlash + "TinAfterSettingDataArea" + strIdentity );
             }
 
             int intCount2 = pTinAdvanced2.DataNodeCount;
@@ -187,17 +197,22 @@ namespace MorphingClass.CGeometry
         /// </summary>
         /// <returns>the boundary edges are stored in the front of the returned list.</returns>
         /// <remarks>this method may be only used for the construction of compatible triangulations</remarks>
-        public List<CEdge> GenerateRealTinCEdgeLt()
+        public List<CEdge> GenerateRealTinCEdgeLt(List<CEdge> KnownCEdgeLt = null)
         {
-            var vertexlt = this.CptLt;
-            vertexlt.SetIndexID();
+            this.CptLt.SetIndexID();
             var vertexSD = this.cptSD;
 
 
             var ITinEdgeLt = GenerateITinEdgeLt();
 
             //we use the difference of the TagValue, so that we know the boundary edges form the difference is 1
-            var tincedgeSS = new SortedSet<CEdge>(new CCmpEdge_CptIndexIDDiff());   
+            var tincedgeSS = new SortedSet<CEdge>(new CCmpEdge_CptGID_BothDirections());
+            var tincedgelt = new List<CEdge>();
+            if (KnownCEdgeLt!=null)
+            {
+                tincedgeSS = new SortedSet<CEdge>(KnownCEdgeLt, new CCmpEdge_CptGID_BothDirections());
+                tincedgelt.AddRange(KnownCEdgeLt);
+            }
 
             foreach (var tinedge in ITinEdgeLt)
             {
@@ -210,27 +225,87 @@ namespace MorphingClass.CGeometry
                 FindCorrCptInSDByTinNode(pFrNode, vertexSD, out frcpt);
                 FindCorrCptInSDByTinNode(pToNode, vertexSD, out tocpt);
 
+                CEdge newCEdge;
                 if (frcpt.indexID < tocpt.indexID)
                 {
-                    tincedgeSS.Add(new CEdge(frcpt, tocpt));  //notice that the duplicated cedge will not be added into tincedgeSS
+                    newCEdge = new CEdge(frcpt, tocpt);
+                }
+                else if (frcpt.indexID > tocpt.indexID)
+                {
+                    newCEdge = new CEdge(tocpt, frcpt);
                 }
                 else
                 {
-                    tincedgeSS.Add(new CEdge(tocpt, frcpt));  //notice that the duplicated cedge will not be added into tincedgeSS
+                    throw new ArgumentException("should not happen!");
+                }
+
+                //notice that the duplicated cedge will not be added into tincedgeSS
+                if (tincedgeSS.Add(newCEdge)==true)
+                {
+                    tincedgelt.Add(newCEdge);
                 }
             }
-            var tincedgelt = tincedgeSS.ToList();
+            //var tincedgelt = tincedgeSS.ToList();
 
             //the boundary edges are stored in the front of the returned list
             //remove the last boundary cedge (with the largest difference of IndexID) and insert it into the correct position
-            var lastcedge = tincedgelt.GetLastT();
-            var newlastcedge = new CEdge(lastcedge.ToCpt, lastcedge.FrCpt);
-            tincedgelt.Insert(_intExteriorEdgeNum - 1, newlastcedge);
-            tincedgelt.RemoveLastT();
+            //var lastcedge = tincedgelt.GetLastT();
+            //var newlastcedge = new CEdge(lastcedge.ToCpt, lastcedge.FrCpt);
+            //tincedgelt.Insert(this.CptLt.Count - 1, newlastcedge);
+            //tincedgelt.RemoveLastT();
 
             this.CEdgeLt = tincedgelt;
             return tincedgelt;
         }
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <returns>the boundary edges are stored in the front of the returned list.</returns>
+        ///// <remarks>this method may be only used for the construction of compatible triangulations</remarks>
+        //public List<CEdge> GenerateRealTinCEdgeLt(List<CEdge> KnownCEdgeLt = null)
+        //{
+        //    this.CptLt.SetIndexID();
+        //    var vertexSD = this.cptSD;
+
+
+        //    var ITinEdgeLt = GenerateITinEdgeLt();
+
+        //    //we use the difference of the TagValue, so that we know the boundary edges form the difference is 1
+        //    var tincedgeSS = new SortedSet<CEdge>(new CCmpEdge_CptIndexIDDiff());
+
+        //    foreach (var tinedge in ITinEdgeLt)
+        //    {
+        //        //there are always a pair of edges between a pair of triangles, but we only need one edge. 
+        //        //So we reverse some edges than we can delete one edge of each pair
+        //        var pFrNode = tinedge.FromNode;
+        //        var pToNode = tinedge.ToNode;
+
+        //        CPoint frcpt, tocpt;
+        //        FindCorrCptInSDByTinNode(pFrNode, vertexSD, out frcpt);
+        //        FindCorrCptInSDByTinNode(pToNode, vertexSD, out tocpt);
+
+        //        if (frcpt.indexID < tocpt.indexID)
+        //        {
+        //            tincedgeSS.Add(new CEdge(frcpt, tocpt));  //notice that the duplicated cedge will not be added into tincedgeSS
+        //        }
+        //        else
+        //        {
+        //            tincedgeSS.Add(new CEdge(tocpt, frcpt));  //notice that the duplicated cedge will not be added into tincedgeSS
+        //        }
+        //    }
+        //    var tincedgelt = tincedgeSS.ToList();
+
+        //    //the boundary edges are stored in the front of the returned list
+        //    //remove the last boundary cedge (with the largest difference of IndexID) and insert it into the correct position
+        //    var lastcedge = tincedgelt.GetLastT();
+        //    var newlastcedge = new CEdge(lastcedge.ToCpt, lastcedge.FrCpt);
+        //    tincedgelt.Insert(this.CptLt.Count - 1, newlastcedge);
+        //    tincedgelt.RemoveLastT();
+
+        //    this.CEdgeLt = tincedgelt;
+        //    return tincedgelt;
+        //}
 
 
 
@@ -255,28 +330,6 @@ namespace MorphingClass.CGeometry
 
             return isFound;
         }
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="cedgelt"></param>
-        ///// <returns>if cedge.pTinEdge.FromNode.TagValue smaller than cedge.pTinEdge.ToNode.TagValue, it is consistent, otherwise not.
-        ///// therefore, the returned edges have the attribute that 
-        ///// cedge.pTinEdge.FromNode.TagValue is always smaller than cedge.pTinEdge.ToNode.TagValue. 
-        ///// This is also true for FrCpt.pTinNode and ToCpt.pTinNode</returns>
-        //public List<CEdge> GetConsistentCEdge(List<CEdge> cedgelt)
-        //{
-        //    var newcedgelt = new List<CEdge>(cedgelt.Count);
-        //    foreach (var cedge in cedgelt)
-        //    {
-        //        if (cedge.pTinEdge.FromNode.TagValue == cedge.FrCpt.pTinNode.TagValue ||
-        //            cedge.pTinEdge.ToNode.TagValue == cedge.ToCpt.pTinNode.TagValue)
-        //        {
-        //            newcedgelt.Add(cedge);
-        //        }
-        //    }
-        //    return newcedgelt;
-        //}
 
 
 
@@ -315,42 +368,6 @@ namespace MorphingClass.CGeometry
             }
 
             CSaveFeature.SaveCEdgeEb(CEdgeLt, "TIN_"+strName);
-        }
-
-        public void CompareCptltAndNode()
-        {
-            var cptlt = this.CptLt;
-            //var cptSD = cptlt.ToSD(cpt => cpt, new CCmpCptYX());
-
-            ITinAdvanced2 ptinadvanced2 = _pTinAdvanced2;
-            var cptNodeDataAreaLt = new List<CPoint>(ptinadvanced2.DataNodeCount); 
-            for (int i = 0; i < ptinadvanced2.NodeCount; i++)
-            {
-                var ptinnode = ptinadvanced2.GetNode(i+1);
-
-                if (ptinnode.IsInsideDataArea)
-                {
-                    cptNodeDataAreaLt.Add(new CPoint(ptinnode));
-
-
-                    //var cptNode = new CPoint(ptinnode);
-                    //cptSD.Remove(cptNode);
-                }
-            }
-
-            int intLeftCount1 = CompareCptltAndNode(cptlt, cptNodeDataAreaLt);
-            int intLeftCount2 = CompareCptltAndNode(cptNodeDataAreaLt, cptlt);
-            //ptinadvanced2.edit
-        }
-
-        private int CompareCptltAndNode(List <CPoint > cptlt1, List <CPoint > cptlt2)
-        {
-            var cptSD = cptlt1.ToSD(cpt => cpt, new CCmpCptYX_VerySmall());
-            foreach (var cpt2 in cptlt2)
-            {
-                cptSD.Remove(cpt2);
-            }
-            return cptSD.Count;
         }
 
         //public List<CEdge > GenerateDataAreaCEdgeLt()

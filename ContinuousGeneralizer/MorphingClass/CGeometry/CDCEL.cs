@@ -188,9 +188,21 @@ namespace MorphingClass.CGeometry
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="cpt"></param>
+        /// <param name="newcedge">newcedge should have a twin edge</param>
+        public static void InsertCEdgeAtCpt(CPoint cpt, CEdge newcedge)
+        {
+            var SmallerAxisAngleCEdge = FindSmallerAxisAngleCEdgebyCEdge(cpt, newcedge);
+            InsertCEdgeBySmaller(SmallerAxisAngleCEdge, newcedge);
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="prevcedge"></param>
         /// <param name="insertedcedge"></param>
-        /// <param name="nextcedge"></param>
+        /// <param name="newcedge">newcedge should have a twin edge</param>
         /// <remarks>prevcedge, insertedcedge, and nextcedge should have the same start</remarks>
         public static void InsertCEdgeBySmaller(CEdge SmallerAxisAngleCEdge, CEdge newcedge)
         {
@@ -741,15 +753,16 @@ namespace MorphingClass.CGeometry
                 {
                     MessageBox.Show("Overlap is not considered when traversing SgCpl in a Triangulation. In: CDCEL.cs");
                 }
-            } while (CurrentCEdge.dblAxisAngle != IncidentCEdge.dblAxisAngle);
+            } while (CurrentCEdge.GID != IncidentCEdge.GID);
 
-
-            return CurrentCEdge.GetSmallerAxisAngleCEdge();  //if cedge.dblAxisAngle is larger than the AxisAngles of all the edges, then the edge with largest AxisAngle is the one we are looking for
+            //if cedge.dblAxisAngle is larger than the AxisAngles of all the edges, 
+            //then the edge with largest AxisAngle is the one we are looking for
+            return CurrentCEdge.GetSmallerAxisAngleCEdge();  
         }
 
         //public static 
 
-        public List<CEdge> UpdateCEdgeLtByHalfCEdgeLt()
+        public void UpdateCEdgeLtByHalfCEdgeLt()
         {
             var halfcedgelt = _HalfEdgeLt;
             var cedgelt = new List<CEdge>(halfcedgelt.Count / 2);
@@ -760,7 +773,6 @@ namespace MorphingClass.CGeometry
                 intI += 2;
             }
             this.CEdgeLt = cedgelt;
-            return cedgelt;
         }
 
         public static bool IsVertexIntersection(CPoint cpt)

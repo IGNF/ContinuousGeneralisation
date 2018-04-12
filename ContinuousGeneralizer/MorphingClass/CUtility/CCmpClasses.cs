@@ -72,18 +72,22 @@ namespace MorphingClass.CUtility
     {
         public override int Compare(IList<object> lt1, IList<object> lt2)
         {
-            int intResult = CCmpMethods.CmpDbl_ConstVerySmall(Convert.ToDouble(lt1[3]), Convert.ToDouble(lt2[3]));  //overesimation factor
+            int intResult = CCmpMethods.CmpDbl_ConstVerySmall
+                (Convert.ToDouble(lt1[3]), Convert.ToDouble(lt2[3]));  //overesimation factor
             if (intResult == 0)
             {
-                intResult = CCmpMethods.CmpDbl_ConstVerySmall(Convert.ToDouble(lt1[1]), Convert.ToDouble(lt2[1]));  //patch number
+                intResult = CCmpMethods.CmpDbl_ConstVerySmall
+                    (Convert.ToDouble(lt1[1]), Convert.ToDouble(lt2[1]));  //patch number
             }
             if (intResult == 0)
             {
-                intResult = CCmpMethods.CmpDbl_ConstVerySmall(Convert.ToDouble(lt1[2]), Convert.ToDouble(lt2[2]));  //adjacency number
+                intResult = CCmpMethods.CmpDbl_ConstVerySmall
+                    (Convert.ToDouble(lt1[2]), Convert.ToDouble(lt2[2]));  //adjacency number
             }
             if (intResult == 0)
             {
-                intResult = CCmpMethods.CmpDbl_ConstVerySmall(Convert.ToDouble(lt1[0]), Convert.ToDouble(lt2[0]));  //domain id
+                intResult = CCmpMethods.CmpDbl_ConstVerySmall
+                    (Convert.ToDouble(lt1[0]), Convert.ToDouble(lt2[0]));  //domain id
             }
             return -intResult;
         }
@@ -239,7 +243,8 @@ namespace MorphingClass.CUtility
         public override int Compare(CRegion crg1, CRegion crg2)
         {
             //int intResult = crg1.GetCphCol().GetFirstT().dblArea.CompareTo(crg2.GetCphCol().GetFirstT().dblArea);
-            int intResult = CCmpMethods.CmpCoordDbl_VerySmall(crg1.GetCphCol().First().dblArea, crg2.GetCphCol().First().dblArea);
+            int intResult = CCmpMethods.CmpCoordDbl_VerySmall
+                (crg1.GetCphCol().First().dblArea, crg2.GetCphCol().First().dblArea);
             if (intResult == 0)
             {
                 intResult = CCmpMethods.CmpCRegion_CphGIDTypeIndex(crg1, crg2);
@@ -289,28 +294,37 @@ namespace MorphingClass.CUtility
         }
     }
 
-    //public class CCmpEdge_CptTinNodeTagValue : Comparer<CEdge>
-    //{
-    //    public override int Compare(CEdge cedge1, CEdge cedge2)
-    //    {
-    //        //we use the difference of the TagValue, so that we know the boundary edges form the difference is 1
-    //        int intResultDiff = (cedge1.ToCpt.pTinNode.TagValue - cedge1.FrCpt.pTinNode.TagValue).CompareTo(cedge2.ToCpt.pTinNode.TagValue - cedge2.FrCpt.pTinNode.TagValue);
-    //        int intResultFF = (cedge1.FrCpt.pTinNode.TagValue).CompareTo(cedge2.FrCpt.pTinNode.TagValue);
-
-    //        return CCmpMethods.HandleTwoResults(intResultDiff, intResultFF);
-    //    }
-    //}
 
     public class CCmpEdge_CptIndexIDDiff : Comparer<CEdge>
     {
         public override int Compare(CEdge cedge1, CEdge cedge2)
         {
-            //we use the difference of the TagValue, so that we know the boundary edges form the difference is 1
-            int intResultDiff = (cedge1.ToCpt.indexID - cedge1.FrCpt.indexID).CompareTo(cedge2.ToCpt.indexID - cedge2.FrCpt.indexID);
+            int intResultDiff = (cedge1.ToCpt.indexID - cedge1.FrCpt.indexID)
+                .CompareTo(cedge2.ToCpt.indexID - cedge2.FrCpt.indexID);
             int intResultFF = cedge1.FrCpt.indexID.CompareTo(cedge2.FrCpt.indexID);
 
             return CCmpMethods.HandleTwoResults(intResultDiff, intResultFF);
         }
     }
-   
+
+
+
+
+
+    public class CCmpEdge_CptGID_BothDirections : Comparer<CEdge>
+    {
+        public override int Compare(CEdge cedge1, CEdge cedge2)
+        {
+            int intSmallGID1 = Math.Min(cedge1.FrCpt.GID, cedge1.ToCpt.GID);
+            int intLargeGID1 = Math.Max(cedge1.FrCpt.GID, cedge1.ToCpt.GID);
+            int intSmallGID2 = Math.Min(cedge2.FrCpt.GID, cedge2.ToCpt.GID);
+            int intLargeGID2 = Math.Max(cedge2.FrCpt.GID, cedge2.ToCpt.GID);
+
+            int intSmallResult = intSmallGID1.CompareTo(intSmallGID2);
+            int intLargeResult = intLargeGID1.CompareTo(intLargeGID2);
+
+            return CCmpMethods.HandleTwoResults(intSmallResult, intLargeResult);
+        }
+    }
+
 }
