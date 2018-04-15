@@ -19,7 +19,8 @@ namespace MorphingClass.CCorrepondObjects
         private IEnvelope _pEnvRgl;  //specify a place to present the regular polygon
         private CTriangulation _FrCtgl;
         private CTriangulation _ToCtgl;
-        private bool _blnSave;
+
+        public bool blnSave { set; get; }  //try to change the value in CCGABM.cs
 
         //private CDCEL _FrRglDCEL;
 
@@ -40,9 +41,9 @@ namespace MorphingClass.CCorrepondObjects
         /// <param name="blnMaxCommonChords"></param>
         /// <param name="blnSave"></param>
         /// <param name="intID"></param>
-        public CCptbCtgl(CPolygon frcpg, CPolygon tocpg, bool blnMaxCommonChords = true, bool blnSave = false, int intID = -1)
+        public CCptbCtgl(CPolygon frcpg, CPolygon tocpg, bool blnMaxCommonChords = true, bool fblnSave = false, int intID = -1)
         {
-            _blnSave = blnSave;
+            this.blnSave = fblnSave;
 
             frcpg.JudgeAndFormCEdgeLt();
             tocpg.JudgeAndFormCEdgeLt();
@@ -51,30 +52,36 @@ namespace MorphingClass.CCorrepondObjects
             double dblMoveHight = 2 * ipgEnv.Height;
             _pEnvRgl = new EnvelopeClass();
             _pEnvRgl.PutCoords(ipgEnv.XMin, ipgEnv.YMin + dblMoveHight, ipgEnv.XMax, ipgEnv.YMax + dblMoveHight);
-            
-
-            List<CEdge> FrChordCEdgelt;
-            List<CEdge> ToChordCEdgelt;
-            SeparateCpgsByDynamic(frcpg, tocpg, out FrChordCEdgelt, out ToChordCEdgelt);
-
-            var FrConstraintCplLt = CHelpFunc.GenerateCplLtByCEdgeLt(FrChordCEdgelt);
-            var ToConstraintCplLt = CHelpFunc.GenerateCplLtByCEdgeLt(ToChordCEdgelt);
 
             var FrConstructingCEdgeLt = new List<CEdge>(frcpg.CEdgeLt);
-            FrConstructingCEdgeLt.AddRange(FrChordCEdgelt);
-
             var ToConstructingCEdgeLt = new List<CEdge>(tocpg.CEdgeLt);
-            ToConstructingCEdgeLt.AddRange(ToChordCEdgelt);
 
+            List<CPolyline> FrConstraintCplLt = null;
+            List<CPolyline> ToConstraintCplLt = null;
+            if (blnMaxCommonChords==true)
+            {
+                List<CEdge> FrChordCEdgelt;
+                List<CEdge> ToChordCEdgelt;
+                SeparateCpgsByDynamic(frcpg, tocpg, out FrChordCEdgelt, out ToChordCEdgelt);
 
-            _FrCtgl = new CTriangulation(frcpg);
-            _FrCtgl.Triangulate(FrConstraintCplLt, "Fr", blnSave);
-            _FrCtgl.ConstructingCEdgeLt= FrConstructingCEdgeLt;
+                FrConstraintCplLt = CHelpFunc.GenerateCplLtByCEdgeLt(FrChordCEdgelt);
+                ToConstraintCplLt = CHelpFunc.GenerateCplLtByCEdgeLt(ToChordCEdgelt);
+
+                FrConstructingCEdgeLt.AddRange(FrChordCEdgelt);
+                ToConstructingCEdgeLt.AddRange(ToChordCEdgelt);
+            }
 
 
             _ToCtgl = new CTriangulation(tocpg);
-            _ToCtgl.Triangulate(ToConstraintCplLt, "To", blnSave);
-            _ToCtgl.ConstructingCEdgeLt = ToConstructingCEdgeLt;
+            _ToCtgl.Triangulate(ToConstraintCplLt, ToConstructingCEdgeLt, "To", fblnSave);
+            //_ToCtgl.ConstructingCEdgeLt = ToConstructingCEdgeLt;
+
+            _FrCtgl = new CTriangulation(frcpg);
+            _FrCtgl.Triangulate(FrConstraintCplLt, FrConstructingCEdgeLt, "Fr", fblnSave);
+            //_FrCtgl.ConstructingCEdgeLt= FrConstructingCEdgeLt;
+
+
+
  
 
 
@@ -91,22 +98,22 @@ namespace MorphingClass.CCorrepondObjects
         {
             CTriangulation frctgl = _FrCtgl;
             CTriangulation toctgl = _ToCtgl;
-            bool blnSave = _blnSave;
+            bool fblnSave = this.blnSave;
             var intRglExteriorEdgeNum = frctgl.CptLt.Count;
 
             CDCEL FrRglDCEL;
             CDCEL ToRglDCEL;
-            ConstructRglDCEL(frctgl, toctgl, out FrRglDCEL, out ToRglDCEL, _pEnvRgl, blnSave);
+            ConstructRglDCEL(frctgl, toctgl, out FrRglDCEL, out ToRglDCEL, _pEnvRgl, fblnSave);
 
             //in FrRglDCEL, cptlt, cpt.AxisAngleCEdgeLt, HalfEdgeLt and CEdgelt has been updated. 
             //FaceCpgLt should not be used before updating
-            CombineAndTriangulateDCEL(ref FrRglDCEL, ref ToRglDCEL, intRglExteriorEdgeNum, blnSave);
+            CombineAndTriangulateDCEL(ref FrRglDCEL, ref ToRglDCEL, intRglExteriorEdgeNum, fblnSave);
 
 
             RefineOriginalCtgl(frctgl, FrRglDCEL, CEnumScale.Larger);    //CptLt, CEdgeLt, HalfEdgeLt, FaceCpgLt are updated
             RefineOriginalCtgl(toctgl, FrRglDCEL, CEnumScale.Smaller);   //CptLt, CEdgeLt, HalfEdgeLt, FaceCpgLt are updated
 
-            if (blnSave == true)
+            if (fblnSave == true)
             {
                 CSaveFeature.SaveCEdgeEb(frctgl.CEdgeLt, "CompatibleFrCtgl", blnVisible: false);
                 CSaveFeature.SaveCptEb(frctgl.CptLt, "CompatibleFrCpt", blnVisible: false);
@@ -134,7 +141,8 @@ namespace MorphingClass.CCorrepondObjects
         private CDCEL ConstructRglDCEL(CTriangulation ctgl, IEnvelope pEnv, CEnumScale enumScale, bool blnSave = false)
         {
             //ctgl.cpg
-            var realIndCEdgelt = ctgl.GenerateRealTinCEdgeLt(ctgl.ConstructingCEdgeLt);
+            //var realIndCEdgelt = ctgl.GenerateRealTinCEdgeLt(ctgl.ConstructingCEdgeLt);
+            var realIndCEdgelt = ctgl.CEdgeLt;
             if (blnSave == true)
             {
                 CSaveFeature.SaveCEdgeEb(realIndCEdgelt, "ActualIndCDT" + enumScale.ToString(), blnVisible: false);
@@ -560,8 +568,9 @@ namespace MorphingClass.CCorrepondObjects
             var ExistingInteriorCplLt = CHelpFunc.GenerateCplLtByCEdgeLt(ExistingInteriorCEdgeLt);
                 
 
-            ctgl.Triangulate(ExistingInteriorCplLt, "Combined", blnSave);
-            ctgl.GenerateRealTinCEdgeLt(FrRglDCEL.CEdgeLt);
+            ctgl.Triangulate(ExistingInteriorCplLt, FrRglDCEL.CEdgeLt, "Combined", blnSave);
+
+            //ctgl.GenerateRealTinCEdgeLt(FrRglDCEL.CEdgeLt);
 
             //insert new edges into the FrRglDCEL
             ctgl.CEdgeLt.ForEach(cedge => cedge.isTraversed = false);
@@ -583,56 +592,56 @@ namespace MorphingClass.CCorrepondObjects
         }
 
 
-        private void TriangulateFaces(ref CDCEL FrRglDCEL)
-        {
-            //set the isTraversed attribute to flase
-            SetCEdgesIsTraversedFalse_AroundCpts(ref FrRglDCEL);
+        //private void TriangulateFaces(ref CDCEL FrRglDCEL)
+        //{
+        //    //set the isTraversed attribute to flase
+        //    SetCEdgesIsTraversedFalse_AroundCpts(ref FrRglDCEL);
 
-            //we don't need to triangulate super face. so we set isTraversed of all the outercedge to true
-            CEdge outercedge = FrRglDCEL.HalfEdgeLt[1];   //we know that FrRglDCEL.HalfEdgeLt[1] is an outer cedge
-            do
-            {
-                outercedge.isTraversed = true;
-                outercedge = outercedge.cedgeNext;
-            } while (outercedge.isTraversed == false);
+        //    //we don't need to triangulate super face. so we set isTraversed of all the outercedge to true
+        //    CEdge outercedge = FrRglDCEL.HalfEdgeLt[1];   //we know that FrRglDCEL.HalfEdgeLt[1] is an outer cedge
+        //    do
+        //    {
+        //        outercedge.isTraversed = true;
+        //        outercedge = outercedge.cedgeNext;
+        //    } while (outercedge.isTraversed == false);
 
-            //triangulate faces
-            foreach (var cpt in FrRglDCEL.CptLt)
-            {
-                var incidentcedge = cpt.IncidentCEdge;
-                var CoStartCEdge = incidentcedge;
+        //    //triangulate faces
+        //    foreach (var cpt in FrRglDCEL.CptLt)
+        //    {
+        //        var incidentcedge = cpt.IncidentCEdge;
+        //        var CoStartCEdge = incidentcedge;
 
-                do
-                {
-                    if (CoStartCEdge.isTraversed == false)
-                    {
-                        CoStartCEdge.isTraversed = true;
-                        CoStartCEdge.cedgeNext.isTraversed = true;
-                        CoStartCEdge.cedgeNext.cedgeNext.isTraversed = true;
+        //        do
+        //        {
+        //            if (CoStartCEdge.isTraversed == false)
+        //            {
+        //                CoStartCEdge.isTraversed = true;
+        //                CoStartCEdge.cedgeNext.isTraversed = true;
+        //                CoStartCEdge.cedgeNext.cedgeNext.isTraversed = true;
 
-                        //we define lastPreCEdge so that we will know where we should insert
-                        CEdge SmallerAxisAngleCEdge = CoStartCEdge;  
-                        CEdge currentcedge = CoStartCEdge.cedgeNext.cedgeNext;
-                        while (CoStartCEdge.FrCpt.GID != currentcedge.ToCpt.GID)
-                        {
-                            CEdge newcedge = new CEdge(CoStartCEdge.FrCpt, currentcedge.FrCpt);
-                            newcedge.CreateTwinCEdge();
-                            CDCEL.InsertCEdgeBySmaller(SmallerAxisAngleCEdge, newcedge);
-                            CDCEL.InsertCEdgeBySmaller(currentcedge, newcedge.cedgeTwin);
+        //                //we define lastPreCEdge so that we will know where we should insert
+        //                CEdge SmallerAxisAngleCEdge = CoStartCEdge;  
+        //                CEdge currentcedge = CoStartCEdge.cedgeNext.cedgeNext;
+        //                while (CoStartCEdge.FrCpt.GID != currentcedge.ToCpt.GID)
+        //                {
+        //                    CEdge newcedge = new CEdge(CoStartCEdge.FrCpt, currentcedge.FrCpt);
+        //                    newcedge.CreateTwinCEdge();
+        //                    CDCEL.InsertCEdgeBySmaller(SmallerAxisAngleCEdge, newcedge);
+        //                    CDCEL.InsertCEdgeBySmaller(currentcedge, newcedge.cedgeTwin);
 
-                            newcedge.isTraversed = false;
-                            newcedge.cedgeTwin.isTraversed = false;
-                            currentcedge.isTraversed = false;
+        //                    newcedge.isTraversed = false;
+        //                    newcedge.cedgeTwin.isTraversed = false;
+        //                    currentcedge.isTraversed = false;
 
-                            currentcedge = currentcedge.cedgeNext;
-                            SmallerAxisAngleCEdge = newcedge;
-                        }
-                    }
+        //                    currentcedge = currentcedge.cedgeNext;
+        //                    SmallerAxisAngleCEdge = newcedge;
+        //                }
+        //            }
 
-                    CoStartCEdge = CoStartCEdge.GetLargerAxisAngleCEdge();
-                } while (CoStartCEdge.GID != incidentcedge.GID);
-            }
-        }
+        //            CoStartCEdge = CoStartCEdge.GetLargerAxisAngleCEdge();
+        //        } while (CoStartCEdge.GID != incidentcedge.GID);
+        //    }
+        //}
 
         private void UpdateCEdgeLtAndHalfCEdgeLt_AroundCpts(ref CDCEL FrRglDCEL, int intRglExteriorEdgeNum, bool blnSave=false)
         {
@@ -826,10 +835,10 @@ namespace MorphingClass.CCorrepondObjects
             ToChordCEdgelt = GenerateInteriorCplLt(aCell, tocpg.CptLt);
 
 
-            if (_blnSave == true)
+            if (this.blnSave == true)
             {
-                CSaveFeature.SaveCEdgeEb(FrChordCEdgelt, "frcommonchords", blnVisible: false);
-                CSaveFeature.SaveCEdgeEb(ToChordCEdgelt, "tocommonchords", blnVisible: false);
+                CSaveFeature.SaveCEdgeEb(FrChordCEdgelt, "CommonChordsFr", blnVisible: false);
+                CSaveFeature.SaveCEdgeEb(ToChordCEdgelt, "CommonChordsTo", blnVisible: false);
             }
         }
 
@@ -905,30 +914,94 @@ namespace MorphingClass.CCorrepondObjects
             var ablnValidChords = new bool[intCptNum, intCptNum];
             var fEdgeGrid = new CEdgeGrid(cpg.CEdgeLt);
 
+            var IgnoreCEdgeLt = new List<CEdge>(cpg.CEdgeLt.Count + 1);
+            IgnoreCEdgeLt.Add(cpg.CEdgeLt.GetLastT());
+            IgnoreCEdgeLt.AddRange(cpg.CEdgeLt);
 
             for (int i = 0; i < intCptNum - 1; i++)
             {
                 ablnValidChords[i, i + 1] = true;
+
+                var IgnoreCEdgeSS = new SortedSet<CEdge>();
+                IgnoreCEdgeSS.Add(IgnoreCEdgeLt[i]);
+                IgnoreCEdgeSS.Add(IgnoreCEdgeLt[i + 1]);
+                IgnoreCEdgeSS.Add(IgnoreCEdgeLt[i + 2]);
+
+                var llcpt = cpgcptlt[i];
+                var precpt = cpgcptlt[i + 1];
+                var succpt = cpgcptlt[i + 1];
+                if (CCmpMethods.CmpCptXY(cpgcptlt[i + 1], llcpt, false) == -1)
+                {
+                    llcpt = cpgcptlt[i + 1];
+                    precpt = cpgcptlt[i];
+                    succpt = cpgcptlt[i];
+                }
+                bool blnClockwise = false;
+
+                //imagine we have a subcptlt which contains points from cpgcptlt[i] to cpgcptlt[j-1]
+                //now we add a new point, cpgcptlt[j], into subcptlt. 
+                //we want to know if new subcptlt is clockwise or not
                 for (int j = i + 2; j < intCptNum; j++)
                 {
-                    var subcptlt = cpgcptlt.GetRange(i, j - i + 1);
-                    //if the baseline is outside of the polygon, then the baseline is not a valid choice
-                    if (CGeoFunc.IsClockwise(subcptlt, false) == true)
+                    bool blnNewllcpt = (CCmpMethods.CmpCptXY(cpgcptlt[j], llcpt, false) == -1);
+                    if (blnNewllcpt == false && 
+                        llcpt.GID != cpgcptlt[i].GID && llcpt.GID != cpgcptlt[j - 1].GID)
                     {
+                        //we do not have new llcpt, and llcpt is somewhere in the middle of subcptlt
+                        //blnClockwise not changed
+                    }
+                    else
+                    {
+                        if (blnNewllcpt == false)
+                        {
+                            if (llcpt.GID == cpgcptlt[i].GID)
+                            {
+                                precpt = cpgcptlt[j];
+                            }
+                            else if (llcpt.GID == cpgcptlt[j-1].GID)
+                            {
+                                succpt= cpgcptlt[j];
+                            }
+                            else
+                            {
+                                throw new ArgumentOutOfRangeException("an impossible case!");
+                            }
+                        }
+                        else
+                        {
+                            llcpt = cpgcptlt[j];
+                            precpt = cpgcptlt[j-1];
+                            succpt = cpgcptlt[i];
+                        }
+
+                        blnClockwise = CGeoFunc.IsClockwise(precpt, llcpt, succpt);
+                    }
+
+                    
+
+
+                    IgnoreCEdgeSS.Add(IgnoreCEdgeLt[j + 1]);
+                    if (blnClockwise == true)
+                    {
+                        //if the baseline is outside of the polygon, then the baseline is not a valid choice
                         ablnValidChords[i, j] = false;
                     }
                     else
                     {
                         var newcedge = new CEdge(cpgcptlt[i], cpgcptlt[j]);
 
-
-                        if (fEdgeGrid.BlnIntersect(newcedge, false, true, true) == false)
+                        //if (fEdgeGrid.BlnIntersect(newcedge, false, true, true, IgnoreCEdgeSS) == false)
+                        if (fEdgeGrid.BlnTouch(newcedge, IgnoreCEdgeSS) == false)
                         {
                             ablnValidChords[i, j] = true;
-                        }
+                        }                        
                     }
+                    IgnoreCEdgeSS.Remove(IgnoreCEdgeLt[j]);
                 }
             }
+
+            //CHelpFunc.PrintArray2D(ablnValidChords, 10);
+
             return ablnValidChords;
         }
         #endregion

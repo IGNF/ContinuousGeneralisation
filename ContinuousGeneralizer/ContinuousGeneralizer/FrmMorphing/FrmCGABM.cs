@@ -69,7 +69,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             CConstants.strMethod = "CGABM";
             ParameterInitialize.cboTransform = this.cboTransform;
 
-            this.cboTransform.Text = "Compatible Triangulations";
+            this.cboTransform.SelectedIndex = 0;
 
             //进行Load操作，初始化变量
             _FrmOperation = new CFrmOperation(ref ParameterInitialize);

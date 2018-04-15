@@ -138,7 +138,8 @@ namespace MorphingClass.CAid
         }
 
 
-        public static double CreateBufferAndNewCorrCGeoLt(List<CPolyline> pLSCPlLt, List<CPolyline> pSSCPlLt, CParameterInitialize ParameterInitialize)
+        public static double CreateBufferAndNewCorrCGeoLt(List<CPolyline> pLSCPlLt, List<CPolyline> pSSCPlLt, 
+            CParameterInitialize ParameterInitialize)
         {
             double dblBuffer = 0;
             switch (ParameterInitialize.cboBuffer.SelectedIndex)

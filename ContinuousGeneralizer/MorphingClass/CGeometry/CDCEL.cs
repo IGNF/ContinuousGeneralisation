@@ -19,9 +19,12 @@ namespace MorphingClass.CGeometry
     /// <remarks>Doubly-Connected Edge List</remarks>
     public class CDCEL/* : CPolyBase<CPolyline>*/
     {
-        
-        private List<CEdge> _HalfEdgeLt;  //output, we always store one edge and then imediately its twin edge; in the construction of compatible triangulations we always store the outer edges in the front of this list
-        private List<CPolygon> _FaceCpgLt;      //output; superface is the first element in this list,i.e., _FaceCpgLt[0]. if a face has OuterCmptCEdge == null, then this face is super face
+        //output, we always store one edge and then imediately its twin edge; 
+        //in the construction of compatible triangulations we always store the outer edges in the front of this list
+        private List<CEdge> _HalfEdgeLt;
+        //output; superface is the first element in this list,i.e., _FaceCpgLt[0]. 
+        //if a face has OuterCmptCEdge == null, then this face is super face  
+        private List<CPolygon> _FaceCpgLt;      
         private CEdgeGrid _pEdgeGrid;
         public List<CEdge> CEdgeLt { get; set; }
         public List<CPoint> CptLt { get; set; }
@@ -154,8 +157,10 @@ namespace MorphingClass.CGeometry
                 var AxisAngleCEdgeEt = kvp.Key. AxisAngleCEdgeLt.GetEnumerator();
                 AxisAngleCEdgeEt.MoveNext();
                 CEdge SmallerAxisAngleCEdge = AxisAngleCEdgeEt.Current;
-                SmallerAxisAngleCEdge.FrCpt = kvp.Key;  //SmallerAxisAngleCEdge may be from LS or SS, so we set its FrCpt as a Cpt from LS
-                SmallerAxisAngleCEdge.cedgeTwin.ToCpt = kvp.Key;  //we also need to set cedgeTwin.ToCpt here because we would not have chance to set it any more
+                //SmallerAxisAngleCEdge may be from LS or SS, so we set its FrCpt as a Cpt from LS
+                SmallerAxisAngleCEdge.FrCpt = kvp.Key;
+                //we also need to set cedgeTwin.ToCpt here because we would not have chance to set it any more 
+                SmallerAxisAngleCEdge.cedgeTwin.ToCpt = kvp.Key;  
                 while (AxisAngleCEdgeEt.MoveNext())
                 {
                     InsertCEdgeBySmaller(SmallerAxisAngleCEdge, AxisAngleCEdgeEt.Current);
@@ -230,8 +235,8 @@ namespace MorphingClass.CGeometry
             SmallerAxisAngleCEdge.cedgePrev = newcedge.cedgeTwin;
 
             //link the edges
-            newcedge.FrCpt = SmallerAxisAngleCEdge.FrCpt;                     //we will keep only one vertex at an intersection
-            newcedge.cedgeTwin.ToCpt = SmallerAxisAngleCEdge.FrCpt;           //we will keep only one vertex at an intersection
+            newcedge.FrCpt = SmallerAxisAngleCEdge.FrCpt;              //we will keep only one vertex at an intersection
+            newcedge.cedgeTwin.ToCpt = SmallerAxisAngleCEdge.FrCpt;    //we will keep only one vertex at an intersection
         }
 
         #endregion
@@ -595,7 +600,9 @@ namespace MorphingClass.CGeometry
         {
             if (intIndex == 1)
             {
-                foreach (CEdge cedge in _HalfEdgeLt)  //we use 1 to store the DCEL information of the mix of Larger-scale and Single linear features (notice that Single linear features are actually also with larger-scale)
+                //we use 1 to store the DCEL information of the mix of Larger-scale and Single linear features 
+                //(notice that Single linear features are actually also with larger-scale)
+                foreach (CEdge cedge in _HalfEdgeLt)  
                 {
                     cedge.cedgePrev1 = cedge.cedgePrev;
                     cedge.cedgeNext1 = cedge.cedgeNext;
@@ -693,8 +700,9 @@ namespace MorphingClass.CGeometry
 
 
         /// <summary>Detect a closest left edge for each point </summary>
-        /// <remarks>create a line segment starting at a point and directing to left, see if this line segment intersect with any other cedges.
-        ///                  even an end of another edge on this line segment, it will be considered as intersect</remarks>
+        /// <remarks>create a line segment starting at a point and directing to left, 
+        /// see if this line segment intersect with any other cedges.
+        /// even an end of another edge on this line segment, it will be considered as intersect</remarks>
         public void DetectCloestLeftCorrectCEdge(List<CPoint> cptlt)
         {
             foreach (CPoint cpt in cptlt)
@@ -733,7 +741,8 @@ namespace MorphingClass.CGeometry
             }
             else
             {
-                MessageBox.Show("Overlap is not considered when traversing SgCpl in a Triangulation. In: CDCEL.cs");
+                throw new ArgumentException(
+    "probably because overlap is not considered when traversing SgCpl in a Triangulation.");
             }
 
             //test other edges (IncidentCEdge)
@@ -751,7 +760,8 @@ namespace MorphingClass.CGeometry
                 }
                 else
                 {
-                    MessageBox.Show("Overlap is not considered when traversing SgCpl in a Triangulation. In: CDCEL.cs");
+                    throw new ArgumentException(
+    "probably because overlap is not considered when traversing SgCpl in a Triangulation.");
                 }
             } while (CurrentCEdge.GID != IncidentCEdge.GID);
 
@@ -837,7 +847,8 @@ namespace MorphingClass.CGeometry
 
         private static void WriteInformationForCEdge(CEdge cedge, string strName)
         {
-            Console.WriteLine(strName +"(indexID "+ cedge.indexID+ ")" + ":  " + cedge.FrCpt.indexID + "   " + cedge.ToCpt.indexID 
+            Console.WriteLine(strName +"(indexID "+ cedge.indexID+ ")" + ":  " + 
+                cedge.FrCpt.indexID + "   " + cedge.ToCpt.indexID 
                 + "   AxisAngle:" + cedge.dblAxisAngle 
                 + "   FrX:" + cedge.FrCpt.X + "   FrY:" + cedge.FrCpt.Y 
                 + "   ToX:" + cedge.ToCpt.X + "   ToY:" + cedge.ToCpt.Y);

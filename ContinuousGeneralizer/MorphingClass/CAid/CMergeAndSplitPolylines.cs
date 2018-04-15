@@ -72,10 +72,11 @@ namespace MorphingClass.CAid
                 PreCptLt.AddRange(SucCptLt);
                 OutputCPlLt.Add(new CPolyline(intID++, PreCptLt));
             }
-            CSaveFeature.SaveCGeoEb(OutputCPlLt, esriGeometryType.esriGeometryPolyline, ParameterInitialize.pFLayerLt[0].Name + "MergeAndSplit");
+            CSaveFeature.SaveCGeoEb(OutputCPlLt, esriGeometryType.esriGeometryPolyline, 
+                ParameterInitialize.pFLayerLt[0].Name + "MergeAndSplit");
 
             long lngEndTime = System.Environment.TickCount;//记录结束时间
-            ParameterInitialize.tsslTime.Text = "Running Time: " + Convert.ToString(lngEndTime - lngStartTime) + "ms";  //显示运行时
+            ParameterInitialize.tsslTime.Text = "Running Time: " + Convert.ToString(lngEndTime - lngStartTime) + "ms";
         }
 
         public void GetCptLtUntilIntersection(List<CPoint> CptLt, CEdge cedge)
@@ -84,7 +85,8 @@ namespace MorphingClass.CAid
             
 
             var CurrentCEdge = cedge;
-            while (CDCEL.IsVertexIntersection(CurrentCEdge.FrCpt) == false && CurrentCEdge.isTraversed == false)  //CurrentCEdge.isTraversed == false is useful when it is a "hole"
+            //CurrentCEdge.isTraversed == false is useful when it is a "hole"
+            while (CDCEL.IsVertexIntersection(CurrentCEdge.FrCpt) == false && CurrentCEdge.isTraversed == false)  
             {
                 CptLt.Add(CurrentCEdge.ToCpt);
                 CurrentCEdge.isTraversed = true;

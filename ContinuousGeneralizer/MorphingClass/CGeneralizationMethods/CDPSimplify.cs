@@ -742,6 +742,15 @@ namespace MorphingClass.CGeneralizationMethods
 
         #endregion
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cptlt">usually, the first point and the last point should not be identical</param>
+        /// <param name="OriginalCEdgeLt"></param>
+        /// <param name="EnlargedCEdgeHS"></param>
+        /// <param name="strSimplification"></param>
+        /// <param name="dblThreshold"></param>
+        /// <returns></returns>
         private static IEnumerable<CPoint> SimplifyAccordExistEdges(List<CPoint> cptlt,
             List<CEdge> OriginalCEdgeLt, HashSet<CEdge> EnlargedCEdgeHS, string strSimplification, double dblThreshold)
         {
@@ -786,12 +795,6 @@ namespace MorphingClass.CGeneralizationMethods
             CNodeLt.SetIndexID();
             for (int i = 0; i < cptlt.Count - 1; i++)
             {
-                //if (i==29)
-                //{
-                //    int kk=5;
-                //}
-
-
                 CNodeLt[i].NbrCNodeLt = new List<CGeometry.CNode>();
                 CNodeLt[i].NbrCNodeLt.Add(CNodeLt[i + 1]);
                 for (int j = i + 2; j < cptlt.Count; j++)

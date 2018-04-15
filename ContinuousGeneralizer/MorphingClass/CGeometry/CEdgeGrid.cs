@@ -199,7 +199,6 @@ namespace MorphingClass.CGeometry
         public bool BlnIntersect(CEdge cedge,
             bool blnTouchBothEnds = false, bool blnTouchEndEdge = false, bool blnOverlap = false,
             SortedSet<CEdge> IgnoreCEdgeSS=null)
-            //List<CValPair<int,int>> intRowColVpLt=null, bool blnRecordInCEdge= false)
         {
             var fEdgeGrid = this;
             var intRowColVpLt = fEdgeGrid.FindRowColVpLt(cedge);
@@ -219,10 +218,6 @@ namespace MorphingClass.CGeometry
             var TraversedCEdgeLt = new List<CEdge>();
             bool blnIntersect = false; //this variable effects only when blnJustTestIfIntersect==true
 
-
-            var intGIDLt = new List<int>();
-
-
             foreach (var RowColVp in intRowColVpLt)
             {
                 if (RowColVp.val1 < 0 || RowColVp.val1 >= fEdgeGrid.intRowCount ||
@@ -230,8 +225,6 @@ namespace MorphingClass.CGeometry
                 {
                     continue;
                 }
-
-
 
 
                 foreach (var pcedge in fEdgeGrid.aCEdgeLtCell[RowColVp.val1, RowColVp.val2])
@@ -243,25 +236,7 @@ namespace MorphingClass.CGeometry
                     }
                     pcedge.isTraversed = true;
                     TraversedCEdgeLt.Add(pcedge);
-                    intGIDLt.Add(pcedge.GID);
-                    //if (pcedge.GID == fEdgeGrid.CEdgeLt[93].GID)
-                    //{
-                    //    int kk = 6;
-                    //}
 
-
-
-                    if (cedge.GID==16254)
-                    {
-                        if (pcedge.GID == fEdgeGrid.CEdgeLt[93].GID)
-                        {
-                            int sy = 5;
-                        }
-
-
-
-                        int kk = 6;
-                    }
                     var pIntersection = cedge.IntersectWith(pcedge);
                     if (pIntersection.JudgeIntersect(blnTouchBothEnds, blnTouchEndEdge, blnOverlap))
                     {
@@ -294,6 +269,63 @@ namespace MorphingClass.CGeometry
 
             return IntersectionLt;
         }
+
+        /// <summary>
+        /// Comparing to BlnIntersect, which computes the exact intersection point, 
+        /// this function decreases the running time by half
+        /// </summary>
+        public bool BlnTouch(CEdge cedge, SortedSet<CEdge> IgnoreCEdgeSS = null)
+        {
+            var fEdgeGrid = this;
+            var intRowColVpLt = fEdgeGrid.FindRowColVpLt(cedge);
+
+            var TraversedCEdgeLt = new List<CEdge>();
+            bool blnTouch = false; //this variable effects only when blnJustTestIfIntersect==true
+
+            foreach (var RowColVp in intRowColVpLt)
+            {
+                if (RowColVp.val1 < 0 || RowColVp.val1 >= fEdgeGrid.intRowCount ||
+                   RowColVp.val2 < 0 || RowColVp.val2 >= fEdgeGrid.intColCount)
+                {
+                    continue;
+                }
+
+
+                foreach (var pcedge in fEdgeGrid.aCEdgeLtCell[RowColVp.val1, RowColVp.val2])
+                {
+                    if (pcedge.isTraversed == true ||
+                        (IgnoreCEdgeSS != null && IgnoreCEdgeSS.Contains(pcedge)))
+                    {
+                        continue;
+                    }
+                    pcedge.isTraversed = true;
+                    TraversedCEdgeLt.Add(pcedge);
+
+                    //cedge.PrintMySelf();
+                    //pcedge.PrintMySelf();
+
+                    if (cedge.IsTouchWith(pcedge))
+                    {
+                        blnTouch = true;
+                        break;
+                    }
+                }
+
+                if (blnTouch == true)
+                {
+                    break;
+                }
+            }
+
+            //Set the TraversedCEdge to false
+            foreach (var TraversedCEdge in TraversedCEdgeLt)
+            {
+                TraversedCEdge.isTraversed = false;
+            }
+
+            return blnTouch;
+        }
+
 
         public double GetCellXMin(int intCol)
         {

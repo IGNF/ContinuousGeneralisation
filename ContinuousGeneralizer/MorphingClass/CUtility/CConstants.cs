@@ -55,7 +55,7 @@ namespace MorphingClass.CUtility
 
         public static int _intMaxTypeChange = 6;
 
-        private static string _strFmtIDs6="{0,3}{1,10}{2,13}{3,10}{4,9}{5,10}";
+        public static string strFmtIDs6="{0,3}{1,10}{2,13}{3,10}{4,9}{5,10}";
 
         public static bool blnComputeMinComp { set; get; }
         public static bool blnComputeAvgComp { set; get; }
@@ -85,11 +85,6 @@ namespace MorphingClass.CUtility
         }
 
 
-        public static string strFmtIDs6
-        {
-            get { return _strFmtIDs6; }
-            set { _strFmtIDs6 = value; }
-        }
 
 
         public static double dblVerySmallCoord

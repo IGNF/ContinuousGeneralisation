@@ -907,6 +907,21 @@ namespace MorphingClass.CUtility
             Console.WriteLine(str);
         }
 
+        public static void PrintArray2D<T>(T[,] array2D, int intLength)
+        {
+            string strFormat = "{0," + intLength.ToString() + "}";  //like "{0,intLength}"
+
+            Console.WriteLine();
+            for (int i = 0; i < array2D.GetLength(0); i++)
+            {
+                for (int j = 0; j < array2D.GetLength(1); j++)
+                {
+                    Console.Write(string.Format(strFormat, array2D[i, j]));
+                }
+                Console.WriteLine();
+            }
+
+        }
 
         public static string GetUnits(esriUnits pMapUnits)
         {

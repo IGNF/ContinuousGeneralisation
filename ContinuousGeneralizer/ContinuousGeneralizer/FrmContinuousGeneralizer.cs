@@ -59,8 +59,8 @@ namespace ContinuousGeneralizer
             //CHelpFunc.strDataFolderName = "MainlandChina-Animation";
             //CHelpFunc.strDataFolderName = "Tianjin-Animation"; 
             //CHelpFunc.strDataFolderName = "MainlandChina-Animation-complicated";
-            CHelpFunc.strDataFolderName = "MainlandChina-Shanghai";
-            //CHelpFunc.strDataFolderName = "MainlandChina";
+            //CHelpFunc.strDataFolderName = "MainlandChina-Shanghai";
+            CHelpFunc.strDataFolderName = "MainlandChina";
             //CHelpFunc.strDataFolderName = "CompatibleTriangulation";
             //CHelpFunc.strDataFolderName = "CT_Common";
             CHelpFunc.strPath =

@@ -483,6 +483,7 @@
             this.cboTransform.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboTransform.FormattingEnabled = true;
             this.cboTransform.Items.AddRange(new object[] {
+            "CT Max Common Chords",
             "Compatible Triangulations",
             "Rubber Sheeting"});
             this.cboTransform.Location = new System.Drawing.Point(118, 268);

@@ -2217,7 +2217,7 @@ namespace MorphingClass.CUtility
 
         public static bool IsClockwise(List<CPoint> cptlt, bool blnIdentical)
         {
-            //find the lower left-most point
+            //find the left-most lower point
             var llcpt = new CPoint(-1, double.MaxValue, double.MaxValue);  //lower left point            
             foreach (var cpt in cptlt)
             {
@@ -2261,9 +2261,9 @@ namespace MorphingClass.CUtility
             return IsClockwise(precpt, llcpt, succpt);
         }
 
-        public static bool IsClockwise(CPoint precpt, CPoint midcpt, CPoint succpt)
+        public static bool IsClockwise(CPoint precpt, CPoint llcpt, CPoint succpt)
         {
-            double dblAngle = CGeoFunc.CalAngle_Counterclockwise(precpt, midcpt, succpt);
+            double dblAngle = CGeoFunc.CalAngle_Counterclockwise(precpt, llcpt, succpt);
 
             if (dblAngle < Math.PI)
             {

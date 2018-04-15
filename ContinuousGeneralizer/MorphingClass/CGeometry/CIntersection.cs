@@ -510,7 +510,8 @@ namespace MorphingClass.CGeometry
             }
             else if (cedge1.blnHasSlope == false && cedge2.blnHasSlope == false)
             {
-                if (CCmpMethods.CmpCoordDbl_VerySmall(cedge1.FrCpt.X, cedge2.FrCpt.X) == 0)   //parallel and with the same X Coordinate
+                //parallel and with the same X Coordinate
+                if (CCmpMethods.CmpCoordDbl_VerySmall(cedge1.FrCpt.X, cedge2.FrCpt.X) == 0)   
                 {
                     return IsTouchParralel(cedge1, cedge2, out IntersectCpt);
                 }
