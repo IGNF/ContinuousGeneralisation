@@ -538,14 +538,14 @@ namespace MorphingClass.CUtility
         public static double CalInbetweenCptProportion(CPoint cpt, CPoint frcpt, CPoint tocpt)
         {
             double dblXDiff = tocpt.X - frcpt.X;
-            if (CCmpMethods.CmpCoordDbl_VerySmall(dblXDiff, 0) != 0)
+            if (CCmpMethods.CmpDbl_CoordVerySmall(dblXDiff, 0) != 0)
             {
                 return ((cpt.X - frcpt.X) / dblXDiff);
             }
             else
             {
                 double dblYDiff = tocpt.Y - frcpt.Y;
-                if (CCmpMethods.CmpCoordDbl_VerySmall(dblYDiff, 0) != 0)
+                if (CCmpMethods.CmpDbl_CoordVerySmall(dblYDiff, 0) != 0)
                 {
                     return ((cpt.Y - frcpt.Y) / dblYDiff);
                 }
@@ -915,6 +915,40 @@ namespace MorphingClass.CUtility
         {
             return CheckPlus2PI(dblEndAxisAngle - dblStartAxisAngle);
         }
+
+        public static bool IsInbetween_Counterclockwise(double dblStartAxisAngle, double dblAngle,  double dblEndAxisAngle)
+        {
+            if (dblAngle== dblStartAxisAngle || dblAngle == dblEndAxisAngle)
+            {
+                return false;
+            }
+
+            var dblAngle1 = CGeoFunc.CalAngle_Counterclockwise(dblStartAxisAngle, dblAngle);
+            var dblAngle2 = CGeoFunc.CalAngle_Counterclockwise(dblAngle, dblEndAxisAngle);
+
+            if (dblAngle1 + dblAngle2 >= CConstants.dblTwoPI)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+
+        ////the new edge starts from a point which constitues the boundary polygon (cpg)
+        //newCEdge.SetAxisAngle();
+        //            var dblAngle1 = CGeoFunc.CalAngle_Counterclockwise(
+        //               cpg.AxisAngleLt[newCEdge.FrCpt.indexID], newCEdge.dblAxisAngle);
+        //var dblAngle2 = CGeoFunc.CalAngle_Counterclockwise(
+        //    newCEdge.dblAxisAngle, cpg.ReverseAxisAngleLt[newCEdge.FrCpt.indexID]);
+
+        //            if (dblAngle1 + dblAngle2 > CConstants.dblTwoPI)
+        //            {
+        //                //the new edge is outside the boundary polygon (cpg)
+        //                continue;
+        //            }
 
         ///// <summary>计算向量与坐标横轴的夹角[0, 2*Pi]</summary>
         ///// <returns>夹角弧度值</returns>
@@ -2215,6 +2249,12 @@ namespace MorphingClass.CUtility
             return cptlt;
         }
 
+        /// <summary>
+        /// this function is not helpful for deciding if a cut of a polygon is valid
+        /// </summary>
+        /// <param name="cptlt"></param>
+        /// <param name="blnIdentical"></param>
+        /// <returns></returns>
         public static bool IsClockwise(List<CPoint> cptlt, bool blnIdentical)
         {
             //find the left-most lower point
@@ -2277,7 +2317,50 @@ namespace MorphingClass.CUtility
             {
                 throw new ArgumentException("what happened about the angle?");
             }
+
+            //*********************************************************
+            //if you have a incremental list, try following idea:
+            //imagine we have a subcptlt which contains points from cpgcptlt[i] to cpgcptlt[j-1]
+            //now we add a new point, cpgcptlt[j], into subcptlt. 
+            //we want to know if new subcptlt is clockwise or not
+            //for (int j = i + 2; j < intCptNum; j++)
+            //{
+            //    bool blnNewllcpt = (CCmpMethods.CmpCptXY(cpgcptlt[j], llcpt, false) == -1);
+            //    if (blnNewllcpt == false &&
+            //        llcpt.GID != cpgcptlt[i].GID && llcpt.GID != cpgcptlt[j - 1].GID)
+            //    {
+            //        //we do not have new llcpt, and llcpt is somewhere in the middle of subcptlt
+            //        //blnClockwise not changed
+            //    }
+            //    else
+            //    {
+            //        if (blnNewllcpt == false)
+            //        {
+            //            if (llcpt.GID == cpgcptlt[i].GID)
+            //            {
+            //                precpt = cpgcptlt[j];
+            //            }
+            //            else if (llcpt.GID == cpgcptlt[j - 1].GID)
+            //            {
+            //                succpt = cpgcptlt[j];
+            //            }
+            //            else
+            //            {
+            //                throw new ArgumentOutOfRangeException("an impossible case!");
+            //            }
+            //        }
+            //        else
+            //        {
+            //            llcpt = cpgcptlt[j];
+            //            precpt = cpgcptlt[j - 1];
+            //            succpt = cpgcptlt[i];
+            //        }
+
+            //        blnClockwise = CGeoFunc.IsClockwise(precpt, llcpt, succpt);
+            //    }
+            //}
         }
+
 
         public static IEnumerable<IEnumerable<CPoint>> RemoveClosePointsForCptEbEb(
             IEnumerable<IEnumerable<CPoint>> cptebeb, bool blnIdentical = true )

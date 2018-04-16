@@ -389,7 +389,7 @@ namespace MorphingClass.CGeometry
             //where dblVerySmall will be changed during checking topological relationships
             //if (CCmpMethods.CmpDblRange(dblXDiff, 0, CConstants.dblVerySmallCoordFixed) == 0)
             //if (dblXDiff == 0)   //this case would result we cannot identify a verticle line
-            if (CCmpMethods.CmpCoordDbl_VerySmall(this.dblIncrX, 0) == 0)
+            if (CCmpMethods.CmpDbl_CoordVerySmall(this.dblIncrX, 0) == 0)
             {
                 _blnHasSlope = false;
             }

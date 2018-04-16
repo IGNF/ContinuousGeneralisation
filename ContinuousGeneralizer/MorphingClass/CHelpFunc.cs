@@ -828,7 +828,7 @@ namespace MorphingClass.CUtility
             {
                 CtrlCpl.SetPolyline();
 
-                if (CCmpMethods.CmpCoordDbl_VerySmall(CtrlCpl.pPolyline.Length, dblStandardLength) == 0)
+                if (CCmpMethods.CmpDbl_CoordVerySmall(CtrlCpl.pPolyline.Length, dblStandardLength) == 0)
                 {
                     cpllt1.Add(CtrlCpl);
                 }

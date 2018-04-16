@@ -72,13 +72,15 @@ namespace MorphingClass.CCorrepondObjects
             }
 
 
+            _FrCtgl = new CTriangulation(frcpg);
+            _FrCtgl.Triangulate(FrConstraintCplLt, FrConstructingCEdgeLt, "Fr", fblnSave);
+            //_FrCtgl.ConstructingCEdgeLt= FrConstructingCEdgeLt;
+
             _ToCtgl = new CTriangulation(tocpg);
             _ToCtgl.Triangulate(ToConstraintCplLt, ToConstructingCEdgeLt, "To", fblnSave);
             //_ToCtgl.ConstructingCEdgeLt = ToConstructingCEdgeLt;
 
-            _FrCtgl = new CTriangulation(frcpg);
-            _FrCtgl.Triangulate(FrConstraintCplLt, FrConstructingCEdgeLt, "Fr", fblnSave);
-            //_FrCtgl.ConstructingCEdgeLt= FrConstructingCEdgeLt;
+
 
 
 
@@ -807,32 +809,31 @@ namespace MorphingClass.CCorrepondObjects
                 {
                     int j = i + k;
 
+                    int intIncrease = 1;
                     if (ablnValidChords[i, j] == false)
                     {
-                        aCell[i, j] = new CCell(0, 0, double.NegativeInfinity, 0, i, j);
+                        intIncrease = 0;
                     }
-                    else
-                    {
-                        var maxCell = new CCell();
-                        for (int l = i + 1; l < j; l++)
-                        {
-                            double dblCost = aCell[i, l].dblCost + aCell[l, j].dblCost + 1;
-                            //when two separations have the same cost, we pick the one which splits the curve more balancedly
-                            double dblCostHelp = -Math.Abs(l - Convert.ToDouble(i + j) / 2);
 
-                            var newcell = new CCell(l, l, dblCost, dblCostHelp, i, j);
-                            maxCell = CHelpFunc.Max(maxCell, newcell, cell => cell.dblCost, cell => cell.dblCostHelp);
-                        }
-                        aCell[i, j] = maxCell;
+                    var maxCell = new CCell();
+                    for (int l = i + 1; l < j; l++)
+                    {
+                        double dblCost = aCell[i, l].dblCost + aCell[l, j].dblCost + intIncrease;
+                        //when two separations have the same cost, we pick the one which splits the curve more balancedly
+                        double dblCostHelp = -Math.Abs(l - Convert.ToDouble(i + j) / 2);
+
+                        var newcell = new CCell(l, l, dblCost, dblCostHelp, i, j);
+                        maxCell = CHelpFunc.Max(maxCell, newcell, cell => cell.dblCost, cell => cell.dblCostHelp);
                     }
+                    aCell[i, j] = maxCell;                    
                 }
             }
 
             var intCommonNum = Convert.ToInt32(aCell[0, intCount - 1].dblCost);
             //Table.PrintaCell();
 
-            FrChordCEdgelt = GenerateInteriorCplLt(aCell, frcpg.CptLt);
-            ToChordCEdgelt = GenerateInteriorCplLt(aCell, tocpg.CptLt);
+            FrChordCEdgelt = GenerateInteriorCplLt(aCell, frcpg.CptLt, ablnValidChords);
+            ToChordCEdgelt = GenerateInteriorCplLt(aCell, tocpg.CptLt, ablnValidChords);
 
 
             if (this.blnSave == true)
@@ -842,7 +843,7 @@ namespace MorphingClass.CCorrepondObjects
             }
         }
 
-        private List<CEdge> GenerateInteriorCplLt(CCell[,] aCell, List<CPoint> OriginalCptLt)
+        private List<CEdge> GenerateInteriorCplLt(CCell[,] aCell, List<CPoint> OriginalCptLt, bool[,] ablnValidChords)
         {
             var intCount = OriginalCptLt.Count - 1; //intCount is the number of vertices without duplicates
             var intCommonNum = Convert.ToInt32(aCell[0, intCount - 1].dblCost);
@@ -857,21 +858,23 @@ namespace MorphingClass.CCorrepondObjects
                 var backcell1 = aCell[currentCell.intRowIndex, intIndex];
                 var backcell2 = aCell[intIndex, currentCell.intColIndex];
 
-                HandleOneCell(backcell2, CellStack, OriginalCptLt, ref ChordCEdgelt);
-                HandleOneCell(backcell1, CellStack, OriginalCptLt, ref ChordCEdgelt);
+                HandleOneCell(backcell2, CellStack, OriginalCptLt, ablnValidChords, ref ChordCEdgelt);
+                HandleOneCell(backcell1, CellStack, OriginalCptLt, ablnValidChords, ref ChordCEdgelt);
             }
 
             return ChordCEdgelt;
         }
 
-        private void HandleOneCell(CCell cell, Stack<CCell> CellStack, List<CPoint> OriginalCptLt, ref List<CEdge> ChordCEdgelt)
+        private void HandleOneCell(CCell cell, Stack<CCell> CellStack, List<CPoint> OriginalCptLt,
+            bool[,] ablnValidChords, ref List<CEdge> ChordCEdgelt)
         {
             int intIndexDiff = cell.intColIndex - cell.intRowIndex; //it holds cell.intColIndex > cell.intRowIndex
             if (intIndexDiff >= 2)
             {
-                ChordCEdgelt.Add(new CEdge(OriginalCptLt[cell.intRowIndex], OriginalCptLt[cell.intColIndex]));
-                //cpllt.Add(new CPolyline(-1,
-                //    CHelpFunc.MakeLt(OriginalCptLt[cell.intRowIndex], OriginalCptLt[cell.intColIndex])));
+                if (ablnValidChords[cell.intRowIndex, cell.intColIndex]==true)
+                {
+                    ChordCEdgelt.Add(new CEdge(OriginalCptLt[cell.intRowIndex], OriginalCptLt[cell.intColIndex]));
+                }               
 
                 if (intIndexDiff > 2)
                 {
@@ -891,7 +894,6 @@ namespace MorphingClass.CCorrepondObjects
             var FrValidChords = GetValidChords(frcpg);
             var ToValidChords = GetValidChords(tocpg);
 
-
             int intCount = frcpg.CptLt.Count - 1;
             var ablnValidChords = new bool[intCount, intCount];
             for (int i = 0; i < intCount; i++)
@@ -909,8 +911,26 @@ namespace MorphingClass.CCorrepondObjects
 
         private bool[,] GetValidChords(CPolygon cpg)
         {
-            var cpgcptlt = cpg.CptLt;
-            var intCptNum = cpgcptlt.Count - 1;
+            var intCptNum = cpg.CptLt.Count - 1;
+            var cpgcptlt = cpg.CptLt.GetRange(0, intCptNum);
+            cpgcptlt.SetIndexID();
+
+    //        for (int i = 0; i < cpgcptlt.Count; i++)
+    //        {
+    //            if (CCmpMethods.CmpDblRange(  cpgcptlt[i].X, 910311.438,10)==0&&
+    //                CCmpMethods.CmpDblRange(cpgcptlt[i].Y, 4663818, 10) == 0)
+    //            {
+    //                int wet = i;
+    //            }
+
+    //            if (CCmpMethods.CmpDblRange(cpgcptlt[i].X, 915216.875, 10) == 0 &&
+    //CCmpMethods.CmpDblRange(cpgcptlt[i].Y, 4643220, 10) == 0)
+    //            {
+    //                int wet2 = i;
+    //            }
+    //        }
+
+
             var ablnValidChords = new bool[intCptNum, intCptNum];
             var fEdgeGrid = new CEdgeGrid(cpg.CEdgeLt);
 
@@ -918,85 +938,115 @@ namespace MorphingClass.CCorrepondObjects
             IgnoreCEdgeLt.Add(cpg.CEdgeLt.GetLastT());
             IgnoreCEdgeLt.AddRange(cpg.CEdgeLt);
 
+            cpg.SetAxisAngleAndReverseLt();
+            var lastTraversedCEdgeLt = new List<CEdge>();
+            var PossibleTouchCEdgeLt = new List<CEdge>();
             for (int i = 0; i < intCptNum - 1; i++)
             {
+                lastTraversedCEdgeLt.ForEach(cedge => cedge.isTraversed = false);
+                lastTraversedCEdgeLt.Clear();
+                //PossibleTouchCEdgeLt.Clear();
+
                 ablnValidChords[i, i + 1] = true;
-
-                var IgnoreCEdgeSS = new SortedSet<CEdge>();
-                IgnoreCEdgeSS.Add(IgnoreCEdgeLt[i]);
-                IgnoreCEdgeSS.Add(IgnoreCEdgeLt[i + 1]);
-                IgnoreCEdgeSS.Add(IgnoreCEdgeLt[i + 2]);
-
-                var llcpt = cpgcptlt[i];
-                var precpt = cpgcptlt[i + 1];
-                var succpt = cpgcptlt[i + 1];
-                if (CCmpMethods.CmpCptXY(cpgcptlt[i + 1], llcpt, false) == -1)
+                var IgnoreCEdgeSS = new SortedSet<CEdge>
                 {
-                    llcpt = cpgcptlt[i + 1];
-                    precpt = cpgcptlt[i];
-                    succpt = cpgcptlt[i];
-                }
-                bool blnClockwise = false;
+                    IgnoreCEdgeLt[i],
+                    IgnoreCEdgeLt[i + 1]
+                };
 
-                //imagine we have a subcptlt which contains points from cpgcptlt[i] to cpgcptlt[j-1]
-                //now we add a new point, cpgcptlt[j], into subcptlt. 
-                //we want to know if new subcptlt is clockwise or not
+                var lastCEdge = cpg.CEdgeLt[i]; //last edge from point i to point j
+                lastCEdge.JudgeAndSetAxisAngle();
+                CEdge outTouchCEdge = null;
+                //bool blnWasValid = true;
                 for (int j = i + 2; j < intCptNum; j++)
                 {
-                    bool blnNewllcpt = (CCmpMethods.CmpCptXY(cpgcptlt[j], llcpt, false) == -1);
-                    if (blnNewllcpt == false && 
-                        llcpt.GID != cpgcptlt[i].GID && llcpt.GID != cpgcptlt[j - 1].GID)
+                    //this is the default value
+                    //ablnValidChords[i, j] = false;
+
+                    var newcedge = new CEdge(cpgcptlt[i], cpgcptlt[j]);
+                    newcedge.SetAxisAngle();
+                    if (CGeoFunc.IsInbetween_Counterclockwise(cpg.AxisAngleLt[i],
+                        newcedge.dblAxisAngle, cpg.ReverseAxisAngleLt[i]) == false)
                     {
-                        //we do not have new llcpt, and llcpt is somewhere in the middle of subcptlt
-                        //blnClockwise not changed
+                        outTouchCEdge = null;  //this is necessary
+                        //the new edge is outside the boundary polygon (cpg)
+                        continue;
                     }
-                    else
+
+                    //if newcedge.dblAxisAngle is inbetween cpg.AxisAngleLt[i] and cpg.ReverseAxisAngleLt[i]:
+                    //if ablnValidChords[i, j - 1] == true and the angle from lastCEdge to newcedge is clockwise, then continue;
+                    //if ablnValidChords[i, j - 1] == true and the angle from lastCEdge to newcedge is counter clockwise,
+                    //  then test touch without taking into account edges in AdvantageTraversedCEdgeLt;
+                    //if ablnValidChords[i, j - 1] == false, then we first test edges in 
+                    //  PossibleTouchCEdgeLt (if there are elements) and test other edges.
+
+                    //excluding some invalid cases
+                    if (ablnValidChords[i, j - 1] == true)  //in this case, we certainly have appropriate lastCEdge
                     {
-                        if (blnNewllcpt == false)
+                        outTouchCEdge = null;
+                        double dblAngle = CGeoFunc.CalAngle_Counterclockwise(lastCEdge.dblAxisAngle, newcedge.dblAxisAngle);
+                        if (dblAngle == 0 || dblAngle >= Math.PI)
                         {
-                            if (llcpt.GID == cpgcptlt[i].GID)
-                            {
-                                precpt = cpgcptlt[j];
-                            }
-                            else if (llcpt.GID == cpgcptlt[j-1].GID)
-                            {
-                                succpt= cpgcptlt[j];
-                            }
-                            else
-                            {
-                                throw new ArgumentOutOfRangeException("an impossible case!");
-                            }
+                            //if dblAngle == 0, lastCEdge and newcedge is on the same line
+                            //if dblAngle >= Math.PI newcedge must intersect with at least one edge of the polygon                            
+                            continue;
                         }
                         else
                         {
-                            llcpt = cpgcptlt[j];
-                            precpt = cpgcptlt[j-1];
-                            succpt = cpgcptlt[i];
+                            var AdvantageTraversedCEdgeLt = new List<CEdge>(lastTraversedCEdgeLt.Count);
+                            foreach (var cedge in lastTraversedCEdgeLt)
+                            {
+                                if (cedge.FrCpt.indexID > i && cedge.FrCpt.indexID < j)
+                                {
+                                    // we do not need to test this edge later
+                                    AdvantageTraversedCEdgeLt.Add(cedge);
+                                }
+                                else
+                                {
+                                    cedge.isTraversed = false;
+                                }
+                            }
+                            lastTraversedCEdgeLt = AdvantageTraversedCEdgeLt;
                         }
-
-                        blnClockwise = CGeoFunc.IsClockwise(precpt, llcpt, succpt);
+                    }
+                    else //if (ablnValidChords[i, j - 1] == false)
+                    {
+                        //lastTraversedCEdgeLt may contain some edges from an earlier attempt, 
+                        //where ablnValidChords[i, j'] == true
+                        lastTraversedCEdgeLt.ForEach(cedge => cedge.isTraversed = false);
+                        lastTraversedCEdgeLt.Clear();
                     }
 
-                    
 
-
+                    //if (ablnValidChords[i, j - 1] == false), then we have to test regularly
+                    IgnoreCEdgeSS.Add(IgnoreCEdgeLt[j]);
                     IgnoreCEdgeSS.Add(IgnoreCEdgeLt[j + 1]);
-                    if (blnClockwise == true)
+
+                    if (outTouchCEdge != null)
                     {
-                        //if the baseline is outside of the polygon, then the baseline is not a valid choice
-                        ablnValidChords[i, j] = false;
+                        PossibleTouchCEdgeLt.Clear();
+                        PossibleTouchCEdgeLt.Add(outTouchCEdge);
+                        PossibleTouchCEdgeLt.Add(IgnoreCEdgeLt[outTouchCEdge.FrCpt.indexID]);  //the edge before
+                        PossibleTouchCEdgeLt.Add(IgnoreCEdgeLt[outTouchCEdge.ToCpt.indexID + 1]);  //the edge after
+                    }
+
+                    if (fEdgeGrid.BlnTouch(newcedge, lastTraversedCEdgeLt, PossibleTouchCEdgeLt,
+                        out outTouchCEdge, IgnoreCEdgeSS) == false)
+                    {
+                        ablnValidChords[i, j] = true;
                     }
                     else
                     {
-                        var newcedge = new CEdge(cpgcptlt[i], cpgcptlt[j]);
-
-                        //if (fEdgeGrid.BlnIntersect(newcedge, false, true, true, IgnoreCEdgeSS) == false)
-                        if (fEdgeGrid.BlnTouch(newcedge, IgnoreCEdgeSS) == false)
+                        //Set the TraversedCEdge to false
+                        foreach (var TraversedCEdge in lastTraversedCEdgeLt)
                         {
-                            ablnValidChords[i, j] = true;
-                        }                        
+                            TraversedCEdge.isTraversed = false;
+                        }
                     }
+
                     IgnoreCEdgeSS.Remove(IgnoreCEdgeLt[j]);
+                    IgnoreCEdgeSS.Remove(IgnoreCEdgeLt[j + 1]);
+                    lastCEdge = newcedge;
                 }
             }
 

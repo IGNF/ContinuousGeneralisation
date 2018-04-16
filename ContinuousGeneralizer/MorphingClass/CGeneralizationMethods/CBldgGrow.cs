@@ -599,8 +599,8 @@ namespace MorphingClass.CGeneralizationMethods
             var CEdgeCptEdgeDisLtDt = new Dictionary<CEdge, List<CptEdgeDis>>();
             foreach (var cptEdgeDis in BridgeCptEdgeDisLt)
             {
-                //if (CCmpMethods.CmpCoordDbl_VerySmall(cptEdgeDis.dblDis, 0) == 0), then the two buildings touch each other
-                if (CCmpMethods.CmpCoordDbl_VerySmall(cptEdgeDis.dblDis, 0) != 0)
+                //if (CCmpMethods.CmpDbl_CoordVerySmall(cptEdgeDis.dblDis, 0) == 0), then the two buildings touch each other
+                if (CCmpMethods.CmpDbl_CoordVerySmall(cptEdgeDis.dblDis, 0) != 0)
                 {
                     //add the bridge as an edge
                     BridgeCEdgeLt.Add(cptEdgeDis.ConnectCEdge);

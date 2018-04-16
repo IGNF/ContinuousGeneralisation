@@ -869,6 +869,8 @@ namespace MorphingClass.CGeneralizationMethods
             }
 
             //if the baseline is outside of the polygon, then the baseline is not a valid choice
+            throw new ArgumentException(
+                "IsClockwise is not helpful. instead test if the edge between the two edges. see CCptbCtgl");
             if (CGeoFunc.IsClockwise(cptlt, false) == false)
             {
                 return false;

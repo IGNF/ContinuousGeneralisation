@@ -108,7 +108,7 @@ namespace MorphingClass.CUtility
 //            get { return _dblCostEstType; }
 //            set
 //            {
-//                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.sComparer);
+//                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpDbl_CoordVerySmall.sComparer);
 //                _dblCostEstType = value;
 //                if (value < 0)
 //                {
@@ -123,7 +123,7 @@ namespace MorphingClass.CUtility
 //            get { return _dblCostEstComp; }
 //            set
 //            {
-//                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.sComparer);
+//                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpDbl_CoordVerySmall.sComparer);
 //                _dblCostEstComp = value;
 //                if (value < 0)
 //                {
@@ -138,7 +138,7 @@ namespace MorphingClass.CUtility
 //            get { return _dblCostExactType; }
 //            set
 //            {
-//                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.sComparer);
+//                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpDbl_CoordVerySmall.sComparer);
 //                _dblCostExactType = value;
 //                if (value < 0)
 //                {
@@ -153,7 +153,7 @@ namespace MorphingClass.CUtility
 //            get { return _dblCostExactComp; }
 //            set
 //            {
-//                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.sComparer);
+//                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpDbl_CoordVerySmall.sComparer);
 //                _dblCostExactComp = value;
 //                if (value < 0)
 //                {
@@ -168,7 +168,7 @@ namespace MorphingClass.CUtility
 //            get { return _dblCostExact; }
 //            set
 //            {
-//                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.sComparer);
+//                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpDbl_CoordVerySmall.sComparer);
 //                _dblCostExact = value;
 //                if (value < 0)
 //                {
@@ -183,7 +183,7 @@ namespace MorphingClass.CUtility
 //            get { return _dblCostEst; }
 //            set
 //            {
-//                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.sComparer);
+//                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpDbl_CoordVerySmall.sComparer);
 //                _dblCostEst = value;
 //                if (value < 0)
 //                {
@@ -775,7 +775,7 @@ namespace MorphingClass.CUtility
 //            if (ExistingCrgSDLt[newcrg.GetCphCount()].TryGetValue(newcrg, out outcrg))
 //            {
 //                int intResult = newcrg.dblCostExact.CompareTo(outcrg.dblCostExact);
-//                //int intResult = CCmpMethods.CmpCoordDbl_VerySmall(newcrg.dblCostExact, outcrg.dblCostExact);
+//                //int intResult = CCmpMethods.CmpDbl_CoordVerySmall(newcrg.dblCostExact, outcrg.dblCostExact);
 
 //                if (intResult == -1)
 //                {

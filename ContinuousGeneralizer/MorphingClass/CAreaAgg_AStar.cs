@@ -459,7 +459,7 @@ namespace MorphingClass.CGeneralizationMethods
             if (ExistingCrgSDLt[newcrg.GetCphCount()].TryGetValue(newcrg, out outcrg))
             {
                 int intResult = newcrg.dblCostExact.CompareTo(outcrg.dblCostExact);
-                //int intResult = CCmpMethods.CmpCoordDbl_VerySmall(newcrg.dblCostExact, outcrg.dblCostExact);
+                //int intResult = CCmpMethods.CmpDbl_CoordVerySmall(newcrg.dblCostExact, outcrg.dblCostExact);
                 
 
                 if (intResult == -1)

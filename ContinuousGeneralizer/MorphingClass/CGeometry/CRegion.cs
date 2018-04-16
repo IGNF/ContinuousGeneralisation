@@ -92,7 +92,7 @@ namespace MorphingClass.CGeometry
             get { return _dblCostEstType; }
             set
             {
-                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.sComparer);
+                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpDbl_CoordVerySmall.sComparer);
                 _dblCostEstType = value;
                 if (value < 0)
                 {
@@ -107,7 +107,7 @@ namespace MorphingClass.CGeometry
             get { return _dblCostEstComp; }
             set
             {
-                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.sComparer);
+                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpDbl_CoordVerySmall.sComparer);
                 _dblCostEstComp = value;
                 if (value < 0)
                 {
@@ -122,7 +122,7 @@ namespace MorphingClass.CGeometry
             get { return _dblCostExactType; }
             set
             {
-                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.sComparer);
+                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpDbl_CoordVerySmall.sComparer);
                 _dblCostExactType = value;
                 if (value < 0)
                 {
@@ -137,7 +137,7 @@ namespace MorphingClass.CGeometry
             get { return _dblCostExactComp; }
             set
             {
-                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.sComparer);
+                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpDbl_CoordVerySmall.sComparer);
                 _dblCostExactComp = value;
                 if (value < 0)
                 {
@@ -152,7 +152,7 @@ namespace MorphingClass.CGeometry
             get { return _dblCostExact; }
             set
             {
-                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.sComparer);
+                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpDbl_CoordVerySmall.sComparer);
                 _dblCostExact = value;
                 if (value < 0)
                 {
@@ -167,7 +167,7 @@ namespace MorphingClass.CGeometry
             get { return _dblCostEst; }
             set
             {
-                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpCoordDbl_VerySmall.sComparer);
+                CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpDbl_CoordVerySmall.sComparer);
                 _dblCostEst = value;
                 if (value < 0)
                 {

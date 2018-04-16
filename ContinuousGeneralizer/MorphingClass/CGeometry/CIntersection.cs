@@ -67,7 +67,7 @@ namespace MorphingClass.CGeometry
                 //if (CCmpMethods.Cmp(cedge1.dblSlope, cedge2.dblSlope)==0)  //parallel
                 if (CCmpMethods.CmpDbl_ConstVerySmall(cedge1.dblSlope, cedge2.dblSlope) == 0)  //parallel
                 {
-                    if (CCmpMethods.CmpCoordDbl_VerySmall(cedge1.dblYIntercept, cedge2.dblYIntercept)==0)   //parallel and with the same YIntercept
+                    if (CCmpMethods.CmpDbl_CoordVerySmall(cedge1.dblYIntercept, cedge2.dblYIntercept)==0)   //parallel and with the same YIntercept
                     {
                         penumIntersectionType = DetectIntersectionParralel(cedge1, cedge2, out IntersectCpt, out overlapcedge);
                     }
@@ -92,7 +92,7 @@ namespace MorphingClass.CGeometry
             }
             else if (cedge1.blnHasSlope == false && cedge2.blnHasSlope == false)
             {
-                if (CCmpMethods.CmpCoordDbl_VerySmall(cedge1.FrCpt.X, cedge2.FrCpt.X) == 0)   //parallel and with the same X Coordinate
+                if (CCmpMethods.CmpDbl_CoordVerySmall(cedge1.FrCpt.X, cedge2.FrCpt.X) == 0)   //parallel and with the same X Coordinate
                 {
                     penumIntersectionType = DetectIntersectionParralel(cedge1, cedge2, out IntersectCpt, out overlapcedge);
                 }
@@ -485,7 +485,7 @@ namespace MorphingClass.CGeometry
                 //if (CCmpMethods.Cmp(cedge1.dblSlope, cedge2.dblSlope)==0)  //parallel
                 if (CCmpMethods.CmpDbl_ConstVerySmall(cedge1.dblSlope, cedge2.dblSlope) == 0)  //parallel
                 {
-                    if (CCmpMethods.CmpCoordDbl_VerySmall(cedge1.dblYIntercept, cedge2.dblYIntercept) == 0)
+                    if (CCmpMethods.CmpDbl_CoordVerySmall(cedge1.dblYIntercept, cedge2.dblYIntercept) == 0)
                     {
                         //parallel and with the same YIntercept
                         return IsTouchParralel(cedge1, cedge2, out IntersectCpt);
@@ -511,7 +511,7 @@ namespace MorphingClass.CGeometry
             else if (cedge1.blnHasSlope == false && cedge2.blnHasSlope == false)
             {
                 //parallel and with the same X Coordinate
-                if (CCmpMethods.CmpCoordDbl_VerySmall(cedge1.FrCpt.X, cedge2.FrCpt.X) == 0)   
+                if (CCmpMethods.CmpDbl_CoordVerySmall(cedge1.FrCpt.X, cedge2.FrCpt.X) == 0)   
                 {
                     return IsTouchParralel(cedge1, cedge2, out IntersectCpt);
                 }

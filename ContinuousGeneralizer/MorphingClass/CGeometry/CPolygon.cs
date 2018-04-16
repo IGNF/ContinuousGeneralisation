@@ -74,6 +74,9 @@ namespace MorphingClass.CGeometry
         public bool IsHole { get; set; }
         public bool IsMerged { get; set; }
         public bool IsSubCpg { get; set; }
+
+        public List<double> AxisAngleLt { get; set; }
+        public List<double> ReverseAxisAngleLt { get; set; }
         //public bool IsOriginal { get; set; } = true;
 
 
@@ -202,6 +205,31 @@ namespace MorphingClass.CGeometry
                     holecpg.SetCEdgeLtAxisAngle();
                 }
             }
+        }
+
+        public void SetAxisAngleAndReverseLt()
+        {
+            var cpg = this;
+
+            cpg.JudgeAndFormCEdgeLt();
+            cpg.CEdgeLt.ForEach(cedge => cedge.JudgeAndSetAxisAngle());
+            var fAxisAngleLt = new List<double>(cpg.CEdgeLt.Count);
+            foreach (var cedge in this.CEdgeLt)
+            {
+                cedge.JudgeAndSetAxisAngle();
+                fAxisAngleLt.Add(cedge.dblAxisAngle);
+            }
+
+            //the index of ReverseAxisAngleLt indicates the index of the starting point
+            var fReverseAxisAngleLt = new List<double>(cpg.CEdgeLt.Count);
+            fReverseAxisAngleLt.Add(CGeoFunc.CalReversedCEdgeAxisAngle(fAxisAngleLt.GetLastT()));
+            for (int i = 1; i < fAxisAngleLt.Count; i++)
+            {
+                fReverseAxisAngleLt.Add(CGeoFunc.CalReversedCEdgeAxisAngle(fAxisAngleLt[i - 1]));
+            }
+
+            this.AxisAngleLt = fAxisAngleLt;
+            this.ReverseAxisAngleLt = fReverseAxisAngleLt;
         }
 
         public void SetExteriorPath()

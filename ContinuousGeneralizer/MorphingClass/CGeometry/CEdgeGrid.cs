@@ -274,14 +274,36 @@ namespace MorphingClass.CGeometry
         /// Comparing to BlnIntersect, which computes the exact intersection point, 
         /// this function decreases the running time by half
         /// </summary>
-        public bool BlnTouch(CEdge cedge, SortedSet<CEdge> IgnoreCEdgeSS = null)
+        public bool BlnTouch(CEdge cedge, List<CEdge> TraversedCEdgeLt, List< CEdge> PossibleTouchCEdgeLt, 
+            out CEdge outTouchCEdge, SortedSet<CEdge> IgnoreCEdgeSS = null)
         {
+            outTouchCEdge = null;
+            foreach (var pcedge in PossibleTouchCEdgeLt)
+            {
+                if (pcedge.isTraversed == true || (IgnoreCEdgeSS != null && IgnoreCEdgeSS.Contains(pcedge)))
+                {
+                    continue;
+                }
+                pcedge.isTraversed = true;
+                TraversedCEdgeLt.Add(pcedge);
+
+
+                if (cedge.IsTouchWith(pcedge))
+                {
+                    outTouchCEdge = pcedge;
+                    return true;
+                }
+            }
+
+
+
+
+
+
             var fEdgeGrid = this;
             var intRowColVpLt = fEdgeGrid.FindRowColVpLt(cedge);
 
-            var TraversedCEdgeLt = new List<CEdge>();
             bool blnTouch = false; //this variable effects only when blnJustTestIfIntersect==true
-
             foreach (var RowColVp in intRowColVpLt)
             {
                 if (RowColVp.val1 < 0 || RowColVp.val1 >= fEdgeGrid.intRowCount ||
@@ -293,8 +315,9 @@ namespace MorphingClass.CGeometry
 
                 foreach (var pcedge in fEdgeGrid.aCEdgeLtCell[RowColVp.val1, RowColVp.val2])
                 {
-                    if (pcedge.isTraversed == true ||
-                        (IgnoreCEdgeSS != null && IgnoreCEdgeSS.Contains(pcedge)))
+                    //int ss = pcedge.FrCpt.indexID;
+                    //int s2 = pcedge.ToCpt.indexID;
+                    if (pcedge.isTraversed == true || (IgnoreCEdgeSS != null && IgnoreCEdgeSS.Contains(pcedge)))
                     {
                         continue;
                     }
@@ -307,6 +330,7 @@ namespace MorphingClass.CGeometry
                     if (cedge.IsTouchWith(pcedge))
                     {
                         blnTouch = true;
+                        outTouchCEdge = pcedge;
                         break;
                     }
                 }
@@ -315,12 +339,6 @@ namespace MorphingClass.CGeometry
                 {
                     break;
                 }
-            }
-
-            //Set the TraversedCEdge to false
-            foreach (var TraversedCEdge in TraversedCEdgeLt)
-            {
-                TraversedCEdge.isTraversed = false;
             }
 
             return blnTouch;

@@ -49,21 +49,6 @@ namespace MorphingClass.CGeometry
             this.CEdgeLt.AddRange(cedgelt);
         }
 
-        ///// <summary>Update the two ends of all the polylines</summary>
-        ///// <remarks>at the beginning, the polylines have their own ends even in the same intersection. 
-        ///// we unified the vertices of the edges when we constructed doubly connected edge list, 
-        ///// now we also need to update the vertices of the polylines</remarks>
-        //public void UpdateCplltEnds()
-        //{
-        //    List<CPolyline> fcpllt = _CplLt;
-        //    foreach (CPolyline cpl in fcpllt)
-        //    {
-        //        int intCount = cpl.CEdgeLt.Count;
-        //        cpl.CptLt[0] = cpl.CEdgeLt[0].FrCpt;
-        //        cpl.CptLt[intCount] = cpl.CEdgeLt[intCount - 1].ToCpt;
-        //    }
-        //}
-
         public void ConstructDCEL()
         {
             var cedgelt = this.CEdgeLt;

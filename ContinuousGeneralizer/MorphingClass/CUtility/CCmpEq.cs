@@ -13,7 +13,7 @@ namespace MorphingClass.CUtility
 
     public class CCmpEqCpgPairIncr : EqualityComparer<CValPairIncr<CPolygon>>
     {
-        //public static CCmpCoordDbl_VerySmall sComparer = new CCmpCoordDbl_VerySmall();
+        //public static CCmpDbl_CoordVerySmall sComparer = new CCmpDbl_CoordVerySmall();
 
         public override bool Equals(CValPairIncr<CPolygon> x, CValPairIncr<CPolygon> y)
         {
@@ -35,7 +35,7 @@ namespace MorphingClass.CUtility
 
     public class CCmpEqCptXY : EqualityComparer<CPoint>
     {
-        //public static CCmpCoordDbl_VerySmall sComparer = new CCmpCoordDbl_VerySmall();
+        //public static CCmpDbl_CoordVerySmall sComparer = new CCmpDbl_CoordVerySmall();
 
         public override bool Equals(CPoint x, CPoint y)
         {
@@ -59,7 +59,7 @@ namespace MorphingClass.CUtility
 
     public class CCmpEqCEdgeCoord : EqualityComparer<CEdge>
     {
-        //public static CCmpCoordDbl_VerySmall sComparer = new CCmpCoordDbl_VerySmall();
+        //public static CCmpDbl_CoordVerySmall sComparer = new CCmpDbl_CoordVerySmall();
 
         public override bool Equals(CEdge x, CEdge y)
         {
@@ -90,7 +90,7 @@ namespace MorphingClass.CUtility
 
     //public class CCmpEqCptEdgeDis : EqualityComparer<CptEdgeDis>
     //{
-    //    //public static CCmpCoordDbl_VerySmall sComparer = new CCmpCoordDbl_VerySmall();
+    //    //public static CCmpDbl_CoordVerySmall sComparer = new CCmpDbl_CoordVerySmall();
 
     //    public override bool Equals(CptEdgeDis x, CptEdgeDis y)
     //    {

@@ -22,13 +22,13 @@ namespace MorphingClass.CUtility
     
 
 
-    public class CCmpCoordDbl_VerySmall : Comparer<double>
+    public class CCmpDbl_CoordVerySmall : Comparer<double>
     {
-        public static CCmpCoordDbl_VerySmall sComparer = new CCmpCoordDbl_VerySmall();
+        public static CCmpDbl_CoordVerySmall sComparer = new CCmpDbl_CoordVerySmall();
 
         public override int Compare(double x, double y)
         {
-            return CCmpMethods.CmpCoordDbl_VerySmall(x, y);
+            return CCmpMethods.CmpDbl_CoordVerySmall(x, y);
         }
     }
 
@@ -156,7 +156,7 @@ namespace MorphingClass.CUtility
     {
         public override int Compare(CPatch cph1, CPatch cph2)
         {
-            int intResult = CCmpMethods.CmpCoordDbl_VerySmall(cph1.dblArea, cph2.dblArea);
+            int intResult = CCmpMethods.CmpDbl_CoordVerySmall(cph1.dblArea, cph2.dblArea);
             if (intResult == 0)
             {
                 intResult = cph1.GID.CompareTo(cph2.GID);
@@ -243,7 +243,7 @@ namespace MorphingClass.CUtility
         public override int Compare(CRegion crg1, CRegion crg2)
         {
             //int intResult = crg1.GetCphCol().GetFirstT().dblArea.CompareTo(crg2.GetCphCol().GetFirstT().dblArea);
-            int intResult = CCmpMethods.CmpCoordDbl_VerySmall
+            int intResult = CCmpMethods.CmpDbl_CoordVerySmall
                 (crg1.GetCphCol().First().dblArea, crg2.GetCphCol().First().dblArea);
             if (intResult == 0)
             {

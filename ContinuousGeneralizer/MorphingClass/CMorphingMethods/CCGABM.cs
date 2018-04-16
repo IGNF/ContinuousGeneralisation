@@ -39,7 +39,7 @@ namespace MorphingClass.CMorphingMethods
         protected int _intInterSg = 5;
         protected int _intTransSg = 5;
 
-        private bool _blnSave=true ;
+        private bool _blnSave = true;
 
         public CCGABM()
         {
@@ -187,12 +187,17 @@ namespace MorphingClass.CMorphingMethods
             TransSgIGeoLt.EveryElementValue(null);
             CHelpFunc.Displaytspb(0.5, intInterLSFaceCount);
 
-            //face 27 represents Beijing; face 7 represents Hunan
-            int intStartFace = 23;
+            //face 27: Beijing; 
+            //face  7: Hunan
+            //face 23: Gansu
+            //face 14: Shanghai
+            //face 26: Tianjin
+            //face 28: between Beijing and Tianjin
+            int intStartFace = 28;
             int intEnd = intStartFace + 1;
 
             for (int i = intStartFace; i < intEnd; i++)
-            //for (int i = 0; i < intInterLSFaceCount; i++)
+                //for (int i = 0; i < intInterLSFaceCount; i++)
             {
                 Console.WriteLine("Face Num: " + i);
                 if (SgIplLtLt[i].Count != 0) //face 0 is the outer face, the count is zero

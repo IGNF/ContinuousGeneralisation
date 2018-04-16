@@ -109,8 +109,8 @@ namespace MorphingClass.CGeometry
             //TinEdit.AddShape((IGeometry)cpg.pPolygon, esriTinSurfaceType.esriTinHardClip, 0);
             //TinEdit.Refresh();
 
-            var cptSD = this.CptSD;
-            if (pTinAdvanced2.DataNodeCount != cptSD.Count)
+            
+            if (pTinAdvanced2.DataNodeCount != this.CptLt.Count)
             {
                 throw new ArgumentException("the numbers of points should be the same!");
             }
@@ -126,24 +126,8 @@ namespace MorphingClass.CGeometry
                 tincedgelt.AddRange(KnownCEdgeLt);
             }
 
-            //var cpg = _CPg;
-            cpg.JudgeAndFormCEdgeLt();
-            cpg.CEdgeLt.ForEach(cedge => cedge.JudgeAndSetAxisAngle());
-            var AxisAngleLt = new List<double>(cpg.CEdgeLt.Count);
-            foreach (var cedge in cpg.CEdgeLt)
-            {
-                cedge.JudgeAndSetAxisAngle();
-                AxisAngleLt.Add(cedge.dblAxisAngle);
-            }
-
-            //the index of ReverseAxisAngleLt indicates the index of the starting point
-            var ReverseAxisAngleLt = new List<double>(cpg.CEdgeLt.Count);
-            ReverseAxisAngleLt.Add(CGeoFunc.CalReversedCEdgeAxisAngle(AxisAngleLt.GetLastT()));
-            for (int i = 1; i < AxisAngleLt.Count; i++)
-            {
-                ReverseAxisAngleLt.Add(CGeoFunc.CalReversedCEdgeAxisAngle(AxisAngleLt[i - 1]));
-            }
-
+            cpg.SetAxisAngleAndReverseLt();
+            var cptSD = this.CptSD;
             foreach (var tinedge in ITinEdgeLt)
             {
                 //there are always a pair of edges between a pair of triangles, but we only need one edge. 
@@ -174,12 +158,8 @@ namespace MorphingClass.CGeometry
                 {
                     //the new edge starts from a point which constitues the boundary polygon (cpg)
                     newCEdge.SetAxisAngle();
-                    var dblAngle1 = CGeoFunc.CalAngle_Counterclockwise(
-                        AxisAngleLt[newCEdge.FrCpt.indexID], newCEdge.dblAxisAngle);
-                    var dblAngle2 = CGeoFunc.CalAngle_Counterclockwise(
-                        newCEdge.dblAxisAngle, ReverseAxisAngleLt[newCEdge.FrCpt.indexID]);
-
-                    if (dblAngle1 + dblAngle2 > CConstants.dblTwoPI)
+                    if (CGeoFunc.IsInbetween_Counterclockwise(cpg.AxisAngleLt[newCEdge.FrCpt.indexID], 
+                        newCEdge.dblAxisAngle, cpg.ReverseAxisAngleLt[newCEdge.FrCpt.indexID]) ==false)
                     {
                         //the new edge is outside the boundary polygon (cpg)
                         continue;

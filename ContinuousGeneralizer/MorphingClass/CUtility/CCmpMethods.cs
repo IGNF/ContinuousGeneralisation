@@ -14,7 +14,7 @@ namespace MorphingClass.CUtility
     //return -1:put the first variable in front of the second one
     public class CCmpMethods
     {
-        //public static CCmpCoordDbl_VerySmall _pCmpCoordDbl_VerySmall = new CCmpCoordDbl_VerySmall();
+        //public static CCmpDbl_CoordVerySmall _pCmpDbl_CoordVerySmall = new CCmpDbl_CoordVerySmall();
 
         public static bool ConvertCmpToBool(int intCmp)
         {
@@ -61,7 +61,7 @@ namespace MorphingClass.CUtility
         /// <returns>1, if the first parameter larger than the second one; -1, smaller; 0, equal</returns>
         /// <remarks>please notice that the default value of _dblVerySmall is 0.0000000000000001, 
         /// but we usually set a new _dblVerySmall with respect to the data</remarks>
-        public static int CmpCoordDbl_VerySmall(double dbl1, double dbl2)
+        public static int CmpDbl_CoordVerySmall(double dbl1, double dbl2)
         {
            return  CmpDblRange(dbl1, dbl2, CConstants.dblVerySmallCoord);
         }
@@ -164,7 +164,7 @@ namespace MorphingClass.CUtility
             IComparer<double> cmp = null;
             if (blnVerySmall==true)
             {
-                cmp = CCmpCoordDbl_VerySmall.sComparer;
+                cmp = CCmpDbl_CoordVerySmall.sComparer;
             }
 
             return CmpDual(cpt1, cpt2, cpt => cpt.Y, cpt => cpt.X, cmp, cmp);
@@ -175,7 +175,7 @@ namespace MorphingClass.CUtility
             IComparer<double> cmp = null;
             if (blnVerySmall == true)
             {
-                cmp = CCmpCoordDbl_VerySmall.sComparer;
+                cmp = CCmpDbl_CoordVerySmall.sComparer;
             }
 
             return CmpDual(cpt1, cpt2, cpt => cpt.X, cpt => cpt.Y, cmp, cmp);
@@ -420,8 +420,8 @@ namespace MorphingClass.CUtility
         /// 5   If dblValue is larger than dblbound1 and larger than dblbound2,</returns>
         public static int CmpIncrease(double dblValue, double dblbound1, double dblbound2)
         {
-            int intCmp1 = CmpCoordDbl_VerySmall(dblValue, dblbound1);
-            int intCmp2 = CmpCoordDbl_VerySmall(dblValue, dblbound2);
+            int intCmp1 = CmpDbl_CoordVerySmall(dblValue, dblbound1);
+            int intCmp2 = CmpDbl_CoordVerySmall(dblValue, dblbound2);
 
             if (intCmp1 == -1)
             {
