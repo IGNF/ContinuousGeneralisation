@@ -225,8 +225,12 @@ namespace MorphingClass.CUtility
         //    }
         //}
 
-       
 
+        /// <summary>
+        /// Please stop use this function. Instead, use HashSet based on GID
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="TEnumerable"></param>
         public static void SetIndexID<T>(this IEnumerable<T> TEnumerable)
             where T : CBasicBase
         {

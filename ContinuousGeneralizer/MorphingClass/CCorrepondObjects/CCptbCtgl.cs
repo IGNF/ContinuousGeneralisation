@@ -557,41 +557,173 @@ namespace MorphingClass.CCorrepondObjects
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="FrRglDCEL">At this point, there is no proper faces</param>
+        /// <param name="intRglExteriorEdgeNum"></param>
+        /// <param name="blnSave"></param>
+        /// <remarks>We avoid to use ArcEngine because ArcEngine may introduce unnecessary points</remarks>
         private void TriangulateFacesDelaunay(ref CDCEL FrRglDCEL, int intRglExteriorEdgeNum, bool blnSave =false)
         {
-            var ExteriorCptLt = new List<CPoint>(FrRglDCEL.CptLt.GetRange(0, intRglExteriorEdgeNum));
-            ExteriorCptLt.Add(FrRglDCEL.CptLt[0]);
-            var ExteriorRglCpg = new CPolygon(-2, ExteriorCptLt);
+            //set the isTraversed attribute to flase
+            SetCEdgesIsTraversedFalse_AroundCpts(ref FrRglDCEL);
 
-            var ctgl = new CTriangulation(ExteriorRglCpg, FrRglDCEL.CptLt);
-
-            var ExistingInteriorCEdgeLt = FrRglDCEL.CEdgeLt
-                .GetRange(intRglExteriorEdgeNum, FrRglDCEL.CEdgeLt.Count - intRglExteriorEdgeNum);
-            var ExistingInteriorCplLt = CHelpFunc.GenerateCplLtByCEdgeLt(ExistingInteriorCEdgeLt);
-                
-
-            ctgl.Triangulate(ExistingInteriorCplLt, FrRglDCEL.CEdgeLt, "Combined", blnSave);
-
-            //ctgl.GenerateRealTinCEdgeLt(FrRglDCEL.CEdgeLt);
-
-            //insert new edges into the FrRglDCEL
-            ctgl.CEdgeLt.ForEach(cedge => cedge.isTraversed = false);
-            //after this step, a cedge with cedge.isTraversed = false is a new edge
-            FrRglDCEL.CEdgeLt.ForEach(cedge => cedge.isTraversed = true);
-
-            foreach (var newCEdge in ctgl.CEdgeLt)
+            //we don't need to triangulate super face. so we set isTraversed of all the outercedge to true
+            CEdge outercedge = FrRglDCEL.HalfEdgeLt[1];   //we know that FrRglDCEL.HalfEdgeLt[1] is an outer cedge
+            do
             {
-                if (newCEdge.isTraversed==true) //not real new edge
+                outercedge.isTraversed = true;
+                outercedge = outercedge.cedgeNext;
+            } while (outercedge.isTraversed == false);
+
+            //triangulate faces
+            foreach (var firstCEdge in FrRglDCEL.HalfEdgeLt)
+            {
+                if (firstCEdge.isTraversed)
                 {
                     continue;
                 }
-                newCEdge.isTraversed = true;
 
-                newCEdge.CreateTwinCEdge();
-                CDCEL.InsertCEdgeAtCpt(newCEdge.FrCpt, newCEdge);
-                CDCEL.InsertCEdgeAtCpt(newCEdge.ToCpt, newCEdge.cedgeTwin);
-            }            
+                var secondCEdge = firstCEdge.cedgeNext;
+                var thirdCEdge = secondCEdge.cedgeNext;
+                var fourthCEdge = thirdCEdge.cedgeNext;
+                firstCEdge.isTraversed = true;
+                secondCEdge.isTraversed = true;
+                thirdCEdge.isTraversed = true;
+                if (firstCEdge.GID== fourthCEdge.GID)  //this is a triangle
+                {
+                    continue;
+                }
+                else if (firstCEdge.GID == fourthCEdge.cedgeNext.GID)  //this is a quadrangle
+                {
+                    fourthCEdge.isTraversed = true;
+                    var DiagonalCEdge = CTriangulation.TriangulateQuadrangle_Delaunay(firstCEdge);
+                    DiagonalCEdge.CreateTwinCEdge();
+                    if (DiagonalCEdge.FrCpt.GID== firstCEdge.FrCpt.GID)
+                    {
+                        CDCEL.InsertCEdgeBySmaller(firstCEdge, DiagonalCEdge);
+                        CDCEL.InsertCEdgeBySmaller(thirdCEdge, DiagonalCEdge.cedgeTwin);
+                    }
+                    else //if (DiagonalCEdge.FrCpt.GID== firstCEdge.ToCpt.GID)
+                    {
+                        CDCEL.InsertCEdgeBySmaller(secondCEdge, DiagonalCEdge);
+                        CDCEL.InsertCEdgeBySmaller(fourthCEdge, DiagonalCEdge.cedgeTwin);
+                    }
+                }
+                else //a convex polygon which has at least 5 edges; we take advantage of ArcEngine
+                {
+                    var newCptLt = new List<CPoint>(5);  //at least five points
+                    newCptLt.Add(firstCEdge.FrCpt);
+                    var newCEdgeLt = new List<CEdge>(5);
+
+                    var currentCEdge = firstCEdge;
+                    do
+                    {
+                        newCptLt.Add(currentCEdge.ToCpt);
+                        newCEdgeLt.Add(currentCEdge);
+                        currentCEdge.isTraversed = true;
+                        currentCEdge = currentCEdge.cedgeNext;
+                    } while (currentCEdge.GID != firstCEdge.GID);
+
+                    var newcpg = new CPolygon(firstCEdge.FrCpt.indexID, newCptLt);
+                    var subCtgl = new CTriangulation(newcpg);
+                    subCtgl.Triangulate(null, newCEdgeLt, "Combined" + newcpg.ID, blnSave);
+
+                    foreach (var newCEdge in subCtgl.NewCEdgeLt)
+                    {
+                        newCEdge.CreateTwinCEdge();
+                        CDCEL.InsertCEdgeAtCpt(newCEdge.FrCpt, newCEdge);
+                        CDCEL.InsertCEdgeAtCpt(newCEdge.ToCpt, newCEdge.cedgeTwin);
+                    }
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+            //foreach (var cpt in FrRglDCEL.CptLt)
+            //{
+            //    var incidentcedge = cpt.IncidentCEdge;
+            //    var CoStartCEdge = incidentcedge;
+
+            //    do
+            //    {
+            //        if (CoStartCEdge.isTraversed == false)
+            //        {
+            //            CoStartCEdge.isTraversed = true;
+            //            CoStartCEdge.cedgeNext.isTraversed = true;
+            //            CoStartCEdge.cedgeNext.cedgeNext.isTraversed = true;
+
+            //            //we define lastPreCEdge so that we will know where we should insert
+            //            CEdge SmallerAxisAngleCEdge = CoStartCEdge;
+            //            CEdge currentcedge = CoStartCEdge.cedgeNext.cedgeNext;
+            //            while (CoStartCEdge.FrCpt.GID != currentcedge.ToCpt.GID)
+            //            {
+            //                CEdge newcedge = new CEdge(CoStartCEdge.FrCpt, currentcedge.FrCpt);
+            //                newcedge.CreateTwinCEdge();
+            //                CDCEL.InsertCEdgeBySmaller(SmallerAxisAngleCEdge, newcedge);
+            //                CDCEL.InsertCEdgeBySmaller(currentcedge, newcedge.cedgeTwin);
+
+            //                newcedge.isTraversed = false;
+            //                newcedge.cedgeTwin.isTraversed = false;
+            //                currentcedge.isTraversed = false;
+
+            //                currentcedge = currentcedge.cedgeNext;
+            //                SmallerAxisAngleCEdge = newcedge;
+            //            }
+            //        }
+
+            //        CoStartCEdge = CoStartCEdge.GetLargerAxisAngleCEdge();
+            //    } while (CoStartCEdge.GID != incidentcedge.GID);
+            //}
+            
+
+
+            //var ExteriorCptLt = new List<CPoint>(FrRglDCEL.CptLt.GetRange(0, intRglExteriorEdgeNum));
+            //ExteriorCptLt.Add(FrRglDCEL.CptLt[0]);
+            //var ExteriorRglCpg = new CPolygon(-2, ExteriorCptLt);
+
+            //var ctgl = new CTriangulation(ExteriorRglCpg, FrRglDCEL.CptLt);
+
+            //var ExistingInteriorCEdgeLt = FrRglDCEL.CEdgeLt
+            //    .GetRange(intRglExteriorEdgeNum, FrRglDCEL.CEdgeLt.Count - intRglExteriorEdgeNum);
+            //var ExistingInteriorCplLt = CHelpFunc.GenerateCplLtByCEdgeLt(ExistingInteriorCEdgeLt);
+
+
+            //ctgl.Triangulate(ExistingInteriorCplLt, FrRglDCEL.CEdgeLt, "Combined", blnSave);
+
+            ////ctgl.GenerateRealTinCEdgeLt(FrRglDCEL.CEdgeLt);
+
+            ////insert new edges into the FrRglDCEL
+            //ctgl.CEdgeLt.ForEach(cedge => cedge.isTraversed = false);
+            ////after this step, a cedge with cedge.isTraversed = false is a new edge
+            //FrRglDCEL.CEdgeLt.ForEach(cedge => cedge.isTraversed = true);
+
+            //foreach (var newCEdge in ctgl.CEdgeLt)
+            //{
+            //    if (newCEdge.isTraversed==true) //not real new edge
+            //    {
+            //        continue;
+            //    }
+            //    newCEdge.isTraversed = true;
+
+            //    newCEdge.CreateTwinCEdge();
+            //    CDCEL.InsertCEdgeAtCpt(newCEdge.FrCpt, newCEdge);
+            //    CDCEL.InsertCEdgeAtCpt(newCEdge.ToCpt, newCEdge.cedgeTwin);
+            //}            
         }
+
+
 
 
         //private void TriangulateFaces(ref CDCEL FrRglDCEL)

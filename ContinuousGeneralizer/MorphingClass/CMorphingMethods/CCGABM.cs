@@ -39,7 +39,7 @@ namespace MorphingClass.CMorphingMethods
         protected int _intInterSg = 5;
         protected int _intTransSg = 5;
 
-        private bool _blnSave = true;
+        private bool _blnSave = false ;
 
         public CCGABM()
         {
@@ -188,12 +188,13 @@ namespace MorphingClass.CMorphingMethods
             CHelpFunc.Displaytspb(0.5, intInterLSFaceCount);
 
             //face 27: Beijing; 
-            //face  7: Hunan
+            //face  7: Hunan: problem when constructing triangulations
             //face 23: Gansu
             //face 14: Shanghai
             //face 26: Tianjin
             //face 28: between Beijing and Tianjin
-            int intStartFace = 28;
+            //face 10: Chongqin: transformed polylines outside boundaries
+            int intStartFace = 7;
             int intEnd = intStartFace + 1;
 
             for (int i = intStartFace; i < intEnd; i++)
