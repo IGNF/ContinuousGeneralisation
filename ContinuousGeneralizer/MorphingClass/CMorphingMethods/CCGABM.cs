@@ -39,7 +39,7 @@ namespace MorphingClass.CMorphingMethods
         protected int _intInterSg = 5;
         protected int _intTransSg = 5;
 
-        private bool _blnSave = false ;
+        private bool _blnSave = true ;
 
         public CCGABM()
         {
@@ -188,13 +188,13 @@ namespace MorphingClass.CMorphingMethods
             CHelpFunc.Displaytspb(0.5, intInterLSFaceCount);
 
             //face 27: Beijing; 
-            //face  7: Hunan: problem when constructing triangulations
+            //face  7: Hunan:
             //face 23: Gansu
             //face 14: Shanghai
             //face 26: Tianjin
             //face 28: between Beijing and Tianjin
             //face 10: Chongqin: transformed polylines outside boundaries
-            int intStartFace = 7;
+            int intStartFace = 10;
             int intEnd = intStartFace + 1;
 
             for (int i = intStartFace; i < intEnd; i++)
@@ -203,17 +203,17 @@ namespace MorphingClass.CMorphingMethods
                 Console.WriteLine("Face Num: " + i);
                 if (SgIplLtLt[i].Count != 0) //face 0 is the outer face, the count is zero
                 {
-                    IEnumerable<CPolyline> TransSgCplEb;
+                    List<CPolyline> TransSgCplLt;
                     switch (pParameterInitialize.cboTransform.Text)
                     {
                         case "CT Max Common Chords":
-                            TransSgCplEb = CTTransform(InterLSIplLtLt[i], InterSSIplLtLt[i], SgIplLtLt[i],true);
+                            TransSgCplLt = CTTransform(InterLSIplLtLt[i], InterSSIplLtLt[i], SgIplLtLt[i],true);
                             break;
                         case "Compatible Triangulations":
-                            TransSgCplEb = CTTransform(InterLSIplLtLt[i], InterSSIplLtLt[i], SgIplLtLt[i],false);
+                            TransSgCplLt = CTTransform(InterLSIplLtLt[i], InterSSIplLtLt[i], SgIplLtLt[i],false);
                             break;
                         case "Rubber Sheeting":
-                            TransSgCplEb = RSTransform(InterLSIplLtLt[i], InterSSIplLtLt[i], SgIplLtLt[i]);
+                            TransSgCplLt = RSTransform(InterLSIplLtLt[i], InterSSIplLtLt[i], SgIplLtLt[i]);
                             break;
                         default: throw new ArgumentOutOfRangeException("a case doesn't exist!");
                     }
@@ -221,7 +221,7 @@ namespace MorphingClass.CMorphingMethods
                     //var TransSgCplEb = dlgTransform(InterLSIplLtLt[i], InterSSIplLtLt[i], SgIplLtLt[i]);
 
                     int intCount = 0;
-                    foreach (var TransSgCpl in TransSgCplEb)
+                    foreach (var TransSgCpl in TransSgCplLt)
                     {
                         TransSgIGeoLt[intSgIndexLtLt[i][intCount++]] = TransSgCpl.JudgeAndSetAEGeometry();
                     }
@@ -251,7 +251,7 @@ namespace MorphingClass.CMorphingMethods
         /// <remarks>InterLSIplLt and InterSSIplLt can be clockwise of counterclockwise.
         /// we will construct DCEL, in which the directions will be counterclockwise.
         /// InterLSIplLt and InterSSIplLt should have the same direction and the corresponding start points</remarks>
-        private IEnumerable<CPolyline> CTTransform(List<IPolyline5> InterLSIplLt, List<IPolyline5> InterSSIplLt, 
+        private List<CPolyline> CTTransform(List<IPolyline5> InterLSIplLt, List<IPolyline5> InterSSIplLt, 
             List<IPolyline5> SgIplLt, bool blnMaxCommonChords = true)
         {
             CConstants.dblVerySmallCoord /= 10;  //this assignment should equal to _dblVerySmallDenominator = 10000000
@@ -274,7 +274,7 @@ namespace MorphingClass.CMorphingMethods
 
             //we maintaine this SD so that for a point from single polyline, 
             //we can know whether this single point overlaps a point of a larger-scale polyline
-            var pInterLSCptSD = pInterSSDCEL.FaceCpgLt[1].CptLt.ToSD(cpt => cpt, new CCmpCptYX_VerySmall()); 
+            var pInterLSCptSD = pInterLSDCEL.FaceCpgLt[1].CptLt.ToSD(cpt => cpt, new CCmpCptYX_VerySmall()); 
 
             //bool blnSave = false;
             //blnSave = true;
@@ -285,10 +285,24 @@ namespace MorphingClass.CMorphingMethods
             var TransSgCPlLt = new List<CPolyline>(SgIplLt.Count);
             foreach (var SgCpl in SgCplEb)
             {
-                yield return GenerateCorrSgCpl(pCptbCtgl, SgCpl, pInterLSCptSD);
+    //            if (CCmpMethods.CmpDblRange(SgCpl.CptLt[0].X, 101786.313,10)==0 &&
+    //                CCmpMethods.CmpDblRange(SgCpl.CptLt[0].Y, 3394808.250, 10) == 0)
+    //            {
+    //                int sd = SgCpl.ID;
+    //            }
+
+    //            if (CCmpMethods.CmpDblRange(SgCpl.CptLt.GetLastT().X, 101786.313, 10) == 0 &&
+    //CCmpMethods.CmpDblRange(SgCpl.CptLt.GetLastT().Y, 3394808.250, 10) == 0)
+    //            {
+    //                int sd = SgCpl.ID;
+    //            }
+
+
+                TransSgCPlLt.Add( GenerateCorrSgCpl(pCptbCtgl, SgCpl, pInterLSCptSD));
             }
 
             CConstants.dblVerySmallCoord *= 10;
+            return TransSgCPlLt;
         }
 
 
@@ -465,6 +479,19 @@ namespace MorphingClass.CMorphingMethods
             CPoint AffineCpt = null;
             CPoint outcpt;
             bool blnContainsKey = pInterLSCptSD.TryGetValue(SgCpt, out outcpt);
+
+            //foreach (var kvp in pInterLSCptSD)
+            //{
+            //    if (CCmpMethods.CmpDblRange(kvp.Key.X, 101786.313, 100) == 0 &&
+            //        CCmpMethods.CmpDblRange(kvp.Key.Y, 3394808.250, 100) == 0)
+            //    {
+            //        int sd = kvp.Key.ID;
+            //    }
+            //}
+
+            
+
+
             if (blnContainsKey == true)
             {
                 AffineCpt = pToCtgl.CptLt[outcpt.indexID];
@@ -560,7 +587,7 @@ namespace MorphingClass.CMorphingMethods
 
         #region RSTransform (rubber sheeting)
 
-        private IEnumerable<CPolyline> RSTransform( 
+        private List<CPolyline> RSTransform( 
             List<IPolyline5> InterLSIplLt, List<IPolyline5> InterSSIplLt, List<IPolyline5> SgIplLt)
         {
             var pInterLSCplLt = CHelpFunc.GenerateCGeoEbAccordingToGeoEb<CPolyline>(InterLSIplLt).ToList();
@@ -571,10 +598,12 @@ namespace MorphingClass.CMorphingMethods
             CHelpFunc.SetMoveVectorForCorrCptsLtLt(pCorrCptsLtLt);
 
             var pInterLSCptSD = pInterLSCplLt.GetAllCptEb<CPolyline, CPolyline>().ToSD(cpt => cpt, new CCmpCptYX_VerySmall());
+            var TransSgCPlLt = new List<CPolyline>(SgIplLt.Count);
             foreach (var SgCpl in SgCplEb)
             {
-                yield return RSGenerateCorrSgCpl(SgCpl, pInterLSCptSD);
+                TransSgCPlLt.Add(RSGenerateCorrSgCpl(SgCpl, pInterLSCptSD));
             }
+            return TransSgCPlLt;
         }
 
         private CPolyline RSGenerateCorrSgCpl(CPolyline SgCpl, SortedDictionary<CPoint, CPoint> pInterLSCptSD)

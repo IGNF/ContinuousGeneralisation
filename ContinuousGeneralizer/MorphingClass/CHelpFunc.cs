@@ -305,19 +305,19 @@ namespace MorphingClass.CUtility
             }
         }
 
-        public static object GenerateCGeoAccordingToInput(IGeometry pGeo, int intIndex = -2, double dblFactor = 1)
+        public static object GenerateCGeoAccordingToInput(IGeometry pGeo, int intID = -2, double dblFactor = 1)
         {
             object obj = null;
             switch (pGeo.GeometryType)
             {
                 case esriGeometryType.esriGeometryPoint:               //point******************
-                    obj = new CPoint(intIndex, (IPoint)pGeo);
+                    obj = new CPoint(intID, (IPoint)pGeo);
                     break;
                 case esriGeometryType.esriGeometryPolygon:             //polygon******************
-                    obj = new CPolygon(intIndex, (IPolygon4)pGeo, dblFactor);
+                    obj = new CPolygon(intID, (IPolygon4)pGeo, dblFactor);
                     break;
                 case esriGeometryType.esriGeometryPolyline:            //polyline******************
-                    obj = new CPolyline(intIndex, (IPolyline5)pGeo);
+                    obj = new CPolyline(intID, (IPolyline5)pGeo);
                     break;
                 default:
                     break;
