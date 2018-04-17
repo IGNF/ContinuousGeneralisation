@@ -39,7 +39,8 @@ namespace MorphingClass.CMorphingMethods
         protected int _intInterSg = 5;
         protected int _intTransSg = 5;
 
-        private bool _blnSave = true ;
+        private bool _blnSave = false;
+        //private bool _blnSave = true;
 
         public CCGABM()
         {
@@ -48,7 +49,8 @@ namespace MorphingClass.CMorphingMethods
 
 
 
-        public CCGABM(CParameterInitialize ParameterInitialize, int intLayerCount = 2, int intStartLayer = 0, bool blnIGeoToCGeo = true)
+        public CCGABM(CParameterInitialize ParameterInitialize, int intLayerCount = 2,
+            int intStartLayer = 0, bool blnIGeoToCGeo = true)
         {
             Construct<CPolyline, CPolyline>(ParameterInitialize, intLayerCount, intStartLayer, blnIGeoToCGeo);
         }
@@ -58,8 +60,10 @@ namespace MorphingClass.CMorphingMethods
         /// <summary>
         /// 
         /// </summary>
-        /// <remarks>construct DCEL for InterLSCPlLt, and set the two face numbers for every Cpl. since InterSSCPlLt are stored with the same order as InterLSCPlLt, we also set the same faces numbers for every Cpl from InterSSCPlLt
-        /// for a SgCpl, we get a point on it and test in which face this point is</remarks>
+        /// <remarks>construct DCEL for InterLSCPlLt, and set the two face numbers for every Cpl. 
+        /// since InterSSCPlLt are stored with the same order as InterLSCPlLt,
+        /// we also set the same faces numbers for every Cpl from InterSSCPlLt for a SgCpl, 
+        /// we get a point on it and test in which face this point is</remarks>
         public void IdentifyAddFaceNumber()
         {
             CParameterInitialize pParameterInitialize = _ParameterInitialize;
@@ -193,12 +197,12 @@ namespace MorphingClass.CMorphingMethods
             //face 14: Shanghai
             //face 26: Tianjin
             //face 28: between Beijing and Tianjin
-            //face 10: Chongqin: transformed polylines outside boundaries
-            int intStartFace = 10;
+            //face 10: Chongqin:
+            int intStartFace = 23;
             int intEnd = intStartFace + 1;
 
-            for (int i = intStartFace; i < intEnd; i++)
-                //for (int i = 0; i < intInterLSFaceCount; i++)
+            //for (int i = intStartFace; i < intEnd; i++)
+            for (int i = 0; i < intInterLSFaceCount; i++)
             {
                 Console.WriteLine("Face Num: " + i);
                 if (SgIplLtLt[i].Count != 0) //face 0 is the outer face, the count is zero
@@ -233,8 +237,6 @@ namespace MorphingClass.CMorphingMethods
             pParameterInitialize.tsslTime.Text = pStopwatch.ElapsedMilliseconds.ToString();
             CSaveFeature.SaveIGeoEb(TransSgIGeoLt, esriGeometryType.esriGeometryPolyline, "TransSgCPlLt",
                  this.strFieldNameLtLt[_intSg], this.esriFieldTypeLtLt[_intSg], _ObjValueLtLtLt[_intSg]);
-
-
         }
 
 
@@ -269,15 +271,12 @@ namespace MorphingClass.CMorphingMethods
             //there are only two faces: the super face and a normal face. Face *.FaceCpgLt[1] is the normal face
             CDCEL pInterSSDCEL = new CDCEL(InterSSCplLt);
             pInterSSDCEL.ConstructDCEL();
-            pInterSSDCEL.FaceCpgLt[1].SetOuterFaceCptlt(false, true, InterSSCplLt[0].CptLt[0]);
-            
+            pInterSSDCEL.FaceCpgLt[1].SetOuterFaceCptlt(false, true, InterSSCplLt[0].CptLt[0]);            
 
             //we maintaine this SD so that for a point from single polyline, 
             //we can know whether this single point overlaps a point of a larger-scale polyline
             var pInterLSCptSD = pInterLSDCEL.FaceCpgLt[1].CptLt.ToSD(cpt => cpt, new CCmpCptYX_VerySmall()); 
 
-            //bool blnSave = false;
-            //blnSave = true;
 
             CCptbCtgl pCptbCtgl = new CCptbCtgl(pInterLSDCEL.FaceCpgLt[1], pInterSSDCEL.FaceCpgLt[1], 
                 blnMaxCommonChords, _blnSave);
@@ -285,48 +284,13 @@ namespace MorphingClass.CMorphingMethods
             var TransSgCPlLt = new List<CPolyline>(SgIplLt.Count);
             foreach (var SgCpl in SgCplEb)
             {
-    //            if (CCmpMethods.CmpDblRange(SgCpl.CptLt[0].X, 101786.313,10)==0 &&
-    //                CCmpMethods.CmpDblRange(SgCpl.CptLt[0].Y, 3394808.250, 10) == 0)
-    //            {
-    //                int sd = SgCpl.ID;
-    //            }
-
-    //            if (CCmpMethods.CmpDblRange(SgCpl.CptLt.GetLastT().X, 101786.313, 10) == 0 &&
-    //CCmpMethods.CmpDblRange(SgCpl.CptLt.GetLastT().Y, 3394808.250, 10) == 0)
-    //            {
-    //                int sd = SgCpl.ID;
-    //            }
-
-
                 TransSgCPlLt.Add( GenerateCorrSgCpl(pCptbCtgl, SgCpl, pInterLSCptSD));
             }
 
             CConstants.dblVerySmallCoord *= 10;
             return TransSgCPlLt;
         }
-
-
-
-
-
-
-
-
-        //private List<List<CPolyline>> FindSgCplInSameLSFace(CDCEL pInterLSDCEL, List<CPolyline> pSgCPlLt)
-        //{
-        //    //initial InsideSameFaceCptLtLt
-        //    List<List<CPolyline>> InsideSameLSFaceSgCplLtLt = new List<List<CPolyline>>(pInterLSDCEL.FaceCpgLt.Count);
-        //    InsideSameLSFaceSgCplLtLt.EveryElementNew();
-
-        //    foreach (var SgCpl in pSgCPlLt)
-        //    {
-        //        //comparing to the method which traverses along DCEL, this method only needs to detect the face once 
-        //        int intIndex = DetectFaceForSg(SgCpl, pInterLSDCEL).indexID;   
-        //        InsideSameLSFaceSgCplLtLt[intIndex].Add(SgCpl);
-        //    }
-
-        //    return InsideSameLSFaceSgCplLtLt;
-        //}
+        
 
         private CPolygon DetectFaceForSg(CPolyline SgCpl, CDCEL pInterLSDCEL)
         {
@@ -479,19 +443,6 @@ namespace MorphingClass.CMorphingMethods
             CPoint AffineCpt = null;
             CPoint outcpt;
             bool blnContainsKey = pInterLSCptSD.TryGetValue(SgCpt, out outcpt);
-
-            //foreach (var kvp in pInterLSCptSD)
-            //{
-            //    if (CCmpMethods.CmpDblRange(kvp.Key.X, 101786.313, 100) == 0 &&
-            //        CCmpMethods.CmpDblRange(kvp.Key.Y, 3394808.250, 100) == 0)
-            //    {
-            //        int sd = kvp.Key.ID;
-            //    }
-            //}
-
-            
-
-
             if (blnContainsKey == true)
             {
                 AffineCpt = pToCtgl.CptLt[outcpt.indexID];
@@ -522,8 +473,8 @@ namespace MorphingClass.CMorphingMethods
             double dblLamda1, dblLamda2, dblLamda3;
             CGeoFunc.CalBarycentricCoordinates(SgCpt, atrianglecpt[0], atrianglecpt[1], atrianglecpt[2], 
                 out dblLamda1, out dblLamda2, out dblLamda3);
-            CPoint AffineCpt = CGeoFunc.CalCartesianCoordinates(
-                pToCtgl.CptLt[atrianglecpt[0].indexID], pToCtgl.CptLt[atrianglecpt[1].indexID], pToCtgl.CptLt[atrianglecpt[2].indexID], 
+            CPoint AffineCpt = CGeoFunc.CalCartesianCoordinates(pToCtgl.CptLt[atrianglecpt[0].indexID], 
+                pToCtgl.CptLt[atrianglecpt[1].indexID], pToCtgl.CptLt[atrianglecpt[2].indexID], 
                 dblLamda1, dblLamda2, dblLamda3, SgCpt.ID);
             return AffineCpt;
         }

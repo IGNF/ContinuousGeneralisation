@@ -90,5 +90,39 @@ namespace MorphingClass.CUtility
             this.intRowIndex = fintRowIndex;
             this.intColIndex = fintColIndex;
         }
+
+        public CCell(int intK1,  double fdblCost, double fdblCostHelp = 0,
+    int fintRowIndex = -1, int fintColIndex = -1)
+        {
+            this.intBackK1 = intK1;
+            this.dblCost = fdblCost;
+            this.dblCostHelp = fdblCostHelp;
+            this.intRowIndex = fintRowIndex;
+            this.intColIndex = fintColIndex;
+        }
     }
+
+    //public class CCellIntCost
+    //{
+    //    public int intBackK1 { get; set; }
+    //    public int intBackK2 { get; set; }
+    //    public int intCost { get; set; }
+    //    public int intCostHelp { get; set; }
+    //    public int intRowIndex { get; set; }
+    //    public int intColIndex { get; set; }
+
+    //    public CCellIntCost()
+    //    {
+    //    }
+
+    //    public CCellIntCost(int intK1, int fintCost, int fintCostHelp = 0,
+    //        int fintRowIndex = -1, int fintColIndex = -1)
+    //    {
+    //        this.intBackK1 = intK1;
+    //        this.intCost = fintCost;
+    //        this.intCostHelp = fintCostHelp;
+    //        this.intRowIndex = fintRowIndex;
+    //        this.intColIndex = fintColIndex;
+    //    }
+    //}
 }

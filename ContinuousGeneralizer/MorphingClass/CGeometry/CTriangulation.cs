@@ -368,7 +368,7 @@ namespace MorphingClass.CGeometry
                 CEdgeLt.Add(new CEdge(pTinEdge));
             }
 
-            CSaveFeature.SaveCEdgeEb(CEdgeLt, "TIN_"+strName);
+            CSaveFeature.SaveCEdgeEb(CEdgeLt, "TIN_" + strName);
         }
 
         /// <summary>
@@ -388,31 +388,10 @@ namespace MorphingClass.CGeometry
             thirdCEdge.JudgeAndSetAxisAngle();
             fourthCEdge.JudgeAndSetAxisAngle();
 
-            //var firstAngle = Math.PI - CGeoFunc.CalAngle_Counterclockwise(fourthCEdge.dblAxisAngle, firstCEdge.dblAxisAngle);
-            //var secondAngle = Math.PI - CGeoFunc.CalAngle_Counterclockwise(firstCEdge.dblAxisAngle, secondCEdge.dblAxisAngle);
-            //var thirdAngle = Math.PI - CGeoFunc.CalAngle_Counterclockwise(secondCEdge.dblAxisAngle, thirdCEdge.dblAxisAngle);
-            //var fourthAngle = Math.PI - CGeoFunc.CalAngle_Counterclockwise(thirdCEdge.dblAxisAngle, fourthCEdge.dblAxisAngle);
-
-            //var minAngle = Math.Min(firstAngle, Math.Min(secondAngle, Math.Min(thirdAngle, fourthAngle)));
-
             CEdge newCEdge1 = new CEdge(firstCEdge.FrCpt, thirdCEdge.FrCpt);
             CEdge newCEdge2 = new CEdge(firstCEdge.ToCpt, thirdCEdge.ToCpt);
             newCEdge1.SetAxisAngle();
             newCEdge2.SetAxisAngle();
-
-            //var dblAngle11= CGeoFunc.CalAngle_Counterclockwise(firstCEdge.dblAxisAngle, newCEdge1.dblAxisAngle);
-            //var dblAngle12 = CGeoFunc.CalAngle_Counterclockwise(newCEdge1.dblAxisAngle, secondCEdge.dblAxisAngle);
-            //var dblAngle13 = Math.PI - CGeoFunc.CalAngle_Counterclockwise(newCEdge1.dblAxisAngle, thirdCEdge.dblAxisAngle);
-            //var dblAngle14 = Math.PI - CGeoFunc.CalAngle_Counterclockwise(fourthCEdge.dblAxisAngle, newCEdge1.dblAxisAngle);
-
-            //var minAngle1 = Math.Min(dblAngle11, Math.Min(dblAngle12, Math.Min(dblAngle13, dblAngle14)));
-
-            //var dblAngle21 = CGeoFunc.CalAngle_Counterclockwise(secondCEdge.dblAxisAngle, newCEdge2.dblAxisAngle);
-            //var dblAngle22 = CGeoFunc.CalAngle_Counterclockwise(newCEdge2.dblAxisAngle, thirdCEdge.dblAxisAngle);
-            //var dblAngle23 = Math.PI - CGeoFunc.CalAngle_Counterclockwise(newCEdge2.dblAxisAngle, fourthCEdge.dblAxisAngle);
-            //var dblAngle24 = Math.PI - CGeoFunc.CalAngle_Counterclockwise(firstCEdge.dblAxisAngle, newCEdge2.dblAxisAngle);
-
-            //var minAngle2 = Math.Min(dblAngle11, Math.Min(dblAngle12, Math.Min(dblAngle13, dblAngle14)));
 
             var dblMinAngle1 = GetDividedMinAngle(newCEdge1, firstCEdge, secondCEdge, thirdCEdge, fourthCEdge);
             var dblMinAngle2 = GetDividedMinAngle(newCEdge2, secondCEdge, thirdCEdge, fourthCEdge, firstCEdge);

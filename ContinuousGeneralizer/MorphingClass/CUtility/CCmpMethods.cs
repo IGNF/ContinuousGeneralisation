@@ -125,12 +125,6 @@ namespace MorphingClass.CUtility
             }
         }
 
-        //public static int CmpGeneric<T>(T pT1, T pT2)
-        //{
-
-
-        //}
-
 
         public static int HandleTwoResults(int intResult1, int intResult2)
         {

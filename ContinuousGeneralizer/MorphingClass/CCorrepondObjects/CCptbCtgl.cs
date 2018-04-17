@@ -80,12 +80,7 @@ namespace MorphingClass.CCorrepondObjects
             _ToCtgl.Triangulate(ToConstraintCplLt, ToConstructingCEdgeLt, "To", fblnSave);
             //_ToCtgl.ConstructingCEdgeLt = ToConstructingCEdgeLt;
 
-
-
-
-
- 
-
+            
 
             _intID = intID;
         }
@@ -213,12 +208,8 @@ namespace MorphingClass.CCorrepondObjects
             }
 
 
-
-
             TriangulateFacesDelaunay(ref FrRglDCEL, intRglExteriorEdgeNum, blnSave);
-
-
-
+            
 
             //TriangulateFaces(ref FrRglDCEL);
             UpdateCEdgeLtAndHalfCEdgeLt_AroundCpts(ref FrRglDCEL, intRglExteriorEdgeNum, blnSave);
@@ -273,12 +264,10 @@ namespace MorphingClass.CCorrepondObjects
                     FrStopCEdge = ToIncidentCEdge;  
                     SmallerAxisAngleCEdge = FrLastCEdge;
                 }
-                //if (intCompare == -1)
                 else if (ToIncidentCEdge.dblAxisAngle > FrIncidentCEdge.dblAxisAngle)
                 {
                     //FrStopCEdge = FrIncidentCEdge;
                 }
-                //else //if (intCompare == 0)
                 else //if (ToCurrentCEdge.dblAxisAngle == FrCurrentCEdge.dblAxisAngle)
                 {
                     //FrStopCEdge = FrIncidentCEdge;
@@ -300,14 +289,12 @@ namespace MorphingClass.CCorrepondObjects
 
                 do
                 {
-                    //if (intCompare == -1)
                     // we can compare directly because the two regular polygons have the same coordiantes
                     if (ToCurrentCEdge.dblAxisAngle < FrCurrentCEdge.dblAxisAngle)
                     {
                         ToCurrentCEdge = InsertCEdge(ToCurrentCEdge, ref SmallerAxisAngleCEdge, ref IntersectCptLt, ref indexID);
                         blnToCurrentCEdgeChanged = true;
                     }
-                    //if (intCompare == -1)
                     else if (ToCurrentCEdge.dblAxisAngle > FrCurrentCEdge.dblAxisAngle)
                     {
                         SmallerAxisAngleCEdge = FrCurrentCEdge;
@@ -315,7 +302,6 @@ namespace MorphingClass.CCorrepondObjects
 
                         blnFrCurrentCEdgeChanged = true;
                     }
-                    //else //if (intCompare == 0)
                     else //if (ToCurrentCEdge.dblAxisAngle == FrCurrentCEdge.dblAxisAngle)
                     {
                         SmallerAxisAngleCEdge = FrCurrentCEdge;
@@ -927,11 +913,10 @@ namespace MorphingClass.CCorrepondObjects
             var aCell = Table.aCell;
 
 
-
             for (int i = 0; i < intCount - 1; i++)
             {
                 int j = i + 1;
-                aCell[i, j] = new CCell(i, j, 1, 0, i, j);
+                aCell[i, j] = new CCell(i, 1, 0, i, j);
             }
 
             //when k=2, we are dealing with triangles
@@ -954,10 +939,12 @@ namespace MorphingClass.CCorrepondObjects
                         //when two separations have the same cost, we pick the one which splits the curve more balancedly
                         double dblCostHelp = -Math.Abs(l - Convert.ToDouble(i + j) / 2);
 
-                        var newcell = new CCell(l, l, dblCost, dblCostHelp, i, j);
-                        maxCell = CHelpFunc.Max(maxCell, newcell, cell => cell.dblCost, cell => cell.dblCostHelp);
+                        var newcell = new CCell(l, dblCost, dblCostHelp, i, j);
+                        //using GetMaxCell(maxCell, newcell) is much faster 
+                        //than using CHelpFunc.Max(maxCell, newcell, cell => cell.dblCost, cell => cell.dblCostHelp);
+                        maxCell = GetMaxCell(maxCell, newcell);
                     }
-                    aCell[i, j] = maxCell;                    
+                    aCell[i, j] = maxCell;
                 }
             }
 
@@ -972,6 +959,33 @@ namespace MorphingClass.CCorrepondObjects
             {
                 CSaveFeature.SaveCEdgeEb(FrChordCEdgelt, "CommonChordsFr", blnVisible: false);
                 CSaveFeature.SaveCEdgeEb(ToChordCEdgelt, "CommonChordsTo", blnVisible: false);
+            }
+        }
+
+        private CCell GetMaxCell(CCell T1, CCell T2)
+        {
+            if (T1.dblCost > T2.dblCost)
+            {
+                return T1;
+            }
+            else if (T1.dblCost < T2.dblCost)
+            {
+                return T2;
+            }
+            else
+            {
+                if (T1.dblCostHelp > T2.dblCostHelp)
+                {
+                    return T1;
+                }
+                else if (T1.dblCostHelp < T2.dblCostHelp)
+                {
+                    return T2;
+                }
+                else
+                {
+                    return T1;
+                }
             }
         }
 
@@ -1047,22 +1061,6 @@ namespace MorphingClass.CCorrepondObjects
             var cpgcptlt = cpg.CptLt.GetRange(0, intCptNum);
             cpgcptlt.SetIndexID();
 
-    //        for (int i = 0; i < cpgcptlt.Count; i++)
-    //        {
-    //            if (CCmpMethods.CmpDblRange(  cpgcptlt[i].X, 910311.438,10)==0&&
-    //                CCmpMethods.CmpDblRange(cpgcptlt[i].Y, 4663818, 10) == 0)
-    //            {
-    //                int wet = i;
-    //            }
-
-    //            if (CCmpMethods.CmpDblRange(cpgcptlt[i].X, 915216.875, 10) == 0 &&
-    //CCmpMethods.CmpDblRange(cpgcptlt[i].Y, 4643220, 10) == 0)
-    //            {
-    //                int wet2 = i;
-    //            }
-    //        }
-
-
             var ablnValidChords = new bool[intCptNum, intCptNum];
             var fEdgeGrid = new CEdgeGrid(cpg.CEdgeLt);
 
@@ -1089,7 +1087,6 @@ namespace MorphingClass.CCorrepondObjects
                 var lastCEdge = cpg.CEdgeLt[i]; //last edge from point i to point j
                 lastCEdge.JudgeAndSetAxisAngle();
                 CEdge outTouchCEdge = null;
-                //bool blnWasValid = true;
                 for (int j = i + 2; j < intCptNum; j++)
                 {
                     //this is the default value
