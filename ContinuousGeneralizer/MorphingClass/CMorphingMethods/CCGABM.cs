@@ -30,7 +30,7 @@ namespace MorphingClass.CMorphingMethods
     /// <remarks>we set slope for every edge when we put the edges in a grid</remarks>
     public class CCGABM : CMorphingBaseCpl
     {
-        
+
         protected int _intLS = 0;
         protected int _intSS = 1;
         protected int _intInterLS = 2;
@@ -88,7 +88,7 @@ namespace MorphingClass.CMorphingMethods
                 //we store the smaller index at "FaceNum_1", and store the larger index at "FaceNum_2"
                 int intSmallerindexID;
                 int intLargerindexID;
-                CHelpFunc.CompareAndOrder(indexID1, indexID2, ID => ID, out intSmallerindexID, out intLargerindexID);  
+                CHelpFunc.CompareAndOrder(indexID1, indexID2, ID => ID, out intSmallerindexID, out intLargerindexID);
 
                 InterLSobjlt1.Add(intSmallerindexID);
                 InterLSobjlt2.Add(intLargerindexID);
@@ -96,13 +96,13 @@ namespace MorphingClass.CMorphingMethods
 
             //it should be true that a polyline of pInterSSCPlLt has the same indices of faces 
             //as the corresponding polyline of pInterLSCPlLt does
-            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intInterLS].FeatureClass, 
+            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intInterLS].FeatureClass,
                 esriFieldType.esriFieldTypeInteger, "FaceNum1", InterLSobjlt1);
-            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intInterLS].FeatureClass, 
+            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intInterLS].FeatureClass,
                 esriFieldType.esriFieldTypeInteger, "FaceNum2", InterLSobjlt2);
-            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intInterSS].FeatureClass, 
+            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intInterSS].FeatureClass,
                 esriFieldType.esriFieldTypeInteger, "FaceNum1", InterLSobjlt1);
-            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intInterSS].FeatureClass, 
+            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intInterSS].FeatureClass,
                 esriFieldType.esriFieldTypeInteger, "FaceNum2", InterLSobjlt2);
 
 
@@ -111,7 +111,7 @@ namespace MorphingClass.CMorphingMethods
             {
                 Sgobjlt.Add(DetectFaceForSg(pSgCPlLt[i], pInterLSDCEL).indexID);
             }
-            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intSg].FeatureClass, 
+            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intSg].FeatureClass,
                 esriFieldType.esriFieldTypeInteger, "FaceNum", Sgobjlt);
 
         }
@@ -191,14 +191,15 @@ namespace MorphingClass.CMorphingMethods
             TransSgIGeoLt.EveryElementValue(null);
             CHelpFunc.Displaytspb(0.5, intInterLSFaceCount);
 
-            //face 27: Beijing; 
-            //face  7: Hunan:
+            //face  2: Guangdong 
+            //face 27: Beijing 
+            //face  7: Hunan
             //face 23: Gansu
             //face 14: Shanghai
             //face 26: Tianjin
             //face 28: between Beijing and Tianjin
-            //face 10: Chongqin:
-            int intStartFace = 23;
+            //face 10: Chongqin
+            int intStartFace = 2;
             int intEnd = intStartFace + 1;
 
             //for (int i = intStartFace; i < intEnd; i++)
@@ -211,10 +212,10 @@ namespace MorphingClass.CMorphingMethods
                     switch (pParameterInitialize.cboTransform.Text)
                     {
                         case "CT Max Common Chords":
-                            TransSgCplLt = CTTransform(InterLSIplLtLt[i], InterSSIplLtLt[i], SgIplLtLt[i],true);
+                            TransSgCplLt = CTTransform(InterLSIplLtLt[i], InterSSIplLtLt[i], SgIplLtLt[i], true);
                             break;
                         case "Compatible Triangulations":
-                            TransSgCplLt = CTTransform(InterLSIplLtLt[i], InterSSIplLtLt[i], SgIplLtLt[i],false);
+                            TransSgCplLt = CTTransform(InterLSIplLtLt[i], InterSSIplLtLt[i], SgIplLtLt[i], false);
                             break;
                         case "Rubber Sheeting":
                             TransSgCplLt = RSTransform(InterLSIplLtLt[i], InterSSIplLtLt[i], SgIplLtLt[i]);
@@ -253,7 +254,7 @@ namespace MorphingClass.CMorphingMethods
         /// <remarks>InterLSIplLt and InterSSIplLt can be clockwise of counterclockwise.
         /// we will construct DCEL, in which the directions will be counterclockwise.
         /// InterLSIplLt and InterSSIplLt should have the same direction and the corresponding start points</remarks>
-        private List<CPolyline> CTTransform(List<IPolyline5> InterLSIplLt, List<IPolyline5> InterSSIplLt, 
+        private List<CPolyline> CTTransform(List<IPolyline5> InterLSIplLt, List<IPolyline5> InterSSIplLt,
             List<IPolyline5> SgIplLt, bool blnMaxCommonChords = true)
         {
             CConstants.dblVerySmallCoord /= 10;  //this assignment should equal to _dblVerySmallDenominator = 10000000
@@ -271,33 +272,33 @@ namespace MorphingClass.CMorphingMethods
             //there are only two faces: the super face and a normal face. Face *.FaceCpgLt[1] is the normal face
             CDCEL pInterSSDCEL = new CDCEL(InterSSCplLt);
             pInterSSDCEL.ConstructDCEL();
-            pInterSSDCEL.FaceCpgLt[1].SetOuterFaceCptlt(false, true, InterSSCplLt[0].CptLt[0]);            
+            pInterSSDCEL.FaceCpgLt[1].SetOuterFaceCptlt(false, true, InterSSCplLt[0].CptLt[0]);
 
             //we maintaine this SD so that for a point from single polyline, 
             //we can know whether this single point overlaps a point of a larger-scale polyline
-            var pInterLSCptSD = pInterLSDCEL.FaceCpgLt[1].CptLt.ToSD(cpt => cpt, new CCmpCptYX_VerySmall()); 
+            var pInterLSCptSD = pInterLSDCEL.FaceCpgLt[1].CptLt.ToSD(cpt => cpt, new CCmpCptYX_VerySmall());
 
 
-            CCptbCtgl pCptbCtgl = new CCptbCtgl(pInterLSDCEL.FaceCpgLt[1], pInterSSDCEL.FaceCpgLt[1], 
+            CCptbCtgl pCptbCtgl = new CCptbCtgl(pInterLSDCEL.FaceCpgLt[1], pInterSSDCEL.FaceCpgLt[1],
                 blnMaxCommonChords, _blnSave);
             pCptbCtgl.ConstructCcptbCtgl();
             var TransSgCPlLt = new List<CPolyline>(SgIplLt.Count);
             foreach (var SgCpl in SgCplEb)
             {
-                TransSgCPlLt.Add( GenerateCorrSgCpl(pCptbCtgl, SgCpl, pInterLSCptSD));
+                TransSgCPlLt.Add(GenerateCorrSgCpl(pCptbCtgl, SgCpl, pInterLSCptSD));
             }
 
             CConstants.dblVerySmallCoord *= 10;
             return TransSgCPlLt;
         }
-        
+
 
         private CPolygon DetectFaceForSg(CPolyline SgCpl, CDCEL pInterLSDCEL)
         {
             var identitycpt = CGeoFunc.GetInbetweenCpt(SgCpl.CptLt[0], SgCpl.CptLt[1], 0.5);
 
             //comparing to the method which traverses along DCEL, this method only needs to detect the face once 
-            return pInterLSDCEL.DetectCloestLeftCorrectCEdge(identitycpt).cpgIncidentFace;   
+            return pInterLSDCEL.DetectCloestLeftCorrectCEdge(identitycpt).cpgIncidentFace;
         }
 
         //private void SgCplTraverse(CTriangulation pFrCtgl, List <CEdge > SgCEdgeLt, ref int intIndex)
@@ -305,14 +306,23 @@ namespace MorphingClass.CMorphingMethods
         {
             CTriangulation pFrCtgl = pCptbCtgl.FrCtgl;
             CTriangulation pToCtgl = pCptbCtgl.ToCtgl;
-
-
             var AffineCptLt = new List<CPoint>(SgCpl.CptLt.Count);
             AffineCptLt.Add(CalFirstAffineCpt(pCptbCtgl, SgCpl.CptLt[0], pInterLSCptSD));   //the first vertex
 
             SgCpl.JudgeAndFormCEdgeLt();
-            //CareCEdge is an edge that current edge may cross with
-            var CareCEdgeLt = FindCareCEdgeLtForFirstCEdge(pFrCtgl, SgCpl.CEdgeLt[0], pInterLSCptSD);  
+            //CareCEdge is an edge that current edge may cross with current triangle
+            //CareCEdgeLt has three edges at most
+            var CareCEdgeLt = FindCareCEdgeLtForFirstCEdge(pFrCtgl, SgCpl.CEdgeLt[0], pInterLSCptSD);
+            if (SgCpl.CEdgeLt.Count == 1 && CCmpMethods.CmpCEdgeCoord(CareCEdgeLt[0], SgCpl.CEdgeLt[0]) == 0)
+            {
+                //this is a special case where a single polyline has only one edge (SgCEdge),
+                //at the same time, this edge is used by the combined triangulation
+                var newCEdge = pToCtgl.HalfEdgeLt[CareCEdgeLt[0].indexID];
+                AffineCptLt.Add(newCEdge.ToCpt);
+                return new CPolyline(SgCpl.ID, AffineCptLt);
+            }
+
+
             int intEdgeCount = 0;
             var CurrentCEdge = SgCpl.CEdgeLt[intEdgeCount++];
             do
@@ -326,25 +336,25 @@ namespace MorphingClass.CMorphingMethods
                     {
                         case CEnumIntersectionType.NoNo:
                             break;
-                            //this case is actually only for the fisrt vertex of a SgCpl, 
-                            //because for other intersections which coincide a triangulation node, 
-                            //we would not add the two neighbour edges in to CareCEdgeLt
-                        case CEnumIntersectionType.FrFr:  
+                        //this case is actually only for the fisrt vertex of a SgCpl, 
+                        //because for other intersections which coincide a triangulation node, 
+                        //we would not add the two neighbour edges in to CareCEdgeLt
+                        case CEnumIntersectionType.FrFr:
                             CareCEdgeLt = GetCareCEdgeLtCptCoincident(carecedge.FrCpt, CurrentCEdge);
                             isFoundExit = true;
                             break;
-                            //this case is actually only for the fisrt vertex of a SgCpl, 
-                            //because for other intersections which coincide a triangulation node, 
-                            //we would not add the two neighbour edges in to CareCEdgeLt
+                        //this case is actually only for the fisrt vertex of a SgCpl, 
+                        //because for other intersections which coincide a triangulation node, 
+                        //we would not add the two neighbour edges in to CareCEdgeLt
                         case CEnumIntersectionType.FrIn:
                             //this can happen, when the first SgCpt is on an triangle edge of FrCtgl
-                            CareCEdgeLt = GetCareCEdgeLt(carecedge.cedgeTwin, false);  
+                            CareCEdgeLt = GetCareCEdgeLt(carecedge.cedgeTwin, false);
                             isFoundExit = true;
                             break;
-                            //this case is actually only for the fisrt vertex of a SgCpl, 
-                            //because for other intersections which coincide a triangulation node, 
-                            //we would not add the two neighbour edges in to CareCEdgeLt
-                        case CEnumIntersectionType.FrTo:  
+                        //this case is actually only for the fisrt vertex of a SgCpl, 
+                        //because for other intersections which coincide a triangulation node, 
+                        //we would not add the two neighbour edges in to CareCEdgeLt
+                        case CEnumIntersectionType.FrTo:
                             CareCEdgeLt = GetCareCEdgeLtCptCoincident(carecedge.ToCpt, CurrentCEdge);  //this can happen
                             isFoundExit = true;
                             break;
@@ -394,7 +404,7 @@ namespace MorphingClass.CMorphingMethods
                             isFoundExit = true;
                             break;
                         //maybe we can just ignore overlap, because if there is overlap, then there is also other cases
-                        case CEnumIntersectionType.Overlap:  
+                        case CEnumIntersectionType.Overlap:
                             MessageBox.Show("we didn't consider Overlap when GenerateCorrSgCpl in:" + this.ToString() + ".cs   ");
                             break;
                         default:
@@ -471,42 +481,58 @@ namespace MorphingClass.CMorphingMethods
             }
 
             double dblLamda1, dblLamda2, dblLamda3;
-            CGeoFunc.CalBarycentricCoordinates(SgCpt, atrianglecpt[0], atrianglecpt[1], atrianglecpt[2], 
+            CGeoFunc.CalBarycentricCoordinates(SgCpt, atrianglecpt[0], atrianglecpt[1], atrianglecpt[2],
                 out dblLamda1, out dblLamda2, out dblLamda3);
-            CPoint AffineCpt = CGeoFunc.CalCartesianCoordinates(pToCtgl.CptLt[atrianglecpt[0].indexID], 
-                pToCtgl.CptLt[atrianglecpt[1].indexID], pToCtgl.CptLt[atrianglecpt[2].indexID], 
+            var AffineCpt = CGeoFunc.CalCartesianCoordinates(pToCtgl.CptLt[atrianglecpt[0].indexID],
+                pToCtgl.CptLt[atrianglecpt[1].indexID], pToCtgl.CptLt[atrianglecpt[2].indexID],
                 dblLamda1, dblLamda2, dblLamda3, SgCpt.ID);
             return AffineCpt;
         }
 
-        private List<CEdge> FindCareCEdgeLtForFirstCEdge(CTriangulation pFrCtgl, 
+        private List<CEdge> FindCareCEdgeLtForFirstCEdge(CTriangulation pFrCtgl,
             CEdge FirstSgCEdge, SortedDictionary<CPoint, CPoint> pInterLSCptSD)
         {
             var pFrCpt = FirstSgCEdge.FrCpt;
-            List<CEdge> CareCEdgeLt = new List<CEdge>();
+            var CareCEdgeLt = new List<CEdge>();
 
             CPoint outcpt;
             bool blnContainsKey = pInterLSCptSD.TryGetValue(pFrCpt, out outcpt);
             if (blnContainsKey == true)
             {
-                CareCEdgeLt = GetCareCEdgeLtCptCoincident(outcpt, FirstSgCEdge);
+                CareCEdgeLt = GetCareCEdgeLtCptCoincident(outcpt, FirstSgCEdge, true);
             }
             else
             {
                 //we have already computed FirstSgCEdge.FrCpt.ClosestLeftCIntersection.CEdge2 
                 //when we computed the affine point for the first point
-                CareCEdgeLt = GetCareCEdgeLt(pFrCpt.ClosestLeftCIntersection.CEdge2, true);  
+                CareCEdgeLt = GetCareCEdgeLt(pFrCpt.ClosestLeftCIntersection.CEdge2, true);
             }
 
             return CareCEdgeLt;
         }
 
 
-        private List<CEdge> GetCareCEdgeLtCptCoincident(CPoint LSNodeCpt, CEdge SgCEdge)
+        private List<CEdge> GetCareCEdgeLtCptCoincident(CPoint LSNodeCpt, CEdge SgCEdge, bool blnAllowOverlap = false)
         {
-            var SmallerAxisAngleCEdge = CDCEL.FindSmallerAxisAngleCEdgebyCEdge(LSNodeCpt, SgCEdge);
-            List<CEdge> CareCEdgeLt = new List<CEdge>();
-            CareCEdgeLt.Add(SmallerAxisAngleCEdge.cedgeNext);
+            var SmallerAxisAngleCEdge = CDCEL.FindSmallerAxisAngleCEdgebyCEdge(LSNodeCpt, SgCEdge, blnAllowOverlap);
+            var CareCEdgeLt = new List<CEdge>(1);
+            if (SgCEdge.dblAxisAngle != SmallerAxisAngleCEdge.dblAxisAngle)
+            {
+                CareCEdgeLt.Add(SmallerAxisAngleCEdge.cedgeNext);
+            }
+            else
+            {
+                if (blnAllowOverlap == true)
+                {
+                    //this should be a special case where a single polyline has only one edge (SgCEdge),
+                    //at the same time, this edge is used by the combined triangulation
+                    CareCEdgeLt.Add(SmallerAxisAngleCEdge);
+                }
+                else
+                {
+                    throw new ArgumentException("we did not consider overlap!");
+                }
+            }
 
             return CareCEdgeLt;
         }
@@ -538,7 +564,7 @@ namespace MorphingClass.CMorphingMethods
 
         #region RSTransform (rubber sheeting)
 
-        private List<CPolyline> RSTransform( 
+        private List<CPolyline> RSTransform(
             List<IPolyline5> InterLSIplLt, List<IPolyline5> InterSSIplLt, List<IPolyline5> SgIplLt)
         {
             var pInterLSCplLt = CHelpFunc.GenerateCGeoEbAccordingToGeoEb<CPolyline>(InterLSIplLt).ToList();
@@ -643,7 +669,7 @@ namespace MorphingClass.CMorphingMethods
 
             return FieldCptLt;
         }
-    
+
 
         #endregion
 
@@ -665,7 +691,7 @@ namespace MorphingClass.CMorphingMethods
 
             double dblLSToSSRatio = CalRatioEdgeNum(pLSCPlLt, pSSCPlLt);
 
-            int intSgEdgeNum = 0;            
+            int intSgEdgeNum = 0;
             foreach (CPolyline cpl in pSgCPlLt)
             {
                 intSgEdgeNum += (cpl.CptLt.Count - 1);
@@ -680,7 +706,7 @@ namespace MorphingClass.CMorphingMethods
             }
 
             int intDeleteNum = intTransSgEdgeNum - intRemainEdgeNum;
-            return intDeleteNum;            
+            return intDeleteNum;
         }
 
 
@@ -696,11 +722,11 @@ namespace MorphingClass.CMorphingMethods
         {
             int intLSEdgeNum = 0;
             int intSSEdgeNum = 0;
-            
+
             for (int i = 0; i < pLSCPlLt.Count; i++)
             {
                 intLSEdgeNum += (pLSCPlLt[i].CptLt.Count - 1);
-                intSSEdgeNum += (pSSCPlLt[i].CptLt.Count - 1);                
+                intSSEdgeNum += (pSSCPlLt[i].CptLt.Count - 1);
             }
 
             return Convert.ToDouble(intLSEdgeNum) / Convert.ToDouble(intSSEdgeNum);
@@ -767,7 +793,7 @@ namespace MorphingClass.CMorphingMethods
 
             var pStopwatch = Stopwatch.StartNew();
             var normaldisplayCplLt = GenerateInterpolatedCplLt(dblProportion);
-            var fadeddisplayCplLt= GenerateInterpolatedCplLt(dblProportion, _SgCorrCptsLtLt);
+            var fadeddisplayCplLt = GenerateInterpolatedCplLt(dblProportion, _SgCorrCptsLtLt);
             pStopwatch.Stop();
 
             var pStopwatchSave = Stopwatch.StartNew();
@@ -775,7 +801,7 @@ namespace MorphingClass.CMorphingMethods
             CSaveFeature.SaveCplEb(normaldisplayCplLt, dblProportion.ToString() + "_Higher");
             pStopwatchSave.Stop();
 
-            CHelpFunc.DisplayRunTime(pStopwatch.ElapsedMilliseconds,"Generate", pStopwatchSave.ElapsedMilliseconds, "ToShape");
+            CHelpFunc.DisplayRunTime(pStopwatch.ElapsedMilliseconds, "Generate", pStopwatchSave.ElapsedMilliseconds, "ToShape");
         }
 
 

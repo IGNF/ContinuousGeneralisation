@@ -182,7 +182,7 @@ namespace MorphingClass.CGeometry
         /// <param name="newcedge">newcedge should have a twin edge</param>
         public static void InsertCEdgeAtCpt(CPoint cpt, CEdge newcedge)
         {
-            var SmallerAxisAngleCEdge = FindSmallerAxisAngleCEdgebyCEdge(cpt, newcedge);
+            var SmallerAxisAngleCEdge = FindSmallerAxisAngleCEdgebyCEdge(cpt, newcedge, false);
             InsertCEdgeBySmaller(SmallerAxisAngleCEdge, newcedge);
         }
 
@@ -708,7 +708,7 @@ namespace MorphingClass.CGeometry
         /// </summary>
         /// <param name="cedge"></param>
         /// <remarks> cpt is a vertex in the CDCEL</remarks>
-        public static CEdge FindSmallerAxisAngleCEdgebyCEdge(CPoint cpt, CEdge cedge)
+        public static CEdge FindSmallerAxisAngleCEdgebyCEdge(CPoint cpt, CEdge cedge,  bool blnAllowOverlap=false)
         {
             cedge.JudgeAndSetAxisAngle();
 
@@ -726,8 +726,14 @@ namespace MorphingClass.CGeometry
             }
             else
             {
-                throw new ArgumentException(
-    "probably because overlap is not considered when traversing SgCpl in a Triangulation.");
+                if (blnAllowOverlap == true)
+                {
+                    return CurrentCEdge;
+                }
+                else
+                {
+                    throw new ArgumentException("edges overlap each other.");
+                }
             }
 
             //test other edges (IncidentCEdge)
@@ -745,8 +751,14 @@ namespace MorphingClass.CGeometry
                 }
                 else
                 {
-                    throw new ArgumentException(
-    "probably because overlap is not considered when traversing SgCpl in a Triangulation.");
+                    if (blnAllowOverlap == true)
+                    {
+                        return CurrentCEdge;
+                    }
+                    else
+                    {
+                        throw new ArgumentException("edges overlap each other.");
+                    }
                 }
             } while (CurrentCEdge.GID != IncidentCEdge.GID);
 
