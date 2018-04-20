@@ -120,17 +120,17 @@ namespace MorphingClass.CCorrepondObjects
             }
         }
 
-        private void ConstructRglDCEL(CTriangulation frctgl, CTriangulation toctgl, 
-            out CDCEL FrRglDCEL, out CDCEL ToRglDCEL, IEnvelope pEnvRgl, bool blnSave=false)
+        private void ConstructRglDCEL(CTriangulation frctgl, CTriangulation toctgl,
+            out CDCEL FrRglDCEL, out CDCEL ToRglDCEL, IEnvelope pEnvRgl, bool blnSave = false)
         {
-            if (frctgl.pTinAdvanced2.DataNodeCount!=toctgl.pTinAdvanced2.DataNodeCount)
+            if (frctgl.pTinAdvanced2.DataNodeCount != toctgl.pTinAdvanced2.DataNodeCount)
             {
                 throw new ArgumentException("The numbers of points are not the same!");
             }
 
             FrRglDCEL = ConstructRglDCEL(frctgl, pEnvRgl, CEnumScale.Larger, blnSave);
             //note that we use the same Extent with the Fr one
-            ToRglDCEL = ConstructRglDCEL(toctgl, pEnvRgl, CEnumScale.Smaller, blnSave);  
+            ToRglDCEL = ConstructRglDCEL(toctgl, pEnvRgl, CEnumScale.Smaller, blnSave);
 
         }
 
@@ -920,6 +920,7 @@ namespace MorphingClass.CCorrepondObjects
             }
 
             //when k=2, we are dealing with triangles
+            //the running time is O(n^3)
             for (int k = 2; k < intCount; k++)
             {
                 for (int i = 0; i < intCount - k; i++)
