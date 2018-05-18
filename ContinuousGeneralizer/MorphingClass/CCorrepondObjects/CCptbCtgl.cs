@@ -938,8 +938,8 @@ namespace MorphingClass.CCorrepondObjects
                     {
                         double dblCost = aCell[i, l].dblCost + aCell[l, j].dblCost + intIncrease;
                         //when two separations have the same cost, we pick the one which splits the curve more balancedly
+						throw new ArgumentException("make floor of the value!");
                         double dblCostHelp = -Math.Abs(l - Convert.ToDouble(i + j) / 2);
-
                         var newcell = new CCell(l, dblCost, dblCostHelp, i, j);
                         //using GetMaxCell(maxCell, newcell) is much faster 
                         //than using CHelpFunc.Max(maxCell, newcell, cell => cell.dblCost, cell => cell.dblCostHelp);

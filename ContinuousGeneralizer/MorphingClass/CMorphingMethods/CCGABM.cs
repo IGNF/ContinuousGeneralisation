@@ -202,8 +202,8 @@ namespace MorphingClass.CMorphingMethods
             int intStartFace = 2;
             int intEnd = intStartFace + 1;
 
-            for (int i = intStartFace; i < intEnd; i++)
-            //for (int i = 0; i < intInterLSFaceCount; i++)
+            //for (int i = intStartFace; i < intEnd; i++)
+            for (int i = 0; i < intInterLSFaceCount; i++)
             {
                 Console.WriteLine("Face Num: " + i);
                 if (SgIplLtLt[i].Count != 0) //face 0 is the outer face, the count is zero

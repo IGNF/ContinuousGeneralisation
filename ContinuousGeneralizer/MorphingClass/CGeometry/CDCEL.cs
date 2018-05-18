@@ -52,9 +52,9 @@ namespace MorphingClass.CGeometry
         public void ConstructDCEL()
         {
             var cedgelt = this.CEdgeLt;
-            
-            //report if there is a short edge
-            //short edges may cause problems. Take a polygon as an example, an edge and its twin edge may refer to the same face
+
+            //report if there is a short edge. short edges may cause problems. 
+            //Take a polygon as an example, an edge and its twin edge may refer to the same face
             CGeoFunc.CheckShortEdges(cedgelt);
 
             if (CGeoFunc.ExistDuplicate(cedgelt, new CCmpEqCEdgeCoord())==true)
