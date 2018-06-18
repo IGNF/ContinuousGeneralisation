@@ -177,11 +177,11 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ILOG.Concert, Version=12.7.1.0, Culture=neutral, PublicKeyToken=7906592bc7cc7340, processorArchitecture=MSIL">
+    <Reference Include="ILOG.Concert, Version=12.6.2.0, Culture=neutral, PublicKeyToken=7906592bc7cc7340, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Citations\Cplex\ILOG.Concert.dll</HintPath>
     </Reference>
-    <Reference Include="ILOG.CPLEX, Version=12.7.1.0, Culture=neutral, PublicKeyToken=7906592bc7cc7340, processorArchitecture=MSIL">
+    <Reference Include="ILOG.CPLEX, Version=12.6.2.0, Culture=neutral, PublicKeyToken=7906592bc7cc7340, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Citations\Cplex\ILOG.CPLEX.dll</HintPath>
     </Reference>

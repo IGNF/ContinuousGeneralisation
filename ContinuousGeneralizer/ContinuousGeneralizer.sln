@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContinuousGeneralizer", "ContinuousGeneralizer\ContinuousGeneralizer.csproj", "{132C8FE0-2BB8-4D07-9BAF-7B85865666BF}"
 EndProject
@@ -64,6 +64,7 @@ Global
 		{37C13D51-20CC-4F15-B16F-20A219F2F3FC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{37C13D51-20CC-4F15-B16F-20A219F2F3FC}.Debug|Win32.ActiveCfg = Debug|Any CPU
 		{37C13D51-20CC-4F15-B16F-20A219F2F3FC}.Debug|x64.ActiveCfg = Debug|x64
+		{37C13D51-20CC-4F15-B16F-20A219F2F3FC}.Debug|x64.Build.0 = Debug|x64
 		{37C13D51-20CC-4F15-B16F-20A219F2F3FC}.Debug|x86.ActiveCfg = Debug|x86
 		{37C13D51-20CC-4F15-B16F-20A219F2F3FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37C13D51-20CC-4F15-B16F-20A219F2F3FC}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -78,7 +79,6 @@ Global
 		{FBBF5C0B-9CA4-4078-8676-C0DECD9A42BA}.Debug|Win32.ActiveCfg = Debug|Win32
 		{FBBF5C0B-9CA4-4078-8676-C0DECD9A42BA}.Debug|Win32.Build.0 = Debug|Win32
 		{FBBF5C0B-9CA4-4078-8676-C0DECD9A42BA}.Debug|x64.ActiveCfg = Debug|x64
-		{FBBF5C0B-9CA4-4078-8676-C0DECD9A42BA}.Debug|x64.Build.0 = Debug|x64
 		{FBBF5C0B-9CA4-4078-8676-C0DECD9A42BA}.Debug|x86.ActiveCfg = Debug|Win32
 		{FBBF5C0B-9CA4-4078-8676-C0DECD9A42BA}.Release|Any CPU.ActiveCfg = Release|Win32
 		{FBBF5C0B-9CA4-4078-8676-C0DECD9A42BA}.Release|Mixed Platforms.ActiveCfg = Release|Win32
@@ -91,5 +91,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {68532205-469A-461E-9A6C-B08369A71CE5}
 	EndGlobalSection
 EndGlobal

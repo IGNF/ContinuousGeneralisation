@@ -49,7 +49,7 @@ namespace MorphingClass.CGeneralizationMethods
 
 
         #region ILP
-        public void AreaAggregation(List<int> intSpecifiedIDLt=null)
+        public void AreaAggregation(List<int> intSpecifiedIDLt = null)
         {
             SetupBasic();
 
@@ -59,22 +59,22 @@ namespace MorphingClass.CGeneralizationMethods
             CRegion._lngEstCountEdgeLength = 0;
             CRegion._lngEstCountEqual = 0;
 
-            if (intSpecifiedIDLt==null)  //this is the usual case
+            if (intSpecifiedIDLt == null)  //this is the usual case
             {
-                for (int i = _intStart; i < _intEnd; i++)
+                for (int i = _intStart; i < _intEndCount; i++)
                 {
-                    ILP(LSCrgLt[i], SSCrgLt[i], this.StrObjLtDt, this._adblTD, 
+                    ILP(LSCrgLt[i], SSCrgLt[i], this.StrObjLtDt, this._adblTD,
                         _ParameterInitialize.strAreaAggregation, ref intOutOfMemorySetting, ref intOutOfMemory);
-                    CHelpFunc.Displaytspb(i+1, _intEnd- _intStart+1);
+                    CHelpFunc.Displaytspb(i - _intStart + 1, _intEndCount - _intStart);
                 }
             }
             else
             {
                 for (int i = 0; i < intSpecifiedIDLt.Count; i++)
                 {
-                    ILP(LSCrgLt[intSpecifiedIDLt[i]], SSCrgLt[intSpecifiedIDLt[i]], this.StrObjLtDt, this._adblTD, 
+                    ILP(LSCrgLt[intSpecifiedIDLt[i]], SSCrgLt[intSpecifiedIDLt[i]], this.StrObjLtDt, this._adblTD,
                         _ParameterInitialize.strAreaAggregation, ref intOutOfMemorySetting, ref intOutOfMemory);
-                    CHelpFunc.Displaytspb(i+1, intSpecifiedIDLt.Count);
+                    CHelpFunc.Displaytspb(i + 1, intSpecifiedIDLt.Count);
                 }
             }
 

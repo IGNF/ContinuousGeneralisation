@@ -60,12 +60,12 @@ namespace ContinuousGeneralizer
             //CHelpFunc.strDataFolderName = "Tianjin-Animation"; 
             //CHelpFunc.strDataFolderName = "MainlandChina-Animation-complicated";
             //CHelpFunc.strDataFolderName = "MainlandChina-Shanghai";
-            CHelpFunc.strDataFolderName = "MainlandChina";
+            //CHelpFunc.strDataFolderName = "MainlandChina";
             //CHelpFunc.strDataFolderName = "CompatibleTriangulation";
             //CHelpFunc.strDataFolderName = "CT_Common";
-            CHelpFunc.strPath =
-            "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\Administrative Boundary\\"
-            + CHelpFunc.strDataFolderName + "\\";
+            //CHelpFunc.strPath =
+            //"C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\Administrative Boundary\\"
+            //+ CHelpFunc.strDataFolderName + "\\";
 
             //CHelpFunc.strDataFolderName = "LinearMorphingBothInjected";
             //CHelpFunc.strDataFolderName = "CompatibleTriangulation3";
@@ -73,7 +73,7 @@ namespace ContinuousGeneralizer
             //"C:\\Study\\Data\\Morphing Data\\Representation In Article\\ContinuousGeneralizationOfAdministrativeBoundariesBasedonMorphing\\" 
             //+ CHelpFunc.strDataFolderName + "\\";
 
-            //CHelpFunc.strDataFolderName = "AreaAggregation";
+            CHelpFunc.strDataFolderName = "AreaAggregation";
             //CHelpFunc.strDataFolderName = "AreaAggregation-664-easy";
             //CHelpFunc.strDataFolderName = "AreaAggregation-716-VeryEasy";
             //CHelpFunc.strDataFolderName = "AreaAggregation_Problematic";
@@ -83,9 +83,9 @@ namespace ContinuousGeneralizer
             //CHelpFunc.strDataFolderName = "AreaAggregation_Simplest_Two";
             //CHelpFunc.strDataFolderName = "AreaAggregation_Simplest_Three";
             //CHelpFunc.strDataFolderName = "AreaAggregation-Mostpatches";
-            //        CHelpFunc.strPath =
-            //"C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\AreaAggregation\\"
-            //+ CHelpFunc.strDataFolderName + "\\";
+            CHelpFunc.strPath =
+    "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\AreaAggregation\\"
+    + CHelpFunc.strDataFolderName + "\\";
 
             //CHelpFunc.strDataFolderName = "France";
             //CHelpFunc.strDataFolderName = "France_FourTowns";
@@ -134,11 +134,11 @@ namespace ContinuousGeneralizer
             //var frmCurrent = new FrmSelectRandomly(_DataRecords);
             //var frmCurrent = new FrmToIpe(_DataRecords);
             //var frmCurrent = new FrmBldgGrow(_DataRecords);
-            //var frmCurrent = new FrmAreaAgg(_DataRecords);
-            var frmCurrent = new FrmCGABM(_DataRecords);
+            var frmCurrent = new FrmAreaAgg(_DataRecords);
+            //var frmCurrent = new FrmCGABM(_DataRecords);
             //var frmCurrent = new FrmExtractPossibleFiles();
             frmCurrent.Show();
-            frmCurrent.btnTransform_Click(sender, e);
+            //frmCurrent.btnTransform_Click(sender, e);
             //frmCurrent.btnRun_Click(sender, e);
             //frmCurrent.btn020_Click(sender, e);
             //frmCurrent.btnMultiResults_Click(sender, e);

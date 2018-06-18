@@ -114,6 +114,7 @@
       <HintPath>..\..\..\..\..\Program Files (x86)\ArcGIS\DeveloperKit10.4\DotNet\ESRI.ArcGIS.AxControls.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="ESRI.ArcGIS.AxPublisherControls, Version=10.6.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL" />
     <Reference Include="ESRI.ArcGIS.DisplayUI, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
@@ -151,6 +152,9 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
+    <Reference Include="ESRI.ArcGIS.PublisherControls, Version=10.6.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="ESRI.ArcGIS.Version">
       <Private>False</Private>
     </Reference>
@@ -171,11 +175,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="ILOG.Concert, Version=12.7.1.0, Culture=neutral, PublicKeyToken=7906592bc7cc7340, processorArchitecture=MSIL">
+    <Reference Include="ILOG.Concert, Version=12.6.2.0, Culture=neutral, PublicKeyToken=7906592bc7cc7340, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Citations\Cplex\ILOG.Concert.dll</HintPath>
     </Reference>
-    <Reference Include="ILOG.CPLEX, Version=12.7.1.0, Culture=neutral, PublicKeyToken=7906592bc7cc7340, processorArchitecture=MSIL">
+    <Reference Include="ILOG.CPLEX, Version=12.6.2.0, Culture=neutral, PublicKeyToken=7906592bc7cc7340, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Citations\Cplex\ILOG.CPLEX.dll</HintPath>
     </Reference>
@@ -1017,8 +1021,8 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>call "$(DevEnvDir)..\tools\vsdevcmd.bat"
+editbin /largeaddressaware "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -41,11 +41,13 @@ namespace MorphingClass.CGeneralizationMethods
         //protected int _intRound = 7;
 
         protected static int _intStart; //=0
-        protected static int _intEnd; //=this.SSCrgLt.Count
+        protected static int _intEndCount; //=this.SSCrgLt.Count
+
+        //comment the following if you want to process on all instances
         protected void UpdateStartEnd()
         {
             _intStart = 612;
-            _intEnd = _intStart + 1;
+            _intEndCount = _intStart + 1;
         }
 
         public List<CRegion> InitialCrgLt { set; get; }
@@ -216,7 +218,7 @@ namespace MorphingClass.CGeneralizationMethods
             this.StrObjLtDt = new CStrObjLtDt(CAreaAgg_AStar.strKeyLt, pSSCPgLt.Count);
 
             _intStart = 0;
-            _intEnd = this.SSCrgLt.Count;
+            _intEndCount = this.SSCrgLt.Count;
 
             UpdateStartEnd();
 

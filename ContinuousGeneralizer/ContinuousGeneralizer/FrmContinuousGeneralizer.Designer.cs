@@ -538,7 +538,7 @@ namespace ContinuousGeneralizer
             // mnuCDTLSA
             // 
             this.mnuCDTLSA.Name = "mnuCDTLSA";
-            this.mnuCDTLSA.Size = new System.Drawing.Size(117, 22);
+            this.mnuCDTLSA.Size = new System.Drawing.Size(116, 22);
             this.mnuCDTLSA.Text = "CDTLSA";
             this.mnuCDTLSA.Click += new System.EventHandler(this.mnuCDTLSA_Click);
             // 
@@ -577,17 +577,18 @@ namespace ContinuousGeneralizer
             // axLicenseControl1
             // 
             this.axLicenseControl1.Enabled = true;
-            this.axLicenseControl1.Location = new System.Drawing.Point(355, 218);
+            this.axLicenseControl1.Location = new System.Drawing.Point(380, 202);
             this.axLicenseControl1.Name = "axLicenseControl1";
             this.axLicenseControl1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axLicenseControl1.OcxState")));
             this.axLicenseControl1.Size = new System.Drawing.Size(32, 32);
-            this.axLicenseControl1.TabIndex = 5;
+            this.axLicenseControl1.TabIndex = 8;
             // 
             // axMapControl
             // 
             this.axMapControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.axMapControl.Location = new System.Drawing.Point(3, 3);
             this.axMapControl.Name = "axMapControl";
+            this.axMapControl.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axMapControl.OcxState")));
             this.axMapControl.Size = new System.Drawing.Size(897, 585);
             this.axMapControl.TabIndex = 7;
             this.axMapControl.OnMouseMove += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseMoveEventHandler(this.axMapControl_OnMouseMove);
@@ -646,6 +647,7 @@ namespace ContinuousGeneralizer
             this.axPageLayoutControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.axPageLayoutControl.Location = new System.Drawing.Point(3, 3);
             this.axPageLayoutControl.Name = "axPageLayoutControl";
+            this.axPageLayoutControl.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axPageLayoutControl.OcxState")));
             this.axPageLayoutControl.Size = new System.Drawing.Size(897, 608);
             this.axPageLayoutControl.TabIndex = 0;
             // 
@@ -674,6 +676,7 @@ namespace ContinuousGeneralizer
             this.axTOCControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.axTOCControl.Location = new System.Drawing.Point(3, 3);
             this.axTOCControl.Name = "axTOCControl";
+            this.axTOCControl.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axTOCControl.OcxState")));
             this.axTOCControl.Size = new System.Drawing.Size(234, 427);
             this.axTOCControl.TabIndex = 0;
             this.axTOCControl.OnMouseDown += new ESRI.ArcGIS.Controls.ITOCControlEvents_Ax_OnMouseDownEventHandler(this.axTOCControl_OnMouseDown);
@@ -684,6 +687,7 @@ namespace ContinuousGeneralizer
             this.axMapControlEagleEye.Dock = System.Windows.Forms.DockStyle.Fill;
             this.axMapControlEagleEye.Location = new System.Drawing.Point(0, 0);
             this.axMapControlEagleEye.Name = "axMapControlEagleEye";
+            this.axMapControlEagleEye.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axMapControlEagleEye.OcxState")));
             this.axMapControlEagleEye.Size = new System.Drawing.Size(248, 177);
             this.axMapControlEagleEye.TabIndex = 0;
             this.axMapControlEagleEye.OnMouseDown += new ESRI.ArcGIS.Controls.IMapControlEvents2_Ax_OnMouseDownEventHandler(this.axMapControlEagleEye_OnMouseDown);
@@ -759,7 +763,7 @@ namespace ContinuousGeneralizer
             // mnuAnyTest
             // 
             this.mnuAnyTest.Name = "mnuAnyTest";
-            this.mnuAnyTest.Size = new System.Drawing.Size(62, 20);
+            this.mnuAnyTest.Size = new System.Drawing.Size(61, 20);
             this.mnuAnyTest.Text = "AnyTest";
             this.mnuAnyTest.Click += new System.EventHandler(this.mnuAnyTest_Click);
             // 
@@ -790,7 +794,7 @@ namespace ContinuousGeneralizer
             this.mnuOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuOpen.Name = "mnuOpen";
             this.mnuOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.mnuOpen.Size = new System.Drawing.Size(203, 22);
+            this.mnuOpen.Size = new System.Drawing.Size(208, 22);
             this.mnuOpen.Text = "打开(&O)";
             this.mnuOpen.Click += new System.EventHandler(this.mnuOpen_Click);
             // 
@@ -800,7 +804,7 @@ namespace ContinuousGeneralizer
             this.mnuNew.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuNew.Name = "mnuNew";
             this.mnuNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.mnuNew.Size = new System.Drawing.Size(203, 22);
+            this.mnuNew.Size = new System.Drawing.Size(208, 22);
             this.mnuNew.Text = "新建(&N)";
             this.mnuNew.Click += new System.EventHandler(this.mnuNew_Click);
             // 
@@ -825,7 +829,7 @@ namespace ContinuousGeneralizer
             // toolStripSeparator
             // 
             this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(200, 6);
+            this.toolStripSeparator.Size = new System.Drawing.Size(205, 6);
             // 
             // mnuSave
             // 
@@ -833,54 +837,54 @@ namespace ContinuousGeneralizer
             this.mnuSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuSave.Name = "mnuSave";
             this.mnuSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.mnuSave.Size = new System.Drawing.Size(203, 22);
+            this.mnuSave.Size = new System.Drawing.Size(208, 22);
             this.mnuSave.Text = "保存(&S)";
             this.mnuSave.Click += new System.EventHandler(this.mnuSave_Click);
             // 
             // mnuSaveAs
             // 
             this.mnuSaveAs.Name = "mnuSaveAs";
-            this.mnuSaveAs.Size = new System.Drawing.Size(203, 22);
+            this.mnuSaveAs.Size = new System.Drawing.Size(208, 22);
             this.mnuSaveAs.Text = "另存为(&A)";
             this.mnuSaveAs.Click += new System.EventHandler(this.mnuSaveAs_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(200, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(205, 6);
             // 
             // mnuAddData
             // 
             this.mnuAddData.Image = ((System.Drawing.Image)(resources.GetObject("mnuAddData.Image")));
             this.mnuAddData.Name = "mnuAddData";
-            this.mnuAddData.Size = new System.Drawing.Size(203, 22);
+            this.mnuAddData.Size = new System.Drawing.Size(208, 22);
             this.mnuAddData.Text = "添加数据";
             this.mnuAddData.Click += new System.EventHandler(this.mnuAddData_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(200, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(205, 6);
             // 
             // mnuExportViewToImage
             // 
             this.mnuExportViewToImage.Image = ((System.Drawing.Image)(resources.GetObject("mnuExportViewToImage.Image")));
             this.mnuExportViewToImage.Name = "mnuExportViewToImage";
             this.mnuExportViewToImage.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.E)));
-            this.mnuExportViewToImage.Size = new System.Drawing.Size(203, 22);
+            this.mnuExportViewToImage.Size = new System.Drawing.Size(208, 22);
             this.mnuExportViewToImage.Text = "导出视图为JPG(&E)";
             this.mnuExportViewToImage.Click += new System.EventHandler(this.mnuExportViewToImage_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(200, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(205, 6);
             // 
             // mnuExit
             // 
             this.mnuExit.Image = ((System.Drawing.Image)(resources.GetObject("mnuExit.Image")));
             this.mnuExit.Name = "mnuExit";
-            this.mnuExit.Size = new System.Drawing.Size(203, 22);
+            this.mnuExit.Size = new System.Drawing.Size(208, 22);
             this.mnuExit.Text = "退出(&X)";
             this.mnuExit.Click += new System.EventHandler(this.mnuExit_Click);
             // 
@@ -1163,28 +1167,28 @@ namespace ContinuousGeneralizer
             // mnuClassification
             // 
             this.mnuClassification.Name = "mnuClassification";
-            this.mnuClassification.Size = new System.Drawing.Size(198, 22);
+            this.mnuClassification.Size = new System.Drawing.Size(197, 22);
             this.mnuClassification.Text = "Classification";
             this.mnuClassification.Click += new System.EventHandler(this.mnuClassification_Click);
             // 
             // mnuRightAngelDPS
             // 
             this.mnuRightAngelDPS.Name = "mnuRightAngelDPS";
-            this.mnuRightAngelDPS.Size = new System.Drawing.Size(198, 22);
+            this.mnuRightAngelDPS.Size = new System.Drawing.Size(197, 22);
             this.mnuRightAngelDPS.Text = "RightAngelDPS";
             this.mnuRightAngelDPS.Click += new System.EventHandler(this.mnuRightAngelDPS_Click);
             // 
             // mnuLinearMorphing
             // 
             this.mnuLinearMorphing.Name = "mnuLinearMorphing";
-            this.mnuLinearMorphing.Size = new System.Drawing.Size(198, 22);
+            this.mnuLinearMorphing.Size = new System.Drawing.Size(197, 22);
             this.mnuLinearMorphing.Text = "LinearMorphing";
             this.mnuLinearMorphing.Click += new System.EventHandler(this.mnuLinearMorphing_Click);
             // 
             // mnuTransparencyMorphing
             // 
             this.mnuTransparencyMorphing.Name = "mnuTransparencyMorphing";
-            this.mnuTransparencyMorphing.Size = new System.Drawing.Size(198, 22);
+            this.mnuTransparencyMorphing.Size = new System.Drawing.Size(197, 22);
             this.mnuTransparencyMorphing.Text = "TransparencyMorphing";
             this.mnuTransparencyMorphing.Click += new System.EventHandler(this.mnuTransparencyMorphing_Click);
             // 
@@ -1428,7 +1432,6 @@ namespace ContinuousGeneralizer
         private System.Windows.Forms.StatusStrip ststMain;
         private System.Windows.Forms.ToolStripStatusLabel tsslTime;
         private System.Windows.Forms.ToolStripProgressBar tspbMain;
-        private ESRI.ArcGIS.Controls.AxLicenseControl axLicenseControl1;
         private System.Windows.Forms.ToolStripMenuItem mnuGaussianPerturbation;
         private System.Windows.Forms.ToolStripMenuItem mnuDeletePointsWithSameCoordinates;
         private System.Windows.Forms.ToolStripMenuItem roadnetworkToolStripMenuItem;
@@ -1459,6 +1462,7 @@ namespace ContinuousGeneralizer
         private System.Windows.Forms.ToolStripMenuItem mnuExtractPossibleFiles;
         private ESRI.ArcGIS.Controls.AxMapControl axMapControl;
         private System.Windows.Forms.ToolStripMenuItem mnuSelectRandomly;
+        private ESRI.ArcGIS.Controls.AxLicenseControl axLicenseControl1;
     }
 }
 

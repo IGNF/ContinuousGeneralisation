@@ -919,8 +919,8 @@ namespace MorphingClass.CCorrepondObjects
                 aCell[i, j] = new CCell(i, 1, 0, i, j);
             }
 
-            //when k=2, we are dealing with triangles
             //the running time is O(n^3)
+            //when k=2, we are dealing with triangles
             for (int k = 2; k < intCount; k++)
             {
                 for (int i = 0; i < intCount - k; i++)
@@ -937,9 +937,10 @@ namespace MorphingClass.CCorrepondObjects
                     for (int l = i + 1; l < j; l++)
                     {
                         double dblCost = aCell[i, l].dblCost + aCell[l, j].dblCost + intIncrease;
-                        //when two separations have the same cost, we pick the one which splits the curve more balancedly
-						throw new ArgumentException("make floor of the value!");
-                        double dblCostHelp = -Math.Abs(l - Convert.ToDouble(i + j) / 2);
+                        //when two separations have the same cost, we pick the one which splits the curve more balancedly.
+                        //if there are two indexes splitting the same balancedly, we choose the smaller one
+                        //e.g., when i=3 and j =10, then the average is 6.5. If both l=5 and l=8 are available, then we pick l=5.
+                        double dblCostHelp = -Math.Abs(l - Math.Floor(Convert.ToDouble(i + j) / 2));
                         var newcell = new CCell(l, dblCost, dblCostHelp, i, j);
                         //using GetMaxCell(maxCell, newcell) is much faster 
                         //than using CHelpFunc.Max(maxCell, newcell, cell => cell.dblCost, cell => cell.dblCostHelp);

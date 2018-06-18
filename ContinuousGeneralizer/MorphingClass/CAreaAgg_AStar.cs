@@ -54,7 +54,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             var dbllengthlt = new List<double>();
             var lengthss = new SortedSet<double>(new CCmpDbl());
-            for (int i = _intStart; i < _intEnd; i++)
+            for (int i = _intStart; i < _intEndCount; i++)
             {
                 //foreach (var cph in LSCrgLt[i].GetCphCol())
                 //{
@@ -70,7 +70,7 @@ namespace MorphingClass.CGeneralizationMethods
                 
 
                 AStar(LSCrgLt[i], SSCrgLt[i], this.StrObjLtDt, _ParameterInitialize.strAreaAggregation, this._adblTD, intQuitCount);
-
+                CHelpFunc.Displaytspb(i - _intStart + 1, _intEndCount - _intStart );
 
 
             }
