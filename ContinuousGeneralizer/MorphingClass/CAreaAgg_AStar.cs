@@ -52,28 +52,33 @@ namespace MorphingClass.CGeneralizationMethods
             CRegion._lngEstCountEdgeLength = 0;
             CRegion._lngEstCountEqual = 0;
 
-            var dbllengthlt = new List<double>();
-            var lengthss = new SortedSet<double>(new CCmpDbl());
+
+            //var proc = Process.GetCurrentProcess();
             for (int i = _intStart; i < _intEndCount; i++)
             {
-                //foreach (var cph in LSCrgLt[i].GetCphCol())
-                //{
-                //    foreach (var cpg in cph.CpgSS)
-                //    {
-                //        foreach (var cedge in cpg.CEdgeLt)
-                //        {
-                //            dbllengthlt.Add(cedge.dblLength);
-                //            lengthss.Add(cedge.dblLength);
-                //        }                        
-                //    }
-                //}
-                
-
+                //we computer a sequence of regions, 
+                //for each region, we record a parent and a child if applicable
                 AStar(LSCrgLt[i], SSCrgLt[i], this.StrObjLtDt, _ParameterInitialize.strAreaAggregation, this._adblTD, intQuitCount);
+                CheckIfForgetSequence(LSCrgLt[i], SSCrgLt[i], _blnTesting);
                 CHelpFunc.Displaytspb(i - _intStart + 1, _intEndCount - _intStart );
-
-
             }
+
+            EndAffairs(_intEndCount);
+
+            //Console.WriteLine("{0,25}{1,25}{2,25}{3,25}{4,25}{5,25}",
+            //    "PagedMemorySize64", "PagedSystemMemorySize64",
+            //    "PeakPagedMemorySize64", "PeakVirtualMemorySize64",
+            //    "PeakWorkingSet64", "PrivateMemorySize64");
+            //for (int i = 0; i < _lngMemoryLtLt.Count; i++)
+            //{
+            //    Console.WriteLine("{0,25}{1,25}{2,25}{3,25}{4,25}{5,25}",
+            //    _lngMemoryLtLt[i][0], _lngMemoryLtLt[i][1],
+            //    _lngMemoryLtLt[i][2], _lngMemoryLtLt[i][3],
+            //    _lngMemoryLtLt[i][4], _lngMemoryLtLt[i][5]);
+            //}
+
+
+
             //Console.WriteLine();
             //Console.WriteLine("Estimation functions that we used:");
             //Console.WriteLine("By EdgeNumber: " + CRegion._lngEstCountEdgeNumber +
@@ -87,23 +92,16 @@ namespace MorphingClass.CGeneralizationMethods
 
         #region AStar
         public CRegion AStar(CRegion LSCrg, CRegion SSCrg, CStrObjLtDt StrObjLtDt, string strAreaAggregation, 
-            double[,] padblTD, int intQuitCount = 200000)
+            double[,] padblTD, int intQuitCount = 200000, Process proc=null)
         {
-            var ExistingCorrCphsSD0 = LSCrg.SetInitialAdjacency();  //also count the number of edges
+            long lngStartMemory = GC.GetTotalMemory(true);
             
-            Stopwatch pStopwatchOverHead = new Stopwatch();
+
+            var pStopwatchOverHead = new Stopwatch();
             pStopwatchOverHead.Start();
-            
-            
-            int intEstSteps = 0;
-            int intRound = _intRound;
-
-            
-            
-
-            //CRegion._intStartStaticGIDAll = CRegion._intStaticGID;
 
 
+            var ExistingCorrCphsSD0 = LSCrg.SetInitialAdjacency();  //also count the number of edges
             AddLineToStrObjLtDt(StrObjLtDt, LSCrg);
 
 
@@ -112,16 +110,18 @@ namespace MorphingClass.CGeneralizationMethods
                     LSCrg.AdjCorrCphsSD.Count + "   " + intQuitCount + "   " + 
                     CConstants.strShapeConstraint + "   " + strAreaAggregation);
 
-            long lngStartMemory = GC.GetTotalMemory(true);
+            
             long lngTimeOverHead = pStopwatchOverHead.ElapsedMilliseconds;
             pStopwatchOverHead.Stop();
 
             Stopwatch pStopwatchLast=new Stopwatch ();
             bool blnRecordTime_F = false;
-            long lngTime_F = 0;
-            long lngTime_L = 0;
+            long lngTime_F = 0; //running time of the first trying
+            long lngTime_L = 0; //running time of last trying
             long lngTimeAll = lngTimeOverHead;
-            CRegion resultcrg = new CRegion(-2);
+            var resultcrg = new CRegion(-2);
+            int intEstSteps = 0;
+            int intRound = _intRound;
             do
             {
                 intEstSteps = Convert.ToInt32(Math.Pow(2, intRound)) - 1;
@@ -157,7 +157,7 @@ namespace MorphingClass.CGeneralizationMethods
                 if (intEstSteps>50)
                 {
                     intEstSteps = 64;
-                    throw new ArgumentException("We cannot solve the problem!");
+                    throw new ArgumentException("We cannot solve the problem! Impossible!");
                 }
                 
                 intRound++;
@@ -169,7 +169,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             //we don't need to +1 because +1 is already included in _intStaticGID
             //int intExploredRegionAll = CRegion._intStaticGID - CRegion._intStartStaticGIDLast;  
-            double dblConsumedMemoryInMB = CHelpFunc.GetConsumedMemoryInMB(false);
+            //double dblConsumedMemoryInMB = CHelpFunc.GetConsumedMemoryInMB(false);
 
             StrObjLtDt.SetLastObj("#Edges", CRegion._intEdgeCount);
             StrObjLtDt.SetLastObj("Time_F(ms)", lngTime_F);
@@ -184,7 +184,7 @@ namespace MorphingClass.CGeneralizationMethods
         }
 
         private CRegion ComputeAccordEstSteps(CRegion LSCrg, CRegion SSCrg, string strAreaAggregation,
-            SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, int intEstSteps, CStrObjLtDt StrObjLtDt, 
+            SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, int intEstSteps, CStrObjLtDt StrObjLtDt,
             double[,] padblTD, int intQuitCount = 200000)
         {
             int intRegionID = LSCrg.ID;  //all the regions generated in this function will have the same intRegionID
@@ -196,7 +196,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             //a region represents a node in graph, ExistingCrgSD stores all the nodes
             //we use this dictionary to make sure that if the two patches have the same cpgs, then they have the same GID
-            var ExistingCphSDLt = new List<SortedDictionary<CPatch, CPatch>>(LSCrg.GetCphCount() + 1);  
+            var ExistingCphSDLt = new List<SortedDictionary<CPatch, CPatch>>(LSCrg.GetCphCount() + 1);
             for (int i = 0; i < ExistingCphSDLt.Capacity; i++)
             {
                 var Element = new SortedDictionary<CPatch, CPatch>(CPatch.pCmpCPatch_CpgGID);
@@ -207,7 +207,7 @@ namespace MorphingClass.CGeneralizationMethods
             for (int i = 0; i < ExistingCrgSDLt.Capacity; i++)
             {
                 //we don't compare exact cost first because of there may be rounding problems 
-                var Element = new SortedDictionary<CRegion, CRegion>(CRegion.pCmpCRegion_CphGIDTypeIndex);  
+                var Element = new SortedDictionary<CRegion, CRegion>(CRegion.pCmpCRegion_CphGIDTypeIndex);
                 ExistingCrgSDLt.Add(Element);
             }
             ExistingCrgSDLt[LSCrg.GetCphCount()].Add(LSCrg, LSCrg);
@@ -254,7 +254,7 @@ namespace MorphingClass.CGeneralizationMethods
                 //resultcrg.d will be changed to the real cost
                 //u.d contains estimation, and resultcrg.d doesn't contains. 
                 //if u.d > resultcrg.d, then resultcrg.d must already be the smallest cost
-                if (u.GetCphCount() == 1 )
+                if (u.GetCphCount() == 1)
                 {
                     if (u.GetSoloCphTypeIndex() == SSCrg.GetSoloCphTypeIndex())
                     {
@@ -278,7 +278,7 @@ namespace MorphingClass.CGeneralizationMethods
                 }
 
 
-                foreach (var newcrg in AggregateAndUpdateQ(u, LSCrg, SSCrg, Q, strAreaAggregation, 
+                foreach (var newcrg in AggregateAndUpdateQ(u, LSCrg, SSCrg, Q, strAreaAggregation,
                     ExistingCrgSDLt, ExistingCphSDLt, ExistingCorrCphsSD, _adblTD, intEstSteps))
                 {
                     //int intExploredRegionLast = CRegion._intStaticGID - CRegion._intStartStaticGIDLast;  
@@ -288,9 +288,9 @@ namespace MorphingClass.CGeneralizationMethods
                     {
                         //if we have visited 2000000 regions but haven't found an optimum aggregation sequence, 
                         //then we return null and overestimate in the heuristic function 
-                        return new CRegion(-2);  
+                        return new CRegion(-2);
                     }
-                }                
+                }
             }
 
             RecordResultForCrg(StrObjLtDt, LSCrg, FinalOneCphCrg, SSCrg.GetSoloCphTypeIndex());
@@ -478,7 +478,7 @@ namespace MorphingClass.CGeneralizationMethods
                         outcrg.dblCostExact = newcrg.dblCostExact;
                         outcrg.d = newcrg.dblCostExact + outcrg.dblCostEst;
 
-                        outcrg.AggedCphs = newcrg.AggedCphs;
+                        outcrg.AggCphs = newcrg.AggCphs;
                         outcrg.parent = newcrg.parent;
                         newcrg = outcrg;
 

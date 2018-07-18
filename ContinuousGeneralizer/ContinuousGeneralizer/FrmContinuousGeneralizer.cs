@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics;
 using SCG = System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -138,12 +140,44 @@ namespace ContinuousGeneralizer
             //var frmCurrent = new FrmCGABM(_DataRecords);
             //var frmCurrent = new FrmExtractPossibleFiles();
             frmCurrent.Show();
+            CConstants.strRunContinuousGeneralizer = File.ReadLines(
+   @"C:\MyWork\DailyWork\ContinuousGeneralisation\RunContinuousGeneralizer\RunContinuousGeneralizer.txt").First();
+            if (CConstants.strRunContinuousGeneralizer != "")
+            {
+                //0 NonShape
+                //1 MinimizeInteriorBoundaries
+                //2 MaximizeMinComp_EdgeNumber
+                //3 MaximizeMinComp_Combine
+                //4 MaximizeAvgComp_EdgeNumber
+                //5 MaximizeAvgComp_Combine
+                _DataRecords.ParameterInitialize.cboShapeConstraint.SelectedIndex = 1;
+                switch (CConstants.strRunContinuousGeneralizer)
+                {
+                    case "Greedy":
+                        frmCurrent.btnGreedy_Click(sender, e);
+                        break;
+                    case "AStar":
+                        frmCurrent.btnRun_Click(sender, e);
+                        break;
+                    case "ILP":
+                        frmCurrent.btnRunILP_Click(sender, e);
+                        break;
+                    default:
+                        break;
+                }
+                return;
+            }
+
             //frmCurrent.btnTransform_Click(sender, e);
+
             //frmCurrent.btnRun_Click(sender, e);
+            //frmCurrent.btnGreedy_Click(sender, e);
+            frmCurrent.btnRunILP_Click(sender, e);
             //frmCurrent.btn020_Click(sender, e);
             //frmCurrent.btnMultiResults_Click(sender, e);
 
             //frmCurrent.btn090_Click(sender, e);
+
         }
 
 
@@ -258,13 +292,13 @@ namespace ContinuousGeneralizer
             pDataRecords.ParameterInitialize.txtT = this.txtT;
             _DataRecords = pDataRecords;
 
+
+
             SetPathForData();
             openMapDoc.OnCreate(m_controlsSynchronizer.MapControl.Object);
             openMapDoc.OnClickAutomatic(CHelpFunc.strPath + CHelpFunc.strDataFolderName + ".mxd");
 
-
-
-
+           
         }
 
 
@@ -761,35 +795,41 @@ namespace ContinuousGeneralizer
 
         private void mnuAnyTest_Click(object sender, EventArgs e)
         {
-            int intNum = 999;
-            var intltltltltlt = new List<List<List<List<List<int>>>>>(intNum);
-            for (int i = 0; i < intNum; i++)
-            {
-                var intltltltlt = new List<List<List<List<int>>>>(intNum);
-                for (int j = 0; j < intNum; j++)
-                {
-                    var intltltlt = new List<List<List<int>>>(intNum);
-                    for (int k = 0; k < intNum; k++)
-                    {
-                        var intltlt = new List<List<int>>(intNum);
-                        for (int l = 0; l < intNum; l++)
-                        {
-                            var intlt = new List<int>(intNum);
-                            for (int m = 0; m < intNum; m++)
-                            {
-                                intlt.Add(m);
-                            }
-                            intltlt.Add(intlt);
-                        }
-                        intltltlt.Add(intltlt);
-                    }
-                    intltltltlt.Add(intltltlt);
-                }
-                intltltltltlt.Add(intltltltlt);
-            }
+            
+            
+            //int intNum = 999;
+            //var intltltltltlt = new List<List<List<List<List<int>>>>>(intNum);
+            //for (int i = 0; i < intNum; i++)
+            //{
+            //    var intltltltlt = new List<List<List<List<int>>>>(intNum);
+            //    for (int j = 0; j < intNum; j++)
+            //    {
+            //        var intltltlt = new List<List<List<int>>>(intNum);
+            //        for (int k = 0; k < intNum; k++)
+            //        {
+            //            if (k==625)
+            //            {
+            //                int ss = 5;
+            //            }
+            //            var intltlt = new List<List<int>>(intNum);
+            //            for (int l = 0; l < intNum; l++)
+            //            {
+            //                var intlt = new List<int>(intNum);
+            //                for (int m = 0; m < intNum; m++)
+            //                {
+            //                    intlt.Add(m);
+            //                }
+            //                intltlt.Add(intlt);
+            //            }
+            //            intltltlt.Add(intltlt);
+            //        }
+            //        intltltltlt.Add(intltltlt);
+            //    }
+            //    intltltltltlt.Add(intltltltlt);
+            //}
 
 
-            tspbMain.Value = 15;
+            //tspbMain.Value = 15;
 
             //var cptlt= CHelpFunc .GetTestCptEb().ToList();
 

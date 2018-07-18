@@ -107,6 +107,7 @@ namespace MorphingClass.CUtility
             return intlt;
         }
 
+
         public static double GetConsumedMemoryInMB(bool blnforceFullCollection, long lngStartMemoryInByte = 0)
         {
             return Math.Round(Convert.ToDouble(GC.GetTotalMemory(blnforceFullCollection) - lngStartMemoryInByte) / 1048576, 3);

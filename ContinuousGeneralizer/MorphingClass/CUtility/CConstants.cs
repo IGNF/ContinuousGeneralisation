@@ -24,8 +24,11 @@ namespace MorphingClass.CUtility
         //10 X e6 is not good for constructing compatible triangulations of data MainlandChina, because there are some intersections too close each other and we may identify a InIn relationship to InFr relationship; 10 X e7 works well
         public static double _dblVerySmallDenominator = 1000000; //I test it many times. it seems 10 X e6 is appropriate value. This value may need change when we have different data sets
         private static double _dblSmallDisDenominator = 1000;
-        public static double dblSpecialValue { set; get; } = -Math.Pow(Math.PI, 3);  //we use the special value to initial some number
-        
+
+        //we use the special value to initial some number； -3.14^3
+        public static double dblSpecialValue { set; get; } = -30.959144;
+        public static int intSpecialValue { set; get; } = -30959144;
+
         public static double dblVerySmallConst { set; get; } = 0.00000001;
         public static double dblTwoPI { set; get; } = 2 * Math.PI;
         public static double dblHalfPI { set; get; } = Math.PI/2;
@@ -59,6 +62,7 @@ namespace MorphingClass.CUtility
 
         public static bool blnComputeMinComp { set; get; }
         public static bool blnComputeAvgComp { set; get; }
+        public static string strRunContinuousGeneralizer { set; get; } = "";
 
         public static string strMethod { set; get; }
         public static string strShapeConstraint { set; get; }

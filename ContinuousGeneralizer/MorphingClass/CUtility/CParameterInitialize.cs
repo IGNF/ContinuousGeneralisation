@@ -62,6 +62,7 @@ namespace MorphingClass.CUtility
         public ComboBox cboIntMaxBackKforJ { get; set; }
         public ComboBox cboTransform { get; set; }
         public ComboBox cboShapeConstraint { get; set; }
+        public Dictionary<int, int> intILPFailedIDDt { get; set; }
 
         //private double _dblBendDelRatio;          //ÍäÇúÉ¾³ı±È
         //private double _dblDistance;              //µãËÑË÷¾àÀë

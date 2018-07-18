@@ -70,7 +70,7 @@ namespace MorphingClass.CGeometry
         public CRegion parent { get; set; }
         public CRegion child { get; set; }
         public CEnumColor cenumColor { get; set; }
-        public CValTri<CPatch, CPatch, CPatch> AggedCphs { get; set; }
+        public CValTri<CPatch, CPatch, CPatch> AggCphs { get; set; }
 
 
         public double dblArea { get; set; }
@@ -641,7 +641,7 @@ namespace MorphingClass.CGeometry
             newcrg.dblArea = this.dblArea;
             newcrg.cenumColor = CEnumColor.gray;
             newcrg.parent = this;
-            newcrg.AggedCphs = new CValTri<CPatch, CPatch, CPatch>(activecph, passivecph, unitedcph);
+            newcrg.AggCphs = new CValTri<CPatch, CPatch, CPatch>(activecph, passivecph, unitedcph);
             newcrg.AdjCorrCphsSD = newAdjCorrCphsSD;
             newcrg.CphTypeIndexSD_Area_CphGID = newCphTypeIndexSD;
             newcrg.intSumCphGID = this.intSumCphGID - activecph.GID - passivecph.GID + unitedcph.GID;

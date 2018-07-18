@@ -33,6 +33,8 @@ namespace MorphingClass.CGeneralizationMethods
 {
     public class CAreaAgg_ILP : CAreaAgg_Base
     {
+        
+
         public CAreaAgg_ILP()
         {
 
@@ -52,9 +54,9 @@ namespace MorphingClass.CGeneralizationMethods
         public void AreaAggregation(List<int> intSpecifiedIDLt = null)
         {
             SetupBasic();
-
-            int intOutOfMemorySetting = 0;
-            int intOutOfMemory = 0;
+            
+            int intOOMSetting = 0; //OOM: Out Of Memory
+            int intOOMAll = 0;
             CRegion._lngEstCountEdgeNumber = 0;
             CRegion._lngEstCountEdgeLength = 0;
             CRegion._lngEstCountEqual = 0;
@@ -64,7 +66,7 @@ namespace MorphingClass.CGeneralizationMethods
                 for (int i = _intStart; i < _intEndCount; i++)
                 {
                     ILP(LSCrgLt[i], SSCrgLt[i], this.StrObjLtDt, this._adblTD,
-                        _ParameterInitialize.strAreaAggregation, ref intOutOfMemorySetting, ref intOutOfMemory);
+                        _ParameterInitialize.strAreaAggregation, ref intOOMSetting, ref intOOMAll);
                     CHelpFunc.Displaytspb(i - _intStart + 1, _intEndCount - _intStart);
                 }
             }
@@ -73,24 +75,34 @@ namespace MorphingClass.CGeneralizationMethods
                 for (int i = 0; i < intSpecifiedIDLt.Count; i++)
                 {
                     ILP(LSCrgLt[intSpecifiedIDLt[i]], SSCrgLt[intSpecifiedIDLt[i]], this.StrObjLtDt, this._adblTD,
-                        _ParameterInitialize.strAreaAggregation, ref intOutOfMemorySetting, ref intOutOfMemory);
+                        _ParameterInitialize.strAreaAggregation, ref intOOMSetting, ref intOOMAll);
                     CHelpFunc.Displaytspb(i + 1, intSpecifiedIDLt.Count);
                 }
             }
 
-            Console.WriteLine("\nThe number of regions that caused the exception out of memory during setting: " + intOutOfMemorySetting);
-            Console.WriteLine("The number of regions that caused the exception out of memory: " + intOutOfMemory);
+            EndAffairs(_intEndCount);
+
+            Console.WriteLine("\nOOM during setting: " + intOOMSetting);
+            Console.WriteLine("total OOM during solving: " + intOOMAll);
         }
 
 
 
         public CRegion ILP(CRegion LSCrg, CRegion SSCrg, CStrObjLtDt StrObjLtDt, 
-            double[,] adblTD, string strAreaAggregation, ref int intOutOfMemorySetting, ref int intOutOfMemory)
+            double[,] adblTD, string strAreaAggregation, ref int intOOMSetting, ref int intOOMAll)
         {
+
+
+
+
             long lngStartMemory = GC.GetTotalMemory(true);
 
+            var pStopwatch = new Stopwatch();
+            pStopwatch.Start();
             LSCrg.SetInitialAdjacency();  //also count the number of edges
+            AddLineToStrObjLtDt(StrObjLtDt, LSCrg);
 
+            //must be below LSCrg.SetInitialAdjacency();
             System.Console.WriteLine();
             System.Console.WriteLine();
             System.Console.WriteLine("Crg:  ID  " + LSCrg.ID + ";    n  " + LSCrg.GetCphCount() + ";    m  " +
@@ -98,17 +110,14 @@ namespace MorphingClass.CGeneralizationMethods
                 + LSCrg.ID + "  " + _ParameterInitialize.strAreaAggregation + "==============================");
 
 
-            Stopwatch pStopwatch = new Stopwatch();
-            pStopwatch.Start();
-            AddLineToStrObjLtDt(StrObjLtDt, LSCrg);
 
             //double dblMemoryInMB2 = CHelpFunc.GetConsumedMemoryInMB(true);
-            Cplex cplex = new Cplex();
+            var cplex = new Cplex();
 
             //double dblMemoryInMB3 = CHelpFunc.GetConsumedMemoryInMB(true);
 
-            CRegion crg = new CRegion(-1);
-            bool blnSolved = true;
+            var crg = new CRegion(-1);
+            bool blnSolved = false;
             bool blnSetting = false;
             try
             {
@@ -120,26 +129,20 @@ namespace MorphingClass.CGeneralizationMethods
                 IRange[][] rng;
                 
                 PopulateByRow(cplex, out var2, out var3, out var4, out rng, LSCrg, SSCrg, adblTD, strAreaAggregation);
-                double dblMemoryInMB4 = CHelpFunc.GetConsumedMemoryInMB(true);
+                //double dblMemoryInMB4 = CHelpFunc.GetConsumedMemoryInMB(true);
                 // Step 11
                 //cplex.ExportModel("lpex1.lp");
 
                 // Step 9
-                //1170 is from _All_MinimizeInteriorBoundaries_200000000
-                //160s is from _Smallest_MinimizeInteriorBoundaries_200000
-                //600s: 10min
-                cplex.SetParam(Cplex.DoubleParam.TiLim, 160);
-                //cplex.SetParam(Cplex.DoubleParam.TiLim, 600);
-
-                //cplex.SetParam(Cplex.IntParam.ParallelMode, 1);
-                //cplex.SetParam(Cplex.ParallelMode.Deterministic,cplex.pa);
-                //cplex.SetParam(Cplex.StringParam.RootAlgorithm,)
+                double dblRemainTimeLim = this.dblTimeLimit - Convert.ToDouble(pStopwatch.ElapsedMilliseconds)/1000;
+                cplex.SetParam(Cplex.DoubleParam.TiLim, dblRemainTimeLim);
 
                 //avoid that optimal solutions from CPELX are not optimal
                 //see https://www-01.ibm.com/support/docview.wss?uid=swg1RS02094
                 cplex.SetParam(Cplex.IntParam.AuxRootThreads, -1);
                 cplex.SetParam(Cplex.IntParam.Reduce, 0);  //really work for me
                 cplex.SetParam(Cplex.DoubleParam.CutLo, 0);
+
                 blnSetting = true;
 
                 if (cplex.Solve())
@@ -295,7 +298,7 @@ namespace MorphingClass.CGeneralizationMethods
                     #endregion
 
                 }
-
+                
                 Console.WriteLine("");
                 cplex.Output().WriteLine("Solution status = " + cplex.GetStatus());
                 cplex.Output().WriteLine("Solution value = " + cplex.ObjValue);
@@ -305,15 +308,17 @@ namespace MorphingClass.CGeneralizationMethods
                 
                 if (strStatus == "Optimal")
                 {
+                    blnSolved = true;
                     StrObjLtDt.SetLastObj("EstSteps", 0.ToString("F4"));
                 }
                 else if (strStatus == "Feasible")
                 {
                     //|best integer-best bound(node)|  / 1e-10 + |best integer|
                     //|cplex.ObjValue-cplex.BestObjValue|  /  1e-10 + |cplex.ObjValue|
+                    blnSolved = true;
                     StrObjLtDt.SetLastObj("EstSteps", (cplex.MIPRelativeGap * 100 ).ToString("F4"));
                 }
-                else
+                else  //we do not find any solution
                 {
                     StrObjLtDt.SetLastObj("EstSteps", 20000.ToString("F4"));
                 }
@@ -322,20 +327,23 @@ namespace MorphingClass.CGeneralizationMethods
             {
                 if (blnSetting == false)
                 {
-                    intOutOfMemorySetting++;
+                    intOOMSetting++;
                 }
-
-                if (e.Message== "CPLEX Error  1001: Out of memory.\n")
+                intOOMAll++;
+                if (e.Message == "CPLEX Error  1001: Out of memory.\n")
                 {
-                    intOutOfMemory++;
+                    System.Console.WriteLine("Concert exception '" + e + "' caught");
                 }
-                blnSolved = false;
-                System.Console.WriteLine("Concert exception '" + e + "' caught");
+                else
+                {
+                    throw;
+                }
+                
             }
             catch (System.OutOfMemoryException e2) //it seems this never happens!
-            {                
-                blnSolved = false;
+            {
                 System.Console.WriteLine("System exception '" + e2);
+                throw new ArgumentException(e2.Message);
             }
             finally
             {
@@ -344,7 +352,7 @@ namespace MorphingClass.CGeneralizationMethods
                 {
                     crg.ID = -2;
                     StrObjLtDt.SetLastObj("EstSteps", 20000.ToString("F4"));
-                    System.Console.WriteLine("We have used memory " + dblMemoryInMB + "MB.");
+                    //System.Console.WriteLine("We have used memory " + dblMemoryInMB + "MB.");
                     Console.WriteLine("Crg:  ID  " + LSCrg.ID + ";    n  " + LSCrg.GetCphCount() + ";    m  " +
                         LSCrg.AdjCorrCphsSD.Count + "  could not be solved by ILP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 }
@@ -369,7 +377,7 @@ namespace MorphingClass.CGeneralizationMethods
             var aCph = lscrg.GetCphCol().ToArray();
             int intCpgCount = lscrg.GetCphCount();
             //double dblILPSmallValue = 0.000000001;
-            double dblILPSmallValue = 0;
+            //double dblILPSmallValue = 0;
 
             IIntVar[][][] x = new IIntVar[intCpgCount][][];
             for (int i = 0; i < intCpgCount; i++)
@@ -467,7 +475,6 @@ namespace MorphingClass.CGeneralizationMethods
                 //model.AddMaximize(Fcp);
                 //model.AddObjective()
             }
-
 
             //for showing slacks
             IList<IRange> IRangeLt = new List<IRange>();
@@ -596,29 +603,58 @@ namespace MorphingClass.CGeneralizationMethods
                                 continue;
                             }
 
+                            //model.AddLe(c[i][j][k][l], x[i][j][k], "RestrictC1");
+
+                            //var pLieContiguityExpr = model.LinearIntExpr();
+                            //var pContiguityExpr2 = model.LinearNumExpr(-1);
+                            ////pContiguityExpr.AddTerm(x[i][j][k], 1.0);  //including polygon j itself
+                            //foreach (var pAdjacentCph in aCph[j].AdjacentCphSS)
+                            //{
+                            //    pLieContiguityExpr.AddTerm(x[i][pAdjacentCph.ID][l], 1);
+                            //    pContiguityExpr2.AddTerm(x[i][pAdjacentCph.ID][l], dblCpgCountReciprocal);
+                            //}
+                            //model.AddLe(c[i][j][k][l], pLieContiguityExpr, "Contiguity");
+
+                            //pContiguityExpr2.AddTerm(x[i][j][k], 1.0);
+                            //model.AddGe(c[i][j][k][l], pContiguityExpr2, "Contiguity2");
+
+                            //var pContiguityExprRight3 = model.LinearIntExpr();
+                            //for (int m = 0; m < intCpgCount; m++)
+                            //{
+                            //    pContiguityExprRight3.AddTerm(c[i][m][k][l], 1);
+                            //}
+
+
+                            //model.AddLe(y[i][k][k][l], pContiguityExprRight3, "Contiguity3");
+
+
+
+
                             model.AddLe(c[i][j][k][l], x[i][j][k], "RestrictC1");
 
                             var pLieContiguityExpr = model.LinearIntExpr();
-                            var pContiguityExpr2 = model.LinearNumExpr(-1);
                             //pContiguityExpr.AddTerm(x[i][j][k], 1.0);  //including polygon j itself
                             foreach (var pAdjacentCph in aCph[j].AdjacentCphSS)
                             {
                                 pLieContiguityExpr.AddTerm(x[i][pAdjacentCph.ID][l], 1);
-                                pContiguityExpr2.AddTerm(x[i][pAdjacentCph.ID][l], dblCpgCountReciprocal);
                             }
-                            model.AddLe(c[i][j][k][l],pLieContiguityExpr, "Contiguity");
+                            model.AddLe(c[i][j][k][l], pLieContiguityExpr, "Contiguity");
 
-                            pContiguityExpr2.AddTerm(x[i][j][k], 1.0);
-                            model.AddGe(c[i][j][k][l], pContiguityExpr2,  "Contiguity2");
 
+                            foreach (var pAdjacentCph in aCph[j].AdjacentCphSS)
+                            {
+                                var pContiguityExpr2 = model.LinearNumExpr(-1);
+                                pContiguityExpr2.AddTerm(x[i][j][k], 1);
+                                pContiguityExpr2.AddTerm(x[i][pAdjacentCph.ID][l], 1);
+
+                                model.AddGe(c[i][j][k][l], pContiguityExpr2, "Contiguity2");
+                            }
 
                             var pContiguityExprRight3 = model.LinearIntExpr();
                             for (int m = 0; m < intCpgCount; m++)
                             {
                                 pContiguityExprRight3.AddTerm(c[i][m][k][l], 1);
                             }
-
-
                             model.AddLe(y[i][k][k][l], pContiguityExprRight3, "Contiguity3");
 
                         }

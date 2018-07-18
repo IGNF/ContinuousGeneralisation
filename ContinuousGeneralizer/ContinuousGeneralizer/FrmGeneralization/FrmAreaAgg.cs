@@ -33,8 +33,10 @@ namespace ContinuousGeneralizer.FrmMorphing
         private CFrmOperation _FrmOperation;
 
         private CAreaAgg_Base _pCAreaAgg_Base;
+        private CAreaAgg_Greedy _pCAreaAgg_Greedy;
         private CAreaAgg_AStar _pCAreaAgg_AStar;
         private CAreaAgg_ILP _pCAreaAgg_ILP;
+
 
         private double _dblProportion = 0.5;
 
@@ -60,7 +62,7 @@ namespace ContinuousGeneralizer.FrmMorphing
 
         private void FrmAreaAgg_Load(object sender, EventArgs e)
         {
-            CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
+            var ParameterInitialize = _DataRecords.ParameterInitialize;
             ParameterInitialize.cboLayerLt = new List<ComboBox>(2);
             ParameterInitialize.cboLayerLt.Add(this.cboLargerScaleLayer);
             ParameterInitialize.cboLayerLt.Add(this.cboSmallerScaleLayer);
@@ -68,6 +70,12 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.cboShapeConstraint = this.cboShapeConstraint;
             ParameterInitialize.chkSmallest = this.chkSmallest;
 
+            //0 NonShape
+            //1 MinimizeInteriorBoundaries
+            //2 MaximizeMinComp_EdgeNumber
+            //3 MaximizeMinComp_Combine
+            //4 MaximizeAvgComp_EdgeNumber
+            //5 MaximizeAvgComp_Combine
             ParameterInitialize.cboShapeConstraint.SelectedIndex = 1;
             //ParameterInitialize.chkSmallest.Checked = false;
 
@@ -76,9 +84,9 @@ namespace ContinuousGeneralizer.FrmMorphing
             _FrmOperation = new CFrmOperation(ref ParameterInitialize);
         }
 
-        private void btnGreedy_Click(object sender, EventArgs e)
+        public void btnGreedy_Click(object sender, EventArgs e)
         {
-            CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
+            var ParameterInitialize = _DataRecords.ParameterInitialize;
             CConstants.strMethod = "Greedy";
             var objResultSD = new SortedDictionary<string, List<object>>();
             var StrObjLtDt = new CStrObjLtDt(CAreaAgg_Base.strKeyLt);
@@ -88,14 +96,14 @@ namespace ContinuousGeneralizer.FrmMorphing
 
             this.txtEvaluation.Text = pCAreaAgg_Greedy.dblCost.ToString();
             StrObjLtDt.Merge(pCAreaAgg_Greedy.StrObjLtDt);
-            CAreaAgg_Base.SaveData(StrObjLtDt, ParameterInitialize, "Greedy", Convert.ToInt32(txtNodes.Text));
+            CAreaAgg_Base.SaveData(StrObjLtDt, ParameterInitialize, "Greedy");
             _pCAreaAgg_Base = pCAreaAgg_Greedy as CAreaAgg_Base;
             MessageBox.Show("Done!");
         }
 
         public void btnRun_Click(object sender, EventArgs e)
         {
-            CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
+            var ParameterInitialize = _DataRecords.ParameterInitialize;
             //var objDataLtLt = new List<List<object>>();
             //var objResultSD = new SortedDictionary<string, List<object>>();
             var StrObjLtDt = new CStrObjLtDt(CAreaAgg_Base.strKeyLt);
@@ -105,7 +113,7 @@ namespace ContinuousGeneralizer.FrmMorphing
 
             this.txtEvaluation.Text = _pCAreaAgg_AStar.dblCost.ToString();
             StrObjLtDt.Merge(_pCAreaAgg_AStar.StrObjLtDt);
-            CAreaAgg_Base.SaveData(StrObjLtDt, ParameterInitialize, "AStar", Convert.ToInt32(txtNodes.Text));
+            CAreaAgg_Base.SaveData(StrObjLtDt, ParameterInitialize, "AStar" + txtNodes.Text);
 
             _pCAreaAgg_Base = _pCAreaAgg_AStar as CAreaAgg_Base;
             MessageBox.Show("Done!");
@@ -114,7 +122,7 @@ namespace ContinuousGeneralizer.FrmMorphing
         private void btnRunSpecified_Click(object sender, EventArgs e)
         {
             //List<int> intSpecifiedIDLt = new List<int>();
-
+            #region intSpecifiedIDLt
             //intSpecifiedIDLt.Add(543);
             //intSpecifiedIDLt.Add(94);
             //intSpecifiedIDLt.Add(190);
@@ -154,7 +162,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             //intSpecifiedIDLt.Add(463);
             //intSpecifiedIDLt.Add(418);
             //intSpecifiedIDLt.Add(155);
-
+            #endregion
 
 
 
@@ -182,9 +190,11 @@ namespace ContinuousGeneralizer.FrmMorphing
 
 
 
-        private void btnRunILP_Click(object sender, EventArgs e)
+        public void btnRunILP_Click(object sender, EventArgs e)
         {
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
+            ParameterInitialize.cboShapeConstraint.SelectedIndex = 1;
+
             var StrObjLtDt = new CStrObjLtDt(CAreaAgg_Base.strKeyLt);
 
             //读取数据
@@ -193,7 +203,7 @@ namespace ContinuousGeneralizer.FrmMorphing
 
             //this.txtEvaluation.Text = _pCAreaAgg_ILP.dblCost.ToString();
             StrObjLtDt.Merge(_pCAreaAgg_ILP.StrObjLtDt);
-            CAreaAgg_AStar.SaveData(StrObjLtDt, ParameterInitialize, "ILP", Convert.ToInt32(txtNodes.Text));
+            CAreaAgg_AStar.SaveData(StrObjLtDt, ParameterInitialize, "ILP" + Convert.ToInt32(_pCAreaAgg_ILP.dblTimeLimit));
 
 
             _pCAreaAgg_Base = _pCAreaAgg_ILP as CAreaAgg_Base;
@@ -208,7 +218,7 @@ namespace ContinuousGeneralizer.FrmMorphing
         private void btnRunILPSpecified_Click(object sender, EventArgs e)
         {
             List<int> intSpecifiedIDLt = new List<int>();
-
+            #region intSpecifiedIDLt
             //intSpecifiedIDLt.Add(215);
             //intSpecifiedIDLt.Add(94);
             //intSpecifiedIDLt.Add(590);
@@ -505,6 +515,8 @@ namespace ContinuousGeneralizer.FrmMorphing
             //intSpecifiedIDLt.Add(69);
             //intSpecifiedIDLt.Add(599);
             //intSpecifiedIDLt.Add(161);
+            #endregion
+
 
 
 
@@ -524,7 +536,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             //}
 
             _pCAreaAgg_Base = _pCAreaAgg_ILP as CAreaAgg_Base;
-            CAreaAgg_AStar.SaveData(StrObjLtDt, ParameterInitialize, "ILP", Convert.ToInt32(txtNodes.Text));
+            CAreaAgg_AStar.SaveData(StrObjLtDt, ParameterInitialize, "ILP" + Convert.ToInt32(_pCAreaAgg_ILP.dblTimeLimit));
             MessageBox.Show("Done!");
         }
 
@@ -566,52 +578,33 @@ namespace ContinuousGeneralizer.FrmMorphing
             //4: MaximizeAvgComp_EdgeNumber
             //5: MaximizeAvgComp_Combine
             //true: involving smallest
-            //false: all
-            //RunBasic(ParameterInitialize, "AStar", intQuitCount, 3, false);
-            //RunBasic(ParameterInitialize, "AStar", intQuitCount, 3, true);
-            //RunBasic(ParameterInitialize, "AStar", intQuitCount, 1, false);
-            //RunBasic(ParameterInitialize, "AStar", intQuitCount, 1, true);
-            RunAStar(ParameterInitialize, intQuitCount, 1, true);
+            //false: not necessarily involving smallest
+            RunGreedy(ParameterInitialize, 4, true);
+            RunGreedy(ParameterInitialize, 1, true);
+            
             RunAStar(ParameterInitialize, intQuitCount, 4, true);
-
-
-            //RunBasic(ParameterInitialize, "AStar", intTwiceCount, 3, false);
-            //RunBasic(ParameterInitialize, "AStar", intTwiceCount, 3, true);
-            //RunBasic(ParameterInitialize, "AStar", intTwiceCount, 1, false);
-            //RunBasic(ParameterInitialize, "AStar", intTwiceCount, 1, true);
             RunAStar(ParameterInitialize, intTwiceCount, 4, true);
+            RunAStar(ParameterInitialize, intQuitCount, 1, true);
 
-
-
-            //RunBasic(ParameterInitialize, "AStar", intUnlimited, 3, false);
-            //RunBasic(ParameterInitialize, "AStar", intUnlimited, 3, true);
-            //RunBasic(ParameterInitialize, "AStar", intUnlimited, 1, false);
-            //RunBasic(ParameterInitialize, "AStar", intUnlimited, 1, true);
-            //RunBasic(ParameterInitialize, "AStar", intUnlimited, 2, true);
-
-
-
-            //RunBasic(ParameterInitialize, "ILP", intUnlimited, 1, false);
-            //RunBasic(ParameterInitialize, "ILP", intUnlimited, 1, true);
-            RunILP(ParameterInitialize, true);
-
-            //RunBasic(ParameterInitialize, "AStar", intQuitCount, 1, false);
-            //RunBasic(ParameterInitialize, "AStar", intQuitCount, 1, true);
-            //RunBasic(ParameterInitialize, "AStar", intQuitCount, 2, false);
-            //RunBasic(ParameterInitialize, "AStar", intQuitCount, 2, true);
-            //RunBasic(ParameterInitialize, "AStar", intTwiceCount, 1, false);
-            //RunBasic(ParameterInitialize, "AStar", intTwiceCount, 1, true);
-            //RunBasic(ParameterInitialize, "AStar", intTwiceCount, 2, false);
-            //RunBasic(ParameterInitialize, "AStar", intTwiceCount, 2, true);
-            //RunBasic(ParameterInitialize, "AStar", intUnlimited, 1, false);
-            //RunBasic(ParameterInitialize, "AStar", intUnlimited, 1, true);
-            //RunBasic(ParameterInitialize, "AStar", intUnlimited, 2, false);
-            //RunBasic(ParameterInitialize, "AStar", intUnlimited, 2, true);
-
-            //RunBasic(ParameterInitialize, "ILP", intUnlimited, 1, false);
-            //RunBasic(ParameterInitialize, "ILP", intUnlimited, 1, true);
+            RunILP(ParameterInitialize, 113, true);
+            RunILP(ParameterInitialize, 300, true);
 
             MessageBox.Show("Done!");
+        }
+
+        private void RunGreedy(CParameterInitialize ParameterInitialize,
+    int cboShapeConstraintSelectedIndex, bool chkSmallestChecked)
+        {
+            ParameterInitialize.cboShapeConstraint.SelectedIndex = cboShapeConstraintSelectedIndex;
+            ParameterInitialize.chkSmallest.Checked = chkSmallestChecked;
+
+            //var objResultSD = new SortedDictionary<string, List<object>>();
+            var StrObjLtDt = new CStrObjLtDt(CAreaAgg_Base.strKeyLt);
+
+            _pCAreaAgg_Greedy = new CAreaAgg_Greedy(ParameterInitialize);
+            _pCAreaAgg_Greedy.AreaAggregation();
+            StrObjLtDt.Merge(_pCAreaAgg_Greedy.StrObjLtDt);
+            CAreaAgg_Base.SaveData(StrObjLtDt, ParameterInitialize, "Greedy");
         }
 
         private void RunAStar(CParameterInitialize ParameterInitialize, 
@@ -620,27 +613,28 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.cboShapeConstraint.SelectedIndex = cboShapeConstraintSelectedIndex;
             ParameterInitialize.chkSmallest.Checked = chkSmallestChecked;
 
-            var objResultSD = new SortedDictionary<string, List<object>>();
+            //var objResultSD = new SortedDictionary<string, List<object>>();
             var StrObjLtDt = new CStrObjLtDt(CAreaAgg_Base.strKeyLt);
 
             _pCAreaAgg_AStar = new CAreaAgg_AStar(ParameterInitialize);
             _pCAreaAgg_AStar.AreaAggregation(intQuitCount);
             StrObjLtDt.Merge(_pCAreaAgg_AStar.StrObjLtDt);
-            CAreaAgg_Base.SaveData(StrObjLtDt, ParameterInitialize, "AStar", intQuitCount);
+            CAreaAgg_Base.SaveData(StrObjLtDt, ParameterInitialize, "AStar" + intQuitCount.ToString());
         }
 
-        private void RunILP(CParameterInitialize ParameterInitialize, bool chkSmallestChecked)
+        private void RunILP(CParameterInitialize ParameterInitialize, double dblTimeLimit, bool chkSmallestChecked)
         {
             ParameterInitialize.cboShapeConstraint.SelectedIndex = 1;
             ParameterInitialize.chkSmallest.Checked = chkSmallestChecked;
 
-            var objResultSD = new SortedDictionary<string, List<object>>();
+            //var objResultSD = new SortedDictionary<string, List<object>>();
             var StrObjLtDt = new CStrObjLtDt(CAreaAgg_Base.strKeyLt);
 
             _pCAreaAgg_ILP = new CAreaAgg_ILP(ParameterInitialize);
+            _pCAreaAgg_ILP.dblTimeLimit = dblTimeLimit;
             _pCAreaAgg_ILP.AreaAggregation();
             StrObjLtDt.Merge(_pCAreaAgg_ILP.StrObjLtDt);
-            CAreaAgg_Base.SaveData(StrObjLtDt, ParameterInitialize, "ILP");
+            CAreaAgg_Base.SaveData(StrObjLtDt, ParameterInitialize, "ILP" + Convert.ToInt32(_pCAreaAgg_ILP.dblTimeLimit));
         }
 
 

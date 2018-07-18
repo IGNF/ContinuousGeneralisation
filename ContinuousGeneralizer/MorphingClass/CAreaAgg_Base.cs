@@ -32,23 +32,43 @@ namespace MorphingClass.CGeneralizationMethods
     public class CAreaAgg_Base : CMorphingBaseCpg
     {
         public static double dblLamda = 0.5; // 1-dblLamda is for type; dblLamda is for shape
+
+
+        //1170 is from _All_MinimizeInteriorBoundaries_200000000
+        //160s is from _Smallest_MinimizeInteriorBoundaries_200000
+        //600s: 10min
+        //public double dblTimeLimit { get; set; } = 113; //in seconds
+        public double dblTimeLimit { get; set; } = 10; //in seconds
+        //public double dblTimeLimit { get; set; } = 300; //in seconds
         //public static double dblLamda2 = 1 - dblLamda1;
 
         //for some prompt settings
-        //protected int _intStartEstSteps = 1;
-        //protected int _intStartEstSteps = 8;
         protected int _intRound = 0;
         //protected int _intRound = 7;
 
         protected static int _intStart; //=0
         protected static int _intEndCount; //=this.SSCrgLt.Count
-
+        protected List< List<long>> _lngMemoryLtLt = new List<List<long>>();
+        protected static bool _blnTesting = true; //if we are testing, we forget about aggregation sequences
         //comment the following if you want to process on all instances
         protected void UpdateStartEnd()
         {
-            _intStart = 612;
-            _intEndCount = _intStart + 1;
+            //_intStart = 94;
+            //_intEndCount = _intStart + 3;
+
+            if (CConstants.strRunContinuousGeneralizer!="")
+            {
+                var lastLine = File.ReadLines(
+               @"C:\MyWork\DailyWork\ContinuousGeneralisation\RunContinuousGeneralizer\CallRecord.txt").Last();
+                _intStart = Convert.ToInt32(lastLine);
+                _intEndCount = _intStart + 1;
+            }
         }
+
+        //if we are testing memory consumption (_blnTestMemoryConsumption = true), 
+        //then our method will forget the computed sequence for each region
+        //protected static bool _blnTestMemoryConsumption = true;
+
 
         public List<CRegion> InitialCrgLt { set; get; }
         public List<CRegion> LSCrgLt { set; get; }
@@ -152,7 +172,6 @@ namespace MorphingClass.CGeneralizationMethods
 
         protected void SetupBasic()
         {
-
             var pLSCPgLt = this.ObjCGeoLtLt[0].AsExpectedClass<CPolygon, object>().ToList();
             var pSSCPgLt = this.ObjCGeoLtLt[1].AsExpectedClass<CPolygon, object>().ToList();
 
@@ -197,7 +216,7 @@ namespace MorphingClass.CGeneralizationMethods
                 }
             }
 
-            //ssign the polygons as well as attributes from a featureLayer into regions, without considering costs
+            //assign the polygons as well as attributes from a featureLayer into regions, without considering costs
             this.LSCrgLt = GenerateCrgLt(pLSCPgLt, pSSCPgLt.Count, 
                 pObjValueLtLtLt[0], intLSTypeATIndex, intLSRegionNumATIndex, _TypePVDt, pRegionPVDt);
             this.SSCrgLt = GenerateCrgLt(pSSCPgLt, pSSCPgLt.Count, 
@@ -206,11 +225,11 @@ namespace MorphingClass.CGeneralizationMethods
             _intTypeSymbolDt = CToIpe.GetKeySymbolDt(_ParameterInitialize.pFLayerLt[0], pObjValueLtLtLt[0], intLSTypeATIndex);
 
 
-            using (var writer = new System.IO.StreamWriter(_ParameterInitialize.strSavePathBackSlash +
-                CHelpFunc.GetTimeStamp() + "_" + "AreaAggregation.txt", false))
-            {
-                writer.Write(_ParameterInitialize.strAreaAggregation);
-            }
+            //using (var writer = new System.IO.StreamWriter(_ParameterInitialize.strSavePathBackSlash +
+            //    CHelpFunc.GetTimeStamp() + "_" + "AreaAggregation.txt", false))
+            //{
+            //    writer.Write(_ParameterInitialize.strAreaAggregation);
+            //}
 
             //apply A* algorithm to each region
             this.InitialCrgLt = new List<CRegion>(pSSCPgLt.Count);
@@ -221,7 +240,32 @@ namespace MorphingClass.CGeneralizationMethods
             _intEndCount = this.SSCrgLt.Count;
 
             UpdateStartEnd();
+        }
 
+
+        protected void EndAffairs(int intNewStart)
+        {
+            if (CConstants.strRunContinuousGeneralizer != "")
+            {
+                using (var writer = new StreamWriter(
+                    @"C:\MyWork\DailyWork\ContinuousGeneralisation\RunContinuousGeneralizer\DirectoryPath.txt", false))
+                {
+                    //we save this path so that we can delte the folder in RunContinuousGeneralizer
+                    writer.WriteLine(CConstants.ParameterInitialize.strSavePath);
+                }
+
+                var proc = Process.GetCurrentProcess();
+                var dblMemoryMB = Convert.ToDouble(proc.PeakWorkingSet64) / 1048576; //bytes to MB
+                var strMemoryMB = string.Format("{0,15}", dblMemoryMB.ToString("0.000"));
+
+                using (var writer = new StreamWriter(
+                    @"C:\MyWork\DailyWork\ContinuousGeneralisation\RunContinuousGeneralizer\CallRecord.txt", true))
+                {
+                    writer.WriteLine(strMemoryMB);
+                }
+                proc.Kill();
+
+            }
         }
 
         #region Common
@@ -475,7 +519,7 @@ namespace MorphingClass.CGeneralizationMethods
 
 
         public static void SaveData(CStrObjLtDt StrObjLtDt, 
-            CParameterInitialize pParameterInitialize, string strMethod, int intQuitCount=0)
+            CParameterInitialize pParameterInitialize, string strMethod)
         {
             int intAtrNum = StrObjLtDt.Count;
             int intCrgNum = StrObjLtDt.Values.First().Count;
@@ -504,15 +548,20 @@ namespace MorphingClass.CGeneralizationMethods
 
             var objDataLtSS = new SortedSet<IList<object>>(pobjDataLtLt, new CAACCmp());
 
+            //save results under the same filename
+            string strResultFileName = CHelpFunc.GetTimeStamp() + "_" + strMethod + "_" + 
+                pParameterInitialize.strAreaAggregation + "_" + CConstants.strShapeConstraint;
+            //excel
             CHelpFuncExcel.ExportToExcel(objDataLtSS,
-                CHelpFunc.GetTimeStamp() + "_" + strMethod + "_" + pParameterInitialize.strAreaAggregation + "_" +
-                CConstants.strShapeConstraint + "_" + intQuitCount, pParameterInitialize.strSavePath, CAreaAgg_AStar.strKeyLt);
-            ExportForLatex(objDataLtSS, CAreaAgg_Base.strKeyLt, pParameterInitialize.strSavePath);
-            ExportIDOverEstimation(objDataLtSS, pParameterInitialize.strSavePath);
-            ExportStatistic(StrObjLtDt, pParameterInitialize.strSavePath);
+                strResultFileName, pParameterInitialize.strSavePath, CAreaAgg_AStar.strKeyLt);
+            //txt
+            ExportStatistic(StrObjLtDt, strResultFileName, pParameterInitialize.strSavePath);
+            ExportDetailsForLatex(objDataLtSS, CAreaAgg_Base.strKeyLt, strResultFileName, pParameterInitialize.strSavePath);
+            ExportIDOverEstimation(objDataLtSS, strResultFileName, pParameterInitialize.strSavePath);
+            
         }
 
-        public static void ExportStatistic(CStrObjLtDt StrObjLtDt, string strSavePath)
+        public static void ExportStatistic(CStrObjLtDt StrObjLtDt, string strName, string strSavePath)
         {
             string strData = "";
 
@@ -520,20 +569,18 @@ namespace MorphingClass.CGeneralizationMethods
             StrObjLtDt.TryGetValue("EstSteps", out objEstStepsLt);
             double dblLogEstStepsSum = 0;
             int intOverEstCount = 0;
-            //the capacity must be larger than 20
-            //because we set 1000,000 as the default value of "EstSteps"
-            var intEstStepsCountlt = new List<int>(21);  
+            
+            var intEstStepsCountlt = new List<int>(21); //make a sufficient capacity 
             intEstStepsCountlt.EveryElementNew();
             for (int i = 0; i < objEstStepsLt.Count; i++)
             {
                 double dblEstSteps = Convert.ToDouble(objEstStepsLt[i]);
                 double dblLogEstSteps = 0;
-                if (dblEstSteps>10)
+                if (dblEstSteps > 0)
                 {
-                    dblLogEstSteps = Math.Log(dblEstSteps+1, 2);
-                    dblLogEstSteps= Math.Log(10000, 2);
+                    dblLogEstSteps = Math.Log(dblEstSteps + 1, 2);
                     dblLogEstStepsSum += dblLogEstSteps;
-                }                
+                }
                 intEstStepsCountlt[Convert.ToInt16(dblLogEstSteps)]++;
                 if (dblEstSteps > 1)
                 {
@@ -548,7 +595,7 @@ namespace MorphingClass.CGeneralizationMethods
             strData += GetSumWithSpecifiedStyle(StrObjLtDt, "CostType", "{0,4}", 1);
             strData += GetSumWithSpecifiedStyle(StrObjLtDt, "CostComp", "{0,4}", 1);
             strData += GetSumWithSpecifiedStyle(StrObjLtDt, "Cost", "{0,4}", 1);
-            strData += GetSumWithSpecifiedStyle(StrObjLtDt, "Time(ms)", "{0,4}", 1, 60000);  //all the time, minuts in statistics
+            strData += GetSumWithSpecifiedStyle(StrObjLtDt, "Time(ms)", "{0,4}", 1, 60000);  //all the time, minutes in statistics
             //strData += ;
 
             //to generate coordinates like (1,6), where x is for the index of overestimation factor, 
@@ -558,11 +605,16 @@ namespace MorphingClass.CGeneralizationMethods
                 strData += "\n(" + i + "," + intEstStepsCountlt[i] + ")";
             }
 
-            using (var writer = new StreamWriter(strSavePath + "\\" + CHelpFunc.GetTimeStamp() + "_" + 
-                "StatisticsForLatex" + ".txt", true))
+            using (var writer = new StreamWriter(strSavePath + "\\" + strName + ".txt", true))
             {
                 writer.Write(strData);
             }
+
+            //using (var writer = new StreamWriter(strSavePath + "\\" + CHelpFunc.GetTimeStamp() + "_" + 
+            //    "StatisticsForLatex" + ".txt", true))
+            //{
+            //    writer.Write(strData);
+            //}
         }
 
         private static string GetSumWithSpecifiedStyle(CStrObjLtDt StrObjLtDt, 
@@ -601,7 +653,8 @@ namespace MorphingClass.CGeneralizationMethods
             return strData;
         }
 
-        public static void ExportForLatex(IEnumerable<IList<object>> objDataLtEb, IEnumerable<object> objHeadEb, string strSavePath)
+        public static void ExportDetailsForLatex(IEnumerable<IList<object>> objDataLtEb, 
+            IEnumerable<object> objHeadEb, string strName, string strSavePath)
         {
             //fetch some values that we want to exprot for latex
             IList<string> strFieldLt = new List<string>
@@ -636,7 +689,7 @@ namespace MorphingClass.CGeneralizationMethods
             //{index[,length][:formatString]}; 
             //length: If positive, the parameter is right-aligned; if negative, it is left-aligned.
             //const string format = "{i,j}"; i: the i-th argument, j:j positions
-            string strData = "";
+            string strData = "\n\n\n";  //make some gap lines
 
             foreach (var objDataLt in objDataLtEb)
             {
@@ -649,7 +702,7 @@ namespace MorphingClass.CGeneralizationMethods
                     {
                         strData += (" & " + string.Format("{0,3}", objDataLt[intIndex].ToString()));
                     }
-                    else if (i == 4 || i == 4 || i == 5 || i == 6 || i == 7)
+                    else if (i == 4 || i == 5 || i == 6 || i == 7)
                     {
                         strData += (" & " + string.Format("{0,7}", Convert.ToDouble(objDataLt[intIndex]).ToString("0.000")));
                     }
@@ -657,33 +710,34 @@ namespace MorphingClass.CGeneralizationMethods
                 // for time
                 strData += (" & " + string.Format("{0,5}", 
                     (Convert.ToDouble(objDataLt[intIndexLt.GetLastT()]) / 1000).ToString("0.0")));
-                strData += ("\\" + "\\" + "\n");
+                strData += ("\\" + "\\" + "\n"); // add \\ at the end of a line, which means line break in latex
             }
 
-            using (var writer = new StreamWriter(strSavePath + "\\" + CHelpFunc.GetTimeStamp() + "_" + 
-                "DetailsForLatex" + ".txt", true))
+            using (var writer = new StreamWriter(strSavePath + "\\" + strName + ".txt", true))
             {
                 writer.Write(strData);
             }
         }
 
-        private static void ExportIDOverEstimation(IEnumerable<IList<object>> objDataLtEb, string strSavePath)
+        private static void ExportIDOverEstimation(IEnumerable<IList<object>> objDataLtEb, string strName, string strSavePath)
         {
-            string strData = "";
+            string strDataID = "\n\n\n";  //make some gap lines
+            string strData = "";            
             foreach (var objDataLt in objDataLtEb)
             {
                 if (Convert.ToDouble(objDataLt[3]) > 0)
                 {
-                    strData += "intSpecifiedIDLt.Add(" + objDataLt[0] + ");\n";
+                    strDataID += objDataLt[0] + "\n";
+                    strData += "intSpecifiedIDLt.Add(" + objDataLt[0] + ");\n";                    
                 }
                 else
                 {
                     break;
                 }
             }
-            using (var writer = new StreamWriter(strSavePath + "\\" + CHelpFunc.GetTimeStamp() + "_" + 
-                "FormalizedOverEstimationID" + ".txt", true))
+            using (var writer = new StreamWriter(strSavePath + "\\" + strName + ".txt", true))
             {
+                writer.Write(strDataID);
                 writer.Write(strData);
             }
         }
@@ -827,9 +881,9 @@ namespace MorphingClass.CGeneralizationMethods
                 else
                 {
                     //get the new polygon
-                    newIpgLt.Add(newCrg.AggedCphs.valResult.JudgeAndMergeCpgSSToIpg());                    
-                    TypeIndexLt.Add(newCrg.GetCphTypeIndex(newCrg.AggedCphs.valResult));
-                    passiveIptLt.Add(newCrg.AggedCphs.valPassive.JudgeAndMergeCpgSSToIpg());
+                    newIpgLt.Add(newCrg.AggCphs.valResult.JudgeAndMergeCpgSSToIpg());                    
+                    TypeIndexLt.Add(newCrg.GetCphTypeIndex(newCrg.AggCphs.valResult));
+                    passiveIptLt.Add(newCrg.AggCphs.valPassive.JudgeAndMergeCpgSSToIpg());
 
                     CrgSS.Add(newCrg);
                 }
@@ -974,7 +1028,30 @@ List<string> strLayerNameLt,
             return strLayerNameLt;
         }
 
+        /// <summary>
+        /// Forget sequence so that we can release the memory
+        /// </summary>
+        /// <param name="lscrg"></param>
+        /// <param name="sscrg"></param>
+        /// <param name="blnTesting"></param>
+        /// <remarks>This function has little influence, e.g., 0.001 MB for a region with 32 polygons and 74 adjacencies</remarks>
+        protected static void CheckIfForgetSequence(CRegion lscrg, CRegion sscrg, bool blnTesting)
+        {
+            //var lngmemorycheck1 = GC.GetTotalMemory(true);  //for testing
+            //var lngmemorycheck2 = GC.GetTotalMemory(true);  //for testing
 
+            if (blnTesting == true)
+            {
+                lscrg.AdjCorrCphsSD = null;
+                lscrg.child = null;
+
+                sscrg.AdjCorrCphsSD = null;
+                sscrg.parent = null;
+            }
+
+            //var lngmemory = GC.GetTotalMemory(true);                                           //for testing
+            //var lngmemorycomsuption = CHelpFunc.GetConsumedMemoryInMB(true, lngmemorycheck2);  //for testing
+        }
 
         #endregion
     }

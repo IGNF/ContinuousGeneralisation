@@ -51,10 +51,14 @@ namespace MorphingClass.CGeneralizationMethods
             CRegion._lngEstCountEdgeLength = 0;
             CRegion._lngEstCountEqual = 0;
 
-            for (int i = _intStart; i < _intEnd; i++)
+            for (int i = _intStart; i < _intEndCount; i++)
             {
                 Greedy(LSCrgLt[i], SSCrgLt[i], this.StrObjLtDt, this._adblTD, _ParameterInitialize.strAreaAggregation);
+                CheckIfForgetSequence(LSCrgLt[i], SSCrgLt[i], _blnTesting);
+                CHelpFunc.Displaytspb(i - _intStart + 1, _intEndCount - _intStart);
             }
+
+            EndAffairs(_intEndCount);
 
         }
 

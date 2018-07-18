@@ -34,6 +34,7 @@
             this.btnSaveInterpolation = new System.Windows.Forms.Button();
             this.pbScale = new System.Windows.Forms.ProgressBar();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.txtMultiResults = new System.Windows.Forms.TextBox();
             this.btnDetailToIpe = new System.Windows.Forms.Button();
             this.btnMultiResults = new System.Windows.Forms.Button();
             this.txtProportion = new System.Windows.Forms.TextBox();
@@ -85,7 +86,6 @@
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.timerAdd = new System.Windows.Forms.Timer(this.components);
-            this.txtMultiResults = new System.Windows.Forms.TextBox();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -164,6 +164,15 @@
             this.groupBox2.TabIndex = 74;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Display";
+            // 
+            // txtMultiResults
+            // 
+            this.txtMultiResults.Location = new System.Drawing.Point(116, 119);
+            this.txtMultiResults.Name = "txtMultiResults";
+            this.txtMultiResults.Size = new System.Drawing.Size(108, 20);
+            this.txtMultiResults.TabIndex = 83;
+            this.txtMultiResults.Text = "11";
+            this.txtMultiResults.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // btnDetailToIpe
             // 
@@ -523,7 +532,7 @@
             // 
             // txtNodes
             // 
-            this.txtNodes.Location = new System.Drawing.Point(191, 87);
+            this.txtNodes.Location = new System.Drawing.Point(191, 19);
             this.txtNodes.Name = "txtNodes";
             this.txtNodes.Size = new System.Drawing.Size(77, 20);
             this.txtNodes.TabIndex = 99;
@@ -684,15 +693,6 @@
             // 
             this.timerAdd.Interval = 500;
             this.timerAdd.Tick += new System.EventHandler(this.timerAdd_Tick);
-            // 
-            // txtMultiResults
-            // 
-            this.txtMultiResults.Location = new System.Drawing.Point(116, 119);
-            this.txtMultiResults.Name = "txtMultiResults";
-            this.txtMultiResults.Size = new System.Drawing.Size(108, 20);
-            this.txtMultiResults.TabIndex = 83;
-            this.txtMultiResults.Text = "11";
-            this.txtMultiResults.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // FrmAreaAgg
             // 
