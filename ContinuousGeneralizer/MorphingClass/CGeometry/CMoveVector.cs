@@ -32,7 +32,6 @@ namespace MorphingClass.CGeometry
         public double DistanceTo(CMoveVector other)
         {
             return CGeoFunc.CalDis(this, other);
-            //blabla
         }
 
 
