@@ -13,9 +13,9 @@ namespace MorphingClass.CGeometry
     public class CPatch : CLandCoverBase
     {
         private static int _intStaticGID;
-        public static CCmpCPatch_CpgGID pCmpCPatch_CpgGID = new CCmpCPatch_CpgGID();  //this variable should be used for CPatch itself
-        public static CCmpCPatch_Area_CphGID pCmpCPatch_Area_CphGID = new CCmpCPatch_Area_CphGID();  //this variable should be used for CPatch itself
-        public static CCmpCPatch_Compactness_CphGID pCmpCPatch_Compactness_CphGID = new CCmpCPatch_Compactness_CphGID();
+        public static CCmpCph_CpgGID pCmpCPatch_CpgGID = new CCmpCph_CpgGID();  //this variable should be used for CPatch itself
+        public static CCmpCph_Area_CphGID pCmpCPatch_Area_CphGID = new CCmpCph_Area_CphGID();  //this variable should be used for CPatch itself
+        public static CCmpCph_Comp_CphGID pCmpCPatch_Compactness_CphGID = new CCmpCph_Comp_CphGID();
 
         private IPolygon4 _pPolygon;
         public IPolygon4 pPolygon

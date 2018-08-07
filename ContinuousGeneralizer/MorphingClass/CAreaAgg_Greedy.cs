@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -51,19 +52,40 @@ namespace MorphingClass.CGeneralizationMethods
             CRegion._lngEstCountEdgeLength = 0;
             CRegion._lngEstCountEqual = 0;
 
+            //we must run AStar first
+            var strLineLt = File.ReadLines(_ParameterInitialize.strMxdPathBackSlash + "AStar200000_" 
+                + _ParameterInitialize.strAreaAggregation + "_"+ CConstants.strShapeConstraint+ ".txt").ToList();
+            var EstStepsCostVPDt = new Dictionary<int, CValPair<int, double>>(strLineLt.Count-1);
+            for (int i = 1; i < strLineLt.Count; i++) //the first line is for headings
+            {
+                var strDetail = strLineLt[i].Split(new char[] { ' ', '\t' }, 
+                    StringSplitOptions.RemoveEmptyEntries); //use white space to split
+                EstStepsCostVPDt.Add(Convert.ToInt32(strDetail[0]), 
+                    new CValPair<int, double>(Convert.ToInt32(strDetail[1]), Convert.ToDouble(strDetail[2])));
+            }
+
+
+
+
+              //@"C:\MyWork\DailyWork\ContinuousGeneralisation\RunContinuousGeneralizer\CallRecord.txt").Last();
+
             for (int i = _intStart; i < _intEndCount; i++)
             {
-                Greedy(LSCrgLt[i], SSCrgLt[i], this.StrObjLtDt, this._adblTD, _ParameterInitialize.strAreaAggregation);
+                Greedy(LSCrgLt[i], SSCrgLt[i], this.StrObjLtDt, this._adblTD,
+                    EstStepsCostVPDt, _ParameterInitialize.strAreaAggregation);
                 CheckIfForgetSequence(LSCrgLt[i], SSCrgLt[i], _blnTesting);
                 CHelpFunc.Displaytspb(i - _intStart + 1, _intEndCount - _intStart);
             }
 
+            _strLineLt = strLineLt;
+            _EstStepsCostVPDt = EstStepsCostVPDt;
             EndAffairs(_intEndCount);
 
         }
 
 
-        public CRegion Greedy(CRegion LSCrg, CRegion SSCrg, CStrObjLtDt StrObjLtDt, double[,] adblTD, string strAreaAggregation)
+        public CRegion Greedy(CRegion LSCrg, CRegion SSCrg, CStrObjLtDt StrObjLtDt, double[,] adblTD,
+            Dictionary<int, CValPair<int, double>> EstStepsCostVPDt, string strAreaAggregation)
         {
             var ExistingCorrCphsSD0 = LSCrg.SetInitialAdjacency();  //also count the number of edges
 
@@ -89,7 +111,8 @@ namespace MorphingClass.CGeneralizationMethods
             try
             {
                 pStopwatchLast.Restart();
-                var ExistingCorrCphsSD = new SortedDictionary<CCorrCphs, CCorrCphs>(ExistingCorrCphsSD0, ExistingCorrCphsSD0.Comparer);
+                var ExistingCorrCphsSD = new SortedDictionary<CCorrCphs, CCorrCphs>
+                    (ExistingCorrCphsSD0, ExistingCorrCphsSD0.Comparer);
                 LSCrg.cenumColor = CEnumColor.white;
 
                 resultcrg = Compute(LSCrg, SSCrg, SSCrg.GetSoloCphTypeIndex(), 
@@ -101,14 +124,24 @@ namespace MorphingClass.CGeneralizationMethods
             }
             lngTime = pStopwatchLast.ElapsedMilliseconds + lngTimeOverHead;
 
-
-            StrObjLtDt.SetLastObj("EstSteps", 0);
+            
             Console.WriteLine("d: " + resultcrg.d
                 + "            Type: " + resultcrg.dblCostExactType
                 + "            Compactness: " + resultcrg.dblCostExactComp);
 
-            //int intExploredRegionAll = CRegion._intStaticGID - CRegion._intStartStaticGIDLast;  //we don't need to +1 because +1 is already included in _intStaticGID
-
+            CValPair<int, double> outEstStepsCostVP;
+            EstStepsCostVPDt.TryGetValue(LSCrg.ID, out outEstStepsCostVP);
+            if (outEstStepsCostVP.val1 == 0 &&
+    CCmpMethods.CmpDbl_CoordVerySmall(outEstStepsCostVP.val2, resultcrg.d) == 0)
+            {
+                StrObjLtDt.SetLastObj("EstSteps", 0); //optimal solutions
+            }
+            else
+            {
+                StrObjLtDt.SetLastObj("EstSteps", 100); //not sure, at least feasible solutions
+            }
+            //we don't need to +1 because +1 is already included in _intStaticGID
+            //int intExploredRegionAll = CRegion._intStaticGID - CRegion._intStartStaticGIDLast; 
             StrObjLtDt.SetLastObj("#Edges", CRegion._intEdgeCount);
             StrObjLtDt.SetLastObj("Time_F(ms)", lngTime);
             StrObjLtDt.SetLastObj("Time_L(ms)", lngTime);

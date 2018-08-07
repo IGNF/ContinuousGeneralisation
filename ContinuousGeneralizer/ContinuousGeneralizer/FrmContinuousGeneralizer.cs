@@ -53,7 +53,7 @@ namespace ContinuousGeneralizer
             //CHelpFunc.strDataFolderName = "JiangxiOneCounty";
             //CHelpFunc.strDataFolderName = "railÃ·¼¯ÏßTest";
             //CHelpFunc.strPath = "C:\\Study\\Data\\Morphing Data\\Rail Data\\" 
-            //+ CHelpFunc.strDataFolderName + "\\";
+            //+ CHelpFunc.strDataFolderName;
 
             //CHelpFunc.strDataFolderName = "MainlandChina-Yunnan";
             //CHelpFunc.strDataFolderName = "MainlandChina-Guangxi";
@@ -67,13 +67,13 @@ namespace ContinuousGeneralizer
             //CHelpFunc.strDataFolderName = "CT_Common";
             //CHelpFunc.strPath =
             //"C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\Administrative Boundary\\"
-            //+ CHelpFunc.strDataFolderName + "\\";
+            //+ CHelpFunc.strDataFolderName;
 
             //CHelpFunc.strDataFolderName = "LinearMorphingBothInjected";
             //CHelpFunc.strDataFolderName = "CompatibleTriangulation3";
             //CHelpFunc.strPath =
             //"C:\\Study\\Data\\Morphing Data\\Representation In Article\\ContinuousGeneralizationOfAdministrativeBoundariesBasedonMorphing\\" 
-            //+ CHelpFunc.strDataFolderName + "\\";
+            //+ CHelpFunc.strDataFolderName;
 
             CHelpFunc.strDataFolderName = "AreaAggregation";
             //CHelpFunc.strDataFolderName = "AreaAggregation-664-easy";
@@ -87,7 +87,7 @@ namespace ContinuousGeneralizer
             //CHelpFunc.strDataFolderName = "AreaAggregation-Mostpatches";
             CHelpFunc.strPath =
     "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\AreaAggregation\\"
-    + CHelpFunc.strDataFolderName + "\\";
+    + CHelpFunc.strDataFolderName;
 
             //CHelpFunc.strDataFolderName = "France";
             //CHelpFunc.strDataFolderName = "France_FourTowns";
@@ -117,7 +117,7 @@ namespace ContinuousGeneralizer
             //CHelpFunc.strDataFolderName = "France_TwoSquares_Overlap";
             //CHelpFunc.strPath =
             //"C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\BuildingGrowing\\"
-            //+ CHelpFunc.strDataFolderName + "\\";
+            //+ CHelpFunc.strDataFolderName;
 
             //CHelpFunc.strDataFolderName = "An Approximate Morphing between Polylines";
             //CHelpFunc.strPath = 
@@ -126,7 +126,7 @@ namespace ContinuousGeneralizer
             //        private static string _strDataFolderName = "bayern20171011";
 
             //        CHelpFunc.strPath =
-            //"C:\\MyWork\\Study_Archive\\Data\\PointData\\PointData\\" + _strDataFolderName + "\\";
+            //"C:\\MyWork\\Study_Archive\\Data\\PointData\\PointData\\" + _strDataFolderName;
         }
 
 
@@ -172,7 +172,7 @@ namespace ContinuousGeneralizer
 
             //frmCurrent.btnRun_Click(sender, e);
             //frmCurrent.btnGreedy_Click(sender, e);
-            frmCurrent.btnRunILP_Click(sender, e);
+            //frmCurrent.btnRunILP_Click(sender, e);
             //frmCurrent.btn020_Click(sender, e);
             //frmCurrent.btnMultiResults_Click(sender, e);
 
@@ -296,7 +296,7 @@ namespace ContinuousGeneralizer
 
             SetPathForData();
             openMapDoc.OnCreate(m_controlsSynchronizer.MapControl.Object);
-            openMapDoc.OnClickAutomatic(CHelpFunc.strPath + CHelpFunc.strDataFolderName + ".mxd");
+            openMapDoc.OnClickAutomatic(CHelpFunc.strPath + "\\" + CHelpFunc.strDataFolderName + ".mxd");
 
            
         }

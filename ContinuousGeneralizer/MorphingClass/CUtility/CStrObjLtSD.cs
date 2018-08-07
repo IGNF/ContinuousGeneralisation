@@ -20,7 +20,7 @@ namespace MorphingClass.CUtility
 {
     public class CStrObjLtDt: Dictionary<string ,List<object>>
     {
-        public CStrObjLtDt(IEnumerable<string> strKeyEb, int intCount=0 )
+        public CStrObjLtDt(IEnumerable<string> strKeyEb, int intCount = 0)
         {
             var strKeyEt = strKeyEb.GetEnumerator();
             while (strKeyEt.MoveNext())

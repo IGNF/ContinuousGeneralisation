@@ -152,7 +152,7 @@ namespace MorphingClass.CUtility
     //}
 
 
-    public class CCmpCPatch_Area_CphGID : Comparer<CPatch>
+    public class CCmpCph_Area_CphGID : Comparer<CPatch>
     {
         public override int Compare(CPatch cph1, CPatch cph2)
         {
@@ -165,7 +165,7 @@ namespace MorphingClass.CUtility
         }
     }
 
-    public class CCmpCPatch_Compactness_CphGID : Comparer<CPatch>
+    public class CCmpCph_Comp_CphGID : Comparer<CPatch>
     {
         public override int Compare(CPatch cph1, CPatch cph2)
         {
@@ -179,7 +179,7 @@ namespace MorphingClass.CUtility
         }
     }
 
-    public class CCmpCPatch_CpgGID : Comparer<CPatch>
+    public class CCmpCph_CpgGID : Comparer<CPatch>
     {
         public override int Compare(CPatch cph1, CPatch cph2)
         {
@@ -208,23 +208,31 @@ namespace MorphingClass.CUtility
     /// <summary>
     /// we assume that there will be no more than one CPatch that contains the same set of polygons
     /// </summary>
-    public class CCmpCRegion_CphGIDTypeIndex : Comparer<CRegion>
+    public class CCmpCrg_CphGIDTypeIndex : Comparer<CRegion>
     {
         public override int Compare(CRegion crg1, CRegion crg2)
         {
-            return CCmpMethods.CmpCRegion_CphGIDTypeIndex (crg1 ,crg2);
+            return CCmpMethods.CmpCrg_CphGIDTypeIndex (crg1 ,crg2);
         }
     }
 
-    public class CCmpCRegion_CphGID : Comparer<CRegion>
+    public class CCmpCrg_nmID : Comparer<CRegion>
     {
         public override int Compare(CRegion crg1, CRegion crg2)
         {
-            return CCmpMethods.CmpCRegion_CphGIDTypeIndex(crg1, crg2);
+            return CCmpMethods.CmpCrg_nmID(crg1, crg2);
         }
     }
 
-    public class CCmpCRegion_Cost_CphGIDTypeIndex : Comparer<CRegion>
+    public class CCmpCrg_CphGID : Comparer<CRegion>
+    {
+        public override int Compare(CRegion crg1, CRegion crg2)
+        {
+            return CCmpMethods.CmpCrg_CphGIDTypeIndex(crg1, crg2);
+        }
+    }
+
+    public class CCmpCrg_Cost_CphGIDTypeIndex : Comparer<CRegion>
     {
         public override int Compare(CRegion crg1, CRegion crg2)
         {
@@ -232,13 +240,13 @@ namespace MorphingClass.CUtility
             int intResult = CCmpMethods.CmpDbl_ConstVerySmall(crg1.d, crg2.d);
             if (intResult == 0)
             {
-                intResult = CCmpMethods.CmpCRegion_CphGIDTypeIndex(crg1, crg2);
+                intResult = CCmpMethods.CmpCrg_CphGIDTypeIndex(crg1, crg2);
             }
             return intResult;
         }
     }
 
-    public class CCmpCRegion_MinArea_CphGIDTypeIndex : Comparer<CRegion>
+    public class CCmpCrg_MinArea_CphGIDTypeIndex : Comparer<CRegion>
     {
         public override int Compare(CRegion crg1, CRegion crg2)
         {
@@ -247,13 +255,13 @@ namespace MorphingClass.CUtility
                 (crg1.GetCphCol().First().dblArea, crg2.GetCphCol().First().dblArea);
             if (intResult == 0)
             {
-                intResult = CCmpMethods.CmpCRegion_CphGIDTypeIndex(crg1, crg2);
+                intResult = CCmpMethods.CmpCrg_CphGIDTypeIndex(crg1, crg2);
             }
             return intResult;
         }
     }
 
-    public class CCmpCRegion_CostExact_CphGIDTypeIndex : Comparer<CRegion>
+    public class CCmpCrg_CostExact_CphGIDTypeIndex : Comparer<CRegion>
     {
         public override int Compare(CRegion crg1, CRegion crg2)
         {
@@ -261,13 +269,13 @@ namespace MorphingClass.CUtility
             //int intResult = crg1.dblCostExact.CompareTo(crg2.dblCostExact);
             if (intResult == 0)
             {
-                intResult = CCmpMethods.CmpCRegion_CphGIDTypeIndex(crg1, crg2);
+                intResult = CCmpMethods.CmpCrg_CphGIDTypeIndex(crg1, crg2);
             }
             return intResult;
         }
     }
 
-    //public class CCmpCRegion_CompareDblPreLocateEqual : Comparer<CRegion>
+    //public class CCmpCrg_CompareDblPreLocateEqual : Comparer<CRegion>
     //{
     //    public override int Compare(CRegion crg1, CRegion crg2)
     //    {

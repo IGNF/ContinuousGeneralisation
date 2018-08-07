@@ -186,7 +186,7 @@ namespace MorphingClass.CUtility
             return CmpDblRange(dbl1, dbl2, CConstants.dblVerySmallPower4);
         }
 
-        public static int CmpCRegion_CphGIDTypeIndex(CRegion crg1, CRegion crg2)
+        public static int CmpCrg_CphGIDTypeIndex(CRegion crg1, CRegion crg2)
         {
             int intResult = crg1.GetCphCount().CompareTo(crg2.GetCphCount());
 
@@ -211,6 +211,29 @@ namespace MorphingClass.CUtility
                 intResult = CCmpMethods.CmpWithSameElements(crg1.GetCphTypeIndexCol(), crg2.GetCphTypeIndexCol(), 
                     intTypeIndex => intTypeIndex);
             }
+            return intResult;
+        }
+
+
+        public static int CmpCrg_nmID(CRegion crg1, CRegion crg2)
+        {
+            int intResult = crg1.GetCphCount().CompareTo(crg2.GetCphCount());
+
+            if (intResult == 0)
+            {
+                intResult = crg1.GetAdjCount().CompareTo(crg2.GetAdjCount());
+            }
+
+            if (intResult == 0)
+            {
+                intResult = crg1.ID.CompareTo(crg2.ID);
+            }
+
+            if (intResult == 0)
+            {
+                throw new ArgumentOutOfRangeException("this should not happen!");
+            }
+
             return intResult;
         }
 

@@ -39,23 +39,23 @@ namespace MorphingClass.CUtility
 //        public static int _intStaticTest;
 
 //        //public LinkedList<int> _IDLk;  //ID of the Region, where the ID is a LinkedList
-//        public static CCmpCRegion_Cost_CphGIDTypeIndex pCmpCRegion_Cost_CphGIDTypeIndex
-//            = new CCmpCRegion_Cost_CphGIDTypeIndex();  //this variable should be used for the queue Q
+//        public static CCmpCrg_Cost_CphGIDTypeIndex pCmpCrg_Cost_CphGIDTypeIndex
+//            = new CCmpCrg_Cost_CphGIDTypeIndex();  //this variable should be used for the queue Q
 
 //        //this comparer should be used for integrate the sequences for output 
-//        public static CCmpCRegion_MinArea_CphGIDTypeIndex pCmpCRegion_MinArea_CphGIDTypeIndex
-//            = new CCmpCRegion_MinArea_CphGIDTypeIndex();
+//        public static CCmpCrg_MinArea_CphGIDTypeIndex pCmpCrg_MinArea_CphGIDTypeIndex
+//            = new CCmpCrg_MinArea_CphGIDTypeIndex();
 
 //        //this comparer should be used for integrate the sequences for output 
-//        public static CCmpCRegion_CostExact_CphGIDTypeIndex pCmpCRegion_CostExact_CphGIDTypeIndex
-//            = new CCmpCRegion_CostExact_CphGIDTypeIndex();
+//        public static CCmpCrg_CostExact_CphGIDTypeIndex pCmpCrg_CostExact_CphGIDTypeIndex
+//            = new CCmpCrg_CostExact_CphGIDTypeIndex();
 
 //        //this comparer should be used for checking existing Crgs
-//        public static CCmpCRegion_CphGIDTypeIndex pCmpCRegion_CphGIDTypeIndex = new CCmpCRegion_CphGIDTypeIndex();
+//        public static CCmpCrg_CphGIDTypeIndex pCmpCrg_CphGIDTypeIndex = new CCmpCrg_CphGIDTypeIndex();
 
 //        //this comparer should be used for counting uncolored Crgs
-//        public static CCmpCRegion_CphGID pCmpCRegion_CphGID
-//            = new CCmpCRegion_CphGID();  //this variable should be used for CRegion itself
+//        public static CCmpCrg_CphGID pCmpCrg_CphGID
+//            = new CCmpCrg_CphGID();  //this variable should be used for CRegion itself
 
 
 //        public SortedDictionary<CCorrCphs, CCorrCphs> AdjCorrCphsSD { get; set; }  //compare GID of CorrCphs
@@ -780,7 +780,7 @@ namespace MorphingClass.CUtility
 //                if (intResult == -1)
 //                {
 //                    //from the idea of A* algorithm, we know that outcrg must be in Q
-//                    //var Q = new SortedSet<CRegion>(CRegion.pCmpCRegion_Cost_CphGIDTypeIndex);
+//                    //var Q = new SortedSet<CRegion>(CRegion.pCmpCrg_Cost_CphGIDTypeIndex);
 //                    //there is no decrease key function for SortedSet, so we have to remove it and later add it again
 //                    if (Q.Remove(outcrg) == true)
 //                    {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -54,9 +55,22 @@ namespace MorphingClass.CGeneralizationMethods
         public void AreaAggregation(List<int> intSpecifiedIDLt = null)
         {
             SetupBasic();
-            
-            int intOOMSetting = 0; //OOM: Out Of Memory
-            int intOOMAll = 0;
+
+            //int intOOMSet = 0; //OOM: Out Of Memory
+            //int intOOMSolve = 0;
+            //int intOOTSet = 0; //OOT: Out Of Time
+            //int intOOTSolve = 0;
+            //int intCplexError3019 = 0;
+            //int intOtherErrors = 0;
+            string strOtherErrors = "Other Errors:\n";
+
+            var CrgOOMSetSS = new SortedSet<CRegion>(CRegion.pCmpCrg_nmID);
+            var CrgOOMSolveSS = new SortedSet<CRegion>(CRegion.pCmpCrg_nmID);
+            var CrgOOTSetSS = new SortedSet<CRegion>(CRegion.pCmpCrg_nmID);
+            var CrgOOTSolveSS = new SortedSet<CRegion>(CRegion.pCmpCrg_nmID);
+            var CrgCplexError3019SS = new SortedSet<CRegion>(CRegion.pCmpCrg_nmID);
+            var CrgOtherErrorsSS = new SortedSet<CRegion>(CRegion.pCmpCrg_nmID);
+
             CRegion._lngEstCountEdgeNumber = 0;
             CRegion._lngEstCountEdgeLength = 0;
             CRegion._lngEstCountEqual = 0;
@@ -65,8 +79,9 @@ namespace MorphingClass.CGeneralizationMethods
             {
                 for (int i = _intStart; i < _intEndCount; i++)
                 {
-                    ILP(LSCrgLt[i], SSCrgLt[i], this.StrObjLtDt, this._adblTD,
-                        _ParameterInitialize.strAreaAggregation, ref intOOMSetting, ref intOOMAll);
+                    ILP(LSCrgLt[i], SSCrgLt[i], this.StrObjLtDt, this._adblTD, _ParameterInitialize.strAreaAggregation,
+                        ref CrgOOMSetSS, ref CrgOOMSolveSS, ref CrgOOTSetSS, ref CrgOOTSolveSS, ref CrgCplexError3019SS,
+                        ref CrgOtherErrorsSS, ref strOtherErrors);
                     CHelpFunc.Displaytspb(i - _intStart + 1, _intEndCount - _intStart);
                 }
             }
@@ -75,24 +90,69 @@ namespace MorphingClass.CGeneralizationMethods
                 for (int i = 0; i < intSpecifiedIDLt.Count; i++)
                 {
                     ILP(LSCrgLt[intSpecifiedIDLt[i]], SSCrgLt[intSpecifiedIDLt[i]], this.StrObjLtDt, this._adblTD,
-                        _ParameterInitialize.strAreaAggregation, ref intOOMSetting, ref intOOMAll);
+                        _ParameterInitialize.strAreaAggregation,
+                        ref CrgOOMSetSS, ref CrgOOMSolveSS, ref CrgOOTSetSS, ref CrgOOTSolveSS, ref CrgCplexError3019SS,
+                        ref CrgOtherErrorsSS, ref strOtherErrors);
                     CHelpFunc.Displaytspb(i + 1, intSpecifiedIDLt.Count);
                 }
             }
 
             EndAffairs(_intEndCount);
 
-            Console.WriteLine("\nOOM during setting: " + intOOMSetting);
-            Console.WriteLine("total OOM during solving: " + intOOMAll);
+            Console.WriteLine();
+            Console.WriteLine("OOM during setting and solving: " + CrgOOMSetSS.Count + "   " + CrgOOMSolveSS.Count);
+            Console.WriteLine("OOT during setting and solving: " + CrgOOTSetSS.Count + "   " + CrgOOTSolveSS.Count);
+            Console.WriteLine("CPLEX Error  3019: Failure to solve MIP subproblem: " + CrgCplexError3019SS.Count);
+            Console.WriteLine(strOtherErrors);
+
+
+            //strData += string.Format("{0,3}", objDataLt[intIndexLt[0]]);
+            string strData = "OOM during setting:\n";
+            foreach (var crg in CrgOOMSetSS)
+            {
+                strData += string.Format("{0,4}{1,4}{2,4}\n", crg.ID, crg.GetCphCount(), crg.GetAdjCount());
+            }
+            strData += "\n\nOOM during solving:\n";
+            foreach (var crg in CrgOOMSolveSS)
+            {
+                strData += string.Format("{0,4}{1,4}{2,4}\n", crg.ID, crg.GetCphCount(), crg.GetAdjCount());
+            }
+            strData += "\n\nOOT during setting:\n";
+            foreach (var crg in CrgOOTSetSS)
+            {
+                strData += string.Format("{0,4}{1,4}{2,4}\n", crg.ID, crg.GetCphCount(), crg.GetAdjCount());
+            }
+            strData += "\n\nOOT during solving:\n";
+            foreach (var crg in CrgOOTSolveSS)
+            {
+                strData += string.Format("{0,4}{1,4}{2,4}\n", crg.ID, crg.GetCphCount(), crg.GetAdjCount());
+            }
+            strData += "\n\nCPLEX Error  3019: Failure to solve MIP subproblem:\n";
+            foreach (var crg in CrgCplexError3019SS)
+            {
+                strData += string.Format("{0,4}{1,4}{2,4}\n", crg.ID, crg.GetCphCount(), crg.GetAdjCount());
+            }
+
+            strData += "\n\n" + strOtherErrors;
+
+            using (var writer = new StreamWriter(_ParameterInitialize.strSavePathBackSlash +
+                CHelpFunc.GetTimeStampWithPrefix() + "ILP" + Convert.ToInt32(this.dblTimeLimit) + "_FailingNum.txt", true))
+            {
+                writer.WriteLine("OOM during setting and solving: " + CrgOOMSetSS.Count + "   " + CrgOOMSolveSS.Count);
+                writer.WriteLine("OOT during setting and solving: " + CrgOOTSetSS.Count + "   " + CrgOOTSolveSS.Count);
+                writer.WriteLine("CPLEX Error  3019: Failure to solve MIP subproblem: " + CrgCplexError3019SS.Count);
+                writer.Write("\n\n");
+                writer.Write(strData);
+            }
         }
 
 
 
-        public CRegion ILP(CRegion LSCrg, CRegion SSCrg, CStrObjLtDt StrObjLtDt, 
-            double[,] adblTD, string strAreaAggregation, ref int intOOMSetting, ref int intOOMAll)
+        public CRegion ILP(CRegion LSCrg, CRegion SSCrg, CStrObjLtDt StrObjLtDt,
+            double[,] adblTD, string strAreaAggregation,
+            ref SortedSet<CRegion> CrgOOMSetSS, ref SortedSet<CRegion> CrgOOMSolveSS, ref SortedSet<CRegion> CrgOOTSetSS, ref SortedSet<CRegion> CrgOOTSolveSS, 
+            ref SortedSet<CRegion> CrgCplexError3019SS, ref SortedSet<CRegion> CrgOtherErrorsSS, ref string strOtherErrors)
         {
-
-
 
 
             long lngStartMemory = GC.GetTotalMemory(true);
@@ -113,7 +173,6 @@ namespace MorphingClass.CGeneralizationMethods
 
             //double dblMemoryInMB2 = CHelpFunc.GetConsumedMemoryInMB(true);
             var cplex = new Cplex();
-
             //double dblMemoryInMB3 = CHelpFunc.GetConsumedMemoryInMB(true);
 
             var crg = new CRegion(-1);
@@ -127,223 +186,261 @@ namespace MorphingClass.CGeneralizationMethods
                 IIntVar[][][][] var3;
                 IIntVar[][][][][] var4;
                 IRange[][] rng;
-                
+
                 PopulateByRow(cplex, out var2, out var3, out var4, out rng, LSCrg, SSCrg, adblTD, strAreaAggregation);
                 //double dblMemoryInMB4 = CHelpFunc.GetConsumedMemoryInMB(true);
                 // Step 11
                 //cplex.ExportModel("lpex1.lp");
 
                 // Step 9
-                double dblRemainTimeLim = this.dblTimeLimit - Convert.ToDouble(pStopwatch.ElapsedMilliseconds)/1000;
-                cplex.SetParam(Cplex.DoubleParam.TiLim, dblRemainTimeLim);
-
-                //avoid that optimal solutions from CPELX are not optimal
-                //see https://www-01.ibm.com/support/docview.wss?uid=swg1RS02094
-                cplex.SetParam(Cplex.IntParam.AuxRootThreads, -1);
-                cplex.SetParam(Cplex.IntParam.Reduce, 0);  //really work for me
-                cplex.SetParam(Cplex.DoubleParam.CutLo, 0);
-
-                blnSetting = true;
-
-                if (cplex.Solve())
+                double dblRemainTimeLim = this.dblTimeLimit - Convert.ToDouble(pStopwatch.ElapsedMilliseconds) / 1000;
+                if (dblRemainTimeLim > 0)
                 {
+                    blnSetting = true;
 
-                    //***********Gap for ILP************
+                    cplex.SetParam(Cplex.DoubleParam.TiLim, dblRemainTimeLim);
 
-                    #region Display x, y, z, and s
-                    //for (int i = 0; i < var3[0].GetLength(0); i++)
-                    //{
+                    //avoid that optimal solutions from CPELX are not optimal
+                    //see https://www-01.ibm.com/support/docview.wss?uid=swg1RS02094
+                    cplex.SetParam(Cplex.IntParam.AuxRootThreads, -1);
+                    cplex.SetParam(Cplex.IntParam.Reduce, 0);  //really work for me
+                    cplex.SetParam(Cplex.DoubleParam.CutLo, 0);
 
-                    //    Console.WriteLine("Variable x; Time: " + (i + 1).ToString());
+                    if (cplex.Solve())
+                    {
+                        //***********Gap for ILP************
 
-                    //    foreach (var x1 in var3[0][i])
-                    //    {
-                    //        //CPatch 
+                        #region Display x, y, z, and s
+                        //for (int i = 0; i < var3[0].GetLength(0); i++)
+                        //{
 
+                        //    Console.WriteLine("Variable x; Time: " + (i + 1).ToString());
 
-
-                    //        double[] x = cplex.GetValues(x1);
-
-
-                    //        foreach (var x0 in x)
-                    //        {
-                    //            int intWrite = 0;  //avoid some values like 0.999999997 or 2E-09
-                    //            if (x0>0.5)
-                    //            {
-                    //                intWrite = 1;
-                    //            }
-                    //            Console.Write(intWrite + "     ");
-                    //        }
-                    //        Console.WriteLine();
-
-                    //    }
-                    //    Console.WriteLine();
-                    //}
-
-                    #region Display y and z
-                    //if (var4[0] != null)
-                    //{
-                    //    Console.WriteLine("");
-                    //    //Console.WriteLine("Variable y:");
-                    //    for (int i = 0; i < var4[0].GetLength(0); i++)
-                    //    {
-                    //        Console.WriteLine("Variable y; Time: " + (i + 1).ToString());
-                    //        foreach (var y2 in var4[0][i])
-                    //        {
-                    //            foreach (var y1 in y2)
-                    //            {
-
-                    //                double[] y = cplex.GetValues(y1);
+                        //    foreach (var x1 in var3[0][i])
+                        //    {
+                        //        //CPatch 
 
 
-                    //                foreach (var y0 in y)
-                    //                {
-                    //                    Console.Write(y0 + "     ");
-                    //                }
-                    //                Console.WriteLine();
-                    //            }
 
-                    //            Console.WriteLine();
-                    //        }
-                    //        //Console.WriteLine();
-                    //    }
-                    //}
-
-                    //if (var4[1] != null)
-                    //{
-                    //    Console.WriteLine("");
-                    //    //Console.WriteLine("Variable z:");
-                    //    for (int i = 0; i < var4[1].GetLength(0); i++)
-                    //    {
-                    //        Console.WriteLine("Variable z; Time: " + (i + 1).ToString());
-                    //        foreach (var z2 in var4[1][i])
-                    //        {
-                    //            foreach (var z1 in z2)
-                    //            {
-
-                    //                double[] z = cplex.GetValues(z1);
+                        //        double[] x = cplex.GetValues(x1);
 
 
-                    //                foreach (var z0 in z)
-                    //                {
-                    //                    Console.Write(z0 + "     ");
-                    //                }
-                    //                Console.WriteLine();
+                        //        foreach (var x0 in x)
+                        //        {
+                        //            int intWrite = 0;  //avoid some values like 0.999999997 or 2E-09
+                        //            if (x0>0.5)
+                        //            {
+                        //                intWrite = 1;
+                        //            }
+                        //            Console.Write(intWrite + "     ");
+                        //        }
+                        //        Console.WriteLine();
 
-                    //            }
-                    //            Console.WriteLine();
-                    //        }
-                    //        //Console.WriteLine();
-                    //    }
-                    //}
-                    #endregion
+                        //    }
+                        //    Console.WriteLine();
+                        //}
+
+                        #region Display y and z
+                        //if (var4[0] != null)
+                        //{
+                        //    Console.WriteLine("");
+                        //    //Console.WriteLine("Variable y:");
+                        //    for (int i = 0; i < var4[0].GetLength(0); i++)
+                        //    {
+                        //        Console.WriteLine("Variable y; Time: " + (i + 1).ToString());
+                        //        foreach (var y2 in var4[0][i])
+                        //        {
+                        //            foreach (var y1 in y2)
+                        //            {
+
+                        //                double[] y = cplex.GetValues(y1);
 
 
-                    //if (_ParameterInitialize.strAreaAggregation == "Smallest")
-                    //{
-                    //    Console.WriteLine("");
-                    //    Console.WriteLine("Variable s:");
-                    //    if (var2[0] != null)
-                    //    {
-                    //        for (int i = 0; i < var2[0].GetLength(0); i++)
-                    //        {
+                        //                foreach (var y0 in y)
+                        //                {
+                        //                    Console.Write(y0 + "     ");
+                        //                }
+                        //                Console.WriteLine();
+                        //            }
+
+                        //            Console.WriteLine();
+                        //        }
+                        //        //Console.WriteLine();
+                        //    }
+                        //}
+
+                        //if (var4[1] != null)
+                        //{
+                        //    Console.WriteLine("");
+                        //    //Console.WriteLine("Variable z:");
+                        //    for (int i = 0; i < var4[1].GetLength(0); i++)
+                        //    {
+                        //        Console.WriteLine("Variable z; Time: " + (i + 1).ToString());
+                        //        foreach (var z2 in var4[1][i])
+                        //        {
+                        //            foreach (var z1 in z2)
+                        //            {
+
+                        //                double[] z = cplex.GetValues(z1);
 
 
-                    //            double[] s = cplex.GetValues(var2[0][i]);
+                        //                foreach (var z0 in z)
+                        //                {
+                        //                    Console.Write(z0 + "     ");
+                        //                }
+                        //                Console.WriteLine();
+
+                        //            }
+                        //            Console.WriteLine();
+                        //        }
+                        //        //Console.WriteLine();
+                        //    }
+                        //}
+                        #endregion
 
 
-                    //            foreach (var s0 in s)
-                    //            {
-                    //                Console.Write(s0 + "     ");
-                    //            }
-                    //            Console.WriteLine();
+                        //if (_ParameterInitialize.strAreaAggregation == "Smallest")
+                        //{
+                        //    Console.WriteLine("");
+                        //    Console.WriteLine("Variable s:");
+                        //    if (var2[0] != null)
+                        //    {
+                        //        for (int i = 0; i < var2[0].GetLength(0); i++)
+                        //        {
 
-                    //        }
-                    //    }
-                    //}
-                    #endregion
 
-                    #region Display other results
-                    //double[] dj = cplex.GetReducedCosts(var3[0][0][0]);
-                    //double[] dj2 = cplex.GetReducedCosts((var3);
-                    //double[] pi = cplex.GetDuals(rng[0]);
-                    //double[] slack = cplex.GetSlacks(rng[0]);
-                    //Console.WriteLine("");
-                    //cplex.Output().WriteLine("Solution status = "
-                    //+ cplex.GetStatus());
-                    //cplex.Output().WriteLine("Solution value = "
-                    //+ cplex.ObjValue);
-                    //objDataLt[13] = cplex.ObjValue;
-                    //int nvars = x.Length;
-                    //for (int j = 0; j < nvars; ++j)
-                    //{
-                    //    cplex.Output().WriteLine("Variable :"
-                    //    + j
-                    //    + " Value = "
-                    //    + x[j]
-                    //    + " Reduced cost = "
-                    //    + dj[j]);
-                    //}
-                    //int ncons = slack.Length;
-                    //for (int i = 0; i < ncons; ++i)
-                    //{
-                    //    cplex.Output().WriteLine("Constraint:"
-                    //    + i
-                    //    + " Slack = "
-                    //    + slack[i]
-                    //    //+ " Pi = "
-                    //    //+ pi[i]
-                    //    );
-                    //}
-                    #endregion
+                        //            double[] s = cplex.GetValues(var2[0][i]);
 
+
+                        //            foreach (var s0 in s)
+                        //            {
+                        //                Console.Write(s0 + "     ");
+                        //            }
+                        //            Console.WriteLine();
+
+                        //        }
+                        //    }
+                        //}
+                        #endregion
+
+                        #region Display other results
+                        //double[] dj = cplex.GetReducedCosts(var3[0][0][0]);
+                        //double[] dj2 = cplex.GetReducedCosts((var3);
+                        //double[] pi = cplex.GetDuals(rng[0]);
+                        //double[] slack = cplex.GetSlacks(rng[0]);
+                        //Console.WriteLine("");
+                        //cplex.Output().WriteLine("Solution status = "
+                        //+ cplex.GetStatus());
+                        //cplex.Output().WriteLine("Solution value = "
+                        //+ cplex.ObjValue);
+                        //objDataLt[13] = cplex.ObjValue;
+                        //int nvars = x.Length;
+                        //for (int j = 0; j < nvars; ++j)
+                        //{
+                        //    cplex.Output().WriteLine("Variable :"
+                        //    + j
+                        //    + " Value = "
+                        //    + x[j]
+                        //    + " Reduced cost = "
+                        //    + dj[j]);
+                        //}
+                        //int ncons = slack.Length;
+                        //for (int i = 0; i < ncons; ++i)
+                        //{
+                        //    cplex.Output().WriteLine("Constraint:"
+                        //    + i
+                        //    + " Slack = "
+                        //    + slack[i]
+                        //    //+ " Pi = "
+                        //    //+ pi[i]
+                        //    );
+                        //}
+                        #endregion
+
+                    }
+
+                    Console.WriteLine("");
+                    var strStatus = cplex.GetStatus().ToString();
+                    Console.WriteLine("Solution status = " + strStatus);
+
+                    if (strStatus == "Optimal")
+                    {
+                        blnSolved = true;
+                        StrObjLtDt.SetLastObj("EstSteps", 0.ToString("F4"));  //keep 4 decimal digits
+                        StrObjLtDt.SetLastObj("Cost", cplex.ObjValue);
+                        Console.WriteLine("Solution value = " + cplex.ObjValue);
+                    }
+                    else if (strStatus == "Feasible")
+                    {
+                        //|best integer-best bound(node)|  / 1e-10 + |best integer|
+                        //|cplex.ObjValue-cplex.BestObjValue|  /  1e-10 + |cplex.ObjValue|
+                        blnSolved = true;
+                        StrObjLtDt.SetLastObj("EstSteps", (cplex.MIPRelativeGap * 100).ToString("F4"));  //keep 4 decimal digits
+                        StrObjLtDt.SetLastObj("Cost", cplex.ObjValue);
+                        Console.WriteLine("Solution value = " + cplex.ObjValue);
+                    }
+                    else //if (strStatus == "Unknown") //we do not find any solution in a time limit
+                    {
+                        CrgOOTSolveSS.Add(LSCrg);
+                        Console.WriteLine("didn't find any solution in the time limit.");
+                    }
                 }
-                
-                Console.WriteLine("");
-                cplex.Output().WriteLine("Solution status = " + cplex.GetStatus());
-                cplex.Output().WriteLine("Solution value = " + cplex.ObjValue);
-                string strStatus = cplex.GetStatus().ToString();
-                //StrObjLtDt.SetLastObj("#Edges", strStatus);
-                StrObjLtDt.SetLastObj("Cost", cplex.ObjValue);
-                
-                if (strStatus == "Optimal")
+                else
                 {
-                    blnSolved = true;
-                    StrObjLtDt.SetLastObj("EstSteps", 0.ToString("F4"));
-                }
-                else if (strStatus == "Feasible")
-                {
-                    //|best integer-best bound(node)|  / 1e-10 + |best integer|
-                    //|cplex.ObjValue-cplex.BestObjValue|  /  1e-10 + |cplex.ObjValue|
-                    blnSolved = true;
-                    StrObjLtDt.SetLastObj("EstSteps", (cplex.MIPRelativeGap * 100 ).ToString("F4"));
-                }
-                else  //we do not find any solution
-                {
-                    StrObjLtDt.SetLastObj("EstSteps", 20000.ToString("F4"));
+                    CrgOOTSetSS.Add(LSCrg);
                 }
             }
             catch (ILOG.Concert.Exception e)
             {
-                if (blnSetting == false)
-                {
-                    intOOMSetting++;
-                }
-                intOOMAll++;
+            //    ref SortedSet<CRegion> CrgOOMSetSS, ref SortedSet<CRegion> CrgOOMSolveSS, ref SortedSet<CRegion> CrgOOTSetSS, ref SortedSet<CRegion> CrgOOTSolveSS,
+            //ref SortedSet<CRegion> CrgCplexError3019SS, ref SortedSet<CRegion> CrgOtherErrorsSS, ref string strOtherErrors)
+
+                //if (e.Message == "CPLEX Error  1217: No solution exists.\n")
+                //{
+                //    //do nothing
+                //}
+                //else 
                 if (e.Message == "CPLEX Error  1001: Out of memory.\n")
                 {
-                    System.Console.WriteLine("Concert exception '" + e + "' caught");
+                    if (blnSetting == false) //this can happen when we are setting up variables and constraints
+                    {
+                        Console.Write("During Setting: " + e.Message);
+                        CrgOOMSetSS.Add(LSCrg);
+                    }
+                    else
+                    {
+                        Console.Write("During Solving: " + e.Message);
+                        CrgOOMSolveSS.Add(LSCrg);
+                    }
+                }
+                else if (e.Message == "CPLEX Error  3019: Failure to solve MIP subproblem.\n") //this can really happen
+                {
+                    Console.Write("During Solving: " + e.Message);
+                    CrgCplexError3019SS.Add(LSCrg);
+                }
+                else  //other eroors, e.g., "CPLEX Error  1004: Null pointer for required data.\n"
+                {
+                    var strError ="ID: "+ LSCrg.ID +"  "+ "blnSetting == " + blnSetting.ToString() + ";    " + e.Message;
+                    Console.Write(strError);
+                    strOtherErrors += strError;
+                    CrgOtherErrorsSS.Add(LSCrg);
+                    //throw;
+                }
+            }
+            catch (System.OutOfMemoryException e2) //this can really happen, though ILOG.Concert.Exception should occur instead
+            {
+                if (blnSetting == false)
+                {
+                    Console.WriteLine("During Setting: System exception " + e2.Message);
+                    CrgOOMSetSS.Add(LSCrg);
+                    //throw;
                 }
                 else
                 {
-                    throw;
+                    CrgOOMSolveSS.Add(LSCrg);
+                    Console.WriteLine("During Solving: System exception " + e2.Message);
+                    //throw;
                 }
-                
-            }
-            catch (System.OutOfMemoryException e2) //it seems this never happens!
-            {
-                System.Console.WriteLine("System exception '" + e2);
-                throw new ArgumentException(e2.Message);
             }
             finally
             {
@@ -352,14 +449,14 @@ namespace MorphingClass.CGeneralizationMethods
                 {
                     crg.ID = -2;
                     StrObjLtDt.SetLastObj("EstSteps", 20000.ToString("F4"));
-                    //System.Console.WriteLine("We have used memory " + dblMemoryInMB + "MB.");
+                    //StrObjLtDt.SetLastObj("Cost", -1); //the cost value is -1 by default
                     Console.WriteLine("Crg:  ID  " + LSCrg.ID + ";    n  " + LSCrg.GetCphCount() + ";    m  " +
                         LSCrg.AdjCorrCphsSD.Count + "  could not be solved by ILP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 }
                 StrObjLtDt.SetLastObj("Time_L(ms)", pStopwatch.ElapsedMilliseconds);
                 StrObjLtDt.SetLastObj("Time(ms)", pStopwatch.ElapsedMilliseconds);
                 StrObjLtDt.SetLastObj("Memory(MB)", dblMemoryInMB);
-                
+
                 cplex.End();
             }
 
@@ -707,35 +804,26 @@ namespace MorphingClass.CGeneralizationMethods
 
                 //forces that the aggregation must involve the smallest patch.
                 for (int i = 0; i < intCpgCount - 1; i++)   //i represents indices
-                {                    
+                {
                     for (int j = 0; j < intCpgCount; j++)
                     {
                         var pInvolveSmallestExpr = model.LinearIntExpr();
                         for (int k = 0; k < intCpgCount; k++)
                         {
-                            if (j != k)
+                            if (j == k) //o != r
                             {
-                                pInvolveSmallestExpr.AddTerm(y[i][j][j][k], 1);
-                                pInvolveSmallestExpr.AddTerm(y[i][k][k][j], 1);
+                                continue;
                             }
+                            pInvolveSmallestExpr.AddTerm(y[i][j][j][k], 1);
+                            pInvolveSmallestExpr.AddTerm(y[i][k][k][j], 1);
 
-
-                            //for (int l = 0; l < intCpgCount; l++)
-                            //{
-                            //    if (l != j)
-                            //    {
-                            //        pInvolveSmallestExpr.AddTerm(y[i][k][j][l], 1);
-                            //        pInvolveSmallestExpr.AddTerm(y[i][k][l][j], 1);
-                            //    }
-                            //}
                         }
-
                         model.AddLe(w[i][j], pInvolveSmallestExpr, "InvolveSmallest");
                     }
                 }
 
                 //To guarantee that patch $o$ is involved in aggregation is indeed the smallest patch
-                double dblW = lscrg.dblArea; //a very large value
+                double dblM = 1.1 * lscrg.dblArea; //a very large value
                 for (int i = 0; i < intCpgCount - 1; i++)   //i represents indices
                 {
                     var aAreaExpr = ComputeAreaExpr(model, x[i], aCph);
@@ -743,10 +831,15 @@ namespace MorphingClass.CGeneralizationMethods
                     {
                         for (int k = 0; k < intCpgCount; k++)
                         {
-                            var pSumExpr = model.Sum(2.0, model.Negative(model.Sum(w[i][j], x[i][k][k])));  //(2-w_{t,o}-x_{t,r,r})
-                            var pProdExpr = model.Prod(pSumExpr, dblW);  //W(2-w_{t,o}-x_{t,r,r})
+                            if (j == k) //o != r
+                            {
+                                continue;
+                            }
 
-                            //A_{t,o}-A_{t,r}<= W(2-w_{t,o}-x_{t,r,r})
+                            var pSumExpr = model.Sum(2.0, model.Negative(model.Sum(w[i][j], x[i][k][k])));  //(2-w_{t,o}-x_{t,r,r})
+                            var pProdExpr = model.Prod(pSumExpr, dblM);  //M(2-w_{t,o}-x_{t,r,r})
+
+                            //A_{t,o}-A_{t,r}<= M(2-w_{t,o}-x_{t,r,r})
                             model.AddLe(model
                                 .Sum(aAreaExpr[j], model.Negative(aAreaExpr[k])), pProdExpr, "IndeedSmallest");
                         }

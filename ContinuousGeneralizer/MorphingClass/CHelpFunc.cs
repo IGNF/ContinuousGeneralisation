@@ -51,6 +51,9 @@ namespace MorphingClass.CUtility
             yield return new CPoint(3, 0, 0);
         }
 
+        /// <summary>
+        /// the path to the folder that contains the .mxd
+        /// </summary>
         public static string strPath
         {
             get { return _strPath; }
@@ -130,10 +133,11 @@ namespace MorphingClass.CUtility
                 _strPath = SFD.FileName;
             }
 
-            string strFileName = _strPath + GetTimeStamp();
+            string strFileName = _strPath + "\\" + GetTimeStamp();
             //string strFileName = CHelpFunc.strPath + "MorphingResults";
 
-            ParameterInitialize.strMxdPathBackSlash = _strPath;
+            ParameterInitialize.strMxdPath = _strPath;
+            ParameterInitialize.strMxdPathBackSlash = _strPath + "\\";
             ParameterInitialize.strSaveFolderName = System.IO.Path.GetFileNameWithoutExtension(strFileName);
             ParameterInitialize.strSavePath = strFileName;
             ParameterInitialize.strSavePathBackSlash = strFileName + "\\";

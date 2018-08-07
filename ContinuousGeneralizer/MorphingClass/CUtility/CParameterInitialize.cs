@@ -125,6 +125,7 @@ namespace MorphingClass.CUtility
         public string strAreaAggregation { get; set; }
 
         /// <summary>The whole path to Data Folder, already including "\\" at the end</summary>
+        public string strMxdPath { get; set; }
         public string strMxdPathBackSlash { get; set; }
 
         /// <summary>The whole path to strSaveFolder, without "\\" at the end, strSavePath == strPath + strLastName</summary>

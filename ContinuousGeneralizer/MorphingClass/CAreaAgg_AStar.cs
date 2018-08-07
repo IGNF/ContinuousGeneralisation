@@ -207,13 +207,13 @@ namespace MorphingClass.CGeneralizationMethods
             for (int i = 0; i < ExistingCrgSDLt.Capacity; i++)
             {
                 //we don't compare exact cost first because of there may be rounding problems 
-                var Element = new SortedDictionary<CRegion, CRegion>(CRegion.pCmpCRegion_CphGIDTypeIndex);
+                var Element = new SortedDictionary<CRegion, CRegion>(CRegion.pCmpCrg_CphGIDTypeIndex);
                 ExistingCrgSDLt.Add(Element);
             }
             ExistingCrgSDLt[LSCrg.GetCphCount()].Add(LSCrg, LSCrg);
 
             var FinalOneCphCrg = new CRegion(intRegionID);
-            var Q = new SortedSet<CRegion>(CRegion.pCmpCRegion_Cost_CphGIDTypeIndex);
+            var Q = new SortedSet<CRegion>(CRegion.pCmpCrg_Cost_CphGIDTypeIndex);
             int intCount = 0;
             CRegion._intNodeCount = 1;
             CRegion._intEdgeCount = 0;
@@ -465,7 +465,7 @@ namespace MorphingClass.CGeneralizationMethods
                 if (intResult == -1)
                 {
                     //from the idea of A* algorithm, we know that outcrg must be in Q
-                    //var Q = new SortedSet<CRegion>(CRegion.pCmpCRegion_Cost_CphGIDTypeIndex);
+                    //var Q = new SortedSet<CRegion>(CRegion.pCmpCrg_Cost_CphGIDTypeIndex);
                     //there is no decrease key function for SortedSet, so we have to remove it and later add it again
                     if (Q.Remove(outcrg) == true)
                     {

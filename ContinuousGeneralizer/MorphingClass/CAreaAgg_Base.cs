@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
+
 using System.Linq;
 using System.Text;
 using ESRI.ArcGIS.Carto;
@@ -31,6 +32,10 @@ namespace MorphingClass.CGeneralizationMethods
 {
     public class CAreaAgg_Base : CMorphingBaseCpg
     {
+        //*******************************************************
+        //set strMethod at the beginning so that we can save files during ILP using the same prefix
+
+
         public static double dblLamda = 0.5; // 1-dblLamda is for type; dblLamda is for shape
 
 
@@ -38,10 +43,11 @@ namespace MorphingClass.CGeneralizationMethods
         //160s is from _Smallest_MinimizeInteriorBoundaries_200000
         //600s: 10min
         //public double dblTimeLimit { get; set; } = 113; //in seconds
-        public double dblTimeLimit { get; set; } = 10; //in seconds
-        //public double dblTimeLimit { get; set; } = 300; //in seconds
-        //public static double dblLamda2 = 1 - dblLamda1;
+        public double dblTimeLimit { get; set; } = 112; //in seconds, from 111.5 s
+                                                        //public double dblTimeLimit { get; set; } = 300; //in seconds
+                                                        //public static double dblLamda2 = 1 - dblLamda1;
 
+        public static string _strResultFileName = "";
         //for some prompt settings
         protected int _intRound = 0;
         //protected int _intRound = 7;
@@ -50,11 +56,14 @@ namespace MorphingClass.CGeneralizationMethods
         protected static int _intEndCount; //=this.SSCrgLt.Count
         protected List< List<long>> _lngMemoryLtLt = new List<List<long>>();
         protected static bool _blnTesting = true; //if we are testing, we forget about aggregation sequences
+        protected static Dictionary<int, CValPair<int, double>> _EstStepsCostVPDt;
+        protected static List<string> _strLineLt; //sort according to ID
+
         //comment the following if you want to process on all instances
         protected void UpdateStartEnd()
         {
-            //_intStart = 94;
-            //_intEndCount = _intStart + 3;
+            //_intStart = 90;
+            //_intEndCount = _intStart + 10;
 
             if (CConstants.strRunContinuousGeneralizer!="")
             {
@@ -239,6 +248,9 @@ namespace MorphingClass.CGeneralizationMethods
             _intStart = 0;
             _intEndCount = this.SSCrgLt.Count;
 
+
+
+
             UpdateStartEnd();
         }
 
@@ -367,8 +379,11 @@ namespace MorphingClass.CGeneralizationMethods
                 {
                     dblR_CompCE = Math.Round(FinalOneCphCrg.dblCostExactComp / LSCrg.dblCostEstComp, _intDigits);
                 }
-                
-                dblR_TypeComp = Math.Round(FinalOneCphCrg.dblCostExactType / FinalOneCphCrg.dblCostExactComp, _intDigits);
+
+                if (FinalOneCphCrg.dblCostExactComp>0)
+                {
+                    dblR_TypeComp = Math.Round(FinalOneCphCrg.dblCostExactType / FinalOneCphCrg.dblCostExactComp, _intDigits);
+                }                
             }
 
             if (CConstants.strMethod == "Greedy")
@@ -440,11 +455,11 @@ namespace MorphingClass.CGeneralizationMethods
 
             if (pParameterInitialize.strAreaAggregation == "Smallest")
             {
-                CrgSS = new SortedSet<CRegion>(pInitialCrgLt, CRegion.pCmpCRegion_MinArea_CphGIDTypeIndex);
+                CrgSS = new SortedSet<CRegion>(pInitialCrgLt, CRegion.pCmpCrg_MinArea_CphGIDTypeIndex);
             }
             else
             {
-                CrgSS = new SortedSet<CRegion>(pInitialCrgLt, CRegion.pCmpCRegion_CostExact_CphGIDTypeIndex);
+                CrgSS = new SortedSet<CRegion>(pInitialCrgLt, CRegion.pCmpCrg_CostExact_CphGIDTypeIndex);
             }
 
 
@@ -518,8 +533,8 @@ namespace MorphingClass.CGeneralizationMethods
 
 
 
-        public static void SaveData(CStrObjLtDt StrObjLtDt, 
-            CParameterInitialize pParameterInitialize, string strMethod)
+        public static void SaveData(CStrObjLtDt StrObjLtDt,
+            CParameterInitialize pParameterInitialize, string strMethod, string strParameter = "")
         {
             int intAtrNum = StrObjLtDt.Count;
             int intCrgNum = StrObjLtDt.Values.First().Count;
@@ -528,7 +543,7 @@ namespace MorphingClass.CGeneralizationMethods
             var TempobjDataLtLt = new List<IList<object>>(intAtrNum);
 
             //order the the lists according to the order of the keys
-            foreach (var strKey in strKeyLt)
+            foreach (var strKey in CAreaAgg_Base.strKeyLt)
             {
                 List<object> valuelt;
                 StrObjLtDt.TryGetValue(strKey, out valuelt);
@@ -546,29 +561,122 @@ namespace MorphingClass.CGeneralizationMethods
                 pobjDataLtLt.Add(pobjDataLt);
             }
 
-            var objDataLtSS = new SortedSet<IList<object>>(pobjDataLtLt, new CAACCmp());
+            //sort according to overestimation factor, n, m, ID
+            var objDataLtONMIdSS = new SortedSet<IList<object>>(pobjDataLtLt, new CAACCmp());
+
+            var objDataIdLtSD = new Dictionary<int, IList<object>>();
+            foreach (var pobjDataLt in pobjDataLtLt)
+            {
+                objDataIdLtSD.Add(Convert.ToInt32(pobjDataLt[0]), pobjDataLt);
+            }
 
             //save results under the same filename
-            string strResultFileName = CHelpFunc.GetTimeStamp() + "_" + strMethod + "_" + 
+            _strResultFileName = CHelpFunc.GetTimeStamp() + "_" + strMethod + strParameter + "_" +
                 pParameterInitialize.strAreaAggregation + "_" + CConstants.strShapeConstraint;
+
             //excel
-            CHelpFuncExcel.ExportToExcel(objDataLtSS,
-                strResultFileName, pParameterInitialize.strSavePath, CAreaAgg_AStar.strKeyLt);
+            CHelpFuncExcel.ExportToExcel(objDataLtONMIdSS,
+                _strResultFileName, pParameterInitialize.strSavePath, CAreaAgg_AStar.strKeyLt);
             //txt
-            ExportStatistic(StrObjLtDt, strResultFileName, pParameterInitialize.strSavePath);
-            ExportDetailsForLatex(objDataLtSS, CAreaAgg_Base.strKeyLt, strResultFileName, pParameterInitialize.strSavePath);
-            ExportIDOverEstimation(objDataLtSS, strResultFileName, pParameterInitialize.strSavePath);
-            
+            ExportStatistic(StrObjLtDt, _strResultFileName, pParameterInitialize.strSavePath);
+            ExportDetailsForLatex(objDataLtONMIdSS, CAreaAgg_Base.strKeyLt, _strResultFileName, pParameterInitialize.strSavePath);
+            ExportIDOverEstimation(objDataLtONMIdSS, _strResultFileName, pParameterInitialize.strSavePath, strMethod);
+
+            if (strMethod == "Greedy" && pobjDataLtLt.Count == 734)
+            {
+                ExportCmpGreedyAStar(_strLineLt, objDataLtONMIdSS, _strResultFileName, pParameterInitialize.strSavePath);
+            }
+
+            if (strMethod == "AStar" && pobjDataLtLt.Count == 734)
+            {
+                ExportAStarCost(objDataLtONMIdSS, strMethod + strParameter + "_" +
+                    pParameterInitialize.strAreaAggregation + "_" + CConstants.strShapeConstraint,
+                    pParameterInitialize.strMxdPath);
+            }
+
+
+        }
+
+
+        public static void ExportCmpGreedyAStar(List<string> strLineLt,
+            SortedSet<IList<object>> objDataLtONMIdSS, string strName, string strSavePath)
+        {
+            var IDCostDt = new Dictionary<int, double>();
+            foreach (var objDataLt in objDataLtONMIdSS)
+            {
+                IDCostDt.Add(Convert.ToInt32(objDataLt[0]), Convert.ToDouble(objDataLt[13]));
+            }
+
+            //string strData = "\n\nComparison between Greedy and AStar200000:\n";
+            string strData = string.Format("{0,5}{1,10}{2,16}{3,16}{4,16}{5,16}",
+                "ID", "EstSteps", "AStarCost", "GreedyCost", "Greedy-AStar", "Diff/AStar") + "\n";
+            for (int i = 1; i < strLineLt.Count; i++) //the first line is for headings
+            {
+                var strDetail = strLineLt[i].Split(new char[] { ' ', '\t' }, 
+                    StringSplitOptions.RemoveEmptyEntries); //use white space to split
+                var intID = Convert.ToInt32(strDetail[0]);
+                var dblAStarCost = Convert.ToDouble(strDetail[2]);
+                double dblGreedyCost;
+                IDCostDt.TryGetValue(intID, out dblGreedyCost);
+                var dblDiff = dblGreedyCost - dblAStarCost;
+                double dblRatio = 10000;
+                if (dblGreedyCost==0)
+                {
+                    //in this case, dblAStarCost == 0
+                    dblRatio = 1; 
+                }
+                else if (dblAStarCost > 0)
+                {
+                    dblRatio = dblDiff / dblAStarCost;
+                }
+
+
+                strData += string.Format("{0,5}{1,10}{2,16}{3,16}{4,16}{5,16}", strDetail[0], strDetail[1], strDetail[2],
+                dblGreedyCost.ToString("F4"), dblDiff.ToString("F4"), dblRatio.ToString("F4")) + "\n";
+            }
+
+            using (var writer = new StreamWriter(strSavePath + "\\" + strName + ".txt", true))
+            {
+                writer.Write(strData);
+            }
+        }
+
+        public static void ExportAStarCost(SortedSet<IList<object>> objDataLtONMIdSS, string strName, string strSavePath)
+        {
+            var objDataLtLt = objDataLtONMIdSS.ToList();
+            string strData = string.Format("{0,5}{1,10}{2,16}", "ID", "EstSteps", "Cost") + "\n";
+            for (int i = 0; i < objDataLtLt.Count; i++)
+            {
+                var pobjdatalt = objDataLtLt[i];
+                //EstSteps: 3; Cost: 13
+                strData += string.Format("{0,5}{1,10}{2,16}", pobjdatalt[0], pobjdatalt[3], 
+                    Convert.ToDouble(pobjdatalt[13]).ToString("F8")) + "\n";
+            }
+
+            using (var writer = new StreamWriter(strSavePath + "\\" + strName + ".txt", false))
+            {
+                writer.Write(strData);
+            }
         }
 
         public static void ExportStatistic(CStrObjLtDt StrObjLtDt, string strName, string strSavePath)
-        {
-            string strData = "";
-
+        { 
             List<object> objEstStepsLt;
             StrObjLtDt.TryGetValue("EstSteps", out objEstStepsLt);
+            List<object> objNLt;
+            StrObjLtDt.TryGetValue("n", out objNLt);
             double dblLogEstStepsSum = 0;
             int intOverEstCount = 0;
+            var dblRngCountLtLt = new List <List< double>>
+            {
+                //total number, optimal number, feasible number, no solution
+                new List<double> { 0, 0, 0, 0 }, //n: 1-5
+                new List<double> { 0, 0, 0, 0 }, //n: 6-10
+                new List<double> { 0, 0, 0, 0 }, //n: 11-15
+                new List<double> { 0, 0, 0, 0 }, //n: 16-20
+                new List<double> { 0, 0, 0, 0 }, //n: 21-25
+                new List<double> { 0, 0, 0, 0 }, //n: 26-36
+            };
             
             var intEstStepsCountlt = new List<int>(21); //make a sufficient capacity 
             intEstStepsCountlt.EveryElementNew();
@@ -586,8 +694,32 @@ namespace MorphingClass.CGeneralizationMethods
                 {
                     intOverEstCount++;
                 }
+
+                int intI = Convert.ToInt32(objNLt[i])/ 5;
+                if (intI > 5)
+                {
+                    intI = 5;
+                }
+                dblRngCountLtLt[intI][0]++;
+                if (dblEstSteps == 0)
+                {
+                    dblRngCountLtLt[intI][1]++;  //optimal solution
+                }
+                else if (dblEstSteps>0 && dblEstSteps<20000)
+                {
+                    dblRngCountLtLt[intI][2]++;  //feasible solution
+                }
+                else if (dblEstSteps == 20000)
+                {
+                    dblRngCountLtLt[intI][3]++;  //no solution
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException("enexpected dblEstSteps");
+                }
             }
 
+            string strData = "& #over  & #repeatition  & #Nodes  & #Edges  & CostType  & CostComp  & Cost  & Time(min)\n";
             strData += ("& " + string.Format("{0,3}", intOverEstCount)); //symbol "&" is for the use in Latex
             strData += (" & " + string.Format("{0,3}", dblLogEstStepsSum));  //repetitions
             strData += GetSumWithSpecifiedStyle(StrObjLtDt, "#Nodes", "{0,8}", 0);
@@ -595,26 +727,58 @@ namespace MorphingClass.CGeneralizationMethods
             strData += GetSumWithSpecifiedStyle(StrObjLtDt, "CostType", "{0,4}", 1);
             strData += GetSumWithSpecifiedStyle(StrObjLtDt, "CostComp", "{0,4}", 1);
             strData += GetSumWithSpecifiedStyle(StrObjLtDt, "Cost", "{0,4}", 1);
-            strData += GetSumWithSpecifiedStyle(StrObjLtDt, "Time(ms)", "{0,4}", 1, 60000);  //all the time, minutes in statistics
+            strData += GetSumWithSpecifiedStyle(StrObjLtDt, "Time(ms)", "{0,4}", 1, 60000) + "\n";  //all the time, minutes in statistics
             //strData += ;
 
             //to generate coordinates like (1,6), where x is for the index of overestimation factor, 
             //and y is for the number of domains that used the factor 
             for (int i = 0; i < intEstStepsCountlt.Count; i++)
             {
-                strData += "\n(" + i + "," + intEstStepsCountlt[i] + ")";
+                strData += "(" + i + "," + intEstStepsCountlt[i] + ")\n";
+            }
+
+            var strFormat = "{0,9}{1,9}{2,9}{3,9}{4,9}{5,9}{6,9}{7,9}";
+            strData += string.Format(strFormat, "range", "total", "optimal", "percent", "feasible", "percent", "no", "percent")+ "\n";
+
+
+            for (int i = 0; i < dblRngCountLtLt.Count; i++)
+            {
+                var dblRngCountLt = dblRngCountLtLt[i];
+                string strRange = "";
+                switch (i)
+                {
+                    case 0:
+                        strRange = "1-5";
+                        break;
+                    case 1:
+                        strRange = "6-10";
+                        break;
+                    case 2:
+                        strRange = "11-15";
+                        break;
+                    case 3:
+                        strRange = "16-20";
+                        break;
+                    case 4:
+                        strRange = "21-25";
+                        break;
+                    case 5:
+                        strRange = "26-36";
+                        break;
+                    default:
+                        break;
+                }
+                double dblSum = dblRngCountLt[0];
+                strData += string.Format(strFormat, strRange, dblSum,
+                    dblRngCountLt[1], (100 * dblRngCountLt[1] / dblSum).ToString("0.0"),
+                    dblRngCountLt[2], (100 * dblRngCountLt[2] / dblSum).ToString("0.0"),
+                    dblRngCountLt[3], (100 * dblRngCountLt[3] / dblSum).ToString("0.0")) + "\n";
             }
 
             using (var writer = new StreamWriter(strSavePath + "\\" + strName + ".txt", true))
             {
                 writer.Write(strData);
             }
-
-            //using (var writer = new StreamWriter(strSavePath + "\\" + CHelpFunc.GetTimeStamp() + "_" + 
-            //    "StatisticsForLatex" + ".txt", true))
-            //{
-            //    writer.Write(strData);
-            //}
         }
 
         private static string GetSumWithSpecifiedStyle(CStrObjLtDt StrObjLtDt, 
@@ -719,16 +883,28 @@ namespace MorphingClass.CGeneralizationMethods
             }
         }
 
-        private static void ExportIDOverEstimation(IEnumerable<IList<object>> objDataLtEb, string strName, string strSavePath)
+        private static void ExportIDOverEstimation(IEnumerable<IList<object>> objDataLtEb, string strName, string strSavePath, string strMethod)
         {
-            string strDataID = "\n\n\n";  //make some gap lines
-            string strData = "";            
+            string strDataNo = "\n\n\n" + "find NO solution:\n";
+            string strDataNoForm = "";
+            string strDataFeasible = "\n\n\n" + "find feasible solution:\n";  //make some gap lines
+            string strDataFeasibleForm = "";
+            //string strData = "";            
             foreach (var objDataLt in objDataLtEb)
             {
-                if (Convert.ToDouble(objDataLt[3]) > 0)
+                double dblEstSteps = Convert.ToDouble(objDataLt[3]); //for ILP, this is the gap between to an optimal solution
+                if (dblEstSteps > 0)  //"EstSteps"
                 {
-                    strDataID += objDataLt[0] + "\n";
-                    strData += "intSpecifiedIDLt.Add(" + objDataLt[0] + ");\n";                    
+                    if (dblEstSteps == 20000) //this is for ILP, where we find no solution
+                    {
+                        strDataNo += objDataLt[0] + "\n";
+                        strDataNoForm += "intSpecifiedIDLt.Add(" + objDataLt[0] + ");\n";
+                    }
+                    else
+                    {
+                        strDataFeasible += objDataLt[0] + "\n";
+                        strDataFeasibleForm += "intSpecifiedIDLt.Add(" + objDataLt[0] + ");\n";
+                    }                    
                 }
                 else
                 {
@@ -737,8 +913,10 @@ namespace MorphingClass.CGeneralizationMethods
             }
             using (var writer = new StreamWriter(strSavePath + "\\" + strName + ".txt", true))
             {
-                writer.Write(strDataID);
-                writer.Write(strData);
+                writer.Write(strDataNo);
+                writer.Write(strDataNoForm);
+                writer.Write(strDataFeasible);
+                writer.Write(strDataFeasibleForm);
             }
         }
 
@@ -858,11 +1036,11 @@ namespace MorphingClass.CGeneralizationMethods
             var CrgSS = new SortedSet<CRegion>();
             if (strAreaAggregation == "Smallest")
             {
-                CrgSS = new SortedSet<CRegion>(pInitialCrgLt, CRegion.pCmpCRegion_MinArea_CphGIDTypeIndex);
+                CrgSS = new SortedSet<CRegion>(pInitialCrgLt, CRegion.pCmpCrg_MinArea_CphGIDTypeIndex);
             }
             else
             {
-                CrgSS = new SortedSet<CRegion>(pInitialCrgLt, CRegion.pCmpCRegion_CostExact_CphGIDTypeIndex);
+                CrgSS = new SortedSet<CRegion>(pInitialCrgLt, CRegion.pCmpCrg_CostExact_CphGIDTypeIndex);
             }
 
             var newIpgLt = new List<IPolygon4>(intOutputStepNum);
