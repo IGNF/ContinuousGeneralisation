@@ -1,0 +1,495 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{456FD3DF-B3F9-41F9-B359-AA1498B57826}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MorphingClass</RootNamespace>
+    <AssemblyName>MorphingClass</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>true</CodeAnalysisFailOnMissingRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>true</CodeAnalysisFailOnMissingRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="C5">
+      <HintPath>..\Citations\C5\C5.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.ADF.Local, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\ArcGIS\DeveloperKit10.4\DotNet\ESRI.ArcGIS.ADF.Local.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.AnalysisTools, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\ArcGIS\DeveloperKit10.4\DotNet\Toolboxes\ESRI.ArcGIS.AnalysisTools.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Carto, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.CartographyTools, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\ArcGIS\DeveloperKit10.4\DotNet\Toolboxes\ESRI.ArcGIS.CartographyTools.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Catalog, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Controls, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.DataSourcesFile, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.DataSourcesGDB, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>..\..\..\..\..\Program Files (x86)\ArcGIS\DeveloperKit10.4\DotNet\ESRI.ArcGIS.DataSourcesGDB.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Display, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Editor, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.GeoAnalyst, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Geodatabase, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Geometry, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Geoprocessing, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>..\..\..\..\..\Program Files (x86)\ArcGIS\DeveloperKit10.4\DotNet\ESRI.ArcGIS.Geoprocessing.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Geoprocessor, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\ArcGIS\DeveloperKit10.4\DotNet\ESRI.ArcGIS.Geoprocessor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Maplex, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Output, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.System, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.SystemUI, Version=10.1.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ILOG.Concert, Version=12.6.2.0, Culture=neutral, PublicKeyToken=7906592bc7cc7340, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Citations\Cplex\ILOG.Concert.dll</HintPath>
+    </Reference>
+    <Reference Include="ILOG.CPLEX, Version=12.6.2.0, Culture=neutral, PublicKeyToken=7906592bc7cc7340, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Citations\Cplex\ILOG.CPLEX.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CAid\CCreatePointLayer.cs" />
+    <Compile Include="CAid\CMatchAndMergePolygons.cs" />
+    <Compile Include="CAid\CMatchAndMergePolylines.cs" />
+    <Compile Include="CAid\CMergeAndSplitPolylines.cs" />
+    <Compile Include="CAid\CIdentifyCorrCpgAddRegionNum.cs" />
+    <Compile Include="CAid\CSelectRandomly.cs" />
+    <Compile Include="CAid\CStatisticsOfDataSetsCpg.cs" />
+    <Compile Include="CAid\CTemporary.cs" />
+    <Compile Include="CAid\CToIpe.cs" />
+    <Compile Include="CAid\CUnifyIndicesPolylines.cs" />
+    <Compile Include="CAid\CUnifyDirectionsPolylines.cs" />
+    <Compile Include="CAid\CStatisticsOfDataSetsCpl.cs" />
+    <Compile Include="CAid\CTopologyChecker.cs" />
+    <Compile Include="CCommon\ControlsSynchronizer.cs" />
+    <Compile Include="CCommon\ExportActiveViewCS_Net .cs" />
+    <Compile Include="CCommon\LayerVisibility.cs" />
+    <Compile Include="CCommon\Maps.cs" />
+    <Compile Include="CCommon\OpenNewMapDocument.cs" />
+    <Compile Include="CCommon\RemoveLayer.cs" />
+    <Compile Include="CCommon\ZoomToLayer.cs" />
+    <Compile Include="CCorrepondObjects\CCorrCpgSS.cs" />
+    <Compile Include="CCorrepondObjects\CCorrAtBds.cs" />
+    <Compile Include="CCorrepondObjects\CCorrespondBend.cs" />
+    <Compile Include="CCorrepondObjects\CCorrCpts.cs" />
+    <Compile Include="CCorrepondObjects\CCorrespondObject.cs" />
+    <Compile Include="CCorrepondObjects\CCorrespondRiver.cs" />
+    <Compile Include="CCorrepondObjects\CCorrespondRiverNet.cs" />
+    <Compile Include="CCorrepondObjects\CCorrespondSegment.cs" />
+    <Compile Include="CCorrepondObjects\CCptbCtgl.cs" />
+    <Compile Include="CCorrepondObjects\CCorrCphs.cs" />
+    <Compile Include="CCorrepondObjects\CPairInt.cs" />
+    <Compile Include="CCorrepondObjects\CValPairIncrease.cs" />
+    <Compile Include="CCorrepondObjects\CValTri.cs" />
+    <Compile Include="CCorrepondObjects\CValFour.cs" />
+    <Compile Include="CCorrepondObjects\CValPair.cs" />
+    <Compile Include="CCorrepondObjects\CValMap_SD.cs" />
+    <Compile Include="CEntity\CAtBd.cs" />
+    <Compile Include="CEntity\CLinearEntity.cs" />
+    <Compile Include="CEntity\CRiver.cs" />
+    <Compile Include="CEntity\CRiverNet.cs" />
+    <Compile Include="CEvaluationMethods\CDeflection.cs" />
+    <Compile Include="CEvaluationMethods\CDeflectionEvaluation.cs" />
+    <Compile Include="CEvaluationMethods\CEvaluation.cs" />
+    <Compile Include="CEvaluationMethods\CIntegral.cs" />
+    <Compile Include="CEvaluationMethods\CLengthDiff.cs" />
+    <Compile Include="CEvaluationMethods\CTranslation.cs" />
+    <Compile Include="CEvaluationMethods\CTranslationEvaluation.cs" />
+    <Compile Include="CAreaAgg_Base.cs" />
+    <Compile Include="CAreaAgg_Greedy.cs" />
+    <Compile Include="CAreaAgg_ILP.cs" />
+    <Compile Include="CGeneralizationMethods\CBezierDetectPoint.cs" />
+    <Compile Include="CAreaAgg_AStar.cs" />
+    <Compile Include="CGeneralizationMethods\CDPSimplify.cs" />
+    <Compile Include="CGeneralizationMethods\CGDNWDD.cs" />
+    <Compile Include="CGeneralizationMethods\CHWPGRN.cs" />
+    <Compile Include="CGeneralizationMethods\CBldgGrow.cs" />
+    <Compile Include="CGeneralizationMethods\CplexServer.cs" />
+    <Compile Include="CGeneralizationMethods\CVetexCover.cs" />
+    <Compile Include="CGeometry\CCphRecord.cs" />
+    <Compile Include="CGeometry\CEdgeRelation.cs" />
+    <Compile Include="CGeometry\CGeometryBase\CBasicBase.cs" />
+    <Compile Include="CGeometry\CGeometryBase\CLandCoverBase.cs" />
+    <Compile Include="CGeometry\CGeometryBase\CLineBase.cs" />
+    <Compile Include="CGeometry\CBend.cs" />
+    <Compile Include="CGeometry\CBendForest.cs" />
+    <Compile Include="CGeometry\CDCEL.cs" />
+    <Compile Include="CGeometry\CEdge.cs" />
+    <Compile Include="CGeometry\CEdgeGrid.cs" />
+    <Compile Include="CGeometry\CFace.cs" />
+    <Compile Include="CGeometry\CGeometryBase\CGeoBase.cs" />
+    <Compile Include="CGeometry\CIntersection.cs" />
+    <Compile Include="CGeometry\CMBR\Geometry\GeoAlgos.cs" />
+    <Compile Include="CGeometry\CMBR\Geometry\Line2d.cs" />
+    <Compile Include="CGeometry\CMBR\Geometry\Polygon2d.cs" />
+    <Compile Include="CGeometry\CMBR\Geometry\Rectangle2d.cs" />
+    <Compile Include="CGeometry\CMBR\Geometry\Segment2d.cs" />
+    <Compile Include="CGeometry\CMBR\Geometry\Vector2d.cs" />
+    <Compile Include="CGeometry\CMBR\MinimalBoundingBox.cs" />
+    <Compile Include="CGeometry\CMoveVector.cs" />
+    <Compile Include="CGeometry\CNode.cs" />
+    <Compile Include="CGeometry\CPtEdgeDis.cs" />
+    <Compile Include="CGeometry\CTriangulation.cs" />
+    <Compile Include="CGeometry\CPatch.cs" />
+    <Compile Include="CGeometry\CPoint.cs" />
+    <Compile Include="CGeometry\CGeometryBase\CPolyBase.cs" />
+    <Compile Include="CGeometry\CPolygon.cs" />
+    <Compile Include="CGeometry\CPolyline.cs" />
+    <Compile Include="CGeometry\CRegion.cs" />
+    <Compile Include="CGeometry\CTriangle.cs" />
+    <Compile Include="CGeometry\CVirtualPolyline.cs" />
+    <Compile Include="CMorphingAlgorithms\CAlgorithmsHelper.cs" />
+    <Compile Include="CMorphingAlgorithms\CLIA.cs" />
+    <Compile Include="CMorphingAlgorithms\CLIMultiA.cs" />
+    <Compile Include="CMorphingAlgorithms\CLinearInterpolationA.cs" />
+    <Compile Include="CMorphingAlgorithms\CVertexInsertionA.cs" />
+    <Compile Include="CMorphingExtent\CBase.cs" />
+    <Compile Include="CMorphingExtent\CLandingTime.cs" />
+    <Compile Include="CMorphingExtent\CLandingTimeLI.cs" />
+    <Compile Include="CMorphingMethodsLSA\CAL.cs" />
+    <Compile Include="CMorphingMethodsLSA\CALALMulti.cs" />
+    <Compile Include="CMorphingMethodsLSA\CALAMulti.cs" />
+    <Compile Include="CMorphingMethodsLSA\CALL.cs" />
+    <Compile Include="CMorphingMethodsLSA\CALLMulti.cs" />
+    <Compile Include="CMorphingMethodsLSA\CALm.cs" />
+    <Compile Include="CMorphingMethodsLSA\CAL_AL.cs" />
+    <Compile Include="CMorphingMethodsLSA\CApLALMulti.cs" />
+    <Compile Include="CMorphingMethodsLSA\CApLL.cs" />
+    <Compile Include="CMorphingMethodsLSA\CIntervalALMulti.cs" />
+    <Compile Include="CMorphingMethodsLSA\CPAL.cs" />
+    <Compile Include="CMorphingMethodsLSA\CStraightLine.cs" />
+    <Compile Include="CMorphingMethods\CSTS.cs" />
+    <Compile Include="CMorphingMethods\CCGABM.cs" />
+    <Compile Include="CMorphingMethods\CAdministrativeBoundaryMorphing.cs" />
+    <Compile Include="CMorphingMethods\CBLGOptCorMMSimplified.cs" />
+    <Compile Include="CMorphingMethods\CBSBLGOptCor.cs" />
+    <Compile Include="CMorphingMethods\CBSBLGOptCorMM.cs" />
+    <Compile Include="CMorphingMethods\CBSBLGOptCorMMSimplified.cs" />
+    <Compile Include="CMorphingMethods\CLinear.cs" />
+    <Compile Include="CMorphingMethods\CLinearMulti.cs" />
+    <Compile Include="CMorphingMethods\CMorphingMethodsBase\CMorphingBase.cs" />
+    <Compile Include="CMorphingMethods\CMorphingMethodsBase\CMorphingBaseCpl.cs" />
+    <Compile Include="CMorphingMethods\CMorphingMethodsBase\CMorphingBaseCpg.cs" />
+    <Compile Include="CMorphingMethods\CMPBBSL.cs" />
+    <Compile Include="CMorphingMethods\CMPBBSLDP.cs" />
+    <Compile Include="CMorphingMethods\CMPBDP.cs" />
+    <Compile Include="CMorphingMethods\CMPBDPBL.cs" />
+    <Compile Include="CMorphingMethods\CMPMBS.cs" />
+    <Compile Include="CMorphingMethods\CMRL.cs" />
+    <Compile Include="CMorphingMethods\CMRLCut.cs" />
+    <Compile Include="CMorphingMethods\COptCor.cs" />
+    <Compile Include="CMorphingMethods\COptCorBezier.cs" />
+    <Compile Include="CMorphingMethods\CRIBS.cs" />
+    <Compile Include="CMorphingMethods\CRIBSBLG.cs" />
+    <Compile Include="CMorphingMethods\CRIBSBLGOptCor.cs" />
+    <Compile Include="CMorphingMethods\CVertexInsertionM.cs" />
+    <Compile Include="CUtility\CBin.cs" />
+    <Compile Include="CUtility\CCheckRange.cs" />
+    <Compile Include="CUtility\CColor.cs" />
+    <Compile Include="CUtility\CConstants.cs" />
+    <Compile Include="CUtility\CDataRecords.cs" />
+    <Compile Include="CUtility\CCmpClasses.cs" />
+    <Compile Include="CUtility\CCmpEq.cs" />
+    <Compile Include="CUtility\clipperMethods.cs" />
+    <Compile Include="CUtility\CPointer.cs" />
+    <Compile Include="CUtility\clipper.cs" />
+    <Compile Include="CUtility\CStrObjLtSD.cs" />
+    <Compile Include="CUtility\CDelegate.cs" />
+    <Compile Include="CUtility\CEnvelope.cs" />
+    <Compile Include="CUtility\CExcelOperator.cs" />
+    <Compile Include="CUtility\CGeoFunc.cs" />
+    <Compile Include="CHelpFunc.cs" />
+    <Compile Include="CUtility\CHelpFuncExcel.cs" />
+    <Compile Include="CUtility\CIEnumerableExtensions.cs" />
+    <Compile Include="CUtility\CIpeDraw.cs" />
+    <Compile Include="CUtility\CMath.cs" />
+    <Compile Include="CUtility\CMathStatistic.cs" />
+    <Compile Include="CUtility\CMatrix.cs" />
+    <Compile Include="CUtility\CMoveInformation.cs" />
+    <Compile Include="CUtility\CCmpMethods.cs" />
+    <Compile Include="CUtility\CEnum.cs" />
+    <Compile Include="CUtility\CExcelStreamWriter.cs" />
+    <Compile Include="CUtility\CQuadraticEquation.cs" />
+    <Compile Include="CUtility\CParameterInitialize.cs" />
+    <Compile Include="CUtility\CParameterResult.cs" />
+    <Compile Include="CUtility\CParameterThreshold.cs" />
+    <Compile Include="CUtility\CParameterVariable.cs" />
+    <Compile Include="CUtility\CSaveFeature.cs" />
+    <Compile Include="CUtility\CTable.cs" />
+    <Compile Include="CUtility\CTriangulator.cs" />
+    <Compile Include="CUtility\CTriangulatorHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CPlusClass\CPlusClass.vcxproj">
+      <Project>{fbbf5c0b-9ca4-4078-8676-c0decd9a42ba}</Project>
+      <Name>CPlusClass</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\VBClass\VBClass.vbproj">
+      <Project>{37C13D51-20CC-4F15-B16F-20A219F2F3FC}</Project>
+      <Name>VBClass</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="esriDataSourcesNetCDF">
+      <Guid>{28ED84CD-FB06-41A0-9A55-E196441D169A}</Guid>
+      <VersionMajor>10</VersionMajor>
+      <VersionMinor>4</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="esriDataSourcesRaster">
+      <Guid>{8F0541A3-D5BE-4B3F-A8D9-062D5579E19B}</Guid>
+      <VersionMajor>10</VersionMajor>
+      <VersionMinor>4</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="esriGeoDatabaseDistributed">
+      <Guid>{A7C74158-1062-4664-B404-8694D490FCD1}</Guid>
+      <VersionMajor>10</VersionMajor>
+      <VersionMinor>4</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="esriGeoDatabaseExtensions">
+      <Guid>{7BA654FE-F55E-4EE5-8CF2-FAEFFBC04A61}</Guid>
+      <VersionMajor>10</VersionMajor>
+      <VersionMinor>4</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="esriGISClient">
+      <Guid>{746F6817-89BB-4490-9829-83CA25FD505A}</Guid>
+      <VersionMajor>10</VersionMajor>
+      <VersionMinor>4</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="esriServer">
+      <Guid>{18F2FC71-6B30-45B9-B101-037A8B868B66}</Guid>
+      <VersionMajor>10</VersionMajor>
+      <VersionMinor>4</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>8</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Excel">
+      <Guid>{00020813-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>9</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="stdole">
+      <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.manifest" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties ESRIImportCache="ESRI.ArcGIS.Carto|ESRI.ArcGIS.Catalog|ESRI.ArcGIS.Controls|ESRI.ArcGIS.DataSourcesFile|ESRI.ArcGIS.Display|ESRI.ArcGIS.Editor|ESRI.ArcGIS.esriSystem|ESRI.ArcGIS.GeoAnalyst|ESRI.ArcGIS.Geodatabase|ESRI.ArcGIS.Geometry|ESRI.ArcGIS.Maplex|ESRI.ArcGIS.Output|ESRI.ArcGIS.SystemUI" />
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
