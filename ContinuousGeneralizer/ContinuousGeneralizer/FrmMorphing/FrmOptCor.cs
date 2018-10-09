@@ -1,0 +1,267 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+using ESRI.ArcGIS.Controls;
+using ESRI.ArcGIS.Carto;
+using ESRI.ArcGIS.Geodatabase;
+using ESRI.ArcGIS.Geometry;
+using ESRI.ArcGIS.GeoAnalyst;
+using ESRI.ArcGIS.Display;
+
+using ContinuousGeneralizer;
+using MorphingClass.CEvaluationMethods;
+using MorphingClass.CUtility;
+using MorphingClass.CMorphingMethods;
+using MorphingClass.CGeometry;
+
+namespace ContinuousGeneralizer.FrmMorphing
+{
+    public partial class FrmOptCor : Form
+    {
+        private CDataRecords _DataRecords;                    //records of data
+        
+        private COptCor _pOptCor;
+
+        private List < CPolyline> _RelativeInterpolationCplLt;
+        private double _dblProp = 0.5;
+
+        /// <summary>属性：数据记录</summary>
+        public CDataRecords DataRecords
+        {
+            get { return _DataRecords; }
+            set { _DataRecords = value; }
+        }
+
+
+        public FrmOptCor()
+        {
+            Initialize();
+        }
+
+        public FrmOptCor(CDataRecords pDataRecords)
+        {
+            Initialize();
+            _DataRecords = pDataRecords;
+        }
+
+        public void Initialize()
+        {
+            InitializeComponent();
+
+        }
+
+        public void FrmOptCor_Load(object sender, EventArgs e)
+        {
+            CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
+            ParameterInitialize.cboLayerLt = new List<ComboBox>(2);
+            ParameterInitialize.cboLayerLt.Add(this.cboLargerScaleLayer);
+            ParameterInitialize.cboLayerLt.Add(this.cboSmallerScaleLayer);
+            ParameterInitialize.txtMaxBackK = this.txtMaxBackK;
+            ParameterInitialize.txtMulti = this.txtMulti;
+            ParameterInitialize.txtIncrease = this.txtIncrease;
+            ParameterInitialize.txtEvaluation = this.txtEvaluation;
+            ParameterInitialize.cboMorphingMethod = this.cboMorphingMethod;
+            ParameterInitialize.chkCoincidentPoints = this.chkCoincidentPoints;
+            ParameterInitialize.cboStandardVector = this.cboStandardVector;
+            ParameterInitialize.cboEvaluationMethod = this.cboEvaluationMethod;
+            ParameterInitialize.cboIntMaxBackKforJ = this.cboIntMaxBackKforJ;
+            ParameterInitialize.txtAttributeOfKnown = this.txtAttributeOfKnown;
+
+            this.cboMorphingMethod.SelectedIndex = 1;
+            this.cboStandardVector.SelectedIndex = 0;
+            this.cboEvaluationMethod.SelectedIndex = 0;
+            this.cboIntMaxBackKforJ.SelectedIndex = 3;
+
+
+
+            //txtEvaluation
+            //Read all the layers
+            CHelpFunc.FrmOperation(ref ParameterInitialize);
+        }
+
+
+        public void btnRun_Click(object sender, EventArgs e)
+        {
+            CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
+
+
+            _pOptCor = new COptCor(ParameterInitialize);
+            _DataRecords.ParameterResult = _pOptCor.OptCorMorphing();
+            MessageBox.Show("Done!");
+        }
+
+
+        private void btn010_Click(object sender, EventArgs e)
+        {
+            _dblProp = 0.1;
+            _RelativeInterpolationCplLt = CHelpFunc.GetAndSaveInterpolation(_DataRecords, _dblProp);
+        }
+        private void btn020_Click(object sender, EventArgs e)
+        {
+            _dblProp = 0.2;
+            _RelativeInterpolationCplLt = CHelpFunc.GetAndSaveInterpolation(_DataRecords, _dblProp);
+        }
+        private void btn030_Click(object sender, EventArgs e)
+        {
+            _dblProp = 0.3;
+            _RelativeInterpolationCplLt = CHelpFunc.GetAndSaveInterpolation(_DataRecords, _dblProp);
+        }
+        private void btn040_Click(object sender, EventArgs e)
+        {
+            _dblProp = 0.4;
+            _RelativeInterpolationCplLt = CHelpFunc.GetAndSaveInterpolation(_DataRecords, _dblProp);
+        }
+        private void btn050_Click(object sender, EventArgs e)
+        {
+            _dblProp = 0.5;
+            _RelativeInterpolationCplLt = CHelpFunc.GetAndSaveInterpolation(_DataRecords, _dblProp);
+        }
+        private void btn060_Click(object sender, EventArgs e)
+        {
+            _dblProp = 0.6;
+            _RelativeInterpolationCplLt = CHelpFunc.GetAndSaveInterpolation(_DataRecords, _dblProp);
+        }
+        private void btn070_Click(object sender, EventArgs e)
+        {
+            _dblProp = 0.7;
+            _RelativeInterpolationCplLt = CHelpFunc.GetAndSaveInterpolation(_DataRecords, _dblProp);
+        }
+        private void btn080_Click(object sender, EventArgs e)
+        {
+            _dblProp = 0.8;
+            _RelativeInterpolationCplLt = CHelpFunc.GetAndSaveInterpolation(_DataRecords, _dblProp);
+        }
+        private void btn090_Click(object sender, EventArgs e)
+        {
+            _dblProp = 0.9;
+            _RelativeInterpolationCplLt = CHelpFunc.GetAndSaveInterpolation(_DataRecords, _dblProp);
+        }
+        private void btn000_Click(object sender, EventArgs e)
+        {
+            _dblProp = 0;
+            _RelativeInterpolationCplLt = CHelpFunc.GetAndSaveInterpolation(_DataRecords, _dblProp);
+        }
+        private void btn025_Click(object sender, EventArgs e)
+        {
+            _dblProp = 0.25;
+            _RelativeInterpolationCplLt = CHelpFunc.GetAndSaveInterpolation(_DataRecords, _dblProp);
+        }
+        private void btn075_Click(object sender, EventArgs e)
+        {
+            _dblProp = 0.75;
+            _RelativeInterpolationCplLt = CHelpFunc.GetAndSaveInterpolation(_DataRecords, _dblProp);
+        }
+        private void btn100_Click(object sender, EventArgs e)
+        {
+            _dblProp = 1;
+            _RelativeInterpolationCplLt = CHelpFunc.GetAndSaveInterpolation(_DataRecords, _dblProp);
+        }
+
+        private void btnInputedScale_Click(object sender, EventArgs e)
+        {
+            _dblProp = Convert.ToDouble(this.txtProportion.Text);
+            _RelativeInterpolationCplLt = CHelpFunc.GetAndSaveInterpolation(_DataRecords, _dblProp);
+
+        }
+
+        private void btnReduce_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _dblProp = _dblProp - 0.02;
+                pbScale.Value = Convert.ToInt16(100 * _dblProp);
+                _RelativeInterpolationCplLt = CHelpFunc.GetAndSaveInterpolation(_DataRecords, _dblProp);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("不能再减小了！");
+            }
+
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            _dblProp = _dblProp + 0.02;
+            pbScale.Value = Convert.ToInt16(100 * _dblProp);
+            _RelativeInterpolationCplLt = CHelpFunc.GetAndSaveInterpolation(_DataRecords, _dblProp);
+        }
+
+        private void btnSaveInterpolation_Click(object sender, EventArgs e)
+        {
+            //CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
+            //List<CPolyline> cpllt = new List<CPolyline>();
+            //cpllt.Add(_RelativeInterpolationCpl);
+            //string strFileName = _dblProp.ToString();
+            //CHelpFunc.SaveCPlLt(cpllt, strFileName, ParameterInitialize.pWorkspace, ParameterInitialize.m_mapControl);
+        }
+
+
+        private void btnIntegral_Click(object sender, EventArgs e)
+        {
+            CDeflectionEvaluation pDeflectionEvaluation = new CDeflectionEvaluation(_DataRecords);
+            double dblEvaluation = pDeflectionEvaluation.CalDeflectionEvaluation();
+            this.txtEvaluation.Text = dblEvaluation.ToString();
+        }
+
+
+        private void btnTranslation_Click(object sender, EventArgs e)
+        {
+            CTranslationEvaluation pTranslationEvaluation = new CTranslationEvaluation(_DataRecords);
+            double dblEvaluation = pTranslationEvaluation.CalTranslationEvaluation();
+            this.txtEvaluation.Text = dblEvaluation.ToString();
+
+        }
+
+
+        private void btnExportToExcel_Click(object sender, EventArgs e)
+        {
+            CHelpFuncExcel.ExportEvaluationToExcelCorr(_DataRecords.ParameterResult, _DataRecords.ParameterInitialize.strSavePath);
+        }
+
+        private void btnStatistic_Click(object sender, EventArgs e)
+        {
+            double dblProp = 0;
+            List<double> dbllt = new List<double>();
+            List<CPoint> CResultPtLt = _DataRecords.ParameterResult.CResultPtLt;
+            for (int i = 0; i <= 100; i++)
+            {
+                CPolyline cpl = CGeoFunc.GetTargetcpl(CResultPtLt, dblProp);
+                dbllt.Add(cpl.pPolyline.Length);
+                dblProp = dblProp + 0.01;
+            }
+
+            CHelpFuncExcel.ExportDataltToExcel(dbllt, "Length", _DataRecords.ParameterInitialize.strSavePath);
+        }
+
+        private void btnstatisticEX_Click(object sender, EventArgs e)
+        {
+            double dblProp = -1;
+            List<double> dbllt = new List<double>();
+            List<CPoint> CResultPtLt = _DataRecords.ParameterResult.CResultPtLt;
+            for (int i = 0; i <= 300; i++)
+            {
+                CPolyline cpl = CGeoFunc.GetTargetcpl(CResultPtLt, dblProp);
+                dbllt.Add(cpl.pPolyline.Length);
+                dblProp = dblProp + 0.01;
+            }
+
+            CHelpFuncExcel.ExportDataltToExcel(dbllt, "Length", _DataRecords.ParameterInitialize.strSavePath);
+        }
+
+
+
+
+
+
+
+
+
+
+
+    }
+}
