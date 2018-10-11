@@ -190,35 +190,6 @@ namespace MorphingClass.CUtility
             }
         }
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <typeparam name="T"></typeparam>
-        ///// <typeparam name="TOrder"></typeparam>
-        ///// <param name="TEnumerable"></param>
-        ///// <param name="orderFunc"></param>
-        ///// <param name="cmp"></param>
-        ///// <returns></returns>
-        ///// <remarks>TEnumerable is already ordered according to cmp</remarks>
-        //public static IEnumerable<T> RemoveOrderedLaterDuplicate<T, TOrder>(this IEnumerable<T> TEnumerable, Func<T, TOrder> orderFunc, IComparer<TOrder> cmp = null)
-        //{
-        //    IEnumerator<T> selfEnumerator = TEnumerable.GetEnumerator();
-        //    if (!selfEnumerator.MoveNext()) throw new ArgumentException("List is empty.", "self");
-
-        //    if (cmp == null) { cmp = Comparer<TOrder>.Default; }
-
-        //    T lastT = selfEnumerator.Current;
-        //    yield return lastT;
-        //    while (selfEnumerator.MoveNext())
-        //    {
-        //        if (cmp.Compare(orderFunc(selfEnumerator.Current), orderFunc(lastT)) != 0)
-        //        {
-        //            yield return selfEnumerator.Current;
-        //            lastT = selfEnumerator.Current;
-        //        }
-        //    }
-        //}
-
 
         /// <summary>
         /// Please stop use this function. Instead, use HashSet based on GID
@@ -235,16 +206,6 @@ namespace MorphingClass.CUtility
                 selfEnumerator.Current.indexID = intIndexID++;
             }
         }
-
-        //public static void SetIndexID<CPoint>(this IEnumerable<CPoint> TEnumerable)
-        //{
-        //    IEnumerator<CPoint> selfEnumerator = TEnumerable.GetEnumerator();
-        //    int intIndexID = 0;
-        //    while (selfEnumerator.MoveNext())
-        //    {
-        //        selfEnumerator.Current.indexID = intIndexID++;
-        //    }
-        //}
 
         public static void EveryElementNew<T>(this List<T> ElementLt)
             where T : new()
@@ -311,35 +272,6 @@ namespace MorphingClass.CUtility
                 yield return TEnumerator.Current as TExpected;
             }
         }
-
-        ///// <summary>
-        ///// we probably could make this more general
-        ///// </summary>
-        ///// <typeparam name="CGeo"></typeparam>
-        ///// <typeparam name="TSpecified"></typeparam>
-        ///// <typeparam name="TValue"></typeparam>
-        ///// <param name="TEnumerable"></param>
-        ///// <param name="TValueEnumerable"></param>
-        ///// <param name="orderFunc"></param>
-        ///// <param name="orderFuncConvert"></param>
-        //public static void SetSpecifiedAttribute<CGeo, TSpecified, TValue>(this IEnumerable<CGeoBase<CGeo>> TEnumerable, IEnumerable<TValue> TValueEnumerable, Func<TValue, TSpecified> orderFuncConvert)        
-        ////public static void SetSpecifiedAttribute<T, TSpecified, TValue>(this IEnumerable<T> TEnumerable, IEnumerable<TValue> TValueEnumerable, Func<T, TSpecified> orderFunc, Func<TValue, TSpecified> orderFuncConvert)
-        //{
-        //    var TEnumerator = TEnumerable.GetEnumerator();
-        //    var TValueEnumerator = TValueEnumerable.GetEnumerator();
-
-        //    while (TEnumerator.MoveNext())
-        //    {
-        //        TValueEnumerator.MoveNext();
-
-        //        TEnumerator.Current.intType = orderFuncConvert(TValueEnumerator.Current);
-        //        //T CurrentT = TEnumerator.Current;
-        //        //orderFunc(CurrentT) = orderFuncConvert(TValueEnumerator.Current);
-
-
-        //    }
-        //}
-
 
         public static List<List<T>> ToLtLt<T>(this IEnumerable<IEnumerable<T>> self)
         {

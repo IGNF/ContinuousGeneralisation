@@ -192,7 +192,7 @@ namespace MorphingClass.CMorphingMethods
             var InterLargerCpl = CGeoFunc.GetInbetweenCpl(olcplmoved, nlcplmoved, dblT);
             var InterSmallerCpl = CGeoFunc.GetInbetweenCpl(oscplmoved, nscplmoved, dblT);
             var InterCpl = CGeoFunc.GetInbetweenCpl(InterLargerCpl, InterSmallerCpl, dblS);
-            var simplifedcptlt = CImaiIriSimplify.ImaiIriSimplify(InterCpl.CptLt, 100000000*CConstants.dblVerySmallCoord).ToList();
+            var simplifedcptlt = CImaiIriSimplify.ImaiIriSimplify(InterCpl.CptLt, 100000 * CConstants.dblVerySmallCoord).ToList();
 
             //CSaveFeature.SaveCpl(InterLargerCpl, "InterLargerCpl_" + dblT.ToString() + " " + dblS.ToString());
             //CSaveFeature.SaveCpl(InterSmallerCpl, "InterSmallerCpl_" + dblT.ToString() + " " + dblS.ToString());

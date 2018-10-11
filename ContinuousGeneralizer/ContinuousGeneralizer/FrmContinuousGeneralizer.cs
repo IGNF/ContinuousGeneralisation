@@ -50,7 +50,10 @@ namespace ContinuousGeneralizer
 
         private void SetPathForData()
         {
-            string strWorkPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\";
+            string strPathCG = System.IO.Path.GetFullPath(@"..\..\..\..\"); //the path to folder ContinuousGeneralisation
+            string strWorkPath = strPathCG + "ContinuousGeneralisation_Data\\";
+
+            //string strWorkPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\";
             //CHelpFunc.strDataFolderName = "Jiangxi";
             //CHelpFunc.strDataFolderName = "CompatibleTriangulationTestVerySimple";
             //CHelpFunc.strDataFolderName = "JiangxiOneCounty";
@@ -184,13 +187,18 @@ namespace ContinuousGeneralizer
 
             //frmCurrent.btnTransform_Click(sender, e);
 
-            //frmCurrent.btnRun_Click(sender, e);
+            frmCurrent.btnRun_Click(sender, e);
             //frmCurrent.btnGreedy_Click(sender, e);
             //frmCurrent.btnRunILP_Click(sender, e);
             //frmCurrent.btn020_Click(sender, e);
             //frmCurrent.btnMultiResults_Click(sender, e);
 
             //frmCurrent.btn090_Click(sender, e);
+
+
+            var frmSecondStep = new FrmCreatePointLayer(_DataRecords);
+            frmSecondStep.Show();
+            frmSecondStep.btnRun_Click(sender, e);
 
         }
 
@@ -216,6 +224,7 @@ namespace ContinuousGeneralizer
         private double m_dblX = 0;
         //当前Y坐标
         private double m_dblY = 0;
+
 
 
         /// <summary>属性：数据记录</summary>
@@ -1457,8 +1466,9 @@ namespace ContinuousGeneralizer
             (new FrmSTS(_DataRecords)).Show();
         }
 
-        #endregion
 
+
+        #endregion
 
 
     }

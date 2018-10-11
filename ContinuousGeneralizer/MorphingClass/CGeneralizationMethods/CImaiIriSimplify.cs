@@ -30,6 +30,7 @@ namespace MorphingClass.CGeneralizationMethods
 
         public static IEnumerable<CPoint> ImaiIriSimplify(List<CPoint> cptlt, double dblThresholdDis)
         {
+            Console.WriteLine("dblThresholdDis: " + dblThresholdDis);
             if (cptlt.Count <= 1)
             {
                 throw new ArgumentOutOfRangeException("There is no points for simplification!");
@@ -46,16 +47,22 @@ namespace MorphingClass.CGeneralizationMethods
                 CNodeLt.SetIndexID();
                 for (int i = 0; i < cptlt.Count - 1; i++)
                 {
-                    CNodeLt[i].NbrCNodeLt = new List<CGeometry.CNode>();
+                    CNodeLt[i].NbrCNodeLt = new List<CNode>();
+                    //CNodeLt[i + 1].dblCost = 0; //the attribute dblCost is used temporarily
                     CNodeLt[i].NbrCNodeLt.Add(CNodeLt[i + 1]);
                     for (int j = i + 2; j < cptlt.Count; j++)
                     {
                         var subcptlt = cptlt.GetRange(i, j - i + 1);
-                        if (CDPSimplify.IsWithinTDis(subcptlt, dblThresholdDis).Item1 == true)
+                        var tplWithinTDis = CDPSimplify.IsWithinTDis(subcptlt, dblThresholdDis);
+                        if (tplWithinTDis.Item1 == true)
                         {
+                            //Console.WriteLine("i, j, dblThresholdDis:" + i.ToString() + "   "+ j.ToString() + "   " + tplWithinTDis.Item3);
+
+                            //CNodeLt[j].dblCost = tplWithinTDis.Item3;
                             CNodeLt[i].NbrCNodeLt.Add(CNodeLt[j]);
                         }
                     }
+                    //CNodeLt[i].NbrCNodeLt.Sort((cnode1, cnode2) => cnode2.dblCost.CompareTo(cnode1.dblCost));
                 }
 
                 BFS(CNodeLt[0], CNodeLt.Last());

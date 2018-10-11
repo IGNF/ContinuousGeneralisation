@@ -245,7 +245,7 @@ namespace MorphingClass.CUtility
                     }
                 }
 
-                TestIGeoAccordingToInput(pFeature.Shape, i);
+                //TestIGeoAccordingToInput(pFeature.Shape, i);
                 ObjShapeLt.Add(pFeature.Shape);
 
                 var ObjValueLt = new List<object>(intFieldCount - 2);  //we don't need the first two values, i.e., Id and shape

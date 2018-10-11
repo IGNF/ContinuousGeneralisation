@@ -830,10 +830,9 @@ namespace MorphingClass.CGeneralizationMethods
         public static bool IsCutValid(List<CPoint> cptlt, CEdgeGrid pEdgeGrid,   
             double dblThreshold, out int intIndexMaxDis)
         {
-            bool blnWithinTDis;
-            (blnWithinTDis, intIndexMaxDis) = IsWithinTDis(cptlt, dblThreshold);
-
-            if (blnWithinTDis == false)
+            var tplWithinTDis = IsWithinTDis(cptlt, dblThreshold);
+            intIndexMaxDis = tplWithinTDis.Item2;
+            if (tplWithinTDis.Item1 == false)
             {
                 return false;
             }
@@ -861,19 +860,18 @@ namespace MorphingClass.CGeneralizationMethods
 
         }
 
-        public static (bool, int) IsWithinTDis(List<CPoint> cptlt, double dblThreshold)
+        public static (bool, int, double) IsWithinTDis(List<CPoint> cptlt, double dblThreshold)
         {            
             //the distances from all the points of the segment to the cedgebaseline should be smaller than a threshold
             var cedgebaseline = new CEdge(cptlt[0], cptlt.Last());
             var IndexDisVP = ComputeMaxIndexDisVP(cedgebaseline, cptlt);
-            int intIndexMaxDis = IndexDisVP.val1;
             if (IndexDisVP.val2 <= dblThreshold)
             {
-                return (true, intIndexMaxDis);
+                return (true, IndexDisVP.val1, IndexDisVP.val2);
             }
             else
             {
-                return (false, intIndexMaxDis);
+                return (false, IndexDisVP.val1, IndexDisVP.val2);
             }
         }
 
@@ -954,7 +952,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             var MaxDisVP = new CValPair<int, double>();
             MaxDisVP.val1 = intStart;
-            MaxDisVP.val2 = 0;
+            MaxDisVP.val2 = -1; //we set -1 as the default distance
 
             for (int i = intStart; i <= intEnd; i++)
             {
