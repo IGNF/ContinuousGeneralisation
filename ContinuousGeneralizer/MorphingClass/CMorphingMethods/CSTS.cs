@@ -167,6 +167,24 @@ namespace MorphingClass.CMorphingMethods
             CSaveFeature.SaveCplEb(HelpCplLt, strTS + "_Help", intRed: 128, intGreen: 128, intBlue: 128, 
                 pesriSimpleLineStyle: esriSimpleLineStyle.esriSLSDash);
 
+
+
+
+
+            CDrawInActiveView.DrawArrow(pAxMapControl.ActiveView, )
+
+
+
+
+
+
+
+
+
+
+
+
+
             //Output(0.3,0);
             //Output(0, 0.6);
             //Output(0.7, 0.2);

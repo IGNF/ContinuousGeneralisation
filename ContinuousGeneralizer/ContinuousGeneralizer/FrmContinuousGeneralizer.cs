@@ -848,8 +848,8 @@ namespace ContinuousGeneralizer
             //var graphics = this.axMapControl.contain.CreateGraphics();
             // graphics.DrawLine()
 
-
             CDrawInActiveView.DrawArrow(this.axMapControl.ActiveView.GraphicsContainer, 128, 128, 128);
+            CDrawInActiveView.DrawArrow(this.axMapControl.ActiveView, new CPoint(0, 0,0), new CPoint(0, 50,50), 128, 128, 128);
             CDrawInActiveView.AddPointElement(this.axMapControl.ActiveView.GraphicsContainer);
             this.axMapControl.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
             //this.axMapControl.ActiveView.Refresh();

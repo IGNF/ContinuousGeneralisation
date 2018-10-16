@@ -23,108 +23,6 @@ namespace MorphingClass.CUtility
 {
     public static class CDrawInActiveView
     {
-        public static void DrawArrow(IGraphicsContainer graphicsContainer, int intRed = 0, int intGreen = 0, int intBlue = 0)
-        {
-            ////Set the element name  
-            string elementName = "ArrowTest";
-
-            ////Get the graphics container from the page layout (set elsewhere)  
-            //IActiveView activeView = (IActiveView)pageLayout;
-            //IGraphicsContainer graphicsContainer = (IGraphicsContainer)pageLayout;
-
-            ////Find all existing elements with specified name  
-            ////Build a list of elements and then loop over the list to delete them  
-            //List<IElement> elementsToDelete = new List<IElement>();
-            //graphicsContainer.Reset();
-            //IElementProperties3 elementProperties3 = null;
-            //IElement element = null;
-            //while ((element = graphicsContainer.Next()) != null)
-            //{
-            //    elementProperties3 = (IElementProperties3)element;
-            //    if (elementProperties3.Name == elementName)
-            //    {
-            //        elementsToDelete.Add(element);
-            //    }
-            //}
-
-            //foreach (IElement elementToDelete in elementsToDelete)
-            //{
-            //    graphicsContainer.DeleteElement(elementToDelete);
-            //}
-
-            //Define color
-            IRgbColor rgbColor = new RgbColorClass();
-            rgbColor.Red = intRed;
-            rgbColor.Green = intGreen;
-            rgbColor.Blue = intBlue;
-
-            //Define an arrow marker  
-            IArrowMarkerSymbol arrowMarkerSymbol = new ArrowMarkerSymbolClass();
-            arrowMarkerSymbol.Color = rgbColor;
-            arrowMarkerSymbol.Size = 6;
-            arrowMarkerSymbol.Length = 8;
-            arrowMarkerSymbol.Width = 6;
-            //Add an offset to make sure the square end of the line is hidden  
-            arrowMarkerSymbol.XOffset = 0.8;
-
-            //Create cartographic line symbol  
-            ICartographicLineSymbol cartographicLineSymbol = new CartographicLineSymbolClass();
-            cartographicLineSymbol.Color = rgbColor;
-            cartographicLineSymbol.Width = 1;
-
-            //Define simple line decoration  
-            ISimpleLineDecorationElement simpleLineDecorationElement = new SimpleLineDecorationElementClass();
-            //Place the arrow at the end of the line (the "To" point in the geometry below)  
-            simpleLineDecorationElement.AddPosition(1);
-            simpleLineDecorationElement.MarkerSymbol = arrowMarkerSymbol;
-
-            //Define line decoration  
-            ILineDecoration lineDecoration = new LineDecorationClass();
-            lineDecoration.AddElement(simpleLineDecorationElement);
-
-            //Set line properties  
-            ILineProperties lineProperties = (ILineProperties)cartographicLineSymbol;
-            lineProperties.LineDecoration = lineDecoration;
-
-            //Define line element  
-            ILineElement lineElement = new LineElementClass();
-            lineElement.Symbol = (ILineSymbol)cartographicLineSymbol;
-
-            //Create the line geometry  
-            IPoint fromPoint = new PointClass();
-            fromPoint.X = 4.0;
-            fromPoint.Y = 0.8;
-
-            IPoint toPoint = new PointClass();
-            toPoint.X = 5.0;
-            toPoint.Y = 0.8;
-
-            IPolyline polyline = new PolylineClass();
-            polyline.FromPoint = fromPoint;
-            polyline.ToPoint = toPoint;
-
-            //Cast to Element and set geometry  
-            var element = (IElement)lineElement;
-            element.Geometry = polyline;
-
-            //Set the name  
-            //IElementProperties3 elementProperties3.Name = elementName;
-
-            //Add element to graphics container  
-            graphicsContainer.AddElement(element, 0);
-
-            ////Clear the graphics selection (graphics are selected when added)  
-            //IGraphicsContainerSelect graphicsContainerSelect = (IGraphicsContainerSelect)graphicsContainer;
-            //graphicsContainerSelect.UnselectAllElements();
-
-            //activeView.Refresh();
-
-
-        }
-
-
-
-
         public static void AddPointElement(IGraphicsContainer pGraphicsContainer)
         {
             IPoint ipt = new PointClass();
@@ -152,35 +50,152 @@ namespace MorphingClass.CUtility
             
         }
 
-        public static void DrawArrow(IGraphicsContainer pGraphicsContainer, CPoint frcpt, CPoint tocpt, 
+
+        public static void DrawArrow(IActiveView pActiveView, CPoint frcpt, CPoint tocpt, 
             int intRed = 0, int intGreen = 0, int intBlue = 0)
         {
-            //CHelpFunc.
+            var rgbColor = CHelpFunc.GenerateIRgbColor(intRed, intGreen, intBlue);
+
+            //Define an arrow marker  
+            IArrowMarkerSymbol arrowMarkerSymbol = new ArrowMarkerSymbolClass();
+            arrowMarkerSymbol.Color = rgbColor;
+            //arrowMarkerSymbol.Size = 6;  //it seems size has no effect
+            arrowMarkerSymbol.Length = 6;
+            arrowMarkerSymbol.Width = 5;
+            //Add an offset to make sure the square end of the line is hidden  
+            //arrowMarkerSymbol.XOffset = 0.8;
+
+            //Create cartographic line symbol  
+            ICartographicLineSymbol cartographicLineSymbol = new CartographicLineSymbolClass();
+            cartographicLineSymbol.Color = rgbColor;
+            cartographicLineSymbol.Width = 1;
+
+            //Define simple line decoration  
+            ISimpleLineDecorationElement simpleLineDecorationElement = new SimpleLineDecorationElementClass();
+            //Place the arrow at the end of the line (the "To" point in the geometry below)  
+            simpleLineDecorationElement.AddPosition(1);
+            simpleLineDecorationElement.MarkerSymbol = arrowMarkerSymbol;
+
+            //Define line decoration  
+            ILineDecoration lineDecoration = new LineDecorationClass();
+            lineDecoration.AddElement(simpleLineDecorationElement);
+
+            //Set line properties  
+            ILineProperties lineProperties = (ILineProperties)cartographicLineSymbol;
+            lineProperties.LineDecoration = lineDecoration;
+
+            //Define line element  
+            ILineElement lineElement = new LineElementClass();
+            lineElement.Symbol = (ILineSymbol)cartographicLineSymbol;
+
+            CPolyline cpl = new CPolyline(-1, frcpt, tocpt);
+
+            //Cast to Element and set geometry  
+            var element = (IElement)lineElement;
+            element.Geometry = cpl.JudgeAndSetPolyline();
+
+            //Set the name  
+            //IElementProperties3 elementProperties3.Name = elementName;
+
+            //Add element to graphics container  
+            pActiveView.GraphicsContainer.AddElement(element, 0);
 
 
-            IPoint ipt = new PointClass();
-            ipt.PutCoords(10, 10);
 
 
-            IRgbColor rgbColor = new RgbColorClass();
-            rgbColor.Red = 255;
-            rgbColor.Green = 0;
-            rgbColor.Blue = 0;
+            #region a useful example https://community.esri.com/thread/69395
+            ////Set the element name  
+            //string elementName = "ArrowTest";
 
-            ISimpleMarkerSymbol pSimpleSym = new SimpleMarkerSymbolClass();
-            pSimpleSym.Style = esriSimpleMarkerStyle.esriSMSCross;
-            pSimpleSym.Size = 10;
-            pSimpleSym.Color = rgbColor as IColor;
+            ////Get the graphics container from the page layout (set elsewhere)  
+            //IActiveView activeView = (IActiveView)pageLayout;
+            //IGraphicsContainer graphicsContainer = (IGraphicsContainer)pageLayout;
 
-            IMarkerElement pMarkerElem = null;
-            IElement pElem;
-            pElem = new MarkerElementClass();
-            pElem.Geometry = ipt;
-            pMarkerElem = pElem as IMarkerElement;
-            pMarkerElem.Symbol = pSimpleSym;
-            pGraphicsContainer.AddElement(pElem, 0);
+            ////Find all existing elements with specified name  
+            ////Build a list of elements and then loop over the list to delete them  
+            //List<IElement> elementsToDelete = new List<IElement>();
+            //graphicsContainer.Reset();
+            //IElementProperties3 elementProperties3 = null;
+            //IElement element = null;
+            //while ((element = graphicsContainer.Next()) != null)
+            //{
+            //    elementProperties3 = (IElementProperties3)element;
+            //    if (elementProperties3.Name == elementName)
+            //    {
+            //        elementsToDelete.Add(element);
+            //    }
+            //}
 
+            //foreach (IElement elementToDelete in elementsToDelete)
+            //{
+            //    graphicsContainer.DeleteElement(elementToDelete);
+            //}
 
+            ////Define color  
+            //IRgbColor rgbColor = new RgbColorClass();
+            //rgbColor.RGB = Color.Black.ToArgb();
+
+            ////Define an arrow marker  
+            //IArrowMarkerSymbol arrowMarkerSymbol = new ArrowMarkerSymbolClass();
+            //arrowMarkerSymbol.Color = rgbColor;
+            //arrowMarkerSymbol.Size = 6;
+            //arrowMarkerSymbol.Length = 8;
+            //arrowMarkerSymbol.Width = 6;
+            ////Add an offset to make sure the square end of the line is hidden  
+            //arrowMarkerSymbol.XOffset = 0.8;
+
+            ////Create cartographic line symbol  
+            //ICartographicLineSymbol cartographicLineSymbol = new CartographicLineSymbolClass();
+            //cartographicLineSymbol.Color = rgbColor;
+            //cartographicLineSymbol.Width = 1;
+
+            ////Define simple line decoration  
+            //ISimpleLineDecorationElement simpleLineDecorationElement = new SimpleLineDecorationElementClass();
+            ////Place the arrow at the end of the line (the "To" point in the geometry below)  
+            //simpleLineDecorationElement.AddPosition(1);
+            //simpleLineDecorationElement.MarkerSymbol = arrowMarkerSymbol;
+
+            ////Define line decoration  
+            //ILineDecoration lineDecoration = new LineDecorationClass();
+            //lineDecoration.AddElement(simpleLineDecorationElement);
+
+            ////Set line properties  
+            //ILineProperties lineProperties = (ILineProperties)cartographicLineSymbol;
+            //lineProperties.LineDecoration = lineDecoration;
+
+            ////Define line element  
+            //ILineElement lineElement = new LineElementClass();
+            //lineElement.Symbol = (ILineSymbol)cartographicLineSymbol;
+
+            ////Create the line geometry  
+            //IPoint fromPoint = new PointClass();
+            //fromPoint.X = 4.0;
+            //fromPoint.Y = 0.8;
+
+            //IPoint toPoint = new PointClass();
+            //toPoint.X = 5.0;
+            //toPoint.Y = 0.8;
+
+            //IPolyline polyline = new PolylineClass();
+            //polyline.FromPoint = fromPoint;
+            //polyline.ToPoint = toPoint;
+
+            ////Cast to Element and set geometry  
+            //element = (IElement)lineElement;
+            //element.Geometry = polyline;
+
+            ////Set the name  
+            //elementProperties3.Name = elementName;
+
+            ////Add element to graphics container  
+            //graphicsContainer.AddElement(element, 0);
+
+            ////Clear the graphics selection (graphics are selected when added)  
+            //IGraphicsContainerSelect graphicsContainerSelect = (IGraphicsContainerSelect)graphicsContainer;
+            //graphicsContainerSelect.UnselectAllElements();
+
+            //activeView.Refresh();
+            #endregion
         }
 
 
@@ -192,13 +207,9 @@ namespace MorphingClass.CUtility
         public static void ViewPolyline(IMapControl4 pMapControl, CPolyline cpl)
         {
             //设置线段属性
-            IRgbColor pColor = new RgbColorClass();
-            pColor.Red = 255;
-            pColor.Green = 0;
-            pColor.Blue = 0;
             ILineSymbol pSimpleLineSymbol = new SimpleLineSymbolClass();
             pSimpleLineSymbol.Width = 2;
-            pSimpleLineSymbol.Color = pColor;
+            pSimpleLineSymbol.Color = CHelpFunc.GenerateIRgbColor(255, 0, 0) as IColor;
 
             //生成线段
             ILineElement pLineElement = new LineElementClass();
@@ -217,13 +228,9 @@ namespace MorphingClass.CUtility
         public static void ViewPolylines(IMapControl4 pMapControl, List<CPolyline> cpllt)
         {
             //设置线段属性
-            IRgbColor pColor = new RgbColorClass();
-            pColor.Red = 255;
-            pColor.Green = 0;
-            pColor.Blue = 0;
             ILineSymbol pSimpleLineSymbol = new SimpleLineSymbolClass();
             pSimpleLineSymbol.Width = 1;
-            pSimpleLineSymbol.Color = pColor;
+            pSimpleLineSymbol.Color = CHelpFunc.GenerateIRgbColor(255, 0, 0) as IColor;
 
 
             //生成线段

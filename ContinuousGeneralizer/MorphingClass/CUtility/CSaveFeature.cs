@@ -270,12 +270,7 @@ esriSimpleLineStyle pesriSimpleLineStyle, esriSimpleFillStyle pesriSimpleFillSty
         {
             if (strSymbolLayerPath == null)
             {
-                IRgbColor pRgbColor = new RgbColorClass();
-                pRgbColor.Red = intRed;
-                pRgbColor.Green = intGreen;
-                pRgbColor.Blue = intBlue;
-
-
+                IRgbColor pRgbColor = CHelpFunc.GenerateIRgbColor(intRed, intGreen, intBlue);
                 ISimpleRenderer pSimpleRenderer = new SimpleRendererClass();
 
                 switch (fesriGeometryType)
