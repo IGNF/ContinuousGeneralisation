@@ -296,7 +296,6 @@
     <Compile Include="CMorphingAlgorithms\CLIMultiA.cs" />
     <Compile Include="CMorphingAlgorithms\CLinearInterpolationA.cs" />
     <Compile Include="CMorphingAlgorithms\CVertexInsertionA.cs" />
-    <Compile Include="CMorphingExtent\CBase.cs" />
     <Compile Include="CMorphingExtent\CLandingTime.cs" />
     <Compile Include="CMorphingExtent\CLandingTimeLI.cs" />
     <Compile Include="CMorphingMethodsLSA\CAL.cs" />
