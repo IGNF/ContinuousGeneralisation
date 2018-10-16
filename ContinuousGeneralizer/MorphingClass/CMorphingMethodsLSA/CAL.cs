@@ -208,7 +208,7 @@ namespace MorphingClass.CMorphingMethodsLSA
             //for (int i = 0; i < cpl.SubCPlLt.Count; i++)
             //{
             //    CPolyline subcpl = cpl.SubCPlLt[i];
-            //    CHelpFunc.ViewPolylineByRGB(m_mapControl, subcpl, subcpl.intRed, subcpl.intGreen, subcpl.intBlue);  //显示生成的线段
+            //    CDrawInActiveView.ViewPolylineByRGB(m_mapControl, subcpl, subcpl.intRed, subcpl.intGreen, subcpl.intBlue);  //显示生成的线段
             //}
 
             ////对缓冲区进行染色
@@ -267,7 +267,7 @@ namespace MorphingClass.CMorphingMethodsLSA
             IMapControl4 m_mapControl = _DataRecords.ParameterInitialize.m_mapControl;
             IGraphicsContainer pGra = m_mapControl.Map as IGraphicsContainer;
             pGra.DeleteAllElements();
-            CHelpFunc.ViewPolyline(m_mapControl, cpl);  //显示生成的线段
+            CDrawInActiveView.ViewPolyline(m_mapControl, cpl);  //显示生成的线段
 
 
             return cpl;

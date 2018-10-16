@@ -94,7 +94,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
                 IMapControl4 m_mapControl = _DataRecords.ParameterInitialize.m_mapControl;
                 IGraphicsContainer pGra = m_mapControl.Map as IGraphicsContainer;
                 pGra.DeleteAllElements();
-                CHelpFunc.ViewPolyline(m_mapControl, cpllt[_intI]);  //显示生成的线段
+                CDrawInActiveView.ViewPolyline(m_mapControl, cpllt[_intI]);  //显示生成的线段
                 _intI -= 1;
             }
             else if (_intI < 0)
@@ -117,7 +117,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
                 IMapControl4 m_mapControl = _DataRecords.ParameterInitialize.m_mapControl;
                 IGraphicsContainer pGra = m_mapControl.Map as IGraphicsContainer;
                 pGra.DeleteAllElements();
-                CHelpFunc.ViewPolyline(m_mapControl, cpllt[_intI]);  //显示生成的线段
+                CDrawInActiveView.ViewPolyline(m_mapControl, cpllt[_intI]);  //显示生成的线段
                 _intI += 1;
             }
             else if (_intI >= cpllt.Count)

@@ -52,7 +52,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
             {
                 if (_CPolylineLt[i].CptLt[0].Z > _CPolylineLt[i].CptLt[_CPolylineLt[i].CptLt.Count - 1].Z)
                 {
-                    CHelpFunc.ViewPolyline(_DataRecords.ParameterInitialize.m_mapControl, _CPolylineLt[i]);
+                    CDrawInActiveView.ViewPolyline(_DataRecords.ParameterInitialize.m_mapControl, _CPolylineLt[i]);
                 }
                 else
                 {
@@ -60,7 +60,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
                 }
             }
 
-            CHelpFunc.ViewPolyline(_DataRecords.ParameterInitialize.m_mapControl, _CPolylineLt[intCount]);
+            CDrawInActiveView.ViewPolyline(_DataRecords.ParameterInitialize.m_mapControl, _CPolylineLt[intCount]);
             intCount += 1;
             int kk = 5;
 
@@ -76,7 +76,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
             }
 
             CPolyline cpl = _CPolyline;
-            CHelpFunc.ViewPolyline(_DataRecords.ParameterInitialize.m_mapControl, cpl);
+            CDrawInActiveView.ViewPolyline(_DataRecords.ParameterInitialize.m_mapControl, cpl);
             int intPtCount = cpl.CptLt.Count;
 
             //计算长度初始值（全部计算）
@@ -110,7 +110,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
 
                 pbScale.Value = Convert.ToInt16(100 * _dblProp);
                 CPolyline cpl0 = GetTargetcpl(_dblProp);
-                CHelpFunc.ViewPolyline(_DataRecords.ParameterInitialize.m_mapControl, cpl0);
+                CDrawInActiveView.ViewPolyline(_DataRecords.ParameterInitialize.m_mapControl, cpl0);
                 return;
             }
             CPolyline cpl1 = GetTargetcpl(_dblProp);
@@ -118,7 +118,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
 
 
 
-            CHelpFunc.ViewPolyline(m_mapControl, cpl1);
+            CDrawInActiveView.ViewPolyline(m_mapControl, cpl1);
         }
 
         public override void timerReduce_Tick(object sender, EventArgs e)
@@ -135,7 +135,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
 
                 pbScale.Value = Convert.ToInt16(100 * _dblProp);
                 CPolyline cpl0 = GetTargetcpl(_dblProp);
-                CHelpFunc.ViewPolyline(_DataRecords.ParameterInitialize.m_mapControl, cpl0);
+                CDrawInActiveView.ViewPolyline(_DataRecords.ParameterInitialize.m_mapControl, cpl0);
                 return;
             }
             CPolyline cpl1 = GetTargetcpl(_dblProp);
@@ -143,7 +143,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
 
 
 
-            CHelpFunc.ViewPolyline(m_mapControl, cpl1);
+            CDrawInActiveView.ViewPolyline(m_mapControl, cpl1);
 
         }
 

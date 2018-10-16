@@ -88,7 +88,7 @@ namespace MorphingClass.CMorphingExtend
             //IMapControl4 m_mapControl = _DataRecords.ParameterInitialize.m_mapControl;
             //IGraphicsContainer pGra = m_mapControl.Map as IGraphicsContainer;
             //pGra.DeleteAllElements();
-            //CHelpFunc.ViewPolylines(m_mapControl, THcpllt);  //显示生成的线段
+            //CDrawInActiveView.ViewPolylines(m_mapControl, THcpllt);  //显示生成的线段
             _DataRecords.ParameterResult.CResultPlLt = THcpllt;
             return THcpllt;
         }

@@ -62,7 +62,7 @@ namespace MorphingClass.CMorphingExtend
             IGraphicsContainer pGra = m_mapControl.Map as IGraphicsContainer;
             pGra.DeleteAllElements();
             m_mapControl.ActiveView.Refresh();
-            CHelpFunc.ViewPolyline(m_mapControl, cpl);  //显示生成的线段
+            CDrawInActiveView.ViewPolyline(m_mapControl, cpl);  //显示生成的线段
             return cpl;
         }
 

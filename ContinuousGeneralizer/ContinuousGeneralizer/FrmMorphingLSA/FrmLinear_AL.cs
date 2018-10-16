@@ -270,7 +270,7 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
 
             IGraphicsContainer pGra = m_mapControl.Map as IGraphicsContainer;
             pGra.DeleteAllElements();
-            CHelpFunc.ViewPolyline(m_mapControl, newcpl);
+            CDrawInActiveView.ViewPolyline(m_mapControl, newcpl);
             return newcpl;
         }
 

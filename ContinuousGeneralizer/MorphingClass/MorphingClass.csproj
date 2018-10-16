@@ -343,6 +343,7 @@
     <Compile Include="CUtility\CDataRecords.cs" />
     <Compile Include="CUtility\CCmpClasses.cs" />
     <Compile Include="CUtility\CCmpEq.cs" />
+    <Compile Include="CUtility\CDrawInActiveView.cs" />
     <Compile Include="CUtility\clipperMethods.cs" />
     <Compile Include="CUtility\CPointer.cs" />
     <Compile Include="CUtility\clipper.cs" />

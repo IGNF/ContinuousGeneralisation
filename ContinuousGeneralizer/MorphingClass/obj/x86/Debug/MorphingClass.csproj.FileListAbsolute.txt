@@ -8,6 +8,5 @@ C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass
 C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\obj\x86\Debug\MorphingClass.dll
 C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\obj\x86\Debug\MorphingClass.pdb
 C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\x86\Debug\ESRI.ArcGIS.AxControls.dll
-C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\obj\x86\Debug\MorphingClass.csprojAssemblyReference.cache
 C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\x86\Debug\System.ValueTuple.dll
 C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\x86\Debug\System.ValueTuple.xml

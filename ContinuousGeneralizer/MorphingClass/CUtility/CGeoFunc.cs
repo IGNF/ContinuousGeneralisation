@@ -2542,7 +2542,7 @@ namespace MorphingClass.CUtility
             IGraphicsContainer pGra = m_mapControl.Map as IGraphicsContainer;
             pGra.DeleteAllElements();
             m_mapControl.ActiveView.Refresh();
-            CHelpFunc.ViewPolylines(m_mapControl, cpllt);
+            CDrawInActiveView.ViewPolylines(m_mapControl, cpllt);
             return cpllt;
         }
 
@@ -2676,7 +2676,7 @@ namespace MorphingClass.CUtility
             IGraphicsContainer pGra = m_mapControl.Map as IGraphicsContainer;
             pGra.DeleteAllElements();
             m_mapControl.ActiveView.Refresh();
-            CHelpFunc.ViewPolylines(m_mapControl, cpllt);
+            CDrawInActiveView.ViewPolylines(m_mapControl, cpllt);
 
             //计算时间
             long lngEndTime = System.Environment.TickCount;

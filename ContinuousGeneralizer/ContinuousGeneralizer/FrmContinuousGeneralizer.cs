@@ -187,7 +187,7 @@ namespace ContinuousGeneralizer
 
             //frmCurrent.btnTransform_Click(sender, e);
 
-            frmCurrent.btnRun_Click(sender, e);
+            //frmCurrent.btnRun_Click(sender, e);
             //frmCurrent.btnGreedy_Click(sender, e);
             //frmCurrent.btnRunILP_Click(sender, e);
             //frmCurrent.btn020_Click(sender, e);
@@ -196,9 +196,9 @@ namespace ContinuousGeneralizer
             //frmCurrent.btn090_Click(sender, e);
 
 
-            var frmSecondStep = new FrmCreatePointLayer(_DataRecords);
-            frmSecondStep.Show();
-            frmSecondStep.btnRun_Click(sender, e);
+            //var frmSecondStep = new FrmCreatePointLayer(_DataRecords);
+            //frmSecondStep.Show();
+            //frmSecondStep.btnRun_Click(sender, e);
 
         }
 
@@ -841,14 +841,28 @@ namespace ContinuousGeneralizer
 
         private void mnuAnyTest_Click(object sender, EventArgs e)
         {
-            this.axMapControl.Dock= DockStyle.None;
-            this.axMapControl.Width = 420;
-            this.axMapControl.Height = 600;
+            //this.axMapControl.DrawShape()
 
-            IPoint cpt = new PointClass();
-            cpt.PutCoords(155, 250);
+            //CDrawingArcGIS.DrawArrow(this.axMapControl.layout)
 
-            this.axMapControl.CenterAt(cpt);
+            //var graphics = this.axMapControl.contain.CreateGraphics();
+            // graphics.DrawLine()
+
+
+            CDrawInActiveView.DrawArrow(this.axMapControl.ActiveView.GraphicsContainer, 128, 128, 128);
+            CDrawInActiveView.AddPointElement(this.axMapControl.ActiveView.GraphicsContainer);
+            this.axMapControl.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
+            //this.axMapControl.ActiveView.Refresh();
+            //this.axMapControl.Refresh();
+
+            //this.axMapControl.Dock= DockStyle.None;
+            //this.axMapControl.Width = 420;
+            //this.axMapControl.Height = 600;
+
+            //IPoint cpt = new PointClass();
+            //cpt.PutCoords(155, 250);
+
+            //this.axMapControl.CenterAt(cpt);
 
             //int intNum = 999;
             //var intltltltltlt = new List<List<List<List<List<int>>>>>(intNum);

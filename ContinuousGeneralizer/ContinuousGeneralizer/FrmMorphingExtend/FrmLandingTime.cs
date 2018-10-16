@@ -165,9 +165,9 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
 
             IGraphicsContainer pGra = m_mapControl.Map as IGraphicsContainer;
             pGra.DeleteAllElements();
-            CHelpFunc.ViewPolyline(m_mapControl, cpl);
-            //CHelpFunc.ViewPolyline(m_mapControl, _DataRecords.ParameterResult.FromCpl);
-            //CHelpFunc.ViewPolyline(m_mapControl, _DataRecords.ParameterResult.ToCpl);
+            CDrawInActiveView.ViewPolyline(m_mapControl, cpl);
+            //CDrawInActiveView.ViewPolyline(m_mapControl, _DataRecords.ParameterResult.FromCpl);
+            //CDrawInActiveView.ViewPolyline(m_mapControl, _DataRecords.ParameterResult.ToCpl);
 
 
             return cpl;
@@ -188,7 +188,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
             //    _dblProp = 1;
             //    pbScale.Value = Convert.ToInt16(100 * _dblProp);
             //    CPolyline cpl0 =_pCAL.CGeoFunc.GetTargetcpl(_dblProp);
-            //    CHelpFunc.ViewPolyline(m_mapControl, cpl0);
+            //    CDrawInActiveView.ViewPolyline(m_mapControl, cpl0);
             //    return;
             //}
             //CPolyline cpl1 = _pCAL.CGeoFunc.GetTargetcpl(_dblProp);
@@ -196,7 +196,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
 
 
 
-            //CHelpFunc.ViewPolyline(m_mapControl, cpl1);
+            //CDrawInActiveView.ViewPolyline(m_mapControl, cpl1);
         }
 
         public override void timerReduce_Tick(object sender, EventArgs e)
@@ -213,7 +213,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
 
             //    pbScale.Value = Convert.ToInt16(100 * _dblProp);
             //    CPolyline cpl0 = _pCAL.CGeoFunc.GetTargetcpl(_dblProp);
-            //    CHelpFunc.ViewPolyline(m_mapControl, cpl0);
+            //    CDrawInActiveView.ViewPolyline(m_mapControl, cpl0);
             //    return;
             //}
             //CPolyline cpl1 = _pCAL.CGeoFunc.GetTargetcpl(_dblProp);
@@ -221,7 +221,7 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
 
 
 
-            //CHelpFunc.ViewPolyline(m_mapControl, cpl1);
+            //CDrawInActiveView.ViewPolyline(m_mapControl, cpl1);
 
         }
 

@@ -89,73 +89,73 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
         public virtual void btn010_Click(object sender, EventArgs e)
         {
             _dblProp = 0.1;
-            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProp);
+            _RelativeInterpolationCpl = CDrawInActiveView.DisplayInterpolation(_DataRecords, _dblProp);
         }
         public virtual void btn020_Click(object sender, EventArgs e)
         {
             _dblProp = 0.2;
-            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProp);
+            _RelativeInterpolationCpl = CDrawInActiveView.DisplayInterpolation(_DataRecords, _dblProp);
         }
         public virtual void btn030_Click(object sender, EventArgs e)
         {
             _dblProp = 0.3;
-            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProp);
+            _RelativeInterpolationCpl = CDrawInActiveView.DisplayInterpolation(_DataRecords, _dblProp);
         }
         public virtual void btn040_Click(object sender, EventArgs e)
         {
             _dblProp = 0.4;
-            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProp);
+            _RelativeInterpolationCpl = CDrawInActiveView.DisplayInterpolation(_DataRecords, _dblProp);
         }
         public virtual void btn050_Click(object sender, EventArgs e)
         {
             _dblProp = 0.5;
-            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProp);
+            _RelativeInterpolationCpl = CDrawInActiveView.DisplayInterpolation(_DataRecords, _dblProp);
         }
         public virtual void btn060_Click(object sender, EventArgs e)
         {
             _dblProp = 0.6;
-            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProp);
+            _RelativeInterpolationCpl = CDrawInActiveView.DisplayInterpolation(_DataRecords, _dblProp);
         }
         public virtual void btn070_Click(object sender, EventArgs e)
         {
             _dblProp = 0.7;
-            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProp);
+            _RelativeInterpolationCpl = CDrawInActiveView.DisplayInterpolation(_DataRecords, _dblProp);
         }
         public virtual void btn080_Click(object sender, EventArgs e)
         {
             _dblProp = 0.8;
-            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProp);
+            _RelativeInterpolationCpl = CDrawInActiveView.DisplayInterpolation(_DataRecords, _dblProp);
         }
         public virtual void btn090_Click(object sender, EventArgs e)
         {
             _dblProp = 0.9;
-            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProp);
+            _RelativeInterpolationCpl = CDrawInActiveView.DisplayInterpolation(_DataRecords, _dblProp);
         }
         public virtual void btn000_Click(object sender, EventArgs e)
         {
             _dblProp = 0;
-            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProp);
+            _RelativeInterpolationCpl = CDrawInActiveView.DisplayInterpolation(_DataRecords, _dblProp);
         }
         public virtual void btn025_Click(object sender, EventArgs e)
         {
             _dblProp = 0.25;
-            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProp);
+            _RelativeInterpolationCpl = CDrawInActiveView.DisplayInterpolation(_DataRecords, _dblProp);
         }
         public virtual void btn075_Click(object sender, EventArgs e)
         {
             _dblProp = 0.75;
-            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProp);
+            _RelativeInterpolationCpl = CDrawInActiveView.DisplayInterpolation(_DataRecords, _dblProp);
         }
         public virtual void btn100_Click(object sender, EventArgs e)
         {
             _dblProp = 1;
-            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProp);
+            _RelativeInterpolationCpl = CDrawInActiveView.DisplayInterpolation(_DataRecords, _dblProp);
         }
 
         public virtual void btnInputedScale_Click(object sender, EventArgs e)
         {
             _dblProp = Convert.ToDouble(this.txtProportion.Text);
-            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProp);
+            _RelativeInterpolationCpl = CDrawInActiveView.DisplayInterpolation(_DataRecords, _dblProp);
 
         }
 
@@ -174,11 +174,11 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
                 this.timerAdd.Enabled = false;
                 _dblProp = 1;
                 pbScale.Value = Convert.ToInt16(100 * _dblProp);
-                _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProp);
+                _RelativeInterpolationCpl = CDrawInActiveView.DisplayInterpolation(_DataRecords, _dblProp);
                 return;
             }
             pbScale.Value = Convert.ToInt16(100 * _dblProp);
-            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProp);
+            _RelativeInterpolationCpl = CDrawInActiveView.DisplayInterpolation(_DataRecords, _dblProp);
         }
 
         private void btnReduce_Click(object sender, EventArgs e)
@@ -194,11 +194,11 @@ namespace ContinuousGeneralizer.FrmMorphingExtend
                 this.timerReduce.Enabled = false;
                 _dblProp = 0;
                 pbScale.Value = Convert.ToInt16(100 * _dblProp);
-                _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProp);
+                _RelativeInterpolationCpl = CDrawInActiveView.DisplayInterpolation(_DataRecords, _dblProp);
                 return;
             }
             pbScale.Value = Convert.ToInt16(100 * _dblProp);
-            _RelativeInterpolationCpl = CHelpFunc.DisplayInterpolation(_DataRecords, _dblProp);
+            _RelativeInterpolationCpl = CDrawInActiveView.DisplayInterpolation(_DataRecords, _dblProp);
         }
 
         public virtual void btnSaveInterpolation_Click(object sender, EventArgs e)

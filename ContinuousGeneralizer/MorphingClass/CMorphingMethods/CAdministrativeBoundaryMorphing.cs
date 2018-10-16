@@ -727,13 +727,13 @@ namespace MorphingClass.CMorphingMethods
 
             //for (int i = 0; i < normaldisplaycpllt.Count; i++)
             //{
-            //    CHelpFunc.ViewPolylineByRGB(m_mapControl, normaldisplaycpllt[i], 0, 0, 0, 1);
+            //    CDrawInActiveView.ViewPolylineByRGB(m_mapControl, normaldisplaycpllt[i], 0, 0, 0, 1);
             //}
 
             //
             //for (int i = 0; i < fadeddisplaycpllt.Count; i++)
             //{
-            //    CHelpFunc.ViewPolylineByRGB(m_mapControl, fadeddisplaycpllt[i], intColor, intColor, intColor, 1);
+            //    CDrawInActiveView.ViewPolylineByRGB(m_mapControl, fadeddisplaycpllt[i], intColor, intColor, intColor, 1);
             //}
             //m_mapControl.ActiveView.Refresh();   //由于在下一步“ViewPolyline”中有刷新的命令，此语句可省略
 
