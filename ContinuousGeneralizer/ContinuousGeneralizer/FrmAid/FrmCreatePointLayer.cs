@@ -61,12 +61,12 @@ namespace ContinuousGeneralizer.FrmAid
             {
                 var pFLayerLt = CHelpFunc.GetVisibleLayers(ParameterInitialize);
                 var pCreatePointLayer = new CCreatePointLayer(ParameterInitialize, pFLayerLt);
-                pCreatePointLayer.CreatePointLayer();
+                pCreatePointLayer.CreatePointLayer(Convert.ToDouble(txtSize.Text));
             }
             else
             {
                 var pCreatePointLayer = new CCreatePointLayer(ParameterInitialize, 1, ParameterInitialize.cboLayerLt[0].SelectedIndex);
-                pCreatePointLayer.CreatePointLayer();
+                pCreatePointLayer.CreatePointLayer(Convert.ToDouble(txtSize.Text));
             }
             MessageBox.Show("Done!");
         }

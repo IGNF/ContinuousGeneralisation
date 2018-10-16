@@ -133,6 +133,39 @@ namespace MorphingClass.CMorphingMethods
             Output(1.00, 1.00);
 
 
+            var olcpl = _OLCplLt[0];
+            var oscpl = _OSCplLt[0];
+            var nlcpl = _NLCplLt[0];
+            var nscpl = _NSCplLt[0];
+
+            var strTS = _ParameterInitialize.strTS;
+            var HelpCplLt = new List<CPolyline>();
+            int intIndex = 0;
+            if (strTS == "vario_vario")
+            {
+                HelpCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[0], oscpl.CptLt[0]));
+                HelpCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[2], oscpl.CptLt[2]));
+                HelpCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[1], nlcpl.CptLt[1]));
+                HelpCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[9], nlcpl.CptLt[9]));
+
+                HelpCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[2], nscpl.CptLt[2]));
+                HelpCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[8], nscpl.CptLt[8]));
+                HelpCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[0], nscpl.CptLt[0]));
+                HelpCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[2], nscpl.CptLt[2]));
+            }
+            else if (strTS == "vario_separate")
+            {
+            }
+            else if (strTS == "separate_vario")
+            {
+            }
+            else //if (strTS == "separate_separate")
+            {
+
+            }
+
+            CSaveFeature.SaveCplEb(HelpCplLt, strTS + "_Help", intRed: 128, intGreen: 128, intBlue: 128, 
+                pesriSimpleLineStyle: esriSimpleLineStyle.esriSLSDash);
 
             //Output(0.3,0);
             //Output(0, 0.6);

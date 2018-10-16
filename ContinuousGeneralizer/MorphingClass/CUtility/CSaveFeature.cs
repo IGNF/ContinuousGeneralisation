@@ -43,18 +43,20 @@ namespace MorphingClass.CUtility
 List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null,
 int intRed = 0, int intGreen = 0, int intBlue = 0, double dblWidth = 1,
 int intOutlineRed = _intColor, int intOutlineGreen = _intColor, int intOutlineBlue = _intColor,
+esriSimpleLineStyle pesriSimpleLineStyle = esriSimpleLineStyle.esriSLSSolid,
 esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid,
 string strSymbolLayerPath = null, bool blnVisible = true)
         {
             this.pFeatureLayer = CreateFeatureLayer(pesriGeometryType, pstrLayerName, pstrFieldNameLt, pesriFieldTypeLt,
-                intRed, intGreen, intBlue, dblWidth, 
-                intOutlineRed, intOutlineGreen, intOutlineBlue, pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
+                intRed, intGreen, intBlue, dblWidth, intOutlineRed, intOutlineGreen, intOutlineBlue, 
+                pesriSimpleLineStyle, pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
         }
 
         private IFeatureLayer CreateFeatureLayer(esriGeometryType pesriGeometryType, string pstrLayerName,
 List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null,
 int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
 int intOutlineRed = _intColor, int intOutlineGreen = _intColor, int intOutlineBlue = _intColor,
+esriSimpleLineStyle pesriSimpleLineStyle=  esriSimpleLineStyle.esriSLSSolid,
 esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid,
 string strSymbolLayerPath = null, bool blnVisible = true)
         {
@@ -70,7 +72,7 @@ string strSymbolLayerPath = null, bool blnVisible = true)
             pFLayer.SpatialReference = pm_mapControl.SpatialReference;
 
             RenderLayer(ref pFLayer, pesriGeometryType, intRed, intGreen, intBlue, dblWidth, 
-                intOutlineRed, intOutlineGreen, intOutlineBlue, pesriSimpleFillStyle, strSymbolLayerPath);
+                intOutlineRed, intOutlineGreen, intOutlineBlue, pesriSimpleLineStyle, pesriSimpleFillStyle, strSymbolLayerPath);
 
             //save Layer as layer file ".lyr"
             //create a new LayerFile instance
@@ -263,9 +265,8 @@ IWorkspace pWorkspace, IMapControl4 pm_mapControl, List<string> pstrFieldNameLt 
         }
 
         public void RenderLayer(ref IFeatureLayer fLayer, esriGeometryType fesriGeometryType,
-int intRed, int intGreen, int intBlue, double fdblWidth,
-int intOutlineRed, int intOutlineGreen, int intOutlineBlue, 
-esriSimpleFillStyle pesriSimpleFillStyle, string strSymbolLayerPath)
+int intRed, int intGreen, int intBlue, double fdblWidth, int intOutlineRed, int intOutlineGreen, int intOutlineBlue, 
+esriSimpleLineStyle pesriSimpleLineStyle, esriSimpleFillStyle pesriSimpleFillStyle, string strSymbolLayerPath)
         {
             if (strSymbolLayerPath == null)
             {
@@ -286,7 +287,7 @@ esriSimpleFillStyle pesriSimpleFillStyle, string strSymbolLayerPath)
                         pSimpleRenderer.Symbol = pSimpleMarkerSymbol as ISymbol;
                         break;
                     case esriGeometryType.esriGeometryPolyline:
-                        pSimpleRenderer.Symbol = GetSimpleLineSymbol(pRgbColor, fdblWidth) as ISymbol;
+                        pSimpleRenderer.Symbol = GetSimpleLineSymbol(pRgbColor, fdblWidth, pesriSimpleLineStyle) as ISymbol;
                         break;
                     case esriGeometryType.esriGeometryPolygon:
                         IRgbColor pRgbColorOutline = new RgbColorClass();
@@ -295,10 +296,10 @@ esriSimpleFillStyle pesriSimpleFillStyle, string strSymbolLayerPath)
                         pRgbColorOutline.Blue = intOutlineBlue;
 
                         ISimpleFillSymbol pSimpleFillSymbol = new SimpleFillSymbolClass();
-                        pSimpleFillSymbol.Outline = GetSimpleLineSymbol(pRgbColorOutline, fdblWidth);
+                        pSimpleFillSymbol.Outline = GetSimpleLineSymbol(pRgbColorOutline, fdblWidth, pesriSimpleLineStyle);
                         pSimpleFillSymbol.Color = pRgbColor as IColor;
                         pSimpleFillSymbol.Style = pesriSimpleFillStyle;
-                        pSimpleRenderer.Symbol= pSimpleFillSymbol as ISymbol;
+                        pSimpleRenderer.Symbol = pSimpleFillSymbol as ISymbol;
                         break;
                     default:
                         return;
@@ -306,7 +307,7 @@ esriSimpleFillStyle pesriSimpleFillStyle, string strSymbolLayerPath)
                 //fLayer.
                 IGeoFeatureLayer pGeoFeaturelayer = fLayer as IGeoFeatureLayer;
                 pGeoFeaturelayer.Renderer = pSimpleRenderer as IFeatureRenderer;
-                
+
             }
             else
             {
@@ -335,13 +336,12 @@ esriSimpleFillStyle pesriSimpleFillStyle, string strSymbolLayerPath)
         }
 
         private ISimpleLineSymbol GetSimpleLineSymbol(IRgbColor pRgbColor, double fdblWidth,
-            esriSimpleLineStyle pesriSimpleLineStyle=  esriSimpleLineStyle.esriSLSSolid)
+            esriSimpleLineStyle pesriSimpleLineStyle)
         {
             ISimpleLineSymbol pSimpleLineSymbol = new SimpleLineSymbolClass();
             pSimpleLineSymbol.Color = pRgbColor as IColor;
             pSimpleLineSymbol.Width = fdblWidth;
             pSimpleLineSymbol.Style = pesriSimpleLineStyle;
-
             return pSimpleLineSymbol;
         }
 
@@ -453,6 +453,7 @@ esriSimpleFillStyle pesriSimpleFillStyle, string strSymbolLayerPath)
 List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
 int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
 int intOutlineRed = _intColor, int intOutlineGreen = _intColor, int intOutlineBlue = _intColor,
+esriSimpleLineStyle pesriSimpleLineStyle = esriSimpleLineStyle.esriSLSSolid,
 esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, string strSymbolLayerPath = null, bool blnVisible = true)
             where T : CGeoBase
         {
@@ -463,7 +464,7 @@ esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, str
 
             CSaveFeature pSaveFeature = new CSaveFeature(pesriGeometryType, strFileName, pstrFieldNameLt, pesriFieldTypeLt,
                 intRed, intGreen, intBlue, dblWidth, intOutlineRed, intOutlineGreen, intOutlineBlue,
-                pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
+                pesriSimpleLineStyle, pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
             IFeatureLayer pFLayer = pSaveFeature.SaveCGeosToLayer(CGeoEb, pstrFieldNameLt, pobjectValueLtLt);
 
             return pFLayer;
@@ -474,7 +475,9 @@ esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, str
 List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
 int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
 int intOutlineRed = _intColor, int intOutlineGreen = _intColor, int intOutlineBlue = _intColor,
-esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, string strSymbolLayerPath = null, bool blnVisible = true)
+esriSimpleLineStyle pesriSimpleLineStyle = esriSimpleLineStyle.esriSLSSolid,
+esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, 
+string strSymbolLayerPath = null, bool blnVisible = true)
             where T : IGeometry
         {
             if (IGeoEb.GetEnumerator().MoveNext() == false)
@@ -484,7 +487,7 @@ esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, str
 
             CSaveFeature pSaveFeature = new CSaveFeature(pesriGeometryType, strFileName, pstrFieldNameLt, pesriFieldTypeLt,
                 intRed, intGreen, intBlue, dblWidth, intOutlineRed, intOutlineGreen, intOutlineBlue,
-                pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
+                pesriSimpleLineStyle, pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
             IFeatureLayer pFLayer = pSaveFeature.SaveIGeosToLayer(IGeoEb, pstrFieldNameLt, pobjectValueLtLt);
 
             return pFLayer;
@@ -494,59 +497,69 @@ esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, str
 List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
 int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
 int intOutlineRed = _intColor, int intOutlineGreen = _intColor, int intOutlineBlue = _intColor,
-esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, string strSymbolLayerPath = null, bool blnVisible = true)
+esriSimpleLineStyle pesriSimpleLineStyle = esriSimpleLineStyle.esriSLSSolid,
+esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, 
+string strSymbolLayerPath = null, bool blnVisible = true)
         {
             return SaveCGeoEb(CHelpFunc.MakeLt(Cpg), esriGeometryType.esriGeometryPolygon, strFileName,
                 pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt,
                 intRed, intGreen, intBlue, dblWidth, intOutlineRed, intOutlineGreen, intOutlineBlue,
-                pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
+                pesriSimpleLineStyle, pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
         }
 
         public static IFeatureLayer SaveCpgEb(IEnumerable<CPolygon> CpgEb, string strFileName,
 List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
 int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
 int intOutlineRed = _intColor, int intOutlineGreen = _intColor, int intOutlineBlue = _intColor,
-esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, string strSymbolLayerPath = null, bool blnVisible = true)
+esriSimpleLineStyle pesriSimpleLineStyle = esriSimpleLineStyle.esriSLSSolid,
+esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, 
+string strSymbolLayerPath = null, bool blnVisible = true)
         {
             return SaveCGeoEb(CpgEb, esriGeometryType.esriGeometryPolygon, strFileName,
                 pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt,
                 intRed, intGreen, intBlue, dblWidth, intOutlineRed, intOutlineGreen, intOutlineBlue,
-                pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
+                pesriSimpleLineStyle, pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
         }
 
         public static IFeatureLayer SaveCpl(CPolyline Cpl, string strFileName,
 List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
 int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
 int intOutlineRed = _intColor, int intOutlineGreen = _intColor, int intOutlineBlue = _intColor,
+esriSimpleLineStyle pesriSimpleLineStyle = esriSimpleLineStyle.esriSLSSolid,
 string strSymbolLayerPath = null, bool blnVisible = true)
         {
             return SaveCGeoEb(CHelpFunc.MakeLt(Cpl), esriGeometryType.esriGeometryPolyline, strFileName,
                 pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt,
                 intRed, intGreen, intBlue, dblWidth, intOutlineRed, intOutlineGreen, intOutlineBlue,
-                esriSimpleFillStyle.esriSFSSolid, strSymbolLayerPath, blnVisible);
+                pesriSimpleLineStyle, esriSimpleFillStyle.esriSFSSolid, 
+                strSymbolLayerPath, blnVisible);
         }
 
         public static IFeatureLayer SaveCplEb(IEnumerable<CPolyline> CplEb, string strFileName,
 List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
 int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
 int intOutlineRed = _intColor, int intOutlineGreen = _intColor, int intOutlineBlue = _intColor,
+esriSimpleLineStyle pesriSimpleLineStyle = esriSimpleLineStyle.esriSLSSolid,
 string strSymbolLayerPath = null, bool blnVisible = true)
         {
             return SaveCGeoEb(CplEb, esriGeometryType.esriGeometryPolyline, strFileName,
                 pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt,
                 intRed, intGreen, intBlue, dblWidth, intOutlineRed, intOutlineGreen, intOutlineBlue,
-                esriSimpleFillStyle.esriSFSSolid, strSymbolLayerPath, blnVisible);
+                pesriSimpleLineStyle, esriSimpleFillStyle.esriSFSNull,
+                strSymbolLayerPath, blnVisible);
         }
 
         public static IFeatureLayer SaveCEdgeEb(IEnumerable<CEdge> CGeoEb, string strFileName,
 List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
 int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
+esriSimpleLineStyle pesriSimpleLineStyle = esriSimpleLineStyle.esriSLSSolid,
 string strSymbolLayerPath = null, bool blnVisible = true)
         {
             return SaveCGeoEb(CGeoEb, esriGeometryType.esriGeometryPolyline, strFileName,
                 pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt,
-                intRed, intGreen, intBlue, dblWidth, _intColor, _intColor, _intColor, 
-                esriSimpleFillStyle.esriSFSSolid, strSymbolLayerPath, blnVisible);
+                intRed, intGreen, intBlue, dblWidth, _intColor, _intColor, _intColor,
+                pesriSimpleLineStyle, esriSimpleFillStyle.esriSFSNull,
+                strSymbolLayerPath, blnVisible);
         }
 
         public static IFeatureLayer SaveCptEb(IEnumerable<CPoint> CGeoEb, string strFileName,
@@ -557,12 +570,14 @@ string strSymbolLayerPath = null, bool blnVisible = true)
             return SaveCGeoEb(CGeoEb, esriGeometryType.esriGeometryPoint, strFileName,
                 pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt,
                 intRed, intGreen, intBlue, dblWidth, _intColor, _intColor, _intColor,
-                esriSimpleFillStyle.esriSFSSolid, strSymbolLayerPath, blnVisible);
+                esriSimpleLineStyle.esriSLSNull, esriSimpleFillStyle.esriSFSNull, 
+                strSymbolLayerPath, blnVisible);
         }
 
         public static IFeatureLayer SavePathEbAsCplEb(IEnumerable<Path> PathEb, string strFileName,
 List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
 int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
+esriSimpleLineStyle pesriSimpleLineStyle = esriSimpleLineStyle.esriSLSSolid,
 string strSymbolLayerPath = null, bool blnVisible = true)
         {
             if (PathEb.GetEnumerator().MoveNext() == false)
@@ -572,7 +587,7 @@ string strSymbolLayerPath = null, bool blnVisible = true)
 
             var cpleb = clipperMethods.ScaleCplEb(clipperMethods.ConvertPathsToCplEb(PathEb, false, true), 1 / CConstants.dblFclipper);
             IFeatureLayer pFLayer = SaveCplEb(cpleb, strFileName, pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt,
-                intRed, intGreen, intBlue, dblWidth, _intColor, _intColor, _intColor, strSymbolLayerPath, blnVisible);
+                intRed, intGreen, intBlue, dblWidth, _intColor, _intColor, _intColor, pesriSimpleLineStyle, strSymbolLayerPath, blnVisible);
 
             return pFLayer;
         }        
@@ -581,7 +596,9 @@ string strSymbolLayerPath = null, bool blnVisible = true)
 List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
 int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
 int intOutlineRed = _intColor, int intOutlineGreen = _intColor, int intOutlineBlue = _intColor,
-esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, string strSymbolLayerPath = null, bool blnVisible = true)
+esriSimpleLineStyle pesriSimpleLineStyle = esriSimpleLineStyle.esriSLSSolid,
+esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, 
+string strSymbolLayerPath = null, bool blnVisible = true)
         {
             if (PathEb.GetEnumerator().MoveNext() == false)
             {
@@ -591,7 +608,7 @@ esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, str
             var cpgeb = clipperMethods.ScaleCpgEb(clipperMethods.ConvertPathsToCpgEb(PathEb, true, true), 1 / CConstants.dblFclipper);
             IFeatureLayer pFLayer = SaveCpgEb(cpgeb, strFileName, pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt,
                 intRed, intGreen, intBlue, dblWidth, intOutlineRed, intOutlineGreen, intOutlineBlue,
-                pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
+                pesriSimpleLineStyle, pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
 
             return pFLayer;
         }
@@ -600,7 +617,9 @@ esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, str
 List<string> pstrFieldNameLt = null, List<esriFieldType> pesriFieldTypeLt = null, List<List<object>> pobjectValueLtLt = null,
 int intRed = _intColor, int intGreen = _intColor, int intBlue = _intColor, double dblWidth = 1,
 int intOutlineRed = _intColor, int intOutlineGreen = _intColor, int intOutlineBlue = _intColor,
-esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, string strSymbolLayerPath = null, bool blnVisible = true)
+esriSimpleLineStyle pesriSimpleLineStyle = esriSimpleLineStyle.esriSLSSolid,
+esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, 
+string strSymbolLayerPath = null, bool blnVisible = true)
         {
             if (polytree.ChildCount == 0)
             {
@@ -610,7 +629,7 @@ esriSimpleFillStyle pesriSimpleFillStyle = esriSimpleFillStyle.esriSFSSolid, str
             var cpgeb = clipperMethods.ScaleCpgEb(clipperMethods.GenerateCpgEbByPolyTree(polytree), 1 / CConstants.dblFclipper);
             IFeatureLayer pFLayer = SaveCpgEb(cpgeb, strFileName, pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt,
                 intRed, intGreen, intBlue, dblWidth, intOutlineRed, intOutlineGreen, intOutlineBlue,
-                pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
+                pesriSimpleLineStyle, pesriSimpleFillStyle, strSymbolLayerPath, blnVisible);
 
             return pFLayer;
         }

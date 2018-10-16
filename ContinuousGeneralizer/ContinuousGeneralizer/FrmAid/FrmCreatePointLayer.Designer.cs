@@ -32,11 +32,15 @@
             this.lblLayer = new System.Windows.Forms.Label();
             this.cboLayer = new System.Windows.Forms.ComboBox();
             this.btnRun = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtSize = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.txtSize);
+            this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.lblLayer);
             this.groupBox1.Controls.Add(this.cboLayer);
             this.groupBox1.Location = new System.Drawing.Point(12, 13);
@@ -59,7 +63,7 @@
             // 
             this.cboLayer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboLayer.FormattingEnabled = true;
-            this.cboLayer.Location = new System.Drawing.Point(102, 22);
+            this.cboLayer.Location = new System.Drawing.Point(48, 22);
             this.cboLayer.Name = "cboLayer";
             this.cboLayer.Size = new System.Drawing.Size(160, 21);
             this.cboLayer.TabIndex = 19;
@@ -73,6 +77,24 @@
             this.btnRun.Text = "Run";
             this.btnRun.UseVisualStyleBackColor = true;
             this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 52);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(30, 13);
+            this.label1.TabIndex = 20;
+            this.label1.Text = "Size:";
+            // 
+            // txtSize
+            // 
+            this.txtSize.Location = new System.Drawing.Point(48, 49);
+            this.txtSize.Name = "txtSize";
+            this.txtSize.Size = new System.Drawing.Size(111, 20);
+            this.txtSize.TabIndex = 21;
+            this.txtSize.Text = "3";
+            this.txtSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // FrmCreatePointLayer
             // 
@@ -96,5 +118,7 @@
         private System.Windows.Forms.Label lblLayer;
         private System.Windows.Forms.ComboBox cboLayer;
         private System.Windows.Forms.Button btnRun;
+        private System.Windows.Forms.TextBox txtSize;
+        private System.Windows.Forms.Label label1;
     }
 }

@@ -43,18 +43,18 @@ namespace MorphingClass.CAid
         }
 
 
-        public void CreatePointLayer()
+        public void CreatePointLayer(double dblSize=4)
         {
             var ParameterInitialize = _ParameterInitialize;
             for (int i = 0; i < ObjCGeoLtLt.Count; i++)
             {
                 var cpblt = ObjCGeoLtLt[i].AsExpectedClassEb<CPolyBase, CGeoBase>().ToList();
-                SavePointLayer(cpblt, ParameterInitialize.pFLayerLt[i].Name +"_Pt");
+                SavePointLayer(cpblt, ParameterInitialize.pFLayerLt[i].Name +"_Pt", dblSize);
             }
         }
 
 
-        private IFeatureLayer SavePointLayer(List<CPolyBase> CpbLt, string strName)
+        private IFeatureLayer SavePointLayer(List<CPolyBase> CpbLt, string strName, double dblSize)
         {
             var pstrFieldNameLt = new List<string> { "PID" };
             var pesriFieldTypeLt = new List<esriFieldType> { esriFieldType.esriFieldTypeInteger };
@@ -71,7 +71,7 @@ namespace MorphingClass.CAid
                 }
             }
 
-            return CSaveFeature.SaveCptEb(cptlt, strName, pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt, dblWidth:5);
+            return CSaveFeature.SaveCptEb(cptlt, strName, pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt, dblWidth: dblSize);
         }
     }
 }
