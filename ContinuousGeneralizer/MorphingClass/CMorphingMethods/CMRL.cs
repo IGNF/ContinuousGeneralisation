@@ -497,8 +497,8 @@ namespace MorphingClass.CMorphingMethods
             //        CPolyline pSSsubcpl = pSSRiver.GetSubPolyline(pSSCorrTriJunctionPtLt[i], pSSCorrTriJunctionPtLt[i + 1]);
 
             //        MessageBox.Show("CMRL.cs: Row499 is needed to be improved");
-            //        //OptMPBDP.DivideCplByDP(pBSsubcpl);
-            //        //OptMPBDP.DivideCplByDP(pSSsubcpl);
+            //        //OptMPBDP.DivideCplForDP(pBSsubcpl);
+            //        //OptMPBDP.DivideCplForDP(pSSsubcpl);
 
             //        pBSsubcpllt.Add(pBSsubcpl);
             //        pSSsubcpllt.Add(pSSsubcpl);

@@ -31,7 +31,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lblLayer = new System.Windows.Forms.Label();
             this.cboLayer = new System.Windows.Forms.ComboBox();
-            this.btnDivideByDP = new System.Windows.Forms.Button();
+            this.btnDivideForDP = new System.Windows.Forms.Button();
             this.txtParameter = new System.Windows.Forms.TextBox();
             this.rdoRemainNum = new System.Windows.Forms.RadioButton();
             this.rdoRemainRatio = new System.Windows.Forms.RadioButton();
@@ -54,7 +54,7 @@
             // 
             this.groupBox1.Controls.Add(this.lblLayer);
             this.groupBox1.Controls.Add(this.cboLayer);
-            this.groupBox1.Controls.Add(this.btnDivideByDP);
+            this.groupBox1.Controls.Add(this.btnDivideForDP);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(268, 129);
@@ -80,15 +80,15 @@
             this.cboLayer.Size = new System.Drawing.Size(160, 21);
             this.cboLayer.TabIndex = 19;
             // 
-            // btnDivideByDP
+            // btnDivideForDP
             // 
-            this.btnDivideByDP.Location = new System.Drawing.Point(184, 49);
-            this.btnDivideByDP.Name = "btnDivideByDP";
-            this.btnDivideByDP.Size = new System.Drawing.Size(78, 25);
-            this.btnDivideByDP.TabIndex = 65;
-            this.btnDivideByDP.Text = "DivideByDP";
-            this.btnDivideByDP.UseVisualStyleBackColor = true;
-            this.btnDivideByDP.Click += new System.EventHandler(this.btnDivideByDP_Click);
+            this.btnDivideForDP.Location = new System.Drawing.Point(184, 49);
+            this.btnDivideForDP.Name = "btnDivideForDP";
+            this.btnDivideForDP.Size = new System.Drawing.Size(78, 25);
+            this.btnDivideForDP.TabIndex = 65;
+            this.btnDivideForDP.Text = "DivideForDP";
+            this.btnDivideForDP.UseVisualStyleBackColor = true;
+            this.btnDivideForDP.Click += new System.EventHandler(this.btnDivideForDP_Click);
             // 
             // txtParameter
             // 
@@ -251,7 +251,7 @@
         private System.Windows.Forms.Button btnDPMorph;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox txtProportion;
-        private System.Windows.Forms.Button btnDivideByDP;
+        private System.Windows.Forms.Button btnDivideForDP;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Label label1;

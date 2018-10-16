@@ -60,8 +60,8 @@ namespace MorphingClass.CMorphingMethods
             //CPolyline frcpl = _LSCPlLt[0];
             //CPolyline tocpl = _SSCPlLt[0];
 
-            //DivideCplByDP(frcpl);
-            //DivideCplByDP(tocpl);
+            //DivideCplForDP(frcpl);
+            //DivideCplForDP(tocpl);
 
             //double dblLengthSumRatio = frcpl.pPolyline.Length / tocpl.pPolyline.Length;
             ////double dblLengthBound = _ParameterInitialize.dblLengthBound;
@@ -143,8 +143,8 @@ namespace MorphingClass.CMorphingMethods
         //    }
 
 
-        //    DivideCplByDP(frcpl);
-        //    DivideCplByDP(tocpl);
+        //    DivideCplForDP(frcpl);
+        //    DivideCplForDP(tocpl);
 
 
         //    CAlgorithmsHelper pAlgorithmsHelper = new CAlgorithmsHelper();
@@ -204,8 +204,8 @@ namespace MorphingClass.CMorphingMethods
         //        return CorrespondSegmentLk00;
         //    }
 
-        //    DivideCplByDP(frcpl);
-        //    DivideCplByDP(tocpl);           
+        //    DivideCplForDP(frcpl);
+        //    DivideCplForDP(tocpl);           
 
         //    //进行弯曲匹配，提取对应线段
         //    C5.LinkedList<CCorrSegment> pCorrespondSegmentLk = new C5.LinkedList<CCorrSegment>();
@@ -229,8 +229,8 @@ namespace MorphingClass.CMorphingMethods
         //        return CorrespondSegmentLk00;
         //    }
 
-        //    DivideCplByDP(frcpl);
-        //    DivideCplByDP(tocpl);
+        //    DivideCplForDP(frcpl);
+        //    DivideCplForDP(tocpl);
 
         //    CParameterThreshold ParameterThreshold = new CParameterThreshold();
         //    ParameterThreshold.dblDLengthBound = dblBound;
@@ -243,7 +243,7 @@ namespace MorphingClass.CMorphingMethods
         //    return pCorrespondSegmentLk;
         //}
 
-        //public void DivideCplByDP(CPolyline dcpl)
+        //public void DivideCplForDP(CPolyline dcpl)
         //{
         //    List<CPoint> dcptlt = dcpl.CptLt;
         //    int intptnum = dcptlt.Count;
@@ -273,8 +273,8 @@ namespace MorphingClass.CMorphingMethods
 
         //    //分别对左右子边执行分割操作
         //    dcpl.DivideByCpt(dcptlt[intMaxDisIndex]);
-        //    DivideCplByDP(dcpl.CLeftPolyline);
-        //    DivideCplByDP(dcpl.CRightPolyline);
+        //    DivideCplForDP(dcpl.CLeftPolyline);
+        //    DivideCplForDP(dcpl.CRightPolyline);
         //}
 
         ///// <summary>基于曲线长度的匹配方法</summary>

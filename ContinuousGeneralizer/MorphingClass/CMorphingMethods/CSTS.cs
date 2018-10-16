@@ -192,8 +192,12 @@ namespace MorphingClass.CMorphingMethods
             var InterLargerCpl = CGeoFunc.GetInbetweenCpl(olcplmoved, nlcplmoved, dblT);
             var InterSmallerCpl = CGeoFunc.GetInbetweenCpl(oscplmoved, nscplmoved, dblT);
             var InterCpl = CGeoFunc.GetInbetweenCpl(InterLargerCpl, InterSmallerCpl, dblS);
-            var simplifedcptlt = CImaiIriSimplify.ImaiIriSimplify(InterCpl.CptLt, 100000 * CConstants.dblVerySmallCoord).ToList();
 
+            var simplifedcpllt = CDPSimplify.DPSimplify(CHelpFunc.MakeLt(InterCpl), dblThresholdDis: 200000 * CConstants.dblVerySmallCoord);
+
+
+            //var simplifedcptlt = CImaiIriSimplify.ImaiIriSimplify(InterCpl.CptLt, 100000 * CConstants.dblVerySmallCoord).ToList();
+            //CDPSimplify.dp
             //CSaveFeature.SaveCpl(InterLargerCpl, "InterLargerCpl_" + dblT.ToString() + " " + dblS.ToString());
             //CSaveFeature.SaveCpl(InterSmallerCpl, "InterSmallerCpl_" + dblT.ToString() + " " + dblS.ToString());
             //CSaveFeature.SaveCpl(InterCpl, "InterCpl_" + dblT.ToString() + " " + dblS.ToString());
@@ -201,7 +205,7 @@ namespace MorphingClass.CMorphingMethods
 
             var dblBaseX = dblT * dblExtraX;
             var dblBaseY = dblS * dblExtraY;
-            var movedInterCpl = new CPolyline(0, CGeoFunc.MoveCptEb(simplifedcptlt, dblBaseX, dblBaseY).ToList());
+            var movedInterCpl = new CPolyline(0, CGeoFunc.MoveCptEb(simplifedcpllt[0].CptLt, dblBaseX, dblBaseY).ToList());
 
             CSaveFeature.SaveCpl(movedInterCpl, dblT.ToString() + " " + dblS.ToString());
 

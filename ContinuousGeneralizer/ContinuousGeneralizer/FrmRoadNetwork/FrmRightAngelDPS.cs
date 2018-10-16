@@ -94,7 +94,7 @@ namespace ContinuousGeneralizer.RoadNetwork
             //    List<CPolyline> Csumpllt = new List<CPolyline>();
             //    for (int j = 0; j < cpllt.Count; j++)
             //    {
-            //        _pDPSimplify.DivideCplByDP(cpllt[j], cpllt[j].pVirtualPolyline);
+            //        _pDPSimplify.DivideCplForDP(cpllt[j], cpllt[j].pVirtualPolyline);
             //    }
             //    for (int j = 0; j < cpllt.Count; j++)
             //    {
@@ -155,7 +155,7 @@ namespace ContinuousGeneralizer.RoadNetwork
             //    }
             //    for (int j = 0; j < Cnewsumpllt.Count; j++)
             //    {
-            //        _pDPSimplify.DivideCplByDP(Cnewsumpllt[j], Cnewsumpllt[j].pVirtualPolyline);
+            //        _pDPSimplify.DivideCplForDP(Cnewsumpllt[j], Cnewsumpllt[j].pVirtualPolyline);
             //        List<CPoint> newcptlt = new List<CPoint>();
             //        CEdge newBaseLine = new CEdge(Cnewsumpllt[j].CptLt[0], Cnewsumpllt[j].CptLt[Csumpllt[j].CptLt.Count - 1]);
             //        RecursivelyMovePt(Cnewsumpllt[j], Cnewsumpllt[j].pVirtualPolyline, ref newBaseLine, ref newcptlt, dblProp);

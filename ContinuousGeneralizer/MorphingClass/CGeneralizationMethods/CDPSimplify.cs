@@ -40,25 +40,23 @@ namespace MorphingClass.CGeneralizationMethods
         public CDPSimplify(List<CPolyline> pCPlLt)
         {
             _CPlLt = pCPlLt;
-            DivideByDP(pCPlLt);
+            DivideForDP(pCPlLt);
         }
 
         public CDPSimplify(CParameterInitialize ParameterInitialize)
         {
             Construct<CPolyline>(ParameterInitialize, 1);
             _CPlLt = this.ObjCGeoLtLt[0].AsExpectedClassEb<CPolyline, CGeoBase>().ToList();
-            DivideByDP(_CPlLt);
+            DivideForDP(_CPlLt);
         }
 
-        private void DivideByDP(List<CPolyline> cptllt)
+        private static void DivideForDP(List<CPolyline> cptllt)
         {
-            _pStopwatch.Start();
             for (int i = 0; i < cptllt.Count; i++)
             {
                 cptllt[i].SetVirtualPolyline();
-                DivideCplByDP(cptllt[i], cptllt[i].pVirtualPolyline);
+                DivideCplForDP(cptllt[i], cptllt[i].pVirtualPolyline);
             }
-            _pStopwatch.Stop ();
         }
 
 
@@ -66,26 +64,48 @@ namespace MorphingClass.CGeneralizationMethods
         /// DPSimplify
         /// </summary>
         /// <remarks>one of the three parameters should be a real parameter, and the others are -1</remarks>
-        public void DPSimplify(double dblThresholdDis, double dblRemainPointsRatio, double dblRemainPoints, double dblDeleteNum)
+        public void DPSimplifyAlreadyDivided(double dblThresholdDis = -1, double dblRemainPointsRatio = -1, double dblRemainPoints = -1, double dblDeleteNum = -1)
+        {
+            var newcpllt = DPSimplifyWithoutDividing(_CPlLt, dblThresholdDis, dblRemainPointsRatio, dblRemainPoints, dblDeleteNum);            
+
+            CParameterResult ParameterResult = new CParameterResult();
+            ParameterResult.CResultPlLt = newcpllt;
+            _ParameterResult = ParameterResult;
+        }
+
+
+        /// <summary>
+        /// DPSimplify
+        /// </summary>
+        /// <remarks>one of the three parameters should be a real parameter, and the others are -1</remarks>
+        public static List<CPolyline> DPSimplify(List<CPolyline> cpllt,
+            double dblThresholdDis = -1, double dblRemainPointsRatio = -1, double dblRemainPoints = -1, double dblDeleteNum = -1)
+        {
+            DivideForDP(cpllt);
+            return DPSimplifyWithoutDividing(cpllt, dblThresholdDis, dblRemainPointsRatio, dblRemainPoints, dblDeleteNum);
+        }
+
+        /// <summary>
+        /// DPSimplify
+        /// </summary>
+        /// <remarks>one of the three parameters should be a real parameter, and the others are -1</remarks>
+        public static List<CPolyline> DPSimplifyWithoutDividing(List<CPolyline> cpllt, 
+            double dblThresholdDis = -1, double dblRemainPointsRatio = -1, double dblRemainPoints = -1, double dblDeleteNum = -1)
         {
             int intRemainPoints = Convert.ToInt16(dblRemainPoints);
-            List<CPolyline> cpllt = _CPlLt;
-            //CGeoFunc.CalDistanceParameters<CPolyline, CPolyline>(cpllt);
 
-
-            _pStopwatch.Start();
             //get threshold
-            double dblTDis = CalThresholdDis(dblThresholdDis, dblRemainPointsRatio, dblRemainPoints, dblDeleteNum);
+            double dblTDis = CalThresholdDis(cpllt, dblThresholdDis, dblRemainPointsRatio, dblRemainPoints, dblDeleteNum);
 
-            List<CPolyline> newcpllt = new List<CPolyline>(cpllt.Count);  // the capacity is not so good
+            var newcpllt = new List<CPolyline>(cpllt.Count);
             for (int i = 0; i < cpllt.Count; i++)
             {
-                Console.WriteLine("polyline number: " + i);
-                List<CPoint> cptlt = cpllt[i].CptLt;
+                //Console.WriteLine("polyline number: " + i);
+                var cptlt = cpllt[i].CptLt;
                 var firstcpt = cptlt.First();
                 var last_cpt = cptlt.Last();
 
-                List<CPoint> newcptlt = new List<CPoint>(cptlt.Count);  // the capacity is not so good
+                var newcptlt = new List<CPoint>(cptlt.Count);  // the capacity is not so good
                 newcptlt.Add(firstcpt);  //first point
                 //middle point
                 if (firstcpt.Compare(last_cpt) != 0)  //Polyline
@@ -97,19 +117,14 @@ namespace MorphingClass.CGeneralizationMethods
                     RecursivelyGetNewCptLtPG(cpllt[i], cpllt[i].pVirtualPolyline, ref newcptlt, dblTDis, 2);
                 }
                 newcptlt.Add(last_cpt);  //last point
-                CPolyline newcpl = new CPolyline(i, newcptlt);
+                var newcpl = new CPolyline(i, newcptlt);
                 newcpllt.Add(newcpl);
             }
-            _pStopwatch.Stop();
-            _ParameterInitialize.tsslTime.Text = _pStopwatch.ElapsedMilliseconds.ToString();
 
-            CParameterResult ParameterResult = new CParameterResult();
-            ParameterResult.CResultPlLt = newcpllt;
-            _ParameterResult = ParameterResult;
+            return newcpllt;
         }
 
 
-        
 
         /// <summary>
         /// Calculate the Threshold for the DP algorithm
@@ -119,8 +134,8 @@ namespace MorphingClass.CGeneralizationMethods
         /// <param name="dblRemainPoints"></param>
         /// <param name="dblVerySmall"></param>
         /// <remarks>there are three ways to calculate the threshold.</remarks>
-        private double CalThresholdDis(double dblThresholdDis, 
-            double dblRemainPointsRatio, double dblRemainPoints, double dblDeleteNum)
+        private static double CalThresholdDis(List<CPolyline> cptllt, 
+            double dblThresholdDis, double dblRemainPointsRatio, double dblRemainPoints, double dblDeleteNum)
         {
             int intRemainPoints = Convert.ToInt16(dblRemainPoints);
 
@@ -134,7 +149,6 @@ namespace MorphingClass.CGeneralizationMethods
             else
             {
                 int intEdgeNum = 0;
-                List<CPolyline> cptllt = _CPlLt;
                 for (int i = 0; i < cptllt.Count; i++)
                 {
                     intEdgeNum += (cptllt[i].CptLt.Count - 1);
@@ -172,7 +186,7 @@ namespace MorphingClass.CGeneralizationMethods
         /// </summary>
         /// <param name="dcpl"></param>
         /// <param name="pVtPl"></param>
-        public void DivideCplByDP(CPolyline dcpl, CVirtualPolyline pVtPl)
+        public static void DivideCplForDP(CPolyline dcpl, CVirtualPolyline pVtPl)
         {
             List<CPoint> dcptlt = dcpl.CptLt;
             Stack<CVirtualPolyline> pVtPlSk = new Stack<CVirtualPolyline>();
@@ -211,7 +225,7 @@ namespace MorphingClass.CGeneralizationMethods
             } while (pVtPlSk.Count > 0);            
         }
 
-        private double CalTDisByDeletePtNum<T>(List<T> CPlLt, int intDeletePtNum) where T : CPolyline
+        private static double CalTDisByDeletePtNum<T>(List<T> CPlLt, int intDeletePtNum) where T : CPolyline
         {
             var dblMaxDisLt = new List<double>();
             for (int i = 0; i < CPlLt.Count; i++)
@@ -231,7 +245,7 @@ namespace MorphingClass.CGeneralizationMethods
         /// </summary>
         /// <remarks>if the height of a point is smaller than the height of a lower-level height, 
         /// the larger lower-level will be used</remarks>
-        private List<double> CollectMaxDis(CVirtualPolyline pVtPl)
+        private static List<double> CollectMaxDis(CVirtualPolyline pVtPl)
         {
             int intCount = pVtPl.intToID - pVtPl.intFrID - 1;
             var dblMaxDisLt = new List<double>(intCount);  //we don't need to consider the MaxDis of the two ends of the polyline
@@ -294,7 +308,7 @@ namespace MorphingClass.CGeneralizationMethods
         /// <param name="newcptlt"></param>
         /// <param name="dblPropotion"></param>
         /// <remarks>Notice that this function gets the vertices without the first and last vertices</remarks>
-        public void GetNewCptLt(CPolyline cpl, CVirtualPolyline pVtPl, ref List<CPoint> newcptlt, double dblTDis)
+        public static void GetNewCptLt(CPolyline cpl, CVirtualPolyline pVtPl, ref List<CPoint> newcptlt, double dblTDis)
         {
             if (pVtPl.dblMaxDis <dblTDis)
             {
@@ -327,7 +341,7 @@ namespace MorphingClass.CGeneralizationMethods
             } while (pVtPlSk.Count >0);
         }
 
-        private void RecursivelyGetNewCptLtPG(CPolyline cpl, CVirtualPolyline pVtPl, 
+        private static void RecursivelyGetNewCptLtPG(CPolyline cpl, CVirtualPolyline pVtPl, 
             ref List<CPoint> newcptlt, double dblTDis, int intDepth)
         {
             if (pVtPl.CLeftPolyline == null)

@@ -78,8 +78,8 @@ namespace MorphingClass.CMorphingMethods
         //    //have to upgrade the codes
         //    //frcpl.SetVirtualPolyline();
         //    //tocpl.SetVirtualPolyline();
-        //    //_pDPSimplify.DivideCplByDP(frcpl, frcpl.pVirtualPolyline);
-        //    //_pDPSimplify.DivideCplByDP(tocpl, tocpl.pVirtualPolyline);
+        //    //_pDPSimplify.DivideCplForDP(frcpl, frcpl.pVirtualPolyline);
+        //    //_pDPSimplify.DivideCplForDP(tocpl, tocpl.pVirtualPolyline);
 
         //    int intIndex = 0;
         //    double dblMin = double.MaxValue;
@@ -152,8 +152,8 @@ namespace MorphingClass.CMorphingMethods
         //    //}
 
 
-        //    //DivideCplByDP(frcpl);
-        //    //DivideCplByDP(tocpl);
+        //    //DivideCplForDP(frcpl);
+        //    //DivideCplForDP(tocpl);
 
 
         //    //CAlgorithmsHelper pAlgorithmsHelper = new CAlgorithmsHelper();
@@ -219,8 +219,8 @@ namespace MorphingClass.CMorphingMethods
         //    //    return CorrespondSegmentLk00;
         //    //}
 
-        //    //DivideCplByDP(frcpl);
-        //    //DivideCplByDP(tocpl);
+        //    //DivideCplForDP(frcpl);
+        //    //DivideCplForDP(tocpl);
 
         //    ////进行弯曲匹配，提取对应线段
         //    //C5.LinkedList<CCorrSegment> pCorrespondSegmentLk = new C5.LinkedList<CCorrSegment>();
@@ -245,8 +245,8 @@ namespace MorphingClass.CMorphingMethods
         //    //    return CorrespondSegmentLk00;
         //    //}
 
-        //    //DivideCplByDP(frcpl);
-        //    //DivideCplByDP(tocpl);           
+        //    //DivideCplForDP(frcpl);
+        //    //DivideCplForDP(tocpl);           
 
         //    ////进行弯曲匹配，提取对应线段
         //    //C5.LinkedList<CCorrSegment> pCorrespondSegmentLk = new C5.LinkedList<CCorrSegment>();
@@ -272,8 +272,8 @@ namespace MorphingClass.CMorphingMethods
         //    //    return CorrespondSegmentLk00;
         //    //}
 
-        //    ////DivideCplByDP(frcpl);
-        //    ////DivideCplByDP(tocpl);
+        //    ////DivideCplForDP(frcpl);
+        //    ////DivideCplForDP(tocpl);
 
         //    //CParameterThreshold ParameterThreshold = new CParameterThreshold();
         //    //ParameterThreshold.dblDLengthBound = dblBound;
@@ -382,7 +382,7 @@ namespace MorphingClass.CMorphingMethods
         /////// <return>DP算法化简后得到的线状要素</return>
         ////public CPolyline GetCplByDP(CPolyline dcpl, double dblDPBound)
         ////{
-        ////    DivideCplByDP(dcpl);
+        ////    DivideCplForDP(dcpl);
 
         ////    List<CPoint> newcptlt = new List<CPoint>();
         ////    newcptlt.Add(dcpl.CptLt[0]);

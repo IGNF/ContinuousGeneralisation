@@ -28,7 +28,7 @@ namespace ContinuousGeneralizer.FrmGeneralization
         
         private CDataRecords _DataRecords;
         private CDPSimplify _pDPSimplify;
-        private bool isDivideByDP = false;
+        private bool isDivideForDP = false;
 
         public FrmDPSimplify()
         {
@@ -54,38 +54,38 @@ namespace ContinuousGeneralizer.FrmGeneralization
             CHelpFunc.FrmOperation(ref ParameterInitialize);
         }
 
-        private void btnDivideByDP_Click(object sender, EventArgs e)
+        private void btnDivideForDP_Click(object sender, EventArgs e)
         {
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
             _pDPSimplify = new CDPSimplify(ParameterInitialize);
-            isDivideByDP = true;
+            isDivideForDP = true;
         }
 
         private void btnSimplify_Click(object sender, EventArgs e)
         {
-            if (isDivideByDP == false)
+            if (isDivideForDP == false)
             {
-                MessageBox.Show("please press DivideByDP first!");
+                MessageBox.Show("please press DivideForDP first!");
                 return;
             }
             
             double dblParameter = Convert.ToDouble(txtParameter.Text);
             if (rdoDistance.Checked == true)
             {
-                _pDPSimplify.DPSimplify(dblParameter, -1, -1, -1);
+                _pDPSimplify.DPSimplifyAlreadyDivided(dblThresholdDis: dblParameter);
             }
             else if (rdoRemainRatio.Checked == true)
             {
-                _pDPSimplify.DPSimplify(-1, dblParameter, -1, -1);
+                _pDPSimplify.DPSimplifyAlreadyDivided(dblRemainPointsRatio: dblParameter);
             }
             else if (rdoRemainNum.Checked == true)
             {
-                _pDPSimplify.DPSimplify(-1, -1, dblParameter, -1);
+                _pDPSimplify.DPSimplifyAlreadyDivided(dblRemainPoints: dblParameter);
             }
 
             else if (rdoDeleteNum.Checked == true)
             {
-                _pDPSimplify.DPSimplify(-1, -1, -1, dblParameter);
+                _pDPSimplify.DPSimplifyAlreadyDivided(dblDeleteNum: dblParameter);
             }
 
 
@@ -97,9 +97,9 @@ namespace ContinuousGeneralizer.FrmGeneralization
 
         private void btnDPMorph_Click(object sender, EventArgs e)
         {
-            if (isDivideByDP == false)
+            if (isDivideForDP == false)
             {
-                MessageBox.Show("please press DivideByDP first!");
+                MessageBox.Show("please press DivideForDP first!");
                 return;
             }
 

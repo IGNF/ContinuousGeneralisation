@@ -147,8 +147,8 @@ namespace MorphingClass.CMorphingMethods
                 pBSAtBdLt[i].CResultPtLt = pLinearInterpolation.CLI(frcpl, tocpl);
 
                 ////By DP Algorithm
-                //_pDPSimplify.DivideCplByDP(pBSAtBdLt[i] as CPolyline, pBSAtBdLt[i].pVirtualPolyline);
-                //_pDPSimplify.DivideCplByDP(pSSAtBdLt[i] as CPolyline, pSSAtBdLt[i].pVirtualPolyline);
+                //_pDPSimplify.DivideCplForDP(pBSAtBdLt[i] as CPolyline, pBSAtBdLt[i].pVirtualPolyline);
+                //_pDPSimplify.DivideCplForDP(pSSAtBdLt[i] as CPolyline, pSSAtBdLt[i].pVirtualPolyline);
 
                 //C5.LinkedList<CCorrSegment> CorrespondSegmentLk = new C5.LinkedList<CCorrSegment>();
                 //SubPolylineMatchLA(pBSAtBdLt[i] as CPolyline, pBSAtBdLt[i].pVirtualPolyline, pSSAtBdLt[i] as CPolyline, pSSAtBdLt[i].pVirtualPolyline, ParameterThreshold, ref CorrespondSegmentLk);
@@ -164,7 +164,7 @@ namespace MorphingClass.CMorphingMethods
             for (int i = 0; i < pSgAtBdLt.Count; i++)
             {
                 pSgAtBdLt[i].SetVirtualPolyline();
-                //_pDPSimplify.DivideCplByDP(pSgAtBdLt[i] as CPolyline, pSgAtBdLt[i].pVirtualPolyline);
+                //_pDPSimplify.DivideCplForDP(pSgAtBdLt[i] as CPolyline, pSgAtBdLt[i].pVirtualPolyline);
             }
         }
 
