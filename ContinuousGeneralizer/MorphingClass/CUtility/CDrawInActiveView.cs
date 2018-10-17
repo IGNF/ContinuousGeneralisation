@@ -34,6 +34,8 @@ namespace MorphingClass.CUtility
             rgbColor.Green = 0;
             rgbColor.Blue = 0;
 
+            
+
             ISimpleMarkerSymbol pSimpleSym = new SimpleMarkerSymbolClass();
             pSimpleSym.Style = esriSimpleMarkerStyle.esriSMSCross;
             pSimpleSym.Size = 10;
@@ -46,12 +48,14 @@ namespace MorphingClass.CUtility
             pMarkerElem = pElem as IMarkerElement;
             pMarkerElem.Symbol = pSimpleSym;
             pGraphicsContainer.AddElement(pElem, 0);
-            
-            
+
+
+            //pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
         }
 
 
-        public static void DrawArrow(IActiveView pActiveView, CPoint frcpt, CPoint tocpt, 
+        public static void DrawArrow(IActiveView pActiveView, CPoint frcpt, CPoint tocpt,
+            double dblArrowLength = 6, double dblArrowWidth = 6,
             int intRed = 0, int intGreen = 0, int intBlue = 0)
         {
             var rgbColor = CHelpFunc.GenerateIRgbColor(intRed, intGreen, intBlue);
@@ -60,8 +64,8 @@ namespace MorphingClass.CUtility
             IArrowMarkerSymbol arrowMarkerSymbol = new ArrowMarkerSymbolClass();
             arrowMarkerSymbol.Color = rgbColor;
             //arrowMarkerSymbol.Size = 6;  //it seems size has no effect
-            arrowMarkerSymbol.Length = 6;
-            arrowMarkerSymbol.Width = 5;
+            arrowMarkerSymbol.Length = dblArrowLength;
+            arrowMarkerSymbol.Width = dblArrowWidth;
             //Add an offset to make sure the square end of the line is hidden  
             //arrowMarkerSymbol.XOffset = 0.8;
 
@@ -88,7 +92,7 @@ namespace MorphingClass.CUtility
             ILineElement lineElement = new LineElementClass();
             lineElement.Symbol = (ILineSymbol)cartographicLineSymbol;
 
-            CPolyline cpl = new CPolyline(-1, frcpt, tocpt);
+            var cpl = new CPolyline(-1, frcpt, tocpt);
 
             //Cast to Element and set geometry  
             var element = (IElement)lineElement;
@@ -100,6 +104,8 @@ namespace MorphingClass.CUtility
             //Add element to graphics container  
             pActiveView.GraphicsContainer.AddElement(element, 0);
 
+
+            pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
 
 
 
@@ -199,12 +205,34 @@ namespace MorphingClass.CUtility
         }
 
 
+        public static void DrawTextMarker(IActiveView pActiveView, CPoint cpt,
+            int intRed = 0, int intGreen = 0, int intBlue = 0)
+        {
+            var textElement = new TextElementClass();
+            textElement.ScaleText = false;
+            textElement.Text = "Scale";
+
+            textElement.Geometry = cpt.JudgeAndSetPoint();
+
+            //textElement.
+            pActiveView.GraphicsContainer.AddElement(textElement as IElement, 0);
+
+            pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
+
+            //IACTextMarkerSymbol pACTextMarkerSymbol = new ACTextMarkerSymbolClass();
+            //IACTextSymbol pACTextSymbol = new ACTextSymbolClass();
+
+
+            //pActiveView.dr
+            //pACTextSymbol.
+            //pACTextMarkerSymbol.
+        }
 
 
 
 
-        //红色线 
-        public static void ViewPolyline(IMapControl4 pMapControl, CPolyline cpl)
+            //红色线 
+            public static void ViewPolyline(IMapControl4 pMapControl, CPolyline cpl)
         {
             //设置线段属性
             ILineSymbol pSimpleLineSymbol = new SimpleLineSymbolClass();

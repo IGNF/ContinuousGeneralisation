@@ -841,6 +841,8 @@ namespace ContinuousGeneralizer
 
         private void mnuAnyTest_Click(object sender, EventArgs e)
         {
+            //this.axMapControl.draw
+
             //this.axMapControl.DrawShape()
 
             //CDrawingArcGIS.DrawArrow(this.axMapControl.layout)
@@ -848,10 +850,12 @@ namespace ContinuousGeneralizer
             //var graphics = this.axMapControl.contain.CreateGraphics();
             // graphics.DrawLine()
 
-            CDrawInActiveView.DrawArrow(this.axMapControl.ActiveView.GraphicsContainer, 128, 128, 128);
-            CDrawInActiveView.DrawArrow(this.axMapControl.ActiveView, new CPoint(0, 0,0), new CPoint(0, 50,50), 128, 128, 128);
-            CDrawInActiveView.AddPointElement(this.axMapControl.ActiveView.GraphicsContainer);
-            this.axMapControl.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
+            CDrawInActiveView.DrawTextMarker(this.axMapControl.ActiveView, new CPoint(0, 0, 0));
+
+
+            //CDrawInActiveView.DrawArrow(this.axMapControl.ActiveView, new CPoint(0, 0,0), new CPoint(0, 50,50), 128, 128, 128);
+            //CDrawInActiveView.AddPointElement(this.axMapControl.ActiveView.GraphicsContainer);
+            //this.axMapControl.ActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
             //this.axMapControl.ActiveView.Refresh();
             //this.axMapControl.Refresh();
 

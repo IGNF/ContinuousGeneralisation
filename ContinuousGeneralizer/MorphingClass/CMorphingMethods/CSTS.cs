@@ -171,8 +171,8 @@ namespace MorphingClass.CMorphingMethods
 
 
 
-            CDrawInActiveView.DrawArrow(pAxMapControl.ActiveView, )
-
+            CDrawInActiveView.DrawArrow(pAxMapControl.ActiveView, new CPoint(-1, -50, -100), new CPoint(-1, -50, 400));
+            CDrawInActiveView.DrawArrow(pAxMapControl.ActiveView, new CPoint(-1, -100, -50), new CPoint(-1, 400, -50));
 
 
 
