@@ -69,9 +69,11 @@ namespace ContinuousGeneralizer.FrmGeneralization
             ParameterInitialize.cboLayerLt.Add(this.cboSSRoad);
             CConstants.strMethod = "STS";
 
-            this.cboTS.SelectedIndex = 0;
-            //this.cboBufferStyle.SelectedIndex = 0;
-            //this.cboSimplification.SelectedIndex = 2;
+            //0: vario_vario
+            //1: vario_separate
+            //2: separate_vario
+            //3: separate_separate
+            this.cboTS.SelectedIndex = 1;
 
 
             //Read all the layers

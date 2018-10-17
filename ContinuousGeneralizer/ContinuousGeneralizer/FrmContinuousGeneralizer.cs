@@ -187,7 +187,7 @@ namespace ContinuousGeneralizer
 
             //frmCurrent.btnTransform_Click(sender, e);
 
-            //frmCurrent.btnRun_Click(sender, e);
+            frmCurrent.btnRun_Click(sender, e);
             //frmCurrent.btnGreedy_Click(sender, e);
             //frmCurrent.btnRunILP_Click(sender, e);
             //frmCurrent.btn020_Click(sender, e);
@@ -495,35 +495,20 @@ namespace ContinuousGeneralizer
 
             int intEDelta = e.Delta;
             double dblScale = 0.8;
-            if (intEDelta > 0)
+            double dblNewWidth = pEnvelope.Width * dblScale;   //for zooming in; scroll forward
+            double dblNewHeight = pEnvelope.Height * dblScale; //for zooming in; scroll forward
+            if (intEDelta < 0) //for zooming out; scroll backward
             {
-                //计算新的Envelope
-                double dblNewWidth = pEnvelope.Width * dblScale;
-                double dblNewXMin = m_dblX - ((m_dblX - pEnvelope.XMin) / pEnvelope.Width) * dblNewWidth;
-                double dblNewXMax = dblNewXMin + dblNewWidth;
-
-                double dblNewHeight = dblScale * pEnvelope.Height;
-                double dblNewYMin = m_dblY - ((m_dblY - pEnvelope.YMin) / pEnvelope.Height) * dblNewHeight;
-                double dblNewYMax = dblNewYMin + dblNewHeight;
-
-                pNewEnvelope.PutCoords(dblNewXMin, dblNewYMin, dblNewXMax, dblNewYMax);
-                axMapControl.Extent = pNewEnvelope;
+                dblNewWidth = pEnvelope.Width / dblScale;
+                dblNewHeight = pEnvelope.Height / dblScale;
             }
-            //滚轮向后，zoom out
-            else if (intEDelta < 0)
-            {
-                //计算新的Envelope
-                double dblNewWidth = pEnvelope.Width / dblScale;
-                double dblNewXMin = m_dblX - ((m_dblX - pEnvelope.XMin) / pEnvelope.Width) * dblNewWidth;
-                double dblNewXMax = dblNewXMin + dblNewWidth;
 
-                double dblNewHeight = pEnvelope.Height / dblScale;
-                double dblNewYMin = m_dblY - ((m_dblY - pEnvelope.YMin) / pEnvelope.Height) * dblNewHeight;
-                double dblNewYMax = dblNewYMin + dblNewHeight;
-
-                pNewEnvelope.PutCoords(dblNewXMin, dblNewYMin, dblNewXMax, dblNewYMax);
-                axMapControl.Extent = pNewEnvelope;
-            }
+            double dblNewXMin = m_dblX - ((m_dblX - pEnvelope.XMin) / pEnvelope.Width) * dblNewWidth;
+            double dblNewXMax = dblNewXMin + dblNewWidth;
+            double dblNewYMin = m_dblY - ((m_dblY - pEnvelope.YMin) / pEnvelope.Height) * dblNewHeight;
+            double dblNewYMax = dblNewYMin + dblNewHeight;
+            pNewEnvelope.PutCoords(dblNewXMin, dblNewYMin, dblNewXMax, dblNewYMax);
+            axMapControl.Extent = pNewEnvelope;
         }
 
         //载入地图到鹰眼控件
@@ -850,7 +835,7 @@ namespace ContinuousGeneralizer
             //var graphics = this.axMapControl.contain.CreateGraphics();
             // graphics.DrawLine()
 
-            CDrawInActiveView.DrawTextMarker(this.axMapControl.ActiveView, new CPoint(0, 0, 0));
+            //CDrawInActiveView.DrawTextMarker(this.axMapControl.ActiveView, new CPoint(0, 0, 0));
 
 
             //CDrawInActiveView.DrawArrow(this.axMapControl.ActiveView, new CPoint(0, 0,0), new CPoint(0, 50,50), 128, 128, 128);

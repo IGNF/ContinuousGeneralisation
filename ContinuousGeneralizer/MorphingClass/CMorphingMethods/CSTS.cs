@@ -98,39 +98,95 @@ namespace MorphingClass.CMorphingMethods
             var pParameterInitialize = _ParameterInitialize;
             var pAxMapControl = pParameterInitialize.pAxMapControl;
 
+            
             pAxMapControl.Dock = DockStyle.None;
-            pAxMapControl.Width = 420;
-            pAxMapControl.Height = 600;
+            pAxMapControl.Width = 320;
+            pAxMapControl.Height = 320;
+            double dblWHRation = pAxMapControl.Width / pAxMapControl.Height;
 
-            IPoint cpt = new PointClass();
-            cpt.PutCoords(155, 250);
-            pAxMapControl.CenterAt(cpt);
+            double dblCenterX = 155;
+            double dblCenterY = 180;
+            //IPoint cptMC = new PointClass();
+            //cptMC.PutCoords(170, 180);
 
+            IEnvelope newEnvelope = new EnvelopeClass();
+            newEnvelope.XMin = dblCenterX - pAxMapControl.Width / 1.2;
+            newEnvelope.XMax = dblCenterX + pAxMapControl.Width / 1.2;
+            newEnvelope.YMin = dblCenterY - pAxMapControl.Height / 1.2;
+            newEnvelope.YMax = dblCenterY + pAxMapControl.Height / 1.2;
+            //newEnvelope.XMin = dblCenterX - pAxMapControl.Width ;
+            //newEnvelope.XMax = dblCenterX + pAxMapControl.Width ;
+            //newEnvelope.YMin = dblCenterY - pAxMapControl.Height ;
+            //newEnvelope.YMax = dblCenterY + pAxMapControl.Height;
+            pAxMapControl.Extent = newEnvelope;
+
+            //pAxMapControl.MapScale = 1 / 6000000;
+            //pAxMapControl.CenterAt(cptMC);
             //Old Larger-scale, Old Smaller-scale, New Larger-scale, New Smaller-scale
             _OLCplLt = this.ObjCGeoLtLt[0].AsExpectedClassEb<CPolyline, CGeoBase>().ToList();
             _OSCplLt = this.ObjCGeoLtLt[1].AsExpectedClassEb<CPolyline, CGeoBase>().ToList();
             _NLCplLt = this.ObjCGeoLtLt[2].AsExpectedClassEb<CPolyline, CGeoBase>().ToList();
             _NSCplLt = this.ObjCGeoLtLt[3].AsExpectedClassEb<CPolyline, CGeoBase>().ToList();
 
-            Output(0.00, 0.00);
-            Output(0.33, 0.00);
-            Output(0.67, 0.00);
-            Output(1.00, 0.00);
 
-            Output(0.00, 0.33);
-            Output(0.33, 0.33);
-            Output(0.67, 0.33);
-            Output(1.00, 0.33);
 
-            Output(0.00, 0.67);
-            Output(0.33, 0.67);
-            Output(0.67, 0.67);
-            Output(1.00, 0.67);
+            var cpllt00 = Output(0.00, 0.00);
+            var cpllt10 = Output(0.33, 0.00);
+            var cpllt20 = Output(0.67, 0.00);
+            var cpllt30 = Output(1.00, 0.00);
 
-            Output(0.00, 1.00);
-            Output(0.33, 1.00);
-            Output(0.67, 1.00);
-            Output(1.00, 1.00);
+            var cpllt01 = Output(0.00, 0.33);
+            var cpllt11 = Output(0.33, 0.33);
+            var cpllt21 = Output(0.67, 0.33);
+            var cpllt31 = Output(1.00, 0.33);
+
+            var cpllt02 = Output(0.00, 0.67);
+            var cpllt12 = Output(0.33, 0.67);
+            var cpllt22 = Output(0.67, 0.67);
+            var cpllt32 = Output(1.00, 0.67);
+
+            var cpllt03 = Output(0.00, 1.00);
+            var cpllt13 = Output(0.33, 1.00);
+            var cpllt23 = Output(0.67, 1.00);
+            var cpllt33 = Output(1.00, 1.00);
+
+            double dblMinY00 = cpllt00[0].CptLt.Min(cpt => cpt.Y);
+            double dblMinY01 = cpllt01[0].CptLt.Min(cpt => cpt.Y);
+            double dblMinY02 = cpllt02[0].CptLt.Min(cpt => cpt.Y);
+            double dblMinY03 = cpllt03[0].CptLt.Min(cpt => cpt.Y);
+
+            double dblMaxY00 = cpllt00[0].CptLt.Max(cpt => cpt.Y);
+            double dblMaxY01 = cpllt01[0].CptLt.Max(cpt => cpt.Y);
+            double dblMaxY02 = cpllt02[0].CptLt.Max(cpt => cpt.Y);
+            double dblMaxY03 = cpllt03[0].CptLt.Max(cpt => cpt.Y);
+
+            double dblMidY00 = (dblMinY00 + dblMaxY00) / 2;
+            double dblMidY01 = (dblMinY01 + dblMaxY01) / 2;
+            double dblMidY02 = (dblMinY02 + dblMaxY02) / 2;
+            double dblMidY03 = (dblMinY03 + dblMaxY03) / 2;
+
+
+            double dblMinX00 = cpllt00[0].CptLt.Min(cpt => cpt.X);
+            double dblMinX10 = cpllt10[0].CptLt.Min(cpt => cpt.X);
+            double dblMinX20 = cpllt20[0].CptLt.Min(cpt => cpt.X);
+            double dblMinX30 = cpllt30[0].CptLt.Min(cpt => cpt.X);
+
+            double dblMaxX00 = cpllt00[0].CptLt.Max(cpt => cpt.X);
+            double dblMaxX10 = cpllt10[0].CptLt.Max(cpt => cpt.X);
+            double dblMaxX20 = cpllt20[0].CptLt.Max(cpt => cpt.X);
+            double dblMaxX30 = cpllt30[0].CptLt.Max(cpt => cpt.X);
+
+            double dblMidX00 = (dblMinX00 + dblMaxX00) / 2;
+            double dblMidX10 = (dblMinX10 + dblMaxX10) / 2;
+            double dblMidX20 = (dblMinX20 + dblMaxX20) / 2;
+            double dblMidX30 = (dblMinX30 + dblMaxX30) / 2;
+
+
+
+
+
+
+
 
 
             var olcpl = _OLCplLt[0];
@@ -138,23 +194,44 @@ namespace MorphingClass.CMorphingMethods
             var nlcpl = _NLCplLt[0];
             var nscpl = _NSCplLt[0];
 
+            double dblXAxisStart = -30;
+            double dblXAxisEnd = 400;
+            double dblYAxisStart = -30;
+            double dblYAxisEnd = 400;
+
             var strTS = _ParameterInitialize.strTS;
-            var HelpCplLt = new List<CPolyline>();
+            var LinkCplLt = new List<CPolyline>();
+            var BreakCplLt = new List<CPolyline>();
             int intIndex = 0;
             if (strTS == "vario_vario")
             {
-                HelpCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[0], oscpl.CptLt[0]));
-                HelpCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[2], oscpl.CptLt[2]));
-                HelpCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[1], nlcpl.CptLt[1]));
-                HelpCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[9], nlcpl.CptLt[9]));
+                //time transition
+                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[1], nlcpl.CptLt[1]));
+                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[9], nlcpl.CptLt[9]));
+                LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[2], nscpl.CptLt[2]));
+                LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[8], nscpl.CptLt[8]));
 
-                HelpCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[2], nscpl.CptLt[2]));
-                HelpCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[8], nscpl.CptLt[8]));
-                HelpCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[0], nscpl.CptLt[0]));
-                HelpCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[2], nscpl.CptLt[2]));
+                //scale transition
+                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[0], oscpl.CptLt[0]));
+                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[2], oscpl.CptLt[2]));
+                LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[0], nscpl.CptLt[0]));
+                LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[2], nscpl.CptLt[2]));
             }
             else if (strTS == "vario_separate")
             {
+                //time transition
+                //LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[1], nlcpl.CptLt[1]));
+                //LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[9], nlcpl.CptLt[9]));
+                //LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[2], nscpl.CptLt[2]));
+                //LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[8], nscpl.CptLt[8]));
+
+                ////scale transition
+                //LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[0], oscpl.CptLt[0]));
+                //LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[2], oscpl.CptLt[2]));
+                //LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[0], nscpl.CptLt[0]));
+                //LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[2], nscpl.CptLt[2]));
+
+
             }
             else if (strTS == "separate_vario")
             {
@@ -164,22 +241,31 @@ namespace MorphingClass.CMorphingMethods
 
             }
 
-            CSaveFeature.SaveCplEb(HelpCplLt, strTS + "_Help", intRed: 128, intGreen: 128, intBlue: 128, 
-                pesriSimpleLineStyle: esriSimpleLineStyle.esriSLSDash);
+            CSaveFeature.SaveCplEb(LinkCplLt, strTS + "_Help", intRed: 128, intGreen: 128, intBlue: 128);
+                //pesriSimpleLineStyle: esriSimpleLineStyle.esriSLSDash);
 
 
 
 
+            double dblTextSize = 8;
+            CDrawInActiveView.DrawArrow(pAxMapControl.ActiveView, 
+                new CPoint(-1, dblXAxisStart - 30, -30), new CPoint(-1, dblXAxisEnd, -30)); //x arrow; horizontal
+            CDrawInActiveView.DrawArrow(pAxMapControl.ActiveView, 
+                new CPoint(-1, -30, dblYAxisStart - 30), new CPoint(-1, -30, dblYAxisEnd)); //y arrow; vertical            
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "M (scale=1/M)", -20, 410, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "time", 380, -10, dblTextSize);
 
-            CDrawInActiveView.DrawArrow(pAxMapControl.ActiveView, new CPoint(-1, -50, -100), new CPoint(-1, -50, 400));
-            CDrawInActiveView.DrawArrow(pAxMapControl.ActiveView, new CPoint(-1, -100, -50), new CPoint(-1, 400, -50));
+            //scales
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "1,000", -60, dblMidY00, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2,000", -60, dblMidY01, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "3,000", -60, dblMidY02, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "4,000", -60, dblMidY03, dblTextSize);
 
-
-
-
-
-
-
+            //times
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2015", dblMidX00, -50, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2016", dblMidX10, -50, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2017", dblMidX20, -50, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2018", dblMidX30, -50, dblTextSize);
 
 
 
@@ -194,13 +280,13 @@ namespace MorphingClass.CMorphingMethods
 
         //Stopwatch _pstopwatch = new Stopwatch();
         #region Output
-        public void Output(double dblT, double dblS)
+        public List<CPolyline> Output(double dblT, double dblS)
         {
             var strTS = _ParameterInitialize.strTS;
-            var x = dblT;
-            var y = dblS;
+            var dblt = dblT;
+            var dbls = dblS;
             double dblExtraX = 300;
-            double dblExtraY = 400;
+            double dblExtraY = 300;
 
             if (strTS == "vario_vario")
             {
@@ -208,16 +294,16 @@ namespace MorphingClass.CMorphingMethods
             }
             else if (strTS == "vario_separate")
             {
-                y = SetForSeparate(dblS, 0.5);
+                dbls = SetForSeparate(dblS, 0.5);
             }
             else if (strTS == "separate_vario")
             {
-                x = SetForSeparate(dblT, 0.5);
+                dblt = SetForSeparate(dblT, 0.5);
             }
             else //if (strTS == "separate_separate")
             {
-                x = SetForSeparate(dblT, 0.5);
-                y = SetForSeparate(dblS, 0.5);
+                dblt = SetForSeparate(dblT, 0.5);
+                dbls = SetForSeparate(dblS, 0.5);
             }
 
             var olcpl = _OLCplLt[0];
@@ -240,9 +326,9 @@ namespace MorphingClass.CMorphingMethods
             //var InterCpl = InterpolateCpl(InterLargerCpl, InterSmallerCpl, dblS);
 
 
-            var InterLargerCpl = CGeoFunc.GetInbetweenCpl(olcplmoved, nlcplmoved, dblT);
-            var InterSmallerCpl = CGeoFunc.GetInbetweenCpl(oscplmoved, nscplmoved, dblT);
-            var InterCpl = CGeoFunc.GetInbetweenCpl(InterLargerCpl, InterSmallerCpl, dblS);
+            var InterLargerCpl = CGeoFunc.GetInbetweenCpl(olcplmoved, nlcplmoved, dblt);
+            var InterSmallerCpl = CGeoFunc.GetInbetweenCpl(oscplmoved, nscplmoved, dblt);
+            var InterCpl = CGeoFunc.GetInbetweenCpl(InterLargerCpl, InterSmallerCpl, dbls);
 
             var simplifedcpllt = CDPSimplify.DPSimplify(CHelpFunc.MakeLt(InterCpl), dblThresholdDis: 200000 * CConstants.dblVerySmallCoord);
 
@@ -260,7 +346,7 @@ namespace MorphingClass.CMorphingMethods
 
             CSaveFeature.SaveCpl(movedInterCpl, dblT.ToString() + " " + dblS.ToString());
 
-
+            return CHelpFunc.MakeLt(movedInterCpl);
 
 
 

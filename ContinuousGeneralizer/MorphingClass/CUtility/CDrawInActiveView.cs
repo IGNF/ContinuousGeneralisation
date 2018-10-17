@@ -12,6 +12,7 @@ using ESRI.ArcGIS.Display;
 using ESRI.ArcGIS.Geodatabase;
 using ESRI.ArcGIS.Geometry;
 using ESRI.ArcGIS.Output;
+//using ESRI.ArcGIS.std
 using ESRI.ArcGIS.esriSystem;
 
 using MorphingClass.CCorrepondObjects;
@@ -205,27 +206,45 @@ namespace MorphingClass.CUtility
         }
 
 
-        public static void DrawTextMarker(IActiveView pActiveView, CPoint cpt,
-            int intRed = 0, int intGreen = 0, int intBlue = 0)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pActiveView"></param>
+        /// <param name="strText"></param>
+        /// <param name="dblX">the center of the text</param>
+        /// <param name="dblY">the bottom of characters like "5", "b", etc.; not the bottome of characters like "q"</param>
+        /// <param name="dblSize">the size of the characters, not the size of the text box</param>
+        /// <param name="intRed"></param>
+        /// <param name="intGreen"></param>
+        /// <param name="intBlue"></param>
+        /// <remarks>
+        /// https://resources.arcgis.com/en/help/arcobjects-net/componenthelp/index.html#//00480000021m000000
+        /// </remarks>
+        public static void DrawTextMarker(IActiveView pActiveView, string strText,
+           double dblX, double dblY, double dblSize = 10, int intRed = 0, int intGreen = 0, int intBlue = 0)
         {
-            var textElement = new TextElementClass();
-            textElement.ScaleText = false;
-            textElement.Text = "Scale";
+            IElement element;
 
-            textElement.Geometry = cpt.JudgeAndSetPoint();
+            ITextElement textElement = new TextElementClass();
+            element = textElement as IElement;
+
+            ITextSymbol textSymbol = new TextSymbolClass();
+            textSymbol.Color = CHelpFunc.GenerateIRgbColor(intRed, intGreen, intBlue);
+            textSymbol.Size = dblSize;
+            //textSymbol.Font = dblSize;
+            //textSymbol.HorizontalAlignment = GetHorizontalAlignment();
+            //textSymbol.VerticalAlignment = GetVerticalAlignment();           
+
+            IPoint ipt = new PointClass();
+            ipt.PutCoords(dblX, dblY);
+            element.Geometry = ipt;
+
+            textElement.Symbol = textSymbol;
+            textElement.Text = strText;
 
             //textElement.
-            pActiveView.GraphicsContainer.AddElement(textElement as IElement, 0);
-
+            pActiveView.GraphicsContainer.AddElement(element, 0);
             pActiveView.PartialRefresh(esriViewDrawPhase.esriViewGraphics, null, null);
-
-            //IACTextMarkerSymbol pACTextMarkerSymbol = new ACTextMarkerSymbolClass();
-            //IACTextSymbol pACTextSymbol = new ACTextSymbolClass();
-
-
-            //pActiveView.dr
-            //pACTextSymbol.
-            //pACTextMarkerSymbol.
         }
 
 
