@@ -24,23 +24,16 @@ namespace MorphingClass.CUtility
 {
     public static class CDrawInActiveView
     {
-        public static void AddPointElement(IGraphicsContainer pGraphicsContainer)
+        public static void AddPointElement(IGraphicsContainer pGraphicsContainer,
+            int intRed = 0, int intGreen = 0, int intBlue = 0)
         {
             IPoint ipt = new PointClass();
             ipt.PutCoords(10, 10);
 
-
-            IRgbColor rgbColor = new RgbColorClass();
-            rgbColor.Red = 255;
-            rgbColor.Green = 0;
-            rgbColor.Blue = 0;
-
-            
-
             ISimpleMarkerSymbol pSimpleSym = new SimpleMarkerSymbolClass();
             pSimpleSym.Style = esriSimpleMarkerStyle.esriSMSCross;
             pSimpleSym.Size = 10;
-            pSimpleSym.Color = rgbColor as IColor;
+            pSimpleSym.Color = CHelpFunc.GenerateIRgbColor(intRed, intGreen, intBlue) as IColor;
 
             IMarkerElement pMarkerElem = null;
             IElement pElem;
@@ -59,11 +52,11 @@ namespace MorphingClass.CUtility
             double dblArrowLength = 6, double dblArrowWidth = 6,
             int intRed = 0, int intGreen = 0, int intBlue = 0)
         {
-            var rgbColor = CHelpFunc.GenerateIRgbColor(intRed, intGreen, intBlue);
+            var iColor = CHelpFunc.GenerateIRgbColor(intRed, intGreen, intBlue) as IColor;
 
             //Define an arrow marker  
             IArrowMarkerSymbol arrowMarkerSymbol = new ArrowMarkerSymbolClass();
-            arrowMarkerSymbol.Color = rgbColor;
+            arrowMarkerSymbol.Color = iColor;
             //arrowMarkerSymbol.Size = 6;  //it seems size has no effect
             arrowMarkerSymbol.Length = dblArrowLength;
             arrowMarkerSymbol.Width = dblArrowWidth;
@@ -72,7 +65,7 @@ namespace MorphingClass.CUtility
 
             //Create cartographic line symbol  
             ICartographicLineSymbol cartographicLineSymbol = new CartographicLineSymbolClass();
-            cartographicLineSymbol.Color = rgbColor;
+            cartographicLineSymbol.Color = iColor;
             cartographicLineSymbol.Width = 1;
 
             //Define simple line decoration  
@@ -229,7 +222,7 @@ namespace MorphingClass.CUtility
             element = textElement as IElement;
 
             ITextSymbol textSymbol = new TextSymbolClass();
-            textSymbol.Color = CHelpFunc.GenerateIRgbColor(intRed, intGreen, intBlue);
+            textSymbol.Color = CHelpFunc.GenerateIRgbColor(intRed, intGreen, intBlue) as IColor;
             textSymbol.Size = dblSize;
             //textSymbol.Font = dblSize;
             //textSymbol.HorizontalAlignment = GetHorizontalAlignment();

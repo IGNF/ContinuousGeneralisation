@@ -383,7 +383,8 @@ namespace MorphingClass.CUtility
         /// 
         /// </summary>
         /// <param name="pCol"></param>
-        /// <remarks>note that if we set z coordinates, then we may lose many information related to IPolygon (ConnectedComponentBag, InteriorRingBag, ExteriorRingBag, etc.) </remarks>
+        /// <remarks>note that if we set z coordinates, then we may lose many information related to IPolygon 
+        /// (ConnectedComponentBag, InteriorRingBag, ExteriorRingBag, etc.) </remarks>
         public static void SetZCoordinates(IPointCollection4 pCol)
         {
             for (int i = 0; i < pCol.PointCount; i++)
@@ -433,19 +434,6 @@ namespace MorphingClass.CUtility
         //    }
         //}
 
-
-        ///// <summary>
-        ///// transform some items into a list
-        ///// </summary>
-        ///// <returns></returns>
-        ///// <remarks >we allow at most three items here. the number of items could be increased if necessary</remarks>
-        //public static List<T> MakeLt<T>(T item)
-        //   where T : class
-        //{
-        //    return MakeLt(1, item);
-        //}
-
-
         /// <summary>
         /// transform some items into a list
         /// </summary>
@@ -472,41 +460,42 @@ namespace MorphingClass.CUtility
             return TLt;
         }
 
-        ///// <summary>
-        ///// transform some items into a list
-        ///// </summary>
-        ///// <returns></returns>
-        ///// <remarks >we allow at most three items here. the number of items could be increased if necessary</remarks>
-        //public static IEnumerable<T> MakeEb<T>(int intCount, T item1, T item2 = null, T item3 = null, T item4 = null, T item5 = null, T item6 = null)
-        //   where T : class
-        //{
+        /// <summary>
+        /// transform some items into a list
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks >we allow at most three items here. the number of items could be increased if necessary</remarks>
+        public static IEnumerable<T> MakeEb<T>(
+        T item1 = null, T item2 = null, T item3 = null, T item4 = null, T item5 = null, T item6 = null)
+           where T : class
+        {
 
-        //    if (intCount >= 1)
-        //    {
-        //        yield return item1;
-        //    }
-        //    if (intCount >= 2)
-        //    {
-        //        yield return item2;
-        //    }
-        //    if (intCount >= 3)
-        //    {
-        //        yield return item3;
-        //    }
-        //    if (intCount >= 4)
-        //    {
-        //        yield return item4;
-        //    }
-        //    if (intCount >= 5)
-        //    {
-        //        yield return item5;
-        //    }
-        //    if (intCount >= 6)
-        //    {
-        //        yield return item6;
-        //    }
+            if (item1 !=null)
+            {
+                yield return item1;
+            }
+            if (item2 != null)
+            {
+                yield return item2;
+            }
+            if (item3 != null)
+            {
+                yield return item3;
+            }
+            if (item4 != null)
+            {
+                yield return item4;
+            }
+            if (item5 != null)
+            {
+                yield return item5;
+            }
+            if (item6 != null)
+            {
+                yield return item6;
+            }
 
-        //}
+        }
 
         /// <summary>
         /// 通过线要素(IPolyline5)获取点数组
@@ -704,35 +693,6 @@ namespace MorphingClass.CUtility
         }
 
 
-        //public static void GetCgbTypeAndTypeIndex<CGeo>(IEnumerable<CGeoBase<CGeo>> TEb, List<List<object>> objltlt, int intValueIndex, CValMap_Dt<int, int> TypePVDt)
-        //    where CGeo : class
-        //{
-        //    IEnumerator<CGeoBase<CGeo>> TEt = TEb.GetEnumerator();
-        //    //IEnumerator<object> objEt = objEb.GetEnumerator();
-
-        //    int intCount = 0;
-        //    while (TEt.MoveNext())
-        //    {
-        //        CGeoBase<CGeo> TCurrent = TEt.Current;
-
-        //        //get intType
-        //        TCurrent.intType = Convert.ToInt32(objltlt[intCount++][intValueIndex]);
-
-        //        //get intTypeIndex
-        //        int intTypeIndex;
-        //        if (TypePVDt.Dt.TryGetValue(TCurrent.intType, out intTypeIndex) == true)
-        //        {
-        //            TCurrent.intTypeIndex = intTypeIndex;
-        //        }
-        //        else
-        //        {
-        //            throw new ArgumentOutOfRangeException("failed to get type index for a type!");
-        //            //MessageBox.Show("failed to get type index for a type!   In: " + "CHelpFunc.cs");
-        //        }
-        //    }
-
-
-
         public static IEnumerable<object> JudgeAndSetAEGeometry<T>(IEnumerable<T> pCGeoEb)
             where T : CGeoBase
         {
@@ -759,7 +719,8 @@ namespace MorphingClass.CUtility
         /// <param name="strFileName">文件名</param>
         /// <param name="strPath">保存路径</param>
         /// <param name="m_mapControl">地图控件</param>
-        public static void SaveCtrlLine(List<List<CCorrCpts>> CtrlCptLtLt, string strFileName, double dblStandardLength, IWorkspace pWorkspace, IMapControl4 m_mapControl)
+        public static void SaveCtrlLine(List<List<CCorrCpts>> CtrlCptLtLt, 
+            string strFileName, double dblStandardLength, IWorkspace pWorkspace, IMapControl4 m_mapControl)
         {
             List<CPolyline> CtrlCplLt = GenerateCplLt(CtrlCptLtLt);
             int intCount = CtrlCptLtLt.GetCountItem();
@@ -831,9 +792,11 @@ namespace MorphingClass.CUtility
     /// <param name="strFileName">保存的文件名</param>
     /// <param name="strPath">保存路径</param>
     /// <param name="m_mapControl">地图控件</param>
-    public static IFeatureLayer SaveCPlLt(List<CPolyline> cpllt, string strFileName, IWorkspace pWorkspace, IMapControl4 m_mapControl, int intRed = 0, int intGreen = 0, int intBlue = 0, double dblWidth = 1)
+    public static IFeatureLayer SaveCPlLt(List<CPolyline> cpllt, string strFileName, IWorkspace pWorkspace, 
+        IMapControl4 m_mapControl, int intRed = 0, int intGreen = 0, int intBlue = 0, double dblWidth = 1)
         {
-            return CSaveFeature.SaveCGeoEb(cpllt, esriGeometryType.esriGeometryPolyline, strFileName, null, null, null, intRed, intGreen, intBlue, dblWidth);
+            return CSaveFeature.SaveCGeoEb(cpllt, esriGeometryType.esriGeometryPolyline, strFileName, 
+                null, null, null, intRed, intGreen, intBlue, dblWidth);
         }
 
 
@@ -985,7 +948,8 @@ namespace MorphingClass.CUtility
             List<CPolyline> pInterpolatedCPlLt = pMorphingBaseCpl.GenerateInterpolatedCplLt(dblProp);
 
             CParameterInitialize pParameterInitialize = pDataRecords.ParameterInitialize;
-            CHelpFunc.SaveCPlLt(pInterpolatedCPlLt, pParameterInitialize.strSaveFolderName + "____" + dblProp.ToString(), pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
+            CHelpFunc.SaveCPlLt(pInterpolatedCPlLt, pParameterInitialize.strSaveFolderName + "____" + dblProp.ToString(), 
+                pParameterInitialize.pWorkspace, pParameterInitialize.m_mapControl);
 
             return pInterpolatedCPlLt;
         }
@@ -1051,7 +1015,9 @@ namespace MorphingClass.CUtility
             for (int i = 0; i < pCorrespondBendLt.Count; i++)
             {
                 CCorrCpts pStartCorrespondingCpt = new CCorrCpts(pCorrespondBendLt[i].CFromBend.CptLt[0], pCorrespondBendLt[i].CToBend.CptLt[0]);
-                CCorrCpts pEndCorrespondingCpt = new CCorrCpts(pCorrespondBendLt[i].CFromBend.CptLt[pCorrespondBendLt[i].CFromBend.CptLt.Count - 1], pCorrespondBendLt[i].CToBend.CptLt[pCorrespondBendLt[i].CToBend.CptLt.Count - 1]);
+                CCorrCpts pEndCorrespondingCpt = new CCorrCpts(
+                    pCorrespondBendLt[i].CFromBend.CptLt[pCorrespondBendLt[i].CFromBend.CptLt.Count - 1], 
+                    pCorrespondBendLt[i].CToBend.CptLt[pCorrespondBendLt[i].CToBend.CptLt.Count - 1]);
 
                 pCorrespondingCptSlt.Add(pCorrespondBendLt[i].CFromBend.dblStartRL, pStartCorrespondingCpt);
                 pCorrespondingCptSlt.Add(pCorrespondBendLt[i].CFromBend.dblEndRL, pEndCorrespondingCpt);

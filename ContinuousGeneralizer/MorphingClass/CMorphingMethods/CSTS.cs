@@ -101,11 +101,11 @@ namespace MorphingClass.CMorphingMethods
 
             pAxMapControl.Dock = DockStyle.None;
             pAxMapControl.Width = 320;
-            pAxMapControl.Height = 320;
+            pAxMapControl.Height = 310;
             double dblWHRation = pAxMapControl.Width / pAxMapControl.Height;
 
             double dblCenterX = 305;
-            double dblCenterY = 340;
+            double dblCenterY = 345;
             //IPoint cptMC = new PointClass();
             //cptMC.PutCoords(170, 180);
 
@@ -130,7 +130,7 @@ namespace MorphingClass.CMorphingMethods
             _NSCplLt = this.ObjCGeoLtLt[3].AsExpectedClassEb<CPolyline, CGeoBase>().ToList();
 
 
-            
+
 
 
 
@@ -147,7 +147,7 @@ namespace MorphingClass.CMorphingMethods
 
             double dblXAxisStart = 60;
             double dblXAxisEnd = 620;
-            double dblYAxisStart = 80;
+            double dblYAxisStart = 70;
             double dblYAxisEnd = 620;
 
             double dblScaleMidY = (olcpl.CptLt[0].Y + oscpl.CptLt[0].Y) / 2;
@@ -157,9 +157,9 @@ namespace MorphingClass.CMorphingMethods
             var LinkCplLt = new List<CPolyline>();
             var SeparatorCplLt = new List<CPolyline>();
             var scaleSeparatorCpl = new CPolyline(
-                new CPoint(-1, dblXAxisStart + 2, dblScaleMidY), new CPoint(-1, dblXAxisEnd - 2, dblScaleMidY));
+                new CPoint(-1, dblXAxisStart + 5, dblScaleMidY), new CPoint(-1, dblXAxisEnd - 5, dblScaleMidY));
             var timeSeparatorCpl = new CPolyline(
-                new CPoint(-1, dblTimeMidX, dblYAxisStart + 2), new CPoint(-1, dblTimeMidX, dblYAxisEnd - 2));
+                new CPoint(-1, dblTimeMidX, dblYAxisStart + 5), new CPoint(-1, dblTimeMidX, dblYAxisEnd - 5));
 
 
 
@@ -299,11 +299,11 @@ namespace MorphingClass.CMorphingMethods
                 SeparatorCplLt.Add(timeSeparatorCpl);
             }
 
-            CSaveFeature.SaveCplEb(LinkCplLt, strTS + "_Link", intRed: 128, intGreen: 128, intBlue: 128);
-            CSaveFeature.SaveCplEb(SeparatorCplLt, strTS + "_Separator", intRed: 128, intGreen: 128, intBlue: 128,
+
+            CSaveFeature.SaveCplEb(SeparatorCplLt, strTS + "_Separator", intRed: 204, intGreen: 204, intBlue: 204,
                 pesriSimpleLineStyle: esriSimpleLineStyle.esriSLSDot);
             //pesriSimpleLineStyle: esriSimpleLineStyle.esriSLSDash);
-
+            CSaveFeature.SaveCplEb(LinkCplLt, strTS + "_Link", intRed: 150, intGreen: 150, intBlue: 150);
 
 
 
@@ -369,9 +369,9 @@ namespace MorphingClass.CMorphingMethods
 
             double dblTextSize = 8;
             CDrawInActiveView.DrawArrow(pAxMapControl.ActiveView,
-                new CPoint(-1, dblXAxisStart - 30, dblYAxisStart), new CPoint(-1, dblXAxisEnd, dblYAxisStart)); //x arrow; horizontal
+                new CPoint(-1, dblXAxisStart - 30, dblYAxisStart), new CPoint(-1, dblXAxisEnd, dblYAxisStart),6,5 ); //x arrow; horizontal
             CDrawInActiveView.DrawArrow(pAxMapControl.ActiveView,
-                new CPoint(-1, dblXAxisStart, dblYAxisStart - 30), new CPoint(-1, dblXAxisStart, dblYAxisEnd)); //y arrow; vertical            
+                new CPoint(-1, dblXAxisStart, dblYAxisStart - 30), new CPoint(-1, dblXAxisStart, dblYAxisEnd),6, 5); //y arrow; vertical            
             CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "M (scale=1/M)", dblXAxisStart + 20, dblYAxisEnd + 10, dblTextSize);
             CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "time", dblXAxisEnd - 20, dblYAxisStart - 25, dblTextSize);
 
@@ -388,10 +388,10 @@ namespace MorphingClass.CMorphingMethods
             CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2018", dblMidX30, dblYAxisStart - 30, dblTextSize);
 
             //inputs
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", dblXAxisStart+ 30 , dblYAxisStart +5, dblTextSize);
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", dblXAxisStart + 30, oscpl.CptLt[0].Y+40, dblTextSize);
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", nlcpl.CptLt[5].X + 10, dblYAxisStart + 5, dblTextSize);
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", nlcpl.CptLt[5].X+ 10, oscpl.CptLt[0].Y + 40, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", dblXAxisStart + 30, dblYAxisStart + 15, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", dblXAxisStart + 30, oscpl.CptLt[0].Y + 40, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", nlcpl.CptLt[5].X + 10, dblYAxisStart + 15, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", nlcpl.CptLt[5].X + 10, oscpl.CptLt[0].Y + 40, dblTextSize);
 
 
 
@@ -457,7 +457,11 @@ namespace MorphingClass.CMorphingMethods
             var dblBaseY = dblS * dblExtraY;
             var movedInterCpl = new CPolyline(0, CGeoFunc.MoveCptEb(simplifedcpllt[0].CptLt, dblBaseX, dblBaseY).ToList());
 
-            CSaveFeature.SaveCpl(movedInterCpl, dblT.ToString() + " " + dblS.ToString());
+            //CSaveFeature.SaveCpl(movedInterCpl, dblT.ToString() + " " + dblS.ToString());
+            var movedInterCpg = new CPolygon(-2, movedInterCpl.CptLt);
+            CSaveFeature.SaveCpg(movedInterCpg, dblT.ToString() + " " + dblS.ToString(), intRed: 247, intGreen: 247, intBlue: 247);
+
+
             var cpbLt = new List<CPolyBase>
             {movedInterCpl };
             CCreatePointLayer.SavePointLayer(cpbLt, dblT.ToString() + " " + dblS.ToString(), 3);
