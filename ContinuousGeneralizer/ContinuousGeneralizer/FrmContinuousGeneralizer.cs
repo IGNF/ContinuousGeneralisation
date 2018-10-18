@@ -91,7 +91,7 @@ namespace ContinuousGeneralizer
             ////CHelpFunc.strDataFolderName = "AreaAggregation-Mostpatches";
             //CHelpFunc.strPath = strWorkPath+ "AreaAggregation\\" + CHelpFunc.strDataFolderName;
 
-            CHelpFunc.strDataFolderName = "SingleLake2";
+            CHelpFunc.strDataFolderName = "SingleLake3";
             CHelpFunc.strPath = strWorkPath + "STSModel\\" + CHelpFunc.strDataFolderName;
 
 

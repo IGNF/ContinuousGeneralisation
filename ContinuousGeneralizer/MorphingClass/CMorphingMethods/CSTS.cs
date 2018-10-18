@@ -98,22 +98,23 @@ namespace MorphingClass.CMorphingMethods
             var pParameterInitialize = _ParameterInitialize;
             var pAxMapControl = pParameterInitialize.pAxMapControl;
 
-            
+
             pAxMapControl.Dock = DockStyle.None;
             pAxMapControl.Width = 320;
             pAxMapControl.Height = 320;
             double dblWHRation = pAxMapControl.Width / pAxMapControl.Height;
 
-            double dblCenterX = 155;
-            double dblCenterY = 180;
+            double dblCenterX = 305;
+            double dblCenterY = 340;
             //IPoint cptMC = new PointClass();
             //cptMC.PutCoords(170, 180);
 
             IEnvelope newEnvelope = new EnvelopeClass();
-            newEnvelope.XMin = dblCenterX - pAxMapControl.Width / 1.2;
-            newEnvelope.XMax = dblCenterX + pAxMapControl.Width / 1.2;
-            newEnvelope.YMin = dblCenterY - pAxMapControl.Height / 1.2;
-            newEnvelope.YMax = dblCenterY + pAxMapControl.Height / 1.2;
+            double dblRatio = 1;
+            newEnvelope.XMin = dblCenterX - pAxMapControl.Width / dblRatio;
+            newEnvelope.XMax = dblCenterX + pAxMapControl.Width / dblRatio;
+            newEnvelope.YMin = dblCenterY - pAxMapControl.Height / dblRatio;
+            newEnvelope.YMax = dblCenterY + pAxMapControl.Height / dblRatio;
             //newEnvelope.XMin = dblCenterX - pAxMapControl.Width ;
             //newEnvelope.XMax = dblCenterX + pAxMapControl.Width ;
             //newEnvelope.YMin = dblCenterY - pAxMapControl.Height ;
@@ -129,26 +130,206 @@ namespace MorphingClass.CMorphingMethods
             _NSCplLt = this.ObjCGeoLtLt[3].AsExpectedClassEb<CPolyline, CGeoBase>().ToList();
 
 
+            
 
-            var cpllt00 = Output(0.00, 0.00);
-            var cpllt10 = Output(0.33, 0.00);
-            var cpllt20 = Output(0.67, 0.00);
-            var cpllt30 = Output(1.00, 0.00);
 
-            var cpllt01 = Output(0.00, 0.33);
-            var cpllt11 = Output(0.33, 0.33);
-            var cpllt21 = Output(0.67, 0.33);
-            var cpllt31 = Output(1.00, 0.33);
 
-            var cpllt02 = Output(0.00, 0.67);
-            var cpllt12 = Output(0.33, 0.67);
-            var cpllt22 = Output(0.67, 0.67);
-            var cpllt32 = Output(1.00, 0.67);
 
-            var cpllt03 = Output(0.00, 1.00);
-            var cpllt13 = Output(0.33, 1.00);
-            var cpllt23 = Output(0.67, 1.00);
-            var cpllt33 = Output(1.00, 1.00);
+
+
+
+
+
+            var olcpl = _OLCplLt[0];
+            var oscpl = _OSCplLt[0];
+            var nlcpl = _NLCplLt[0];
+            var nscpl = _NSCplLt[0];
+
+            double dblXAxisStart = 60;
+            double dblXAxisEnd = 620;
+            double dblYAxisStart = 80;
+            double dblYAxisEnd = 620;
+
+            double dblScaleMidY = (olcpl.CptLt[0].Y + oscpl.CptLt[0].Y) / 2;
+            double dblTimeMidX = (olcpl.CptLt[4].X + nlcpl.CptLt[4].X) / 2;
+
+            var strTS = _ParameterInitialize.strTS;
+            var LinkCplLt = new List<CPolyline>();
+            var SeparatorCplLt = new List<CPolyline>();
+            var scaleSeparatorCpl = new CPolyline(
+                new CPoint(-1, dblXAxisStart + 2, dblScaleMidY), new CPoint(-1, dblXAxisEnd - 2, dblScaleMidY));
+            var timeSeparatorCpl = new CPolyline(
+                new CPoint(-1, dblTimeMidX, dblYAxisStart + 2), new CPoint(-1, dblTimeMidX, dblYAxisEnd - 2));
+
+
+
+            int intIndex = 0;
+            if (strTS == "vario_vario")
+            {
+                //time transition
+                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[4], nlcpl.CptLt[4]));
+                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[12], nlcpl.CptLt[12]));
+                LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[4], nscpl.CptLt[4]));
+                LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[12], nscpl.CptLt[12]));
+
+                //scale transition
+                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[0], oscpl.CptLt[0]));
+                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[8], oscpl.CptLt[8]));
+                LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[0], nscpl.CptLt[0]));
+                LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[8], nscpl.CptLt[8]));
+            }
+            else if (strTS == "vario_separate")
+            {
+                //time transition
+                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[4], nlcpl.CptLt[4]));
+                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[12], nlcpl.CptLt[12]));
+                LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[4], nscpl.CptLt[4]));
+                LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[12], nscpl.CptLt[12]));
+
+                //scale transition
+                var olmidLeftCpt = new CPoint(-1, olcpl.CptLt[0].X, dblScaleMidY);
+                var osmidLeftCpt = new CPoint(-1, oscpl.CptLt[0].X, dblScaleMidY);
+                var olmidRightCpt = new CPoint(-1, olcpl.CptLt[8].X, dblScaleMidY);
+                var osmidRightCpt = new CPoint(-1, oscpl.CptLt[8].X, dblScaleMidY);
+                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[0], olmidLeftCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, olmidLeftCpt, osmidLeftCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, osmidLeftCpt, oscpl.CptLt[0]));
+                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[8], olmidRightCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, olmidRightCpt, osmidRightCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, osmidRightCpt, oscpl.CptLt[8]));
+
+                var nlmidLeftCpt = new CPoint(-1, nlcpl.CptLt[0].X, dblScaleMidY);
+                var nsmidLeftCpt = new CPoint(-1, nscpl.CptLt[0].X, dblScaleMidY);
+                var nlmidRightCpt = new CPoint(-1, nlcpl.CptLt[8].X, dblScaleMidY);
+                var nsmidRightCpt = new CPoint(-1, nscpl.CptLt[8].X, dblScaleMidY);
+                LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[0], nlmidLeftCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, nlmidLeftCpt, nsmidLeftCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, nsmidLeftCpt, nscpl.CptLt[0]));
+                LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[8], nlmidRightCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, nlmidRightCpt, nsmidRightCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, nsmidRightCpt, nscpl.CptLt[8]));
+
+                SeparatorCplLt.Add(scaleSeparatorCpl);
+            }
+            else if (strTS == "separate_vario")
+            {
+                //time transition
+                var olmidLowerCpt = new CPoint(-1, dblTimeMidX, olcpl.CptLt[4].Y);
+                var nlmidLowerCpt = new CPoint(-1, dblTimeMidX, nlcpl.CptLt[4].Y);
+                var olmidUpperCpt = new CPoint(-1, dblTimeMidX, olcpl.CptLt[12].Y);
+                var nlmidUpperCpt = new CPoint(-1, dblTimeMidX, nlcpl.CptLt[12].Y);
+                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[4], olmidLowerCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, olmidLowerCpt, nlmidLowerCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, nlmidLowerCpt, nlcpl.CptLt[4]));
+                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[12], olmidUpperCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, olmidUpperCpt, nlmidUpperCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, nlmidUpperCpt, nlcpl.CptLt[12]));
+
+                var osmidLowerCpt = new CPoint(-1, dblTimeMidX, oscpl.CptLt[4].Y);
+                var nsmidLowerCpt = new CPoint(-1, dblTimeMidX, nscpl.CptLt[4].Y);
+                var osmidUpperCpt = new CPoint(-1, dblTimeMidX, oscpl.CptLt[12].Y);
+                var nsmidUpperCpt = new CPoint(-1, dblTimeMidX, nscpl.CptLt[12].Y);
+                LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[4], osmidLowerCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, osmidLowerCpt, nsmidLowerCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, nsmidLowerCpt, nscpl.CptLt[4]));
+                LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[12], osmidUpperCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, osmidUpperCpt, nsmidUpperCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, nsmidUpperCpt, nscpl.CptLt[12]));
+
+
+
+                //scale transition
+                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[0], oscpl.CptLt[0]));
+                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[8], oscpl.CptLt[8]));
+                LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[0], nscpl.CptLt[0]));
+                LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[8], nscpl.CptLt[8]));
+
+                SeparatorCplLt.Add(timeSeparatorCpl);
+            }
+            else //if (strTS == "separate_separate")
+            {
+                //time transition
+                var olmidLowerCpt = new CPoint(-1, dblTimeMidX, olcpl.CptLt[4].Y);
+                var nlmidLowerCpt = new CPoint(-1, dblTimeMidX, nlcpl.CptLt[4].Y);
+                var olmidUpperCpt = new CPoint(-1, dblTimeMidX, olcpl.CptLt[12].Y);
+                var nlmidUpperCpt = new CPoint(-1, dblTimeMidX, nlcpl.CptLt[12].Y);
+                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[4], olmidLowerCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, olmidLowerCpt, nlmidLowerCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, nlmidLowerCpt, nlcpl.CptLt[4]));
+                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[12], olmidUpperCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, olmidUpperCpt, nlmidUpperCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, nlmidUpperCpt, nlcpl.CptLt[12]));
+
+                var osmidLowerCpt = new CPoint(-1, dblTimeMidX, oscpl.CptLt[4].Y);
+                var nsmidLowerCpt = new CPoint(-1, dblTimeMidX, nscpl.CptLt[4].Y);
+                var osmidUpperCpt = new CPoint(-1, dblTimeMidX, oscpl.CptLt[12].Y);
+                var nsmidUpperCpt = new CPoint(-1, dblTimeMidX, nscpl.CptLt[12].Y);
+                LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[4], osmidLowerCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, osmidLowerCpt, nsmidLowerCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, nsmidLowerCpt, nscpl.CptLt[4]));
+                LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[12], osmidUpperCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, osmidUpperCpt, nsmidUpperCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, nsmidUpperCpt, nscpl.CptLt[12]));
+
+                //scale transition
+                var olmidLeftCpt = new CPoint(-1, olcpl.CptLt[0].X, dblScaleMidY);
+                var osmidLeftCpt = new CPoint(-1, oscpl.CptLt[0].X, dblScaleMidY);
+                var olmidRightCpt = new CPoint(-1, olcpl.CptLt[8].X, dblScaleMidY);
+                var osmidRightCpt = new CPoint(-1, oscpl.CptLt[8].X, dblScaleMidY);
+                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[0], olmidLeftCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, olmidLeftCpt, osmidLeftCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, osmidLeftCpt, oscpl.CptLt[0]));
+                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[8], olmidRightCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, olmidRightCpt, osmidRightCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, osmidRightCpt, oscpl.CptLt[8]));
+
+                var nlmidLeftCpt = new CPoint(-1, nlcpl.CptLt[0].X, dblScaleMidY);
+                var nsmidLeftCpt = new CPoint(-1, nscpl.CptLt[0].X, dblScaleMidY);
+                var nlmidRightCpt = new CPoint(-1, nlcpl.CptLt[8].X, dblScaleMidY);
+                var nsmidRightCpt = new CPoint(-1, nscpl.CptLt[8].X, dblScaleMidY);
+                LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[0], nlmidLeftCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, nlmidLeftCpt, nsmidLeftCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, nsmidLeftCpt, nscpl.CptLt[0]));
+                LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[8], nlmidRightCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, nlmidRightCpt, nsmidRightCpt));
+                LinkCplLt.Add(new CPolyline(intIndex++, nsmidRightCpt, nscpl.CptLt[8]));
+
+
+                SeparatorCplLt.Add(scaleSeparatorCpl);
+                SeparatorCplLt.Add(timeSeparatorCpl);
+            }
+
+            CSaveFeature.SaveCplEb(LinkCplLt, strTS + "_Link", intRed: 128, intGreen: 128, intBlue: 128);
+            CSaveFeature.SaveCplEb(SeparatorCplLt, strTS + "_Separator", intRed: 128, intGreen: 128, intBlue: 128,
+                pesriSimpleLineStyle: esriSimpleLineStyle.esriSLSDot);
+            //pesriSimpleLineStyle: esriSimpleLineStyle.esriSLSDash);
+
+
+
+
+
+            double dblXExtra = 400;
+            double dblYExtra = 400;
+
+            var cpllt00 = Output(0.00, 0.00, dblXExtra, dblYExtra);
+            var cpllt10 = Output(0.33, 0.00, dblXExtra, dblYExtra);
+            var cpllt20 = Output(0.67, 0.00, dblXExtra, dblYExtra);
+            var cpllt30 = Output(1.00, 0.00, dblXExtra, dblYExtra);
+
+            var cpllt01 = Output(0.00, 0.33, dblXExtra, dblYExtra);
+            var cpllt11 = Output(0.33, 0.33, dblXExtra, dblYExtra);
+            var cpllt21 = Output(0.67, 0.33, dblXExtra, dblYExtra);
+            var cpllt31 = Output(1.00, 0.33, dblXExtra, dblYExtra);
+
+            var cpllt02 = Output(0.00, 0.67, dblXExtra, dblYExtra);
+            var cpllt12 = Output(0.33, 0.67, dblXExtra, dblYExtra);
+            var cpllt22 = Output(0.67, 0.67, dblXExtra, dblYExtra);
+            var cpllt32 = Output(1.00, 0.67, dblXExtra, dblYExtra);
+
+            var cpllt03 = Output(0.00, 1.00, dblXExtra, dblYExtra);
+            var cpllt13 = Output(0.33, 1.00, dblXExtra, dblYExtra);
+            var cpllt23 = Output(0.67, 1.00, dblXExtra, dblYExtra);
+            var cpllt33 = Output(1.00, 1.00, dblXExtra, dblYExtra);
 
             double dblMinY00 = cpllt00[0].CptLt.Min(cpt => cpt.Y);
             double dblMinY01 = cpllt01[0].CptLt.Min(cpt => cpt.Y);
@@ -186,88 +367,31 @@ namespace MorphingClass.CMorphingMethods
 
 
 
-
-
-
-            var olcpl = _OLCplLt[0];
-            var oscpl = _OSCplLt[0];
-            var nlcpl = _NLCplLt[0];
-            var nscpl = _NSCplLt[0];
-
-            double dblXAxisStart = -30;
-            double dblXAxisEnd = 400;
-            double dblYAxisStart = -30;
-            double dblYAxisEnd = 400;
-
-            var strTS = _ParameterInitialize.strTS;
-            var LinkCplLt = new List<CPolyline>();
-            var BreakCplLt = new List<CPolyline>();
-            int intIndex = 0;
-            if (strTS == "vario_vario")
-            {
-                //time transition
-                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[1], nlcpl.CptLt[1]));
-                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[9], nlcpl.CptLt[9]));
-                LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[2], nscpl.CptLt[2]));
-                LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[8], nscpl.CptLt[8]));
-
-                //scale transition
-                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[0], oscpl.CptLt[0]));
-                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[2], oscpl.CptLt[2]));
-                LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[0], nscpl.CptLt[0]));
-                LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[2], nscpl.CptLt[2]));
-            }
-            else if (strTS == "vario_separate")
-            {
-                //time transition
-                //LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[1], nlcpl.CptLt[1]));
-                //LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[9], nlcpl.CptLt[9]));
-                //LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[2], nscpl.CptLt[2]));
-                //LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[8], nscpl.CptLt[8]));
-
-                ////scale transition
-                //LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[0], oscpl.CptLt[0]));
-                //LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[2], oscpl.CptLt[2]));
-                //LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[0], nscpl.CptLt[0]));
-                //LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[2], nscpl.CptLt[2]));
-
-
-            }
-            else if (strTS == "separate_vario")
-            {
-            }
-            else //if (strTS == "separate_separate")
-            {
-
-            }
-
-            CSaveFeature.SaveCplEb(LinkCplLt, strTS + "_Help", intRed: 128, intGreen: 128, intBlue: 128);
-                //pesriSimpleLineStyle: esriSimpleLineStyle.esriSLSDash);
-
-
-
-
             double dblTextSize = 8;
-            CDrawInActiveView.DrawArrow(pAxMapControl.ActiveView, 
-                new CPoint(-1, dblXAxisStart - 30, -30), new CPoint(-1, dblXAxisEnd, -30)); //x arrow; horizontal
-            CDrawInActiveView.DrawArrow(pAxMapControl.ActiveView, 
-                new CPoint(-1, -30, dblYAxisStart - 30), new CPoint(-1, -30, dblYAxisEnd)); //y arrow; vertical            
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "M (scale=1/M)", -20, 410, dblTextSize);
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "time", 380, -10, dblTextSize);
+            CDrawInActiveView.DrawArrow(pAxMapControl.ActiveView,
+                new CPoint(-1, dblXAxisStart - 30, dblYAxisStart), new CPoint(-1, dblXAxisEnd, dblYAxisStart)); //x arrow; horizontal
+            CDrawInActiveView.DrawArrow(pAxMapControl.ActiveView,
+                new CPoint(-1, dblXAxisStart, dblYAxisStart - 30), new CPoint(-1, dblXAxisStart, dblYAxisEnd)); //y arrow; vertical            
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "M (scale=1/M)", dblXAxisStart + 20, dblYAxisEnd + 10, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "time", dblXAxisEnd - 20, dblYAxisStart - 25, dblTextSize);
 
             //scales
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "1,000", -60, dblMidY00, dblTextSize);
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2,000", -60, dblMidY01, dblTextSize);
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "3,000", -60, dblMidY02, dblTextSize);
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "4,000", -60, dblMidY03, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "1,000", dblXAxisStart - 40, dblMidY00 - dblTextSize / 2, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2,000", dblXAxisStart - 40, dblMidY01 - dblTextSize / 2, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "3,000", dblXAxisStart - 40, dblMidY02 - dblTextSize / 2, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "4,000", dblXAxisStart - 40, dblMidY03 - dblTextSize / 2, dblTextSize);
 
             //times
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2015", dblMidX00, -50, dblTextSize);
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2016", dblMidX10, -50, dblTextSize);
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2017", dblMidX20, -50, dblTextSize);
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2018", dblMidX30, -50, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2015", dblMidX00, dblYAxisStart - 30, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2016", dblMidX10, dblYAxisStart - 30, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2017", dblMidX20, dblYAxisStart - 30, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2018", dblMidX30, dblYAxisStart - 30, dblTextSize);
 
-
+            //inputs
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", dblXAxisStart+ 30 , dblYAxisStart +5, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", dblXAxisStart + 30, oscpl.CptLt[0].Y+40, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", nlcpl.CptLt[5].X + 10, dblYAxisStart + 5, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", nlcpl.CptLt[5].X+ 10, oscpl.CptLt[0].Y + 40, dblTextSize);
 
 
 
@@ -280,13 +404,11 @@ namespace MorphingClass.CMorphingMethods
 
         //Stopwatch _pstopwatch = new Stopwatch();
         #region Output
-        public List<CPolyline> Output(double dblT, double dblS)
+        public List<CPolyline> Output(double dblT, double dblS, double dblExtraX = 300, double dblExtraY = 300)
         {
             var strTS = _ParameterInitialize.strTS;
             var dblt = dblT;
             var dbls = dblS;
-            double dblExtraX = 300;
-            double dblExtraY = 300;
 
             if (strTS == "vario_vario")
             {
@@ -316,21 +438,12 @@ namespace MorphingClass.CMorphingMethods
             var nlcplmoved = nlcpl.Move(-dblExtraX, 0);
             var nscplmoved = nscpl.Move(-dblExtraX, -dblExtraY);
 
-            //double dblMaxDis = olcpl.CptLt[9].DistanceTo(oscpl.CptLt[9]);
-            //double dblMaxDis = 22.36068;
-            //double dblMoveT = dblMaxDis * dblT;
-            //double dblMoveS = dblMaxDis * dblS;
-
-            //var InterLargerCpl = InterpolateCpl(olcplmoved, nlcplmoved, dblT);
-            //var InterSmallerCpl = InterpolateCpl(oscplmoved, nscplmoved, dblT);
-            //var InterCpl = InterpolateCpl(InterLargerCpl, InterSmallerCpl, dblS);
-
 
             var InterLargerCpl = CGeoFunc.GetInbetweenCpl(olcplmoved, nlcplmoved, dblt);
             var InterSmallerCpl = CGeoFunc.GetInbetweenCpl(oscplmoved, nscplmoved, dblt);
             var InterCpl = CGeoFunc.GetInbetweenCpl(InterLargerCpl, InterSmallerCpl, dbls);
 
-            var simplifedcpllt = CDPSimplify.DPSimplify(CHelpFunc.MakeLt(InterCpl), dblThresholdDis: 200000 * CConstants.dblVerySmallCoord);
+            var simplifedcpllt = CDPSimplify.DPSimplify(CHelpFunc.MakeLt(InterCpl), dblThresholdDis: 300000 * CConstants.dblVerySmallCoord);
 
 
             //var simplifedcptlt = CImaiIriSimplify.ImaiIriSimplify(InterCpl.CptLt, 100000 * CConstants.dblVerySmallCoord).ToList();
@@ -345,6 +458,9 @@ namespace MorphingClass.CMorphingMethods
             var movedInterCpl = new CPolyline(0, CGeoFunc.MoveCptEb(simplifedcpllt[0].CptLt, dblBaseX, dblBaseY).ToList());
 
             CSaveFeature.SaveCpl(movedInterCpl, dblT.ToString() + " " + dblS.ToString());
+            var cpbLt = new List<CPolyBase>
+            {movedInterCpl };
+            CCreatePointLayer.SavePointLayer(cpbLt, dblT.ToString() + " " + dblS.ToString(), 3);
 
             return CHelpFunc.MakeLt(movedInterCpl);
 

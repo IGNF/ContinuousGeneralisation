@@ -54,7 +54,7 @@ namespace MorphingClass.CAid
         }
 
 
-        private IFeatureLayer SavePointLayer(List<CPolyBase> CpbLt, string strName, double dblSize)
+        public static IFeatureLayer SavePointLayer(List<CPolyBase> CpbLt, string strName, double dblSize)
         {
             var pstrFieldNameLt = new List<string> { "PID" };
             var pesriFieldTypeLt = new List<esriFieldType> { esriFieldType.esriFieldTypeInteger };
