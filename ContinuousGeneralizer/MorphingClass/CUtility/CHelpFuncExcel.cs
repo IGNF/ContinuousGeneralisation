@@ -33,7 +33,7 @@ namespace MorphingClass.CUtility
 
             Excel.Application pExcelAPP = new Excel.Application();
             pExcelAPP.Visible = false;
-            Workbook pWorkBook = pExcelAPP.Workbooks.Open(strPath, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+            Workbook pWorkBook = pExcelAPP.Workbooks.Open(strPath);
             Worksheet pWorksheet = pWorkBook.Worksheets[1] as Worksheet;
 
 
@@ -122,7 +122,7 @@ namespace MorphingClass.CUtility
 
             pWorksheet.Columns.AutoFit();
             pExcelAPP.DisplayAlerts = false;
-            pWorkBook.SaveAs(strSavePath + "\\" + strfilename + strSuffix, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlNoChange, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+            pWorkBook.SaveAs(strSavePath + "\\" + strfilename + strSuffix, AccessMode: XlSaveAsAccessMode.xlNoChange);
             pExcelAPP.Quit();
 
             long lngEndTime = System.Environment.TickCount;
@@ -257,7 +257,7 @@ namespace MorphingClass.CUtility
 
         //    pWorksheet.Columns.AutoFit();
         //    pExcelAPP.DisplayAlerts = false;
-        //    pWorkBook.SaveAs(strSavePath + "\\" + strfilename + strSuffix, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlNoChange, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+        //    pWorkBook.SaveAs(strSavePath + "\\" + strfilename + strSuffix, AccessMode: XlSaveAsAccessMode.xlNoChange);
         //    pExcelAPP.Quit();
 
         //    long lngEndTime = System.Environment.TickCount;
@@ -278,10 +278,14 @@ namespace MorphingClass.CUtility
 
             for (int i = 0; i < CorrCptsLtLt.Count; i++)
             {
-                string strEntireFileName = strPath + "\\" + strfilename + strEvaluationMethod + CHelpFunc.JudgeAndAddZero(i, 4) + "__" + dblSumEvaluationLtLt[i].Last().ToString();
-                StreamWriter sw = new StreamWriter(strEntireFileName + ".xls", false, Encoding.GetEncoding(-0));  //it's better if we can output a file with ".xlsx", but that causes problems
+                string strEntireFileName = strPath + "\\" + strfilename + strEvaluationMethod + 
+                    CHelpFunc.JudgeAndAddZero(i, 4) + "__" + dblSumEvaluationLtLt[i].Last().ToString();
 
-                string strColNames = "FrID\t" + "FrX\t" + "FrY\t" + "ToID\t" + "ToX\t" + "ToY\t" + "MoveID\t" + "MoveX\t" + "MoveY\t" + strEvaluationMethod + "\t" + "Sum" + strEvaluationMethod;
+                //it's better if we can output a file with ".xlsx", but that causes problems
+                var sw = new StreamWriter(strEntireFileName + ".xls", false, Encoding.GetEncoding(-0));  
+
+                string strColNames = "FrID\t" + "FrX\t" + "FrY\t" + "ToID\t" + "ToX\t" + "ToY\t" + "MoveID\t" + "MoveX\t" + "MoveY\t" 
+                    + strEvaluationMethod + "\t" + "Sum" + strEvaluationMethod;
                 sw.WriteLine(strColNames);
 
                 int intJ = 0;
@@ -342,7 +346,7 @@ namespace MorphingClass.CUtility
         //    //pWorksheet.Columns.AutoFit();
         //    strfilename = strfilename + strName;
         //    string strEntireFileName = strSavePath + "\\" + strfilename + ".xls";
-        //    pWorkBook.SaveAs(strEntireFileName, 56, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+        //    pWorkBook.SaveAs(strEntireFileName, 56, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlExclusive);
         //    pWorkBook.Close(false, false, false);
         //    pExcelAPP.Quit();
 
@@ -430,7 +434,7 @@ namespace MorphingClass.CUtility
         //    string strfilename = System.IO.Path.GetFileNameWithoutExtension(strSavePath);
         //    strfilename = strfilename + strName;
         //    string strEntireFileName = strSavePath + "\\" + strfilename;
-        //    pWorkBook.SaveAs(strEntireFileName, XlFileFormat.xlWorkbookNormal, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+        //    pWorkBook.SaveAs(strEntireFileName, XlFileFormat.xlWorkbookNormal, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlExclusive);
         //    pWorkBook.Close(false, false, false);
         //    pExcelAPP.Quit();
         //    KillExcel();
@@ -573,7 +577,7 @@ namespace MorphingClass.CUtility
 
             pWorksheet.Columns.AutoFit();
             pExcelAPP.DisplayAlerts = false;
-            pWorkBook.SaveAs(strSavePath + "\\" + strfilename, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlNoChange, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+            pWorkBook.SaveAs(strSavePath + "\\" + strfilename, AccessMode: XlSaveAsAccessMode.xlNoChange);
             pExcelAPP.Quit();
             //KillExcel();
         }
@@ -606,7 +610,7 @@ namespace MorphingClass.CUtility
 
         //    pWorksheet.Columns.AutoFit();
         //    pExcelAPP.DisplayAlerts = false;
-        //    pWorkBook.SaveAs(strSavePath + "\\" + strfilename, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlNoChange, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+        //    pWorkBook.SaveAs(strSavePath + "\\" + strfilename, AccessMode: XlSaveAsAccessMode.xlNoChange);
         //    pExcelAPP.Quit();
         //    //KillExcel();
         //}
@@ -644,7 +648,7 @@ namespace MorphingClass.CUtility
 
             pWorksheet.Columns.AutoFit();
             pExcelAPP.DisplayAlerts = false;
-            pWorkBook.SaveAs(strSavePath + "\\" + strfilename + ".xlsx", Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlNoChange, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+            pWorkBook.SaveAs(strSavePath + "\\" + strfilename + ".xlsx", AccessMode: XlSaveAsAccessMode.xlNoChange);
             pExcelAPP.Quit();
             //KillExcel();
         }
@@ -665,7 +669,7 @@ namespace MorphingClass.CUtility
         //    string strfilename = System.IO.Path.GetFileNameWithoutExtension(strSavePath);
         //    strfilename = strfilename + strName;
         //    string strEntireFileName = strSavePath + "\\" + strfilename;
-        //    pWorkBook.SaveAs(strEntireFileName, 56, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+        //    pWorkBook.SaveAs(strEntireFileName, 56, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlExclusive);
         //    //pWorkBook 
         //    //pWorksheet.close
         //    pWorkBook.Close(false, false, false);
@@ -711,7 +715,7 @@ namespace MorphingClass.CUtility
         //    //ofg.clo
         //    //pWorksheet.Columns.AutoFit();
         //    //pExcelAPP.DisplayAlerts = false;
-        //    //pWorkBook.SaveAs(strSavePath + "\\" + strfilename, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlNoChange, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+        //    //pWorkBook.SaveAs(strSavePath + "\\" + strfilename, AccessMode: XlSaveAsAccessMode.xlNoChange);
         //    //pExcelAPP.Quit();
         //    //KillExcel();
         //}
@@ -749,7 +753,7 @@ namespace MorphingClass.CUtility
 
         //    pWorksheet.Columns.AutoFit();
         //    pExcelAPP.DisplayAlerts = false;
-        //    pWorkBook.SaveAs(strSavePath + "\\" + strfilename, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlNoChange, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+        //    pWorkBook.SaveAs(strSavePath + "\\" + strfilename, AccessMode: XlSaveAsAccessMode.xlNoChange);
         //    pExcelAPP.Quit();
         //    //KillExcel();
         //}
@@ -785,7 +789,7 @@ namespace MorphingClass.CUtility
 
         //    pWorksheet.Columns.AutoFit();
         //    pExcelAPP.DisplayAlerts = false;
-        //    pWorkBook.SaveAs(strSavePath + "\\" + strfilename, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlNoChange, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+        //    pWorkBook.SaveAs(strSavePath + "\\" + strfilename, AccessMode: XlSaveAsAccessMode.xlNoChange);
         //    pExcelAPP.Quit();
         //    //KillExcel();
         //}
@@ -824,7 +828,7 @@ namespace MorphingClass.CUtility
 
             pWorksheet.Columns.AutoFit();
             pExcelAPP.DisplayAlerts = false;
-            pWorkBook.SaveAs(strSavePath + "\\" + strfilename, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlNoChange, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+            pWorkBook.SaveAs(strSavePath + "\\" + strfilename, AccessMode: XlSaveAsAccessMode.xlNoChange);
             pExcelAPP.Quit();
             //KillExcel();
         }
@@ -867,7 +871,7 @@ namespace MorphingClass.CUtility
 
         //    pWorksheet.Columns.AutoFit();
         //    pExcelAPP.DisplayAlerts = false;
-        //    pWorkBook.SaveAs(strSavePath + "\\" + strfilename, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlNoChange, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+        //    pWorkBook.SaveAs(strSavePath + "\\" + strfilename, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlNoChange);
         //    pExcelAPP.Quit();
         //    //KillExcel();
         //}
@@ -903,7 +907,7 @@ namespace MorphingClass.CUtility
 
         //    pWorksheet.Columns.AutoFit();
         //    pExcelAPP.DisplayAlerts = false;
-        //    pWorkBook.SaveAs(strSavePath + "\\" + strfilename, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlNoChange, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+        //    pWorkBook.SaveAs(strSavePath + "\\" + strfilename, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlNoChange);
         //    pExcelAPP.Quit();
         //    //KillExcel();
         //}
@@ -916,7 +920,7 @@ namespace MorphingClass.CUtility
         //{
         //    Excel.Application pExcelAPP = new Excel.Application();
         //    pExcelAPP.Visible = false;
-        //    Workbook pWorkBook = pExcelAPP.Workbooks.Open(strPath, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+        //    Workbook pWorkBook = pExcelAPP.Workbooks.Open(strPath);
         //    Worksheet pWorksheet = pWorkBook.Worksheets[1] as Worksheet;
 
         //    pWorksheet.Cells[intRow, intCol] = dblData;
@@ -936,7 +940,7 @@ namespace MorphingClass.CUtility
         {
             Excel.Application pExcelAPP = new Excel.Application();
             pExcelAPP.Visible = false;
-            Workbook pWorkBook = pExcelAPP.Workbooks.Open(strPath, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+            Workbook pWorkBook = pExcelAPP.Workbooks.Open(strPath);
             Worksheet pWorksheet = pWorkBook.Worksheets[1] as Worksheet;
 
             List<CCorrCpts> pCorrCptsLt = new List<CCorrCpts>();
@@ -946,8 +950,10 @@ namespace MorphingClass.CUtility
             System.Array values = (System.Array)pWorksheet.UsedRange.Formula;
             for (int i = 0; i < intRow - 1; i++)
             {
-                CPoint frcpt = new CPoint(Convert.ToInt32(values.GetValue(i + 2, 1)), Convert.ToDouble(values.GetValue(i + 2, 2)), Convert.ToDouble(values.GetValue(i + 2, 3)));
-                CPoint tocpt = new CPoint(Convert.ToInt32(values.GetValue(i + 2, 4)), Convert.ToDouble(values.GetValue(i + 2, 5)), Convert.ToDouble(values.GetValue(i + 2, 6)));
+                CPoint frcpt = new CPoint(Convert.ToInt32(values.GetValue(i + 2, 1)), 
+                    Convert.ToDouble(values.GetValue(i + 2, 2)), Convert.ToDouble(values.GetValue(i + 2, 3)));
+                CPoint tocpt = new CPoint(Convert.ToInt32(values.GetValue(i + 2, 4)), 
+                    Convert.ToDouble(values.GetValue(i + 2, 5)), Convert.ToDouble(values.GetValue(i + 2, 6)));
 
                 if (blnReverse == true)
                 {
@@ -1000,7 +1006,7 @@ namespace MorphingClass.CUtility
 
             return pParameterResult;
         }
-        
+
 
 
         ///// <summary>
@@ -1016,7 +1022,7 @@ namespace MorphingClass.CUtility
         //{
         //    Excel.Application pExcelAPP = new Excel.Application();
         //    pExcelAPP.Visible = false;
-        //    Workbook pWorkBook = pExcelAPP.Workbooks.Open(strPath, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+        //    Workbook pWorkBook = pExcelAPP.Workbooks.Open(strPath);
         //    Worksheet pWorksheet = pWorkBook.Worksheets[1] as Worksheet;
 
         //    int intRow = pWorksheet.UsedRange.Rows.Count;
@@ -1024,7 +1030,8 @@ namespace MorphingClass.CUtility
         //    List<CPoint> cptlt = new List<CPoint>();
         //    for (int i = 0; i < intRow - 1; i++)
         //    {
-        //        CPoint cpt = new CPoint(i, Convert.ToDouble(values.GetValue(i + 2, 3)), Convert.ToDouble(values.GetValue(i + 2, 4)), Convert.ToDouble(values.GetValue(i + 2, 5)));
+        //        CPoint cpt = new CPoint(i, Convert.ToDouble(values.GetValue(i + 2, 3)), 
+        //              Convert.ToDouble(values.GetValue(i + 2, 4)), Convert.ToDouble(values.GetValue(i + 2, 5)));
         //        cpt.dblTime = Convert.ToDouble(values.GetValue(i + 2, 2));
         //        cptlt.Add(cpt);
         //    }
@@ -1047,7 +1054,7 @@ namespace MorphingClass.CUtility
         {
             Excel.Application pExcelAPP = new Excel.Application();
             pExcelAPP.Visible = false;
-            Workbook pWorkBook = pExcelAPP.Workbooks.Open(strPath, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+            Workbook pWorkBook = pExcelAPP.Workbooks.Open(strPath);
             Worksheet pWorksheet = pWorkBook.Worksheets[1] as Worksheet;
 
             //读取所有数据
@@ -1056,7 +1063,8 @@ namespace MorphingClass.CUtility
             List<CPoint> cptlt = new List<CPoint>();
             for (int i = 0; i < intRow - 1; i++)
             {
-                CPoint cpt = new CPoint(i, Convert.ToDouble(values.GetValue(i + 2, 3)), Convert.ToDouble(values.GetValue(i + 2, 4)), Convert.ToDouble(values.GetValue(i + 2, 5)));
+                CPoint cpt = new CPoint(i, Convert.ToDouble(values.GetValue(i + 2, 3)), 
+                    Convert.ToDouble(values.GetValue(i + 2, 4)), Convert.ToDouble(values.GetValue(i + 2, 5)));
                 cpt.intTrajectory = Convert.ToInt32(values.GetValue(i + 2, 1));
                 cpt.dblTime = Convert.ToDouble(values.GetValue(i + 2, 2));
                 cptlt.Add(cpt);
