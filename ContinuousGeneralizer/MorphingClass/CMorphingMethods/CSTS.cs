@@ -139,7 +139,6 @@ namespace MorphingClass.CMorphingMethods
 
 
 
-
             var olcpl = _OLCplLt[0];
             var oscpl = _OSCplLt[0];
             var nlcpl = _NLCplLt[0];
@@ -310,26 +309,29 @@ namespace MorphingClass.CMorphingMethods
 
             double dblXExtra = 400;
             double dblYExtra = 400;
+            var olIRgbColor = CHelpFunc.GenerateIRgbColor(230, 97, 1);
+            var nlIRgbColor = CHelpFunc.GenerateIRgbColor(94, 60, 153);
 
-            var cpllt00 = Output(0.00, 0.00, dblXExtra, dblYExtra);
-            var cpllt10 = Output(0.33, 0.00, dblXExtra, dblYExtra);
-            var cpllt20 = Output(0.67, 0.00, dblXExtra, dblYExtra);
-            var cpllt30 = Output(1.00, 0.00, dblXExtra, dblYExtra);
 
-            var cpllt01 = Output(0.00, 0.33, dblXExtra, dblYExtra);
-            var cpllt11 = Output(0.33, 0.33, dblXExtra, dblYExtra);
-            var cpllt21 = Output(0.67, 0.33, dblXExtra, dblYExtra);
-            var cpllt31 = Output(1.00, 0.33, dblXExtra, dblYExtra);
+            var cpllt00 = Output(0.00, 0.00, olIRgbColor, nlIRgbColor, dblXExtra, dblYExtra);
+            var cpllt10 = Output(0.33, 0.00, olIRgbColor, nlIRgbColor, dblXExtra, dblYExtra);
+            var cpllt20 = Output(0.67, 0.00, olIRgbColor, nlIRgbColor, dblXExtra, dblYExtra);
+            var cpllt30 = Output(1.00, 0.00, olIRgbColor, nlIRgbColor, dblXExtra, dblYExtra);
 
-            var cpllt02 = Output(0.00, 0.67, dblXExtra, dblYExtra);
-            var cpllt12 = Output(0.33, 0.67, dblXExtra, dblYExtra);
-            var cpllt22 = Output(0.67, 0.67, dblXExtra, dblYExtra);
-            var cpllt32 = Output(1.00, 0.67, dblXExtra, dblYExtra);
+            var cpllt01 = Output(0.00, 0.33, olIRgbColor, nlIRgbColor, dblXExtra, dblYExtra);
+            var cpllt11 = Output(0.33, 0.33, olIRgbColor, nlIRgbColor, dblXExtra, dblYExtra);
+            var cpllt21 = Output(0.67, 0.33, olIRgbColor, nlIRgbColor, dblXExtra, dblYExtra);
+            var cpllt31 = Output(1.00, 0.33, olIRgbColor, nlIRgbColor, dblXExtra, dblYExtra);
 
-            var cpllt03 = Output(0.00, 1.00, dblXExtra, dblYExtra);
-            var cpllt13 = Output(0.33, 1.00, dblXExtra, dblYExtra);
-            var cpllt23 = Output(0.67, 1.00, dblXExtra, dblYExtra);
-            var cpllt33 = Output(1.00, 1.00, dblXExtra, dblYExtra);
+            var cpllt02 = Output(0.00, 0.67, olIRgbColor, nlIRgbColor, dblXExtra, dblYExtra);
+            var cpllt12 = Output(0.33, 0.67, olIRgbColor, nlIRgbColor, dblXExtra, dblYExtra);
+            var cpllt22 = Output(0.67, 0.67, olIRgbColor, nlIRgbColor, dblXExtra, dblYExtra);
+            var cpllt32 = Output(1.00, 0.67, olIRgbColor, nlIRgbColor, dblXExtra, dblYExtra);
+
+            var cpllt03 = Output(0.00, 1.00, olIRgbColor, nlIRgbColor, dblXExtra, dblYExtra);
+            var cpllt13 = Output(0.33, 1.00, olIRgbColor, nlIRgbColor, dblXExtra, dblYExtra);
+            var cpllt23 = Output(0.67, 1.00, olIRgbColor, nlIRgbColor, dblXExtra, dblYExtra);
+            var cpllt33 = Output(1.00, 1.00, olIRgbColor, nlIRgbColor, dblXExtra, dblYExtra);
 
             double dblMinY00 = cpllt00[0].CptLt.Min(cpt => cpt.Y);
             double dblMinY01 = cpllt01[0].CptLt.Min(cpt => cpt.Y);
@@ -387,11 +389,11 @@ namespace MorphingClass.CMorphingMethods
             CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2017", dblMidX20, dblYAxisStart - 30, dblTextSize);
             CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2018", dblMidX30, dblYAxisStart - 30, dblTextSize);
 
-            //inputs
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", dblXAxisStart + 30, dblYAxisStart + 15, dblTextSize);
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", dblXAxisStart + 30, oscpl.CptLt[0].Y + 40, dblTextSize);
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", nlcpl.CptLt[5].X + 10, dblYAxisStart + 15, dblTextSize);
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", nlcpl.CptLt[5].X + 10, oscpl.CptLt[0].Y + 40, dblTextSize);
+            ////inputs
+            //CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", dblXAxisStart + 30, dblYAxisStart + 15, dblTextSize);
+            //CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", dblXAxisStart + 30, oscpl.CptLt[0].Y + 40, dblTextSize);
+            //CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", nlcpl.CptLt[5].X + 10, dblYAxisStart + 15, dblTextSize);
+            //CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", nlcpl.CptLt[5].X + 10, oscpl.CptLt[0].Y + 40, dblTextSize);
 
 
 
@@ -404,7 +406,7 @@ namespace MorphingClass.CMorphingMethods
 
         //Stopwatch _pstopwatch = new Stopwatch();
         #region Output
-        public List<CPolyline> Output(double dblT, double dblS, double dblExtraX = 300, double dblExtraY = 300)
+        public List<CPolyline> Output(double dblT, double dblS, IRgbColor olIRgbColor, IRgbColor nlIRgbColor, double dblExtraX = 300, double dblExtraY = 300)
         {
             var strTS = _ParameterInitialize.strTS;
             var dblt = dblT;
@@ -427,6 +429,13 @@ namespace MorphingClass.CMorphingMethods
                 dblt = SetForSeparate(dblT, 0.5);
                 dbls = SetForSeparate(dblS, 0.5);
             }
+
+            double dblRTime = CGeoFunc.GetInbetweenDbl(olIRgbColor.Red, nlIRgbColor.Red, dblt);
+            double dblGTime = CGeoFunc.GetInbetweenDbl(olIRgbColor.Green, nlIRgbColor.Green, dblt);
+            double dblBTime = CGeoFunc.GetInbetweenDbl(olIRgbColor.Blue, nlIRgbColor.Blue, dblt);
+            int intRTS = Convert.ToInt32(CGeoFunc.GetInbetweenDbl(dblRTime, CGeoFunc.GetInbetweenDbl(dblRTime, 255, 0.8), dbls));
+            int intGTS = Convert.ToInt32(CGeoFunc.GetInbetweenDbl(dblGTime, CGeoFunc.GetInbetweenDbl(dblGTime, 255, 0.8), dbls));
+            int intBTS = Convert.ToInt32(CGeoFunc.GetInbetweenDbl(dblBTime, CGeoFunc.GetInbetweenDbl(dblBTime, 255, 0.8), dbls));
 
             var olcpl = _OLCplLt[0];
             var oscpl = _OSCplLt[0];
@@ -459,7 +468,7 @@ namespace MorphingClass.CMorphingMethods
 
             //CSaveFeature.SaveCpl(movedInterCpl, dblT.ToString() + " " + dblS.ToString());
             var movedInterCpg = new CPolygon(-2, movedInterCpl.CptLt);
-            CSaveFeature.SaveCpg(movedInterCpg, dblT.ToString() + " " + dblS.ToString(), intRed: 247, intGreen: 247, intBlue: 247);
+            CSaveFeature.SaveCpg(movedInterCpg, dblT.ToString() + " " + dblS.ToString(), intRed: intRTS, intGreen: intGTS, intBlue: intBTS);
 
 
             var cpbLt = new List<CPolyBase>

@@ -73,7 +73,7 @@ namespace ContinuousGeneralizer.FrmGeneralization
             //1: vario_separate
             //2: separate_vario
             //3: separate_separate
-            this.cboTS.SelectedIndex = 0;
+            this.cboTS.SelectedIndex = 3;
 
 
             //Read all the layers
