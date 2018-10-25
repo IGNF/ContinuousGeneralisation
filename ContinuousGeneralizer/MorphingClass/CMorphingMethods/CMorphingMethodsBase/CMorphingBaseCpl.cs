@@ -39,7 +39,7 @@ namespace MorphingClass.CMorphingMethods.CMorphingMethodsBase
             var pObjCGeoLtLt = this.ObjCGeoLtLt;
             foreach (var CGeoLt in pObjCGeoLtLt)
             {
-                pAllReadCPlLt.AddRange(CGeoLt.AsExpectedClassEb<CPolyline, CGeoBase>());
+                pAllReadCPlLt.AddRange(CGeoLt.Select(cgeo => cgeo as CPolyline));
             }
             _AllReadCPlLt = pAllReadCPlLt;
             return pAllReadCPlLt;

@@ -24,8 +24,8 @@ namespace MorphingClass.CMorphingMethods
         public CLinear(CParameterInitialize ParameterInitialize)
         {
             Construct<CPolyline>(ParameterInitialize);
-            _LSCPlLt = this.ObjCGeoLtLt[0].AsExpectedClassEb<CPolyline, CGeoBase>().ToList();
-            _SSCPlLt = this.ObjCGeoLtLt[1].AsExpectedClassEb<CPolyline, CGeoBase>().ToList();
+            _LSCPlLt = this.ObjCGeoLtLt[0].Select(cgeo => cgeo as CPolyline).ToList();
+            _SSCPlLt = this.ObjCGeoLtLt[1].Select(cgeo => cgeo as CPolyline).ToList();
         }
 
         public CParameterResult LIMorphing()

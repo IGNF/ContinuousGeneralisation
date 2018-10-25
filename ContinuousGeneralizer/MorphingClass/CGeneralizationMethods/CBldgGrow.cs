@@ -94,7 +94,7 @@ namespace MorphingClass.CGeneralizationMethods
             
             var pParameterInitialize = _ParameterInitialize;
 
-            var LSCpgLt = this.ObjCGeoLtLt[0].AsExpectedClassEb<CPolygon, CGeoBase>().ToList();
+            var LSCpgLt = this.ObjCGeoLtLt[0].Select(cgeo => cgeo as CPolygon).ToList();
             //int intEdgeCount = 0;
             //double dblArea = 0;
             //foreach (var cpg in LSCpgLt)

@@ -38,7 +38,7 @@ namespace MorphingClass.CAid
         public void StatisticsOfDataSets()
         {
             var ParameterInitialize = _ParameterInitialize;
-            List<CPolygon> pCPgLt = this.ObjCGeoLtLt[0].AsExpectedClassEb<CPolygon, CGeoBase>().ToList();
+            List<CPolygon> pCPgLt = this.ObjCGeoLtLt[0].Select(cgeo => cgeo as CPolygon).ToList();
 
             long lngStartTime = System.Environment.TickCount;
             double dblArea = 0;

@@ -38,8 +38,8 @@ namespace MorphingClass.CAid
         {
             var ParameterInitialize = _ParameterInitialize;
 
-            var pLSCPlLt = this.ObjCGeoLtLt[0].AsExpectedClassEb<CPolyline, CGeoBase>().ToList();
-            //var pSSCPlLt = this.ObjCGeoLtLt[1].AsExpectedClassEb<CPolyline, CGeoBase>().ToList();
+            var pLSCPlLt = this.ObjCGeoLtLt[0].Select(cgeo => cgeo as CPolyline).ToList();
+            //var pSSCPlLt = this.ObjCGeoLtLt[1].Select(cgeo => cgeo as CPolyline).ToList();
 
             var subLSCplLt = new List<CPolyline>(pLSCPlLt.Count / 2);
             var subSSCplLt = new List<CPolyline>(pLSCPlLt.Count / 2);

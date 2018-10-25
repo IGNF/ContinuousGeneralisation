@@ -38,10 +38,10 @@ namespace MorphingClass.CAid
         public void UnifyIndicesPolylines()
         {
             var ParameterInitialize = _ParameterInitialize;
-            //List<CPolyline> pCPlLt = this.ObjCGeoLtLt[0].AsExpectedClassEb<CPolyline, CGeoBase>().ToList();
+            //List<CPolyline> pCPlLt = this.ObjCGeoLtLt[0].Select(cgeo => cgeo as CPolyline).ToList();
 
-            List<CPolyline> LSCPlLt = this.ObjCGeoLtLt[0].AsExpectedClassEb<CPolyline, CGeoBase>().ToList();
-            List<CPolyline> SSCPlLt = this.ObjCGeoLtLt[1].AsExpectedClassEb<CPolyline, CGeoBase>().ToList();
+            List<CPolyline> LSCPlLt = this.ObjCGeoLtLt[0].Select(cgeo => cgeo as CPolyline).ToList();
+            List<CPolyline> SSCPlLt = this.ObjCGeoLtLt[1].Select(cgeo => cgeo as CPolyline).ToList();
 
             long lngStartTime = System.Environment.TickCount;
 

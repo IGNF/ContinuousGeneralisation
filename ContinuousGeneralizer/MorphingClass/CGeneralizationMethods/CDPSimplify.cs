@@ -46,7 +46,7 @@ namespace MorphingClass.CGeneralizationMethods
         public CDPSimplify(CParameterInitialize ParameterInitialize)
         {
             Construct<CPolyline>(ParameterInitialize, 1);
-            _CPlLt = this.ObjCGeoLtLt[0].AsExpectedClassEb<CPolyline, CGeoBase>().ToList();
+            _CPlLt = this.ObjCGeoLtLt[0].Select(cgeo => cgeo as CPolyline).ToList();
             DivideForDP(_CPlLt);
         }
 

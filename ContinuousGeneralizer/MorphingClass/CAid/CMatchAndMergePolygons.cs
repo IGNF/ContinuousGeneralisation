@@ -39,8 +39,8 @@ namespace MorphingClass.CAid
         public void MatchAndMergePolygons()
         {
             var ParameterInitialize = _ParameterInitialize;
-            var pLSCPgLt = this.ObjCGeoLtLt[0].AsExpectedClassEb<CPolygon, CGeoBase>().ToList();
-            var pSSCPgLt = this.ObjCGeoLtLt[1].AsExpectedClassEb<CPolygon, CGeoBase>().ToList();
+            var pLSCPgLt = this.ObjCGeoLtLt[0].Select(cgeo => cgeo as CPolygon).ToList();
+            var pSSCPgLt = this.ObjCGeoLtLt[1].Select(cgeo => cgeo as CPolygon).ToList();
 
             long lngStartTime = System.Environment.TickCount;
             List<CPolygon> InterLSAttentionCPgLt = new List<CPolygon>();

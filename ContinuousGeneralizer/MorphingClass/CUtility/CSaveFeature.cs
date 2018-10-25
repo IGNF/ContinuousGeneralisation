@@ -114,7 +114,7 @@ string strSymbolLayerPath = null, bool blnVisible = true)
         {
             if (pIGeoEb != null)
             {
-                var objshapeEb = pIGeoEb.AsExpectedClassEb<object, T>();
+                var objshapeEb = pIGeoEb.Select(igeo => igeo as object);
                 CommitFeatures(objshapeEb, pstrFieldNameLt, pobjectValueLtLt);
             }
 

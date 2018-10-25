@@ -262,17 +262,6 @@ namespace MorphingClass.CUtility
 
 
 
-
-        public static IEnumerable<TExpected> AsExpectedClassEb<TExpected, TCurrent>(this IEnumerable<TCurrent> TEnumerable) 
-            where TExpected : class 
-        {
-            var TEnumerator = TEnumerable.GetEnumerator();
-            while (TEnumerator.MoveNext ())
-            {
-                yield return TEnumerator.Current as TExpected;
-            }
-        }
-
         public static List<List<T>> ToLtLt<T>(this IEnumerable<IEnumerable<T>> self)
         {
             return self.Select(innerEb => innerEb.ToList()).ToList();

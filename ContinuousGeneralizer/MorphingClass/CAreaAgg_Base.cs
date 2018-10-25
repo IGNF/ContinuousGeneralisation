@@ -181,8 +181,8 @@ namespace MorphingClass.CGeneralizationMethods
 
         protected void SetupBasic()
         {
-            var pLSCPgLt = this.ObjCGeoLtLt[0].AsExpectedClassEb<CPolygon, CGeoBase>().ToList();
-            var pSSCPgLt = this.ObjCGeoLtLt[1].AsExpectedClassEb<CPolygon, CGeoBase>().ToList();
+            var pLSCPgLt = this.ObjCGeoLtLt[0].Select(cgeo => cgeo as CPolygon).ToList();
+            var pSSCPgLt = this.ObjCGeoLtLt[1].Select(cgeo => cgeo as CPolygon).ToList();
 
             //this.intTotalTimeNum = pLSCPgLt.Count - pSSCPgLt.Count + 1;
 
@@ -206,9 +206,9 @@ namespace MorphingClass.CGeneralizationMethods
             //RegionNumATIndex: the index of RegionNum in the attribute table 
             var intLSTypeATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[0], "OBJART");
             var intSSTypeATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[1], "OBJART");
-            //var CgbEb=pLSCPgLk.AsExpectedClassEb<CGeoBase<CPolygon>, CGeoBase<CPolygon>>();
-            CHelpFunc.GetCgbTypeAndTypeIndex(pLSCPgLt.AsExpectedClassEb<CPolygon, CPolygon>(), _ObjValueLtLtLt[0], 0, _TypePVDt);
-            CHelpFunc.GetCgbTypeAndTypeIndex(pSSCPgLt.AsExpectedClassEb<CPolygon, CPolygon>(), _ObjValueLtLtLt[1], 0, _TypePVDt);
+            CHelpFunc.GetCgbTypeAndTypeIndex(pLSCPgLt, _ObjValueLtLtLt[0], 0, _TypePVDt);
+            CHelpFunc.GetCgbTypeAndTypeIndex(pSSCPgLt, _ObjValueLtLtLt[1], 0, _TypePVDt);
+
 
             //RegionNumATIndex: the index of RegionNum in the attribute table 
             var intLSRegionNumATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[0], "RegionNum");

@@ -77,7 +77,6 @@ namespace MorphingClass.CMorphingMethods
         private static int _intStart = 0;
         private static int _intEnd = _intStart + 1;
 
-        private Dictionary<CValPairIncr<CPolygon>, CptEdgeDis> _CloseCpipeDt;
 
         public CSTS()
         {
@@ -124,12 +123,20 @@ namespace MorphingClass.CMorphingMethods
             //pAxMapControl.MapScale = 1 / 6000000;
             //pAxMapControl.CenterAt(cptMC);
             //Old Larger-scale, Old Smaller-scale, New Larger-scale, New Smaller-scale
-            _OLCplLt = this.ObjCGeoLtLt[0].AsExpectedClassEb<CPolyline, CGeoBase>().ToList();
-            _OSCplLt = this.ObjCGeoLtLt[1].AsExpectedClassEb<CPolyline, CGeoBase>().ToList();
-            _NLCplLt = this.ObjCGeoLtLt[2].AsExpectedClassEb<CPolyline, CGeoBase>().ToList();
-            _NSCplLt = this.ObjCGeoLtLt[3].AsExpectedClassEb<CPolyline, CGeoBase>().ToList();
+            //_OLCplLt = this.ObjCGeoLtLt[0].Select(cgeo => cgeo as CPolyline).ToList();
+            //_OSCplLt = this.ObjCGeoLtLt[1].Select(cgeo => cgeo as CPolyline).ToList();
+            //_NLCplLt = this.ObjCGeoLtLt[2].Select(cgeo => cgeo as CPolyline).ToList();
+            //_NSCplLt = this.ObjCGeoLtLt[3].Select(cgeo => cgeo as CPolyline).ToList();
+
+            _OLCplLt = this.ObjCGeoLtLt[0].Select(cgeo => cgeo as CPolyline).ToList();
+            _OSCplLt = this.ObjCGeoLtLt[1].Select(cgeo => cgeo as CPolyline).ToList();
+            _NLCplLt = this.ObjCGeoLtLt[2].Select(cgeo => cgeo as CPolyline).ToList();
+            _NSCplLt = this.ObjCGeoLtLt[3].Select(cgeo => cgeo as CPolyline).ToList();
 
 
+            //_OSCplLt = this.ObjCGeoLtLt[1].Select(cgeo => cgeo as CPolyline).ToList();
+            //_NLCplLt = this.ObjCGeoLtLt[2].Select(cgeo => cgeo as CPolyline).ToList();
+            //_NSCplLt = this.ObjCGeoLtLt[3].Select(cgeo => cgeo as CPolyline).ToList();
 
 
 

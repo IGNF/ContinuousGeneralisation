@@ -36,7 +36,7 @@ namespace MorphingClass.CAid
 
         public void SelectRandomly(double dblPortion)
         {
-            var iptlt = this.ObjIGeoLtLt[0].AsExpectedClassEb<IPoint, object>().ToList();
+            var iptlt = this.ObjIGeoLtLt[0].Select(igeo => igeo as IPoint).ToList();
 
             var remainIptLt = new List<IPoint>(Convert.ToInt32(dblPortion * iptlt.Count));
             var rand = new Random();

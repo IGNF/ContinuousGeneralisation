@@ -60,6 +60,7 @@ namespace MorphingClass.CUtility
             set { _strPath = value; }
         }
 
+        public static string strPathCG { get; set; } //the path to ContinuousGeneralisation
         public static string strDataFolderName { get; set; }
 
 
@@ -667,13 +668,13 @@ namespace MorphingClass.CUtility
             int intValueIndex, CValMap_Dt<int, int> TypePVDt)
         //where CGeo : class
         {
-            IEnumerator<CPolygon> TEt = TEb.GetEnumerator();
+            var TEt = TEb.GetEnumerator();
             //IEnumerator<object> objEt = objEb.GetEnumerator();
 
             int intCount = 0;
             while (TEt.MoveNext())
             {
-                CPolygon TCurrent = TEt.Current;
+                var TCurrent = TEt.Current;
 
                 //get intType
                 TCurrent.intType = Convert.ToInt32(objltlt[intCount++][intValueIndex]);

@@ -48,7 +48,7 @@ namespace MorphingClass.CAid
             var ParameterInitialize = _ParameterInitialize;
             for (int i = 0; i < ObjCGeoLtLt.Count; i++)
             {
-                var cpblt = ObjCGeoLtLt[i].AsExpectedClassEb<CPolyBase, CGeoBase>().ToList();
+                var cpblt = ObjCGeoLtLt[i].Select(cgeo => cgeo as CPolyBase).ToList();
                 SavePointLayer(cpblt, ParameterInitialize.pFLayerLt[i].Name +"_Pt", dblSize);
             }
         }
