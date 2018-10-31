@@ -43,9 +43,9 @@ using Paths = System.Collections.Generic.List<System.Collections.Generic.List<Cl
 namespace MorphingClass.CMorphingMethods
 {
     /// <summary>
-    /// Building Growing
+    /// STS: space-time-scale model
     /// </summary>
-    /// <remarks>Cpipe: CpgPairIncrCPtEdgeDis</remarks>
+    /// <remarks></remarks>
     public class CSTS : CMorphingBaseCpg
     {
         public List<CPolygon> MergedCpgLt { get; set; }
@@ -54,28 +54,6 @@ namespace MorphingClass.CMorphingMethods
         private List<CPolyline> _OSCplLt;
         private List<CPolyline> _NLCplLt;
         private List<CPolyline> _NSCplLt;
-
-
-        private double _intRound = 0;
-        private static int _intI = 3;
-        private double _dblTotalGrow;
-        //private double _dblTargetDepsilon;
-        private double _dblEpsilon;
-        private double _dblDilation;
-        private double _dblErosion;
-        //private double _dblSimplifyEpsilon;
-        private double _dblLambda;
-
-        private static double _dblStartScale;
-        private static double _dblTargetScale;
-
-
-        private static double _dblAreaLimit;
-        private static double _dblHoleAreaLimit;
-
-
-        private static int _intStart = 0;
-        private static int _intEnd = _intStart + 1;
 
 
         public CSTS()
@@ -89,10 +67,7 @@ namespace MorphingClass.CMorphingMethods
         }
 
 
-        public void STS(
-            //string strBufferStyle, double dblMiterLimit, string strSimplification,
-            //double dblLS, double dblSS, int intOutputMapCount
-            )
+        public void STS()
         {
             var pParameterInitialize = _ParameterInitialize;
             var pAxMapControl = pParameterInitialize.pAxMapControl;
@@ -385,16 +360,21 @@ namespace MorphingClass.CMorphingMethods
             CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "time", dblXAxisEnd - 20, dblYAxisStart - 25, dblTextSize);
 
             //scales
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "1,000", dblXAxisStart - 40, dblMidY00 - dblTextSize / 2, dblTextSize);
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2,000", dblXAxisStart - 40, dblMidY01 - dblTextSize / 2, dblTextSize);
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "3,000", dblXAxisStart - 40, dblMidY02 - dblTextSize / 2, dblTextSize);
-            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "4,000", dblXAxisStart - 40, dblMidY03 - dblTextSize / 2, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2,000", dblXAxisStart - 40, dblMidY00 - dblTextSize / 2, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "4,000", dblXAxisStart - 40, dblMidY01 - dblTextSize / 2, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "6,000", dblXAxisStart - 40, dblMidY02 - dblTextSize / 2, dblTextSize);
+            CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "8,000", dblXAxisStart - 40, dblMidY03 - dblTextSize / 2, dblTextSize);
 
             //times
             CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2015", dblMidX00, dblYAxisStart - 30, dblTextSize);
             CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2016", dblMidX10, dblYAxisStart - 30, dblTextSize);
             CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2017", dblMidX20, dblYAxisStart - 30, dblTextSize);
             CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "2018", dblMidX30, dblYAxisStart - 30, dblTextSize);
+
+            var pExportActiveViewCS_Net = new MorphingClass.CCommon.ExportActiveViewCS_Net();
+            pExportActiveViewCS_Net.ExportActiveViewParameterized(300, 1, "EMF",
+                pParameterInitialize.strMxdPathBackSlash + strTS, true);
+
 
             ////inputs
             //CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "input", dblXAxisStart + 30, dblYAxisStart + 15, dblTextSize);

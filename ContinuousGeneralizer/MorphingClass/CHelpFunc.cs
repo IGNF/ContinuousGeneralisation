@@ -161,13 +161,14 @@ namespace MorphingClass.CUtility
 
         public static string GetTimeStamp()
         {
-            var strMonth = JudgeAndAddZero(DateTime.Now.Month);
-            var strDay = JudgeAndAddZero(DateTime.Now.Day);
-            var strHour = JudgeAndAddZero(DateTime.Now.Hour);
-            var strMinute = JudgeAndAddZero(DateTime.Now.Minute);
-            var strSecond = JudgeAndAddZero(DateTime.Now.Second);
-            var strMillisecond = JudgeAndAddZero(DateTime.Now.Millisecond, 3);
-            return DateTime.Now.Year.ToString() + strMonth + strDay + "_" + strHour + strMinute + strSecond + strMillisecond;
+            var DataTimeNow = DateTime.Now;
+            var strMonth = JudgeAndAddZero(DataTimeNow.Month);
+            var strDay = JudgeAndAddZero(DataTimeNow.Day);
+            var strHour = JudgeAndAddZero(DataTimeNow.Hour);
+            var strMinute = JudgeAndAddZero(DataTimeNow.Minute);
+            var strSecond = JudgeAndAddZero(DataTimeNow.Second);
+            var strMillisecond = JudgeAndAddZero(DataTimeNow.Millisecond, 3);
+            return DataTimeNow.Year.ToString() + strMonth + strDay + "_" + strHour + strMinute + strSecond + strMillisecond;
         }
 
         public static string JudgeAndAddZero(double dblNumber, int intDigits = 2)

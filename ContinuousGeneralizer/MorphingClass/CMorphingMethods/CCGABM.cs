@@ -133,9 +133,9 @@ namespace MorphingClass.CMorphingMethods
             var pstrFieldNameLtLt = this.strFieldNameLtLt;
             var pObjValueLtLtLt = this.ObjValueLtLtLt;
 
-            var InterLSIplLt = this.ObjIGeoLtLt[_intInterLS].Select(obj => obj as IPolygon5).ToList();
-            var InterSSIplLt = this.ObjIGeoLtLt[_intInterSS].Select(obj => obj as IPolygon5).ToList();
-            var SgIplLt = this.ObjIGeoLtLt[_intSg].Select(obj => obj as IPolygon5).ToList();
+            var InterLSIplLt = this.ObjIGeoLtLt[_intInterLS].Select(obj => obj as IPolyline5).ToList();
+            var InterSSIplLt = this.ObjIGeoLtLt[_intInterSS].Select(obj => obj as IPolyline5).ToList();
+            var SgIplLt = this.ObjIGeoLtLt[_intSg].Select(obj => obj as IPolyline5).ToList();
 
             Stopwatch pStopwatch = new Stopwatch();
             pStopwatch.Start();

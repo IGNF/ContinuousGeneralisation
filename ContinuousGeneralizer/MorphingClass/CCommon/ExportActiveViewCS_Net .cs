@@ -72,7 +72,7 @@ namespace MorphingClass.CCommon
              * output (JPEG, PDF, etc.), the fourth is the directory to which you'd like to write, and the last is a 
              * boolean which determines whether or not the output will be clipped to graphics extent (for layouts).
              */
-        public void ExportActiveViewParameterized(IActiveView docActiveView, long iOutputResolution, long lResampleRatio, 
+        public void ExportActiveViewParameterized(long iOutputResolution, long lResampleRatio, 
             string ExportType, string sOutputDir, Boolean bClipToGraphicsExtent)
         {
 
@@ -183,7 +183,8 @@ namespace MorphingClass.CCommon
                 // formats by default which is what should be used
             }
            
-            docPrintExport.Export(docActiveView, docExport, iOutputResolution, bClipToGraphicsExtent, null);
+            
+            docPrintExport.Export(CConstants.ParameterInitialize.pAxMapControl.ActiveView, docExport, iOutputResolution, bClipToGraphicsExtent, null);
 
             //MessageBox.Show("Finished exporting " + sOutputDir + sNameRoot + "." 
             //+ docExport.Filter.Split('.')[1].Split('|')[0].Split(')')[0] + ".", "Export Active View Sample");

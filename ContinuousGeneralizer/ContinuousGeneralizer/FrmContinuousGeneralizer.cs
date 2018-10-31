@@ -79,7 +79,7 @@ namespace ContinuousGeneralizer
             //"C:\\Study\\Data\\Morphing Data\\Representation In Article\\ContinuousGeneralizationOfAdministrativeBoundariesBasedonMorphing\\" 
             //+ CHelpFunc.strDataFolderName;
 
-            CHelpFunc.strDataFolderName = "AreaAggregation";
+            //CHelpFunc.strDataFolderName = "AreaAggregation";
             ////CHelpFunc.strDataFolderName = "AreaAggregation-664-easy";
             ////CHelpFunc.strDataFolderName = "AreaAggregation-716-VeryEasy";
             ////CHelpFunc.strDataFolderName = "AreaAggregation_Problematic";
@@ -89,10 +89,10 @@ namespace ContinuousGeneralizer
             ////CHelpFunc.strDataFolderName = "AreaAggregation_Simplest_Two";
             ////CHelpFunc.strDataFolderName = "AreaAggregation_Simplest_Three";
             ////CHelpFunc.strDataFolderName = "AreaAggregation-Mostpatches";
-            CHelpFunc.strPath = strWorkPath + "\\AreaAggregation\\" + CHelpFunc.strDataFolderName;
+            //CHelpFunc.strPath = strWorkPath + "\\AreaAggregation\\" + CHelpFunc.strDataFolderName;
 
-            //CHelpFunc.strDataFolderName = "SingleLake3";
-            //CHelpFunc.strPath = strWorkPath + "\\STSModel\\" + CHelpFunc.strDataFolderName;
+            CHelpFunc.strDataFolderName = "SingleLake3";
+            CHelpFunc.strPath = strWorkPath + "\\STSModel\\" + CHelpFunc.strDataFolderName;
 
 
             //CHelpFunc.strDataFolderName = "France";
@@ -141,39 +141,38 @@ namespace ContinuousGeneralizer
             //var frmCurrent = new FrmToIpe(_DataRecords);
             //var frmCurrent = new FrmBldgGrow(_DataRecords);
 
-            //var frmCurrent = new FrmSTS(_DataRecords);
+            var frmCurrent = new FrmSTS(_DataRecords);
             //var frmCurrent = new FrmCGABM(_DataRecords);
             //var frmCurrent = new FrmExtractPossibleFiles();
 
-            var frmCurrent = new FrmAreaAgg(_DataRecords);
-            CConstants.strRunContinuousGeneralizer = File.ReadLines(
-                CHelpFunc.strPathCG + "\\RunContinuousGeneralizer\\RunContinuousGeneralizer.txt").First();
-            //@"C:\MyWork\DailyWork\ContinuousGeneralisation\RunContinuousGeneralizer\RunContinuousGeneralizer.txt").First();
-            if (CConstants.strRunContinuousGeneralizer != "")
-            {
-                //0 NonShape
-                //1 MinimizeInteriorBoundaries
-                //2 MaximizeMinComp_EdgeNumber
-                //3 MaximizeMinComp_Combine
-                //4 MaximizeAvgComp_EdgeNumber
-                //5 MaximizeAvgComp_Combine
-                _DataRecords.ParameterInitialize.cboShapeConstraint.SelectedIndex = 1;
-                switch (CConstants.strRunContinuousGeneralizer)
-                {
-                    case "Greedy":
-                        frmCurrent.btnGreedy_Click(sender, e);
-                        break;
-                    case "AStar":
-                        frmCurrent.btnRun_Click(sender, e);
-                        break;
-                    case "ILP":
-                        frmCurrent.btnRunILP_Click(sender, e);
-                        break;
-                    default:
-                        break;
-                }
-                return;
-            }
+            //var frmCurrent = new FrmAreaAgg(_DataRecords);
+            //CConstants.strRunContinuousGeneralizer = File.ReadLines(
+            //    CHelpFunc.strPathCG + "\\RunContinuousGeneralizer\\RunContinuousGeneralizer.txt").First();
+            //if (CConstants.strRunContinuousGeneralizer != "")
+            //{
+            //    //0 NonShape
+            //    //1 MinimizeInteriorBoundaries
+            //    //2 MaximizeMinComp_EdgeNumber
+            //    //3 MaximizeMinComp_Combine
+            //    //4 MaximizeAvgComp_EdgeNumber
+            //    //5 MaximizeAvgComp_Combine
+            //    _DataRecords.ParameterInitialize.cboShapeConstraint.SelectedIndex = 1;
+            //    switch (CConstants.strRunContinuousGeneralizer)
+            //    {
+            //        case "Greedy":
+            //            frmCurrent.btnGreedy_Click(sender, e);
+            //            break;
+            //        case "AStar":
+            //            frmCurrent.btnRun_Click(sender, e);
+            //            break;
+            //        case "ILP":
+            //            frmCurrent.btnRunILP_Click(sender, e);
+            //            break;
+            //        default:
+            //            break;
+            //    }
+            //    return;
+            //}
 
 
 
@@ -188,7 +187,7 @@ namespace ContinuousGeneralizer
 
             //frmCurrent.btnTransform_Click(sender, e);
 
-            //frmCurrent.btnRun_Click(sender, e);
+            frmCurrent.btnRun_Click(sender, e);
             //frmCurrent.btnGreedy_Click(sender, e);
             //frmCurrent.btnRunILP_Click(sender, e);
             //frmCurrent.btn020_Click(sender, e);
@@ -751,7 +750,7 @@ namespace ContinuousGeneralizer
 
             var pExportActiveViewCS_Net = new MorphingClass.CCommon.ExportActiveViewCS_Net();
 
-            pExportActiveViewCS_Net.ExportActiveViewParameterized(this.axMapControl.ActiveView, 300, 1, "JPEG", strFileName, true);
+            pExportActiveViewCS_Net.ExportActiveViewParameterized(300, 1, "JPEG", strFileName, true);
 
         }
 
@@ -768,8 +767,7 @@ namespace ContinuousGeneralizer
             strFileName = sfdjpg.FileName;
 
             var pExportActiveViewCS_Net = new MorphingClass.CCommon.ExportActiveViewCS_Net();
-
-            pExportActiveViewCS_Net.ExportActiveViewParameterized(this.axMapControl.ActiveView, 300, 1, "EMF", strFileName, true);
+            pExportActiveViewCS_Net.ExportActiveViewParameterized(300, 1, "EMF", strFileName, true);
 
         }
 
