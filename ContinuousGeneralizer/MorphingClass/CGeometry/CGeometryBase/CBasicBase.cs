@@ -8,18 +8,24 @@ namespace MorphingClass.CGeometry.CGeometryBase
     public class CBasicBase : IComparable<CBasicBase>, IEquatable<CBasicBase>
     //, EqualityComparer<CBasicBase>
     {
-        protected int _intID = -1;
+        public const int intDefaultID = -1;
+        protected int _intID = intDefaultID;
         public int GID { get; set; } //global id
         public int indexID { get; set; }
         public bool isTraversed { get; set; }
+
+        public int ID
+        {
+            get { return _intID; }
+            set { _intID = value; }
+        }
 
 
         public int CompareTo(CBasicBase other)
         {
             return this.GID.CompareTo(other.GID);
         }
-
-
+        
 
         //Notes to Implementers:
         //If you implement Equals, you should also override the base class implementations of Object.Equals(Object) and GetHashCode 
@@ -67,10 +73,6 @@ namespace MorphingClass.CGeometry.CGeometryBase
         }
 
 
-        public int ID
-        {
-            get { return _intID; }
-            set { _intID = value; }
-        }
+
     }
 }

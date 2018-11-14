@@ -226,10 +226,10 @@ namespace ContinuousGeneralizer.FrmMorphingLSA
             //先确定最后两个点
             double dblLastX = (1 - dblProp) * pCorrCptsLt[intPtNum - 1].FrCpt.X + dblProp * pCorrCptsLt[intPtNum - 1].ToCpt.X;
             double dblLastY = (1 - dblProp) * pCorrCptsLt[intPtNum - 1].FrCpt.Y + dblProp * pCorrCptsLt[intPtNum - 1].ToCpt.Y;
-            CPoint newlastcpt = new CPoint(intPtNum - 1, dblLastX, dblLastY);
+            var newlastcpt = new CPoint(intPtNum - 1, dblLastX, dblLastY);
             double dblLast1X = (1 - dblProp) * pCorrCptsLt[intPtNum - 2].FrCpt.X + dblProp * pCorrCptsLt[intPtNum - 2].ToCpt.X;
             double dblLast1Y = (1 - dblProp) * pCorrCptsLt[intPtNum - 2].FrCpt.Y + dblProp * pCorrCptsLt[intPtNum - 2].ToCpt.Y;
-            CPoint newlast1cpt = new CPoint(intPtNum - 2, dblLast1X, dblLast1Y);
+            var newlast1cpt = new CPoint(intPtNum - 2, dblLast1X, dblLast1Y);
             newcptlt.Insert(0, newlastcpt);
             newcptlt.Insert(0, newlast1cpt);
 

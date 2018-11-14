@@ -297,7 +297,7 @@ namespace MorphingClass.CMorphingMethods
         //        }
         //        else
         //        {
-        //            CPoint frcpt = new CPoint(-1, -1, cpt.X - dblVerySmall, cpt.Y);
+        //            CPoint frcpt = new CPoint(-1, cpt.X - dblVerySmall, cpt.Y);
         //            CPoint tocpt = new CPoint(intGIDCount, intGIDCount, cpt.X + dblVerySmall, cpt.Y);
 
         //            SortedSet<CPoint> StripView = StripCPtXGID.GetViewBetween(frcpt, tocpt);

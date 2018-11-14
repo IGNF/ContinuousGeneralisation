@@ -486,7 +486,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             //double dblTargetX = (1 - dblRatio) * frcpt.X + dblRatio * tocpt.X;
             //double dblTargetY = (1 - dblRatio) * frcpt.Y + dblRatio * tocpt.Y;
-            //CPoint targetcpt = new CPoint(-1, dblTargetX,dblTargetY);
+            //CPoint targetcpt = new CPoint(dblTargetX,dblTargetY);
             CPoint targetcpt = CGeoFunc.GetInbetweenCpt(frcpt, tocpt, dblRatio);
             pVtPl.dblRatioforMovePt = dblRatio;
             pVtPl.dblLengthforMovePt = CGeoFunc.CalDis(targetcpt, cpt);
@@ -853,7 +853,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             //if the baseline is outside of the polygon, then the baseline is not a valid choice
             throw new ArgumentException(
-                "IsClockwise is not helpful. instead test if the edge between the two edges. see CCptbCtgl");
+                "IsClockwise is not helpful. instead test if the edge is between the two edges. see CCptbCtgl");
             if (CGeoFunc.IsClockwise(cptlt, false) == false)
             {
                 return false;

@@ -121,9 +121,9 @@ namespace MorphingClass.CMorphingMethods
             var LinkCplLt = new List<CPolyline>();
             var SeparatorCplLt = new List<CPolyline>();
             var scaleSeparatorCpl = new CPolyline(
-                new CPoint(-1, dblXAxisStart + 5, dblScaleMidY), new CPoint(-1, dblXAxisEnd - 5, dblScaleMidY));
+                new CPoint(dblXAxisStart + 5, dblScaleMidY), new CPoint(dblXAxisEnd - 5, dblScaleMidY));
             var timeSeparatorCpl = new CPolyline(
-                new CPoint(-1, dblTimeMidX, dblYAxisStart + 5), new CPoint(-1, dblTimeMidX, dblYAxisEnd - 5));
+                new CPoint(dblTimeMidX, dblYAxisStart + 5), new CPoint(dblTimeMidX, dblYAxisEnd - 5));
 
             if (strTS == "vario_vario")
             {
@@ -234,9 +234,9 @@ namespace MorphingClass.CMorphingMethods
 
             double dblTextSize = 8;
             CDrawInActiveView.DrawArrow(pAxMapControl.ActiveView,
-                new CPoint(-1, dblXAxisStart - 30, dblYAxisStart), new CPoint(-1, dblXAxisEnd, dblYAxisStart),6,5 ); //x arrow; horizontal
+                new CPoint(dblXAxisStart - 30, dblYAxisStart), new CPoint(dblXAxisEnd, dblYAxisStart),6,5 ); //x arrow; horizontal
             CDrawInActiveView.DrawArrow(pAxMapControl.ActiveView,
-                new CPoint(-1, dblXAxisStart, dblYAxisStart - 30), new CPoint(-1, dblXAxisStart, dblYAxisEnd),6, 5); //y arrow; vertical            
+                new CPoint(dblXAxisStart, dblYAxisStart - 30), new CPoint(dblXAxisStart, dblYAxisEnd),6, 5); //y arrow; vertical            
             CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "M (scale=1/M)", dblXAxisStart + 20, dblYAxisEnd + 10, dblTextSize);
             CDrawInActiveView.DrawTextMarker(pAxMapControl.ActiveView, "time", dblXAxisEnd - 20, dblYAxisStart - 25, dblTextSize);
 
@@ -381,7 +381,7 @@ namespace MorphingClass.CMorphingMethods
             var movedInterCpl = new CPolyline(0, CGeoFunc.MoveCptEb(simplifedcpllt[0].CptLt, dblBaseX, dblBaseY).ToList());
 
             //CSaveFeature.SaveCpl(movedInterCpl, dblT.ToString() + " " + dblS.ToString());
-            var movedInterCpg = new CPolygon(-2, movedInterCpl.CptLt);
+            var movedInterCpg = new CPolygon(movedInterCpl.CptLt);
             CSaveFeature.SaveCpg(movedInterCpg, dblT.ToString() + " " + dblS.ToString(), intRed: intRTS, intGreen: intGTS, intBlue: intBTS);
 
 

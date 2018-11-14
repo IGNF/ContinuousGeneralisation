@@ -111,7 +111,7 @@ namespace MorphingClass.CMorphingExtend
             double dblEndX = dblSumX / cpllt.Count ;
             double dblEndY = dblSumY / cpllt.Count;
 
-            CPoint cpt = new CPoint(-1, dblEndX, dblEndY);
+            CPoint cpt = new CPoint(dblEndX, dblEndY);
             return cpt;
         }
 

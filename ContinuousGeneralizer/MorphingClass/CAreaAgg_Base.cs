@@ -121,7 +121,7 @@ namespace MorphingClass.CGeneralizationMethods
         protected void Preprocessing(CParameterInitialize ParameterInitialize, 
             string strSpecifiedFieldName = null, string strSpecifiedValue = null)
         {
-            Construct<CPolygon>(ParameterInitialize, 2, 0, true, 1, strSpecifiedFieldName, strSpecifiedValue);
+            Construct<CPolygon>(ParameterInitialize, 2, 0, true, strSpecifiedFieldName, strSpecifiedValue);
             CConstants.strShapeConstraint = ParameterInitialize.cboShapeConstraint.Text;
             if (CConstants.strShapeConstraint == "MaximizeMinComp_EdgeNumber" || 
                 CConstants.strShapeConstraint == "MaximizeMinComp_Combine")
@@ -1116,7 +1116,7 @@ List<string> strLayerNameLt,
             return strIpeContAllLayers;
         }
 
-        private static string strDataOfCphs(IEnumerable<CPolygon> startCpgEb, List<IPolygon4> IpgLt, 
+        private static string strDataOfCphs(IEnumerable<CPolygon> startCpgEb, List<IPolygon4> IpgLt,
             List<IPolygon4> passiveIpgLt, List<IFillSymbol> pFillSymbolLt, List<string> strLayerNameLt,
             IEnvelope pFLayerEnv, CEnvelope pIpeEnv, string strBoundWidth)
         {
@@ -1124,7 +1124,7 @@ List<string> strLayerNameLt,
             var resultColor = new CColor(255, 153, 0);
             string strActive = "heavier";
             string strPassive = "fat";
-            
+
             //var resultColor = new CColor(45, 121, 147);
 
             ////for the first layer, we add all the patches
@@ -1139,7 +1139,7 @@ List<string> strLayerNameLt,
 
 
             var strIpeContAllLayers = CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[1], "removable", 320, 64);
-            strIpeContAllLayers += 
+            strIpeContAllLayers +=
                 "<group>\n" +
                 CToIpe.TranIpgBoundToIpe(IpgLt[0], pFLayerEnv, pIpeEnv, resultColor, strActive) +
                 CToIpe.TranIpgBoundToIpe(passiveIpgLt[0], pFLayerEnv, pIpeEnv, passiveColor, strPassive) +
@@ -1148,7 +1148,7 @@ List<string> strLayerNameLt,
 
 
             //for each of other layers, we only add the new patch
-            for (int i = 2; i < strLayerNameLt.Count-2; i++)
+            for (int i = 2; i < strLayerNameLt.Count - 2; i++)
             {
                 strIpeContAllLayers += CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[i], "removable", 320, 64);
 
@@ -1160,19 +1160,19 @@ List<string> strLayerNameLt,
 
                 //add the data=================================================================
                 strIpeContAllLayers += CToIpe.TranIpgToIpe(
-                    IpgLt[i/2 - 1], pFillSymbolLt[i / 2 - 1], pFLayerEnv, pIpeEnv, strBoundWidth);
-                
+                    IpgLt[i / 2 - 1], pFillSymbolLt[i / 2 - 1], pFLayerEnv, pIpeEnv, strBoundWidth);
 
-                strIpeContAllLayers += CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[i+1], "removable", 320, 64);
+
+                strIpeContAllLayers += CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[i + 1], "removable", 320, 64);
                 strIpeContAllLayers +=
                     "<group>\n" +
                     CToIpe.TranIpgBoundToIpe(IpgLt[i / 2], pFLayerEnv, pIpeEnv, resultColor, strActive) +
-                    CToIpe.TranIpgBoundToIpe(passiveIpgLt[i / 2], pFLayerEnv, pIpeEnv, passiveColor, strPassive) +               
+                    CToIpe.TranIpgBoundToIpe(passiveIpgLt[i / 2], pFLayerEnv, pIpeEnv, passiveColor, strPassive) +
                     "</group>\n";
                 i++;
             }
 
-            strIpeContAllLayers += CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[strLayerNameLt.Count-2], "removable", 320, 64);
+            strIpeContAllLayers += CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[strLayerNameLt.Count - 2], "removable", 320, 64);
 
             //draw a rectangle to cover the patch number of the last layer
             strIpeContAllLayers += CIpeDraw.drawIpeBox(304, 112, 384, 160, "white");
@@ -1181,8 +1181,8 @@ List<string> strLayerNameLt,
             strIpeContAllLayers += CIpeDraw.writeIpeText(strLayerNameLt[strLayerNameLt.Count - 2], 320, 128);
 
             //add the data
-            strIpeContAllLayers += CToIpe.TranIpgToIpe(IpgLt[strLayerNameLt.Count /2-2], 
-                pFillSymbolLt[strLayerNameLt.Count  / 2 -2], pFLayerEnv, pIpeEnv, strBoundWidth);
+            strIpeContAllLayers += CToIpe.TranIpgToIpe(IpgLt[strLayerNameLt.Count / 2 - 2],
+                pFillSymbolLt[strLayerNameLt.Count / 2 - 2], pFLayerEnv, pIpeEnv, strBoundWidth);
 
 
             return strIpeContAllLayers;

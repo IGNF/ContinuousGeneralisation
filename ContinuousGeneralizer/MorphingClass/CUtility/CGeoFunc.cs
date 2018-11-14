@@ -1682,7 +1682,7 @@ namespace MorphingClass.CUtility
             int intRow = pEdgeGrid.GetRow(rayfrcpt.Y);
             int intCol = pEdgeGrid.GetCol(rayfrcpt.X);
 
-            CPoint raytocpt = new CPoint(-1, pEdgeGrid.pEnvelope.XMin - pEdgeGrid.dblCellWidth, rayfrcpt.Y);
+            CPoint raytocpt = new CPoint(pEdgeGrid.pEnvelope.XMin - pEdgeGrid.dblCellWidth, rayfrcpt.Y);
 
             CIntersection pIntersectionRightMost = new CIntersection();
             pIntersectionRightMost.IntersectCpt = raytocpt;
@@ -1772,8 +1772,8 @@ namespace MorphingClass.CUtility
         private static CIntersection ComputeCloestIntersectionByAdjusting(
             CEdge raycedge, double dblY, CIntersection pIntersectionRightMost, CIntersection pIntersection)
         {
-            CEdge adjustedraycedge = new CEdge(new CPoint(-1, raycedge.FrCpt.X, raycedge.FrCpt.Y + dblY), 
-                new CPoint(-1, raycedge.ToCpt.X, raycedge.ToCpt.Y + dblY));
+            CEdge adjustedraycedge = new CEdge(new CPoint(raycedge.FrCpt.X, raycedge.FrCpt.Y + dblY), 
+                new CPoint(raycedge.ToCpt.X, raycedge.ToCpt.Y + dblY));
 
             var adjustedintersectionrightmost = adjustedraycedge.IntersectWith(pIntersectionRightMost.CEdge2);
             var adjustedintersection = adjustedraycedge.IntersectWith(pIntersection.CEdge2);
@@ -2288,15 +2288,16 @@ namespace MorphingClass.CUtility
         }
 
         /// <summary>
-        /// this function is not helpful for deciding if a cut of a polygon is valid
+        /// 
         /// </summary>
         /// <param name="cptlt"></param>
         /// <param name="blnIdentical"></param>
         /// <returns></returns>
+        /// <remarks>this function is not helpful for deciding if a cut of a polygon is valid</remarks>
         public static bool IsClockwise(List<CPoint> cptlt, bool blnIdentical)
         {
             //find the left-most lower point
-            var llcpt = new CPoint(-1, double.MaxValue, double.MaxValue);  //lower left point            
+            var llcpt = new CPoint(double.MaxValue, double.MaxValue);  //lower left point            
             foreach (var cpt in cptlt)
             {
                 if (CCmpMethods.CmpCptXY(cpt, llcpt, false) == -1)

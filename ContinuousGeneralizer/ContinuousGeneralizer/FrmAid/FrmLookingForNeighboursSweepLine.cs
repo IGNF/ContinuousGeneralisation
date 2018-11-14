@@ -361,7 +361,7 @@ namespace ContinuousGeneralizer.FrmAid
             //        cpt.intTS = new TreeSet<int>();
             //        if (HorizontalCPtXTS.Count >0)
             //        {
-            //            CPoint frcpt = new CPoint(-1, cpt.X - dblThreshold, cpt.Y); frcpt.GID = -1;
+            //            CPoint frcpt = new CPoint(cpt.X - dblThreshold, cpt.Y); frcpt.GID = -1;
             //            CPoint tocpt = new CPoint(-2, cpt.X + dblThreshold, cpt.Y); tocpt.GID = -2;
 
             //            IDirectedEnumerable<CPoint> pDECpt = HorizontalCPtXTS.RangeFromTo(frcpt, tocpt);
@@ -415,7 +415,7 @@ namespace ContinuousGeneralizer.FrmAid
 
             //        //if (HorizontalCPtXTS.Count > 0)
             //        //{
-            //        CPoint frcpt = new CPoint(-1, -1, cpt.X - dblThreshold, cpt.Y);
+            //        CPoint frcpt = new CPoint(-1, cpt.X - dblThreshold, cpt.Y);
             //        CPoint tocpt = new CPoint(intCount, intCount, cpt.X + dblThreshold, cpt.Y);
 
             //        IDirectedEnumerable<CPoint> pDECpt = HorizontalCPtXTS.RangeFromTo(frcpt, tocpt);
@@ -520,7 +520,7 @@ namespace ContinuousGeneralizer.FrmAid
 
             //        //if (HorizontalCPtXTS.Count > 0)
             //        //{
-            //        CPoint frcpt = new CPoint(-1, -1, cpt.X - dblThreshold, cpt.Y);
+            //        CPoint frcpt = new CPoint(-1, cpt.X - dblThreshold, cpt.Y);
             //        CPoint tocpt = new CPoint(intCount, intCount, cpt.X + dblThreshold, cpt.Y);
 
             //        SortedSet<CPoint> pDECpt = HorizontalCPtXTS.GetViewBetween(frcpt, tocpt);

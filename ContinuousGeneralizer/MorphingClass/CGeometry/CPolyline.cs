@@ -59,7 +59,7 @@ namespace MorphingClass.CGeometry
 
 
         public CPolyline()
-            : this(-2, CHelpFunc.MakeLt<CPoint>())
+            : this(intDefaultID, CHelpFunc.MakeLt<CPoint>())
         {
 
         }

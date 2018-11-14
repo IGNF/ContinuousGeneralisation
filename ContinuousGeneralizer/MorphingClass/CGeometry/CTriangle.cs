@@ -231,9 +231,9 @@ namespace MorphingClass.CGeometry
         /// <summary>
         /// Initializes a new instance of a triangle
         /// </summary>
-        public CTriangle()
+        public CTriangle(int intTID)
         {
-            _intTID = -2;
+            _intTID = intTID;
         }
 
         /// <summary>

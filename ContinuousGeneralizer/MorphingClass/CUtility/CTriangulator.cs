@@ -769,8 +769,7 @@ namespace MorphingClass.CUtility
                 List<CTriangle> pTriangleLt = new List<CTriangle>(3);
                 for (int j = 0; j < 3; j++)
                 {
-                    CTriangle pTriangle = new CTriangle();
-                    pTriangle.TID = -2;    //TID = -2代表空三角形
+                    var pTriangle = new CTriangle(-2); //TID = -2: empty triangle
                     pTriangleLt.Add(pTriangle);
                 }
                 CTriangleLt[i].SETriangleLt = pTriangleLt;
@@ -1176,7 +1175,7 @@ namespace MorphingClass.CUtility
         /// <remarks>如果目标点有相同点，则返回相同点，否则，返回当前目标点</remarks>
         private void FindSamePoint(IPoint ipt, CPolyline cpl, ref List<CPoint> ctempptlt, double dblVerySmall, ref CPoint cpt)
         {
-            cpt = new CPoint(-1, ipt);
+            cpt = new CPoint(ipt);
             for (int i = 0; i < ctempptlt.Count; i++)
             {
                 if (cpt.Equals2D(ctempptlt[i]))
@@ -1194,7 +1193,7 @@ namespace MorphingClass.CUtility
             cpl.pPolyline.QueryPointAndDistance(esriSegmentExtension.esriExtendEmbedded, ipt, false, outpt, ref dblAlongDis, ref dblFromDis, ref blnIsRight);
             if (dblFromDis<dblVerySmall)
             {
-                CPoint newcpt = new CPoint(-1, outpt);
+                var newcpt = new CPoint(outpt);
                 cpt = newcpt;
                 ctempptlt.Add(newcpt);
             }

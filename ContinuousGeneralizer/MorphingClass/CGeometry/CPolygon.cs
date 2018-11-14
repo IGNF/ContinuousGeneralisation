@@ -81,9 +81,9 @@ namespace MorphingClass.CGeometry
 
 
 
-        public CPolygon(int intID, IPolygon4 pPolygon, double dblFactor = 1)
-            : this(intID, CHelpFunc.GetIpgExteriorCptLt(pPolygon, dblFactor).ToList(), 
-                  CHelpFunc.GetIpgInteriorCptLtEb(pPolygon, dblFactor))
+        public CPolygon(int intID, IPolygon4 pPolygon)
+            : this(intID, CHelpFunc.GetIpgExteriorCptLt(pPolygon).ToList(), 
+                  CHelpFunc.GetIpgInteriorCptLtEb(pPolygon))
         {
             this.pPolygon = pPolygon;
         }
@@ -101,11 +101,16 @@ namespace MorphingClass.CGeometry
         {
         }
 
+        public CPolygon(List<CPoint> cptlt)
+    : this(intDefaultID, cptlt)
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of a CPolygon, 
         /// the first point and the last point in cptlt must have the same coordinates
         /// </summary>
-        public CPolygon(int intID = -2, List<CPoint> cptlt = null, List<CPolygon> holecpglt = null)
+        public CPolygon(int intID = intDefaultID, List<CPoint> cptlt = null, List<CPolygon> holecpglt = null)
         {
             this.GID = _intStaticGID++;
             _intID = intID;
@@ -324,16 +329,28 @@ namespace MorphingClass.CGeometry
             IPolygon4 polygon = new PolygonClass();
 
             IGeometryCollection geometryCollection = (IGeometryCollection)polygon;
-            geometryCollection.AddGeometry(CGeoFunc.GetIrgFromCptLt(this.CptLt));
+
+            var exteriorCptLt = this.CptLt;
+            if (CGeoFunc.IsClockwise(exteriorCptLt, true) ==false )
+            {
+                exteriorCptLt = exteriorCptLt.AsEnumerable().Reverse().ToList(); //this will not change this.CptLt
+            }
+
+            geometryCollection.AddGeometry(CGeoFunc.GetIrgFromCptLt(exteriorCptLt));
             //add the holes
             if (this.HoleCpgLt != null)
             {
                 foreach (var holecpg in this.HoleCpgLt)
                 {
-                    geometryCollection.AddGeometry(CGeoFunc.GetIrgFromCptLt(holecpg.CptLt));
+                    var interiorCptLt = holecpg.CptLt;
+                    if (CGeoFunc.IsClockwise(exteriorCptLt, true) == true)
+                    {
+                        interiorCptLt = interiorCptLt.AsEnumerable().Reverse().ToList(); //this will not change holecpg.CptLt
+                    }
+                    geometryCollection.AddGeometry(CGeoFunc.GetIrgFromCptLt(interiorCptLt));
                 }
             }
-
+            //polygon.Close();
             this.pPolygon = polygon;
             return polygon;
         }

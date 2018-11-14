@@ -7,7 +7,7 @@ namespace MorphingClass.CUtility
 {
     public static class CConstants
     {
-
+        
         private static double _dblVerySmallCoord = 0.0000000000000000001;
         //private static double _dblVerySmall = 0.0000000000000000001;  //please notice that the default value of _dblVerySmall is 0.000000000001, but we usually set a new _dblVerySmall with respect to the data
         private static double _dblVerySmallSquare = 0.0000000000000000001;  //please notice that the default value of _dblVerySmall is 0.000000000001, but we usually set a new _dblVerySmall with respect to the data

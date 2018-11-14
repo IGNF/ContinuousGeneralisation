@@ -162,13 +162,26 @@ namespace MorphingClass.CUtility
         public static string GetTimeStamp()
         {
             var DataTimeNow = DateTime.Now;
+            var strYear = DataTimeNow.Year.ToString();
             var strMonth = JudgeAndAddZero(DataTimeNow.Month);
             var strDay = JudgeAndAddZero(DataTimeNow.Day);
             var strHour = JudgeAndAddZero(DataTimeNow.Hour);
             var strMinute = JudgeAndAddZero(DataTimeNow.Minute);
             var strSecond = JudgeAndAddZero(DataTimeNow.Second);
             var strMillisecond = JudgeAndAddZero(DataTimeNow.Millisecond, 3);
-            return DataTimeNow.Year.ToString() + strMonth + strDay + "_" + strHour + strMinute + strSecond + strMillisecond;
+            return strYear + strMonth + strDay + "_" + strHour + strMinute + strSecond + strMillisecond;
+        }
+
+        public static string GetTimeStampForIpe()
+        {
+            var DataTimeNow = DateTime.Now;
+            var strYear = DataTimeNow.Year.ToString();
+            var strMonth = JudgeAndAddZero(DataTimeNow.Month);
+            var strDay = JudgeAndAddZero(DataTimeNow.Day);
+            var strHour = JudgeAndAddZero(DataTimeNow.Hour);
+            var strMinute = JudgeAndAddZero(DataTimeNow.Minute);
+            var strSecond = JudgeAndAddZero(DataTimeNow.Second);
+            return strYear + strMonth + strDay + strHour + strMinute + strSecond;
         }
 
         public static string JudgeAndAddZero(double dblNumber, int intDigits = 2)
@@ -261,11 +274,11 @@ namespace MorphingClass.CUtility
             return ObjShapeLt;
         }
 
-        public static IEnumerable<CGeoBase> GenerateCGeoEbAccordingToInputLt(List<object> pObjIGeoLt, double dblFactor = 1)
+        public static IEnumerable<CGeoBase> GenerateCGeoEbAccordingToInputLt(List<object> pObjIGeoLt)
         {
             for (int i = 0; i < pObjIGeoLt.Count; i++)
             {
-                yield return GenerateCGeoAccordingToInput((IGeometry)pObjIGeoLt[i], i, dblFactor);
+                yield return GenerateCGeoAccordingToInput((IGeometry)pObjIGeoLt[i], i);
             }
         }
 
@@ -313,7 +326,7 @@ namespace MorphingClass.CUtility
             }
         }
 
-        public static CGeoBase GenerateCGeoAccordingToInput(IGeometry pGeo, int intID = -2, double dblFactor = 1)
+        public static CGeoBase GenerateCGeoAccordingToInput(IGeometry pGeo, int intID)
         {
             CGeoBase obj = null;
             switch (pGeo.GeometryType)
@@ -322,7 +335,7 @@ namespace MorphingClass.CUtility
                     obj = new CPoint(intID, (IPoint)pGeo);
                     break;
                 case esriGeometryType.esriGeometryPolygon:             //polygon******************
-                    obj = new CPolygon(intID, (IPolygon4)pGeo, dblFactor);
+                    obj = new CPolygon(intID, (IPolygon4)pGeo);
                     break;
                 case esriGeometryType.esriGeometryPolyline:            //polyline******************
                     obj = new CPolyline(intID, (IPolyline5)pGeo);
@@ -369,16 +382,15 @@ namespace MorphingClass.CUtility
             IFeatureClass pFeatureClass = pFeatureLayer.FeatureClass;
             int intFeatureCount = pFeatureClass.FeatureCount(null);
             IFeatureCursor pFeatureCursor = pFeatureClass.Search(null, false);    //注意此处的参数(****,false)！！！
-            List<CPoint> CPtLt = new List<CPoint>(intFeatureCount);
+            var cptlt = new List<CPoint>(intFeatureCount);
             for (int i = 0; i < intFeatureCount; i++)
             {
-                IFeature pFeature = pFeatureCursor.NextFeature();
-                IPoint ipt = (IPoint)pFeature.Shape;
-                CPoint cpt = new CPoint(i, ipt);
-                CPtLt.Add(cpt);
+                var pFeature = pFeatureCursor.NextFeature();
+                var ipt = (IPoint)pFeature.Shape;
+                cptlt.Add(new CPoint(i, ipt));
             }
 
-            return CPtLt;
+            return cptlt;
         }
 
         /// <summary>
@@ -510,7 +522,7 @@ namespace MorphingClass.CUtility
         /// <param name="ipg">面要素</param>
         /// <returns>点数组</returns>
         /// <remarks>currently, we assume that there is only one exterior ring for ipg</remarks>
-        public static IEnumerable<CPoint> GetIpgExteriorCptLt(IPolygon4 ipg, double dblFactor = 1)
+        public static IEnumerable<CPoint> GetIpgExteriorCptLt(IPolygon4 ipg)
         {
             //ipg.Close();
             if (ipg.ExteriorRingCount != 1)
@@ -520,10 +532,10 @@ namespace MorphingClass.CUtility
             }
 
             IRing2 pExteriorRing = (ipg.ExteriorRingBag as IGeometryCollection).get_Geometry(0) as IRing2;
-            return GetCptEbByICol(pExteriorRing as IPointCollection4, dblFactor).ToList();
+            return GetCptEbByICol(pExteriorRing as IPointCollection4).ToList();
         }
 
-        public static IEnumerable<List<CPoint>> GetIpgInteriorCptLtEb(IPolygon4 ipg, double dblFactor = 1)
+        public static IEnumerable<List<CPoint>> GetIpgInteriorCptLtEb(IPolygon4 ipg)
         {
             //ipg.Close();
             if (ipg.ExteriorRingCount != 1)
@@ -537,16 +549,16 @@ namespace MorphingClass.CUtility
 
             for (int i = 0; i < pGeoColInteriorRing.GeometryCount; i++)
             {
-                yield return GetCptEbByICol(pGeoColInteriorRing.get_Geometry(i) as IPointCollection4, dblFactor).ToList();
+                yield return GetCptEbByICol(pGeoColInteriorRing.get_Geometry(i) as IPointCollection4).ToList();
             }
         }
 
 
-        public static IEnumerable<IEnumerable<CPoint>> GetCptEbEbByIColEb<T>(IEnumerable<T> TEb, int intFactor = 1)
+        public static IEnumerable<IEnumerable<CPoint>> GetCptEbEbByIColEb<T>(IEnumerable<T> TEb)
         {
             foreach (var item in TEb)
             {
-                yield return GetCptEbByICol(item as IPointCollection4, intFactor);
+                yield return GetCptEbByICol(item as IPointCollection4);
             }
         }
 
@@ -556,11 +568,11 @@ namespace MorphingClass.CUtility
         /// <param name="pCol">for a polygon, the fisrt point and the last point are identical</param>
         /// <param name="dblFactor"></param>
         /// <returns></returns>
-        public static IEnumerable<CPoint> GetCptEbByICol(IPointCollection4 pCol, double dblFactor = 1)
+        public static IEnumerable<CPoint> GetCptEbByICol(IPointCollection4 pCol)
         {
             for (int i = 0; i < pCol.PointCount; i++)
             {
-                yield return new CPoint(i, pCol.get_Point(i), dblFactor);
+                yield return new CPoint(i, pCol.get_Point(i));
             }
         }
 
@@ -687,7 +699,7 @@ namespace MorphingClass.CUtility
         {
             foreach (var pCGeo in pCGeoEb)
             {
-                yield return (pCGeo.JudgeAndSetAEGeometry() as object);
+                yield return pCGeo.JudgeAndSetAEGeometry() as object;
             }
         }
 

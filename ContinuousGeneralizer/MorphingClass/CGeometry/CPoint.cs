@@ -56,9 +56,6 @@ namespace MorphingClass.CGeometry
         //private string _strSweepStatus;
         
 
-        //对点或缓冲区进行"红绿蓝"染色
-
-
         //private int _intLID;  //the id of the polyline to which this point belongs
         
         //private int _intXID;  //the id of the points according to the X coordinate
@@ -106,12 +103,12 @@ namespace MorphingClass.CGeometry
         /// <param name="dblZ">Z坐标</param> 
         /// <returns></returns>
         /// <remarks>Main Constructor</remarks>
-        public CPoint(int intID, double dblX = 0, double dblY = 0, double dblZ = 0, bool isSetPoint = false, double dblFactor = 1)
+        public CPoint(int intID, double dblX = 0, double dblY = 0, double dblZ = 0, bool isSetPoint = false)
         {
             this.ID = intID;
-            this.X = dblX * dblFactor;
-            this.Y = dblY * dblFactor;
-            this.Z = dblZ * dblFactor;
+            this.X = dblX;
+            this.Y = dblY;
+            this.Z = dblZ;
             this.GID = _intStaticGID++;
 
             if (isSetPoint == true)
@@ -120,13 +117,20 @@ namespace MorphingClass.CGeometry
             }
         }
 
-        public CPoint(double dblX = 0, double dblY = 0, double dblZ = 0, bool isSetPoint = false, double dblFactor = 1)
-            : this(-1, dblX, dblY, dblZ, isSetPoint, dblFactor)
+        public CPoint(double dblX = 0, double dblY = 0, double dblZ = 0, bool isSetPoint = false)
+            : this(intDefaultID, dblX, dblY, dblZ, isSetPoint)
         {
         }
 
-        public CPoint(int intID, IPoint pPoint, double dblFactor = 1)
-            : this(intID, pPoint.X, pPoint.Y, pPoint.Z, false, dblFactor)
+
+        public CPoint(IPoint pPoint)
+    : this(intDefaultID, pPoint.X, pPoint.Y, pPoint.Z, false)
+        {
+            this.pPoint = pPoint;
+        }
+
+        public CPoint(int intID, IPoint pPoint)
+            : this(intID, pPoint.X, pPoint.Y, pPoint.Z, false)
         {
             this.pPoint = pPoint;
         }

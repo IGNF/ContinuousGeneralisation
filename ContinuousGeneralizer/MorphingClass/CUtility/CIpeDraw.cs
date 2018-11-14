@@ -522,7 +522,7 @@ namespace MorphingClass.CUtility
 
         public static string GenerateIpeContentByData(string strData = null)
         {
-            return getIpePreamble() + getIpeConf() + GeneratePageByData(strData) + getIpeEnd();
+            return getIpePreamble() + GeneratePageByData(strData) + getIpeEnd();
         }
 
         public static string GeneratePageByData(string strData = null)
@@ -532,7 +532,7 @@ namespace MorphingClass.CUtility
 
         public static string GenerateIpeContentByDataWithLayerInfo(string strDataWithLayerInfo = null)
         {
-            return getIpePreamble() + getIpeConf() + GeneratePageByDataWithLayerInfo(strDataWithLayerInfo) + getIpeEnd();
+            return getIpePreamble() + GeneratePageByDataWithLayerInfo(strDataWithLayerInfo) + getIpeEnd();
         }
 
         public static string GeneratePageByDataWithLayerInfo(string strDataWithLayerInfo = null)
@@ -600,19 +600,266 @@ namespace MorphingClass.CUtility
          */
         public static String getIpePreamble()
         {
-            return "<?xml version=\"1.0\"?>\n    <!DOCTYPE ipe SYSTEM \"ipe.dtd\">\n    <ipe version=\"70206\" creator=\"Ipe 7.2.7\">\n    <info created=\"D:20170619162606\" modified=\"D:20170619162606\"/>\n    <preamble>\\usepackage[english]{babel}</preamble>\n";
-        }
-
-        /**
-         * Configuration of the standard objects in ipe.
-         * 
-         * @return
-         */
-        public static String getIpeConf()
-        {
-            return "    <ipestyle name=\"basic\">\n    <symbol name=\"arrow/arc(spx)\">\n    <path stroke=\"sym-stroke\" fill=\"sym-stroke\" pen=\"sym-pen\">\n    0 0 m\n    -1 0.333 l\n    -1 -0.333 l\n    h\n    </path>\n    </symbol>\n    <symbol name=\"arrow/farc(spx)\">\n    <path stroke=\"sym-stroke\" fill=\"white\" pen=\"sym-pen\">\n    0 0 m\n    -1 0.333 l\n    -1 -0.333 l\n    h\n    </path>\n    </symbol>\n    <symbol name=\"mark/circle(sx)\" transformations=\"translations\">\n    <path fill=\"sym-stroke\">\n    0.6 0 0 0.6 0 0 e\n    0.4 0 0 0.4 0 0 e\n    </path>\n    </symbol>\n    <symbol name=\"mark/disk(sx)\" transformations=\"translations\">\n    <path fill=\"sym-stroke\">\n    0.6 0 0 0.6 0 0 e\n    </path>\n    </symbol>\n    <symbol name=\"mark/fdisk(sfx)\" transformations=\"translations\">\n    <group>\n    <path fill=\"sym-fill\">\n    0.5 0 0 0.5 0 0 e\n    </path>\n    <path fill=\"sym-stroke\" fillrule=\"eofill\">\n    0.6 0 0 0.6 0 0 e\n    0.4 0 0 0.4 0 0 e\n    </path>\n    </group>\n    </symbol>\n    <symbol name=\"mark/box(sx)\" transformations=\"translations\">\n    <path fill=\"sym-stroke\" fillrule=\"eofill\">\n    -0.6 -0.6 m\n    0.6 -0.6 l\n    0.6 0.6 l\n    -0.6 0.6 l\n    h\n    -0.4 -0.4 m\n    0.4 -0.4 l\n    0.4 0.4 l\n    -0.4 0.4 l\n    h\n    </path>\n    </symbol>\n    <symbol name=\"mark/square(sx)\" transformations=\"translations\">\n    <path fill=\"sym-stroke\">\n    -0.6 -0.6 m\n    0.6 -0.6 l\n    0.6 0.6 l\n    -0.6 0.6 l\n    h\n    </path>\n    </symbol>\n    <symbol name=\"mark/fsquare(sfx)\" transformations=\"translations\">\n    <group>\n    <path fill=\"sym-fill\">\n    -0.5 -0.5 m\n    0.5 -0.5 l\n    0.5 0.5 l\n    -0.5 0.5 l\n    h\n    </path>\n    <path fill=\"sym-stroke\" fillrule=\"eofill\">\n    -0.6 -0.6 m\n    0.6 -0.6 l\n    0.6 0.6 l\n    -0.6 0.6 l\n    h\n    -0.4 -0.4 m\n    0.4 -0.4 l\n    0.4 0.4 l\n    -0.4 0.4 l\n    h\n    </path>\n    </group>\n    </symbol>\n    <symbol name=\"mark/cross(sx)\" transformations=\"translations\">\n    <group>\n    <path fill=\"sym-stroke\">\n    -0.43 -0.57 m\n    0.57 0.43 l\n    0.43 0.57 l\n    -0.57 -0.43 l\n    h\n    </path>\n    <path fill=\"sym-stroke\">\n    -0.43 0.57 m\n    0.57 -0.43 l\n    0.43 -0.57 l\n    -0.57 0.43 l\n    h\n    </path>\n    </group>\n    </symbol>\n    <symbol name=\"arrow/fnormal(spx)\">\n    <path stroke=\"sym-stroke\" fill=\"white\" pen=\"sym-pen\">\n    0 0 m\n    -1 0.333 l\n    -1 -0.333 l\n    h\n    </path>\n    </symbol>\n    <symbol name=\"arrow/pointed(spx)\">\n    <path stroke=\"sym-stroke\" fill=\"sym-stroke\" pen=\"sym-pen\">\n    0 0 m\n    -1 0.333 l\n    -0.8 0 l\n    -1 -0.333 l\n    h\n    </path>\n    </symbol>\n    <symbol name=\"arrow/fpointed(spx)\">\n    <path stroke=\"sym-stroke\" fill=\"white\" pen=\"sym-pen\">\n    0 0 m\n    -1 0.333 l\n    -0.8 0 l\n    -1 -0.333 l\n    h\n    </path>\n    </symbol>\n    <symbol name=\"arrow/linear(spx)\">\n    <path stroke=\"sym-stroke\" pen=\"sym-pen\">\n    -1 0.333 m\n    0 0 l\n    -1 -0.333 l\n    </path>\n    </symbol>\n    <symbol name=\"arrow/fdouble(spx)\">\n    <path stroke=\"sym-stroke\" fill=\"white\" pen=\"sym-pen\">\n    0 0 m\n    -1 0.333 l\n    -1 -0.333 l\n    h\n    -1 0 m\n    -2 0.333 l\n    -2 -0.333 l\n    h\n    </path>\n    </symbol>\n    <symbol name=\"arrow/double(spx)\">\n    <path stroke=\"sym-stroke\" fill=\"sym-stroke\" pen=\"sym-pen\">\n    0 0 m\n    -1 0.333 l\n    -1 -0.333 l\n    h\n    -1 0 m\n    -2 0.333 l\n    -2 -0.333 l\n    h\n    </path>\n    </symbol>\n    <pen name=\"heavier\" value=\"0.8\"/>\n    <pen name=\"fat\" value=\"1.2\"/>\n    <pen name=\"ultrafat\" value=\"2\"/>\n    <symbolsize name=\"large\" value=\"5\"/>\n    <symbolsize name=\"small\" value=\"2\"/>\n    <symbolsize name=\"tiny\" value=\"1.1\"/>\n    <arrowsize name=\"large\" value=\"10\"/>\n    <arrowsize name=\"small\" value=\"5\"/>\n    <arrowsize name=\"tiny\" value=\"3\"/>\n    <color name=\"red\" value=\"1 0 0\"/>\n    <color name=\"green\" value=\"0 1 0\"/>\n    <color name=\"blue\" value=\"0 0 1\"/>\n    <color name=\"yellow\" value=\"1 1 0\"/>\n    <color name=\"orange\" value=\"1 0.647 0\"/>\n    <color name=\"gold\" value=\"1 0.843 0\"/>\n    <color name=\"purple\" value=\"0.627 0.125 0.941\"/>\n    <color name=\"gray\" value=\"0.745\"/>\n    <color name=\"brown\" value=\"0.647 0.165 0.165\"/>\n    <color name=\"navy\" value=\"0 0 0.502\"/>\n    <color name=\"pink\" value=\"1 0.753 0.796\"/>\n    <color name=\"seagreen\" value=\"0.18 0.545 0.341\"/>\n    <color name=\"turquoise\" value=\"0.251 0.878 0.816\"/>\n    <color name=\"violet\" value=\"0.933 0.51 0.933\"/>\n    <color name=\"darkblue\" value=\"0 0 0.545\"/>\n    <color name=\"darkcyan\" value=\"0 0.545 0.545\"/>\n    <color name=\"darkgray\" value=\"0.663\"/>\n    <color name=\"darkgreen\" value=\"0 0.392 0\"/>\n    <color name=\"darkmagenta\" value=\"0.545 0 0.545\"/>\n    <color name=\"darkorange\" value=\"1 0.549 0\"/>\n    <color name=\"darkred\" value=\"0.545 0 0\"/>\n    <color name=\"lightblue\" value=\"0.678 0.847 0.902\"/>\n    <color name=\"lightcyan\" value=\"0.878 1 1\"/>\n    <color name=\"lightgray\" value=\"0.827\"/>\n    <color name=\"lightgreen\" value=\"0.565 0.933 0.565\"/>\n    <color name=\"lightyellow\" value=\"1 1 0.878\"/>\n    <dashstyle name=\"dashed\" value=\"[4] 0\"/>\n    <dashstyle name=\"dotted\" value=\"[1 3] 0\"/>\n    <dashstyle name=\"dash dotted\" value=\"[4 2 1 2] 0\"/>\n    <dashstyle name=\"dash dot dotted\" value=\"[4 2 1 2 1 2] 0\"/>\n    <textsize name=\"large\" value=\"\\large\"/>\n    <textsize name=\"Large\" value=\"\\Large\"/>\n    <textsize name=\"LARGE\" value=\"\\LARGE\"/>\n    <textsize name=\"huge\" value=\"\\huge\"/>\n    <textsize name=\"Huge\" value=\"\\Huge\"/>\n    <textsize name=\"small\" value=\"\\small\"/>\n    <textsize name=\"footnote\" value=\"\\footnotesize\"/>\n    <textsize name=\"tiny\" value=\"\\tiny\"/>\n    <textstyle name=\"center\" begin=\"\\begin{center}\" end=\"\\end{center}\"/>\n    <textstyle name=\"itemize\" begin=\"\\begin{itemize}\" end=\"\\end{itemize}\"/>\n    <textstyle name=\"item\" begin=\"\\begin{itemize}\\item{}\" end=\"\\end{itemize}\"/>\n    <gridsize name=\"4 pts\" value=\"4\"/>\n    <gridsize name=\"8 pts (~3 mm)\" value=\"8\"/>\n    <gridsize name=\"16 pts (~6 mm)\" value=\"16\"/>\n    <gridsize name=\"32 pts (~12 mm)\" value=\"32\"/>\n    <gridsize name=\"10 pts (~3.5 mm)\" value=\"10\"/>\n    <gridsize name=\"20 pts (~7 mm)\" value=\"20\"/>\n    <gridsize name=\"14 pts (~5 mm)\" value=\"14\"/>\n    <gridsize name=\"28 pts (~10 mm)\" value=\"28\"/>\n    <gridsize name=\"56 pts (~20 mm)\" value=\"56\"/>\n    <anglesize name=\"90 deg\" value=\"90\"/>\n    <anglesize name=\"60 deg\" value=\"60\"/>\n    <anglesize name=\"45 deg\" value=\"45\"/>\n    <anglesize name=\"30 deg\" value=\"30\"/>\n    <anglesize name=\"22.5 deg\" value=\"22.5\"/>\n    <tiling name=\"falling\" angle=\"-60\" step=\"4\" width=\"1\"/>\n    <tiling name=\"rising\" angle=\"30\" step=\"4\" width=\"1\"/>\n    <layout paper=\"595 842\" origin=\"0 0\" frame=\"595 842\" skip=\"32\" crop=\"yes\"/>\n    </ipestyle>\n";
-
-            //return "    <ipestyle name=\"basic\">\n    <symbol name=\"arrow/arc(spx)\">\n    <path stroke=\"sym-stroke\" fill=\"sym-stroke\" pen=\"sym-pen\">\n    0 0 m\n    -1 0.333 l\n    -1 -0.333 l\n    h\n    </path>\n    </symbol>\n    <symbol name=\"arrow/farc(spx)\">\n    <path stroke=\"sym-stroke\" fill=\"white\" pen=\"sym-pen\">\n    0 0 m\n    -1 0.333 l\n    -1 -0.333 l\n    h\n    </path>\n    </symbol>\n    <symbol name=\"mark/circle(sx)\" transformations=\"translations\">\n    <path fill=\"sym-stroke\">\n    0.6 0 0 0.6 0 0 e\n    0.4 0 0 0.4 0 0 e\n    </path>\n    </symbol>\n    <symbol name=\"mark/disk(sx)\" transformations=\"translations\">\n    <path fill=\"sym-stroke\">\n    0.6 0 0 0.6 0 0 e\n    </path>\n    </symbol>\n    <symbol name=\"mark/fdisk(sfx)\" transformations=\"translations\">\n    <group>\n    <path fill=\"sym-fill\">\n    0.5 0 0 0.5 0 0 e\n    </path>\n    <path fill=\"sym-stroke\" fillrule=\"eofill\">\n    0.6 0 0 0.6 0 0 e\n    0.4 0 0 0.4 0 0 e\n    </path>\n    </group>\n    </symbol>\n    <symbol name=\"mark/box(sx)\" transformations=\"translations\">\n    <path fill=\"sym-stroke\" fillrule=\"eofill\">\n    -0.6 -0.6 m\n    0.6 -0.6 l\n    0.6 0.6 l\n    -0.6 0.6 l\n    h\n    -0.4 -0.4 m\n    0.4 -0.4 l\n    0.4 0.4 l\n    -0.4 0.4 l\n    h\n    </path>\n    </symbol>\n    <symbol name=\"mark/square(sx)\" transformations=\"translations\">\n    <path fill=\"sym-stroke\">\n    -0.6 -0.6 m\n    0.6 -0.6 l\n    0.6 0.6 l\n    -0.6 0.6 l\n    h\n    </path>\n    </symbol>\n    <symbol name=\"mark/fsquare(sfx)\" transformations=\"translations\">\n    <group>\n    <path fill=\"sym-fill\">\n    -0.5 -0.5 m\n    0.5 -0.5 l\n    0.5 0.5 l\n    -0.5 0.5 l\n    h\n    </path>\n    <path fill=\"sym-stroke\" fillrule=\"eofill\">\n    -0.6 -0.6 m\n    0.6 -0.6 l\n    0.6 0.6 l\n    -0.6 0.6 l\n    h\n    -0.4 -0.4 m\n    0.4 -0.4 l\n    0.4 0.4 l\n    -0.4 0.4 l\n    h\n    </path>\n    </group>\n    </symbol>\n    <symbol name=\"mark/cross(sx)\" transformations=\"translations\">\n    <group>\n    <path fill=\"sym-stroke\">\n    -0.43 -0.57 m\n    0.57 0.43 l\n    0.43 0.57 l\n    -0.57 -0.43 l\n    h\n    </path>\n    <path fill=\"sym-stroke\">\n    -0.43 0.57 m\n    0.57 -0.43 l\n    0.43 -0.57 l\n    -0.57 0.43 l\n    h\n    </path>\n    </group>\n    </symbol>\n    <symbol name=\"arrow/fnormal(spx)\">\n    <path stroke=\"sym-stroke\" fill=\"white\" pen=\"sym-pen\">\n    0 0 m\n    -1 0.333 l\n    -1 -0.333 l\n    h\n    </path>\n    </symbol>\n    <symbol name=\"arrow/pointed(spx)\">\n    <path stroke=\"sym-stroke\" fill=\"sym-stroke\" pen=\"sym-pen\">\n    0 0 m\n    -1 0.333 l\n    -0.8 0 l\n    -1 -0.333 l\n    h\n    </path>\n    </symbol>\n    <symbol name=\"arrow/fpointed(spx)\">\n    <path stroke=\"sym-stroke\" fill=\"white\" pen=\"sym-pen\">\n    0 0 m\n    -1 0.333 l\n    -0.8 0 l\n    -1 -0.333 l\n    h\n    </path>\n    </symbol>\n    <symbol name=\"arrow/linear(spx)\">\n    <path stroke=\"sym-stroke\" pen=\"sym-pen\">\n    -1 0.333 m\n    0 0 l\n    -1 -0.333 l\n    </path>\n    </symbol>\n    <symbol name=\"arrow/fdouble(spx)\">\n    <path stroke=\"sym-stroke\" fill=\"white\" pen=\"sym-pen\">\n    0 0 m\n    -1 0.333 l\n    -1 -0.333 l\n    h\n    -1 0 m\n    -2 0.333 l\n    -2 -0.333 l\n    h\n    </path>\n    </symbol>\n    <symbol name=\"arrow/double(spx)\">\n    <path stroke=\"sym-stroke\" fill=\"sym-stroke\" pen=\"sym-pen\">\n    0 0 m\n    -1 0.333 l\n    -1 -0.333 l\n    h\n    -1 0 m\n    -2 0.333 l\n    -2 -0.333 l\n    h\n    </path>\n    </symbol>\n    <pen name=\"heavier\" value=\"0.8\"/>\n    <pen name=\"fat\" value=\"1.2\"/>\n    <pen name=\"ultrafat\" value=\"2\"/>\n    <symbolsize name=\"large\" value=\"5\"/>\n    <symbolsize name=\"small\" value=\"2\"/>\n    <symbolsize name=\"tiny\" value=\"1.1\"/>\n    <arrowsize name=\"large\" value=\"10\"/>\n    <arrowsize name=\"small\" value=\"5\"/>\n    <arrowsize name=\"tiny\" value=\"3\"/>\n    <color name=\"red\" value=\"1 0 0\"/>\n    <color name=\"green\" value=\"0 1 0\"/>\n    <color name=\"blue\" value=\"0 0 1\"/>\n    <color name=\"yellow\" value=\"1 1 0\"/>\n    <color name=\"orange\" value=\"1 0.647 0\"/>\n    <color name=\"gold\" value=\"1 0.843 0\"/>\n    <color name=\"purple\" value=\"0.627 0.125 0.941\"/>\n    <color name=\"gray\" value=\"0.745\"/>\n    <color name=\"brown\" value=\"0.647 0.165 0.165\"/>\n    <color name=\"navy\" value=\"0 0 0.502\"/>\n    <color name=\"pink\" value=\"1 0.753 0.796\"/>\n    <color name=\"seagreen\" value=\"0.18 0.545 0.341\"/>\n    <color name=\"turquoise\" value=\"0.251 0.878 0.816\"/>\n    <color name=\"violet\" value=\"0.933 0.51 0.933\"/>\n    <color name=\"darkblue\" value=\"0 0 0.545\"/>\n    <color name=\"darkcyan\" value=\"0 0.545 0.545\"/>\n    <color name=\"darkgray\" value=\"0.663\"/>\n    <color name=\"darkgreen\" value=\"0 0.392 0\"/>\n    <color name=\"darkmagenta\" value=\"0.545 0 0.545\"/>\n    <color name=\"darkorange\" value=\"1 0.549 0\"/>\n    <color name=\"darkred\" value=\"0.545 0 0\"/>\n    <color name=\"lightblue\" value=\"0.678 0.847 0.902\"/>\n    <color name=\"lightcyan\" value=\"0.878 1 1\"/>\n    <color name=\"lightgray\" value=\"0.827\"/>\n    <color name=\"lightgreen\" value=\"0.565 0.933 0.565\"/>\n    <color name=\"lightyellow\" value=\"1 1 0.878\"/>\n    <dashstyle name=\"dashed\" value=\"[4] 0\"/>\n    <dashstyle name=\"dotted\" value=\"[1 3] 0\"/>\n    <dashstyle name=\"dash dotted\" value=\"[4 2 1 2] 0\"/>\n    <dashstyle name=\"dash dot dotted\" value=\"[4 2 1 2 1 2] 0\"/>\n    <textsize name=\"large\" value=\"\\large\"/>\n    <textsize name=\"Large\" value=\"\\Large\"/>\n    <textsize name=\"LARGE\" value=\"\\LARGE\"/>\n    <textsize name=\"huge\" value=\"\\huge\"/>\n    <textsize name=\"Huge\" value=\"\\Huge\"/>\n    <textsize name=\"small\" value=\"\\small\"/>\n    <textsize name=\"footnote\" value=\"\\footnotesize\"/>\n    <textsize name=\"tiny\" value=\"\\tiny\"/>\n    <textstyle name=\"center\" begin=\"\\begin{center}\" end=\"\\end{center}\"/>\n    <textstyle name=\"itemize\" begin=\"\\begin{itemize}\" end=\"\\end{itemize}\"/>\n    <textstyle name=\"item\" begin=\"\\begin{itemize}\\item{}\" end=\"\\end{itemize}\"/>\n    <gridsize name=\"4 pts\" value=\"4\"/>\n    <gridsize name=\"8 pts (~3 mm)\" value=\"8\"/>\n    <gridsize name=\"16 pts (~6 mm)\" value=\"16\"/>\n    <gridsize name=\"32 pts (~12 mm)\" value=\"32\"/>\n    <gridsize name=\"10 pts (~3.5 mm)\" value=\"10\"/>\n    <gridsize name=\"20 pts (~7 mm)\" value=\"20\"/>\n    <gridsize name=\"14 pts (~5 mm)\" value=\"14\"/>\n    <gridsize name=\"28 pts (~10 mm)\" value=\"28\"/>\n    <gridsize name=\"56 pts (~20 mm)\" value=\"56\"/>\n    <anglesize name=\"90 deg\" value=\"90\"/>\n    <anglesize name=\"60 deg\" value=\"60\"/>\n    <anglesize name=\"45 deg\" value=\"45\"/>\n    <anglesize name=\"30 deg\" value=\"30\"/>\n    <anglesize name=\"22.5 deg\" value=\"22.5\"/>\n    <tiling name=\"falling\" angle=\"-60\" step=\"4\" width=\"1\"/>\n    <tiling name=\"rising\" angle=\"30\" step=\"4\" width=\"1\"/>\n    <layout paper=\"595 842\" origin=\"0 0\" frame=\"595 842\" skip=\"32\" crop=\"yes\"/>\n    </ipestyle>\n    <page>\n    <layer name=\"alpha\"/>\n    <view layers=\"alpha\" active=\"alpha\"/>\n";
+            var strTime = CHelpFunc.GetTimeStampForIpe();
+            #region strIpePreamble
+            string strIpePreamble =
+@"<?xml version=""1.0""?>
+<!DOCTYPE ipe SYSTEM ""ipe.dtd"">
+<ipe version=""70206"" creator=""Ipe 7.2.7"">
+<info created=""D:" + strTime + @""" modified=""D:" + strTime + @"""/>
+<preamble>\usepackage[english]{babel}</preamble>
+<ipestyle name=""basic"">
+<symbol name=""arrow/arc(spx)"">
+<path stroke=""sym-stroke"" fill=""sym-stroke"" pen=""sym-pen"">
+0 0 m
+-1 0.333 l
+-1 -0.333 l
+h
+</path>
+</symbol>
+<symbol name=""arrow/farc(spx)"">
+<path stroke=""sym-stroke"" fill=""white"" pen=""sym-pen"">
+0 0 m
+-1 0.333 l
+-1 -0.333 l
+h
+</path>
+</symbol>
+<symbol name=""arrow/ptarc(spx)"">
+<path stroke=""sym-stroke"" fill=""sym-stroke"" pen=""sym-pen"">
+0 0 m
+-1 0.333 l
+-0.8 0 l
+-1 -0.333 l
+h
+</path>
+</symbol>
+<symbol name=""arrow/fptarc(spx)"">
+<path stroke=""sym-stroke"" fill=""white"" pen=""sym-pen"">
+0 0 m
+-1 0.333 l
+-0.8 0 l
+-1 -0.333 l
+h
+</path>
+</symbol>
+<symbol name=""mark/circle(sx)"" transformations=""translations"">
+<path fill=""sym-stroke"">
+0.6 0 0 0.6 0 0 e
+0.4 0 0 0.4 0 0 e
+</path>
+</symbol>
+<symbol name=""mark/disk(sx)"" transformations=""translations"">
+<path fill=""sym-stroke"">
+0.6 0 0 0.6 0 0 e
+</path>
+</symbol>
+<symbol name=""mark/fdisk(sfx)"" transformations=""translations"">
+<group>
+<path fill=""sym-fill"">
+0.5 0 0 0.5 0 0 e
+</path>
+<path fill=""sym-stroke"" fillrule=""eofill"">
+0.6 0 0 0.6 0 0 e
+0.4 0 0 0.4 0 0 e
+</path>
+</group>
+</symbol>
+<symbol name=""mark/box(sx)"" transformations=""translations"">
+<path fill=""sym-stroke"" fillrule=""eofill"">
+-0.6 -0.6 m
+0.6 -0.6 l
+0.6 0.6 l
+-0.6 0.6 l
+h
+-0.4 -0.4 m
+0.4 -0.4 l
+0.4 0.4 l
+-0.4 0.4 l
+h
+</path>
+</symbol>
+<symbol name=""mark/square(sx)"" transformations=""translations"">
+<path fill=""sym-stroke"">
+-0.6 -0.6 m
+0.6 -0.6 l
+0.6 0.6 l
+-0.6 0.6 l
+h
+</path>
+</symbol>
+<symbol name=""mark/fsquare(sfx)"" transformations=""translations"">
+<group>
+<path fill=""sym-fill"">
+-0.5 -0.5 m
+0.5 -0.5 l
+0.5 0.5 l
+-0.5 0.5 l
+h
+</path>
+<path fill=""sym-stroke"" fillrule=""eofill"">
+-0.6 -0.6 m
+0.6 -0.6 l
+0.6 0.6 l
+-0.6 0.6 l
+h
+-0.4 -0.4 m
+0.4 -0.4 l
+0.4 0.4 l
+-0.4 0.4 l
+h
+</path>
+</group>
+</symbol>
+<symbol name=""mark/cross(sx)"" transformations=""translations"">
+<group>
+<path fill=""sym-stroke"">
+-0.43 -0.57 m
+0.57 0.43 l
+0.43 0.57 l
+-0.57 -0.43 l
+h
+</path>
+<path fill=""sym-stroke"">
+-0.43 0.57 m
+0.57 -0.43 l
+0.43 -0.57 l
+-0.57 0.43 l
+h
+</path>
+</group>
+</symbol>
+<symbol name=""arrow/fnormal(spx)"">
+<path stroke=""sym-stroke"" fill=""white"" pen=""sym-pen"">
+0 0 m
+-1 0.333 l
+-1 -0.333 l
+h
+</path>
+</symbol>
+<symbol name=""arrow/pointed(spx)"">
+<path stroke=""sym-stroke"" fill=""sym-stroke"" pen=""sym-pen"">
+0 0 m
+-1 0.333 l
+-0.8 0 l
+-1 -0.333 l
+h
+</path>
+</symbol>
+<symbol name=""arrow/fpointed(spx)"">
+<path stroke=""sym-stroke"" fill=""white"" pen=""sym-pen"">
+0 0 m
+-1 0.333 l
+-0.8 0 l
+-1 -0.333 l
+h
+</path>
+</symbol>
+<symbol name=""arrow/linear(spx)"">
+<path stroke=""sym-stroke"" pen=""sym-pen"">
+-1 0.333 m
+0 0 l
+-1 -0.333 l
+</path>
+</symbol>
+<symbol name=""arrow/fdouble(spx)"">
+<path stroke=""sym-stroke"" fill=""white"" pen=""sym-pen"">
+0 0 m
+-1 0.333 l
+-1 -0.333 l
+h
+-1 0 m
+-2 0.333 l
+-2 -0.333 l
+h
+</path>
+</symbol>
+<symbol name=""arrow/double(spx)"">
+<path stroke=""sym-stroke"" fill=""sym-stroke"" pen=""sym-pen"">
+0 0 m
+-1 0.333 l
+-1 -0.333 l
+h
+-1 0 m
+-2 0.333 l
+-2 -0.333 l
+h
+</path>
+</symbol>
+<pen name=""heavier"" value=""0.8""/>
+<pen name=""fat"" value=""1.2""/>
+<pen name=""ultrafat"" value=""2""/>
+<symbolsize name=""large"" value=""5""/>
+<symbolsize name=""small"" value=""2""/>
+<symbolsize name=""tiny"" value=""1.1""/>
+<arrowsize name=""large"" value=""10""/>
+<arrowsize name=""small"" value=""5""/>
+<arrowsize name=""tiny"" value=""3""/>
+<color name=""red"" value=""1 0 0""/>
+<color name=""green"" value=""0 1 0""/>
+<color name=""blue"" value=""0 0 1""/>
+<color name=""yellow"" value=""1 1 0""/>
+<color name=""orange"" value=""1 0.647 0""/>
+<color name=""gold"" value=""1 0.843 0""/>
+<color name=""purple"" value=""0.627 0.125 0.941""/>
+<color name=""gray"" value=""0.745""/>
+<color name=""brown"" value=""0.647 0.165 0.165""/>
+<color name=""navy"" value=""0 0 0.502""/>
+<color name=""pink"" value=""1 0.753 0.796""/>
+<color name=""seagreen"" value=""0.18 0.545 0.341""/>
+<color name=""turquoise"" value=""0.251 0.878 0.816""/>
+<color name=""violet"" value=""0.933 0.51 0.933""/>
+<color name=""darkblue"" value=""0 0 0.545""/>
+<color name=""darkcyan"" value=""0 0.545 0.545""/>
+<color name=""darkgray"" value=""0.663""/>
+<color name=""darkgreen"" value=""0 0.392 0""/>
+<color name=""darkmagenta"" value=""0.545 0 0.545""/>
+<color name=""darkorange"" value=""1 0.549 0""/>
+<color name=""darkred"" value=""0.545 0 0""/>
+<color name=""lightblue"" value=""0.678 0.847 0.902""/>
+<color name=""lightcyan"" value=""0.878 1 1""/>
+<color name=""lightgray"" value=""0.827""/>
+<color name=""lightgreen"" value=""0.565 0.933 0.565""/>
+<color name=""lightyellow"" value=""1 1 0.878""/>
+<dashstyle name=""dashed"" value=""[4] 0""/>
+<dashstyle name=""dotted"" value=""[1 3] 0""/>
+<dashstyle name=""dash dotted"" value=""[4 2 1 2] 0""/>
+<dashstyle name=""dash dot dotted"" value=""[4 2 1 2 1 2] 0""/>
+<textsize name=""large"" value=""\large""/>
+<textsize name=""Large"" value=""\Large""/>
+<textsize name=""LARGE"" value=""\LARGE""/>
+<textsize name=""huge"" value=""\huge""/>
+<textsize name=""Huge"" value=""\Huge""/>
+<textsize name=""small"" value=""\small""/>
+<textsize name=""footnote"" value=""\footnotesize""/>
+<textsize name=""tiny"" value=""\tiny""/>
+<textstyle name=""center"" begin=""\begin{center}"" end=""\end{center}""/>
+<textstyle name=""itemize"" begin=""\begin{itemize}"" end=""\end{itemize}""/>
+<textstyle name=""item"" begin=""\begin{itemize}\item{}"" end=""\end{itemize}""/>
+<gridsize name=""4 pts"" value=""4""/>
+<gridsize name=""8 pts (~3 mm)"" value=""8""/>
+<gridsize name=""16 pts (~6 mm)"" value=""16""/>
+<gridsize name=""32 pts (~12 mm)"" value=""32""/>
+<gridsize name=""10 pts (~3.5 mm)"" value=""10""/>
+<gridsize name=""20 pts (~7 mm)"" value=""20""/>
+<gridsize name=""14 pts (~5 mm)"" value=""14""/>
+<gridsize name=""28 pts (~10 mm)"" value=""28""/>
+<gridsize name=""56 pts (~20 mm)"" value=""56""/>
+<anglesize name=""90 deg"" value=""90""/>
+<anglesize name=""60 deg"" value=""60""/>
+<anglesize name=""45 deg"" value=""45""/>
+<anglesize name=""30 deg"" value=""30""/>
+<anglesize name=""22.5 deg"" value=""22.5""/>
+<opacity name=""10%"" value=""0.1""/>
+<opacity name=""30%"" value=""0.3""/>
+<opacity name=""50%"" value=""0.5""/>
+<opacity name=""75%"" value=""0.75""/>
+<tiling name=""falling"" angle=""-60"" step=""4"" width=""1""/>
+<tiling name=""rising"" angle=""30"" step=""4"" width=""1""/>
+</ipestyle>";
+            #endregion
+            
+            return strIpePreamble;
         }
 
         /// <summary>

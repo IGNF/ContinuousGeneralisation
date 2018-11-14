@@ -56,7 +56,7 @@ namespace MorphingClass.CMorphingMethods.CMorphingMethodsBase
         /// <param name="strSpecifiedFieldName">read the features which have the specified values of the specified attribute</param>
         /// <param name="strSpecifiedValue"></param>
         public virtual void Construct<T>(CParameterInitialize ParameterInitialize, int intLayerCount = 2, 
-            int intStartLayer = 0, bool blnIGeoToCGeo = true, double  dblFactor=1, string strSpecifiedFieldName = null, 
+            int intStartLayer = 0, bool blnIGeoToCGeo = true, string strSpecifiedFieldName = null, 
             string strSpecifiedValue = null, bool blnCreateFileGdbWorkspace = false, bool blnCalDistanceParameters=true) 
             where T : CPolyBase
         {
@@ -70,13 +70,13 @@ namespace MorphingClass.CMorphingMethods.CMorphingMethodsBase
                 FLayerLt.Add(pFLayer);
             }
 
-            Construct<T>(ParameterInitialize, FLayerLt, blnIGeoToCGeo, dblFactor, 
+            Construct<T>(ParameterInitialize, FLayerLt, blnIGeoToCGeo,
                 strSpecifiedFieldName, strSpecifiedValue, blnCreateFileGdbWorkspace, blnCalDistanceParameters);
         }
 
 
         public virtual void Construct<T>(CParameterInitialize ParameterInitialize, List<IFeatureLayer> FLayerLt, 
-            bool blnIGeoToCGeo = true, double dblFactor = 1, string strSpecifiedFieldName = null,
+            bool blnIGeoToCGeo = true, string strSpecifiedFieldName = null,
              string strSpecifiedValue = null, bool blnCreateFileGdbWorkspace = false, bool blnCalDistanceParameters = true)
              where T : CPolyBase
         {
@@ -112,7 +112,7 @@ namespace MorphingClass.CMorphingMethods.CMorphingMethodsBase
                 var pObjCGeoLtLt = new List<List<CGeoBase>>(intLayerCount);
                 for (int i = 0; i < pObjIGeoLtLt.Count; i++)
                 {
-                    pObjCGeoLtLt.Add(CHelpFunc.GenerateCGeoEbAccordingToInputLt(pObjIGeoLtLt[i], dblFactor).ToList());
+                    pObjCGeoLtLt.Add(CHelpFunc.GenerateCGeoEbAccordingToInputLt(pObjIGeoLtLt[i]).ToList());
                 }
                 this.ObjCGeoLtLt = pObjCGeoLtLt;
 
@@ -122,7 +122,7 @@ namespace MorphingClass.CMorphingMethods.CMorphingMethodsBase
             else
             {
                 //we get the data in order to compute the Distance Parameters
-                pFirstLayerObjCGeoLt = CHelpFunc.GenerateCGeoEbAccordingToInputLt(pObjIGeoLtLt[0], dblFactor).ToList();
+                pFirstLayerObjCGeoLt = CHelpFunc.GenerateCGeoEbAccordingToInputLt(pObjIGeoLtLt[0]).ToList();
             }
 
             //we compute the parameters of distance according to the features in the first layer

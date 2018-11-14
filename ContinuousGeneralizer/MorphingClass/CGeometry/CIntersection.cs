@@ -114,7 +114,7 @@ namespace MorphingClass.CGeometry
         /// <summary>Detect the intesection between two edges</summary>
         private CEnumIntersectionType DetectIntersectionOneNoSlope(CEdge cedge, CEdge cedgeNoSlope, out CPoint IntersectCpt)
         {
-            IntersectCpt = new CPoint(-1);  //the intersection of the two lines, not the two line segments
+            IntersectCpt = new CPoint();  //the intersection of the two lines, not the two line segments
             IntersectCpt.X = cedgeNoSlope.FrCpt.X;
             IntersectCpt.Y = IntersectCpt.X * cedge.dblSlope + cedge.dblYIntercept;
 
@@ -126,7 +126,7 @@ namespace MorphingClass.CGeometry
         /// </summary>
         private CEnumIntersectionType DetectIntersectionNormal(CEdge cedge1, CEdge cedge2, out CPoint IntersectCpt)
         {
-            IntersectCpt = new CPoint(-1);  //the intersection of the two lines, not the two line segments
+            IntersectCpt = new CPoint();  //the intersection of the two lines, not the two line segments
             IntersectCpt.X = (cedge2.dblYIntercept - cedge1.dblYIntercept) / (cedge1.dblSlope - cedge2.dblSlope);
             IntersectCpt.Y = IntersectCpt.X * cedge1.dblSlope + cedge1.dblYIntercept;
 
@@ -533,7 +533,7 @@ namespace MorphingClass.CGeometry
         /// </summary>
         private bool IsTouchNormal(CEdge cedge1, CEdge cedge2, out CPoint IntersectCpt)
         {
-            IntersectCpt = new CPoint(-1);  //the intersection of the two lines, not the two line segments
+            IntersectCpt = new CPoint();  //the intersection of the two lines, not the two line segments
             IntersectCpt.X = (cedge2.dblYIntercept - cedge1.dblYIntercept) / (cedge1.dblSlope - cedge2.dblSlope);
             IntersectCpt.Y = IntersectCpt.X * cedge1.dblSlope + cedge1.dblYIntercept;
 
@@ -572,7 +572,7 @@ namespace MorphingClass.CGeometry
         /// <summary>Detect the intesection between two edges</summary>
         private bool IsTouchOneNoSlope(CEdge cedge, CEdge cedgeNoSlope, out CPoint IntersectCpt)
         {
-            IntersectCpt = new CPoint(-1);  //the intersection of the two lines, not the two line segments
+            IntersectCpt = new CPoint();  //the intersection of the two lines, not the two line segments
             IntersectCpt.X = cedgeNoSlope.FrCpt.X;
             IntersectCpt.Y = IntersectCpt.X * cedge.dblSlope + cedge.dblYIntercept;
 
