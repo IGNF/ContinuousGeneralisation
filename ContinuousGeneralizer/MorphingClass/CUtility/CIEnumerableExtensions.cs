@@ -155,7 +155,7 @@ namespace MorphingClass.CUtility
 
         public static T RemoveLastT<T>(this List<T> items)
         {
-            T lastT = items[items.Count - 1];
+            var lastT = items[items.Count - 1];
             items.RemoveAt(items.Count - 1);
             return lastT;
         }
@@ -167,7 +167,7 @@ namespace MorphingClass.CUtility
                 throw new ArgumentException("There is no need to use this function.");
             }
 
-            IEnumerator<T> selfEnumerator = itmes.GetEnumerator();
+            var selfEnumerator = itmes.GetEnumerator();
             if (!selfEnumerator.MoveNext()) throw new ArgumentException("List is empty.", "self");
 
             if (blnRemainFirst == true)
@@ -199,7 +199,7 @@ namespace MorphingClass.CUtility
         public static void SetIndexID<T>(this IEnumerable<T> TEnumerable)
             where T : CBasicBase
         {
-            IEnumerator<T> selfEnumerator = TEnumerable.GetEnumerator();
+            var selfEnumerator = TEnumerable.GetEnumerator();
             int intIndexID = 0;
             while (selfEnumerator.MoveNext())
             {
@@ -300,9 +300,9 @@ namespace MorphingClass.CUtility
             this IEnumerable<T_value> self, Func<T_value, T_key> orderFunc, IComparer<T_key> pCmp)
         {
             if (self == null) throw new ArgumentNullException("self");
-            SortedDictionary<T_key, T_value> resultsd = new SortedDictionary<T_key, T_value>(pCmp);
+            var resultsd = new SortedDictionary<T_key, T_value>(pCmp);
 
-            IEnumerator<T_value> selfEnumerator = self.GetEnumerator();
+            var selfEnumerator = self.GetEnumerator();
 
             while (selfEnumerator.MoveNext())
             {
@@ -338,7 +338,7 @@ namespace MorphingClass.CUtility
         /// <returns></returns>
         public static bool AreAnyDuplicates<T>(this IEnumerable<T> Tself, IComparer<T> cmp = null)
         {
-            if (cmp == null) { cmp = Comparer<T>.Default; }
+            cmp = CHelpFunc.SetOrDefaultCmp(cmp);
             var TSS = new SortedSet<T>(cmp);
             foreach (var item in Tself)
             {
@@ -358,10 +358,10 @@ namespace MorphingClass.CUtility
         {
             if (self == null) throw new ArgumentNullException("self");
 
-            IEnumerator<T> selfEnumerator = self.GetEnumerator();
+            var selfEnumerator = self.GetEnumerator();
             if (!selfEnumerator.MoveNext()) throw new ArgumentException("List is empty.", "self");
 
-            if (cmp == null) { cmp = Comparer<TOrder>.Default; }
+            cmp = CHelpFunc.SetOrDefaultCmp(cmp);
 
             T min = selfEnumerator.Current;
             int intMinIndex = 0;

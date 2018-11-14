@@ -441,25 +441,12 @@ namespace MorphingClass.CUtility
         /// </summary>
         /// <returns></returns>
         /// <remarks >we allow at most three items here. the number of items could be increased if necessary</remarks>
-        public static List<T> MakeLt<T>(T item1 = null, T item2 = null, T item3 = null)
+        public static List<T> MakeLt<T>(
+            T item1 = null, T item2 = null, T item3 = null, T item4 = null, T item5 = null, T item6 = null)
            where T : class
         {
-            List<T> TLt = new List<T>();
-
-            if (item1 != null)
-            {
-                TLt.Add(item1);
-            }
-            if (item2 != null)
-            {
-                TLt.Add(item2);
-            }
-            if (item3 != null)
-            {
-                TLt.Add(item3);
-            }
-
-            return TLt;
+            var TEb = MakeEb(item1, item2, item3, item4, item5, item6);
+            return TEb.ToList();
         }
 
         /// <summary>
@@ -468,7 +455,7 @@ namespace MorphingClass.CUtility
         /// <returns></returns>
         /// <remarks >we allow at most three items here. the number of items could be increased if necessary</remarks>
         public static IEnumerable<T> MakeEb<T>(
-        T item1 = null, T item2 = null, T item3 = null, T item4 = null, T item5 = null, T item6 = null)
+            T item1 = null, T item2 = null, T item3 = null, T item4 = null, T item5 = null, T item6 = null)
            where T : class
         {
 
@@ -1093,7 +1080,7 @@ namespace MorphingClass.CUtility
         public static void CompareAndOrder<T, TOrder>(T T1, T T2, Func<T, TOrder> orderFunc,
             out T minT, out T maxT, IComparer<TOrder> cmp = null)
         {
-            if (cmp == null) { cmp = SCG.Comparer<TOrder>.Default; }
+            cmp = CHelpFunc.SetOrDefaultCmp(cmp);
             if (cmp.Compare(orderFunc(T1), orderFunc(T2)) <= 0)
             {
                 minT = T1;
@@ -1108,9 +1095,9 @@ namespace MorphingClass.CUtility
 
         public static void Swap<T>(T T1, T T2)
         {
-            T TempT = T1;
+            var Temp = T1;
             T1 = T2;
-            T2 = TempT;
+            T2 = Temp;
         }
 
         /// <summary>

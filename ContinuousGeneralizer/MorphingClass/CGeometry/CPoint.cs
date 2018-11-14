@@ -106,7 +106,7 @@ namespace MorphingClass.CGeometry
         /// <param name="dblZ">Z×ø±ê</param> 
         /// <returns></returns>
         /// <remarks>Main Constructor</remarks>
-        public CPoint(int intID = -1, double dblX = 0, double dblY = 0, double dblZ = 0, bool isSetPoint = false, double dblFactor = 1)
+        public CPoint(int intID, double dblX = 0, double dblY = 0, double dblZ = 0, bool isSetPoint = false, double dblFactor = 1)
         {
             this.ID = intID;
             this.X = dblX * dblFactor;
@@ -118,6 +118,11 @@ namespace MorphingClass.CGeometry
             {
                 SetPoint();
             }
+        }
+
+        public CPoint(double dblX = 0, double dblY = 0, double dblZ = 0, bool isSetPoint = false, double dblFactor = 1)
+            : this(-1, dblX, dblY, dblZ, isSetPoint, dblFactor)
+        {
         }
 
         public CPoint(int intID, IPoint pPoint, double dblFactor = 1)

@@ -187,7 +187,7 @@ namespace ContinuousGeneralizer
 
             //frmCurrent.btnTransform_Click(sender, e);
 
-            frmCurrent.btnRun_Click(sender, e);
+            //frmCurrent.btnRun_Click(sender, e);
             //frmCurrent.btnGreedy_Click(sender, e);
             //frmCurrent.btnRunILP_Click(sender, e);
             //frmCurrent.btn020_Click(sender, e);
