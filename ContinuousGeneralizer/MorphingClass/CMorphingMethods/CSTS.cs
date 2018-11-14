@@ -98,27 +98,10 @@ namespace MorphingClass.CMorphingMethods
             //pAxMapControl.MapScale = 1 / 6000000;
             //pAxMapControl.CenterAt(cptMC);
             //Old Larger-scale, Old Smaller-scale, New Larger-scale, New Smaller-scale
-            //_OLCplLt = this.ObjCGeoLtLt[0].Select(cgeo => cgeo as CPolyline).ToList();
-            //_OSCplLt = this.ObjCGeoLtLt[1].Select(cgeo => cgeo as CPolyline).ToList();
-            //_NLCplLt = this.ObjCGeoLtLt[2].Select(cgeo => cgeo as CPolyline).ToList();
-            //_NSCplLt = this.ObjCGeoLtLt[3].Select(cgeo => cgeo as CPolyline).ToList();
-
             _OLCplLt = this.ObjCGeoLtLt[0].Select(cgeo => cgeo as CPolyline).ToList();
             _OSCplLt = this.ObjCGeoLtLt[1].Select(cgeo => cgeo as CPolyline).ToList();
             _NLCplLt = this.ObjCGeoLtLt[2].Select(cgeo => cgeo as CPolyline).ToList();
             _NSCplLt = this.ObjCGeoLtLt[3].Select(cgeo => cgeo as CPolyline).ToList();
-
-
-            //_OSCplLt = this.ObjCGeoLtLt[1].Select(cgeo => cgeo as CPolyline).ToList();
-            //_NLCplLt = this.ObjCGeoLtLt[2].Select(cgeo => cgeo as CPolyline).ToList();
-            //_NSCplLt = this.ObjCGeoLtLt[3].Select(cgeo => cgeo as CPolyline).ToList();
-
-
-
-
-
-
-
 
 
             var olcpl = _OLCplLt[0];
@@ -142,139 +125,37 @@ namespace MorphingClass.CMorphingMethods
             var timeSeparatorCpl = new CPolyline(
                 new CPoint(-1, dblTimeMidX, dblYAxisStart + 5), new CPoint(-1, dblTimeMidX, dblYAxisEnd - 5));
 
-
-
-            int intIndex = 0;
             if (strTS == "vario_vario")
             {
                 //time transition
-                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[4], nlcpl.CptLt[4]));
-                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[12], nlcpl.CptLt[12]));
-                LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[4], nscpl.CptLt[4]));
-                LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[12], nscpl.CptLt[12]));
-
+                LinkCplLt.AddRange(GenerateVarioLinkCplEb(olcpl, nlcpl, oscpl, nscpl, 4, 12));
                 //scale transition
-                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[0], oscpl.CptLt[0]));
-                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[8], oscpl.CptLt[8]));
-                LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[0], nscpl.CptLt[0]));
-                LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[8], nscpl.CptLt[8]));
+                LinkCplLt.AddRange(GenerateVarioLinkCplEb(olcpl, oscpl, nlcpl, nscpl, 0, 8));
             }
             else if (strTS == "vario_separate")
             {
                 //time transition
-                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[4], nlcpl.CptLt[4]));
-                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[12], nlcpl.CptLt[12]));
-                LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[4], nscpl.CptLt[4]));
-                LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[12], nscpl.CptLt[12]));
-
-                //scale transition
-                var olmidLeftCpt = new CPoint(-1, olcpl.CptLt[0].X, dblScaleMidY);
-                var osmidLeftCpt = new CPoint(-1, oscpl.CptLt[0].X, dblScaleMidY);
-                var olmidRightCpt = new CPoint(-1, olcpl.CptLt[8].X, dblScaleMidY);
-                var osmidRightCpt = new CPoint(-1, oscpl.CptLt[8].X, dblScaleMidY);
-                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[0], olmidLeftCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, olmidLeftCpt, osmidLeftCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, osmidLeftCpt, oscpl.CptLt[0]));
-                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[8], olmidRightCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, olmidRightCpt, osmidRightCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, osmidRightCpt, oscpl.CptLt[8]));
-
-                var nlmidLeftCpt = new CPoint(-1, nlcpl.CptLt[0].X, dblScaleMidY);
-                var nsmidLeftCpt = new CPoint(-1, nscpl.CptLt[0].X, dblScaleMidY);
-                var nlmidRightCpt = new CPoint(-1, nlcpl.CptLt[8].X, dblScaleMidY);
-                var nsmidRightCpt = new CPoint(-1, nscpl.CptLt[8].X, dblScaleMidY);
-                LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[0], nlmidLeftCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, nlmidLeftCpt, nsmidLeftCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, nsmidLeftCpt, nscpl.CptLt[0]));
-                LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[8], nlmidRightCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, nlmidRightCpt, nsmidRightCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, nsmidRightCpt, nscpl.CptLt[8]));
+                LinkCplLt.AddRange(GenerateVarioLinkCplEb(olcpl, nlcpl, oscpl, nscpl, 4, 12));
+                //scale transition 
+                LinkCplLt.AddRange(GenerateSeparateLinkCplEb(olcpl, oscpl, nlcpl, nscpl, 0, 8, dblScaleMidY, "Scale"));
 
                 SeparatorCplLt.Add(scaleSeparatorCpl);
             }
             else if (strTS == "separate_vario")
             {
                 //time transition
-                var olmidLowerCpt = new CPoint(-1, dblTimeMidX, olcpl.CptLt[4].Y);
-                var nlmidLowerCpt = new CPoint(-1, dblTimeMidX, nlcpl.CptLt[4].Y);
-                var olmidUpperCpt = new CPoint(-1, dblTimeMidX, olcpl.CptLt[12].Y);
-                var nlmidUpperCpt = new CPoint(-1, dblTimeMidX, nlcpl.CptLt[12].Y);
-                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[4], olmidLowerCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, olmidLowerCpt, nlmidLowerCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, nlmidLowerCpt, nlcpl.CptLt[4]));
-                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[12], olmidUpperCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, olmidUpperCpt, nlmidUpperCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, nlmidUpperCpt, nlcpl.CptLt[12]));
-
-                var osmidLowerCpt = new CPoint(-1, dblTimeMidX, oscpl.CptLt[4].Y);
-                var nsmidLowerCpt = new CPoint(-1, dblTimeMidX, nscpl.CptLt[4].Y);
-                var osmidUpperCpt = new CPoint(-1, dblTimeMidX, oscpl.CptLt[12].Y);
-                var nsmidUpperCpt = new CPoint(-1, dblTimeMidX, nscpl.CptLt[12].Y);
-                LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[4], osmidLowerCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, osmidLowerCpt, nsmidLowerCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, nsmidLowerCpt, nscpl.CptLt[4]));
-                LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[12], osmidUpperCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, osmidUpperCpt, nsmidUpperCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, nsmidUpperCpt, nscpl.CptLt[12]));
-
-
-
+                LinkCplLt.AddRange(GenerateSeparateLinkCplEb(olcpl, nlcpl, oscpl, nscpl, 4, 12, dblTimeMidX, "Time"));                
                 //scale transition
-                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[0], oscpl.CptLt[0]));
-                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[8], oscpl.CptLt[8]));
-                LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[0], nscpl.CptLt[0]));
-                LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[8], nscpl.CptLt[8]));
+                LinkCplLt.AddRange(GenerateVarioLinkCplEb(olcpl, oscpl, nlcpl, nscpl, 0, 8));
 
                 SeparatorCplLt.Add(timeSeparatorCpl);
             }
             else //if (strTS == "separate_separate")
             {
                 //time transition
-                var olmidLowerCpt = new CPoint(-1, dblTimeMidX, olcpl.CptLt[4].Y);
-                var nlmidLowerCpt = new CPoint(-1, dblTimeMidX, nlcpl.CptLt[4].Y);
-                var olmidUpperCpt = new CPoint(-1, dblTimeMidX, olcpl.CptLt[12].Y);
-                var nlmidUpperCpt = new CPoint(-1, dblTimeMidX, nlcpl.CptLt[12].Y);
-                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[4], olmidLowerCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, olmidLowerCpt, nlmidLowerCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, nlmidLowerCpt, nlcpl.CptLt[4]));
-                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[12], olmidUpperCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, olmidUpperCpt, nlmidUpperCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, nlmidUpperCpt, nlcpl.CptLt[12]));
-
-                var osmidLowerCpt = new CPoint(-1, dblTimeMidX, oscpl.CptLt[4].Y);
-                var nsmidLowerCpt = new CPoint(-1, dblTimeMidX, nscpl.CptLt[4].Y);
-                var osmidUpperCpt = new CPoint(-1, dblTimeMidX, oscpl.CptLt[12].Y);
-                var nsmidUpperCpt = new CPoint(-1, dblTimeMidX, nscpl.CptLt[12].Y);
-                LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[4], osmidLowerCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, osmidLowerCpt, nsmidLowerCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, nsmidLowerCpt, nscpl.CptLt[4]));
-                LinkCplLt.Add(new CPolyline(intIndex++, oscpl.CptLt[12], osmidUpperCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, osmidUpperCpt, nsmidUpperCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, nsmidUpperCpt, nscpl.CptLt[12]));
-
+                LinkCplLt.AddRange(GenerateSeparateLinkCplEb(olcpl, nlcpl, oscpl, nscpl, 4, 12, dblTimeMidX, "Time"));
                 //scale transition
-                var olmidLeftCpt = new CPoint(-1, olcpl.CptLt[0].X, dblScaleMidY);
-                var osmidLeftCpt = new CPoint(-1, oscpl.CptLt[0].X, dblScaleMidY);
-                var olmidRightCpt = new CPoint(-1, olcpl.CptLt[8].X, dblScaleMidY);
-                var osmidRightCpt = new CPoint(-1, oscpl.CptLt[8].X, dblScaleMidY);
-                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[0], olmidLeftCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, olmidLeftCpt, osmidLeftCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, osmidLeftCpt, oscpl.CptLt[0]));
-                LinkCplLt.Add(new CPolyline(intIndex++, olcpl.CptLt[8], olmidRightCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, olmidRightCpt, osmidRightCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, osmidRightCpt, oscpl.CptLt[8]));
-
-                var nlmidLeftCpt = new CPoint(-1, nlcpl.CptLt[0].X, dblScaleMidY);
-                var nsmidLeftCpt = new CPoint(-1, nscpl.CptLt[0].X, dblScaleMidY);
-                var nlmidRightCpt = new CPoint(-1, nlcpl.CptLt[8].X, dblScaleMidY);
-                var nsmidRightCpt = new CPoint(-1, nscpl.CptLt[8].X, dblScaleMidY);
-                LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[0], nlmidLeftCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, nlmidLeftCpt, nsmidLeftCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, nsmidLeftCpt, nscpl.CptLt[0]));
-                LinkCplLt.Add(new CPolyline(intIndex++, nlcpl.CptLt[8], nlmidRightCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, nlmidRightCpt, nsmidRightCpt));
-                LinkCplLt.Add(new CPolyline(intIndex++, nsmidRightCpt, nscpl.CptLt[8]));
-
+                LinkCplLt.AddRange(GenerateSeparateLinkCplEb(olcpl, oscpl, nlcpl, nscpl, 0, 8, dblScaleMidY, "Scale"));
 
                 SeparatorCplLt.Add(scaleSeparatorCpl);
                 SeparatorCplLt.Add(timeSeparatorCpl);
@@ -388,6 +269,52 @@ namespace MorphingClass.CMorphingMethods
             //Output(0, 0.6);
             //Output(0.7, 0.2);
             //Output(0.6, 0.9);
+        }
+
+        private IEnumerable<CPolyline> GenerateVarioLinkCplEb(CPolyline frcpl1, CPolyline tocpl1, CPolyline frcpl2, CPolyline tocpl2,
+            int intIndex1, int intIndex2)
+        {
+            yield return new CPolyline(frcpl1.CptLt[intIndex1], tocpl1.CptLt[intIndex1]);
+            yield return new CPolyline(frcpl1.CptLt[intIndex2], tocpl1.CptLt[intIndex2]);
+            yield return new CPolyline(frcpl2.CptLt[intIndex1], tocpl2.CptLt[intIndex1]);
+            yield return new CPolyline(frcpl2.CptLt[intIndex2], tocpl2.CptLt[intIndex2]);
+        }
+
+        private IEnumerable<CPolyline> GenerateSeparateLinkCplEb(CPolyline frcpl1, CPolyline tocpl1, CPolyline frcpl2, CPolyline tocpl2,
+    int intIndex1, int intIndex2, double dblMid, string strDimension)
+        {
+            var SeparateLinkCplEb1 = GenerateOneSeparateLinkCplEb(frcpl1, tocpl1, intIndex1, intIndex2, dblMid, strDimension);
+            var SeparateLinkCplEb2 = GenerateOneSeparateLinkCplEb(frcpl2, tocpl2, intIndex1, intIndex2, dblMid, strDimension);
+            return SeparateLinkCplEb1.Concat(SeparateLinkCplEb2);
+        }
+
+        private IEnumerable<CPolyline> GenerateOneSeparateLinkCplEb(CPolyline frcpl, CPolyline tocpl, int intIndex1, int intIndex2, double dblMid, string strDimension)
+        {
+            CPoint frmidLeftCpt;
+            CPoint tomidLeftCpt;
+            CPoint frmidRightCpt;
+            CPoint tomidRightCpt;
+            if (strDimension == "Time")
+            {
+                frmidLeftCpt = new CPoint(dblMid, frcpl.CptLt[intIndex1].Y);
+                tomidLeftCpt = new CPoint(dblMid, tocpl.CptLt[intIndex1].Y);
+                frmidRightCpt = new CPoint(dblMid, frcpl.CptLt[intIndex2].Y);
+                tomidRightCpt = new CPoint(dblMid, tocpl.CptLt[intIndex2].Y);
+            }
+            else //if (strDimension == "scale")
+            {
+                frmidLeftCpt = new CPoint(frcpl.CptLt[intIndex1].X, dblMid);
+                tomidLeftCpt = new CPoint(tocpl.CptLt[intIndex1].X, dblMid);
+                frmidRightCpt = new CPoint(frcpl.CptLt[intIndex2].X, dblMid);
+                tomidRightCpt = new CPoint(tocpl.CptLt[intIndex2].X, dblMid);
+            }                        
+
+            yield return new CPolyline(frcpl.CptLt[intIndex1], frmidLeftCpt);
+            yield return new CPolyline(frmidLeftCpt, tomidLeftCpt);
+            yield return new CPolyline(tomidLeftCpt, tocpl.CptLt[intIndex1]);
+            yield return new CPolyline(frcpl.CptLt[intIndex2], frmidRightCpt);
+            yield return new CPolyline(frmidRightCpt, tomidRightCpt);
+            yield return new CPolyline(tomidRightCpt, tocpl.CptLt[intIndex2]);
         }
 
 
