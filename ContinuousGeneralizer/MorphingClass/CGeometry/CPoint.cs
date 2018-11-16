@@ -65,10 +65,7 @@ namespace MorphingClass.CGeometry
 
         private bool _isMoveable;
         private bool _isSteiner;
-
-        //private double this.X;
-        //private double this.Y;
-        //private double this.Z;
+        
         
         //private CEdge _BelongedCEdge;
         private CEdge _IncidentCEdge;   //we always set the edge with the smallest axis angle as the IncidentCEdge
@@ -159,11 +156,11 @@ namespace MorphingClass.CGeometry
         }
 
 
-        public IPoint JudgeAndSetPoint(double dblFactor=1)
+        public IPoint JudgeAndSetPoint()
         {
             if (_pPoint == null)
             {
-                return SetPoint(dblFactor);
+                return SetPoint();
             }
             else
             {
@@ -172,12 +169,12 @@ namespace MorphingClass.CGeometry
         }
 
         //this method takes a lot of time, please do not use it if not necessary
-        public IPoint SetPoint(double dblFactor=1)
+        public IPoint SetPoint()
         {
             IPoint ipt = new PointClass();
             ipt.ID = this.ID;
-            ipt.PutCoords(this.X / dblFactor, this.Y / dblFactor);
-            ipt.Z = this.Z / dblFactor;
+            ipt.PutCoords(this.X, this.Y);
+            ipt.Z = this.Z;
             this.pPoint = ipt;
             return ipt;
         }

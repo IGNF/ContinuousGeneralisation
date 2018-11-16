@@ -956,43 +956,6 @@ namespace MorphingClass.CUtility
         }
 
 
-        ///// <summary>
-        ///// 显示并返回单个插值线段
-        ///// </summary>
-        ///// <param name="pDataRecords">数据记录</param>
-        ///// <param name="dblProp">差值参数</param>
-        ///// <returns>插值线段</returns>
-        //public static List<CRiver> DisplayRiverLt(CDataRecords pDataRecords, double dblProp)
-        //{
-        //    if (dblProp < 0 || dblProp > 1)
-        //    {
-        //        MessageBox.Show("请输入正确参数！");
-        //        return null;
-        //    }
-        //    List<CRiver> CResultRiverLt = pDataRecords.ParameterResult.CResultRiverLt;
-        //    List<CRiver> CDisplayRiverLt = new List<CRiver>();
-        //    List<CPolyline> CDisplayPlLt = new List<CPolyline>();
-        //    for (int i = 0; i < CResultRiverLt.Count; i++)
-        //    {
-        //        if (CResultRiverLt[i].dblWeightinessUnitary > dblProp)
-        //        {
-        //            CDisplayRiverLt.Add(CResultRiverLt[i]);
-        //            CPolyline cpl = new CPolyline(CResultRiverLt[i]);
-        //            CDisplayPlLt.Add(cpl);
-        //        }
-        //    }
-
-        //    // 清除绘画痕迹
-        //    IMapControl4 m_mapControl = pDataRecords.ParameterInitialize.m_mapControl;
-        //    IGraphicsContainer pGra = m_mapControl.Map as IGraphicsContainer;
-        //    pGra.DeleteAllElements();
-        //    m_mapControl.ActiveView.Refresh();
-        //    ViewPolylines(m_mapControl, CDisplayPlLt);  //显示生成的线段
-        //    return CDisplayRiverLt;
-        //}
-
-
-
 
         /// <summary>
         /// 提取对应线段

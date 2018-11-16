@@ -90,8 +90,8 @@ namespace MorphingClass.CUtility
          *            dotted
          * @return
          */
-        public static String drawIpePath(double[] x, double[] y, String color = "black",
-                String pen = "normal", String dash = "normal")
+        public static String drawIpePath(double[] x, double[] y, 
+            String color = "black", String pen = "normal", String dash = "normal")
         {
             String s = "<path stroke=\"" + color + "\" pen=\"" + pen + "\" dash=\""
                     + dash + "\">\n" + AddXY(x[0], y[0]) + " m\n";
@@ -136,11 +136,10 @@ namespace MorphingClass.CUtility
         *            dotted
         * @return
         */
-        public static String drawIpeEdge(double x1, double y1, double x2, double y2, String color = "black",
-                String pen = "normal", String dash = "normal")
+        public static String drawIpeEdge(double x1, double y1, double x2, double y2, 
+            String color = "black", String pen = "normal", String dash = "normal")
         {
-            return drawIpePath(new double[] { x1, x2 }, new double[] { y1, y2 }, color,
-                    pen, dash);
+            return drawIpePath(new double[] { x1, x2 }, new double[] { y1, y2 }, color, pen, dash);
         }
 
 
@@ -220,7 +219,8 @@ namespace MorphingClass.CUtility
             return str;
         }
 
-        public static string GetStrokeStarting(CColor StrokeColor, string strWidth = "normal", string strDash="normal", CColor FillColor = null)
+        public static string GetStrokeStarting(CColor StrokeColor, 
+            string strWidth = "normal", string strDash="normal", CColor FillColor = null)
         {
             string str = "<path stroke=\"" + AddColor(StrokeColor) + "\" ";
             if (FillColor != null)
@@ -355,8 +355,8 @@ namespace MorphingClass.CUtility
          *            text-size
          * @return
          */
-        public static String writeIpeText(String text, int x, int y, String color = "black",
-                String size = "normal")
+        public static String writeIpeText(String text, int x, int y, 
+            String color = "black", String size = "normal")
         {
             return "<text transformations=\"translations\" pos=\""
                     + x
@@ -368,8 +368,8 @@ namespace MorphingClass.CUtility
                     + size + "\">" + text + "</text>\n";
         }
 
-        public static String SpecifyLayerByWritingText(string strLayerName, String text, int x, int y, String color = "black",
-        String size = "normal")
+        public static String SpecifyLayerByWritingText(string strLayerName, String text, int x, int y, 
+            String color = "black", String size = "normal")
         {
             return "<text layer=\"" + strLayerName + "\" transformations=\"translations\" pos=\""
                     + x
@@ -467,8 +467,8 @@ namespace MorphingClass.CUtility
          *            dotted
          * @return
          */
-        public static String drawIpeSpline(int[] x, int[] y, String color = "black",
-                String pen = "normal", String dash = "normal")
+        public static String drawIpeSpline(int[] x, int[] y, 
+            String color = "black", String pen = "normal", String dash = "normal")
         {
             String s = "<path stroke=\"" + color + "\" pen=\"" + pen + "\" dash=\""
                     + dash + "\">\n " + x[0] + " " + y[0] + " m";
@@ -497,8 +497,8 @@ namespace MorphingClass.CUtility
          *            dotted
          * @return
          */
-        public static String drawIpeSplinegon(int[] x, int[] y, String color = "black",
-                String pen = "normal", String dash = "normal")
+        public static String drawIpeSplinegon(int[] x, int[] y, 
+            String color = "black", String pen = "normal", String dash = "normal")
         {
             String s = "<path stroke=\"" + color + "\" pen=\"" + pen + "\" dash=\""
                     + dash + "\">\n " + x[0] + " " + y[0];
@@ -590,7 +590,6 @@ namespace MorphingClass.CUtility
         public static String getIpeEnd()
         {
             return "</ipe>\n";
-            //return "</page>\n</ipe>\n";
         }
 
         /**

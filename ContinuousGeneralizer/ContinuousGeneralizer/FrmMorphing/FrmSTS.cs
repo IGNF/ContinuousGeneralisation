@@ -89,12 +89,7 @@ namespace ContinuousGeneralizer.FrmGeneralization
             ParameterInitialize.strTS = this.cboTS.Text;
             //读取数据
             _pSTS = new CSTS(ParameterInitialize);
-            _pSTS.STS(
-                //this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text),
-                //this.cboSimplification.Text,
-                //Convert.ToDouble(this.txtLargerScale.Text),Convert.ToDouble(this.txtSmallerScale.Text),
-                //Convert.ToInt32(this.txtOutput.Text)
-                );
+            _pSTS.STS();
 
             ParameterInitialize.tsslMessage.Text = this.Name + ": Ready!";
         }
