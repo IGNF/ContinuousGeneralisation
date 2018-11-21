@@ -1135,10 +1135,10 @@ namespace ContinuousGeneralizer
             frmRIBSBLGOptCor.Show();
         }
 
-        private void mnuAtBdMorphing_Click(object sender, EventArgs e)
+        private void mnuAdminBound_Click(object sender, EventArgs e)
         {
-            var frmAtBdMorphing = new FrmAtBdMorphing(_DataRecords);
-            frmAtBdMorphing.Show();
+            var frmAdminBound = new FrmAdminBound(_DataRecords);
+            frmAdminBound.Show();
         }
 
         private void mnuPAL_Click(object sender, EventArgs e)

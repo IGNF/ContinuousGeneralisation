@@ -135,7 +135,7 @@ namespace ContinuousGeneralizer
             this.mnuRIBS = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuRIBSBLG = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuRIBSBLGOptCor = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuAtBdMorphing = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuAdminBound = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCGABM = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuTest = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSTS = new System.Windows.Forms.ToolStripMenuItem();
@@ -944,7 +944,7 @@ namespace ContinuousGeneralizer
             this.mnuRIBS,
             this.mnuRIBSBLG,
             this.mnuRIBSBLGOptCor,
-            this.mnuAtBdMorphing,
+            this.mnuAdminBound,
             this.mnuCGABM,
             this.mnuTest,
             this.mnuSTS});
@@ -1077,12 +1077,12 @@ namespace ContinuousGeneralizer
             this.mnuRIBSBLGOptCor.Text = "RIBSBLGOptCor";
             this.mnuRIBSBLGOptCor.Click += new System.EventHandler(this.mnuRIBSBLGOptCor_Click);
             // 
-            // mnuAtBdMorphing
+            // mnuAdminBound
             // 
-            this.mnuAtBdMorphing.Name = "mnuAtBdMorphing";
-            this.mnuAtBdMorphing.Size = new System.Drawing.Size(226, 22);
-            this.mnuAtBdMorphing.Text = "AtBdMorphing";
-            this.mnuAtBdMorphing.Click += new System.EventHandler(this.mnuAtBdMorphing_Click);
+            this.mnuAdminBound.Name = "mnuAdminBound";
+            this.mnuAdminBound.Size = new System.Drawing.Size(226, 22);
+            this.mnuAdminBound.Text = "AdminBound";
+            this.mnuAdminBound.Click += new System.EventHandler(this.mnuAdminBound_Click);
             // 
             // mnuCGABM
             // 
@@ -1437,7 +1437,7 @@ namespace ContinuousGeneralizer
         private System.Windows.Forms.ToolStripMenuItem mnuRIBS;
         private System.Windows.Forms.ToolStripMenuItem mnuRIBSBLG;
         private System.Windows.Forms.ToolStripMenuItem mnuRIBSBLGOptCor;
-        private System.Windows.Forms.ToolStripMenuItem mnuAtBdMorphing;
+        private System.Windows.Forms.ToolStripMenuItem mnuAdminBound;
         private System.Windows.Forms.ToolStripMenuItem MorphingLSAToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mnuStraightLine;
         private System.Windows.Forms.ToolStripMenuItem mnuAL_AL;

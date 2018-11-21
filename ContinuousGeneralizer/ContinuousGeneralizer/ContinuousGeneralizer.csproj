@@ -520,12 +520,6 @@
     <Compile Include="FrmMorphingLSA\FrmStraightLine.Designer.cs">
       <DependentUpon>FrmStraightLine.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmMorphing\FrmAdministrativeBoundaryMorphing.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmMorphing\FrmAdministrativeBoundaryMorphing.designer.cs">
-      <DependentUpon>FrmAdministrativeBoundaryMorphing.cs</DependentUpon>
-    </Compile>
     <Compile Include="FrmMorphing\FrmBase.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -862,9 +856,6 @@
       <DependentUpon>FrmPAL.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMorphingLSA\FrmStraightLine.resx" />
-    <EmbeddedResource Include="FrmMorphing\FrmAdministrativeBoundaryMorphing.resx">
-      <DependentUpon>FrmAdministrativeBoundaryMorphing.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="FrmMorphing\FrmBase.resx">
       <DependentUpon>FrmBase.cs</DependentUpon>
     </EmbeddedResource>

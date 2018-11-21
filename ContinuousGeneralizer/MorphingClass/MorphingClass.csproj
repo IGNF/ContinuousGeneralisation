@@ -312,7 +312,6 @@
     <Compile Include="CMorphingMethodsLSA\CStraightLine.cs" />
     <Compile Include="CMorphingMethods\CSTS.cs" />
     <Compile Include="CMorphingMethods\CCGABM.cs" />
-    <Compile Include="CMorphingMethods\CAdministrativeBoundaryMorphing.cs" />
     <Compile Include="CMorphingMethods\CBLGOptCorMMSimplified.cs" />
     <Compile Include="CMorphingMethods\CBSBLGOptCor.cs" />
     <Compile Include="CMorphingMethods\CBSBLGOptCorMM.cs" />

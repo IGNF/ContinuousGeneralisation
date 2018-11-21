@@ -61,7 +61,7 @@ namespace ContinuousGeneralizer.FrmGeneralization
         private void FrmBldgGrow_Load(object sender, EventArgs e)
         {
             var ParameterInitialize = _DataRecords.ParameterInitialize;
-            ParameterInitialize.cboLayerLt = new List<ComboBox>(2);
+            ParameterInitialize.cboLayerLt = new List<ComboBox>(4);
             ParameterInitialize.cboLayerLt.Add(this.cboLargerScaleLayer);
             ParameterInitialize.cboLayerLt.Add(this.cboSmallerScaleLayer);
             ParameterInitialize.cboLayerLt.Add(this.cboLSRoad);
