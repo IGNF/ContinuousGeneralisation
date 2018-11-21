@@ -121,7 +121,7 @@ namespace MorphingClass.CGeneralizationMethods
         protected void Preprocessing(CParameterInitialize ParameterInitialize, 
             string strSpecifiedFieldName = null, string strSpecifiedValue = null)
         {
-            Construct<CPolygon>(ParameterInitialize, 2, 0, true, strSpecifiedFieldName, strSpecifiedValue);
+            Construct<CPolygon>(ParameterInitialize, 0, 2, true, strSpecifiedFieldName, strSpecifiedValue);
             CConstants.strShapeConstraint = ParameterInitialize.cboShapeConstraint.Text;
             if (CConstants.strShapeConstraint == "MaximizeMinComp_EdgeNumber" || 
                 CConstants.strShapeConstraint == "MaximizeMinComp_Combine")
@@ -246,11 +246,7 @@ namespace MorphingClass.CGeneralizationMethods
             this.StrObjLtDt = new CStrObjLtDt(CAreaAgg_AStar.strKeyLt, pSSCPgLt.Count);
 
             _intStart = 0;
-            _intEndCount = this.SSCrgLt.Count;
-
-
-
-
+            _intEndCount = this.SSCrgLt.Count;            
             UpdateStartEnd();
         }
 

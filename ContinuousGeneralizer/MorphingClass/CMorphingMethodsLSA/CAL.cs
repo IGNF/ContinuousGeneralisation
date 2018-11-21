@@ -288,7 +288,7 @@ namespace MorphingClass.CMorphingMethodsLSA
                 int aa = 5;
             }
             //intIterationNum = Convert.ToInt32(_DataRecords.ParameterInitialize.txtIterationNum.Text);     //the maximum itrative times
-            List<CCorrCpts> pCorrCptsLt = _DataRecords.ParameterResult.CCorrCptsLt;   //读取数据后，此处ResultPtLt中的对应点为一一对应
+            List<CCorrCpts> pCorrCptsLt = _DataRecords.ParameterResult.CCorrCptsLt;   //Read Datasets后，此处ResultPtLt中的对应点为一一对应
             double dblTX = _dblTX;
 
             int intPtNum = pCorrCptsLt.Count;

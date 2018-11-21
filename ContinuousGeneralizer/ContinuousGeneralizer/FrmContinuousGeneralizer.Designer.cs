@@ -135,7 +135,6 @@ namespace ContinuousGeneralizer
             this.mnuRIBS = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuRIBSBLG = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuRIBSBLGOptCor = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuAdminBound = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCGABM = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuTest = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSTS = new System.Windows.Forms.ToolStripMenuItem();
@@ -477,21 +476,21 @@ namespace ContinuousGeneralizer
             // mnuApLALMulti
             // 
             this.mnuApLALMulti.Name = "mnuApLALMulti";
-            this.mnuApLALMulti.Size = new System.Drawing.Size(140, 22);
+            this.mnuApLALMulti.Size = new System.Drawing.Size(180, 22);
             this.mnuApLALMulti.Text = "ApLALMulti";
             this.mnuApLALMulti.Click += new System.EventHandler(this.mnuApLALMulti_Click);
             // 
             // mnuLinear_AL
             // 
             this.mnuLinear_AL.Name = "mnuLinear_AL";
-            this.mnuLinear_AL.Size = new System.Drawing.Size(140, 22);
+            this.mnuLinear_AL.Size = new System.Drawing.Size(180, 22);
             this.mnuLinear_AL.Text = "Linear_AL";
             this.mnuLinear_AL.Click += new System.EventHandler(this.mnuLinear_AL_Click);
             // 
             // mnuPAL
             // 
             this.mnuPAL.Name = "mnuPAL";
-            this.mnuPAL.Size = new System.Drawing.Size(140, 22);
+            this.mnuPAL.Size = new System.Drawing.Size(180, 22);
             this.mnuPAL.Text = "PAL";
             this.mnuPAL.Click += new System.EventHandler(this.mnuPAL_Click);
             // 
@@ -508,21 +507,21 @@ namespace ContinuousGeneralizer
             // mnuDPSimplify
             // 
             this.mnuDPSimplify.Name = "mnuDPSimplify";
-            this.mnuDPSimplify.Size = new System.Drawing.Size(156, 22);
+            this.mnuDPSimplify.Size = new System.Drawing.Size(180, 22);
             this.mnuDPSimplify.Text = "DPSimplify";
             this.mnuDPSimplify.Click += new System.EventHandler(this.mnuDPSimplify_Click);
             // 
             // mnuAreaAgg_AStar
             // 
             this.mnuAreaAgg_AStar.Name = "mnuAreaAgg_AStar";
-            this.mnuAreaAgg_AStar.Size = new System.Drawing.Size(156, 22);
+            this.mnuAreaAgg_AStar.Size = new System.Drawing.Size(180, 22);
             this.mnuAreaAgg_AStar.Text = "AreaAgg_AStar";
             this.mnuAreaAgg_AStar.Click += new System.EventHandler(this.mnuAreaAgg_AStar_Click);
             // 
             // mnuBldgGrow
             // 
             this.mnuBldgGrow.Name = "mnuBldgGrow";
-            this.mnuBldgGrow.Size = new System.Drawing.Size(156, 22);
+            this.mnuBldgGrow.Size = new System.Drawing.Size(180, 22);
             this.mnuBldgGrow.Text = "BldgGrow";
             this.mnuBldgGrow.Click += new System.EventHandler(this.mnuBldgGrow_Click);
             // 
@@ -772,21 +771,21 @@ namespace ContinuousGeneralizer
             // mnuALALMulti
             // 
             this.mnuALALMulti.Name = "mnuALALMulti";
-            this.mnuALALMulti.Size = new System.Drawing.Size(140, 22);
+            this.mnuALALMulti.Size = new System.Drawing.Size(180, 22);
             this.mnuALALMulti.Text = "ALALMulti";
             this.mnuALALMulti.Click += new System.EventHandler(this.mnuALALMulti_Click);
             // 
             // mnuALAMulti
             // 
             this.mnuALAMulti.Name = "mnuALAMulti";
-            this.mnuALAMulti.Size = new System.Drawing.Size(140, 22);
+            this.mnuALAMulti.Size = new System.Drawing.Size(180, 22);
             this.mnuALAMulti.Text = "ALAMulti";
             this.mnuALAMulti.Click += new System.EventHandler(this.mnuALAMulti_Click);
             // 
             // mnuCALMulti
             // 
             this.mnuCALMulti.Name = "mnuCALMulti";
-            this.mnuCALMulti.Size = new System.Drawing.Size(140, 22);
+            this.mnuCALMulti.Size = new System.Drawing.Size(180, 22);
             this.mnuCALMulti.Text = "ALLMulti";
             this.mnuCALMulti.Click += new System.EventHandler(this.mnuALLMulti_Click);
             // 
@@ -944,7 +943,6 @@ namespace ContinuousGeneralizer
             this.mnuRIBS,
             this.mnuRIBSBLG,
             this.mnuRIBSBLGOptCor,
-            this.mnuAdminBound,
             this.mnuCGABM,
             this.mnuTest,
             this.mnuSTS});
@@ -1077,13 +1075,6 @@ namespace ContinuousGeneralizer
             this.mnuRIBSBLGOptCor.Text = "RIBSBLGOptCor";
             this.mnuRIBSBLGOptCor.Click += new System.EventHandler(this.mnuRIBSBLGOptCor_Click);
             // 
-            // mnuAdminBound
-            // 
-            this.mnuAdminBound.Name = "mnuAdminBound";
-            this.mnuAdminBound.Size = new System.Drawing.Size(226, 22);
-            this.mnuAdminBound.Text = "AdminBound";
-            this.mnuAdminBound.Click += new System.EventHandler(this.mnuAdminBound_Click);
-            // 
             // mnuCGABM
             // 
             this.mnuCGABM.Name = "mnuCGABM";
@@ -1128,49 +1119,49 @@ namespace ContinuousGeneralizer
             // mnuStraightLine
             // 
             this.mnuStraightLine.Name = "mnuStraightLine";
-            this.mnuStraightLine.Size = new System.Drawing.Size(140, 22);
+            this.mnuStraightLine.Size = new System.Drawing.Size(180, 22);
             this.mnuStraightLine.Text = "StraightLine";
             this.mnuStraightLine.Click += new System.EventHandler(this.mnuStraightLine_Click);
             // 
             // mnuAL_AL
             // 
             this.mnuAL_AL.Name = "mnuAL_AL";
-            this.mnuAL_AL.Size = new System.Drawing.Size(140, 22);
+            this.mnuAL_AL.Size = new System.Drawing.Size(180, 22);
             this.mnuAL_AL.Text = "AL_AL";
             this.mnuAL_AL.Click += new System.EventHandler(this.mnuAL_AL_Click);
             // 
             // mnuAL
             // 
             this.mnuAL.Name = "mnuAL";
-            this.mnuAL.Size = new System.Drawing.Size(140, 22);
+            this.mnuAL.Size = new System.Drawing.Size(180, 22);
             this.mnuAL.Text = "AL";
             this.mnuAL.Click += new System.EventHandler(this.mnuAL_Click);
             // 
             // mnuALL
             // 
             this.mnuALL.Name = "mnuALL";
-            this.mnuALL.Size = new System.Drawing.Size(140, 22);
+            this.mnuALL.Size = new System.Drawing.Size(180, 22);
             this.mnuALL.Text = "ALL";
             this.mnuALL.Click += new System.EventHandler(this.mnuALL_Click);
             // 
             // mnuApLL
             // 
             this.mnuApLL.Name = "mnuApLL";
-            this.mnuApLL.Size = new System.Drawing.Size(140, 22);
+            this.mnuApLL.Size = new System.Drawing.Size(180, 22);
             this.mnuApLL.Text = "ApLL";
             this.mnuApLL.Click += new System.EventHandler(this.mnuApLL_Click);
             // 
             // mnuALm
             // 
             this.mnuALm.Name = "mnuALm";
-            this.mnuALm.Size = new System.Drawing.Size(140, 22);
+            this.mnuALm.Size = new System.Drawing.Size(180, 22);
             this.mnuALm.Text = "ALm";
             this.mnuALm.Click += new System.EventHandler(this.mnuALm_Click);
             // 
             // mnuLMulti
             // 
             this.mnuLMulti.Name = "mnuLMulti";
-            this.mnuLMulti.Size = new System.Drawing.Size(140, 22);
+            this.mnuLMulti.Size = new System.Drawing.Size(180, 22);
             this.mnuLMulti.Text = "LMulti";
             this.mnuLMulti.Click += new System.EventHandler(this.mnuLMulti_Click);
             // 
@@ -1437,7 +1428,6 @@ namespace ContinuousGeneralizer
         private System.Windows.Forms.ToolStripMenuItem mnuRIBS;
         private System.Windows.Forms.ToolStripMenuItem mnuRIBSBLG;
         private System.Windows.Forms.ToolStripMenuItem mnuRIBSBLGOptCor;
-        private System.Windows.Forms.ToolStripMenuItem mnuAdminBound;
         private System.Windows.Forms.ToolStripMenuItem MorphingLSAToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mnuStraightLine;
         private System.Windows.Forms.ToolStripMenuItem mnuAL_AL;

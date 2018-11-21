@@ -83,7 +83,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             //SFD.FileName .
             long lngStartTime = System.Environment.TickCount;
 
-            //¶ÁÈ¡Êý¾Ý
+            //Read Datasets
             try
             {
                 _pMRL = new CMRL(ParameterInitialize);

@@ -63,7 +63,7 @@ namespace MorphingClass.CMorphingMethods
 
         public CSTS(CParameterInitialize ParameterInitialize)
         {
-            Construct<CPolyline>(ParameterInitialize, 4, 0);
+            Construct<CPolyline>(ParameterInitialize, 0, 4);
         }
 
 

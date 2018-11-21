@@ -75,7 +75,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.strSavePath = SFD.FileName;
             ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
 
-            //¶ÁÈ¡Êý¾Ý
+            //Read Datasets
             try
             {
                 _pBLGOptCorMMSimplified = new CBLGOptCorMMSimplified(ParameterInitialize);

@@ -31,7 +31,7 @@ namespace MorphingClass.CAid
 
         public CStatisticsOfDataSetsCpg(CParameterInitialize ParameterInitialize)
         {
-            Construct<CPolygon>(ParameterInitialize, 1);
+            Construct<CPolygon>(ParameterInitialize, 0, 1);
         }
 
 

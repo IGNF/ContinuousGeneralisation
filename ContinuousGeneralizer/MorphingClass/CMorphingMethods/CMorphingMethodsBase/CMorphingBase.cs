@@ -55,8 +55,8 @@ namespace MorphingClass.CMorphingMethods.CMorphingMethodsBase
         /// <param name="blnIGeoToCGeo"></param>
         /// <param name="strSpecifiedFieldName">read the features which have the specified values of the specified attribute</param>
         /// <param name="strSpecifiedValue"></param>
-        public virtual void Construct<T>(CParameterInitialize ParameterInitialize, int intLayerCount = 2, 
-            int intStartLayer = 0, bool blnIGeoToCGeo = true, string strSpecifiedFieldName = null, 
+        public virtual void Construct<T>(CParameterInitialize ParameterInitialize, int intStartLayer = 0, int intLayerCount = 2, 
+            bool blnIGeoToCGeo = true, string strSpecifiedFieldName = null, 
             string strSpecifiedValue = null, bool blnCreateFileGdbWorkspace = false, bool blnCalDistanceParameters=true) 
             where T : CPolyBase
         {

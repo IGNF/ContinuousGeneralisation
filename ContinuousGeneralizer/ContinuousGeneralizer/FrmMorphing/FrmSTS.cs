@@ -87,7 +87,7 @@ namespace ContinuousGeneralizer.FrmGeneralization
             var ParameterInitialize = _DataRecords.ParameterInitialize;
             ParameterInitialize.tsslMessage.Text = this.Name + ": Computing...";
             ParameterInitialize.strTS = this.cboTS.Text;
-            //读取数据
+            //Read Datasets
             _pSTS = new CSTS(ParameterInitialize);
             _pSTS.STS();
 

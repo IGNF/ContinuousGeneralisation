@@ -79,7 +79,7 @@ namespace MorphingClass.CGeneralizationMethods
 
         public CBldgGrow(CParameterInitialize ParameterInitialize)
         {
-            Construct<CPolygon>(ParameterInitialize, 1, 0, blnCreateFileGdbWorkspace: false);
+            Construct<CPolygon>(ParameterInitialize, 0, 1, blnCreateFileGdbWorkspace: false);
         }
 
 

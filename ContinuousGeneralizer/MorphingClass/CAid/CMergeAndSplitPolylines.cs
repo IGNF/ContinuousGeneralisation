@@ -31,7 +31,7 @@ namespace MorphingClass.CAid
 
         public CMergeAndSplitPolylines(CParameterInitialize ParameterInitialize)
         {
-            Construct<CPolyline>(ParameterInitialize, 1);
+            Construct<CPolyline>(ParameterInitialize, 0, 1);
         }
 
 

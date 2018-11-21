@@ -31,7 +31,7 @@ namespace MorphingClass.CAid
 
         public CIdentifyCorrCpgAddRegionNum(CParameterInitialize ParameterInitialize)
         {
-            Construct<CPolygon>(ParameterInitialize, 2);
+            Construct<CPolygon>(ParameterInitialize, 0, 2);
         }
 
 

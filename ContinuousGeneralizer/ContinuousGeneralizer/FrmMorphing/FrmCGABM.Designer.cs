@@ -50,16 +50,10 @@
             this.btn070 = new System.Windows.Forms.Button();
             this.btn090 = new System.Windows.Forms.Button();
             this.btnTranslation = new System.Windows.Forms.Button();
-            this.txtSmallerScale = new System.Windows.Forms.TextBox();
-            this.txtLargerScale = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.btnExportToExcel = new System.Windows.Forms.Button();
             this.txtEvaluation = new System.Windows.Forms.TextBox();
             this.btnIntegral = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.txtDeleteNumber = new System.Windows.Forms.TextBox();
             this.btnDeleteNumber = new System.Windows.Forms.Button();
@@ -71,7 +65,7 @@
             this.cboInterBS = new System.Windows.Forms.ComboBox();
             this.btnTransform = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
-            this.cboSingleSmallerScaleLayer = new System.Windows.Forms.ComboBox();
+            this.cboInterSSSg = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.cboSingleLayer = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -79,6 +73,8 @@
             this.btnRun = new System.Windows.Forms.Button();
             this.lblLayer = new System.Windows.Forms.Label();
             this.cboLargerScaleLayer = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.cboInterLSSg = new System.Windows.Forms.ComboBox();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -321,51 +317,6 @@
             this.btnTranslation.UseVisualStyleBackColor = true;
             this.btnTranslation.Click += new System.EventHandler(this.btnTranslation_Click);
             // 
-            // txtSmallerScale
-            // 
-            this.txtSmallerScale.Location = new System.Drawing.Point(168, 211);
-            this.txtSmallerScale.Name = "txtSmallerScale";
-            this.txtSmallerScale.Size = new System.Drawing.Size(114, 20);
-            this.txtSmallerScale.TabIndex = 88;
-            this.txtSmallerScale.Text = "30000";
-            this.txtSmallerScale.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // txtLargerScale
-            // 
-            this.txtLargerScale.Location = new System.Drawing.Point(168, 185);
-            this.txtLargerScale.Name = "txtLargerScale";
-            this.txtLargerScale.Size = new System.Drawing.Size(114, 20);
-            this.txtLargerScale.TabIndex = 87;
-            this.txtLargerScale.Text = "5000";
-            this.txtLargerScale.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(147, 214);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(18, 13);
-            this.label6.TabIndex = 86;
-            this.label6.Text = "1/";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(147, 188);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(18, 13);
-            this.label5.TabIndex = 84;
-            this.label5.Text = "1/";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 214);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(135, 13);
-            this.label4.TabIndex = 82;
-            this.label4.Text = "Scale of less detailed layer:";
-            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.btnTranslation);
@@ -407,17 +358,10 @@
             this.btnIntegral.UseVisualStyleBackColor = true;
             this.btnIntegral.Click += new System.EventHandler(this.btnIntegral_Click);
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 188);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(140, 13);
-            this.label3.TabIndex = 81;
-            this.label3.Text = "Scale of more detailed layer:";
-            // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.cboInterLSSg);
             this.groupBox1.Controls.Add(this.txtDeleteNumber);
             this.groupBox1.Controls.Add(this.btnDeleteNumber);
             this.groupBox1.Controls.Add(this.btnAddFaceNumber);
@@ -428,23 +372,17 @@
             this.groupBox1.Controls.Add(this.cboInterBS);
             this.groupBox1.Controls.Add(this.btnTransform);
             this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Controls.Add(this.cboSingleSmallerScaleLayer);
-            this.groupBox1.Controls.Add(this.txtSmallerScale);
+            this.groupBox1.Controls.Add(this.cboInterSSSg);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.txtLargerScale);
             this.groupBox1.Controls.Add(this.cboSingleLayer);
-            this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.cboSmallerScaleLayer);
-            this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.btnRun);
             this.groupBox1.Controls.Add(this.lblLayer);
-            this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.cboLargerScaleLayer);
-            this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Location = new System.Drawing.Point(12, 14);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(288, 364);
+            this.groupBox1.Size = new System.Drawing.Size(288, 400);
             this.groupBox1.TabIndex = 73;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parameters";
@@ -466,7 +404,7 @@
             this.btnDeleteNumber.TabIndex = 99;
             this.btnDeleteNumber.Text = "ComputeDeleteNumber";
             this.btnDeleteNumber.UseVisualStyleBackColor = true;
-            this.btnDeleteNumber.Click += new System.EventHandler(this.btnDeleteNumber_Click);
+            this.btnDeleteNumber.Click += new System.EventHandler(this.btnComputeDeleteNumber_Click);
             // 
             // btnAddFaceNumber
             // 
@@ -514,9 +452,9 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(6, 80);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(48, 13);
+            this.label9.Size = new System.Drawing.Size(47, 13);
             this.label9.TabIndex = 93;
-            this.label9.Text = "Inter BS:";
+            this.label9.Text = "Inter LS:";
             // 
             // cboInterBS
             // 
@@ -542,18 +480,18 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(6, 161);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(82, 13);
+            this.label7.Size = new System.Drawing.Size(63, 13);
             this.label7.TabIndex = 90;
-            this.label7.Text = "Single-DP layer:";
+            this.label7.Text = "Inter LS Sg:";
             // 
-            // cboSingleSmallerScaleLayer
+            // cboInterSSSg
             // 
-            this.cboSingleSmallerScaleLayer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboSingleSmallerScaleLayer.FormattingEnabled = true;
-            this.cboSingleSmallerScaleLayer.Location = new System.Drawing.Point(122, 158);
-            this.cboSingleSmallerScaleLayer.Name = "cboSingleSmallerScaleLayer";
-            this.cboSingleSmallerScaleLayer.Size = new System.Drawing.Size(160, 21);
-            this.cboSingleSmallerScaleLayer.TabIndex = 91;
+            this.cboInterSSSg.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboInterSSSg.FormattingEnabled = true;
+            this.cboInterSSSg.Location = new System.Drawing.Point(122, 158);
+            this.cboInterSSSg.Name = "cboInterSSSg";
+            this.cboInterSSSg.Size = new System.Drawing.Size(160, 21);
+            this.cboInterSSSg.TabIndex = 91;
             // 
             // label1
             // 
@@ -619,6 +557,24 @@
             this.cboLargerScaleLayer.Size = new System.Drawing.Size(160, 21);
             this.cboLargerScaleLayer.TabIndex = 19;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 188);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(64, 13);
+            this.label3.TabIndex = 101;
+            this.label3.Text = "Inter SS Sg:";
+            // 
+            // cboInterLSSg
+            // 
+            this.cboInterLSSg.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboInterLSSg.FormattingEnabled = true;
+            this.cboInterLSSg.Location = new System.Drawing.Point(122, 185);
+            this.cboInterLSSg.Name = "cboInterLSSg";
+            this.cboInterLSSg.Size = new System.Drawing.Size(160, 21);
+            this.cboInterLSSg.TabIndex = 102;
+            // 
             // FrmCGABM
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -660,16 +616,10 @@
         private System.Windows.Forms.Button btn070;
         private System.Windows.Forms.Button btn090;
         private System.Windows.Forms.Button btnTranslation;
-        private System.Windows.Forms.TextBox txtSmallerScale;
-        private System.Windows.Forms.TextBox txtLargerScale;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button btnExportToExcel;
         private System.Windows.Forms.TextBox txtEvaluation;
         private System.Windows.Forms.Button btnIntegral;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cboSingleLayer;
@@ -679,7 +629,7 @@
         private System.Windows.Forms.Label lblLayer;
         private System.Windows.Forms.ComboBox cboLargerScaleLayer;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.ComboBox cboSingleSmallerScaleLayer;
+        private System.Windows.Forms.ComboBox cboInterSSSg;
         private System.Windows.Forms.Button btnTransform;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox cboInterSS;
@@ -693,5 +643,7 @@
         private System.Windows.Forms.Button btnAddFaceNumber;
         private System.Windows.Forms.Button btnDeleteNumber;
         private System.Windows.Forms.TextBox txtDeleteNumber;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox cboInterLSSg;
     }
 }

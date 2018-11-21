@@ -83,7 +83,7 @@ namespace ContinuousGeneralizer.FrmGeneralization
 
             var ParameterInitialize = _DataRecords.ParameterInitialize;
             ParameterInitialize.tsslMessage.Text = this.Name + ": Computing...";
-            //读取数据
+            //Read Datasets
             _pBldgGrow = new CBldgGrow(ParameterInitialize);
             _pBldgGrow.BldgGrow(
                 this.cboBufferStyle.Text, Convert.ToDouble(this.txtMiterLimit.Text),

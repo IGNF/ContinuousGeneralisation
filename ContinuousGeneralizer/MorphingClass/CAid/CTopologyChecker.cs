@@ -28,7 +28,7 @@ namespace MorphingClass.CAid
 
         public CTopologyChecker(CParameterInitialize ParameterInitialize, int intLayerCount = 2)
         {
-            Construct<CPolyline>(ParameterInitialize, intLayerCount);
+            Construct<CPolyline>(ParameterInitialize, 0, intLayerCount);
 
             GetAllReadCEdgeLt<CPolyline>();
 

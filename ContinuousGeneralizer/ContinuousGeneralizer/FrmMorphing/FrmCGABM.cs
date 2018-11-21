@@ -65,7 +65,8 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.cboLayerLt.Add(this.cboInterBS);
             ParameterInitialize.cboLayerLt.Add(this.cboInterSS);
             ParameterInitialize.cboLayerLt.Add(this.cboSingleLayer);
-            ParameterInitialize.cboLayerLt.Add(this.cboSingleSmallerScaleLayer);
+            ParameterInitialize.cboLayerLt.Add(this.cboInterLSSg);
+            ParameterInitialize.cboLayerLt.Add(this.cboInterSSSg);
             CConstants.strMethod = "CGABM";
             ParameterInitialize.cboTransform = this.cboTransform;
 
@@ -80,8 +81,8 @@ namespace ContinuousGeneralizer.FrmMorphing
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
 
 
-            //读取数据
-            _pCGABM = new CCGABM(ParameterInitialize,3,2);
+            //Read Datasets
+            _pCGABM = new CCGABM(ParameterInitialize, 2, 3);
             _pCGABM.IdentifyAddFaceNumber();
 
             _DataRecords.ParameterResult = _pCGABM.ParameterResult;
@@ -93,8 +94,8 @@ namespace ContinuousGeneralizer.FrmMorphing
         {
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
 
-            //读取数据
-            _pCGABM = new CCGABM(ParameterInitialize,3,2,false);
+            //Read Datasets
+            _pCGABM = new CCGABM(ParameterInitialize, 2, 3, false);
             _pCGABM.Transform();
 
             _DataRecords.ParameterResult = _pCGABM.ParameterResult;
@@ -102,7 +103,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             MessageBox.Show("Done!");
         }
 
-        private void btnDeleteNumber_Click(object sender, EventArgs e)
+        private void btnComputeDeleteNumber_Click(object sender, EventArgs e)
         {
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
 
@@ -111,8 +112,9 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.cboLayerLt.RemoveAt(3);
             ParameterInitialize.cboLayerLt.RemoveAt(2);
 
-            //读取数据
-            _pCGABM = new CCGABM(ParameterInitialize, 4);
+            //Read Datasets
+            //note that we have skipped two layers; see the preceding lines
+            _pCGABM = new CCGABM(ParameterInitialize, 0, 4);
 
             this.txtDeleteNumber.Text = _pCGABM.ComputeDeleteNumber().ToString();
 
@@ -127,11 +129,11 @@ namespace ContinuousGeneralizer.FrmMorphing
         public void btnRun_Click(object sender, EventArgs e)  // public btnRun_Click
         {
             CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
-            ParameterInitialize.dblLargerScale = Convert.ToDouble(this.txtLargerScale.Text);
-            ParameterInitialize.dblSmallerScale = Convert.ToDouble(this.txtSmallerScale.Text);
+            //ParameterInitialize.dblLargerScale = Convert.ToDouble(this.txtLargerScale.Text);
+            //ParameterInitialize.dblSmallerScale = Convert.ToDouble(this.txtSmallerScale.Text);
 
-            //读取数据
-            _pCGABM = new CCGABM(ParameterInitialize,4,2);
+            //Read Datasets
+            _pCGABM = new CCGABM(ParameterInitialize, 2, 5);
             _pCGABM.CGABM();
             _DataRecords.ParameterResult = _pCGABM.ParameterResult;
             //CHelpFuncExcel.KillExcel();
@@ -273,28 +275,13 @@ namespace ContinuousGeneralizer.FrmMorphing
 
         private void btnOutputScale_Click(object sender, EventArgs e)
         {
-            double dblLSFactor = Convert.ToDouble(txtLargerScale.Text);
-            double dblSSFactor = Convert.ToDouble(txtSmallerScale.Text);
-            double dblOSFactor = Convert.ToDouble(txtOutputScale.Text);
-            _dblProp = Math.Log(dblLSFactor / dblOSFactor, dblLSFactor / dblSSFactor);
+            //double dblLSFactor = Convert.ToDouble(txtLargerScale.Text);
+            //double dblSSFactor = Convert.ToDouble(txtSmallerScale.Text);
+            //double dblOSFactor = Convert.ToDouble(txtOutputScale.Text);
+            //_dblProp = Math.Log(dblLSFactor / dblOSFactor, dblLSFactor / dblSSFactor);
 
-            _pCGABM.DisplayAtBd(_dblProp);
+            //_pCGABM.DisplayAtBd(_dblProp);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     }

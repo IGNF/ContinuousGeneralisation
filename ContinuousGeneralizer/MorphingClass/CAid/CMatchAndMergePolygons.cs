@@ -32,7 +32,7 @@ namespace MorphingClass.CAid
 
         public CMatchAndMergePolygons(CParameterInitialize ParameterInitialize)
         {
-            Construct<CPolygon>(ParameterInitialize, 2);
+            Construct<CPolygon>(ParameterInitialize, 0, 2);
         }
 
 

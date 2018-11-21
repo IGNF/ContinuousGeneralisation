@@ -30,10 +30,10 @@ namespace MorphingClass.CAid
 
         }
 
-        public CCreatePointLayer(CParameterInitialize ParameterInitialize, int intLayerCount = 1,
-            int intStartLayer = 0, bool blnIGeoToCGeo = true)
+        public CCreatePointLayer(CParameterInitialize ParameterInitialize, int intStartLayer = 0, int intLayerCount = 1,
+             bool blnIGeoToCGeo = true)
         {
-            Construct<CPolyBase>(ParameterInitialize, intLayerCount, intStartLayer);
+            Construct<CPolyBase>(ParameterInitialize, intStartLayer, intLayerCount);
         }
 
 

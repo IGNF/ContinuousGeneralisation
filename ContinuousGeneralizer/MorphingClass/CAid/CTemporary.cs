@@ -29,7 +29,7 @@ namespace MorphingClass.CAid
 
         public CTemporary(CParameterInitialize ParameterInitialize, int intLayerCount = 2)
         {
-            Construct<CPolyline>(ParameterInitialize, intLayerCount);
+            Construct<CPolyline>(ParameterInitialize, 0, intLayerCount);
 
         }
 

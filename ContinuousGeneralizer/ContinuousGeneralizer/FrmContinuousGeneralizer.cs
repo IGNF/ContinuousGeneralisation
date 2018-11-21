@@ -61,6 +61,7 @@ namespace ContinuousGeneralizer
             //CHelpFunc.strPath = "C:\\Study\\Data\\Morphing Data\\Rail Data\\" 
             //+ CHelpFunc.strDataFolderName;
 
+            CHelpFunc.strDataFolderName = "MainlandChina";
             //CHelpFunc.strDataFolderName = "MainlandChina-Yunnan";
             //CHelpFunc.strDataFolderName = "MainlandChina-Guangxi";
             //CHelpFunc.strDataFolderName = "MainlandChina-Tianjin";
@@ -68,7 +69,6 @@ namespace ContinuousGeneralizer
             //CHelpFunc.strDataFolderName = "MainlandChina-Animation-Tianjin";
             //CHelpFunc.strDataFolderName = "MainlandChina-Animation-complicated";
             //CHelpFunc.strDataFolderName = "MainlandChina-Shanghai";
-            //CHelpFunc.strDataFolderName = "MainlandChina";
             //CHelpFunc.strDataFolderName = "CompatibleTriangulation";
             //CHelpFunc.strDataFolderName = "CT_Common";
             CHelpFunc.strPath = strWorkPath + "\\Administrative Boundary\\" + CHelpFunc.strDataFolderName;
@@ -139,8 +139,8 @@ namespace ContinuousGeneralizer
             //var frmCurrent = new FrmToIpe(_DataRecords);
             //var frmCurrent = new FrmBldgGrow(_DataRecords);
 
-            var frmCurrent = new FrmSTS(_DataRecords);
-            //var frmCurrent = new FrmCGABM(_DataRecords);
+            //var frmCurrent = new FrmSTS(_DataRecords);
+            var frmCurrent = new FrmCGABM(_DataRecords);
             //var frmCurrent = new FrmExtractPossibleFiles();
 
             //var frmCurrent = new FrmAreaAgg(_DataRecords);
@@ -1133,12 +1133,6 @@ namespace ContinuousGeneralizer
         {
             var frmRIBSBLGOptCor = new FrmRIBSBLGOptCor(_DataRecords);
             frmRIBSBLGOptCor.Show();
-        }
-
-        private void mnuAdminBound_Click(object sender, EventArgs e)
-        {
-            var frmAdminBound = new FrmAdminBound(_DataRecords);
-            frmAdminBound.Show();
         }
 
         private void mnuPAL_Click(object sender, EventArgs e)

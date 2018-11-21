@@ -30,7 +30,7 @@ namespace MorphingClass.CAid
 
         public CSelectRandomly(CParameterInitialize ParameterInitialize)
         {
-            Construct<CPolyline>(ParameterInitialize, 1, 0, false, blnCalDistanceParameters: false);
+            Construct<CPolyline>(ParameterInitialize, 0, 1, false, blnCalDistanceParameters: false);
         }
 
 

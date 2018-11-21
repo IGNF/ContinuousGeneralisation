@@ -66,7 +66,7 @@ namespace MorphingClass.CMorphingMethodsLSA
         /// <returns>线状要素</returns>
         public CPolyline GetTargetcpl(double dblProp)
         {
-            List<CCorrCpts> pCorrCptsLt = _DataRecords.ParameterResult.CCorrCptsLt;   //读取数据后，此处ResultPtLt中的对应点为一一对应
+            List<CCorrCpts> pCorrCptsLt = _DataRecords.ParameterResult.CCorrCptsLt;   //Read Datasets后，此处ResultPtLt中的对应点为一一对应
             List<CPoint> CTargetPtLt = new List<CPoint>();
             for (int i = 0; i < pCorrCptsLt.Count; i++)
             {

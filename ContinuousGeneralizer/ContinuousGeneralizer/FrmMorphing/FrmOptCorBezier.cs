@@ -78,7 +78,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
 
 
-            //读取数据
+            //Read Datasets
             try
             {
                 _pOptCorBezier = new COptCorBezier(ParameterInitialize);
@@ -105,7 +105,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
 
 
-            //读取数据
+            //Read Datasets
             try
             {
                 _pOptCorBezier = new COptCorBezier(ParameterInitialize);

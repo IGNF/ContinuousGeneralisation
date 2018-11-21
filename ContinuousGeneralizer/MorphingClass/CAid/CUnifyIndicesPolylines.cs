@@ -31,7 +31,7 @@ namespace MorphingClass.CAid
 
         public CUnifyIndicesPolylines(CParameterInitialize ParameterInitialize)
         {
-            Construct<CPolyline>(ParameterInitialize, 2);
+            Construct<CPolyline>(ParameterInitialize);
         }
 
 

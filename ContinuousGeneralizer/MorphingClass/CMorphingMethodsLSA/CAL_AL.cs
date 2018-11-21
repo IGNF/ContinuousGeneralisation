@@ -83,7 +83,7 @@ namespace MorphingClass.CMorphingMethodsLSA
         /// <returns>在处理面状要素时，本程序将原面状要素的边界切开，按线状要素处理，处理完后再重新生成面状要素</returns>
         public CPolyline GetTargetcpl(double dblProp)
         {
-            List<CCorrCpts> pCorrCptsLt = _DataRecords.ParameterResult.CCorrCptsLt;   //读取数据后，此处ResultPtLt中的对应点为一一对应
+            List<CCorrCpts> pCorrCptsLt = _DataRecords.ParameterResult.CCorrCptsLt;   //Read Datasets后，此处ResultPtLt中的对应点为一一对应
             double dblTX = _dblTX;
 
             int intPtNum = pCorrCptsLt.Count;
@@ -548,7 +548,7 @@ namespace MorphingClass.CMorphingMethodsLSA
         /// <returns>在处理面状要素时，本程序将原面状要素的边界切开，按线状要素处理，处理完后再重新生成面状要素</returns>
         public CPolyline GetTargetcpl2(double dblProp)
         {
-            List<CCorrCpts> pCorrCptsLt = _DataRecords.ParameterResult.CCorrCptsLt;   //读取数据后，此处ResultPtLt中的对应点为一一对应
+            List<CCorrCpts> pCorrCptsLt = _DataRecords.ParameterResult.CCorrCptsLt;   //Read Datasets后，此处ResultPtLt中的对应点为一一对应
             double dblTX = _dblTX;
 
             int intPtNum = pCorrCptsLt.Count;

@@ -85,7 +85,7 @@ namespace MorphingClass.CMorphingMethodsLSA
         public List<CPolyline> GetTargetcpllt()
         {
             int intInterNum = Convert.ToInt16(_DataRecords.ParameterInitialize.txtInterpolationNum.Text);
-            List<CCorrCpts> pCorrCptsLt = _DataRecords.ParameterResult.CCorrCptsLt;   //读取数据后，此处ResultPtLt中的对应点为一一对应
+            List<CCorrCpts> pCorrCptsLt = _DataRecords.ParameterResult.CCorrCptsLt;   //Read Datasets后，此处ResultPtLt中的对应点为一一对应
             double dblTX = _dblTX;
             double dblInterval = 1 / Convert.ToDouble(intInterNum + 1);
 

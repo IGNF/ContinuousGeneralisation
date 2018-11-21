@@ -83,7 +83,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             CConstants.strMethod = "Greedy";
             var objResultSD = new SortedDictionary<string, List<object>>();
             var StrObjLtDt = new CStrObjLtDt(CAreaAgg_Base.strKeyLt);
-            //读取数据
+            //Read Datasets
             var pCAreaAgg_Greedy = new CAreaAgg_Greedy(ParameterInitialize);
             pCAreaAgg_Greedy.AreaAggregation();
 
@@ -100,7 +100,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             //var objDataLtLt = new List<List<object>>();
             //var objResultSD = new SortedDictionary<string, List<object>>();
             var StrObjLtDt = new CStrObjLtDt(CAreaAgg_Base.strKeyLt);
-            //读取数据
+            //Read Datasets
             _pCAreaAgg_AStar = new CAreaAgg_AStar(ParameterInitialize);
             _pCAreaAgg_AStar.AreaAggregation(Convert.ToInt32(txtNodes.Text));
 
@@ -190,7 +190,7 @@ namespace ContinuousGeneralizer.FrmMorphing
 
             var StrObjLtDt = new CStrObjLtDt(CAreaAgg_Base.strKeyLt);
 
-            //读取数据
+            //Read Datasets
             _pCAreaAgg_ILP = new CAreaAgg_ILP(ParameterInitialize);
             _pCAreaAgg_ILP.AreaAggregation();
 
@@ -526,7 +526,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             //CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
             //var StrObjLtDt = new CStrObjLtDt(CAreaAgg_Base.strKeyLt);
 
-            ////读取数据
+            ////Read Datasets
             //_pCAreaAgg_AStar = new CAreaAgg_AStar(ParameterInitialize);
             //_pCAreaAgg_AStar.AreaAggregation(Convert.ToInt32(txtNodes.Text), "ILP_Extend");
 

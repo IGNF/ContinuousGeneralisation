@@ -65,7 +65,7 @@ namespace ContinuousGeneralizer.FrmAid
             }
             else
             {
-                var pCreatePointLayer = new CCreatePointLayer(ParameterInitialize, 1, ParameterInitialize.cboLayerLt[0].SelectedIndex);
+                var pCreatePointLayer = new CCreatePointLayer(ParameterInitialize, ParameterInitialize.cboLayerLt[0].SelectedIndex, 1);
                 pCreatePointLayer.CreatePointLayer(Convert.ToDouble(txtSize.Text));
             }
             MessageBox.Show("Done!");

@@ -78,7 +78,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.pWorkspace = CHelpFunc.OpenWorkspace(ParameterInitialize.strSavePath);
 
 
-            //¶ÁÈ¡Êý¾Ý
+            //Read Datasets
             try
             {
                 _pMRLCut = new CMRLCut(ParameterInitialize);
