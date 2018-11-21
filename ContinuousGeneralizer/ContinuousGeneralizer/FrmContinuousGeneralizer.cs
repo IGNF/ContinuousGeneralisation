@@ -65,19 +65,17 @@ namespace ContinuousGeneralizer
             //CHelpFunc.strDataFolderName = "MainlandChina-Guangxi";
             //CHelpFunc.strDataFolderName = "MainlandChina-Tianjin";
             //CHelpFunc.strDataFolderName = "MainlandChina-Animation";
-            //CHelpFunc.strDataFolderName = "Tianjin-Animation"; 
+            //CHelpFunc.strDataFolderName = "MainlandChina-Animation-Tianjin";
             //CHelpFunc.strDataFolderName = "MainlandChina-Animation-complicated";
             //CHelpFunc.strDataFolderName = "MainlandChina-Shanghai";
             //CHelpFunc.strDataFolderName = "MainlandChina";
             //CHelpFunc.strDataFolderName = "CompatibleTriangulation";
             //CHelpFunc.strDataFolderName = "CT_Common";
-            //CHelpFunc.strPath = strWorkPath + "\\Administrative Boundary\\" + CHelpFunc.strDataFolderName;
+            CHelpFunc.strPath = strWorkPath + "\\Administrative Boundary\\" + CHelpFunc.strDataFolderName;
 
             //CHelpFunc.strDataFolderName = "LinearMorphingBothInjected";
             //CHelpFunc.strDataFolderName = "CompatibleTriangulation3";
-            //CHelpFunc.strPath =
-            //"C:\\Study\\Data\\Morphing Data\\Representation In Article\\ContinuousGeneralizationOfAdministrativeBoundariesBasedonMorphing\\" 
-            //+ CHelpFunc.strDataFolderName;
+
 
             //CHelpFunc.strDataFolderName = "AreaAggregation";
             ////CHelpFunc.strDataFolderName = "AreaAggregation-664-easy";
@@ -91,8 +89,8 @@ namespace ContinuousGeneralizer
             ////CHelpFunc.strDataFolderName = "AreaAggregation-Mostpatches";
             //CHelpFunc.strPath = strWorkPath + "\\AreaAggregation\\" + CHelpFunc.strDataFolderName;
 
-            CHelpFunc.strDataFolderName = "SingleLake3";
-            CHelpFunc.strPath = strWorkPath + "\\STSModel\\" + CHelpFunc.strDataFolderName;
+            //CHelpFunc.strDataFolderName = "SingleLake";
+            //CHelpFunc.strPath = strWorkPath + "\\STSModel\\" + CHelpFunc.strDataFolderName;
 
 
             //CHelpFunc.strDataFolderName = "France";

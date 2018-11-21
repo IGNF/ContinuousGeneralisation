@@ -386,6 +386,10 @@ namespace MorphingClass.CGeneralizationMethods
             {
                 dblTDis = dblMaxDisLt.Last() + CConstants.dblVerySmallCoord;
             }
+            else if (intDeletePtNum == 0)
+            {
+                dblTDis = -CConstants.dblVerySmallCoord;
+            }
             else
             {
                 //we should find a value larger than dblMaxDisLt[intDeletePtNum-1], 
