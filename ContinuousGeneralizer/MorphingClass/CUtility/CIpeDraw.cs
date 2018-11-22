@@ -8,18 +8,19 @@ using ESRI.ArcGIS.Geometry;
 
 namespace MorphingClass.CUtility
 {
-    /**
- * This class helps creating ipe-files in Java by providing functions for most
- * common objects. Currently supports: Mark, Rectangle, Path, Edge, Text
- * label, Circle, Circular Arc, Spline, Splinegon
- * 
- * Usage: The functions create an UML-string that corresponds to the specified
- * object in Ipe. Every file has to start with getIpePreamble(), followed by
- * getIpeConf(), and has to end with getIpeEnd().
- * 
- * @author Martin Fink
- * @author Philipp Kindermann
- */
+    /// <summary>
+    /// This class helps creating ipe-files in C# by providing functions for most common objects.
+    ///
+    /// Usage: The functions create an UML-string that corresponds to the specified.
+    /// Every file has to start with getIpeStart() and has to end with getIpeEnd().
+    /// 
+    /// This class is translated from the Java version of Martin Fink and Philipp Kindermann;
+    /// see https://github.com/otfried/ipe-wiki/tree/master/ipedraw.
+    /// 
+    /// I am improving this class from time to time.
+    /// 
+    /// Author: Dongliang Peng
+    /// </summary>
     public static class CIpeDraw
     {
 
@@ -91,7 +92,7 @@ namespace MorphingClass.CUtility
             string pen = "normal", string dash = "normal", string cap = "normal", string join = "normal")
         {
             string s = "<path stroke=\"" + color + "\"";
-            s += AddOtherAttribute(pen, dash, cap, join) + ">\n";
+            s += AddOtherAttributes(pen, dash, cap, join) + ">\n";
 
             //add coordinates
             s += AddXY(x[0], y[0]) + " m\n";
@@ -237,7 +238,7 @@ namespace MorphingClass.CUtility
             {
                 str += "fill=\"" + AddColor(FillColor) + "\"";
             }
-            str += AddOtherAttribute(strWidth, strDash, cap, join) + ">\n";
+            str += AddOtherAttributes(strWidth, strDash, cap, join) + ">\n";
             return str;
         }
         
@@ -341,26 +342,27 @@ namespace MorphingClass.CUtility
         }
 
 
-        private static string AddOtherAttribute(string pen = "normal", string dash = "normal", string cap = "normal", string join = "normal")
+        private static string AddOtherAttributes(
+            string pen = "normal", string dash = "normal", string cap = "normal", string join = "normal")
         {
-            string strOtherAttribute = "";
+            string strOtherAttributes = "";
             if (dash != "normal")
             {
-                strOtherAttribute += " dash=\"" + dash + "\"";
+                strOtherAttributes += " dash=\"" + dash + "\"";
             }
             if (pen != "normal")
             {
-                strOtherAttribute += " pen=\"" + pen + "\"";
+                strOtherAttributes += " pen=\"" + pen + "\"";
             }
             if (cap != "normal")
             {
-                strOtherAttribute += " cap=\"" + cap + "\"";
+                strOtherAttributes += " cap=\"" + cap + "\"";
             }
             if (join != "normal")
             {
-                strOtherAttribute += " join=\"" + join + "\"";
+                strOtherAttributes += " join=\"" + join + "\"";
             }
-            return strOtherAttribute;
+            return strOtherAttributes;
         }
 
 
@@ -553,7 +555,7 @@ namespace MorphingClass.CUtility
 
         public static string GenerateIpeContentByData(string strData = null)
         {
-            return getIpePreamble() + GeneratePageByData(strData) + getIpeEnd();
+            return getIpeStart() + GeneratePageByData(strData) + getIpeEnd();
         }
 
         public static string GeneratePageByData(string strData = null)
@@ -563,7 +565,7 @@ namespace MorphingClass.CUtility
 
         public static string GenerateIpeContentByDataWithLayerInfo(string strDataWithLayerInfo = null)
         {
-            return getIpePreamble() + GeneratePageByDataWithLayerInfo(strDataWithLayerInfo) + getIpeEnd();
+            return getIpeStart() + GeneratePageByDataWithLayerInfo(strDataWithLayerInfo) + getIpeEnd();
         }
 
         public static string GeneratePageByDataWithLayerInfo(string strDataWithLayerInfo = null)
@@ -628,11 +630,11 @@ namespace MorphingClass.CUtility
          * 
          * @return
          */
-        public static string getIpePreamble()
+        public static string getIpeStart()
         {
             var strTime = CHelpFunc.GetTimeStampForIpe();
-            #region strIpePreamble
-            string strIpePreamble =
+            #region strIpeStart
+            string strIpeStart =
 @"<?xml version=""1.0""?>
 <!DOCTYPE ipe SYSTEM ""ipe.dtd"">
 <ipe version=""70206"" creator=""Ipe 7.2.7"">
@@ -889,7 +891,7 @@ h
 </ipestyle>";
             #endregion
             
-            return strIpePreamble;
+            return strIpeStart;
         }
 
         /// <summary>
