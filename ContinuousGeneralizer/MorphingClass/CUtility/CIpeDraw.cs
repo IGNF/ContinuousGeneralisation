@@ -13,7 +13,7 @@ namespace MorphingClass.CUtility
  * common objects. Currently supports: Mark, Rectangle, Path, Edge, Text
  * label, Circle, Circular Arc, Spline, Splinegon
  * 
- * Usage: The functions create an UML-String that corresponds to the specified
+ * Usage: The functions create an UML-string that corresponds to the specified
  * object in Ipe. Every file has to start with getIpePreamble(), followed by
  * getIpeConf(), and has to end with getIpeEnd().
  * 
@@ -38,7 +38,7 @@ namespace MorphingClass.CUtility
          *            size: tiny, small, normal, large
          * @return
          */
-        public static String drawIpeMark(double x, double y, String shape = "disk", String color = "black", String size = "normal")
+        public static string drawIpeMark(double x, double y, string shape = "disk", string color = "black", string size = "normal")
         {
             return "<use name=\"mark/" + shape + "(sx)\" pos=\"" + AddXY(x, y)
                     + "\" size=\"" + size + "\" stroke=\"" + color + "\"/>\n";
@@ -64,8 +64,8 @@ namespace MorphingClass.CUtility
          *            dotted
          * @return
          */
-        public static String drawIpeBox(int x1, int y1, int x2, int y2,
-                String outlinecolor = "black", String fillcolor = "white", String pen = "normal", String dash = "normal")
+        public static string drawIpeBox(int x1, int y1, int x2, int y2,
+                string outlinecolor = "black", string fillcolor = "white", string pen = "normal", string dash = "normal")
         {
             return "<path stroke=\"" + outlinecolor + "\" fill=\"" + fillcolor + "\" pen=\"" + pen + "\" dash=\""
                     + dash + "\">\n " + x1 + " " + y2 + " m\n " + x1 + " " + y1
@@ -74,27 +74,27 @@ namespace MorphingClass.CUtility
         }
 
 
-        /**
-         * Draws a path between points.
-         * 
-         * @param x
-         *            x-coordinates of the points
-         * @param y
-         *            y-coordinates of the points
-         * @param color
-         *            color
-         * @param pen
-         *            pen width: normal, heavier, fat, ultrafat
-         * @param dash
-         *            dash style: normal, dashed, dotted, dash dotted, dash dot
-         *            dotted
-         * @return
-         */
-        public static String drawIpePath(double[] x, double[] y, 
-            String color = "black", String pen = "normal", String dash = "normal")
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x">x-coordinates of the points</param>
+        /// <param name="y">y-coordinates of the points</param>
+        /// <param name="color"></param>
+        /// <param name="pen">normal, heavier, fat, ultrafat</param>
+        /// <param name="dash">normal, dashed, dotted, dash dotted, dash dot dotted</param>
+        /// <param name="cap">normal: butt;      0: butt;      1: round;      2: square</param>
+        /// <param name="join">normal: round;      0: miter;      1: round;      2: bevel</param>
+        /// <returns></returns>
+        public static string drawIpePath(double[] x, double[] y, string color = "black", 
+            string pen = "normal", string dash = "normal", string cap = "normal", string join = "normal")
         {
-            String s = "<path stroke=\"" + color + "\" pen=\"" + pen + "\" dash=\""
-                    + dash + "\">\n" + AddXY(x[0], y[0]) + " m\n";
+            string s = "<path stroke=\"" + color + "\"";
+            s += AddOtherAttribute(pen, dash, cap, join) + ">\n";
+
+            //add coordinates
+            s += AddXY(x[0], y[0]) + " m\n";
             for (int i = 1; i < x.Length; i++)
             {
                 s += AddXY(x[i], y[i]) + " l\n";
@@ -103,10 +103,10 @@ namespace MorphingClass.CUtility
             return s;
         }
 
-        public static String drawIpeBoxPath(double dblXMin, double dblYMin, double dblXMax, double dblYMax, 
-            String color = "black", String pen = "normal", String dash = "normal")
+        public static string drawIpeBoxPath(double dblXMin, double dblYMin, double dblXMax, double dblYMax, 
+            string color = "black", string pen = "normal", string dash = "normal")
         {
-            String s = "<path stroke=\"" + color + "\" pen=\"" + pen + "\" dash=\""
+            string s = "<path stroke=\"" + color + "\" pen=\"" + pen + "\" dash=\""
                     + dash + "\">\n" + AddXY(dblXMin, dblYMin) + " m\n";
             s += AddXY(dblXMax, dblYMin) + " l\n";
             s += AddXY(dblXMax, dblYMax) + " l\n";
@@ -136,10 +136,10 @@ namespace MorphingClass.CUtility
         *            dotted
         * @return
         */
-        public static String drawIpeEdge(double x1, double y1, double x2, double y2, 
-            String color = "black", String pen = "normal", String dash = "normal")
+        public static string drawIpeEdge(double x1, double y1, double x2, double y2, string color = "black",
+            string pen = "normal", string dash = "normal", string cap = "normal", string join = "normal")
         {
-            return drawIpePath(new double[] { x1, x2 }, new double[] { y1, y2 }, color, pen, dash);
+            return drawIpePath(new double[] { x1, x2 }, new double[] { y1, y2 }, color, pen, dash, cap, join);
         }
 
 
@@ -164,7 +164,7 @@ namespace MorphingClass.CUtility
 
             var cptlt = cpl.CptLt;
 
-            string str = GetStrokeStarting(StrokeColor, strWidth, null);
+            string str = GetStrokeStarting(StrokeColor, strWidth, "normal", "1", "1", null);
             str += AddCoordinates(cptlt, pEnvelopeLayer, pEnvelopeIpe, dblFactor);
             str += "</path>\n";
 
@@ -175,7 +175,7 @@ namespace MorphingClass.CUtility
             CColor StrokeColor, CColor FillColor, string strWidth = "normal", string strDash = "normal")
         {
             double dblFactor = pEnvelopeIpe.Height / pEnvelopeLayer.Height;
-            string str = GetStrokeStarting(StrokeColor, strWidth, strDash, FillColor);
+            string str = GetStrokeStarting(StrokeColor, strWidth, strDash, "1", "1", FillColor);
             str += AddPolygonCoordinates(cpg.CptLt, pEnvelopeLayer, pEnvelopeIpe, dblFactor);
 
             //draw holes and fill wholes with white
@@ -199,7 +199,7 @@ namespace MorphingClass.CUtility
     CColor StrokeColor, string strWidth = "normal", string strDash = "normal")
         {
             double dblFactor = pEnvelopeIpe.Height / pEnvelopeLayer.Height;
-            string str = GetStrokeStarting(StrokeColor, strWidth, strDash);
+            string str = GetStrokeStarting(StrokeColor, strWidth, strDash, "1", "1");
             str += AddCoordinates(cpg.CptLt, pEnvelopeLayer, pEnvelopeIpe, dblFactor);
 
             //draw holes and fill wholes with white
@@ -219,15 +219,25 @@ namespace MorphingClass.CUtility
             return str;
         }
 
-        public static string GetStrokeStarting(CColor StrokeColor, 
-            string strWidth = "normal", string strDash="normal", CColor FillColor = null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="StrokeColor"></param>
+        /// <param name="strWidth">normal, heavier, fat, ultrafat</param>
+        /// <param name="strDash">normal, dashed, dotted, dash dotted, dash dot dotted</param>
+        /// <param name="cap">normal: butt; 0: butt; 1: round; 2: square</param>
+        /// <param name="join">normal: round; 0: miter; 1: round; 2: bevel</param>
+        /// <param name="FillColor"></param>
+        /// <returns></returns>
+        public static string GetStrokeStarting(CColor StrokeColor, string strWidth = "normal", 
+            string strDash="normal", string cap= "normal", string join = "normal", CColor FillColor = null)
         {
-            string str = "<path stroke=\"" + AddColor(StrokeColor) + "\" ";
+            string str = "<path stroke=\"" + AddColor(StrokeColor) + "\"";
             if (FillColor != null)
             {
-                str += "fill=\"" + AddColor(FillColor) + "\" ";
+                str += "fill=\"" + AddColor(FillColor) + "\"";
             }
-            str += "pen=\"" + strWidth + "\" dash=\"" + strDash + "\">\n";
+            str += AddOtherAttribute(strWidth, strDash, cap, join) + ">\n";
             return str;
         }
         
@@ -331,6 +341,27 @@ namespace MorphingClass.CUtility
         }
 
 
+        private static string AddOtherAttribute(string pen = "normal", string dash = "normal", string cap = "normal", string join = "normal")
+        {
+            string strOtherAttribute = "";
+            if (dash != "normal")
+            {
+                strOtherAttribute += " dash=\"" + dash + "\"";
+            }
+            if (pen != "normal")
+            {
+                strOtherAttribute += " pen=\"" + pen + "\"";
+            }
+            if (cap != "normal")
+            {
+                strOtherAttribute += " cap=\"" + cap + "\"";
+            }
+            if (join != "normal")
+            {
+                strOtherAttribute += " join=\"" + join + "\"";
+            }
+            return strOtherAttribute;
+        }
 
 
 
@@ -355,8 +386,8 @@ namespace MorphingClass.CUtility
          *            text-size
          * @return
          */
-        public static String writeIpeText(String text, int x, int y, 
-            String color = "black", String size = "normal")
+        public static string writeIpeText(string text, int x, int y, 
+            string color = "black", string size = "normal")
         {
             return "<text transformations=\"translations\" pos=\""
                     + x
@@ -368,8 +399,8 @@ namespace MorphingClass.CUtility
                     + size + "\">" + text + "</text>\n";
         }
 
-        public static String SpecifyLayerByWritingText(string strLayerName, String text, int x, int y, 
-            String color = "black", String size = "normal")
+        public static string SpecifyLayerByWritingText(string strLayerName, string text, int x, int y, 
+            string color = "black", string size = "normal")
         {
             return "<text layer=\"" + strLayerName + "\" transformations=\"translations\" pos=\""
                     + x
@@ -402,10 +433,10 @@ namespace MorphingClass.CUtility
          *            dotted
          * @return
          */
-        public static String drawIpeCircle(int x, int y, double radius, String color = "black",
-                String pen = "normal", String dash = "normal")
+        public static string drawIpeCircle(int x, int y, double radius, string color = "black",
+                string pen = "normal", string dash = "normal")
         {
-            //String sf = new DecimalFormat("####.000").format(radius);
+            //string sf = new DecimalFormat("####.000").format(radius);
             //return "<path stroke=\"" + color + "\" pen=\"" + pen + "\" dash=\""
             //        + dash + "\">\n " + sf + " 0 0 " + sf + " " + x + " " + y
             //        + " e\n</path>\n";
@@ -437,13 +468,13 @@ namespace MorphingClass.CUtility
          *            dotted
          * @return
          */
-        public static String drawIpeCircularArc(int xCenter, int yCenter,
-                int xStart, int yStart, int xEnd, int yEnd, String color = "black",
-                String pen = "normal", String dash = "normal")
+        public static string drawIpeCircularArc(int xCenter, int yCenter,
+                int xStart, int yStart, int xEnd, int yEnd, string color = "black",
+                string pen = "normal", string dash = "normal")
         {
             //double radius = Math.Sqrt(Math.Pow(xStart - xCenter, 2)
             //        + Math.Pow(yStart - yCenter, 2));
-            //String sf = new DecimalFormat("####.000").format(radius);
+            //string sf = new DecimalFormat("####.000").format(radius);
             //return "<path stroke=\"" + color + "\" pen=\"" + pen + "\" dash=\""
             //        + dash + "\">\n " + xStart + " " + yStart + " m\n " + sf
             //        + " 0 0 " + sf + " " + xCenter + " " + yCenter + " " + xEnd
@@ -467,10 +498,10 @@ namespace MorphingClass.CUtility
          *            dotted
          * @return
          */
-        public static String drawIpeSpline(int[] x, int[] y, 
-            String color = "black", String pen = "normal", String dash = "normal")
+        public static string drawIpeSpline(int[] x, int[] y, 
+            string color = "black", string pen = "normal", string dash = "normal")
         {
-            String s = "<path stroke=\"" + color + "\" pen=\"" + pen + "\" dash=\""
+            string s = "<path stroke=\"" + color + "\" pen=\"" + pen + "\" dash=\""
                     + dash + "\">\n " + x[0] + " " + y[0] + " m";
             for (int i = 1; i < x.Length; i++)
             {
@@ -497,10 +528,10 @@ namespace MorphingClass.CUtility
          *            dotted
          * @return
          */
-        public static String drawIpeSplinegon(int[] x, int[] y, 
-            String color = "black", String pen = "normal", String dash = "normal")
+        public static string drawIpeSplinegon(int[] x, int[] y, 
+            string color = "black", string pen = "normal", string dash = "normal")
         {
-            String s = "<path stroke=\"" + color + "\" pen=\"" + pen + "\" dash=\""
+            string s = "<path stroke=\"" + color + "\" pen=\"" + pen + "\" dash=\""
                     + dash + "\">\n " + x[0] + " " + y[0];
             for (int i = 1; i < x.Length; i++)
             {
@@ -515,7 +546,7 @@ namespace MorphingClass.CUtility
         // * 
         // * @return
         // */
-        //public static String newPage()
+        //public static string newPage()
         //{
         //    return "</page>\n<page>\n<layer name=\"alpha\"/>\n<view layers=\"alpha\" active=\"alpha\"/>\n";
         //}
@@ -552,7 +583,7 @@ namespace MorphingClass.CUtility
         //    }
         //}
 
-        public static String AddLayer(string strLayerName = "alpha")
+        public static string AddLayer(string strLayerName = "alpha")
         {
             return "<layer name=\"" + strLayerName + "\"/>\n";
         }
@@ -562,7 +593,7 @@ namespace MorphingClass.CUtility
             return AddLayer() + AddView();
         }
 
-        public static String AddViews(IEnumerable<String> strDisplayLayerEb, string strActiveLayer)
+        public static string AddViews(IEnumerable<string> strDisplayLayerEb, string strActiveLayer)
         {
             var strDisplayLayerEt = strDisplayLayerEb.GetEnumerator();
             strDisplayLayerEt.MoveNext();
@@ -576,7 +607,7 @@ namespace MorphingClass.CUtility
             return AddView(strDisplayLayers, strActiveLayer);
         }
 
-        public static String AddView(String strDisplayLayers = "alpha", string strActiveLayer = "alpha")
+        public static string AddView(string strDisplayLayers = "alpha", string strActiveLayer = "alpha")
         {
             return "<view layers=\"" + strDisplayLayers + "\" active=\"" + strActiveLayer + "\"/>\n";
         }
@@ -587,7 +618,7 @@ namespace MorphingClass.CUtility
          * 
          * @return
          */
-        public static String getIpeEnd()
+        public static string getIpeEnd()
         {
             return "</ipe>\n";
         }
@@ -597,7 +628,7 @@ namespace MorphingClass.CUtility
          * 
          * @return
          */
-        public static String getIpePreamble()
+        public static string getIpePreamble()
         {
             var strTime = CHelpFunc.GetTimeStampForIpe();
             #region strIpePreamble

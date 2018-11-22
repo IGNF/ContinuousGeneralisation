@@ -236,7 +236,7 @@ namespace MorphingClass.CUtility
         {
             IFeatureClass pFeatureClass = pFeatureLayer.FeatureClass;
             int intFeatureCount = pFeatureClass.FeatureCount(null);
-            IFeatureCursor pFeatureCursor = pFeatureClass.Search(null, false);    //注意此处的参数(****,false)！！！
+            IFeatureCursor pFeatureCursor = pFeatureClass.Search(null, false);    //Note the parameters(****,false)！！！ 
             int intFieldCount = pFeatureClass.Fields.FieldCount;
             pobjectValueLtLt = new List<List<object>>(intFeatureCount);
 
@@ -358,7 +358,7 @@ namespace MorphingClass.CUtility
         {
             IFeatureClass pFeatureClass = pFeatureLayer.FeatureClass;
             int intFeatureCount = pFeatureClass.FeatureCount(null);
-            IFeatureCursor pFeatureCursor = pFeatureClass.Search(null, false);    //注意此处的参数(****,false)！！！
+            IFeatureCursor pFeatureCursor = pFeatureClass.Search(null, false);    //Note the parameters(****,false)！！！ 
             List<CPolyline> CPlLt = new List<CPolyline>(intFeatureCount);    //先创建线数组，以获取图层中的线段
             for (int i = 0; i < intFeatureCount; i++)
             {
@@ -381,7 +381,7 @@ namespace MorphingClass.CUtility
 
             IFeatureClass pFeatureClass = pFeatureLayer.FeatureClass;
             int intFeatureCount = pFeatureClass.FeatureCount(null);
-            IFeatureCursor pFeatureCursor = pFeatureClass.Search(null, false);    //注意此处的参数(****,false)！！！
+            IFeatureCursor pFeatureCursor = pFeatureClass.Search(null, false);    //Note the parameters(****,false)！！！ 
             var cptlt = new List<CPoint>(intFeatureCount);
             for (int i = 0; i < intFeatureCount; i++)
             {

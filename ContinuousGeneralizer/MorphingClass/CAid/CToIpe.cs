@@ -80,7 +80,7 @@ namespace MorphingClass.CAid
         {
             double dblFactorIpeToLayer = pIpeEnv.Height / pFLayerEnv.Height;
             double dblLegend16 = 16 / dblFactorIpeToLayer;
-            if (dblLegend16<1)
+            if (dblLegend16 < 1)
             {
                 dblLegend16 = 1;
             }
@@ -89,8 +89,9 @@ namespace MorphingClass.CAid
 
             ////add legend (unit and a sample line), draw a line with length 16 in ipe
             return CIpeDraw.writeIpeText("$" + intLegendInt + @"\,$" + strMapUnits, 320, 32) +
-                   CIpeDraw.drawIpePath(new double[] { 320, 320, 320 + dblLegentInt, 320 + dblLegentInt },
-                                        new double[] { 20, 16, 16, 20 });
+                   CIpeDraw.drawIpeEdge(320, 20, 320, 16, cap: "1") +
+                   CIpeDraw.drawIpeEdge(320, 16, 320 + dblLegentInt, 16, cap: "1") +
+                   CIpeDraw.drawIpeEdge(320 + dblLegentInt, 16, 320 + dblLegentInt, 20, cap: "1");
         }
 
         public static string GetDataOfFeatureLayer(IFeatureLayer pFLayer, IEnvelope pFLayerEnv,
@@ -106,9 +107,9 @@ namespace MorphingClass.CAid
                 str += CIpeDraw.drawIpeEdge(pIpeEnv.XMin, pIpeEnv.YMin, pIpeEnv.XMin, pIpeEnv.YMax, "white");
             }
             string strName = pFLayer.Name;
-            IFeatureClass pFeatureClass = pFLayer.FeatureClass;
+            var pFeatureClass = pFLayer.FeatureClass;
             int intFeatureCount = pFeatureClass.FeatureCount(null);
-            IFeatureCursor pFeatureCursor = pFeatureClass.Search(null, false);    //注意此处的参数(****,false)！！！            
+            var pFeatureCursor = pFeatureClass.Search(null, false);    //Note the parameters(****,false)！！！             
             var pRenderer = (pFLayer as IGeoFeatureLayer).Renderer;
             for (int i = 0; i < intFeatureCount; i++)
             {
@@ -257,33 +258,11 @@ namespace MorphingClass.CAid
             return CIpeDraw.DrawCpgBound(cpg, pFLayerEnv, pIpeEnv, StrokeColor, strBoundWidth, strDash);
         }
 
-
-        //public static SortedDictionary<T, ISymbol> GetKeySymbolSD<T>(IFeatureLayer pFLayer, List<List<object>> pObjValueLtLt, int intKeyIndex)
-        //    where T : IComparable<T>
-        //{
-        //    IFeatureClass pFeatureClass = pFLayer.FeatureClass;
-        //    int intFeatureCount = pFeatureClass.FeatureCount(null);
-        //    IFeatureCursor pFeatureCursor = pFeatureClass.Search(null, false);    //注意此处的参数(****,false)！！！            
-        //    var pRenderer = (pFLayer as IGeoFeatureLayer).Renderer;
-        //    SortedDictionary<T, ISymbol> KeySymbolSD = new SortedDictionary<T, ISymbol>();
-        //    for (int i = 0; i < intFeatureCount; i++)
-        //    {
-        //        //at the last round of this loop, pFeatureCursor.NextFeature() will return null
-        //        IFeature pFeature = pFeatureCursor.NextFeature();
-        //        var TKey = (T)pObjValueLtLt[i][intKeyIndex];
-        //        if (KeySymbolSD.ContainsKey(TKey) == false)
-        //        {
-        //            KeySymbolSD.Add(TKey, pRenderer.SymbolByFeature[pFeature]);
-        //        }
-        //    }
-        //    return KeySymbolSD;
-        //}
-
         public static Dictionary<int, ISymbol> GetKeySymbolDt(IFeatureLayer pFLayer, List<List<object>> pObjValueLtLt, int intKeyIndex)
         {
             IFeatureClass pFeatureClass = pFLayer.FeatureClass;
             int intFeatureCount = pFeatureClass.FeatureCount(null);
-            IFeatureCursor pFeatureCursor = pFeatureClass.Search(null, false);    //注意此处的参数(****,false)！！！            
+            IFeatureCursor pFeatureCursor = pFeatureClass.Search(null, false);    //Note the parameters(****,false)！！！             
             var pRenderer = (pFLayer as IGeoFeatureLayer).Renderer;
             var KeySymbolDt = new Dictionary<int, ISymbol>();
             for (int i = 0; i < intFeatureCount; i++)
@@ -311,7 +290,7 @@ namespace MorphingClass.CAid
         //    string str = "";
         //    IFeatureClass pFeatureClass = pFeatureLayer.FeatureClass;
         //    int intFeatureCount = pFeatureClass.FeatureCount(null);
-        //    IFeatureCursor pFeatureCursor = pFeatureClass.Search(null, false);    //注意此处的参数(****,false)！！！            
+        //    IFeatureCursor pFeatureCursor = pFeatureClass.Search(null, false);    //Note the parameters(****,false)！！！             
 
         //    IGeoFeatureLayer pGeoFeaturelayer = pFeatureLayer as IGeoFeatureLayer;
         //    IClassBreaksRenderer pClassBreaksRenderer = pGeoFeaturelayer.Renderer as IClassBreaksRenderer;

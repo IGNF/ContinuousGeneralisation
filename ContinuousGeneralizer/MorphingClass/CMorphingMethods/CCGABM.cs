@@ -82,20 +82,20 @@ namespace MorphingClass.CMorphingMethods
         /// we get a point on it and test in which face this point is</remarks>
         public void IdentifyAddFaceNumber()
         {
-            CParameterInitialize pParameterInitialize = _ParameterInitialize;
-            int _intInterLS = 0;
-            int _intInterSS = 1;
-            int _intSg = 2;
+            var pParameterInitialize = _ParameterInitialize;
+            int intInterLS = 0;
+            int intInterSS = 1;
+            int intSg = 2;
 
 
-            List<CPolyline> pInterLSCPlLt = this.ObjCGeoLtLt[_intInterLS].Select(cgeo => cgeo as CPolyline).ToList();
-            List<CPolyline> pSgCPlLt = this.ObjCGeoLtLt[_intSg].Select(cgeo => cgeo as CPolyline).ToList();
+            var pInterLSCPlLt = this.ObjCGeoLtLt[intInterLS].Select(cgeo => cgeo as CPolyline).ToList();
+            var pSgCPlLt = this.ObjCGeoLtLt[intSg].Select(cgeo => cgeo as CPolyline).ToList();
 
-            CDCEL pInterLSDCEL = new CDCEL(pInterLSCPlLt);
+            var pInterLSDCEL = new CDCEL(pInterLSCPlLt);
             pInterLSDCEL.ConstructDCEL();
 
-            List<object> InterLSobjlt1 = new List<object>(pInterLSCPlLt.Count);
-            List<object> InterLSobjlt2 = new List<object>(pInterLSCPlLt.Count);
+            var InterLSobjlt1 = new List<object>(pInterLSCPlLt.Count);
+            var InterLSobjlt2 = new List<object>(pInterLSCPlLt.Count);
             for (int i = 0; i < pInterLSCPlLt.Count; i++)
             {
                 int indexID1 = pInterLSCPlLt[i].CEdgeLt[0].cpgIncidentFace.indexID;
@@ -112,22 +112,22 @@ namespace MorphingClass.CMorphingMethods
 
             //it should be true that a polyline of pInterSSCPlLt has the same indices of faces 
             //as the corresponding polyline of pInterLSCPlLt does
-            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intInterLS].FeatureClass,
+            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[intInterLS].FeatureClass,
                 esriFieldType.esriFieldTypeInteger, "FaceNum1", InterLSobjlt1);
-            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intInterLS].FeatureClass,
+            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[intInterLS].FeatureClass,
                 esriFieldType.esriFieldTypeInteger, "FaceNum2", InterLSobjlt2);
-            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intInterSS].FeatureClass,
+            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[intInterSS].FeatureClass,
                 esriFieldType.esriFieldTypeInteger, "FaceNum1", InterLSobjlt1);
-            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intInterSS].FeatureClass,
+            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[intInterSS].FeatureClass,
                 esriFieldType.esriFieldTypeInteger, "FaceNum2", InterLSobjlt2);
 
 
-            List<object> Sgobjlt = new List<object>(pSgCPlLt.Count);
+            var Sgobjlt = new List<object>(pSgCPlLt.Count);
             for (int i = 0; i < pSgCPlLt.Count; i++)
             {
                 Sgobjlt.Add(DetectFaceForSg(pSgCPlLt[i], pInterLSDCEL).indexID);
             }
-            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[_intSg].FeatureClass,
+            CSaveFeature.AddFieldandAttribute(pParameterInitialize.pFLayerLt[intSg].FeatureClass,
                 esriFieldType.esriFieldTypeInteger, "FaceNum", Sgobjlt);
 
         }
@@ -139,29 +139,29 @@ namespace MorphingClass.CMorphingMethods
         {
 
 
-            int _intInterLS = 0;
-            int _intInterSS = 1;
-            int _intSg = 2;
+            int intInterLS = 0;
+            int intInterSS = 1;
+            int intSg = 2;
 
 
             var pParameterInitialize = CConstants.ParameterInitialize;
             var pstrFieldNameLtLt = this.strFieldNameLtLt;
             var pObjValueLtLtLt = this.ObjValueLtLtLt;
 
-            var InterLSIplLt = this.ObjIGeoLtLt[_intInterLS].Select(obj => obj as IPolyline5).ToList();
-            var InterSSIplLt = this.ObjIGeoLtLt[_intInterSS].Select(obj => obj as IPolyline5).ToList();
-            var SgIplLt = this.ObjIGeoLtLt[_intSg].Select(obj => obj as IPolyline5).ToList();
+            var InterLSIplLt = this.ObjIGeoLtLt[intInterLS].Select(obj => obj as IPolyline5).ToList();
+            var InterSSIplLt = this.ObjIGeoLtLt[intInterSS].Select(obj => obj as IPolyline5).ToList();
+            var SgIplLt = this.ObjIGeoLtLt[intSg].Select(obj => obj as IPolyline5).ToList();
 
             var pStopwatch = new Stopwatch();
             pStopwatch.Start();
 
-            var intInterLSFaceNumIndex1 = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[_intInterLS], "FaceNum1");
-            var intInterLSFaceNumIndex2 = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[_intInterLS], "FaceNum2");
-            var intSgFaceNumIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[_intSg], "FaceNum");
+            var intInterLSFaceNumIndex1 = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[intInterLS], "FaceNum1");
+            var intInterLSFaceNumIndex2 = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[intInterLS], "FaceNum2");
+            var intSgFaceNumIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[intSg], "FaceNum");
 
             //count the faces
             var intInterLSFaceNumSS = new SortedSet<int>();
-            foreach (var objlt in pObjValueLtLtLt[_intInterLS])
+            foreach (var objlt in pObjValueLtLtLt[intInterLS])
             {
                 intInterLSFaceNumSS.Add((int)objlt[intInterLSFaceNumIndex1]);
                 intInterLSFaceNumSS.Add((int)objlt[intInterLSFaceNumIndex2]);
@@ -174,7 +174,7 @@ namespace MorphingClass.CMorphingMethods
             InterLSIplLtLt.EveryElementNew();
             InterSSIplLtLt.EveryElementNew();
 
-            var pInterLSObjValueLtLt = pObjValueLtLtLt[_intInterLS];  //the value table of LSLayer
+            var pInterLSObjValueLtLt = pObjValueLtLtLt[intInterLS];  //the value table of LSLayer
             for (int i = 0; i < pInterLSObjValueLtLt.Count; i++)
             {
                 //pLSObjValueLtLt[i][intInterLSFaceNumIndex1] is the index of a face
@@ -191,7 +191,7 @@ namespace MorphingClass.CMorphingMethods
             SgIplLtLt.EveryElementNew();
             intSgIndexLtLt.EveryElementNew();
 
-            var pSgObjValueLtLt = pObjValueLtLtLt[_intSg];  //the value table of LSLayer
+            var pSgObjValueLtLt = pObjValueLtLtLt[intSg];  //the value table of LSLayer
 
             for (int i = 0; i < pSgObjValueLtLt.Count; i++)
             {
@@ -244,11 +244,9 @@ namespace MorphingClass.CMorphingMethods
 
             CHelpFunc.DisplayRunTime(pStopwatch.ElapsedMilliseconds);
             CSaveFeature.SaveIGeoEb(TransSgIGeoLt, esriGeometryType.esriGeometryPolyline, "TransSgCPlLt",
-                 this.strFieldNameLtLt[_intSg], this.esriFieldTypeLtLt[_intSg], _ObjValueLtLtLt[_intSg]);
+                 this.strFieldNameLtLt[intSg], this.esriFieldTypeLtLt[intSg], _ObjValueLtLtLt[intSg]);
         }
-
-
-
+               
         #region CTTransform (compatible triangulation)
         /// <summary>
         /// Transform interior polylines in one province
@@ -272,12 +270,12 @@ namespace MorphingClass.CMorphingMethods
             var SgCplEb = CHelpFunc.GenerateCGeoEbAccordingToGeoEb<CPolyline>(SgIplLt);
 
             //there are only two faces: the super face and a normal face. Face *.FaceCpgLt[1] is the normal face
-            CDCEL pInterLSDCEL = new CDCEL(InterLSCplLt);
+            var pInterLSDCEL = new CDCEL(InterLSCplLt);
             pInterLSDCEL.ConstructDCEL();
             pInterLSDCEL.FaceCpgLt[1].SetOuterFaceCptlt(false, true, InterLSCplLt[0].CptLt[0]);
 
             //there are only two faces: the super face and a normal face. Face *.FaceCpgLt[1] is the normal face
-            CDCEL pInterSSDCEL = new CDCEL(InterSSCplLt);
+            var pInterSSDCEL = new CDCEL(InterSSCplLt);
             pInterSSDCEL.ConstructDCEL();
             pInterSSDCEL.FaceCpgLt[1].SetOuterFaceCptlt(false, true, InterSSCplLt[0].CptLt[0]);
 
@@ -286,7 +284,7 @@ namespace MorphingClass.CMorphingMethods
             var pInterLSCptSD = pInterLSDCEL.FaceCpgLt[1].CptLt.ToSD(cpt => cpt, new CCmpCptYX_VerySmall());
 
 
-            CCptbCtgl pCptbCtgl = new CCptbCtgl(pInterLSDCEL.FaceCpgLt[1], pInterSSDCEL.FaceCpgLt[1],
+            var pCptbCtgl = new CCptbCtgl(pInterLSDCEL.FaceCpgLt[1], pInterSSDCEL.FaceCpgLt[1],
                 blnMaxCommonChords, _blnSave);
             pCptbCtgl.ConstructCcptbCtgl();
             var TransSgCPlLt = new List<CPolyline>(SgIplLt.Count);
@@ -679,22 +677,20 @@ namespace MorphingClass.CMorphingMethods
 
 
         #endregion
-
-
-
+               
         #region Simplify Transformed single polylines
 
         public int ComputeDeleteNumber()
         {
             int _intLS = 0;
             int _intSS = 1;
-            int _intSg = 2;
+            int intSg = 2;
             int _intTransSg = 3;
 
-            List<CPolyline> pLSCPlLt = this.ObjCGeoLtLt[_intLS].Select(cgeo => cgeo as CPolyline).ToList();
-            List<CPolyline> pSSCPlLt = this.ObjCGeoLtLt[_intSS].Select(cgeo => cgeo as CPolyline).ToList();
-            List<CPolyline> pSgCPlLt = this.ObjCGeoLtLt[_intSg].Select(cgeo => cgeo as CPolyline).ToList();
-            List<CPolyline> TransSgCPlLt = this.ObjCGeoLtLt[_intTransSg].Select(cgeo => cgeo as CPolyline).ToList();
+            var pLSCPlLt = this.ObjCGeoLtLt[_intLS].Select(cgeo => cgeo as CPolyline).ToList();
+            var pSSCPlLt = this.ObjCGeoLtLt[_intSS].Select(cgeo => cgeo as CPolyline).ToList();
+            var pSgCPlLt = this.ObjCGeoLtLt[intSg].Select(cgeo => cgeo as CPolyline).ToList();
+            var TransSgCPlLt = this.ObjCGeoLtLt[_intTransSg].Select(cgeo => cgeo as CPolyline).ToList();
 
             double dblLSToSSRatio = CalRatioEdgeNum(pLSCPlLt, pSSCPlLt);
 
@@ -748,22 +744,22 @@ namespace MorphingClass.CMorphingMethods
 
         public void CGABM()
         {
-            int _intInterLS = 0;
-            int _intInterSS = 1;
-            int _intSg = 2;
-            int _intInterLSSg = 3;
-            int _intInterSSSg = 4;
+            int intInterLS = 0;
+            int intInterSS = 1;
+            int intSg = 2;
+            int intInterLSSg = 3;
+            int intInterSSSg = 4;
 
             var pstrFieldNameLtLt = this.strFieldNameLtLt;
             var pObjValueLtLtLt = this.ObjValueLtLtLt;
 
-            var intInterLSFaceNumIndex1 = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[_intInterLS], "FaceNum1");
-            var intInterLSFaceNumIndex2 = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[_intInterLS], "FaceNum2");
-            var intSgFaceNumIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[_intSg], "FaceNum");
+            var intInterLSFaceNumIndex1 = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[intInterLS], "FaceNum1");
+            var intInterLSFaceNumIndex2 = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[intInterLS], "FaceNum2");
+            var intSgFaceNumIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[intSg], "FaceNum");
 
             //count the faces
             var intInterLSFaceNumSS = new SortedSet<int>();
-            foreach (var objlt in pObjValueLtLtLt[_intInterLS])
+            foreach (var objlt in pObjValueLtLtLt[intInterLS])
             {
                 intInterLSFaceNumSS.Add((int)objlt[intInterLSFaceNumIndex1]);
                 intInterLSFaceNumSS.Add((int)objlt[intInterLSFaceNumIndex2]);
@@ -776,7 +772,7 @@ namespace MorphingClass.CMorphingMethods
 
             var pInterLSCplLt = new List<CPolyline>();
             var pInterSSCplLt = new List<CPolyline>();
-            var pObjValueLSLtLt = pObjValueLtLtLt[_intInterLS]; //the values for the layer of the larger-scale polylines
+            var pObjValueLSLtLt = pObjValueLtLtLt[intInterLS]; //the values for the layer of the larger-scale polylines
             for (int i = 0; i < pObjValueLSLtLt.Count; i++)
             {
                 int intFaceNum1 = (int)pObjValueLSLtLt[i][intInterLSFaceNumIndex1];
@@ -785,22 +781,22 @@ namespace MorphingClass.CMorphingMethods
                 if ((intFaceNum1 >= _intStart && intFaceNum1 < _intEndCount)||
                     (intFaceNum2 >= _intStart && intFaceNum2 < _intEndCount))
                 {
-                    pInterLSCplLt.Add(this.ObjCGeoLtLt[_intInterLS][i] as CPolyline);
-                    pInterSSCplLt.Add(this.ObjCGeoLtLt[_intInterSS][i] as CPolyline);
+                    pInterLSCplLt.Add(this.ObjCGeoLtLt[intInterLS][i] as CPolyline);
+                    pInterSSCplLt.Add(this.ObjCGeoLtLt[intInterSS][i] as CPolyline);
                 }
             }
 
             var pInterLSSgCplLt = new List<CPolyline>();
             var pInterSSSgCplLt = new List<CPolyline>();
-            var pObjValueSgLtLt = pObjValueLtLtLt[_intSg]; //the values for the layer of the larger-scale polylines
+            var pObjValueSgLtLt = pObjValueLtLtLt[intSg]; //the values for the layer of the larger-scale polylines
             for (int i = 0; i < pObjValueSgLtLt.Count; i++)
             {
                 int intFaceNum = (int)pObjValueSgLtLt[i][intSgFaceNumIndex];
 
                 if (intFaceNum >= _intStart && intFaceNum < _intEndCount)
                 {
-                    pInterLSSgCplLt.Add(this.ObjCGeoLtLt[_intInterLSSg][i] as CPolyline);
-                    pInterSSSgCplLt.Add(this.ObjCGeoLtLt[_intInterSSSg][i] as CPolyline);
+                    pInterLSSgCplLt.Add(this.ObjCGeoLtLt[intInterLSSg][i] as CPolyline);
+                    pInterSSSgCplLt.Add(this.ObjCGeoLtLt[intInterSSSg][i] as CPolyline);
                 }
             }
             
@@ -810,11 +806,11 @@ namespace MorphingClass.CMorphingMethods
             CHelpFunc.SetMoveVectorForCorrCptsLtLt(_CorrCptsLtLt);
             CHelpFunc.SetMoveVectorForCorrCptsLtLt(_SgCorrCptsLtLt);
 
-            //to save memory
-            this.ObjCGeoLtLt[0] = null;
-            this.ObjCGeoLtLt[1] = null;
-            this.ObjCGeoLtLt[2] = null;
-            this.ObjCGeoLtLt[3] = null;
+            ////to save memory
+            //this.ObjCGeoLtLt[0] = null;
+            //this.ObjCGeoLtLt[1] = null;
+            //this.ObjCGeoLtLt[2] = null;
+            //this.ObjCGeoLtLt[3] = null;
 
 
 
@@ -834,8 +830,8 @@ namespace MorphingClass.CMorphingMethods
         #region Display
         public void DisplayAtBd(double dblProp)
         {
-            CParameterInitialize pParameterInitialize = _ParameterInitialize;
-            CParameterResult pParameterResult = _ParameterResult;
+            var pParameterInitialize = _ParameterInitialize;
+            var pParameterResult = _ParameterResult;
             if (dblProp < 0 || dblProp > 1)
             {
                 MessageBox.Show("请输入正确参数！");
@@ -855,9 +851,10 @@ namespace MorphingClass.CMorphingMethods
             var fadeddisplayCplLt = GenerateInterpolatedCplLt(dblProp, _SgCorrCptsLtLt);
             pStopwatch.Stop();
 
+            int intRGB = Convert.ToInt32(dblProp * 255);
             var pStopwatchSave = Stopwatch.StartNew();
-            CSaveFeature.SaveCplEb(fadeddisplayCplLt, dblProp.ToString() + "_Lower");
-            CSaveFeature.SaveCplEb(normaldisplayCplLt, dblProp.ToString() + "_Higher");
+            CSaveFeature.SaveCplEb(fadeddisplayCplLt, dblProp.ToString() + "_Lower", intRed: intRGB, intGreen: intRGB, intBlue: intRGB, dblWidth: 0.5);
+            CSaveFeature.SaveCplEb(normaldisplayCplLt, dblProp.ToString() + "_Higher", dblWidth: 1.2);
             pStopwatchSave.Stop();
 
             CHelpFunc.DisplayRunTime(pStopwatch.ElapsedMilliseconds, "Generate", pStopwatchSave.ElapsedMilliseconds, "ToShape");
