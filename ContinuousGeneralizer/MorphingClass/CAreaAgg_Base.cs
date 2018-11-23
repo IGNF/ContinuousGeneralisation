@@ -1149,7 +1149,7 @@ List<string> strLayerNameLt,
                 strIpeContAllLayers += CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[i], "removable", 320, 64);
 
                 //draw a rectangle to cover the patch number of the last layer
-                strIpeContAllLayers += CIpeDraw.drawIpeBox(304, 112, 384, 160, "white");
+                strIpeContAllLayers += CIpeDraw.DrawIpeBox(304, 112, 384, 160, "white");
 
                 //add a text of patch numbers
                 strIpeContAllLayers += CIpeDraw.writeIpeText(strLayerNameLt[i], 320, 128);
@@ -1171,7 +1171,7 @@ List<string> strLayerNameLt,
             strIpeContAllLayers += CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[strLayerNameLt.Count - 2], "removable", 320, 64);
 
             //draw a rectangle to cover the patch number of the last layer
-            strIpeContAllLayers += CIpeDraw.drawIpeBox(304, 112, 384, 160, "white");
+            strIpeContAllLayers += CIpeDraw.DrawIpeBox(304, 112, 384, 160, "white");
 
             //add a text of patch numbers
             strIpeContAllLayers += CIpeDraw.writeIpeText(strLayerNameLt[strLayerNameLt.Count - 2], 320, 128);

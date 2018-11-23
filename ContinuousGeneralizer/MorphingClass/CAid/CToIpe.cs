@@ -24,41 +24,18 @@ namespace MorphingClass.CAid
         public static void SaveToIpe(List<IFeatureLayer> pFLayerLt, IEnvelope pFLayerEnv, CEnvelope pIpeEnv,
             bool blnGroup, string strBoundWidth, CParameterInitialize ParameterInitialize, bool blnLayerToLeft = true)
         {
-            //save path
-            //CHelpFunc.SetSavePath(ParameterInitialize);
+            var strContent = GetScaleLegend(pFLayerEnv, pIpeEnv, CHelpFunc.GetUnits(ParameterInitialize.m_mapControl.MapUnits));
 
-            //        double dblFactorIpeToLayer = pIpeEnv.Height / pFLayerEnv.Height;
-            //        double dblLegend16 = 16 / dblFactorIpeToLayer;
-            //        int intLegendInt = CMath.GetNumberTidy(dblLegend16);
-            //        double dblLegentInt = intLegendInt * dblFactorIpeToLayer;
-
-
-            //        //add legend (unit and a sample line), draw a line with length 32 in ipe
-            //        string strData = CIpeDraw.writeIpeText(dblLegend16 + " " + ParameterInitialize.m_mapControl.MapUnits.ToString(), 320, 80) +
-            //            CIpeDraw.drawIpeEdge(320, 64, 336, 64);
-
-            //        strData += CIpeDraw.writeIpeText(intLegendInt + " " + ParameterInitialize.m_mapControl.MapUnits.ToString(), 320, 32) +
-            //CIpeDraw.drawIpeEdge(320, 16, 320 + dblLegentInt, 16) +
-            //CIpeDraw.drawIpeEdge(320, 16, 320, 20) + CIpeDraw.drawIpeEdge(320 + dblLegentInt, 16, 320 + dblLegentInt, 20);
-            var strData = GetScaleLegend(pFLayerEnv, pIpeEnv, CHelpFunc.GetUnits(ParameterInitialize.m_mapControl.MapUnits));
-
-
-            //var tt = ParameterInitialize.m_mapControl.
             for (int i = 0; i < pFLayerLt.Count; i++)
             {
                 var pFLayer = pFLayerLt[i] as IFeatureLayer;
+                var strDataOfFLayer = CToIpe.GetDataOfFeatureLayer(pFLayer, pFLayerEnv, pIpeEnv, strBoundWidth, true);
 
                 if (blnGroup == true)
                 {
-                    strData += "<group>\n";
+                    strDataOfFLayer = "</group>\n" + strDataOfFLayer + "</group>\n";
                 }
-
-                strData += CToIpe.GetDataOfFeatureLayer(pFLayer, pFLayerEnv, pIpeEnv, strBoundWidth, true);
-
-                if (blnGroup == true)
-                {
-                    strData += "</group>\n";
-                }
+                strContent += strDataOfFLayer;
 
                 if (blnLayerToLeft == true)
                 {
@@ -70,7 +47,7 @@ namespace MorphingClass.CAid
             string strFullName = ParameterInitialize.strSavePath + "\\" + CHelpFunc.GetTimeStamp() + ".ipe";
             using (var writer = new System.IO.StreamWriter(strFullName, true))
             {
-                writer.Write(CIpeDraw.GenerateIpeContentByData(strData));
+                writer.Write(CIpeDraw.GenerateIpeXMLWithContent(strContent));
             }
 
             System.Diagnostics.Process.Start(@strFullName);
@@ -89,9 +66,9 @@ namespace MorphingClass.CAid
 
             ////add legend (unit and a sample line), draw a line with length 16 in ipe
             return CIpeDraw.writeIpeText("$" + intLegendInt + @"\,$" + strMapUnits, 320, 32) +
-                   CIpeDraw.drawIpeEdge(320, 20, 320, 16, cap: "1") +
-                   CIpeDraw.drawIpeEdge(320, 16, 320 + dblLegentInt, 16, cap: "1") +
-                   CIpeDraw.drawIpeEdge(320 + dblLegentInt, 16, 320 + dblLegentInt, 20, cap: "1");
+                   CIpeDraw.DrawIpeEdge(320, 20, 320, 16, cap: "1") +
+                   CIpeDraw.DrawIpeEdge(320, 16, 320 + dblLegentInt, 16, cap: "1") +
+                   CIpeDraw.DrawIpeEdge(320 + dblLegentInt, 16, 320 + dblLegentInt, 20, cap: "1");
         }
 
         public static string GetDataOfFeatureLayer(IFeatureLayer pFLayer, IEnvelope pFLayerEnv,
@@ -104,7 +81,7 @@ namespace MorphingClass.CAid
                 //so that we can easily compare shrinks with other figures
                 //if the text of an object is above, then the object is under other objects
                 //this bound line should be under all other objectss
-                str += CIpeDraw.drawIpeEdge(pIpeEnv.XMin, pIpeEnv.YMin, pIpeEnv.XMin, pIpeEnv.YMax, "white");
+                str += CIpeDraw.DrawIpeEdge(pIpeEnv.XMin, pIpeEnv.YMin, pIpeEnv.XMin, pIpeEnv.YMax, "white");
             }
             string strName = pFLayer.Name;
             var pFeatureClass = pFLayer.FeatureClass;

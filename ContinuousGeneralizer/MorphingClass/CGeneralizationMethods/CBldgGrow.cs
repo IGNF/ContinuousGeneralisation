@@ -806,7 +806,7 @@ namespace MorphingClass.CGeneralizationMethods
                 strDataAllLayers += CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[i], "removable", 320, 64);
 
                 //draw a rectangle to cover the patch number of the last layer
-                strDataAllLayers += CIpeDraw.drawIpeBox(304, 112, 384, 160, "white");
+                strDataAllLayers += CIpeDraw.DrawIpeBox(304, 112, 384, 160, "white");
 
                 //add layer name and a text of patch numbers
                 strDataAllLayers += CIpeDraw.writeIpeText(strLayerNameLt[i], 320, 128);
@@ -816,7 +816,7 @@ namespace MorphingClass.CGeneralizationMethods
 
                 //add the Content of animations
                 strDataAllLayers += "<group>\n";
-                strDataAllLayers += CIpeDraw.drawIpeEdge(pIpeEnv.XMin, pIpeEnv.YMin, pIpeEnv.XMin, pIpeEnv.YMax, "white");
+                strDataAllLayers += CIpeDraw.DrawIpeEdge(pIpeEnv.XMin, pIpeEnv.YMin, pIpeEnv.XMin, pIpeEnv.YMax, "white");
                 foreach (var cpg in GetResultCpgEb(this.MergedCpgLt, Convert.ToDouble(strLayerNameLt[i]), 
                     strSimplification, strBufferStyle, dblMiterLimit))
                 {
