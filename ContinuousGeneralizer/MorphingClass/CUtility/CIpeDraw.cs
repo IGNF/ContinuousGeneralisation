@@ -85,8 +85,8 @@ namespace MorphingClass.CUtility
         /// <param name="color"></param>
         /// <param name="pen">normal, heavier, fat, ultrafat</param>
         /// <param name="dash">normal, dashed, dotted, dash dotted, dash dot dotted</param>
-        /// <param name="cap">normal: butt;      0: butt;      1: round;      2: square</param>
-        /// <param name="join">normal: round;      0: miter;      1: round;      2: bevel</param>
+        /// <param name="cap"> "normal": butt;       "0": butt;       "1": round;      "2": square</param>
+        /// <param name="join">"normal": round;      "0": miter;      "1": round;      "2": bevel</param>
         /// <returns></returns>
         public static string DrawIpePath(double[] x, double[] y, string color = "black", 
             string pen = "normal", string dash = "normal", string cap = "normal", string join = "normal")
@@ -117,26 +117,19 @@ namespace MorphingClass.CUtility
             return s;
         }
 
-        /**
-        * Draws an edge between two points.
-        * 
-        * @param x1
-        *            x-coordinate of point 1
-        * @param y1
-        *            y-coordinate of point 1
-        * @param x2
-        *            x-coordinate of point 2
-        * @param y2
-        *            y-coordinate of point 2
-        * @param color
-        *            color
-        * @param pen
-        *            pen width: normal, heavier, fat, ultrafat
-        * @param dash
-        *            dash style: normal, dashed, dotted, dash dotted, dash dot
-        *            dotted
-        * @return
-        */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x1"></param>
+        /// <param name="y1"></param>
+        /// <param name="x2"></param>
+        /// <param name="y2"></param>
+        /// <param name="color"></param>
+        /// <param name="pen">normal, heavier, fat, ultrafat</param>
+        /// <param name="dash">normal, dashed, dotted, dash dotted, dash dot dotted</param>
+        /// <param name="cap"> "normal": butt;       "0": butt;       "1": round;      "2": square</param>
+        /// <param name="join">"normal": round;      "0": miter;      "1": round;      "2": bevel</param>
+        /// <returns></returns>
         public static string DrawIpeEdge(double x1, double y1, double x2, double y2, string color = "black",
             string pen = "normal", string dash = "normal", string cap = "normal", string join = "normal")
         {
@@ -152,6 +145,8 @@ namespace MorphingClass.CUtility
                     ipt.X, pEnvelopeLayer.XMin, pEnvelopeIpe.XMin, dblFactor);
             double dbly = CGeoFunc.CoordinateTransform(
                     ipt.Y, pEnvelopeLayer.YMin, pEnvelopeIpe.YMin, dblFactor);
+
+
 
             return DrawIpeMark(dblx, dbly, strShape, AddColor(StrokeColor), strWidth);
         }
