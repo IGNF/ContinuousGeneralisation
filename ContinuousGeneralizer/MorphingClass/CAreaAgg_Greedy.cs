@@ -39,6 +39,7 @@ namespace MorphingClass.CGeneralizationMethods
         public CAreaAgg_Greedy(CParameterInitialize ParameterInitialize, 
             string strSpecifiedFieldName = null, string strSpecifiedValue = null)
         {
+            CConstants.strMethod = "Greedy";
             Preprocessing(ParameterInitialize, strSpecifiedFieldName, strSpecifiedValue);
         }
 
@@ -55,7 +56,7 @@ namespace MorphingClass.CGeneralizationMethods
             //we must run AStar first
             var strLineLt = File.ReadLines(_ParameterInitialize.strMxdPathBackSlash + "AStar200000_" 
                 + _ParameterInitialize.strAreaAggregation + "_"+ CConstants.strShapeConstraint+ ".txt").ToList();
-            var EstStepsCostVPDt = new Dictionary<int, CValPair<int, double>>(strLineLt.Count-1);
+            var EstStepsCostVPDt = new Dictionary<int, CValPair<int, double>>(strLineLt.Count-1);  //record the results from A*
             for (int i = 1; i < strLineLt.Count; i++) //the first line is for headings
             {
                 var strDetail = strLineLt[i].Split(new char[] { ' ', '\t' }, 
@@ -83,7 +84,16 @@ namespace MorphingClass.CGeneralizationMethods
 
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="LSCrg"></param>
+        /// <param name="SSCrg"></param>
+        /// <param name="StrObjLtDt"></param>
+        /// <param name="adblTD"></param>
+        /// <param name="EstStepsCostVPDt">Results from A*</param>
+        /// <param name="strAreaAggregation"></param>
+        /// <returns></returns>
         public CRegion Greedy(CRegion LSCrg, CRegion SSCrg, CStrObjLtDt StrObjLtDt, double[,] adblTD,
             Dictionary<int, CValPair<int, double>> EstStepsCostVPDt, string strAreaAggregation)
         {

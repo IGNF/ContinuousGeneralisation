@@ -60,7 +60,7 @@ namespace MorphingClass.CGeometry
             this.dblArea = (cpg.pPolygon as IArea).Area;
             this.dblLength = cpg.pPolygon.Length;
             this.intSumCpgGID = cpg.GID;
-            this.intTypeIndex = pintTypeIndex;
+            this.intTypeIndex = pintTypeIndex;  //only use for ILP
 
             if (CConstants.blnComputeMinComp == true || CConstants.blnComputeAvgComp == true)
             {

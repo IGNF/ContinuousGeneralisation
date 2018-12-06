@@ -80,7 +80,7 @@ namespace ContinuousGeneralizer.FrmMorphing
         public void btnGreedy_Click(object sender, EventArgs e)
         {
             var ParameterInitialize = _DataRecords.ParameterInitialize;
-            CConstants.strMethod = "Greedy";
+            
             var objResultSD = new SortedDictionary<string, List<object>>();
             var StrObjLtDt = new CStrObjLtDt(CAreaAgg_Base.strKeyLt);
             //Read Datasets
@@ -555,14 +555,14 @@ namespace ContinuousGeneralizer.FrmMorphing
             //5: MaximizeAvgComp_Combine
             //true: involving smallest
             //false: not necessarily involving smallest
-            //RunGreedy(ParameterInitialize, 4, true);
-            //RunGreedy(ParameterInitialize, 1, true);
+            RunGreedy(ParameterInitialize, 4, true);
+            RunGreedy(ParameterInitialize, 1, true);
 
             RunAStar(ParameterInitialize, intQuitCount, 4, true);
             RunAStar(ParameterInitialize, intTwiceCount, 4, true);
             RunAStar(ParameterInitialize, intQuitCount, 1, true);
 
-            //RunILP(ParameterInitialize, 112, true);
+            RunILP(ParameterInitialize, 112, true);
             //RunILP(ParameterInitialize, 300, true);
 
             MessageBox.Show("Done!");

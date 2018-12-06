@@ -80,7 +80,6 @@ namespace MorphingClass.CGeometry
         //public bool IsOriginal { get; set; } = true;
 
 
-
         public CPolygon(int intID, IPolygon4 pPolygon)
             : this(intID, CHelpFunc.GetIpgExteriorCptLt(pPolygon).ToList(), 
                   CHelpFunc.GetIpgInteriorCptLtEb(pPolygon))

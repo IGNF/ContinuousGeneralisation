@@ -44,6 +44,7 @@ namespace MorphingClass.CGeneralizationMethods
         public CAreaAgg_ILP(CParameterInitialize ParameterInitialize,
             string strSpecifiedFieldName = null, string strSpecifiedValue = null)
         {
+            CConstants.strMethod = "ILP";
             Preprocessing(ParameterInitialize, strSpecifiedFieldName, strSpecifiedValue);
         }
 
@@ -62,7 +63,7 @@ namespace MorphingClass.CGeneralizationMethods
             //int intOOTSolve = 0;
             //int intCplexError3019 = 0;
             //int intOtherErrors = 0;
-            string strOtherErrors = "Other Errors:\n";
+            string strOtherErrors = "";
 
             var CrgOOMSetSS = new SortedSet<CRegion>(CRegion.pCmpCrg_nmID);
             var CrgOOMSolveSS = new SortedSet<CRegion>(CRegion.pCmpCrg_nmID);
@@ -99,51 +100,67 @@ namespace MorphingClass.CGeneralizationMethods
 
             EndAffairs(_intEndCount);
 
-            Console.WriteLine();
-            Console.WriteLine("OOM during setting and solving: " + CrgOOMSetSS.Count + "   " + CrgOOMSolveSS.Count);
-            Console.WriteLine("OOT during setting and solving: " + CrgOOTSetSS.Count + "   " + CrgOOTSolveSS.Count);
-            Console.WriteLine("CPLEX Error  3019: Failure to solve MIP subproblem: " + CrgCplexError3019SS.Count);
-            Console.WriteLine(strOtherErrors);
+
+            //_strILPFailingNumOutput += "Out of Memory during setting and solving, respectively: "
+            string strILPFailingNumOutput = "";
+            strILPFailingNumOutput += "Out of Memory during setting and solving, respectively: "
+                + string.Format("{0,6}, {1,6}", CrgOOMSetSS.Count, CrgOOMSolveSS.Count) + "\n";
+            strILPFailingNumOutput += "Out of Time   during setting and solving, respectively: "
+                + string.Format("{0,6}, {1,6}", CrgOOTSetSS.Count, CrgOOTSolveSS.Count) + "\n";
+            strILPFailingNumOutput += "CPLEX Error  3019: Failure to solve MIP subproblem: "
+                + CrgCplexError3019SS.Count + "\n";
+            strILPFailingNumOutput += "Other Errors: " + CrgOtherErrorsSS.Count + "\n";
+            strILPFailingNumOutput += strOtherErrors + "\n";
+
+            //Console.WriteLine();
+            //Console.WriteLine("Out of Memory during setting and solving, respectively: " + CrgOOMSetSS.Count + "   " + CrgOOMSolveSS.Count);
+            //Console.WriteLine("Out of Time during setting and solving, respectively: " + CrgOOTSetSS.Count + "   " + CrgOOTSolveSS.Count);
+            //Console.WriteLine("CPLEX Error  3019: Failure to solve MIP subproblem: " + CrgCplexError3019SS.Count);
+            //Console.WriteLine("Other Errors: " + CrgOtherErrorsSS.Count);
+            //Console.WriteLine(strOtherErrors);
 
 
             //strData += string.Format("{0,3}", objDataLt[intIndexLt[0]]);
-            string strData = "OOM during setting:\n";
+            string strFormatIDNM = "{0,6}{1,6}{2,6}\n";
+            strILPFailingNumOutput += "\n\nOOM during setting (ID, n, m):\n";
             foreach (var crg in CrgOOMSetSS)
             {
-                strData += string.Format("{0,4}{1,4}{2,4}\n", crg.ID, crg.GetCphCount(), crg.GetAdjCount());
+                strILPFailingNumOutput += string.Format(strFormatIDNM, crg.ID, crg.GetCphCount(), crg.GetAdjCount());
             }
-            strData += "\n\nOOM during solving:\n";
+            strILPFailingNumOutput += "\n\nOOM during solving (ID, n, m):\n";
             foreach (var crg in CrgOOMSolveSS)
             {
-                strData += string.Format("{0,4}{1,4}{2,4}\n", crg.ID, crg.GetCphCount(), crg.GetAdjCount());
+                strILPFailingNumOutput += string.Format(strFormatIDNM, crg.ID, crg.GetCphCount(), crg.GetAdjCount());
             }
-            strData += "\n\nOOT during setting:\n";
+            strILPFailingNumOutput += "\n\nOOT during setting (ID, n, m):\n";
             foreach (var crg in CrgOOTSetSS)
             {
-                strData += string.Format("{0,4}{1,4}{2,4}\n", crg.ID, crg.GetCphCount(), crg.GetAdjCount());
+                strILPFailingNumOutput += string.Format(strFormatIDNM, crg.ID, crg.GetCphCount(), crg.GetAdjCount());
             }
-            strData += "\n\nOOT during solving:\n";
+            strILPFailingNumOutput += "\n\nOOT during solving (ID, n, m):\n";
             foreach (var crg in CrgOOTSolveSS)
             {
-                strData += string.Format("{0,4}{1,4}{2,4}\n", crg.ID, crg.GetCphCount(), crg.GetAdjCount());
+                strILPFailingNumOutput += string.Format(strFormatIDNM, crg.ID, crg.GetCphCount(), crg.GetAdjCount());
             }
-            strData += "\n\nCPLEX Error  3019: Failure to solve MIP subproblem:\n";
+            strILPFailingNumOutput += "\n\nCPLEX Error  3019: Failure to solve MIP subproblem (ID, n, m):\n";
             foreach (var crg in CrgCplexError3019SS)
             {
-                strData += string.Format("{0,4}{1,4}{2,4}\n", crg.ID, crg.GetCphCount(), crg.GetAdjCount());
+                strILPFailingNumOutput += string.Format(strFormatIDNM, crg.ID, crg.GetCphCount(), crg.GetAdjCount());
             }
 
-            strData += "\n\n" + strOtherErrors;
+            _strILPFailingNumOutput = strILPFailingNumOutput;
 
-            using (var writer = new StreamWriter(_ParameterInitialize.strSavePathBackSlash +
-                CHelpFunc.GetTimeStampWithPrefix() + "ILP" + Convert.ToInt32(this.dblTimeLimit) + "_FailingNum.txt", true))
-            {
-                writer.WriteLine("OOM during setting and solving: " + CrgOOMSetSS.Count + "   " + CrgOOMSolveSS.Count);
-                writer.WriteLine("OOT during setting and solving: " + CrgOOTSetSS.Count + "   " + CrgOOTSolveSS.Count);
-                writer.WriteLine("CPLEX Error  3019: Failure to solve MIP subproblem: " + CrgCplexError3019SS.Count);
-                writer.Write("\n\n");
-                writer.Write(strData);
-            }
+            //strILPFailingNumOutput += "\n\n" + strOtherErrors;
+
+            //using (var writer = new StreamWriter(_ParameterInitialize.strSavePathBackSlash +
+            //    CHelpFunc.GetTimeStampWithPrefix() + "ILP" + Convert.ToInt32(this.dblTimeLimit) + "_FailingNum.txt", true))
+            //{
+            //    writer.WriteLine("OOM during setting and solving: " + CrgOOMSetSS.Count + "   " + CrgOOMSolveSS.Count);
+            //    writer.WriteLine("OOT during setting and solving: " + CrgOOTSetSS.Count + "   " + CrgOOTSolveSS.Count);
+            //    writer.WriteLine("CPLEX Error  3019: Failure to solve MIP subproblem: " + CrgCplexError3019SS.Count);
+            //    writer.Write("\n\n");
+            //    writer.Write(strData);
+            //}
         }
 
 
@@ -905,8 +922,8 @@ namespace MorphingClass.CGeneralizationMethods
         //public CRegion ILP_Extend(CRegion LSCrg, CRegion SSCrg, double[,] adblTD)
         //{
         //    var ExistingCorrCphsSD0 = LSCrg.SetInitialAdjacency();  //also count the number of edges
-        //    var aCph = LSCrg.CphTypeIndexSD_Area_CphGID.Keys.ToArray();
-        //    int intCpgCount = LSCrg.CphTypeIndexSD_Area_CphGID.Count;
+        //    var aCph = LSCrg.CphCpgSD_Area_CphGID.Keys.ToArray();
+        //    int intCpgCount = LSCrg.CphCpgSD_Area_CphGID.Count;
 
         //    //create a directory for current LSCrg
         //    System.IO.Directory.CreateDirectory(_ParameterInitialize.strSavePath + "\\" + LSCrg.ID);
@@ -928,7 +945,7 @@ namespace MorphingClass.CGeneralizationMethods
         //    }
 
         //    //Output LSCrg: ID Area dblInteriorSegLength intTargetTypeIndex {corrcphs: GID FrCph.ID ToCph.ID dblSharedSegLength ...}
-        //    string strLSCrg = LSCrg.ID + " " + LSCrg.dblArea + " " + LSCrg.dblInteriorSegLength + " " + SSCrg.CphTypeIndexSD_Area_CphGID.First().Key.intTypeIndex + "\n";
+        //    string strLSCrg = LSCrg.ID + " " + LSCrg.dblArea + " " + LSCrg.dblInteriorSegLength + " " + SSCrg.CphCpgSD_Area_CphGID.First().Key.intTypeIndex + "\n";
         //    foreach (var corrcphs in LSCrg.AdjCorrCphsSD.Keys)
         //    {
         //        strLSCrg += corrcphs.GID + " " + corrcphs.FrCph.ID + " " + corrcphs.ToCph.ID + " " + corrcphs.dblSharedSegLength + "\n";

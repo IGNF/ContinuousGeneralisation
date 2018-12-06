@@ -61,7 +61,7 @@ namespace ContinuousGeneralizer
             //CHelpFunc.strPath = "C:\\Study\\Data\\Morphing Data\\Rail Data\\" 
             //+ CHelpFunc.strDataFolderName;
 
-            CHelpFunc.strDataFolderName = "MainlandChina";
+            //CHelpFunc.strDataFolderName = "MainlandChina";
             //CHelpFunc.strDataFolderName = "MainlandChina-Yunnan";
             //CHelpFunc.strDataFolderName = "MainlandChina-Guangxi";
             //CHelpFunc.strDataFolderName = "MainlandChina-Tianjin";
@@ -71,13 +71,13 @@ namespace ContinuousGeneralizer
             //CHelpFunc.strDataFolderName = "MainlandChina-Shanghai";
             //CHelpFunc.strDataFolderName = "CompatibleTriangulation";
             //CHelpFunc.strDataFolderName = "CT_Common";
-            CHelpFunc.strPath = strWorkPath + "\\Administrative Boundary\\" + CHelpFunc.strDataFolderName;
+            //CHelpFunc.strPath = strWorkPath + "\\Administrative Boundary\\" + CHelpFunc.strDataFolderName;
 
             //CHelpFunc.strDataFolderName = "LinearMorphingBothInjected";
             //CHelpFunc.strDataFolderName = "CompatibleTriangulation3";
 
 
-            //CHelpFunc.strDataFolderName = "AreaAggregation";
+            CHelpFunc.strDataFolderName = "AreaAggregation";
             ////CHelpFunc.strDataFolderName = "AreaAggregation-664-easy";
             ////CHelpFunc.strDataFolderName = "AreaAggregation-716-VeryEasy";
             ////CHelpFunc.strDataFolderName = "AreaAggregation_Problematic";
@@ -87,7 +87,7 @@ namespace ContinuousGeneralizer
             ////CHelpFunc.strDataFolderName = "AreaAggregation_Simplest_Two";
             ////CHelpFunc.strDataFolderName = "AreaAggregation_Simplest_Three";
             ////CHelpFunc.strDataFolderName = "AreaAggregation-Mostpatches";
-            //CHelpFunc.strPath = strWorkPath + "\\AreaAggregation\\" + CHelpFunc.strDataFolderName;
+            CHelpFunc.strPath = strWorkPath + "\\AreaAggregation\\" + CHelpFunc.strDataFolderName;
 
             //CHelpFunc.strDataFolderName = "SingleLake";
             //CHelpFunc.strPath = strWorkPath + "\\STSModel\\" + CHelpFunc.strDataFolderName;
@@ -140,37 +140,37 @@ namespace ContinuousGeneralizer
             //var frmCurrent = new FrmBldgGrow(_DataRecords);
 
             //var frmCurrent = new FrmSTS(_DataRecords);
-            var frmCurrent = new FrmCGABM(_DataRecords);
+            //var frmCurrent = new FrmCGABM(_DataRecords);
             //var frmCurrent = new FrmExtractPossibleFiles();
 
-            //var frmCurrent = new FrmAreaAgg(_DataRecords);
-            //CConstants.strRunContinuousGeneralizer = File.ReadLines(
-            //    CHelpFunc.strPathCG + "\\RunContinuousGeneralizer\\RunContinuousGeneralizer.txt").First();
-            //if (CConstants.strRunContinuousGeneralizer != "")
-            //{
-            //    //0 NonShape
-            //    //1 MinimizeInteriorBoundaries
-            //    //2 MaximizeMinComp_EdgeNumber
-            //    //3 MaximizeMinComp_Combine
-            //    //4 MaximizeAvgComp_EdgeNumber
-            //    //5 MaximizeAvgComp_Combine
-            //    _DataRecords.ParameterInitialize.cboShapeConstraint.SelectedIndex = 1;
-            //    switch (CConstants.strRunContinuousGeneralizer)
-            //    {
-            //        case "Greedy":
-            //            frmCurrent.btnGreedy_Click(sender, e);
-            //            break;
-            //        case "AStar":
-            //            frmCurrent.btnRun_Click(sender, e);
-            //            break;
-            //        case "ILP":
-            //            frmCurrent.btnRunILP_Click(sender, e);
-            //            break;
-            //        default:
-            //            break;
-            //    }
-            //    return;
-            //}
+            var frmCurrent = new FrmAreaAgg(_DataRecords);
+            CConstants.strRunContinuousGeneralizer = File.ReadLines(
+                CHelpFunc.strPathCG + "\\RunContinuousGeneralizer\\RunContinuousGeneralizer.txt").First();
+            if (CConstants.strRunContinuousGeneralizer != "")
+            {
+                //0 NonShape
+                //1 MinimizeInteriorBoundaries
+                //2 MaximizeMinComp_EdgeNumber
+                //3 MaximizeMinComp_Combine
+                //4 MaximizeAvgComp_EdgeNumber
+                //5 MaximizeAvgComp_Combine
+                _DataRecords.ParameterInitialize.cboShapeConstraint.SelectedIndex = 1;
+                switch (CConstants.strRunContinuousGeneralizer)
+                {
+                    case "Greedy":
+                        frmCurrent.btnGreedy_Click(sender, e);
+                        break;
+                    case "AStar":
+                        frmCurrent.btnRun_Click(sender, e);
+                        break;
+                    case "ILP":
+                        frmCurrent.btnRunILP_Click(sender, e);
+                        break;
+                    default:
+                        break;
+                }
+                return;
+            }
 
 
 

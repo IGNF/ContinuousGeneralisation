@@ -40,6 +40,7 @@ namespace MorphingClass.CGeneralizationMethods
         public CAreaAgg_AStar(CParameterInitialize ParameterInitialize, 
             string strSpecifiedFieldName = null, string strSpecifiedValue = null)
         {
+            CConstants.strMethod = "AStar";
             Preprocessing(ParameterInitialize, strSpecifiedFieldName, strSpecifiedValue);
         }
 
@@ -567,7 +568,7 @@ namespace MorphingClass.CGeneralizationMethods
         //public void InitialEstimatedCost(CRegion sscrg, double[,] padblTD, int intEstSteps)
         //{
         //    this.dblCostEstType = 0;
-        //    foreach (var kvp in this.CphTypeIndexSD_Area_CphGID)
+        //    foreach (var kvp in this.CphCpgSD_Area_CphGID)
         //    {
         //        //there is only one element in targetCrg
         //        this.dblCostEstType += kvp.Key.dblArea * padblTD[kvp.Value, sscrg.GetSoloCphTypeIndex()];  
@@ -677,21 +678,21 @@ namespace MorphingClass.CGeneralizationMethods
         private double BalancedEstType(CRegion crg, int intFinalTypeIndex, double[,] padblTD, int intEstSteps)
         {
             int intOverestimationCount = Math.Min(intEstSteps, crg.GetCphCount());
-            var pCphTypeIndexEt = crg.CphTypeIndexSD_Area_CphGID.GetEnumerator();
+            var pCphCpgEt = crg.CphCpgSD_Area_CphGID.GetEnumerator();
             double dblCostEst = 0;
             for (int i = 0; i < intOverestimationCount; i++)
             {
-                pCphTypeIndexEt.MoveNext();
+                pCphCpgEt.MoveNext();
 
-                dblCostEst += pCphTypeIndexEt.Current.Key.dblArea *
-                    padblTD[pCphTypeIndexEt.Current.Value, intFinalTypeIndex] * intEstSteps;  //overestimation         
+                dblCostEst += pCphCpgEt.Current.Key.dblArea *
+                    padblTD[pCphCpgEt.Current.Value.intTypeIndex, intFinalTypeIndex] * intEstSteps;  //overestimation         
             }
 
             for (int i = intOverestimationCount; i < crg.GetCphCount(); i++)
             {
-                pCphTypeIndexEt.MoveNext();
-                dblCostEst += pCphTypeIndexEt.Current.Key.dblArea *
-                    padblTD[pCphTypeIndexEt.Current.Value, intFinalTypeIndex];  //estimation
+                pCphCpgEt.MoveNext();
+                dblCostEst += pCphCpgEt.Current.Key.dblArea *
+                    padblTD[pCphCpgEt.Current.Value.intTypeIndex, intFinalTypeIndex];  //estimation
             }
 
             return dblCostEst;

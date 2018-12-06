@@ -47,7 +47,10 @@ namespace MorphingClass.CGeometry
         public SortedDictionary<CCorrCphs, CCorrCphs> AdjCorrCphsSD { get; set; }  //compare GID of CorrCphs
 
         //Why did I use SortedDictionary? We use this comparator CPatch .pCmpCPatch_Area_CphGID
-        public SortedDictionary<CPatch, int> CphTypeIndexSD_Area_CphGID { get; set; } 
+        /// <summary>
+        /// Cpg is the Core Cpolygon
+        /// </summary>
+        public SortedDictionary<CPatch, CPolygon> CphCpgSD_Area_CphGID { get; set; } 
 
         public static long _lngEstCountEdgeNumber;
         public static long _lngEstCountEdgeLength;
@@ -219,7 +222,7 @@ namespace MorphingClass.CGeometry
         {
             this.ID = intID;
             this.GID = _intStaticGID++;
-            this.CphTypeIndexSD_Area_CphGID = new SortedDictionary<CPatch, int>(CPatch.pCmpCPatch_Area_CphGID);
+            this.CphCpgSD_Area_CphGID = new SortedDictionary<CPatch, CPolygon>(CPatch.pCmpCPatch_Area_CphGID);
 
 
             ////intID==-2 is for a temporary Crg, and thus should not be counted
@@ -235,27 +238,27 @@ namespace MorphingClass.CGeometry
 
         public ICollection<CPatch> GetCphCol()
         {
-            return this.CphTypeIndexSD_Area_CphGID.Keys;
+            return this.CphCpgSD_Area_CphGID.Keys;
         }
 
-        public ICollection<int> GetCphTypeIndexCol()
+        public List<int> GetCphTypeIndexCol()
         {
-            return this.CphTypeIndexSD_Area_CphGID.Values;
+            return this.CphCpgSD_Area_CphGID.Values.Select(cpg => cpg.intTypeIndex).ToList();
         }
 
         public int GetCphTypeIndex(CPatch cph)
         {
-            int intTypeIndex;
-            if (this.CphTypeIndexSD_Area_CphGID.TryGetValue(cph, out intTypeIndex) == false)
+            CPolygon corecpg;
+            if (this.CphCpgSD_Area_CphGID.TryGetValue(cph, out corecpg) == false)
             {
                 throw new ArgumentNullException("The patch does not exist!");
             }
-            return intTypeIndex;
+            return corecpg.intTypeIndex;
         }
 
         public int GetCphCount()
         {
-            return this.CphTypeIndexSD_Area_CphGID.Count;
+            return this.CphCpgSD_Area_CphGID.Count;
         }
 
         public int GetAdjCount()
@@ -265,17 +268,17 @@ namespace MorphingClass.CGeometry
 
         public CPatch GetSmallestCph()
         {
-            return this.CphTypeIndexSD_Area_CphGID.First().Key;
+            return this.CphCpgSD_Area_CphGID.First().Key;
         }
 
         public int GetSoloCphTypeIndex()
         {
-            if (this.CphTypeIndexSD_Area_CphGID.Count > 1)
+            if (this.CphCpgSD_Area_CphGID.Count > 1)
             {
                 throw new ArgumentOutOfRangeException("There are more than one elements!");
             }
 
-            return this.CphTypeIndexSD_Area_CphGID.First().Value;
+            return this.CphCpgSD_Area_CphGID.First().Value.intTypeIndex;
         }
 
 
@@ -293,12 +296,12 @@ namespace MorphingClass.CGeometry
             }
         }
 
-        public void AddCph(CPatch Cph, int pintTypeIndex)
+        public void AddCph(CPatch Cph, CPolygon corecpg)
         {
-            this.CphTypeIndexSD_Area_CphGID.Add(Cph, pintTypeIndex);
+            this.CphCpgSD_Area_CphGID.Add(Cph, corecpg);
 
             this.intSumCphGID += Cph.GID;
-            this.intSumTypeIndex += pintTypeIndex;
+            this.intSumTypeIndex += corecpg.intTypeIndex;
             this.dblArea += Cph.dblArea;
 
 
@@ -312,23 +315,23 @@ namespace MorphingClass.CGeometry
 
 
 
-        public void SetCoreCph(int intTypeIndex)
-        {
-            CPatch CoreCph = new CPatch();
-            foreach (var kvp in this.CphTypeIndexSD_Area_CphGID)
-            {
-                if (kvp.Key.dblArea > CoreCph.dblArea && kvp.Value == intTypeIndex)
-                {
-                    CoreCph = kvp.Key;
-                }
-            }
+        //public void SetCoreCph(int intTypeIndex)
+        //{
+        //    var CoreCph = new CPatch();
+        //    foreach (var kvp in this.CphCpgSD_Area_CphGID)
+        //    {
+        //        if (kvp.Key.dblArea > CoreCph.dblArea && kvp.Value.intTypeIndex == intTypeIndex)
+        //        {
+        //            CoreCph = kvp.Key;
+        //        }
+        //    }
 
-            if (CoreCph.dblArea == 0)
-            {
-                throw new ArgumentException("Either no CoreCph or Cph without area!");
-            }
-            CoreCph.isCore = true;
-        }
+        //    if (CoreCph.dblArea == 0)
+        //    {
+        //        throw new ArgumentException("Either no CoreCph or Cph without area!");
+        //    }
+        //    CoreCph.isCore = true;
+        //}
 
         //public void AddCph(SortedDictionary<CPatch, int> pCphTypeIndexSD)
         //{
@@ -433,7 +436,7 @@ namespace MorphingClass.CGeometry
                 item.Value.SharedCEdgeLt.Clear();
             }
             //******************************************************************************************************//
-            foreach (var cphkvp in CphTypeIndexSD_Area_CphGID)
+            foreach (var cphkvp in CphCpgSD_Area_CphGID)
             {
                 cphkvp.Key.AdjacentCphSS = new SortedSet<CPatch>();
             }
@@ -630,11 +633,16 @@ namespace MorphingClass.CGeometry
         {
             var intactiveTypeIndex = this.GetCphTypeIndex(activecph);
             var intpassiveTypeIndex = this.GetCphTypeIndex(passivecph);
+            CPolygon corecpg;
+            if (this.CphCpgSD_Area_CphGID.TryGetValue(activecph, out corecpg) == false)
+            {
+                throw new ArgumentOutOfRangeException("this should not happen!");
+            }
 
-            var newCphTypeIndexSD = new SortedDictionary<CPatch, int>(this.CphTypeIndexSD_Area_CphGID, CPatch.pCmpCPatch_Area_CphGID);
-            newCphTypeIndexSD.Remove(activecph);
-            newCphTypeIndexSD.Remove(passivecph);
-            newCphTypeIndexSD.Add(unitedcph, intactiveTypeIndex);
+            var newCphCpgSD = new SortedDictionary<CPatch, CPolygon>(this.CphCpgSD_Area_CphGID, CPatch.pCmpCPatch_Area_CphGID);
+            newCphCpgSD.Remove(activecph);
+            newCphCpgSD.Remove(passivecph);
+            newCphCpgSD.Add(unitedcph, corecpg);
 
             //****if I update the codes below, then I should consider updating the codes in function GenerateCrgAndUpdateQ
             //for transfering information to outcrg
@@ -645,7 +653,7 @@ namespace MorphingClass.CGeometry
             newcrg.parent = this;
             newcrg.AggCphs = new CValTri<CPatch, CPatch, CPatch>(activecph, passivecph, unitedcph);
             newcrg.AdjCorrCphsSD = newAdjCorrCphsSD;
-            newcrg.CphTypeIndexSD_Area_CphGID = newCphTypeIndexSD;
+            newcrg.CphCpgSD_Area_CphGID = newCphCpgSD;
             newcrg.intSumCphGID = this.intSumCphGID - activecph.GID - passivecph.GID + unitedcph.GID;
             newcrg.intSumTypeIndex = this.intSumTypeIndex - intpassiveTypeIndex;
             //newcrg.intEdgeCount = this.intEdgeCount - intDecreaseEdgeCount;

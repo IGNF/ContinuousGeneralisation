@@ -61,7 +61,7 @@ namespace MorphingClass.CUtility
 //        public SortedDictionary<CCorrCphs, CCorrCphs> AdjCorrCphsSD { get; set; }  //compare GID of CorrCphs
 
 //        //Why did I use SortedDictionary? We use this comparator CPatch .pCmpCPatch_Area_CphGID
-//        public SortedDictionary<CPatch, int> CphTypeIndexSD_Area_CphGID { get; set; }
+//        public SortedDictionary<CPatch, int> CphCpgSD_Area_CphGID { get; set; }
 
 //        public static long _lngEstCountEdgeNumber;
 //        public static long _lngEstCountEdgeLength;
@@ -233,7 +233,7 @@ namespace MorphingClass.CUtility
 //        {
 //            this.ID = intID;
 //            this.GID = _intStaticGID++;
-//            this.CphTypeIndexSD_Area_CphGID = new SortedDictionary<CPatch, int>(CPatch.pCmpCPatch_Area_CphGID);
+//            this.CphCpgSD_Area_CphGID = new SortedDictionary<CPatch, int>(CPatch.pCmpCPatch_Area_CphGID);
 
 
 //            ////intID==-2 is for a temporary Crg, and thus should not be counted
@@ -249,18 +249,18 @@ namespace MorphingClass.CUtility
 
 //        public ICollection<CPatch> GetCphCol()
 //        {
-//            return this.CphTypeIndexSD_Area_CphGID.Keys;
+//            return this.CphCpgSD_Area_CphGID.Keys;
 //        }
 
 //        public ICollection<int> GetCphTypeIndexCol()
 //        {
-//            return this.CphTypeIndexSD_Area_CphGID.Values;
+//            return this.CphCpgSD_Area_CphGID.Values;
 //        }
 
 //        public int GetCphTypeIndex(CPatch cph)
 //        {
 //            int intTypeIndex;
-//            if (this.CphTypeIndexSD_Area_CphGID.TryGetValue(cph, out intTypeIndex) == false)
+//            if (this.CphCpgSD_Area_CphGID.TryGetValue(cph, out intTypeIndex) == false)
 //            {
 //                throw new ArgumentNullException("The patch does not exist!");
 //            }
@@ -269,7 +269,7 @@ namespace MorphingClass.CUtility
 
 //        public int GetCphCount()
 //        {
-//            return this.CphTypeIndexSD_Area_CphGID.Count;
+//            return this.CphCpgSD_Area_CphGID.Count;
 //        }
 
 //        public int GetAdjCount()
@@ -279,17 +279,17 @@ namespace MorphingClass.CUtility
 
 //        public CPatch GetSmallestCph()
 //        {
-//            return this.CphTypeIndexSD_Area_CphGID.First().Key;
+//            return this.CphCpgSD_Area_CphGID.First().Key;
 //        }
 
 //        public int GetSoloCphTypeIndex()
 //        {
-//            if (this.CphTypeIndexSD_Area_CphGID.Count > 1)
+//            if (this.CphCpgSD_Area_CphGID.Count > 1)
 //            {
 //                throw new ArgumentOutOfRangeException("There are more than one elements!");
 //            }
 
-//            return this.CphTypeIndexSD_Area_CphGID.First().Value;
+//            return this.CphCpgSD_Area_CphGID.First().Value;
 //        }
 
 
@@ -309,7 +309,7 @@ namespace MorphingClass.CUtility
 
 //        public void AddCph(CPatch Cph, int pintTypeIndex)
 //        {
-//            this.CphTypeIndexSD_Area_CphGID.Add(Cph, pintTypeIndex);
+//            this.CphCpgSD_Area_CphGID.Add(Cph, pintTypeIndex);
 
 //            this.intSumCphGID += Cph.GID;
 //            this.intSumTypeIndex += pintTypeIndex;
@@ -329,7 +329,7 @@ namespace MorphingClass.CUtility
 //        public void SetCoreCph(int intTypeIndex)
 //        {
 //            CPatch CoreCph = new CPatch();
-//            foreach (var kvp in this.CphTypeIndexSD_Area_CphGID)
+//            foreach (var kvp in this.CphCpgSD_Area_CphGID)
 //            {
 //                if (kvp.Key.dblArea > CoreCph.dblArea && kvp.Value == intTypeIndex)
 //                {
@@ -447,7 +447,7 @@ namespace MorphingClass.CUtility
 //                item.Value.SharedCEdgeLt.Clear();
 //            }
 //            //******************************************************************************************************//
-//            foreach (var cphkvp in CphTypeIndexSD_Area_CphGID)
+//            foreach (var cphkvp in CphCpgSD_Area_CphGID)
 //            {
 //                cphkvp.Key.AdjacentCphSS = new SortedSet<CPatch>();
 //            }
@@ -881,7 +881,7 @@ namespace MorphingClass.CUtility
 //            var intactiveTypeIndex = this.GetCphTypeIndex(activecph);
 //            var intpassiveTypeIndex = this.GetCphTypeIndex(passivecph);
 
-//            var newCphTypeIndexSD = new SortedDictionary<CPatch, int>(this.CphTypeIndexSD_Area_CphGID, CPatch.pCmpCPatch_Area_CphGID);
+//            var newCphTypeIndexSD = new SortedDictionary<CPatch, int>(this.CphCpgSD_Area_CphGID, CPatch.pCmpCPatch_Area_CphGID);
 //            newCphTypeIndexSD.Remove(activecph);
 //            newCphTypeIndexSD.Remove(passivecph);
 //            newCphTypeIndexSD.Add(unitedcph, intactiveTypeIndex);
@@ -895,7 +895,7 @@ namespace MorphingClass.CUtility
 //            newcrg.parent = this;
 //            newcrg.AggCphs = new CValTri<CPatch, CPatch, CPatch>(activecph, passivecph, unitedcph);
 //            newcrg.AdjCorrCphsSD = newAdjCorrCphsSD;
-//            newcrg.CphTypeIndexSD_Area_CphGID = newCphTypeIndexSD;
+//            newcrg.CphCpgSD_Area_CphGID = newCphTypeIndexSD;
 //            newcrg.intSumCphGID = this.intSumCphGID - activecph.GID - passivecph.GID + unitedcph.GID;
 //            newcrg.intSumTypeIndex = this.intSumTypeIndex - intpassiveTypeIndex;
 //            //newcrg.intEdgeCount = this.intEdgeCount - intDecreaseEdgeCount;
@@ -944,7 +944,7 @@ namespace MorphingClass.CUtility
 //        public void InitialEstimatedCost(CRegion sscrg, double[,] padblTD, int intFactor)
 //        {
 //            this.dblCostEstType = 0;
-//            foreach (var kvp in this.CphTypeIndexSD_Area_CphGID)
+//            foreach (var kvp in this.CphCpgSD_Area_CphGID)
 //            {
 //                //there is only one element in targetCrg
 //                this.dblCostEstType += kvp.Key.dblArea * padblTD[kvp.Value, sscrg.GetSoloCphTypeIndex()];

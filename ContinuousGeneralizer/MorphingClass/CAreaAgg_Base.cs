@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 
 using System.Linq;
 using System.Text;
@@ -58,12 +59,13 @@ namespace MorphingClass.CGeneralizationMethods
         protected static bool _blnTesting = true; //if we are testing, we forget about aggregation sequences
         protected static Dictionary<int, CValPair<int, double>> _EstStepsCostVPDt;
         protected static List<string> _strLineLt; //sort according to ID
+        protected static string _strILPFailingNumOutput = "";
 
         //comment the following if you want to process on all instances
         protected void UpdateStartEnd()
         {
-            //_intStart = 100;
-            //_intEndCount = _intStart + 2;
+            _intStart = 100;
+            _intEndCount = _intStart + 10;
 
             if (CConstants.strRunContinuousGeneralizer!="")
             {
@@ -227,9 +229,9 @@ namespace MorphingClass.CGeneralizationMethods
 
             //assign the polygons as well as attributes from a featureLayer into regions, without considering costs
             this.LSCrgLt = GenerateCrgLt(pLSCPgLt, pSSCPgLt.Count, 
-                pObjValueLtLtLt[0], intLSTypeATIndex, intLSRegionNumATIndex, _TypePVDt, pRegionPVDt);
+                pObjValueLtLtLt[0], intLSRegionNumATIndex, pRegionPVDt);
             this.SSCrgLt = GenerateCrgLt(pSSCPgLt, pSSCPgLt.Count, 
-                pObjValueLtLtLt[1], intSSTypeATIndex, intSSRegionNumATIndex, _TypePVDt, pRegionPVDt);
+                pObjValueLtLtLt[1], intSSRegionNumATIndex, pRegionPVDt);
 
             _intTypeSymbolDt = CToIpe.GetKeySymbolDt(_ParameterInitialize.pFLayerLt[0], pObjValueLtLtLt[0], intLSTypeATIndex);
 
@@ -287,7 +289,7 @@ namespace MorphingClass.CGeneralizationMethods
             }
 
             StrObjLtDt.SetLastObj("ID", LSCrg.ID);
-            StrObjLtDt.SetLastObj("n", LSCrg.CphTypeIndexSD_Area_CphGID.Count);
+            StrObjLtDt.SetLastObj("n", LSCrg.CphCpgSD_Area_CphGID.Count);
             StrObjLtDt.SetLastObj("m", LSCrg.AdjCorrCphsSD.Count);
             StrObjLtDt.SetLastObj("EstSteps", -1);  //default value
         }
@@ -305,18 +307,17 @@ namespace MorphingClass.CGeneralizationMethods
         /// <param name="pRegionPVDt"></param>
         /// <returns></returns>
         protected List<CRegion> GenerateCrgLt(List<CPolygon> pCpgLt, int intCrgNum, 
-            List<List<object>> pObjValueLtLt, int intTypeATIndex, int intRegionNumATIndex, 
-            CValMap_Dt<int, int> pTypePVDt, CValMap_Dt<int, int> pRegionPVDt)
+            List<List<object>> pObjValueLtLt, int intRegionNumATIndex, CValMap_Dt<int, int> pRegionPVDt)
         {
             var pCrgLt = new List<CRegion>(intCrgNum);
             pCrgLt.EveryElementNew();
 
             for (int i = 0; i < pCpgLt.Count; i++)
             {
-                //get the type index
-                int intType = Convert.ToInt32(pObjValueLtLt[i][intTypeATIndex]);
-                int intTypeIndex;
-                pTypePVDt.Dt.TryGetValue(intType, out intTypeIndex);
+                ////get the type index
+                //int intType = Convert.ToInt32(pObjValueLtLt[i][intTypeATIndex]);
+                //int intTypeIndex;
+                //pTypePVDt.Dt.TryGetValue(intType, out intTypeIndex);
 
                 //get the RegionNum index
                 var intRegionNum = Convert.ToInt32(pObjValueLtLt[i][intRegionNumATIndex]);
@@ -324,7 +325,7 @@ namespace MorphingClass.CGeneralizationMethods
                 pRegionPVDt.Dt.TryGetValue(intRegionNum, out intRegionIndex);
 
                 //add the Cph into the corresponding Region
-                pCrgLt[intRegionIndex].AddCph(new CPatch(pCpgLt[i], -1, intTypeIndex), intTypeIndex);
+                pCrgLt[intRegionIndex].AddCph(new CPatch(pCpgLt[i], -1, pCpgLt[i].intTypeIndex), pCpgLt[i]);
                 pCrgLt[intRegionIndex].ID = intRegionNum;  //set the ID for each region
             }
 
@@ -332,7 +333,7 @@ namespace MorphingClass.CGeneralizationMethods
             foreach (var crg in pCrgLt)
             {
                 int intCount = 0;
-                foreach (var cph in crg.CphTypeIndexSD_Area_CphGID.Keys)
+                foreach (var cph in crg.CphCpgSD_Area_CphGID.Keys)
                 {
                     cph.ID = intCount++;
                 }
@@ -494,12 +495,12 @@ namespace MorphingClass.CGeneralizationMethods
             var IpgLt = new List<IPolygon4>();
             foreach (var crg in OutputCrgLt)
             {
-                foreach (var CphTypeIndexKVP in crg.CphTypeIndexSD_Area_CphGID)
+                foreach (var CphCpgKVP in crg.CphCpgSD_Area_CphGID)
                 {
-                    IpgLt.Add(CphTypeIndexKVP.Key.JudgeAndMergeCpgSSToIpg());
+                    IpgLt.Add(CphCpgKVP.Key.JudgeAndMergeCpgSSToIpg());
                     var pobjectValueLt = new List<object>(2);
                     int intType;
-                    pTypePVDt.Dt_R.TryGetValue(CphTypeIndexKVP.Value, out intType);
+                    pTypePVDt.Dt_R.TryGetValue(CphCpgKVP.Value.intTypeIndex, out intType);
                     pobjectValueLt.Add(intType);
                     pobjectValueLt.Add(crg.ID);
                     pobjectValueLtLt.Add(pobjectValueLt);
@@ -509,7 +510,7 @@ namespace MorphingClass.CGeneralizationMethods
             CSaveFeature.SaveIGeoEb(IpgLt, esriGeometryType.esriGeometryPolygon,
         dblProp.ToString() + "_#" + IpgLt.Count + "_Step" + intTime.ToString(),
         pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt, 
-        strSymbolLayerPath: pParameterInitialize.strMxdPathBackSlash + "complete.lyr");
+        strSymbolLayerPath: pParameterInitialize.strMxdPathBackSlash + "Legend.lyr");
         }
 
         private static void SetAttributes(out List<string> pstrFieldNameLt, out List<esriFieldType> pesriFieldTypeLt)
@@ -590,6 +591,14 @@ namespace MorphingClass.CGeneralizationMethods
                     pParameterInitialize.strMxdPath);
             }
 
+            if (strMethod == "ILP")
+            {
+                using (var writer = new StreamWriter(pParameterInitialize.strSavePath + "\\" + _strResultFileName + ".txt", true))
+                {
+                    writer.Write(_strILPFailingNumOutput);
+                }
+            }
+
 
         }
 
@@ -659,6 +668,8 @@ namespace MorphingClass.CGeneralizationMethods
         { 
             List<object> objEstStepsLt;
             StrObjLtDt.TryGetValue("EstSteps", out objEstStepsLt);
+            List<object> objTimeLt;
+            StrObjLtDt.TryGetValue("Time(ms)", out objTimeLt);
             List<object> objNLt;
             StrObjLtDt.TryGetValue("n", out objNLt);
             double dblLogEstStepsSum = 0;
@@ -676,6 +687,10 @@ namespace MorphingClass.CGeneralizationMethods
             
             var intEstStepsCountlt = new List<int>(21); //make a sufficient capacity 
             intEstStepsCountlt.EveryElementNew();
+            int intOptimalSolution = 0;
+            int intFeasibleSolution = 0;
+            int intNoSolution = 0;
+            double dblFSTime = 0;
             for (int i = 0; i < objEstStepsLt.Count; i++)
             {
                 double dblEstSteps = Convert.ToDouble(objEstStepsLt[i]);
@@ -691,23 +706,27 @@ namespace MorphingClass.CGeneralizationMethods
                     intOverEstCount++;
                 }
 
-                int intI = Convert.ToInt32(objNLt[i])/ 5;
+                int intI = Convert.ToInt32(objNLt[i]) / 5;
                 if (intI > 5)
                 {
                     intI = 5;
                 }
                 dblRngCountLtLt[intI][0]++;
-                if (dblEstSteps == 0)
+                if (dblEstSteps == 0) //optimal solution
                 {
-                    dblRngCountLtLt[intI][1]++;  //optimal solution
+                    intOptimalSolution++;
+                    dblRngCountLtLt[intI][1]++;  
                 }
-                else if (dblEstSteps>0 && dblEstSteps<20000)
+                else if (dblEstSteps > 0 && dblEstSteps < 20000) //feasible solution
                 {
-                    dblRngCountLtLt[intI][2]++;  //feasible solution
+                    intFeasibleSolution++;
+                    dblFSTime += Convert.ToDouble(objTimeLt[i]);
+                    dblRngCountLtLt[intI][2]++;  
                 }
-                else if (dblEstSteps == 20000)
+                else if (dblEstSteps == 20000) //no solution
                 {
-                    dblRngCountLtLt[intI][3]++;  //no solution
+                    intNoSolution++;
+                    dblRngCountLtLt[intI][3]++;  
                 }
                 else
                 {
@@ -715,27 +734,72 @@ namespace MorphingClass.CGeneralizationMethods
                 }
             }
 
-            string strData = "& #over  & #repeatition  & #Nodes  & #Edges  & CostType  & CostComp  & Cost  & Time(min)\n";
-            strData += ("& " + string.Format("{0,3}", intOverEstCount)); //symbol "&" is for the use in Latex
-            strData += (" & " + string.Format("{0,3}", dblLogEstStepsSum));  //repetitions
-            strData += GetSumWithSpecifiedStyle(StrObjLtDt, "#Nodes", "{0,8}", 0);
-            strData += GetSumWithSpecifiedStyle(StrObjLtDt, "#Edges", "{0,10}", 0);            
-            strData += GetSumWithSpecifiedStyle(StrObjLtDt, "CostType", "{0,4}", 1);
-            strData += GetSumWithSpecifiedStyle(StrObjLtDt, "CostComp", "{0,4}", 1);
-            strData += GetSumWithSpecifiedStyle(StrObjLtDt, "Cost", "{0,4}", 1);
-            strData += GetSumWithSpecifiedStyle(StrObjLtDt, "Time(ms)", "{0,4}", 1, 60000) + "\n";  //all the time, minutes in statistics
+            string strLogEstStepsSum = "";
+            if (CConstants.strMethod == "AStar")
+            {
+                strLogEstStepsSum = dblLogEstStepsSum.ToString();
+            }
+
+            //string strformatstatistics = "&{0,5} \n&{1,15} \n&{2,8} &{3,15} &{4,15} \n&{5,8} &{6,8} &{7,8} &{8,15}";
+            string strformatstatistics = "&{0,-15} \n&{1,-12} \n&{2,-8} &{3,-14} &{4,-14} \n&{5,-8} &{6,-14} &{7,-14} &{8,-15}";
+            string[] astrHead = { "#OS", "#FS", "#rep", "#Nodes", "#Edges", "CostT", "CostC", "Cost", "Time(min)" };
+
+            //string strHead = string.Format("&{0,3} &{1,11} &{2,3} &{3,9} &{4,11} &{5,5} &{6,5} &{7,5} &{8,5}",
+            //    "#OS", "#FS", "#rep", "#OS", "#OS", "#OS", "#OS", "#OS", "#OS");
+
+            //string strData = "& #OS  & #repetition  & #Nodes  & #Edges  & CostT  & CostC  & Cost  & Time(min)\n";
+            string strData = string.Format(strformatstatistics, astrHead) + "\n";
+
+
+
+            var astrValuess = new string[9];
+            int intArrayIndex = 0;
+            astrValuess[intArrayIndex++] = intOptimalSolution.ToString();
+            astrValuess[intArrayIndex++] = intFeasibleSolution.ToString() + @"~("
+                + (Convert.ToDouble(intFeasibleSolution) / objEstStepsLt.Count * 100).ToString("F1") + @"\%)";
+            astrValuess[intArrayIndex++] = strLogEstStepsSum;
+            var dblNodeNum = GetSumValue(StrObjLtDt, "#Nodes");
+            astrValuess[intArrayIndex++] = (dblNodeNum/1000).ToString("F1") + @"\cdot 10^3";
+            var dblEdgeNum = GetSumValue(StrObjLtDt, "#Edges");
+            astrValuess[intArrayIndex++] = (dblEdgeNum / 1000).ToString("F1") + @"\cdot 10^3";
+            var dblCostT = GetSumValue(StrObjLtDt, "CostType");
+            astrValuess[intArrayIndex++] = dblCostT.ToString("F1");
+            var dblCostC = GetSumValue(StrObjLtDt, "CostComp");
+            astrValuess[intArrayIndex++] = dblCostC.ToString("F1");
+            var dblCost = GetSumValue(StrObjLtDt, "Cost");
+            astrValuess[intArrayIndex++] = dblCost.ToString("F1");
+            var dblTime = GetSumValue(StrObjLtDt, "Time(ms)");
+
+            var dblTimeDisplay = Math.Round(dblTime / 60000, 1);
+            var nfi = new NumberFormatInfo();
+            nfi.NumberDecimalSeparator = "'"; //use "'" as decial separator for latex
+            astrValuess[intArrayIndex++] = dblTimeDisplay.ToString(nfi) + @"~(" 
+                + (dblFSTime / dblTime *100).ToString("F1")+ @"\%)";
+
+            strData+= string.Format(strformatstatistics, astrValuess) + "\n";
+
+
+            //strData += ("&" + string.Format("{0,3}", intOverEstCount)); //symbol "&" is for the use in Latex
+            //strData += (" &" + string.Format("{0,3}", dblLogEstStepsSum));  //repetitions
+            //strData += GetSumWithSpecifiedStyle(StrObjLtDt, "#Nodes", "{0,9}", 0);
+            //strData += GetSumWithSpecifiedStyle(StrObjLtDt, "#Edges", "{0,11}", 0);            
+            //strData += GetSumWithSpecifiedStyle(StrObjLtDt, "CostType", "{0,5}", 1);
+            //strData += GetSumWithSpecifiedStyle(StrObjLtDt, "CostComp", "{0,5}", 1);
+            //strData += GetSumWithSpecifiedStyle(StrObjLtDt, "Cost", "{0,5}", 1);
+            //strData += GetSumWithSpecifiedStyle(StrObjLtDt, "Time(ms)", "{0,5}", 1, 60000) + "\n";  //all the time, minutes in statistics
             //strData += ;
 
             //to generate coordinates like (1,6), where x is for the index of overestimation factor, 
             //and y is for the number of domains that used the factor 
+            strData += "\n\n#Repetitions, #Regions:\n";
             for (int i = 0; i < intEstStepsCountlt.Count; i++)
             {
                 strData += "(" + i + "," + intEstStepsCountlt[i] + ")\n";
             }
 
-            var strFormat = "{0,9}{1,9}{2,9}{3,9}{4,9}{5,9}{6,9}{7,9}";
-            strData += string.Format(strFormat, "range", "total", "optimal", "percent", "feasible", "percent", "no", "percent")+ "\n";
-
+            strData += "\n\nStatistics by ranges:\n";
+            var strFormat = "{0,9}{1,9}{2,9}{3,9}{4,9}{5,9}{6,9}{7,9}\n";
+            strData += string.Format(strFormat, "range", "total", "optimal", "percent", "feasible", "percent", "no", "percent");
 
             for (int i = 0; i < dblRngCountLtLt.Count; i++)
             {
@@ -768,13 +832,26 @@ namespace MorphingClass.CGeneralizationMethods
                 strData += string.Format(strFormat, strRange, dblSum,
                     dblRngCountLt[1], (100 * dblRngCountLt[1] / dblSum).ToString("0.0"),
                     dblRngCountLt[2], (100 * dblRngCountLt[2] / dblSum).ToString("0.0"),
-                    dblRngCountLt[3], (100 * dblRngCountLt[3] / dblSum).ToString("0.0")) + "\n";
+                    dblRngCountLt[3], (100 * dblRngCountLt[3] / dblSum).ToString("0.0"));
             }
 
             using (var writer = new StreamWriter(strSavePath + "\\" + strName + ".txt", true))
             {
                 writer.Write(strData);
             }
+        }
+
+        private static double GetSumValue(CStrObjLtDt StrObjLtDt, string strKey)
+        {
+            List<object> objLt;
+            StrObjLtDt.TryGetValue(strKey, out objLt);
+            double dblSum = 0;
+            for (int i = 0; i < objLt.Count; i++)
+            {
+                dblSum += Convert.ToDouble(objLt[i]);
+            }
+
+            return dblSum;
         }
 
         private static string GetSumWithSpecifiedStyle(CStrObjLtDt StrObjLtDt, 
@@ -790,7 +867,7 @@ namespace MorphingClass.CGeneralizationMethods
             dblSum /= dblTimeUnit;
 
             string strData = Uniquedigits(dblSum, intRound);
-            return " & " + string.Format(strformat, strData);
+            return " &" + string.Format(strformat, strData);
         }
 
         private static string Uniquedigits(double dblValue, int intRound)
@@ -825,7 +902,7 @@ namespace MorphingClass.CGeneralizationMethods
                 "EstSteps",
                 "CostType",
                 "CostComp",
-                "R_TypeCE",
+                "R_TypeCE",  //CE: cost/estimated
                 "R_CompCE",
                 //"R_CompType",
                 //"Cost",
@@ -849,28 +926,48 @@ namespace MorphingClass.CGeneralizationMethods
             //{index[,length][:formatString]}; 
             //length: If positive, the parameter is right-aligned; if negative, it is left-aligned.
             //const string format = "{i,j}"; i: the i-th argument, j:j positions
-            string strData = "\n\n\n";  //make some gap lines
-
+            
+            // add \\ at the end of a line, which means line break in latex
+            string strFormatCostDetail = "{0,4} &{1,3} &{2,3} &{3,10} &{4,8} &{5,8} &{6,8} &{7,8} &{8,8}\\\\\n";
+            string strData = "\n\n\n"+string.Format(strFormatCostDetail, 
+                "ID", "n", "m", "EstSteps", "CostT", "CostC", "R_TCE", "R_CCE", "T(s)");
             foreach (var objDataLt in objDataLtEb)
             {
-                strData += string.Format("{0,3}", objDataLt[intIndexLt[0]]);  //for ID
-                for (int i = 1; i < intIndexLt.Count - 1; i++)
-                {
-                    int intIndex = intIndexLt[i];
+                var astrDetail = new string[9];
+                int intIndex = 0;
+                astrDetail[intIndex] = objDataLt[intIndexLt[intIndex++]].ToString();      //ID
+                astrDetail[intIndex] = objDataLt[intIndexLt[intIndex++]].ToString();      //n
+                astrDetail[intIndex] = objDataLt[intIndexLt[intIndex++]].ToString();      //m
+                astrDetail[intIndex] = objDataLt[intIndexLt[intIndex++]].ToString();      //EstSteps
+                astrDetail[intIndex] = Convert.ToDouble(objDataLt[intIndexLt[intIndex++]]).ToString("F3");  //CostType
+                astrDetail[intIndex] = Convert.ToDouble(objDataLt[intIndexLt[intIndex++]]).ToString("F3");  //CostComp
+                astrDetail[intIndex] = Convert.ToDouble(objDataLt[intIndexLt[intIndex++]]).ToString("F3");  //R_TypeCE
+                astrDetail[intIndex] = Convert.ToDouble(objDataLt[intIndexLt[intIndex++]]).ToString("F3");  //R_CompCE
+                astrDetail[intIndex] = (Convert.ToDouble(objDataLt[intIndexLt[intIndex++]])/1000).ToString("F1");  //Time(ms)
 
-                    if (i == 1 || i == 2 || i == 3) // for n and m, EstSteps
-                    {
-                        strData += (" & " + string.Format("{0,3}", objDataLt[intIndex].ToString()));
-                    }
-                    else if (i == 4 || i == 5 || i == 6 || i == 7)
-                    {
-                        strData += (" & " + string.Format("{0,7}", Convert.ToDouble(objDataLt[intIndex]).ToString("0.000")));
-                    }
-                }
-                // for time
-                strData += (" & " + string.Format("{0,5}", 
-                    (Convert.ToDouble(objDataLt[intIndexLt.Last()]) / 1000).ToString("0.0")));
-                strData += ("\\" + "\\" + "\n"); // add \\ at the end of a line, which means line break in latex
+                strData += string.Format(strFormatCostDetail, astrDetail);
+                //strData += string.Format("{0,3}", objDataLt[intIndexLt[0]]);  //for ID
+                //for (int i = 1; i < intIndexLt.Count - 1; i++)
+                //{
+                //    int intIndex = intIndexLt[i];
+
+                //    if (i == 1 || i == 2 || i == 3) // for n and m, //EstSteps
+                //    {
+                //        strData += " & " + string.Format("{0,3}", objDataLt[intIndex].ToString());
+                //    }
+                //    else if (i == 4) 
+                //    {
+                //        strData += " & " + string.Format("{0,12}", objDataLt[intIndex].ToString());
+                //    }
+                //    else if (i == 5 || i == 6 || i == 7)
+                //    {
+                //        strData += " & " + string.Format("{0,7}", Convert.ToDouble(objDataLt[intIndex]).ToString("0.000"));
+                //    }
+                //}
+                //// for time
+                //strData += (" & " + string.Format("{0,5}", 
+                //    (Convert.ToDouble(objDataLt[intIndexLt.Last()]) / 1000).ToString("0.0")));
+                //strData += ("\\" + "\\" + "\n"); // add \\ at the end of a line, which means line break in latex
             }
 
             using (var writer = new StreamWriter(strSavePath + "\\" + strName + ".txt", true))
@@ -882,9 +979,9 @@ namespace MorphingClass.CGeneralizationMethods
         private static void ExportIDOverEstimation(IEnumerable<IList<object>> objDataLtEb, string strName, string strSavePath, string strMethod)
         {
             string strDataNo = "\n\n\n" + "find NO solution:\n";
-            string strDataNoForm = "";
+            //string strDataNoForm = "";
             string strDataFeasible = "\n\n\n" + "find feasible solution:\n";  //make some gap lines
-            string strDataFeasibleForm = "";
+            //string strDataFeasibleForm = "";
             //string strData = "";            
             foreach (var objDataLt in objDataLtEb)
             {
@@ -894,12 +991,12 @@ namespace MorphingClass.CGeneralizationMethods
                     if (dblEstSteps == 20000) //this is for ILP, where we find no solution
                     {
                         strDataNo += objDataLt[0] + "\n";
-                        strDataNoForm += "intSpecifiedIDLt.Add(" + objDataLt[0] + ");\n";
+                        //strDataNoForm += "intSpecifiedIDLt.Add(" + objDataLt[0] + ");\n";
                     }
                     else
                     {
                         strDataFeasible += objDataLt[0] + "\n";
-                        strDataFeasibleForm += "intSpecifiedIDLt.Add(" + objDataLt[0] + ");\n";
+                        //strDataFeasibleForm += "intSpecifiedIDLt.Add(" + objDataLt[0] + ");\n";
                     }                    
                 }
                 else
@@ -910,9 +1007,9 @@ namespace MorphingClass.CGeneralizationMethods
             using (var writer = new StreamWriter(strSavePath + "\\" + strName + ".txt", true))
             {
                 writer.Write(strDataNo);
-                writer.Write(strDataNoForm);
+                //writer.Write(strDataNoForm);
                 writer.Write(strDataFeasible);
-                writer.Write(strDataFeasibleForm);
+                //writer.Write(strDataFeasibleForm);
             }
         }
 
@@ -956,7 +1053,7 @@ namespace MorphingClass.CGeneralizationMethods
                 yield return CSaveFeature.SaveIGeoEb(ipglt, esriGeometryType.esriGeometryPolygon, 
         "#" + (intTotalCphCount - i - 1).ToString() + "_Step" + (i + 1).ToString(),
         pstrFieldNameLt, pesriFieldTypeLt, pobjectValueLtLt, 
-        strSymbolLayerPath: pParameterInitialize.strMxdPathBackSlash + "complete.lyr");
+        strSymbolLayerPath: pParameterInitialize.strMxdPathBackSlash + "Legend.lyr");
 
             }
         }
@@ -1095,10 +1192,10 @@ List<string> strLayerNameLt,
             strIpeContAllLayers += "<group>\n";
             foreach (var crg in pInitialCrgLt)
             {
-                foreach (var kvp in crg.CphTypeIndexSD_Area_CphGID)
+                foreach (var kvp in crg.CphCpgSD_Area_CphGID)
                 {
                     int intType;
-                    pTypePVDt.Dt_R.TryGetValue(kvp.Value, out intType);
+                    pTypePVDt.Dt_R.TryGetValue(kvp.Value.intTypeIndex, out intType);
                     ISymbol pSymbol;
                     pintTypeSymbolDt.TryGetValue(intType, out pSymbol);
                     var pfillSymbol=pSymbol as IFillSymbol;
@@ -1121,27 +1218,12 @@ List<string> strLayerNameLt,
             string strActive = "heavier";
             string strPassive = "fat";
 
-            //var resultColor = new CColor(45, 121, 147);
-
-            ////for the first layer, we add all the patches
-            //string strIpeContAllLayers = CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[0], "removable", 320, 64);
-            //strIpeContAllLayers += CIpeDraw.writeIpeText(strLayerNameLt[0], 320, 128);  //write the number of patches
-            //strIpeContAllLayers += "<group>\n";
-            //foreach (var cpg in startCpgEb)
-            //{
-            //    strIpeContAllLayers+= CIpeDraw.DrawCpg(cpg, pFLayerEnv, pIpeEnv, resultColor, strBoundWidth);
-            //}
-            //strIpeContAllLayers += "</group>\n";            
-
-
             var strIpeContAllLayers = CIpeDraw.SpecifyLayerByWritingText(strLayerNameLt[1], "removable", 320, 64);
             strIpeContAllLayers +=
                 "<group>\n" +
                 CToIpe.TranIpgBoundToIpe(IpgLt[0], pFLayerEnv, pIpeEnv, resultColor, strActive) +
                 CToIpe.TranIpgBoundToIpe(passiveIpgLt[0], pFLayerEnv, pIpeEnv, passiveColor, strPassive) +
                 "</group>\n";
-
-
 
             //for each of other layers, we only add the new patch
             for (int i = 2; i < strLayerNameLt.Count - 2; i++)
