@@ -72,7 +72,7 @@
             this.cboShapeConstraint = new System.Windows.Forms.ComboBox();
             this.txtNodes = new System.Windows.Forms.TextBox();
             this.btnRunSpecified = new System.Windows.Forms.Button();
-            this.btnRun = new System.Windows.Forms.Button();
+            this.btnAStar = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.btnRunILP_Extend = new System.Windows.Forms.Button();
             this.btnRunILP = new System.Windows.Forms.Button();
@@ -520,11 +520,11 @@
             this.cboShapeConstraint.FormattingEnabled = true;
             this.cboShapeConstraint.Items.AddRange(new object[] {
             "NonShape",
-            "MinimizeInteriorBoundaries",
-            "MaximizeMinComp_EdgeNumber",
-            "MaximizeMinComp_Combine",
-            "MaximizeAvgComp_EdgeNumber",
-            "MaximizeAvgComp_Combine"});
+            "MinIntBound",
+            "MaxMinC_EdgeNo",
+            "MaxMinC_Comb",
+            "MaxAvgC_EdgeNo",
+            "MaxAvgC_Comb"});
             this.cboShapeConstraint.Location = new System.Drawing.Point(122, 19);
             this.cboShapeConstraint.Name = "cboShapeConstraint";
             this.cboShapeConstraint.Size = new System.Drawing.Size(160, 21);
@@ -549,15 +549,15 @@
             this.btnRunSpecified.UseVisualStyleBackColor = true;
             this.btnRunSpecified.Click += new System.EventHandler(this.btnRunSpecified_Click);
             // 
-            // btnRun
+            // btnAStar
             // 
-            this.btnRun.Location = new System.Drawing.Point(6, 19);
-            this.btnRun.Name = "btnRun";
-            this.btnRun.Size = new System.Drawing.Size(64, 25);
-            this.btnRun.TabIndex = 71;
-            this.btnRun.Text = "Run";
-            this.btnRun.UseVisualStyleBackColor = true;
-            this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
+            this.btnAStar.Location = new System.Drawing.Point(6, 19);
+            this.btnAStar.Name = "btnAStar";
+            this.btnAStar.Size = new System.Drawing.Size(64, 25);
+            this.btnAStar.TabIndex = 71;
+            this.btnAStar.Text = "Run";
+            this.btnAStar.UseVisualStyleBackColor = true;
+            this.btnAStar.Click += new System.EventHandler(this.btnAStar_Click);
             // 
             // groupBox4
             // 
@@ -607,7 +607,7 @@
             this.groupBox5.Controls.Add(this.label7);
             this.groupBox5.Controls.Add(this.textBox1);
             this.groupBox5.Controls.Add(this.txtNodes);
-            this.groupBox5.Controls.Add(this.btnRun);
+            this.groupBox5.Controls.Add(this.btnAStar);
             this.groupBox5.Controls.Add(this.btnRunSpecified);
             this.groupBox5.Location = new System.Drawing.Point(9, 134);
             this.groupBox5.Name = "groupBox5";
@@ -755,7 +755,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox cboSmallerScaleLayer;
-        private System.Windows.Forms.Button btnRun;
+        private System.Windows.Forms.Button btnAStar;
         private System.Windows.Forms.Label lblLayer;
         private System.Windows.Forms.ComboBox cboLargerScaleLayer;
         private System.Windows.Forms.TextBox txtEvaluation;

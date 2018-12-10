@@ -101,8 +101,7 @@ namespace MorphingClass.CGeneralizationMethods
             EndAffairs(_intEndCount);
 
 
-            //_strILPFailingNumOutput += "Out of Memory during setting and solving, respectively: "
-            string strILPFailingNumOutput = "";
+            string strILPFailingNumOutput = "\n\n";
             strILPFailingNumOutput += "Out of Memory during setting and solving, respectively: "
                 + string.Format("{0,6}, {1,6}", CrgOOMSetSS.Count, CrgOOMSolveSS.Count) + "\n";
             strILPFailingNumOutput += "Out of Time   during setting and solving, respectively: "
@@ -316,7 +315,7 @@ namespace MorphingClass.CGeneralizationMethods
                         #endregion
 
 
-                        //if (_ParameterInitialize.strAreaAggregation == "Smallest")
+                        //if (_ParameterInitialize.strAreaAggregation == "Sml")
                         //{
                         //    Console.WriteLine("");
                         //    Console.WriteLine("Variable s:");
@@ -383,7 +382,7 @@ namespace MorphingClass.CGeneralizationMethods
                     if (strStatus == "Optimal")
                     {
                         blnSolved = true;
-                        StrObjLtDt.SetLastObj("EstSteps", 0.ToString("F4"));  //keep 4 decimal digits
+                        StrObjLtDt.SetLastObj("EstSteps/Gap%", 0.ToString("F4"));  //keep 4 decimal digits
                         StrObjLtDt.SetLastObj("Cost", cplex.ObjValue);
                         Console.WriteLine("Solution value = " + cplex.ObjValue);
                     }
@@ -392,7 +391,7 @@ namespace MorphingClass.CGeneralizationMethods
                         //|best integer-best bound(node)|  / 1e-10 + |best integer|
                         //|cplex.ObjValue-cplex.BestObjValue|  /  1e-10 + |cplex.ObjValue|
                         blnSolved = true;
-                        StrObjLtDt.SetLastObj("EstSteps", (cplex.MIPRelativeGap * 100).ToString("F4"));  //keep 4 decimal digits
+                        StrObjLtDt.SetLastObj("EstSteps/Gap%", (cplex.MIPRelativeGap * 100).ToString("F4"));  //keep 4 decimal digits
                         StrObjLtDt.SetLastObj("Cost", cplex.ObjValue);
                         Console.WriteLine("Solution value = " + cplex.ObjValue);
                     }
@@ -409,14 +408,6 @@ namespace MorphingClass.CGeneralizationMethods
             }
             catch (ILOG.Concert.Exception e)
             {
-            //    ref SortedSet<CRegion> CrgOOMSetSS, ref SortedSet<CRegion> CrgOOMSolveSS, ref SortedSet<CRegion> CrgOOTSetSS, ref SortedSet<CRegion> CrgOOTSolveSS,
-            //ref SortedSet<CRegion> CrgCplexError3019SS, ref SortedSet<CRegion> CrgOtherErrorsSS, ref string strOtherErrors)
-
-                //if (e.Message == "CPLEX Error  1217: No solution exists.\n")
-                //{
-                //    //do nothing
-                //}
-                //else 
                 if (e.Message == "CPLEX Error  1001: Out of memory.\n")
                 {
                     if (blnSetting == false) //this can happen when we are setting up variables and constraints
@@ -465,7 +456,7 @@ namespace MorphingClass.CGeneralizationMethods
                 if (blnSolved == false)
                 {
                     crg.ID = -2;
-                    StrObjLtDt.SetLastObj("EstSteps", 20000.ToString("F4"));
+                    StrObjLtDt.SetLastObj("EstSteps/Gap%", _intNoSolutionEstSteps.ToString("F4"));
                     //StrObjLtDt.SetLastObj("Cost", -1); //the cost value is -1 by default
                     Console.WriteLine("Crg:  ID  " + LSCrg.ID + ";    n  " + LSCrg.GetCphCount() + ";    m  " +
                         LSCrg.AdjCorrCphsSD.Count + "  could not be solved by ILP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -798,7 +789,7 @@ namespace MorphingClass.CGeneralizationMethods
             }
 
             var2 = new IIntVar[1][][];
-            if (strAreaAggregation == "Smallest")
+            if (strAreaAggregation == "Sml")
             {
                 IIntVar[][] w = new IIntVar[intCpgCount - 1][];
                 for (int i = 0; i < intCpgCount - 1; i++)

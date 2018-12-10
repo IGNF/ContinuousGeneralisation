@@ -144,11 +144,11 @@ namespace MorphingClass.CGeneralizationMethods
             if (outEstStepsCostVP.val1 == 0 &&
     CCmpMethods.CmpDbl_CoordVerySmall(outEstStepsCostVP.val2, resultcrg.d) == 0)
             {
-                StrObjLtDt.SetLastObj("EstSteps", 0); //optimal solutions
+                StrObjLtDt.SetLastObj("EstSteps/Gap%", 0); //optimal solutions
             }
             else
             {
-                StrObjLtDt.SetLastObj("EstSteps", 100); //not sure, at least feasible solutions
+                StrObjLtDt.SetLastObj("EstSteps/Gap%", 100); //not sure, at least feasible solutions
             }
             //we don't need to +1 because +1 is already included in _intStaticGID
             //int intExploredRegionAll = CRegion._intStaticGID - CRegion._intStartStaticGIDLast; 
@@ -203,8 +203,8 @@ namespace MorphingClass.CGeneralizationMethods
                         * passivecph.dblArea / lscrg.dblArea;
 
                     double dblCostShape = 0;
-                    if (CConstants.strShapeConstraint == "MaximizeAvgComp_EdgeNumber" ||
-                        CConstants.strShapeConstraint == "MaximizeAvgComp_Combine")
+                    if (CConstants.strShapeConstraint == "MaxAvgC_EdgeNo" ||
+                        CConstants.strShapeConstraint == "MaxAvgC_Comb")
                     {
                         if (lscrg.GetCphCount() - 2>0)
                         {
@@ -215,7 +215,7 @@ namespace MorphingClass.CGeneralizationMethods
                         }
                         
                     }
-                    else if (CConstants.strShapeConstraint == "MinimizeInteriorBoundaries")
+                    else if (CConstants.strShapeConstraint == "MinIntBound")
                     {
                         if (lscrg.GetCphCount() - 2 > 0)
                         {
@@ -226,8 +226,8 @@ namespace MorphingClass.CGeneralizationMethods
                     }
                     else
                     {
-                        //CConstants.strShapeConstraint == "MaximizeMinComp_EdgeNumber" ||
-                        //CConstants.strShapeConstraint == "MaximizeMinComp_Combine" ||
+                        //CConstants.strShapeConstraint == "MaxMinC_EdgeNo" ||
+                        //CConstants.strShapeConstraint == "MaxMinC_Comb" ||
                         throw new ArgumentException("We didn't consider the case!");
                     }
 

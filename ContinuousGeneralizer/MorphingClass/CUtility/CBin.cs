@@ -956,19 +956,19 @@ namespace MorphingClass.CUtility
 //                //this.dblCostEstArea = intFactor * EstimateSumMinArea(this);
 //                //this.dblCostEst += this.dblCostEstArea;
 //            }
-//            else if (CConstants.strShapeConstraint == "MaximizeAvgComp_EdgeNumber")
+//            else if (CConstants.strShapeConstraint == "MaxAvgC_EdgeNo")
 //            {
 //                this.dblCostEstComp = intFactor * BalancedEstAvgComp_EdgeNumber(this, this, sscrg);
 //            }
-//            else if (CConstants.strShapeConstraint == "MaximizeMinComp_Combine")
+//            else if (CConstants.strShapeConstraint == "MaxMinC_Comb")
 //            {
 //                this.dblCostEstComp = intFactor * BalancedEstMinComp_Combine(this, this, sscrg);
 //            }
-//            else if (CConstants.strShapeConstraint == "MaximizeMinComp_EdgeNumber")
+//            else if (CConstants.strShapeConstraint == "MaxMinC_EdgeNo")
 //            {
 //                this.dblCostEstComp = intFactor * BalancedEstMinComp_EdgeNumber(this, this, sscrg);
 //            }
-//            else if (CConstants.strShapeConstraint == "MinimizeInteriorBoundaries")
+//            else if (CConstants.strShapeConstraint == "MinIntBound")
 //            {
 //                this.dblCostEstComp = intFactor * BalancedEstCompInteriorLength_Basic(this, this);
 //            }
@@ -993,8 +993,8 @@ namespace MorphingClass.CUtility
 
 //                //NewCrg.dblCostExact = NewCrg.dblCostExactType + NewCrg.dblCostExactArea;
 //            }
-//            else if (CConstants.strShapeConstraint == "MaximizeAvgComp_EdgeNumber" ||
-//                CConstants.strShapeConstraint == "MaximizeAvgComp_Combine")
+//            else if (CConstants.strShapeConstraint == "MaxAvgC_EdgeNo" ||
+//                CConstants.strShapeConstraint == "MaxAvgC_Comb")
 //            {
 //                //divide by intTimeNum - 2, because at each step the value for AvgComp can be 1 and 
 //                //there are intotal intTimeNum - 2 steps; 
@@ -1011,8 +1011,8 @@ namespace MorphingClass.CUtility
 //                NewCrg.dblCostExact = (1 - CAreaAgg_Base.dblLamda) * NewCrg.dblCostExactType +
 //                    CAreaAgg_Base.dblLamda * NewCrg.dblArea * NewCrg.dblCostExactComp;
 //            }
-//            else if (CConstants.strShapeConstraint == "MaximizeMinComp_EdgeNumber"
-//                || CConstants.strShapeConstraint == "MaximizeMinComp_Combine")
+//            else if (CConstants.strShapeConstraint == "MaxMinC_EdgeNo"
+//                || CConstants.strShapeConstraint == "MaxMinC_Comb")
 //            {
 //                //divide by intTimeNum - 2, because at each step the value for AvgComp can be 1 and 
 //                //there are intotal intTimeNum - 2 steps; 
@@ -1029,7 +1029,7 @@ namespace MorphingClass.CUtility
 //                NewCrg.dblCostExact = (1 - CAreaAgg_Base.dblLamda) * NewCrg.dblCostExactType +
 //                    CAreaAgg_Base.dblLamda * NewCrg.dblArea * NewCrg.dblCostExactComp;
 //            }
-//            else if (CConstants.strShapeConstraint == "MinimizeInteriorBoundaries")
+//            else if (CConstants.strShapeConstraint == "MinIntBound")
 //            {
 //                //divide by intTimeNum - 2, because at each step the value for InteriorSegLength can be 1 and 
 //                //there are intotal intTimeNum - 2 steps; 
@@ -1087,7 +1087,7 @@ namespace MorphingClass.CUtility
 
 //                //NewCrg.dblCostEst = NewCrg.dblCostEstType + NewCrg.dblCostEstArea;
 //            }
-//            else if (CConstants.strShapeConstraint == "MaximizeAvgComp_EdgeNumber")
+//            else if (CConstants.strShapeConstraint == "MaxAvgC_EdgeNo")
 //            {
 //                NewCrg.dblCostEstComp = intFactor * BalancedEstAvgComp_EdgeNumber(NewCrg, lscrg, sscrg);
 
@@ -1096,11 +1096,11 @@ namespace MorphingClass.CUtility
 //                NewCrg.dblCostEst = (1 - CAreaAgg_Base.dblLamda) * NewCrg.dblCostEstType +
 //                    CAreaAgg_Base.dblLamda * NewCrg.dblArea * NewCrg.dblCostEstComp;
 //            }
-//            else if (CConstants.strShapeConstraint == "MaximizeAvgComp_Combine")
+//            else if (CConstants.strShapeConstraint == "MaxAvgC_Comb")
 //            {
 
 //            }
-//            else if (CConstants.strShapeConstraint == "MaximizeMinComp_Comine")
+//            else if (CConstants.strShapeConstraint == "MaxMinC_Comb")
 //            {
 //                NewCrg.dblCostEstComp = intFactor * BalancedEstMinComp_Combine(NewCrg, lscrg, sscrg);
 
@@ -1109,7 +1109,7 @@ namespace MorphingClass.CUtility
 //                NewCrg.dblCostEst = (1 - CAreaAgg_Base.dblLamda) * NewCrg.dblCostEstType +
 //                    CAreaAgg_Base.dblLamda * NewCrg.dblArea * NewCrg.dblCostEstComp;
 //            }
-//            else if (CConstants.strShapeConstraint == "MaximizeMinComp_EdgeNumber")
+//            else if (CConstants.strShapeConstraint == "MaxMinC_EdgeNo")
 //            {
 //                NewCrg.dblCostEstComp = intFactor * BalancedEstMinComp_EdgeNumber(NewCrg, lscrg, sscrg);
 
@@ -1118,7 +1118,7 @@ namespace MorphingClass.CUtility
 //                NewCrg.dblCostEst = (1 - CAreaAgg_Base.dblLamda) * NewCrg.dblCostEstType +
 //                    CAreaAgg_Base.dblLamda * NewCrg.dblArea * NewCrg.dblCostEstComp;
 //            }
-//            else if (CConstants.strShapeConstraint == "MinimizeInteriorBoundaries")
+//            else if (CConstants.strShapeConstraint == "MinIntBound")
 //            {
 //                NewCrg.dblCostEstComp = intFactor * BalancedEstCompInteriorLength_Basic(NewCrg, lscrg);
 

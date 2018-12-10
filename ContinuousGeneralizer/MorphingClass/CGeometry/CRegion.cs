@@ -247,13 +247,18 @@ namespace MorphingClass.CGeometry
         }
 
         public int GetCphTypeIndex(CPatch cph)
+        {            
+            return GetCoreCpg(cph).intTypeIndex;
+        }
+
+        public CPolygon GetCoreCpg(CPatch cph)
         {
             CPolygon corecpg;
             if (this.CphCpgSD_Area_CphGID.TryGetValue(cph, out corecpg) == false)
             {
                 throw new ArgumentNullException("The patch does not exist!");
             }
-            return corecpg.intTypeIndex;
+            return corecpg;
         }
 
         public int GetCphCount()
@@ -715,8 +720,8 @@ namespace MorphingClass.CGeometry
 
                 //NewCrg.dblCostExact = NewCrg.dblCostExactType + NewCrg.dblCostExactArea;
             }
-            else if (CConstants.strShapeConstraint == "MaximizeAvgComp_EdgeNumber" ||
-                CConstants.strShapeConstraint == "MaximizeAvgComp_Combine")
+            else if (CConstants.strShapeConstraint == "MaxAvgC_EdgeNo" ||
+                CConstants.strShapeConstraint == "MaxAvgC_Comb")
             {
                 //divide by intTimeNum - 2, because at each step the value for AvgComp can be 1 and 
                 //there are intotal intTimeNum - 2 steps; 
@@ -733,8 +738,8 @@ namespace MorphingClass.CGeometry
                 NewCrg.dblCostExact = (1 - CAreaAgg_Base.dblLamda) * NewCrg.dblCostExactType +
                     CAreaAgg_Base.dblLamda * NewCrg.dblArea * NewCrg.dblCostExactComp;
             }
-            else if (CConstants.strShapeConstraint == "MaximizeMinComp_EdgeNumber"
-                || CConstants.strShapeConstraint == "MaximizeMinComp_Combine")
+            else if (CConstants.strShapeConstraint == "MaxMinC_EdgeNo"
+                || CConstants.strShapeConstraint == "MaxMinC_Comb")
             {
                 //divide by intTimeNum - 2, because at each step the value for AvgComp can be 1 and 
                 //there are intotal intTimeNum - 2 steps; 
@@ -751,7 +756,7 @@ namespace MorphingClass.CGeometry
                 NewCrg.dblCostExact = (1 - CAreaAgg_Base.dblLamda) * NewCrg.dblCostExactType +
                     CAreaAgg_Base.dblLamda * NewCrg.dblArea * NewCrg.dblCostExactComp;
             }
-            else if (CConstants.strShapeConstraint == "MinimizeInteriorBoundaries")
+            else if (CConstants.strShapeConstraint == "MinIntBound")
             {
                 //divide by intTimeNum - 2, because at each step the value for InteriorSegLength can be 1 and 
                 //there are intotal intTimeNum - 2 steps; 

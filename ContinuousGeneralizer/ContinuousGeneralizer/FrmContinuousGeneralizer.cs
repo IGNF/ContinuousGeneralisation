@@ -151,9 +151,9 @@ namespace ContinuousGeneralizer
                 //0 NonShape
                 //1 MinimizeInteriorBoundaries
                 //2 MaximizeMinComp_EdgeNumber
-                //3 MaximizeMinComp_Combine
-                //4 MaximizeAvgComp_EdgeNumber
-                //5 MaximizeAvgComp_Combine
+                //3 MaxMinC_Comb
+                //4 MaxAvgC_EdgeNo
+                //5 MaxAvgC_Comb
                 _DataRecords.ParameterInitialize.cboShapeConstraint.SelectedIndex = 1;
                 switch (CConstants.strRunContinuousGeneralizer)
                 {
@@ -161,7 +161,7 @@ namespace ContinuousGeneralizer
                         frmCurrent.btnGreedy_Click(sender, e);
                         break;
                     case "AStar":
-                        frmCurrent.btnRun_Click(sender, e);
+                        frmCurrent.btnAStar_Click(sender, e);
                         break;
                     case "ILP":
                         frmCurrent.btnRunILP_Click(sender, e);
