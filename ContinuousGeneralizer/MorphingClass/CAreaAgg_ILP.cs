@@ -315,7 +315,7 @@ namespace MorphingClass.CGeneralizationMethods
                         #endregion
 
 
-                        //if (_ParameterInitialize.strAreaAggregation == "Sml")
+                        //if (_ParameterInitialize.strAreaAggregation == _strSmallest)
                         //{
                         //    Console.WriteLine("");
                         //    Console.WriteLine("Variable s:");
@@ -789,7 +789,7 @@ namespace MorphingClass.CGeneralizationMethods
             }
 
             var2 = new IIntVar[1][][];
-            if (strAreaAggregation == "Sml")
+            if (strAreaAggregation == _strSmallest)
             {
                 IIntVar[][] w = new IIntVar[intCpgCount - 1][];
                 for (int i = 0; i < intCpgCount - 1; i++)

@@ -50,8 +50,8 @@ namespace ContinuousGeneralizer
 
         private void SetPathForData()
         {
-            CHelpFunc.strPathCG = System.IO.Path.GetFullPath(@"..\..\..\..\"); //the path to folder ContinuousGeneralisation
-            string strWorkPath = CHelpFunc.strPathCG + "ContinuousGeneralisation_Data";
+            CHelpFunc.strPathCGBackSlash = System.IO.Path.GetFullPath(@"..\..\..\..\"); //the path to folder ContinuousGeneralisation
+            string strWorkPath = CHelpFunc.strPathCGBackSlash + "ContinuousGeneralisation_Data";
 
             //string strWorkPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\";
             //CHelpFunc.strDataFolderName = "Jiangxi";
@@ -123,7 +123,7 @@ namespace ContinuousGeneralizer
 
             //CHelpFunc.strDataFolderName = "An Approximate Morphing between Polylines";
             //CHelpFunc.strPath = 
-            //    "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\" + _strDataFolderName + "\\";
+            //    "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\" + _strDataFolderName;
 
             //        private static string _strDataFolderName = "bayern20171011";
 
@@ -145,7 +145,7 @@ namespace ContinuousGeneralizer
 
             var frmCurrent = new FrmAreaAgg(_DataRecords);
             CConstants.strRunContinuousGeneralizer = File.ReadLines(
-                CHelpFunc.strPathCG + "\\RunContinuousGeneralizer\\RunContinuousGeneralizer.txt").First();
+                CHelpFunc.strPathCGBackSlash + "RunContinuousGeneralizer\\RunContinuousGeneralizer.txt").First();
             if (CConstants.strRunContinuousGeneralizer != "")
             {
                 //0 NonShape

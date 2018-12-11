@@ -419,8 +419,7 @@ namespace MorphingClass.CUtility
 
             pWorksheet.Columns.AutoFit();
             string strEntireFileName = strSavePath + "\\" + strName + ".xls";
-            pWorkBook.SaveAs(strEntireFileName, 56, Type.Missing, Type.Missing, Type.Missing, Type.Missing,
-                XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+            pWorkBook.SaveAs(strEntireFileName, 56, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlExclusive);
             pWorkBook.Close(false, false, false);
             pExcelAPP.Quit();
         }

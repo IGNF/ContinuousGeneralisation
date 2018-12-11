@@ -72,11 +72,14 @@ namespace MorphingClass.CGeneralizationMethods
         protected static string _strILPFailingNumOutput = "";
         protected static int _intNoSolutionEstSteps = 999; //if we can't find a solution by ILP
 
+        protected static string _strSmallest = "Sml";
+        protected static string _strAll = "All";
+
         //comment the following if you want to process on all instances
         protected void UpdateStartEnd()
         {
-            //_intStart = 100;
-            //_intEndCount = _intStart + 3;
+            _intStart = 417;
+            _intEndCount = _intStart + 1;
 
             if (CConstants.strRunContinuousGeneralizer!="")
             {
@@ -149,11 +152,11 @@ namespace MorphingClass.CGeneralizationMethods
 
             if (ParameterInitialize.chkSmallest.Checked == true)
             {
-                ParameterInitialize.strAreaAggregation = "Sml";
+                ParameterInitialize.strAreaAggregation = _strSmallest;
             }
             else
             {
-                ParameterInitialize.strAreaAggregation = "All";
+                ParameterInitialize.strAreaAggregation = _strAll;
             }
 
             //read type distance
@@ -219,9 +222,12 @@ namespace MorphingClass.CGeneralizationMethods
             //RegionNumATIndex: the index of RegionNum in the attribute table 
             var intLSTypeATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[0], "OBJART");
             var intSSTypeATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[1], "OBJART");
-            CHelpFunc.GetCgbTypeAndTypeIndex(pLSCPgLt, _ObjValueLtLtLt[0], 0, _TypePVDt);
-            CHelpFunc.GetCgbTypeAndTypeIndex(pSSCPgLt, _ObjValueLtLtLt[1], 0, _TypePVDt);
-
+            var intLSFaceIDIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[0], "face_id");
+            CHelpFunc.GetCgbTypeAndTypeIndex(pLSCPgLt, _ObjValueLtLtLt[0], intLSTypeATIndex, _TypePVDt);
+            CHelpFunc.GetCgbTypeAndTypeIndex(pSSCPgLt, _ObjValueLtLtLt[1], intSSTypeATIndex, _TypePVDt);
+            CHelpFunc.SetCpgAttribute<int>(pLSCPgLt, (cpg, intFaceID) => cpg.ID = intFaceID, _ObjValueLtLtLt[0], intLSFaceIDIndex);
+            //CHelpFunc.SetCpgAttribute<int>(pLSCPgLt, (cpg, intType)=> cpg.intType=intType, _ObjValueLtLtLt[0], intLSTypeATIndex);
+            //CHelpFunc.SetCpgAttribute<int>(pSSCPgLt, (cpg, intType) => cpg.intType = intType, _ObjValueLtLtLt[1], intSSTypeATIndex);
 
             //RegionNumATIndex: the index of RegionNum in the attribute table 
             var intLSRegionNumATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[0], "RegionNum");
@@ -266,10 +272,11 @@ namespace MorphingClass.CGeneralizationMethods
 
         protected void EndAffairs(int intNewStart)
         {
+            string strPathRCGBackSlash = CHelpFunc.strPathCGBackSlash + "RunContinuousGeneralizer\\";
             if (CConstants.strRunContinuousGeneralizer != "")
             {
-                using (var writer = new StreamWriter(
-                    @"C:\MyWork\DailyWork\ContinuousGeneralisation\RunContinuousGeneralizer\DirectoryPath.txt", false))
+                using (var writer = new StreamWriter(strPathRCGBackSlash + "DirectoryPath.txt", false))
+                //@"C:\MyWork\DailyWork\ContinuousGeneralisation\RunContinuousGeneralizer\DirectoryPath.txt", false))
                 {
                     //we save this path so that we can delte the folder in RunContinuousGeneralizer
                     writer.WriteLine(CConstants.ParameterInitialize.strSavePath);
@@ -279,8 +286,8 @@ namespace MorphingClass.CGeneralizationMethods
                 var dblMemoryMB = Convert.ToDouble(proc.PeakWorkingSet64) / 1048576; //bytes to MB
                 var strMemoryMB = string.Format("{0,15}", dblMemoryMB.ToString("0.000"));
 
-                using (var writer = new StreamWriter(
-                    @"C:\MyWork\DailyWork\ContinuousGeneralisation\RunContinuousGeneralizer\CallRecord.txt", true))
+                using (var writer = new StreamWriter(strPathRCGBackSlash + "CallRecord.txt", true))
+                //@"C:\MyWork\DailyWork\ContinuousGeneralisation\RunContinuousGeneralizer\CallRecord.txt", true))
                 {
                     writer.WriteLine(strMemoryMB);
                 }
@@ -458,7 +465,7 @@ namespace MorphingClass.CGeneralizationMethods
             var OutputCrgLt = new List<CRegion>(pInitialCrgLt.Count);
             var CrgSS = new SortedSet<CRegion>();
 
-            if (pParameterInitialize.strAreaAggregation == "Sml")
+            if (pParameterInitialize.strAreaAggregation == _strSmallest)
             {
                 CrgSS = new SortedSet<CRegion>(pInitialCrgLt, CRegion.pCmpCrg_MinArea_CphGIDTypeIndex);
             }
@@ -1010,7 +1017,7 @@ namespace MorphingClass.CGeneralizationMethods
         {
             int intTotalStepNum = GetTotalStepNum(pInitialCrgLt);
             var CrgSS = new SortedSet<CRegion>();
-            if (pParameterInitialize.strAreaAggregation == "Sml")
+            if (pParameterInitialize.strAreaAggregation == _strSmallest)
             {
                 CrgSS = new SortedSet<CRegion>(pInitialCrgLt, CRegion.pCmpCrg_MinArea_CphGIDTypeIndex);
             }
@@ -1019,9 +1026,9 @@ namespace MorphingClass.CGeneralizationMethods
                 CrgSS = new SortedSet<CRegion>(pInitialCrgLt, CRegion.pCmpCrg_CostExact_CphGIDTypeIndex);
             }
 
-            string strFormatAggSeq = "{0,7}{1,12}\n";
-            string strAggSeq = "\n\n";
-            strAggSeq += string.Format(strFormatAggSeq, "ID", "to      ID");
+            string strFormatAggSeq = "{0,7}{1,16}{2,16}\n";
+            string strAggSeq = "\n\nAggregation Sequence: \n";
+            strAggSeq += string.Format(strFormatAggSeq, "Step", "FaceID", "   into   FaceID");
 
             for (int i = 0; i < intTotalStepNum; i++)
             {
@@ -1036,7 +1043,7 @@ namespace MorphingClass.CGeneralizationMethods
                 {
                     var corecpgPassive = currentMinCrg.GetCoreCpg(newCrg.AggCphs.valPassive);
                     var corecpgActive = currentMinCrg.GetCoreCpg(newCrg.AggCphs.valActive);
-                    strAggSeq += String.Format(strFormatAggSeq, corecpgPassive.ID, corecpgActive.ID);
+                    strAggSeq += String.Format(strFormatAggSeq, i+1, corecpgPassive.ID, corecpgActive.ID);
 
                     CrgSS.Add(newCrg);
                 }
@@ -1155,7 +1162,7 @@ namespace MorphingClass.CGeneralizationMethods
             string strAreaAggregation, out List<IPolygon4> passiveIptLt, out List<int> TypeIndexLt)
         {
             var CrgSS = new SortedSet<CRegion>();
-            if (strAreaAggregation == "Sml")
+            if (strAreaAggregation == _strSmallest)
             {
                 CrgSS = new SortedSet<CRegion>(pInitialCrgLt, CRegion.pCmpCrg_MinArea_CphGIDTypeIndex);
             }

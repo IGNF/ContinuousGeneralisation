@@ -479,7 +479,7 @@ namespace MorphingClass.CUtility
 //            List<SortedDictionary<CRegion, CRegion>> ExistingCrgSDLt, List<SortedDictionary<CPatch, CPatch>> ExistingCphSDLt,
 //            SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, int intFinalTypeIndex, double[,] padblTD, int intFactor)
 //        {
-//            if (strAreaAggregation == "Smallest")
+//            if (strAreaAggregation == _strSmallest)
 //            {
 //                foreach (var item in AggregateSmallestAndUpdateQ(lscrg, sscrg, Q,
 //                    ExistingCrgSDLt, ExistingCphSDLt, ExistingCorrCphsSD, intFinalTypeIndex, padblTD, intFactor))

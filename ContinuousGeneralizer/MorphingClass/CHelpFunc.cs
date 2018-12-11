@@ -51,6 +51,11 @@ namespace MorphingClass.CUtility
             yield return new CPoint(3, 0, 0);
         }
 
+        //Path: a sequence; should not have "\\" at the end
+        //PathBackSlash: a sequence; should have "\\" at the end
+        //Directory: a sequence; should not have "\\" at the end
+        //FolderName: not a sequence
+
         /// <summary>
         /// the path to the folder that contains the .mxd
         /// </summary>
@@ -60,7 +65,7 @@ namespace MorphingClass.CUtility
             set { _strPath = value; }
         }
 
-        public static string strPathCG { get; set; } //the path to ContinuousGeneralisation
+        public static string strPathCGBackSlash { get; set; } //the path to ContinuousGeneralisation
         public static string strDataFolderName { get; set; }
 
 
@@ -664,9 +669,8 @@ namespace MorphingClass.CUtility
         /// <param name="objltlt"></param>
         /// <param name="intValueIndex"></param>
         /// <param name="intTypeIndexSD"></param>
-        public static void GetCgbTypeAndTypeIndex(IEnumerable<CPolygon> TEb, List<List<object>> objltlt,
-            int intValueIndex, CValMap_Dt<int, int> TypePVDt)
-        //where CGeo : class
+        public static void GetCgbTypeAndTypeIndex(IEnumerable<CPolygon> TEb, 
+            List<List<object>> objltlt, int intValueIndex, CValMap_Dt<int, int> TypePVDt = null)
         {
             var TEt = TEb.GetEnumerator();
             //IEnumerator<object> objEt = objEb.GetEnumerator();
@@ -680,8 +684,8 @@ namespace MorphingClass.CUtility
                 TCurrent.intType = Convert.ToInt32(objltlt[intCount++][intValueIndex]);
 
                 //get intTypeIndex
-                int intTypeIndex;
-                if (TypePVDt.Dt.TryGetValue(TCurrent.intType, out intTypeIndex) == true)
+                //int intTypeIndex;
+                if (TypePVDt.Dt.TryGetValue(TCurrent.intType, out int intTypeIndex) == true)
                 {
                     TCurrent.intTypeIndex = intTypeIndex;
                 }
@@ -692,6 +696,39 @@ namespace MorphingClass.CUtility
                 }
             }
         }
+
+        public static void SetCpgAttribute<TOrder>(IEnumerable<CPolygon> TEb, Action<CPolygon, TOrder> orderAction,
+            List<List<object>> objltlt, int intAttributeIndex)
+            //where TOrder: class
+        {
+            var TEt = TEb.GetEnumerator();
+            //IEnumerator<object> objEt = objEb.GetEnumerator();
+
+            int intCount = 0;
+            while (TEt.MoveNext())
+            {
+                var TCurrent = TEt.Current;
+
+                //get intType
+                //var ss = orderFunc(TCurrent);
+                //orderFunc(TCurrent) = Convert.ToInt32(objltlt[intCount++][intAttributeIndex]);
+
+                orderAction(TCurrent, (TOrder)objltlt[intCount++][intAttributeIndex]);
+
+                ////get intTypeIndex
+                ////int intTypeIndex;
+                //if (TypePVDt.Dt.TryGetValue(TCurrent.intType, out int intTypeIndex) == true)
+                //{
+                //    TCurrent.intTypeIndex = intTypeIndex;
+                //}
+                //else
+                //{
+                //    throw new ArgumentOutOfRangeException("failed to get type index for a type!");
+                //    //MessageBox.Show("failed to get type index for a type!   In: " + "CHelpFunc.cs");
+                //}
+            }
+        }
+
 
 
         public static IEnumerable<object> JudgeAndSetAEGeometry<T>(IEnumerable<T> pCGeoEb)
@@ -847,9 +884,6 @@ namespace MorphingClass.CUtility
         /// <remarks>please consider using CHelpFunc.SetSavePath(ParameterInitialize)</remarks>
         public static IWorkspace OpenWorkspace(string path)
         {
-
-
-
             IWorkspaceFactory pWorkspaceFactory = new ShapefileWorkspaceFactoryClass();
             IWorkspace pWorkspace;
 
@@ -868,8 +902,7 @@ namespace MorphingClass.CUtility
             IWorkspaceFactory workspaceFactory = new FileGDBWorkspaceFactoryClass();
             //IWorkspaceName workspaceName = workspaceFactory.Create("C:\\temp\\",
             //  "Sample.gdb", null, 0);
-            IWorkspaceName workspaceName = workspaceFactory.Create(strSavePathBackSlash,
-  strName, null, 0);
+            IWorkspaceName workspaceName = workspaceFactory.Create(strSavePathBackSlash, strName, null, 0);
 
 
             // Cast the workspace name object to the IName interface and open the workspace.
@@ -1023,7 +1056,7 @@ namespace MorphingClass.CUtility
         /// <remarks></remarks>
         public static List<CCorrCpts> TransferResultptltToCorrCptsLt(List<CPoint> cresultptlt)
         {
-            List<CCorrCpts> pCorrCptslt = new List<CCorrCpts>(cresultptlt.Count);
+            var pCorrCptslt = new List<CCorrCpts>(cresultptlt.Count);
             for (int i = 0; i < cresultptlt.Count; i++)
             {
                 CPoint frcpt = cresultptlt[i];
@@ -1032,9 +1065,9 @@ namespace MorphingClass.CUtility
                     CPoint tocpt = cresultptlt[i].CorrespondingPtLt[j];
 
                     //为了跟原来的点断绝关系，以产生不必要的麻烦，此处重新生成点
-                    CPoint newfrcpt = new CPoint(frcpt.ID, frcpt.X, frcpt.Y, frcpt.Z);
-                    CPoint newtocpt = new CPoint(tocpt.ID, tocpt.X, tocpt.Y, frcpt.Z);
-                    CCorrCpts pCorrCpts = new CCorrCpts(newfrcpt, newtocpt);
+                    var newfrcpt = new CPoint(frcpt.ID, frcpt.X, frcpt.Y, frcpt.Z);
+                    var newtocpt = new CPoint(tocpt.ID, tocpt.X, tocpt.Y, frcpt.Z);
+                    var pCorrCpts = new CCorrCpts(newfrcpt, newtocpt);
                     pCorrCptslt.Add(pCorrCpts);
                 }
             }

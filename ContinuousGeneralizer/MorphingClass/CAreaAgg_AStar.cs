@@ -300,7 +300,7 @@ namespace MorphingClass.CGeneralizationMethods
             List<SortedDictionary<CRegion, CRegion>> ExistingCrgSDLt, List<SortedDictionary<CPatch, CPatch>> ExistingCphSDLt,
             SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, double[,] padblTD, int intEstSteps)
         {
-            if (strAreaAggregation == "Smallest")
+            if (strAreaAggregation == _strSmallest)
             {
                 foreach (var item in AggregateSmallestAndUpdateQ(crg, lscrg, sscrg, Q,
                     ExistingCrgSDLt, ExistingCphSDLt, ExistingCorrCphsSD, padblTD, intEstSteps))
