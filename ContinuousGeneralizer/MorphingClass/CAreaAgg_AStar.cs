@@ -60,7 +60,7 @@ namespace MorphingClass.CGeneralizationMethods
                 //we computer a sequence of regions, 
                 //for each region, we record a parent and a child if applicable
                 AStar(LSCrgLt[i], SSCrgLt[i], this.StrObjLtDt, _ParameterInitialize.strAreaAggregation, this._adblTD, intQuitCount);
-                CheckIfForgetSequence(LSCrgLt[i], SSCrgLt[i], _blnTesting);
+                CheckIfForgetSequence(LSCrgLt[i], SSCrgLt[i], _ParameterInitialize.chkTesting.Checked);
                 CHelpFunc.Displaytspb(i - _intStart + 1, _intEndCount - _intStart );
             }
 
@@ -420,37 +420,7 @@ namespace MorphingClass.CGeneralizationMethods
             var newcrg = crg.GenerateCrgChildAndComputeCost(lscrg, newAdjCorrCphsSD,
              activecph, passivecph, unitedcph, unitingCorrCphs, padblTD);
 
-            //var intGIDLt = new List<int>();
-            //var intTypeLt = new List<int>();
-            //if (newcrg.intSumCphGID == 32961 && newcrg.intSumTypeIndex == 91)
-            //{
-
-            //    foreach (var cph in newcrg.GetCphCol())
-            //    {
-            //        intGIDLt.Add(cph.GID);
-            //    }
-
-
-            //    foreach (var inttype in newcrg.GetCphTypeIndexCol())
-            //    {
-            //        intTypeLt.Add(inttype);
-            //    }
-
-            //    foreach (var item in Q)
-            //    {
-            //        if (item.intSumCphGID == 65794 && item.intSumTypeIndex == 172)
-            //        {
-            //            int ss = 5;
-            //        }
-            //    }
-            //}
-            //if (CRegion._intStaticGID == 2008)
-            //{
-            //    int kes = 8;
-            //}
-
-            CRegion outcrg;
-            if (ExistingCrgSDLt[newcrg.GetCphCount()].TryGetValue(newcrg, out outcrg))
+            if (ExistingCrgSDLt[newcrg.GetCphCount()].TryGetValue(newcrg, out CRegion outcrg))
             {
                 int intResult = newcrg.dblCostExact.CompareTo(outcrg.dblCostExact);
                 //int intResult = CCmpMethods.CmpDbl_CoordVerySmall(newcrg.dblCostExact, outcrg.dblCostExact);

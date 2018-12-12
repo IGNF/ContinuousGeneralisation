@@ -62,6 +62,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             //CConstants.strMethod = "AStar";
             ParameterInitialize.cboShapeConstraint = this.cboShapeConstraint;
             ParameterInitialize.chkSmallest = this.chkSmallest;
+            ParameterInitialize.chkTesting = this.chkTesting;
 
             //0 NonShape
             //1 MinimizeInteriorBoundaries
@@ -69,7 +70,7 @@ namespace ContinuousGeneralizer.FrmMorphing
             //3 MaxMinC_Comb
             //4 MaxAvgC_EdgeNo
             //5 MaxAvgC_Comb
-            ParameterInitialize.cboShapeConstraint.SelectedIndex = 1;
+            ParameterInitialize.cboShapeConstraint.SelectedIndex = 4;
             //ParameterInitialize.chkSmallest.Checked = false;
 
 
@@ -556,16 +557,18 @@ namespace ContinuousGeneralizer.FrmMorphing
             //5: MaxAvgC_Comb
             //true: involving smallest
             //false: not necessarily involving smallest
-            RunGreedy(ParameterInitialize, 4, true);
-            RunGreedy(ParameterInitialize, 1, true);
-
             
             RunAStar(ParameterInitialize, intQuitCount, 4, true);
             RunAStar(ParameterInitialize, intTwiceCount, 4, true);
             RunAStar(ParameterInitialize, intQuitCount, 1, true);
 
-            RunILP(ParameterInitialize, 150, true);
-            RunILP(ParameterInitialize, 300, true);
+            //we should run AStar before running greedy
+            //because we want to compare the results between Greedy and AStar 
+            RunGreedy(ParameterInitialize, 4, true);
+            RunGreedy(ParameterInitialize, 1, true);
+
+            //RunILP(ParameterInitialize, 150, true);
+            //RunILP(ParameterInitialize, 300, true);
 
             MessageBox.Show("Done!");
         }

@@ -49,6 +49,7 @@ namespace MorphingClass.CUtility
 
         public CheckBox chkCoincidentPoints { get; set; }
         public CheckBox chkSmallest { get; set; }
+        public CheckBox chkTesting { get; set; }
         //private CheckedListBox _clstFields;       //²åÖµ×Ö¶Î¸´Ñ¡¿ò
 
         private ComboBox _cboLargerScaleLayer;       //´ó±ÈÀý³ßÍ¼²ã

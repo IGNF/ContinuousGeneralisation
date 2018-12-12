@@ -66,7 +66,7 @@ namespace MorphingClass.CGeneralizationMethods
         protected static int _intStart; //=0
         protected static int _intEndCount; //=this.SSCrgLt.Count
         protected List< List<long>> _lngMemoryLtLt = new List<List<long>>();
-        protected static bool _blnTesting = false; //if we are testing, we forget about aggregation sequences
+        //protected static bool _blnTesting = false; //if we are testing, we forget about aggregation sequences
         protected static Dictionary<int, CValPair<int, double>> _EstStepsCostVPDt;
         protected static List<string> _strLineLt; //sort according to ID
         protected static string _strILPFailingNumOutput = "";
@@ -79,7 +79,7 @@ namespace MorphingClass.CGeneralizationMethods
         protected void UpdateStartEnd()
         {
             _intStart = 417;
-            _intEndCount = _intStart + 1;
+            _intEndCount = _intStart + 3;
 
             if (CConstants.strRunContinuousGeneralizer!="")
             {
@@ -611,7 +611,11 @@ namespace MorphingClass.CGeneralizationMethods
 
             if (strMethod == "Greedy")
             {
-                ExportAggSequence(pInitialCrgLt, pParameterInitialize, strResultFileName);
+                //if we are not testing, we want to export aggregation sequence
+                if (pParameterInitialize.chkTesting.Checked == false)
+                {
+                    ExportAggSequence(pInitialCrgLt, pParameterInitialize, strResultFileName);
+                }
 
                 if (pobjDataLtLt.Count == 734)
                 {
@@ -621,7 +625,10 @@ namespace MorphingClass.CGeneralizationMethods
 
             if (strMethod == "AStar")
             {
-                ExportAggSequence(pInitialCrgLt, pParameterInitialize, strResultFileName);
+                if (pParameterInitialize.chkTesting.Checked == false)
+                {
+                    ExportAggSequence(pInitialCrgLt, pParameterInitialize, strResultFileName);
+                }               
 
                 if (pobjDataLtLt.Count == 734)
                 {

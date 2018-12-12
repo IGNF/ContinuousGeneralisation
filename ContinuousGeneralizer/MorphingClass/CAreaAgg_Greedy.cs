@@ -74,7 +74,7 @@ namespace MorphingClass.CGeneralizationMethods
             {
                 Greedy(LSCrgLt[i], SSCrgLt[i], this.StrObjLtDt, this._adblTD,
                     EstStepsCostVPDt, _ParameterInitialize.strAreaAggregation);
-                CheckIfForgetSequence(LSCrgLt[i], SSCrgLt[i], _blnTesting);
+                CheckIfForgetSequence(LSCrgLt[i], SSCrgLt[i], _ParameterInitialize.chkTesting.Checked);
                 CHelpFunc.Displaytspb(i - _intStart + 1, _intEndCount - _intStart);
             }
 
