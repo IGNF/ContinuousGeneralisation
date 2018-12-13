@@ -105,10 +105,10 @@ namespace MorphingClass.CGeneralizationMethods
                     CConstants.strShapeConstraint + "   " + strAreaAggregation);
 
             
-            long lngTimeOverHead = pStopwatchOverHead.ElapsedMilliseconds;
+            var lngTimeOverHead = pStopwatchOverHead.ElapsedMilliseconds;
             pStopwatchOverHead.Stop();
 
-            Stopwatch pStopwatchLast=new Stopwatch ();
+            var pStopwatchLast =new Stopwatch ();
             bool blnRecordTime_F = false;
             long lngTime_F = 0; //running time of the first trying
             long lngTime_L = 0; //running time of last trying

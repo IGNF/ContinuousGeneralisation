@@ -66,7 +66,6 @@ namespace MorphingClass.CGeneralizationMethods
         protected static int _intStart; //=0
         protected static int _intEndCount; //=this.SSCrgLt.Count
         protected List< List<long>> _lngMemoryLtLt = new List<List<long>>();
-        //protected static bool _blnTesting = false; //if we are testing, we forget about aggregation sequences
         protected static Dictionary<int, CValPair<int, double>> _EstStepsCostVPDt;
         protected static List<string> _strLineLt; //sort according to ID
         protected static string _strILPFailingNumOutput = "";
@@ -78,8 +77,8 @@ namespace MorphingClass.CGeneralizationMethods
         //comment the following if you want to process on all instances
         protected void UpdateStartEnd()
         {
-            _intStart = 417;
-            _intEndCount = _intStart + 3;
+            //_intStart = 417;
+            //_intEndCount = _intStart + 3;
 
             if (CConstants.strRunContinuousGeneralizer!="")
             {
@@ -226,8 +225,6 @@ namespace MorphingClass.CGeneralizationMethods
             CHelpFunc.GetCgbTypeAndTypeIndex(pLSCPgLt, _ObjValueLtLtLt[0], intLSTypeATIndex, _TypePVDt);
             CHelpFunc.GetCgbTypeAndTypeIndex(pSSCPgLt, _ObjValueLtLtLt[1], intSSTypeATIndex, _TypePVDt);
             CHelpFunc.SetCpgAttribute<int>(pLSCPgLt, (cpg, intFaceID) => cpg.ID = intFaceID, _ObjValueLtLtLt[0], intLSFaceIDIndex);
-            //CHelpFunc.SetCpgAttribute<int>(pLSCPgLt, (cpg, intType)=> cpg.intType=intType, _ObjValueLtLtLt[0], intLSTypeATIndex);
-            //CHelpFunc.SetCpgAttribute<int>(pSSCPgLt, (cpg, intType) => cpg.intType = intType, _ObjValueLtLtLt[1], intSSTypeATIndex);
 
             //RegionNumATIndex: the index of RegionNum in the attribute table 
             var intLSRegionNumATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[0], "RegionNum");
@@ -813,7 +810,8 @@ namespace MorphingClass.CGeneralizationMethods
             var dblTimeDisplay = Math.Round(dblTime / 60000, 1);
             var nfi = new NumberFormatInfo();
             nfi.NumberDecimalSeparator = "'"; //use "'" as decial separator for latex
-            astrValuess[intArrayIndex++] = dblTimeDisplay.ToString(nfi) + @"~(" 
+            dblTimeDisplay = 10;
+            astrValuess[intArrayIndex++] = dblTimeDisplay.ToString("F1", nfi) + @"~(" 
                 + (dblFSTime / dblTime *100).ToString("F1")+ @"\%)";
             strData+= string.Format(strformatstatistics, astrValuess) + "\n";
 

@@ -97,12 +97,12 @@ namespace MorphingClass.CGeneralizationMethods
         public CRegion Greedy(CRegion LSCrg, CRegion SSCrg, CStrObjLtDt StrObjLtDt, double[,] adblTD,
             Dictionary<int, CValPair<int, double>> EstStepsCostVPDt, string strAreaAggregation)
         {
+            long lngStartMemory = GC.GetTotalMemory(true);
+
+            var pStopwatchOverHead = new Stopwatch();
+            pStopwatchOverHead.Start();
+
             var ExistingCorrCphsSD0 = LSCrg.SetInitialAdjacency();  //also count the number of edges
-
-            Stopwatch pStopwatchOverHead = new Stopwatch();
-            pStopwatchOverHead.Start();            
-
-
             AddLineToStrObjLtDt(StrObjLtDt, LSCrg);
 
             
@@ -110,11 +110,11 @@ namespace MorphingClass.CGeneralizationMethods
             Console.WriteLine("Crg:  ID  " + LSCrg.ID + ";    n  " + LSCrg.GetCphCount() + ";    m  " +
                     LSCrg.AdjCorrCphsSD.Count + "   " + CConstants.strShapeConstraint + "   " + strAreaAggregation);
 
-            long lngStartMemory = GC.GetTotalMemory(true);
+            
             long lngTimeOverHead = pStopwatchOverHead.ElapsedMilliseconds;
             pStopwatchOverHead.Stop();
 
-            Stopwatch pStopwatchLast = new Stopwatch();
+            var pStopwatchLast = new Stopwatch();
             long lngTime = 0;
 
             CRegion resultcrg = new CRegion(-2);

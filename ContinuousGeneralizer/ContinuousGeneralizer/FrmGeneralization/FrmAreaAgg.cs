@@ -59,7 +59,6 @@ namespace ContinuousGeneralizer.FrmMorphing
             ParameterInitialize.cboLayerLt = new List<ComboBox>(2);
             ParameterInitialize.cboLayerLt.Add(this.cboLargerScaleLayer);
             ParameterInitialize.cboLayerLt.Add(this.cboSmallerScaleLayer);
-            //CConstants.strMethod = "AStar";
             ParameterInitialize.cboShapeConstraint = this.cboShapeConstraint;
             ParameterInitialize.chkSmallest = this.chkSmallest;
             ParameterInitialize.chkTesting = this.chkTesting;

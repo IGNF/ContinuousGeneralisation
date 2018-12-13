@@ -708,33 +708,6 @@ namespace MorphingClass.CGeneralizationMethods
                                 continue;
                             }
 
-                            //model.AddLe(c[i][j][k][l], x[i][j][k], "RestrictC1");
-
-                            //var pLieContiguityExpr = model.LinearIntExpr();
-                            //var pContiguityExpr2 = model.LinearNumExpr(-1);
-                            ////pContiguityExpr.AddTerm(x[i][j][k], 1.0);  //including polygon j itself
-                            //foreach (var pAdjacentCph in aCph[j].AdjacentCphSS)
-                            //{
-                            //    pLieContiguityExpr.AddTerm(x[i][pAdjacentCph.ID][l], 1);
-                            //    pContiguityExpr2.AddTerm(x[i][pAdjacentCph.ID][l], dblCpgCountReciprocal);
-                            //}
-                            //model.AddLe(c[i][j][k][l], pLieContiguityExpr, "Contiguity");
-
-                            //pContiguityExpr2.AddTerm(x[i][j][k], 1.0);
-                            //model.AddGe(c[i][j][k][l], pContiguityExpr2, "Contiguity2");
-
-                            //var pContiguityExprRight3 = model.LinearIntExpr();
-                            //for (int m = 0; m < intCpgCount; m++)
-                            //{
-                            //    pContiguityExprRight3.AddTerm(c[i][m][k][l], 1);
-                            //}
-
-
-                            //model.AddLe(y[i][k][k][l], pContiguityExprRight3, "Contiguity3");
-
-
-
-
                             model.AddLe(c[i][j][k][l], x[i][j][k], "RestrictC1");
 
                             var pLieContiguityExpr = model.LinearIntExpr();

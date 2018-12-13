@@ -673,7 +673,6 @@ namespace MorphingClass.CUtility
             List<List<object>> objltlt, int intValueIndex, CValMap_Dt<int, int> TypePVDt = null)
         {
             var TEt = TEb.GetEnumerator();
-            //IEnumerator<object> objEt = objEb.GetEnumerator();
 
             int intCount = 0;
             while (TEt.MoveNext())
@@ -684,7 +683,6 @@ namespace MorphingClass.CUtility
                 TCurrent.intType = Convert.ToInt32(objltlt[intCount++][intValueIndex]);
 
                 //get intTypeIndex
-                //int intTypeIndex;
                 if (TypePVDt.Dt.TryGetValue(TCurrent.intType, out int intTypeIndex) == true)
                 {
                     TCurrent.intTypeIndex = intTypeIndex;
@@ -699,33 +697,13 @@ namespace MorphingClass.CUtility
 
         public static void SetCpgAttribute<TOrder>(IEnumerable<CPolygon> TEb, Action<CPolygon, TOrder> orderAction,
             List<List<object>> objltlt, int intAttributeIndex)
-            //where TOrder: class
         {
             var TEt = TEb.GetEnumerator();
-            //IEnumerator<object> objEt = objEb.GetEnumerator();
 
             int intCount = 0;
             while (TEt.MoveNext())
             {
-                var TCurrent = TEt.Current;
-
-                //get intType
-                //var ss = orderFunc(TCurrent);
-                //orderFunc(TCurrent) = Convert.ToInt32(objltlt[intCount++][intAttributeIndex]);
-
-                orderAction(TCurrent, (TOrder)objltlt[intCount++][intAttributeIndex]);
-
-                ////get intTypeIndex
-                ////int intTypeIndex;
-                //if (TypePVDt.Dt.TryGetValue(TCurrent.intType, out int intTypeIndex) == true)
-                //{
-                //    TCurrent.intTypeIndex = intTypeIndex;
-                //}
-                //else
-                //{
-                //    throw new ArgumentOutOfRangeException("failed to get type index for a type!");
-                //    //MessageBox.Show("failed to get type index for a type!   In: " + "CHelpFunc.cs");
-                //}
+                orderAction(TEt.Current, (TOrder)objltlt[intCount++][intAttributeIndex]);
             }
         }
 
