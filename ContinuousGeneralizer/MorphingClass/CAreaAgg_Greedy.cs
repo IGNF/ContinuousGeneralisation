@@ -78,8 +78,8 @@ namespace MorphingClass.CGeneralizationMethods
                 CHelpFunc.Displaytspb(i - _intStart + 1, _intEndCount - _intStart);
             }
 
-            _strLineLt = strLineLt;
-            _EstStepsCostVPDt = EstStepsCostVPDt;
+            this.strLineLt = strLineLt;
+            //_EstStepsCostVPDt = EstStepsCostVPDt;
             EndAffairs(_intEndCount);
 
         }
@@ -98,9 +98,7 @@ namespace MorphingClass.CGeneralizationMethods
             Dictionary<int, CValPair<int, double>> EstStepsCostVPDt, string strAreaAggregation)
         {
             long lngStartMemory = GC.GetTotalMemory(true);
-
-            var pStopwatchOverHead = new Stopwatch();
-            pStopwatchOverHead.Start();
+            var pStopwatchOverHead = Stopwatch.StartNew();
 
             var ExistingCorrCphsSD0 = LSCrg.SetInitialAdjacency();  //also count the number of edges
             AddLineToStrObjLtDt(StrObjLtDt, LSCrg);

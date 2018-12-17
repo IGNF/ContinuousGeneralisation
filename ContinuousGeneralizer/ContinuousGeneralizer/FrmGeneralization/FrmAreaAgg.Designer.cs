@@ -61,6 +61,7 @@
             this.txtEvaluation = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.chkTesting = new System.Windows.Forms.CheckBox();
             this.btnRunAll = new System.Windows.Forms.Button();
             this.chkSmallest = new System.Windows.Forms.CheckBox();
             this.btnResultFolder = new System.Windows.Forms.Button();
@@ -86,7 +87,9 @@
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.timerAdd = new System.Windows.Forms.Timer(this.components);
-            this.chkTesting = new System.Windows.Forms.CheckBox();
+            this.txtTimeLimit = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -439,6 +442,16 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parameters";
             // 
+            // chkTesting
+            // 
+            this.chkTesting.AutoSize = true;
+            this.chkTesting.Location = new System.Drawing.Point(147, 100);
+            this.chkTesting.Name = "chkTesting";
+            this.chkTesting.Size = new System.Drawing.Size(129, 17);
+            this.chkTesting.TabIndex = 103;
+            this.chkTesting.Text = "Testing, no sequence";
+            this.chkTesting.UseVisualStyleBackColor = true;
+            // 
             // btnRunAll
             // 
             this.btnRunAll.Location = new System.Drawing.Point(5, 190);
@@ -543,7 +556,7 @@
             // 
             // btnRunSpecified
             // 
-            this.btnRunSpecified.Location = new System.Drawing.Point(6, 89);
+            this.btnRunSpecified.Location = new System.Drawing.Point(6, 50);
             this.btnRunSpecified.Name = "btnRunSpecified";
             this.btnRunSpecified.Size = new System.Drawing.Size(106, 25);
             this.btnRunSpecified.TabIndex = 98;
@@ -563,12 +576,15 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.label9);
+            this.groupBox4.Controls.Add(this.label8);
+            this.groupBox4.Controls.Add(this.txtTimeLimit);
             this.groupBox4.Controls.Add(this.btnRunILP_Extend);
             this.groupBox4.Controls.Add(this.btnRunILP);
             this.groupBox4.Controls.Add(this.btnRunILPSpecified);
-            this.groupBox4.Location = new System.Drawing.Point(12, 496);
+            this.groupBox4.Location = new System.Drawing.Point(12, 472);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(288, 56);
+            this.groupBox4.Size = new System.Drawing.Size(288, 80);
             this.groupBox4.TabIndex = 76;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "ILP";
@@ -613,7 +629,7 @@
             this.groupBox5.Controls.Add(this.btnRunSpecified);
             this.groupBox5.Location = new System.Drawing.Point(8, 106);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(274, 139);
+            this.groupBox5.Size = new System.Drawing.Size(274, 113);
             this.groupBox5.TabIndex = 77;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "A Star";
@@ -621,7 +637,7 @@
             // chkOutput
             // 
             this.chkOutput.AutoSize = true;
-            this.chkOutput.Location = new System.Drawing.Point(56, 116);
+            this.chkOutput.Location = new System.Drawing.Point(59, 83);
             this.chkOutput.Name = "chkOutput";
             this.chkOutput.Size = new System.Drawing.Size(87, 17);
             this.chkOutput.TabIndex = 102;
@@ -631,7 +647,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(157, 116);
+            this.label7.Location = new System.Drawing.Point(160, 83);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(28, 13);
             this.label7.TabIndex = 101;
@@ -641,7 +657,7 @@
             // 
             this.textBox1.BackColor = System.Drawing.SystemColors.ControlLight;
             this.textBox1.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.textBox1.Location = new System.Drawing.Point(191, 113);
+            this.textBox1.Location = new System.Drawing.Point(194, 80);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(77, 20);
             this.textBox1.TabIndex = 100;
@@ -686,7 +702,7 @@
             this.groupBox7.Controls.Add(this.label1);
             this.groupBox7.Location = new System.Drawing.Point(12, 239);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(287, 251);
+            this.groupBox7.Size = new System.Drawing.Size(287, 227);
             this.groupBox7.TabIndex = 79;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Greedy and AStar";
@@ -696,15 +712,32 @@
             this.timerAdd.Interval = 500;
             this.timerAdd.Tick += new System.EventHandler(this.timerAdd_Tick);
             // 
-            // chkTesting
+            // txtTimeLimit
             // 
-            this.chkTesting.AutoSize = true;
-            this.chkTesting.Location = new System.Drawing.Point(147, 100);
-            this.chkTesting.Name = "chkTesting";
-            this.chkTesting.Size = new System.Drawing.Size(129, 17);
-            this.chkTesting.TabIndex = 103;
-            this.chkTesting.Text = "Testing, no sequence";
-            this.chkTesting.UseVisualStyleBackColor = true;
+            this.txtTimeLimit.Location = new System.Drawing.Point(187, 50);
+            this.txtTimeLimit.Name = "txtTimeLimit";
+            this.txtTimeLimit.Size = new System.Drawing.Size(77, 20);
+            this.txtTimeLimit.TabIndex = 102;
+            this.txtTimeLimit.Text = "200";
+            this.txtTimeLimit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(270, 53);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(12, 13);
+            this.label8.TabIndex = 103;
+            this.label8.Text = "s";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(128, 53);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(53, 13);
+            this.label9.TabIndex = 104;
+            this.label9.Text = "Time limit:";
             // 
             // FrmAreaAgg
             // 
@@ -726,6 +759,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.groupBox6.ResumeLayout(false);
@@ -795,5 +829,8 @@
         private System.Windows.Forms.Timer timerAdd;
         private System.Windows.Forms.TextBox txtMultiResults;
         private System.Windows.Forms.CheckBox chkTesting;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox txtTimeLimit;
     }
 }

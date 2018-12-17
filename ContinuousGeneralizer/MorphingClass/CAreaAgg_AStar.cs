@@ -91,8 +91,7 @@ namespace MorphingClass.CGeneralizationMethods
             long lngStartMemory = GC.GetTotalMemory(true);
             
 
-            var pStopwatchOverHead = new Stopwatch();
-            pStopwatchOverHead.Start();
+            var pStopwatchOverHead = Stopwatch.StartNew();
 
 
             var ExistingCorrCphsSD0 = LSCrg.SetInitialAdjacency();  //also count the number of edges

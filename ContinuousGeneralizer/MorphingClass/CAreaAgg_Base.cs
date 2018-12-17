@@ -54,7 +54,7 @@ namespace MorphingClass.CGeneralizationMethods
         //160s is from _Smallest_MinIntBound_200000
         //600s: 10min
         //public double dblTimeLimit { get; set; } = 113; //in seconds
-        public double dblTimeLimit { get; set; } = 150; //in seconds, from 111.5 s
+        public double dblTimeLimit { get; set; } = 100; //in seconds, from 111.5 s
                                                         //public double dblTimeLimit { get; set; } = 300; //in seconds
                                                         //public static double dblLamda2 = 1 - dblLamda1;
 
@@ -66,8 +66,8 @@ namespace MorphingClass.CGeneralizationMethods
         protected static int _intStart; //=0
         protected static int _intEndCount; //=this.SSCrgLt.Count
         protected List< List<long>> _lngMemoryLtLt = new List<List<long>>();
-        protected static Dictionary<int, CValPair<int, double>> _EstStepsCostVPDt;
-        protected static List<string> _strLineLt; //sort according to ID
+        //protected static Dictionary<int, CValPair<int, double>> _EstStepsCostVPDt;
+        public List<string> strLineLt; //sort according to ID
         protected static string _strILPFailingNumOutput = "";
         protected static int _intNoSolutionEstSteps = 999; //if we can't find a solution by ILP
 
@@ -557,7 +557,7 @@ namespace MorphingClass.CGeneralizationMethods
 
 
 
-        public static string SaveData(CStrObjLtDt StrObjLtDt, List<CRegion> pInitialCrgLt,
+        public static string SaveData(CStrObjLtDt StrObjLtDt, CAreaAgg_Base pAreaAgg_Base,
             CParameterInitialize pParameterInitialize, string strMethod, string strParameter = "")
         {
             int intAtrNum = StrObjLtDt.Count;
@@ -611,12 +611,12 @@ namespace MorphingClass.CGeneralizationMethods
                 //if we are not testing, we want to export aggregation sequence
                 if (pParameterInitialize.chkTesting.Checked == false)
                 {
-                    ExportAggSequence(pInitialCrgLt, pParameterInitialize, strResultFileName);
+                    ExportAggSequence(pAreaAgg_Base.InitialCrgLt, pParameterInitialize, strResultFileName);
                 }
 
                 if (pobjDataLtLt.Count == 734)
                 {
-                    ExportCmpGreedyAStar(_strLineLt, objDataLtONMIdSS, strResultFileName, pParameterInitialize.strSavePath);
+                    ExportCmpGreedyAStar(pAreaAgg_Base.strLineLt, objDataLtONMIdSS, strResultFileName, pParameterInitialize.strSavePath);
                 }
             }
 
@@ -624,7 +624,7 @@ namespace MorphingClass.CGeneralizationMethods
             {
                 if (pParameterInitialize.chkTesting.Checked == false)
                 {
-                    ExportAggSequence(pInitialCrgLt, pParameterInitialize, strResultFileName);
+                    ExportAggSequence(pAreaAgg_Base.InitialCrgLt, pParameterInitialize, strResultFileName);
                 }               
 
                 if (pobjDataLtLt.Count == 734)
@@ -810,7 +810,6 @@ namespace MorphingClass.CGeneralizationMethods
             var dblTimeDisplay = Math.Round(dblTime / 60000, 1);
             var nfi = new NumberFormatInfo();
             nfi.NumberDecimalSeparator = "'"; //use "'" as decial separator for latex
-            dblTimeDisplay = 10;
             astrValuess[intArrayIndex++] = dblTimeDisplay.ToString("F1", nfi) + @"~(" 
                 + (dblFSTime / dblTime *100).ToString("F1")+ @"\%)";
             strData+= string.Format(strformatstatistics, astrValuess) + "\n";

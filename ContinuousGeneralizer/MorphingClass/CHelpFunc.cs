@@ -690,7 +690,6 @@ namespace MorphingClass.CUtility
                 else
                 {
                     throw new ArgumentOutOfRangeException("failed to get type index for a type!");
-                    //MessageBox.Show("failed to get type index for a type!   In: " + "CHelpFunc.cs");
                 }
             }
         }

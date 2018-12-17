@@ -148,18 +148,6 @@ namespace MorphingClass.CGeneralizationMethods
             }
 
             _strILPFailingNumOutput = strILPFailingNumOutput;
-
-            //strILPFailingNumOutput += "\n\n" + strOtherErrors;
-
-            //using (var writer = new StreamWriter(_ParameterInitialize.strSavePathBackSlash +
-            //    CHelpFunc.GetTimeStampWithPrefix() + "ILP" + Convert.ToInt32(this.dblTimeLimit) + "_FailingNum.txt", true))
-            //{
-            //    writer.WriteLine("OOM during setting and solving: " + CrgOOMSetSS.Count + "   " + CrgOOMSolveSS.Count);
-            //    writer.WriteLine("OOT during setting and solving: " + CrgOOTSetSS.Count + "   " + CrgOOTSolveSS.Count);
-            //    writer.WriteLine("CPLEX Error  3019: Failure to solve MIP subproblem: " + CrgCplexError3019SS.Count);
-            //    writer.Write("\n\n");
-            //    writer.Write(strData);
-            //}
         }
 
 
@@ -173,8 +161,7 @@ namespace MorphingClass.CGeneralizationMethods
 
             long lngStartMemory = GC.GetTotalMemory(true);
 
-            var pStopwatch = new Stopwatch();
-            pStopwatch.Start();
+            var pStopwatch = Stopwatch.StartNew();
             LSCrg.SetInitialAdjacency();  //also count the number of edges
             AddLineToStrObjLtDt(StrObjLtDt, LSCrg);
 
@@ -183,7 +170,7 @@ namespace MorphingClass.CGeneralizationMethods
             System.Console.WriteLine();
             System.Console.WriteLine("Crg:  ID  " + LSCrg.ID + ";    n  " + LSCrg.GetCphCount() + ";    m  " +
                 LSCrg.AdjCorrCphsSD.Count + "  " + _ParameterInitialize.strAreaAggregation + "================================="
-                + LSCrg.ID + "  " + _ParameterInitialize.strAreaAggregation + "==============================");
+                + LSCrg.ID + "  " + _ParameterInitialize.strAreaAggregation + " "+ this.dblTimeLimit + " s " + "==============================");
 
 
 
@@ -605,9 +592,7 @@ namespace MorphingClass.CGeneralizationMethods
                 {
                     for (int l = 0; l < intCpgCount; l++)
                     {
-                        model.AddLe(x[i][j][l], x[i][l][l]);
-                        //model.AddLe(model.Sum(x[i][j][l], model.Negative(x[i][l][l])),
-                        //    dblILPSmallValue, "AssignedIsCenter__" + i + "__" + j + "__" + l);
+                        model.AddLe(x[i][j][l], x[i][l][l], "AssignedIsCenter__" + i + "__" + j + "__" + l);
                     }
                 }
             }
@@ -629,7 +614,6 @@ namespace MorphingClass.CGeneralizationMethods
                 for (int j = 0; j < intCpgCount; j++)
                 {
                     model.AddGe(x[i][j][j], x[i + 1][j][j], "SteadyCenters");
-                    //model.AddGe(model.Sum(x[i][j][j], model.Negative(x[i + 1][j][j])), -dblILPSmallValue, "SteadyCenters");
                 }
             }
 
