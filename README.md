@@ -11,5 +11,5 @@ I understand that it is difficult to set up everything to run the prototype.
 Please feel free to contact me if you have any questions.
 
 Dongliang Peng  
-dongliang.peng@uni-wuerzburg.de  
-http://www1.informatik.uni-wuerzburg.de/peng
+pengdlzn@gmail.com  
+www.researchgate.net/profile/Dongliang_Peng
