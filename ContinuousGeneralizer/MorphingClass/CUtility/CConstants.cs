@@ -107,6 +107,8 @@ namespace MorphingClass.CUtility
                 double yyy = yy * y;
                 double yyyy = yy * yy;
 
+                
+                //dblVerySmallSquare=
                 _dblVerySmallCoord = y;
                 _dblVerySmallSquare = 2 * X * y + yy;
                 _dblVerySmallPower3 = 3 * XX * y + 3 * X * yy + yyy;

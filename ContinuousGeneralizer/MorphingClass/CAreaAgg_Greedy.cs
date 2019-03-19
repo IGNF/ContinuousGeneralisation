@@ -54,12 +54,12 @@ namespace MorphingClass.CGeneralizationMethods
             CRegion._lngEstCountEqual = 0;
 
             //we must run AStar first
-            var strLineLt = File.ReadLines(_ParameterInitialize.strMxdPathBackSlash + "AStar200000_" 
+            var strAStarCostLineLt = File.ReadLines(_ParameterInitialize.strMxdPathBackSlash + "AStar200000_" 
                 + _ParameterInitialize.strAreaAggregation + "_"+ CConstants.strShapeConstraint+ ".txt").ToList();
-            var EstStepsCostVPDt = new Dictionary<int, CValPair<int, double>>(strLineLt.Count-1);  //record the results from A*
-            for (int i = 1; i < strLineLt.Count; i++) //the first line is for headings
+            var EstStepsCostVPDt = new Dictionary<int, CValPair<int, double>>(strAStarCostLineLt.Count-1);  //record the results from A*
+            for (int i = 1; i < strAStarCostLineLt.Count; i++) //the first line is for headings
             {
-                var strDetail = strLineLt[i].Split(new char[] { ' ', '\t' }, 
+                var strDetail = strAStarCostLineLt[i].Split(new char[] { ' ', '\t' }, 
                     StringSplitOptions.RemoveEmptyEntries); //use white space to split
                 EstStepsCostVPDt.Add(Convert.ToInt32(strDetail[0]), 
                     new CValPair<int, double>(Convert.ToInt32(strDetail[1]), Convert.ToDouble(strDetail[2])));
@@ -78,7 +78,7 @@ namespace MorphingClass.CGeneralizationMethods
                 CHelpFunc.Displaytspb(i - _intStart + 1, _intEndCount - _intStart);
             }
 
-            this.strLineLt = strLineLt;
+            this.strAStarCostLineLt = strAStarCostLineLt;
             //_EstStepsCostVPDt = EstStepsCostVPDt;
             EndAffairs(_intEndCount);
 
@@ -137,8 +137,7 @@ namespace MorphingClass.CGeneralizationMethods
                 + "            Type: " + resultcrg.dblCostExactType
                 + "            Compactness: " + resultcrg.dblCostExactComp);
 
-            CValPair<int, double> outEstStepsCostVP;
-            EstStepsCostVPDt.TryGetValue(LSCrg.ID, out outEstStepsCostVP);
+            EstStepsCostVPDt.TryGetValue(LSCrg.ID, out CValPair<int, double> outEstStepsCostVP);
             if (outEstStepsCostVP.val1 == 0 &&
     CCmpMethods.CmpDbl_CoordVerySmall(outEstStepsCostVP.val2, resultcrg.d) == 0)
             {
@@ -243,7 +242,7 @@ namespace MorphingClass.CGeneralizationMethods
 
                 var newAdjCorrCphsSD = CRegion.ComputeNewAdjCorrCphsSDAndUpdateExistingCorrCphsSD
                     (currentCrg.AdjCorrCphsSD, minunitingCorrCphs, minunitedcph, ExistingCorrCphsSD);
-                var newcrg = currentCrg.GenerateCrgChildAndComputeCost(lscrg, newAdjCorrCphsSD,
+                var newcrg = currentCrg.GenerateCrgChildAndComputeExactCost(lscrg, newAdjCorrCphsSD,
              minactivecph, minpassivecph, minunitedcph, minunitingCorrCphs, padblTD);
 
                 newcrg.d = newcrg.dblCostExact;

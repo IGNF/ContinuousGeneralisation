@@ -73,7 +73,7 @@ namespace MorphingClass.CCommon
              * boolean which determines whether or not the output will be clipped to graphics extent (for layouts).
              */
         public void ExportActiveViewParameterized(long iOutputResolution, long lResampleRatio, 
-            string ExportType, string sOutputDir, Boolean bClipToGraphicsExtent)
+            string ExportType, string sOutputDir, string strModel, Boolean bClipToGraphicsExtent)
         {
 
             /* EXPORT PARAMETER: (iOutputResolution) the resolution requested.
@@ -164,7 +164,7 @@ namespace MorphingClass.CCommon
             //sNameRoot = "ExportActiveViewSampleOutput";
 
             //set the export filename (which is the nameroot + the appropriate file extension)
-            docExport.ExportFileName = sOutputDir + "_" + CHelpFunc.GetTimeStampWithPrefix() 
+            docExport.ExportFileName = sOutputDir + CHelpFunc.GetTimeStamp() + "_" + strModel
                 + "." + docExport.Filter.Split('.')[1].Split('|')[0].Split(')')[0];
 
             //Output Image Quality of the export.  The value here will only be used if the export

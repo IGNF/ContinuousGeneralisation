@@ -154,7 +154,7 @@ namespace ContinuousGeneralizer
                 //3 MaxMinC_Comb
                 //4 MaxAvgC_EdgeNo
                 //5 MaxAvgC_Comb
-                _DataRecords.ParameterInitialize.cboShapeConstraint.SelectedIndex = 1;
+                _DataRecords.ParameterInitialize.cboShapeConstraint.SelectedIndex = 4;
                 switch (CConstants.strRunContinuousGeneralizer)
                 {
                     case "Greedy":
@@ -184,7 +184,7 @@ namespace ContinuousGeneralizer
 
 
             //frmCurrent.btnTransform_Click(sender, e);
-            //frmCurrent.btnAStar_Click(sender, e);
+            frmCurrent.btnAStar_Click(sender, e);
             //frmCurrent.btnRun_Click(sender, e);
             //frmCurrent.btnGreedy_Click(sender, e);
             //frmCurrent.btnRunILP_Click(sender, e);
@@ -748,7 +748,7 @@ namespace ContinuousGeneralizer
 
             var pExportActiveViewCS_Net = new MorphingClass.CCommon.ExportActiveViewCS_Net();
 
-            pExportActiveViewCS_Net.ExportActiveViewParameterized(300, 1, "JPEG", strFileName, true);
+            pExportActiveViewCS_Net.ExportActiveViewParameterized(300, 1, "JPEG", strFileName, "", true);
 
         }
 
@@ -765,7 +765,7 @@ namespace ContinuousGeneralizer
             strFileName = sfdjpg.FileName;
 
             var pExportActiveViewCS_Net = new MorphingClass.CCommon.ExportActiveViewCS_Net();
-            pExportActiveViewCS_Net.ExportActiveViewParameterized(300, 1, "EMF", strFileName, true);
+            pExportActiveViewCS_Net.ExportActiveViewParameterized(300, 1, "EMF", strFileName, "", true);
 
         }
 

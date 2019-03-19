@@ -75,6 +75,9 @@
             this.btnRunSpecified = new System.Windows.Forms.Button();
             this.btnAStar = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.txtTimeLimit = new System.Windows.Forms.TextBox();
             this.btnRunILP_Extend = new System.Windows.Forms.Button();
             this.btnRunILP = new System.Windows.Forms.Button();
             this.btnRunILPSpecified = new System.Windows.Forms.Button();
@@ -87,9 +90,6 @@
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.timerAdd = new System.Windows.Forms.Timer(this.components);
-            this.txtTimeLimit = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -551,7 +551,7 @@
             this.txtNodes.Name = "txtNodes";
             this.txtNodes.Size = new System.Drawing.Size(77, 20);
             this.txtNodes.TabIndex = 99;
-            this.txtNodes.Text = "200000";
+            this.txtNodes.Text = "400000";
             this.txtNodes.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // btnRunSpecified
@@ -588,6 +588,33 @@
             this.groupBox4.TabIndex = 76;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "ILP";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(128, 53);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(53, 13);
+            this.label9.TabIndex = 104;
+            this.label9.Text = "Time limit:";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(270, 53);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(12, 13);
+            this.label8.TabIndex = 103;
+            this.label8.Text = "s";
+            // 
+            // txtTimeLimit
+            // 
+            this.txtTimeLimit.Location = new System.Drawing.Point(187, 50);
+            this.txtTimeLimit.Name = "txtTimeLimit";
+            this.txtTimeLimit.Size = new System.Drawing.Size(77, 20);
+            this.txtTimeLimit.TabIndex = 102;
+            this.txtTimeLimit.Text = "200";
+            this.txtTimeLimit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // btnRunILP_Extend
             // 
@@ -711,33 +738,6 @@
             // 
             this.timerAdd.Interval = 500;
             this.timerAdd.Tick += new System.EventHandler(this.timerAdd_Tick);
-            // 
-            // txtTimeLimit
-            // 
-            this.txtTimeLimit.Location = new System.Drawing.Point(187, 50);
-            this.txtTimeLimit.Name = "txtTimeLimit";
-            this.txtTimeLimit.Size = new System.Drawing.Size(77, 20);
-            this.txtTimeLimit.TabIndex = 102;
-            this.txtTimeLimit.Text = "200";
-            this.txtTimeLimit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(270, 53);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(12, 13);
-            this.label8.TabIndex = 103;
-            this.label8.Text = "s";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(128, 53);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(53, 13);
-            this.label9.TabIndex = 104;
-            this.label9.Text = "Time limit:";
             // 
             // FrmAreaAgg
             // 

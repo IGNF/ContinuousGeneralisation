@@ -194,7 +194,7 @@ namespace ContinuousGeneralizer
             // mnuORB
             // 
             this.mnuORB.Name = "mnuORB";
-            this.mnuORB.Size = new System.Drawing.Size(151, 22);
+            this.mnuORB.Size = new System.Drawing.Size(148, 22);
             this.mnuORB.Text = "ORB";
             this.mnuORB.Click += new System.EventHandler(this.mnuORB_Click);
             // 
@@ -206,62 +206,62 @@ namespace ContinuousGeneralizer
             this.mnuSimDeflection,
             this.mnuTF});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(69, 20);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(68, 20);
             this.toolStripMenuItem1.Text = "Similarity";
             // 
             // mnuSimAngle3
             // 
             this.mnuSimAngle3.Name = "mnuSimAngle3";
-            this.mnuSimAngle3.Size = new System.Drawing.Size(151, 22);
+            this.mnuSimAngle3.Size = new System.Drawing.Size(148, 22);
             this.mnuSimAngle3.Text = "SimAngle3";
             this.mnuSimAngle3.Click += new System.EventHandler(this.mnuSimAngle3_Click);
             // 
             // mnuSimDeflection
             // 
             this.mnuSimDeflection.Name = "mnuSimDeflection";
-            this.mnuSimDeflection.Size = new System.Drawing.Size(151, 22);
+            this.mnuSimDeflection.Size = new System.Drawing.Size(148, 22);
             this.mnuSimDeflection.Text = "SimDeflection";
             this.mnuSimDeflection.Click += new System.EventHandler(this.mnuSimDeflection_Click);
             // 
             // mnuTF
             // 
             this.mnuTF.Name = "mnuTF";
-            this.mnuTF.Size = new System.Drawing.Size(151, 22);
+            this.mnuTF.Size = new System.Drawing.Size(148, 22);
             this.mnuTF.Text = "TF";
             this.mnuTF.Click += new System.EventHandler(this.mnuTF_Click);
             // 
             // mnuLandingTimeLI
             // 
             this.mnuLandingTimeLI.Name = "mnuLandingTimeLI";
-            this.mnuLandingTimeLI.Size = new System.Drawing.Size(157, 22);
+            this.mnuLandingTimeLI.Size = new System.Drawing.Size(153, 22);
             this.mnuLandingTimeLI.Text = "LandingTimeLI";
             this.mnuLandingTimeLI.Click += new System.EventHandler(this.mnuLandingTimeLI_Click);
             // 
             // mnuLandingTime
             // 
             this.mnuLandingTime.Name = "mnuLandingTime";
-            this.mnuLandingTime.Size = new System.Drawing.Size(157, 22);
+            this.mnuLandingTime.Size = new System.Drawing.Size(153, 22);
             this.mnuLandingTime.Text = "LandingTime";
             this.mnuLandingTime.Click += new System.EventHandler(this.mnuLandingTime_Click);
             // 
             // mnuBezierDetectPointfarthest
             // 
             this.mnuBezierDetectPointfarthest.Name = "mnuBezierDetectPointfarthest";
-            this.mnuBezierDetectPointfarthest.Size = new System.Drawing.Size(270, 22);
+            this.mnuBezierDetectPointfarthest.Size = new System.Drawing.Size(258, 22);
             this.mnuBezierDetectPointfarthest.Text = "BezierDetectPointfarthest";
             this.mnuBezierDetectPointfarthest.Click += new System.EventHandler(this.mnuBezierDetectPointfarthest_Click);
             // 
             // mnuBezierDetectPoint
             // 
             this.mnuBezierDetectPoint.Name = "mnuBezierDetectPoint";
-            this.mnuBezierDetectPoint.Size = new System.Drawing.Size(270, 22);
+            this.mnuBezierDetectPoint.Size = new System.Drawing.Size(258, 22);
             this.mnuBezierDetectPoint.Text = "BezierDetectPoint";
             this.mnuBezierDetectPoint.Click += new System.EventHandler(this.mnuBezierDetectPoint_Click);
             // 
             // mnuCreatePointLayer
             // 
             this.mnuCreatePointLayer.Name = "mnuCreatePointLayer";
-            this.mnuCreatePointLayer.Size = new System.Drawing.Size(270, 22);
+            this.mnuCreatePointLayer.Size = new System.Drawing.Size(258, 22);
             this.mnuCreatePointLayer.Text = "CreatePointLayer";
             this.mnuCreatePointLayer.Click += new System.EventHandler(this.mnuCreatePointLayer_Click);
             // 
@@ -295,202 +295,202 @@ namespace ContinuousGeneralizer
             this.mnuCompareExcel,
             this.mnuSelectRandomly});
             this.mnuLookingForNeighboursDT.Name = "mnuLookingForNeighboursDT";
-            this.mnuLookingForNeighboursDT.Size = new System.Drawing.Size(36, 20);
+            this.mnuLookingForNeighboursDT.Size = new System.Drawing.Size(37, 20);
             this.mnuLookingForNeighboursDT.Text = "Aid";
             // 
             // mnuTemporary
             // 
             this.mnuTemporary.Name = "mnuTemporary";
-            this.mnuTemporary.Size = new System.Drawing.Size(270, 22);
+            this.mnuTemporary.Size = new System.Drawing.Size(258, 22);
             this.mnuTemporary.Text = "Temporary";
             this.mnuTemporary.Click += new System.EventHandler(this.mnuTemporary_Click);
             // 
             // mnuExcelToShape
             // 
             this.mnuExcelToShape.Name = "mnuExcelToShape";
-            this.mnuExcelToShape.Size = new System.Drawing.Size(270, 22);
+            this.mnuExcelToShape.Size = new System.Drawing.Size(258, 22);
             this.mnuExcelToShape.Text = "ExcelToShape";
             this.mnuExcelToShape.Click += new System.EventHandler(this.mnuExcelToShape_Click);
             // 
             // mnuEnlargeLayer
             // 
             this.mnuEnlargeLayer.Name = "mnuEnlargeLayer";
-            this.mnuEnlargeLayer.Size = new System.Drawing.Size(270, 22);
+            this.mnuEnlargeLayer.Size = new System.Drawing.Size(258, 22);
             this.mnuEnlargeLayer.Text = "EnlargeLayer";
             this.mnuEnlargeLayer.Click += new System.EventHandler(this.mnuEnlargeLayer_Click);
             // 
             // mnuMatchAndMergePolylines
             // 
             this.mnuMatchAndMergePolylines.Name = "mnuMatchAndMergePolylines";
-            this.mnuMatchAndMergePolylines.Size = new System.Drawing.Size(270, 22);
+            this.mnuMatchAndMergePolylines.Size = new System.Drawing.Size(258, 22);
             this.mnuMatchAndMergePolylines.Text = "MatchAndMergePolylines";
             this.mnuMatchAndMergePolylines.Click += new System.EventHandler(this.mnuMatchAndMergePolylines_Click);
             // 
             // mnuLookingForNeighboursSweepLine
             // 
             this.mnuLookingForNeighboursSweepLine.Name = "mnuLookingForNeighboursSweepLine";
-            this.mnuLookingForNeighboursSweepLine.Size = new System.Drawing.Size(270, 22);
+            this.mnuLookingForNeighboursSweepLine.Size = new System.Drawing.Size(258, 22);
             this.mnuLookingForNeighboursSweepLine.Text = "LookingForNeighboursSweepLine";
             this.mnuLookingForNeighboursSweepLine.Click += new System.EventHandler(this.mnuLookingForNeighboursSweepLine_Click);
             // 
             // mnuLookingForNeighboursDT2
             // 
             this.mnuLookingForNeighboursDT2.Name = "mnuLookingForNeighboursDT2";
-            this.mnuLookingForNeighboursDT2.Size = new System.Drawing.Size(270, 22);
+            this.mnuLookingForNeighboursDT2.Size = new System.Drawing.Size(258, 22);
             this.mnuLookingForNeighboursDT2.Text = "LookingForNeighboursDT";
             this.mnuLookingForNeighboursDT2.Click += new System.EventHandler(this.mnuLookingForNeighboursDT2_Click);
             // 
             // mnuLookingForNeighboursGrids
             // 
             this.mnuLookingForNeighboursGrids.Name = "mnuLookingForNeighboursGrids";
-            this.mnuLookingForNeighboursGrids.Size = new System.Drawing.Size(270, 22);
+            this.mnuLookingForNeighboursGrids.Size = new System.Drawing.Size(258, 22);
             this.mnuLookingForNeighboursGrids.Text = "LookingForNeighboursGrids";
             this.mnuLookingForNeighboursGrids.Click += new System.EventHandler(this.mnuLookingForNeighboursGrids_Click);
             // 
             // mnuCreateRandomPointLayer
             // 
             this.mnuCreateRandomPointLayer.Name = "mnuCreateRandomPointLayer";
-            this.mnuCreateRandomPointLayer.Size = new System.Drawing.Size(270, 22);
+            this.mnuCreateRandomPointLayer.Size = new System.Drawing.Size(258, 22);
             this.mnuCreateRandomPointLayer.Text = "CreateRandomPointLayer";
             this.mnuCreateRandomPointLayer.Click += new System.EventHandler(this.mnuCreateRandomPointLayer_Click);
             // 
             // mnuCoordinatesTransformation
             // 
             this.mnuCoordinatesTransformation.Name = "mnuCoordinatesTransformation";
-            this.mnuCoordinatesTransformation.Size = new System.Drawing.Size(270, 22);
+            this.mnuCoordinatesTransformation.Size = new System.Drawing.Size(258, 22);
             this.mnuCoordinatesTransformation.Text = "CoordinatesTransformation";
             this.mnuCoordinatesTransformation.Click += new System.EventHandler(this.mnuCoordinatesTransformation_Click);
             // 
             // mnuGaussianPerturbation
             // 
             this.mnuGaussianPerturbation.Name = "mnuGaussianPerturbation";
-            this.mnuGaussianPerturbation.Size = new System.Drawing.Size(270, 22);
+            this.mnuGaussianPerturbation.Size = new System.Drawing.Size(258, 22);
             this.mnuGaussianPerturbation.Text = "GaussianPerturbation";
             this.mnuGaussianPerturbation.Click += new System.EventHandler(this.mnuGaussianPerturbation_Click);
             // 
             // mnuDeletePointsWithSameCoordinates
             // 
             this.mnuDeletePointsWithSameCoordinates.Name = "mnuDeletePointsWithSameCoordinates";
-            this.mnuDeletePointsWithSameCoordinates.Size = new System.Drawing.Size(270, 22);
+            this.mnuDeletePointsWithSameCoordinates.Size = new System.Drawing.Size(258, 22);
             this.mnuDeletePointsWithSameCoordinates.Text = "DeletePointsWithSameCoordinates";
             this.mnuDeletePointsWithSameCoordinates.Click += new System.EventHandler(this.mnuDeletePointsWithSameCoordinates_Click);
             // 
             // mnuUnifyDirections
             // 
             this.mnuUnifyDirections.Name = "mnuUnifyDirections";
-            this.mnuUnifyDirections.Size = new System.Drawing.Size(270, 22);
+            this.mnuUnifyDirections.Size = new System.Drawing.Size(258, 22);
             this.mnuUnifyDirections.Text = "UnifyDirections";
             this.mnuUnifyDirections.Click += new System.EventHandler(this.mnuUnifyDirections_Click);
             // 
             // toIpeToolStripMenuItem
             // 
             this.toIpeToolStripMenuItem.Name = "toIpeToolStripMenuItem";
-            this.toIpeToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
+            this.toIpeToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.toIpeToolStripMenuItem.Text = "ToIpe";
             this.toIpeToolStripMenuItem.Click += new System.EventHandler(this.mnuToIpe);
             // 
             // mnuCalGeo_Ipe
             // 
             this.mnuCalGeo_Ipe.Name = "mnuCalGeo_Ipe";
-            this.mnuCalGeo_Ipe.Size = new System.Drawing.Size(270, 22);
+            this.mnuCalGeo_Ipe.Size = new System.Drawing.Size(258, 22);
             this.mnuCalGeo_Ipe.Text = "CalGeo_Ipe";
             this.mnuCalGeo_Ipe.Click += new System.EventHandler(this.mnuCalGeo_Ipe_Click);
             // 
             // mnuTopologyChecker
             // 
             this.mnuTopologyChecker.Name = "mnuTopologyChecker";
-            this.mnuTopologyChecker.Size = new System.Drawing.Size(270, 22);
+            this.mnuTopologyChecker.Size = new System.Drawing.Size(258, 22);
             this.mnuTopologyChecker.Text = "TopologyChecker";
             this.mnuTopologyChecker.Click += new System.EventHandler(this.mnuTopologyChecker_Click);
             // 
             // mnuStatisticsOfDataSets
             // 
             this.mnuStatisticsOfDataSets.Name = "mnuStatisticsOfDataSets";
-            this.mnuStatisticsOfDataSets.Size = new System.Drawing.Size(270, 22);
+            this.mnuStatisticsOfDataSets.Size = new System.Drawing.Size(258, 22);
             this.mnuStatisticsOfDataSets.Text = "StatisticsOfDataSets";
             this.mnuStatisticsOfDataSets.Click += new System.EventHandler(this.mnuStatisticsOfDataSets_Click);
             // 
             // mnuTestDistanceMetric
             // 
             this.mnuTestDistanceMetric.Name = "mnuTestDistanceMetric";
-            this.mnuTestDistanceMetric.Size = new System.Drawing.Size(270, 22);
+            this.mnuTestDistanceMetric.Size = new System.Drawing.Size(258, 22);
             this.mnuTestDistanceMetric.Text = "TestDistanceMetric";
             this.mnuTestDistanceMetric.Click += new System.EventHandler(this.mnuTestDistanceMetric_Click);
             // 
             // mnuMatchAndMergePolygons
             // 
             this.mnuMatchAndMergePolygons.Name = "mnuMatchAndMergePolygons";
-            this.mnuMatchAndMergePolygons.Size = new System.Drawing.Size(270, 22);
+            this.mnuMatchAndMergePolygons.Size = new System.Drawing.Size(258, 22);
             this.mnuMatchAndMergePolygons.Text = "MatchAndMergePolygons";
             this.mnuMatchAndMergePolygons.Click += new System.EventHandler(this.mnuMatchAndMergePolygons_Click);
             // 
             // mnuMergeAndSplitPolylines
             // 
             this.mnuMergeAndSplitPolylines.Name = "mnuMergeAndSplitPolylines";
-            this.mnuMergeAndSplitPolylines.Size = new System.Drawing.Size(270, 22);
+            this.mnuMergeAndSplitPolylines.Size = new System.Drawing.Size(258, 22);
             this.mnuMergeAndSplitPolylines.Text = "MergeAndSplitPolylines";
             this.mnuMergeAndSplitPolylines.Click += new System.EventHandler(this.mnuMergeAndSplitPolylines_Click);
             // 
             // mnuUnifyIndicesPolylines
             // 
             this.mnuUnifyIndicesPolylines.Name = "mnuUnifyIndicesPolylines";
-            this.mnuUnifyIndicesPolylines.Size = new System.Drawing.Size(270, 22);
+            this.mnuUnifyIndicesPolylines.Size = new System.Drawing.Size(258, 22);
             this.mnuUnifyIndicesPolylines.Text = "UnifyIndicesPolylines";
             this.mnuUnifyIndicesPolylines.Click += new System.EventHandler(this.mnuUnifyIndicesPolylines_Click);
             // 
             // mnuIdentifyCorrCpgAddRegionNum
             // 
             this.mnuIdentifyCorrCpgAddRegionNum.Name = "mnuIdentifyCorrCpgAddRegionNum";
-            this.mnuIdentifyCorrCpgAddRegionNum.Size = new System.Drawing.Size(270, 22);
+            this.mnuIdentifyCorrCpgAddRegionNum.Size = new System.Drawing.Size(258, 22);
             this.mnuIdentifyCorrCpgAddRegionNum.Text = "IdentifyCorrCpgAddRegionNum";
             this.mnuIdentifyCorrCpgAddRegionNum.Click += new System.EventHandler(this.mnuIdentifyCorrCpgAddRegionNum_Click);
             // 
             // mnuCompareExcel
             // 
             this.mnuCompareExcel.Name = "mnuCompareExcel";
-            this.mnuCompareExcel.Size = new System.Drawing.Size(270, 22);
+            this.mnuCompareExcel.Size = new System.Drawing.Size(258, 22);
             this.mnuCompareExcel.Text = "CompareExcel";
             this.mnuCompareExcel.Click += new System.EventHandler(this.mnuCompareExcel_Click);
             // 
             // mnuSelectRandomly
             // 
             this.mnuSelectRandomly.Name = "mnuSelectRandomly";
-            this.mnuSelectRandomly.Size = new System.Drawing.Size(270, 22);
+            this.mnuSelectRandomly.Size = new System.Drawing.Size(258, 22);
             this.mnuSelectRandomly.Text = "SelectRandomly";
             this.mnuSelectRandomly.Click += new System.EventHandler(this.mnuSelectRandomly_Click);
             // 
             // mnuOrdinal
             // 
             this.mnuOrdinal.Name = "mnuOrdinal";
-            this.mnuOrdinal.Size = new System.Drawing.Size(157, 22);
+            this.mnuOrdinal.Size = new System.Drawing.Size(153, 22);
             this.mnuOrdinal.Text = "Ordinal";
             this.mnuOrdinal.Click += new System.EventHandler(this.mnuOrdinal_Click);
             // 
             // mnuSimultaneity
             // 
             this.mnuSimultaneity.Name = "mnuSimultaneity";
-            this.mnuSimultaneity.Size = new System.Drawing.Size(157, 22);
+            this.mnuSimultaneity.Size = new System.Drawing.Size(153, 22);
             this.mnuSimultaneity.Text = "Simultaneity";
             this.mnuSimultaneity.Click += new System.EventHandler(this.mnuSimultaneity_Click);
             // 
             // mnuApLALMulti
             // 
             this.mnuApLALMulti.Name = "mnuApLALMulti";
-            this.mnuApLALMulti.Size = new System.Drawing.Size(180, 22);
+            this.mnuApLALMulti.Size = new System.Drawing.Size(137, 22);
             this.mnuApLALMulti.Text = "ApLALMulti";
             this.mnuApLALMulti.Click += new System.EventHandler(this.mnuApLALMulti_Click);
             // 
             // mnuLinear_AL
             // 
             this.mnuLinear_AL.Name = "mnuLinear_AL";
-            this.mnuLinear_AL.Size = new System.Drawing.Size(180, 22);
+            this.mnuLinear_AL.Size = new System.Drawing.Size(137, 22);
             this.mnuLinear_AL.Text = "Linear_AL";
             this.mnuLinear_AL.Click += new System.EventHandler(this.mnuLinear_AL_Click);
             // 
             // mnuPAL
             // 
             this.mnuPAL.Name = "mnuPAL";
-            this.mnuPAL.Size = new System.Drawing.Size(180, 22);
+            this.mnuPAL.Size = new System.Drawing.Size(137, 22);
             this.mnuPAL.Text = "PAL";
             this.mnuPAL.Click += new System.EventHandler(this.mnuPAL_Click);
             // 
@@ -501,27 +501,27 @@ namespace ContinuousGeneralizer
             this.mnuAreaAgg_AStar,
             this.mnuBldgGrow});
             this.mnuGeneralization.Name = "mnuGeneralization";
-            this.mnuGeneralization.Size = new System.Drawing.Size(98, 20);
+            this.mnuGeneralization.Size = new System.Drawing.Size(94, 20);
             this.mnuGeneralization.Text = "Generalization";
             // 
             // mnuDPSimplify
             // 
             this.mnuDPSimplify.Name = "mnuDPSimplify";
-            this.mnuDPSimplify.Size = new System.Drawing.Size(180, 22);
+            this.mnuDPSimplify.Size = new System.Drawing.Size(153, 22);
             this.mnuDPSimplify.Text = "DPSimplify";
             this.mnuDPSimplify.Click += new System.EventHandler(this.mnuDPSimplify_Click);
             // 
             // mnuAreaAgg_AStar
             // 
             this.mnuAreaAgg_AStar.Name = "mnuAreaAgg_AStar";
-            this.mnuAreaAgg_AStar.Size = new System.Drawing.Size(180, 22);
+            this.mnuAreaAgg_AStar.Size = new System.Drawing.Size(153, 22);
             this.mnuAreaAgg_AStar.Text = "AreaAgg_AStar";
             this.mnuAreaAgg_AStar.Click += new System.EventHandler(this.mnuAreaAgg_AStar_Click);
             // 
             // mnuBldgGrow
             // 
             this.mnuBldgGrow.Name = "mnuBldgGrow";
-            this.mnuBldgGrow.Size = new System.Drawing.Size(180, 22);
+            this.mnuBldgGrow.Size = new System.Drawing.Size(153, 22);
             this.mnuBldgGrow.Text = "BldgGrow";
             this.mnuBldgGrow.Click += new System.EventHandler(this.mnuBldgGrow_Click);
             // 
@@ -539,7 +539,7 @@ namespace ContinuousGeneralizer
             // mnuCDTLSA
             // 
             this.mnuCDTLSA.Name = "mnuCDTLSA";
-            this.mnuCDTLSA.Size = new System.Drawing.Size(121, 22);
+            this.mnuCDTLSA.Size = new System.Drawing.Size(116, 22);
             this.mnuCDTLSA.Text = "CDTLSA";
             this.mnuCDTLSA.Click += new System.EventHandler(this.mnuCDTLSA_Click);
             // 
@@ -548,7 +548,7 @@ namespace ContinuousGeneralizer
             this.fishEyeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuCDTLSA});
             this.fishEyeToolStripMenuItem.Name = "fishEyeToolStripMenuItem";
-            this.fishEyeToolStripMenuItem.Size = new System.Drawing.Size(63, 20);
+            this.fishEyeToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
             this.fishEyeToolStripMenuItem.Text = "FishEye";
             // 
             // tbcRight
@@ -771,21 +771,21 @@ namespace ContinuousGeneralizer
             // mnuALALMulti
             // 
             this.mnuALALMulti.Name = "mnuALALMulti";
-            this.mnuALALMulti.Size = new System.Drawing.Size(180, 22);
+            this.mnuALALMulti.Size = new System.Drawing.Size(137, 22);
             this.mnuALALMulti.Text = "ALALMulti";
             this.mnuALALMulti.Click += new System.EventHandler(this.mnuALALMulti_Click);
             // 
             // mnuALAMulti
             // 
             this.mnuALAMulti.Name = "mnuALAMulti";
-            this.mnuALAMulti.Size = new System.Drawing.Size(180, 22);
+            this.mnuALAMulti.Size = new System.Drawing.Size(137, 22);
             this.mnuALAMulti.Text = "ALAMulti";
             this.mnuALAMulti.Click += new System.EventHandler(this.mnuALAMulti_Click);
             // 
             // mnuCALMulti
             // 
             this.mnuCALMulti.Name = "mnuCALMulti";
-            this.mnuCALMulti.Size = new System.Drawing.Size(180, 22);
+            this.mnuCALMulti.Size = new System.Drawing.Size(137, 22);
             this.mnuCALMulti.Text = "ALLMulti";
             this.mnuCALMulti.Click += new System.EventHandler(this.mnuALLMulti_Click);
             // 
@@ -795,7 +795,7 @@ namespace ContinuousGeneralizer
             this.mnuOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuOpen.Name = "mnuOpen";
             this.mnuOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.mnuOpen.Size = new System.Drawing.Size(239, 22);
+            this.mnuOpen.Size = new System.Drawing.Size(234, 22);
             this.mnuOpen.Text = "Open";
             this.mnuOpen.Click += new System.EventHandler(this.mnuOpen_Click);
             // 
@@ -805,7 +805,7 @@ namespace ContinuousGeneralizer
             this.mnuNew.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuNew.Name = "mnuNew";
             this.mnuNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.mnuNew.Size = new System.Drawing.Size(239, 22);
+            this.mnuNew.Size = new System.Drawing.Size(234, 22);
             this.mnuNew.Text = "New";
             this.mnuNew.Click += new System.EventHandler(this.mnuNew_Click);
             // 
@@ -825,13 +825,13 @@ namespace ContinuousGeneralizer
             this.toolStripSeparator4,
             this.mnuExit});
             this.mnuFile.Name = "mnuFile";
-            this.mnuFile.Size = new System.Drawing.Size(39, 20);
+            this.mnuFile.Size = new System.Drawing.Size(37, 20);
             this.mnuFile.Text = "File";
             // 
             // toolStripSeparator
             // 
             this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(236, 6);
+            this.toolStripSeparator.Size = new System.Drawing.Size(231, 6);
             // 
             // mnuSave
             // 
@@ -839,7 +839,7 @@ namespace ContinuousGeneralizer
             this.mnuSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mnuSave.Name = "mnuSave";
             this.mnuSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.mnuSave.Size = new System.Drawing.Size(239, 22);
+            this.mnuSave.Size = new System.Drawing.Size(234, 22);
             this.mnuSave.Text = "Save";
             this.mnuSave.Click += new System.EventHandler(this.mnuSave_Click);
             // 
@@ -848,33 +848,33 @@ namespace ContinuousGeneralizer
             this.mnuSaveAs.Name = "mnuSaveAs";
             this.mnuSaveAs.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.S)));
-            this.mnuSaveAs.Size = new System.Drawing.Size(239, 22);
+            this.mnuSaveAs.Size = new System.Drawing.Size(234, 22);
             this.mnuSaveAs.Text = "Save As";
             this.mnuSaveAs.Click += new System.EventHandler(this.mnuSaveAs_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(236, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(231, 6);
             // 
             // mnuAddData
             // 
             this.mnuAddData.Image = ((System.Drawing.Image)(resources.GetObject("mnuAddData.Image")));
             this.mnuAddData.Name = "mnuAddData";
-            this.mnuAddData.Size = new System.Drawing.Size(239, 22);
+            this.mnuAddData.Size = new System.Drawing.Size(234, 22);
             this.mnuAddData.Text = "Add Data";
             this.mnuAddData.Click += new System.EventHandler(this.mnuAddData_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(236, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(231, 6);
             // 
             // mnuEMF
             // 
             this.mnuEMF.Name = "mnuEMF";
             this.mnuEMF.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.E)));
-            this.mnuEMF.Size = new System.Drawing.Size(239, 22);
+            this.mnuEMF.Size = new System.Drawing.Size(234, 22);
             this.mnuEMF.Text = "Export Graphics As EMF";
             this.mnuEMF.Click += new System.EventHandler(this.mnuEMF_Click);
             // 
@@ -883,20 +883,20 @@ namespace ContinuousGeneralizer
             this.mnuExportViewToImage.Image = ((System.Drawing.Image)(resources.GetObject("mnuExportViewToImage.Image")));
             this.mnuExportViewToImage.Name = "mnuExportViewToImage";
             this.mnuExportViewToImage.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.J)));
-            this.mnuExportViewToImage.Size = new System.Drawing.Size(239, 22);
+            this.mnuExportViewToImage.Size = new System.Drawing.Size(234, 22);
             this.mnuExportViewToImage.Text = "Export View As JPG";
             this.mnuExportViewToImage.Click += new System.EventHandler(this.mnuExportViewToImage_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(236, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(231, 6);
             // 
             // mnuExit
             // 
             this.mnuExit.Image = ((System.Drawing.Image)(resources.GetObject("mnuExit.Image")));
             this.mnuExit.Name = "mnuExit";
-            this.mnuExit.Size = new System.Drawing.Size(239, 22);
+            this.mnuExit.Size = new System.Drawing.Size(234, 22);
             this.mnuExit.Text = "Exit";
             this.mnuExit.Click += new System.EventHandler(this.mnuExit_Click);
             // 
@@ -947,152 +947,152 @@ namespace ContinuousGeneralizer
             this.mnuTest,
             this.mnuSTS});
             this.morphingToolStripMenuItem.Name = "morphingToolStripMenuItem";
-            this.morphingToolStripMenuItem.Size = new System.Drawing.Size(70, 20);
+            this.morphingToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
             this.morphingToolStripMenuItem.Text = "Morphing";
             // 
             // mnuLinear
             // 
             this.mnuLinear.Name = "mnuLinear";
-            this.mnuLinear.Size = new System.Drawing.Size(226, 22);
+            this.mnuLinear.Size = new System.Drawing.Size(222, 22);
             this.mnuLinear.Text = "Linear";
             this.mnuLinear.Click += new System.EventHandler(this.mnuLinear_Click);
             // 
             // mnuLinearMulti
             // 
             this.mnuLinearMulti.Name = "mnuLinearMulti";
-            this.mnuLinearMulti.Size = new System.Drawing.Size(226, 22);
+            this.mnuLinearMulti.Size = new System.Drawing.Size(222, 22);
             this.mnuLinearMulti.Text = "LinearMulti";
             this.mnuLinearMulti.Click += new System.EventHandler(this.mnuLinearMulti_Click);
             // 
             // mnuVertexInsertion
             // 
             this.mnuVertexInsertion.Name = "mnuVertexInsertion";
-            this.mnuVertexInsertion.Size = new System.Drawing.Size(226, 22);
+            this.mnuVertexInsertion.Size = new System.Drawing.Size(222, 22);
             this.mnuVertexInsertion.Text = "VertexInsertion";
             // 
             // mnuMPBDP
             // 
             this.mnuMPBDP.Name = "mnuMPBDP";
-            this.mnuMPBDP.Size = new System.Drawing.Size(226, 22);
+            this.mnuMPBDP.Size = new System.Drawing.Size(222, 22);
             this.mnuMPBDP.Text = "MPBDP";
             this.mnuMPBDP.Click += new System.EventHandler(this.mnuMPBDP_Click);
             // 
             // mnuMPBDPBL
             // 
             this.mnuMPBDPBL.Name = "mnuMPBDPBL";
-            this.mnuMPBDPBL.Size = new System.Drawing.Size(226, 22);
+            this.mnuMPBDPBL.Size = new System.Drawing.Size(222, 22);
             this.mnuMPBDPBL.Text = "MPBDPBL";
             this.mnuMPBDPBL.Click += new System.EventHandler(this.mnuMPBDPBL_Click);
             // 
             // mnuMRL
             // 
             this.mnuMRL.Name = "mnuMRL";
-            this.mnuMRL.Size = new System.Drawing.Size(226, 22);
+            this.mnuMRL.Size = new System.Drawing.Size(222, 22);
             this.mnuMRL.Text = "MRL";
             this.mnuMRL.Click += new System.EventHandler(this.mnuMRL_Click);
             // 
             // mnuMRLCut
             // 
             this.mnuMRLCut.Name = "mnuMRLCut";
-            this.mnuMRLCut.Size = new System.Drawing.Size(226, 22);
+            this.mnuMRLCut.Size = new System.Drawing.Size(222, 22);
             this.mnuMRLCut.Text = "MRLCut";
             this.mnuMRLCut.Click += new System.EventHandler(this.mnuMRLCut_Click);
             // 
             // mnuOptCor
             // 
             this.mnuOptCor.Name = "mnuOptCor";
-            this.mnuOptCor.Size = new System.Drawing.Size(226, 22);
+            this.mnuOptCor.Size = new System.Drawing.Size(222, 22);
             this.mnuOptCor.Text = "OptCor";
             this.mnuOptCor.Click += new System.EventHandler(this.mnuOptCor_Click);
             // 
             // mnuOptCorBezier
             // 
             this.mnuOptCorBezier.Name = "mnuOptCorBezier";
-            this.mnuOptCorBezier.Size = new System.Drawing.Size(226, 22);
+            this.mnuOptCorBezier.Size = new System.Drawing.Size(222, 22);
             this.mnuOptCorBezier.Text = "OptCorBezier";
             this.mnuOptCorBezier.Click += new System.EventHandler(this.mnuOptCorBezier_Click);
             // 
             // mnuMPBBSL
             // 
             this.mnuMPBBSL.Name = "mnuMPBBSL";
-            this.mnuMPBBSL.Size = new System.Drawing.Size(226, 22);
+            this.mnuMPBBSL.Size = new System.Drawing.Size(222, 22);
             this.mnuMPBBSL.Text = "MPBBSL";
             this.mnuMPBBSL.Click += new System.EventHandler(this.mnuMPBBSL_Click);
             // 
             // mnuMPBBSLDP
             // 
             this.mnuMPBBSLDP.Name = "mnuMPBBSLDP";
-            this.mnuMPBBSLDP.Size = new System.Drawing.Size(226, 22);
+            this.mnuMPBBSLDP.Size = new System.Drawing.Size(222, 22);
             this.mnuMPBBSLDP.Text = "MPBBSLDP";
             this.mnuMPBBSLDP.Click += new System.EventHandler(this.mnuMPBBSLDP_Click);
             // 
             // mnuBLGOptCorMMSimplified
             // 
             this.mnuBLGOptCorMMSimplified.Name = "mnuBLGOptCorMMSimplified";
-            this.mnuBLGOptCorMMSimplified.Size = new System.Drawing.Size(226, 22);
+            this.mnuBLGOptCorMMSimplified.Size = new System.Drawing.Size(222, 22);
             this.mnuBLGOptCorMMSimplified.Text = "BLGOptCorMMSimplified";
             this.mnuBLGOptCorMMSimplified.Click += new System.EventHandler(this.mnuBLGOptCorMMSimplified_Click);
             // 
             // mnuBSBLGOptCorMMSimplified
             // 
             this.mnuBSBLGOptCorMMSimplified.Name = "mnuBSBLGOptCorMMSimplified";
-            this.mnuBSBLGOptCorMMSimplified.Size = new System.Drawing.Size(226, 22);
+            this.mnuBSBLGOptCorMMSimplified.Size = new System.Drawing.Size(222, 22);
             this.mnuBSBLGOptCorMMSimplified.Text = "BSBLGOptCorMMSimplified";
             this.mnuBSBLGOptCorMMSimplified.Click += new System.EventHandler(this.mnuBSBLGOptCorMMSimplified_Click);
             // 
             // mnuBSBLGOptCor
             // 
             this.mnuBSBLGOptCor.Name = "mnuBSBLGOptCor";
-            this.mnuBSBLGOptCor.Size = new System.Drawing.Size(226, 22);
+            this.mnuBSBLGOptCor.Size = new System.Drawing.Size(222, 22);
             this.mnuBSBLGOptCor.Text = "BSBLGOptCor";
             this.mnuBSBLGOptCor.Click += new System.EventHandler(this.mnuBSBLGOptCor_Click);
             // 
             // mnuBSBLGOptCorMM
             // 
             this.mnuBSBLGOptCorMM.Name = "mnuBSBLGOptCorMM";
-            this.mnuBSBLGOptCorMM.Size = new System.Drawing.Size(226, 22);
+            this.mnuBSBLGOptCorMM.Size = new System.Drawing.Size(222, 22);
             this.mnuBSBLGOptCorMM.Text = "BSBLGOptCorMM";
             this.mnuBSBLGOptCorMM.Click += new System.EventHandler(this.mnuBSBLGOptCorMM_Click);
             // 
             // mnuRIBS
             // 
             this.mnuRIBS.Name = "mnuRIBS";
-            this.mnuRIBS.Size = new System.Drawing.Size(226, 22);
+            this.mnuRIBS.Size = new System.Drawing.Size(222, 22);
             this.mnuRIBS.Text = "RIBS";
             this.mnuRIBS.Click += new System.EventHandler(this.mnuRIBS_Click);
             // 
             // mnuRIBSBLG
             // 
             this.mnuRIBSBLG.Name = "mnuRIBSBLG";
-            this.mnuRIBSBLG.Size = new System.Drawing.Size(226, 22);
+            this.mnuRIBSBLG.Size = new System.Drawing.Size(222, 22);
             this.mnuRIBSBLG.Text = "RIBSBLG";
             this.mnuRIBSBLG.Click += new System.EventHandler(this.mnuRIBSBLG_Click);
             // 
             // mnuRIBSBLGOptCor
             // 
             this.mnuRIBSBLGOptCor.Name = "mnuRIBSBLGOptCor";
-            this.mnuRIBSBLGOptCor.Size = new System.Drawing.Size(226, 22);
+            this.mnuRIBSBLGOptCor.Size = new System.Drawing.Size(222, 22);
             this.mnuRIBSBLGOptCor.Text = "RIBSBLGOptCor";
             this.mnuRIBSBLGOptCor.Click += new System.EventHandler(this.mnuRIBSBLGOptCor_Click);
             // 
             // mnuCGABM
             // 
             this.mnuCGABM.Name = "mnuCGABM";
-            this.mnuCGABM.Size = new System.Drawing.Size(226, 22);
+            this.mnuCGABM.Size = new System.Drawing.Size(222, 22);
             this.mnuCGABM.Text = "CGABM";
             this.mnuCGABM.Click += new System.EventHandler(this.mnuCGABM_Click);
             // 
             // mnuTest
             // 
             this.mnuTest.Name = "mnuTest";
-            this.mnuTest.Size = new System.Drawing.Size(226, 22);
+            this.mnuTest.Size = new System.Drawing.Size(222, 22);
             this.mnuTest.Text = "Test";
             this.mnuTest.Click += new System.EventHandler(this.mnuTest_Click);
             // 
             // mnuSTS
             // 
             this.mnuSTS.Name = "mnuSTS";
-            this.mnuSTS.Size = new System.Drawing.Size(226, 22);
+            this.mnuSTS.Size = new System.Drawing.Size(222, 22);
             this.mnuSTS.Text = "STS";
             this.mnuSTS.Click += new System.EventHandler(this.mnuSTS_Click);
             // 
@@ -1119,49 +1119,49 @@ namespace ContinuousGeneralizer
             // mnuStraightLine
             // 
             this.mnuStraightLine.Name = "mnuStraightLine";
-            this.mnuStraightLine.Size = new System.Drawing.Size(180, 22);
+            this.mnuStraightLine.Size = new System.Drawing.Size(137, 22);
             this.mnuStraightLine.Text = "StraightLine";
             this.mnuStraightLine.Click += new System.EventHandler(this.mnuStraightLine_Click);
             // 
             // mnuAL_AL
             // 
             this.mnuAL_AL.Name = "mnuAL_AL";
-            this.mnuAL_AL.Size = new System.Drawing.Size(180, 22);
+            this.mnuAL_AL.Size = new System.Drawing.Size(137, 22);
             this.mnuAL_AL.Text = "AL_AL";
             this.mnuAL_AL.Click += new System.EventHandler(this.mnuAL_AL_Click);
             // 
             // mnuAL
             // 
             this.mnuAL.Name = "mnuAL";
-            this.mnuAL.Size = new System.Drawing.Size(180, 22);
+            this.mnuAL.Size = new System.Drawing.Size(137, 22);
             this.mnuAL.Text = "AL";
             this.mnuAL.Click += new System.EventHandler(this.mnuAL_Click);
             // 
             // mnuALL
             // 
             this.mnuALL.Name = "mnuALL";
-            this.mnuALL.Size = new System.Drawing.Size(180, 22);
+            this.mnuALL.Size = new System.Drawing.Size(137, 22);
             this.mnuALL.Text = "ALL";
             this.mnuALL.Click += new System.EventHandler(this.mnuALL_Click);
             // 
             // mnuApLL
             // 
             this.mnuApLL.Name = "mnuApLL";
-            this.mnuApLL.Size = new System.Drawing.Size(180, 22);
+            this.mnuApLL.Size = new System.Drawing.Size(137, 22);
             this.mnuApLL.Text = "ApLL";
             this.mnuApLL.Click += new System.EventHandler(this.mnuApLL_Click);
             // 
             // mnuALm
             // 
             this.mnuALm.Name = "mnuALm";
-            this.mnuALm.Size = new System.Drawing.Size(180, 22);
+            this.mnuALm.Size = new System.Drawing.Size(137, 22);
             this.mnuALm.Text = "ALm";
             this.mnuALm.Click += new System.EventHandler(this.mnuALm_Click);
             // 
             // mnuLMulti
             // 
             this.mnuLMulti.Name = "mnuLMulti";
-            this.mnuLMulti.Size = new System.Drawing.Size(180, 22);
+            this.mnuLMulti.Size = new System.Drawing.Size(137, 22);
             this.mnuLMulti.Text = "LMulti";
             this.mnuLMulti.Click += new System.EventHandler(this.mnuLMulti_Click);
             // 
@@ -1173,34 +1173,34 @@ namespace ContinuousGeneralizer
             this.mnuLinearMorphing,
             this.mnuTransparencyMorphing});
             this.roadnetworkToolStripMenuItem.Name = "roadnetworkToolStripMenuItem";
-            this.roadnetworkToolStripMenuItem.Size = new System.Drawing.Size(94, 20);
+            this.roadnetworkToolStripMenuItem.Size = new System.Drawing.Size(91, 20);
             this.roadnetworkToolStripMenuItem.Text = "RoadNetwork";
             // 
             // mnuClassification
             // 
             this.mnuClassification.Name = "mnuClassification";
-            this.mnuClassification.Size = new System.Drawing.Size(200, 22);
+            this.mnuClassification.Size = new System.Drawing.Size(197, 22);
             this.mnuClassification.Text = "Classification";
             this.mnuClassification.Click += new System.EventHandler(this.mnuClassification_Click);
             // 
             // mnuRightAngelDPS
             // 
             this.mnuRightAngelDPS.Name = "mnuRightAngelDPS";
-            this.mnuRightAngelDPS.Size = new System.Drawing.Size(200, 22);
+            this.mnuRightAngelDPS.Size = new System.Drawing.Size(197, 22);
             this.mnuRightAngelDPS.Text = "RightAngelDPS";
             this.mnuRightAngelDPS.Click += new System.EventHandler(this.mnuRightAngelDPS_Click);
             // 
             // mnuLinearMorphing
             // 
             this.mnuLinearMorphing.Name = "mnuLinearMorphing";
-            this.mnuLinearMorphing.Size = new System.Drawing.Size(200, 22);
+            this.mnuLinearMorphing.Size = new System.Drawing.Size(197, 22);
             this.mnuLinearMorphing.Text = "LinearMorphing";
             this.mnuLinearMorphing.Click += new System.EventHandler(this.mnuLinearMorphing_Click);
             // 
             // mnuTransparencyMorphing
             // 
             this.mnuTransparencyMorphing.Name = "mnuTransparencyMorphing";
-            this.mnuTransparencyMorphing.Size = new System.Drawing.Size(200, 22);
+            this.mnuTransparencyMorphing.Size = new System.Drawing.Size(197, 22);
             this.mnuTransparencyMorphing.Text = "TransparencyMorphing";
             this.mnuTransparencyMorphing.Click += new System.EventHandler(this.mnuTransparencyMorphing_Click);
             // 
@@ -1216,14 +1216,14 @@ namespace ContinuousGeneralizer
             // mnuKillExcel
             // 
             this.mnuKillExcel.Name = "mnuKillExcel";
-            this.mnuKillExcel.Size = new System.Drawing.Size(145, 22);
+            this.mnuKillExcel.Size = new System.Drawing.Size(141, 22);
             this.mnuKillExcel.Text = "mnuKillExcel";
             this.mnuKillExcel.Click += new System.EventHandler(this.mnuKillExcel_Click);
             // 
             // mnuClear
             // 
             this.mnuClear.Name = "mnuClear";
-            this.mnuClear.Size = new System.Drawing.Size(145, 22);
+            this.mnuClear.Size = new System.Drawing.Size(141, 22);
             this.mnuClear.Text = "Clear";
             this.mnuClear.Click += new System.EventHandler(this.mnuClear_Click);
             // 
@@ -1232,20 +1232,20 @@ namespace ContinuousGeneralizer
             this.kARSToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuExtractPossibleFiles});
             this.kARSToolStripMenuItem.Name = "kARSToolStripMenuItem";
-            this.kARSToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
+            this.kARSToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.kARSToolStripMenuItem.Text = "KARS";
             // 
             // mnuExtractPossibleFiles
             // 
             this.mnuExtractPossibleFiles.Name = "mnuExtractPossibleFiles";
-            this.mnuExtractPossibleFiles.Size = new System.Drawing.Size(186, 22);
+            this.mnuExtractPossibleFiles.Size = new System.Drawing.Size(175, 22);
             this.mnuExtractPossibleFiles.Text = "ExtractPossibleFiles";
             this.mnuExtractPossibleFiles.Click += new System.EventHandler(this.mnuExtractPossibleFiles_Click);
             // 
             // mnuHelp
             // 
             this.mnuHelp.Name = "mnuHelp";
-            this.mnuHelp.Size = new System.Drawing.Size(45, 20);
+            this.mnuHelp.Size = new System.Drawing.Size(44, 20);
             this.mnuHelp.Text = "Help";
             // 
             // CoordinateLabel
@@ -1259,13 +1259,13 @@ namespace ContinuousGeneralizer
             // 
             this.Blank.AccessibleDescription = "s";
             this.Blank.Name = "Blank";
-            this.Blank.Size = new System.Drawing.Size(289, 19);
+            this.Blank.Size = new System.Drawing.Size(292, 19);
             this.Blank.Spring = true;
             // 
             // tsslMessage
             // 
             this.tsslMessage.Name = "tsslMessage";
-            this.tsslMessage.Size = new System.Drawing.Size(42, 19);
+            this.tsslMessage.Size = new System.Drawing.Size(39, 19);
             this.tsslMessage.Text = "Ready";
             // 
             // ststMain

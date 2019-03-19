@@ -93,6 +93,15 @@ namespace MorphingClass.CUtility
         }
     }
 
+    public class CTernaryTupleCmp<T1, T2, T3> : Comparer<Tuple<T1, T2, T3>>
+    {
+        public override int Compare(Tuple<T1, T2, T3> tuple1, Tuple<T1, T2, T3> tuple2)
+        {
+            return CCmpMethods.CmpTernary(tuple1, tuple2, tuple => tuple.Item1, tuple => tuple.Item2, tuple => tuple.Item3);
+
+        }
+    }
+
 
     public class CDblReverseCompare : Comparer<double>
     {
@@ -221,14 +230,6 @@ namespace MorphingClass.CUtility
         public override int Compare(CRegion crg1, CRegion crg2)
         {
             return CCmpMethods.CmpCrg_nmID(crg1, crg2);
-        }
-    }
-
-    public class CCmpCrg_CphGID : Comparer<CRegion>
-    {
-        public override int Compare(CRegion crg1, CRegion crg2)
-        {
-            return CCmpMethods.CmpCrg_CphGIDTypeIndex(crg1, crg2);
         }
     }
 

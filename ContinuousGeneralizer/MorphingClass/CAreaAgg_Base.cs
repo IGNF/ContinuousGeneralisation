@@ -67,7 +67,7 @@ namespace MorphingClass.CGeneralizationMethods
         protected static int _intEndCount; //=this.SSCrgLt.Count
         protected List< List<long>> _lngMemoryLtLt = new List<List<long>>();
         //protected static Dictionary<int, CValPair<int, double>> _EstStepsCostVPDt;
-        public List<string> strLineLt; //sort according to ID
+        public List<string> strAStarCostLineLt; //sort according to ID
         protected static string _strILPFailingNumOutput = "";
         protected static int _intNoSolutionEstSteps = 999; //if we can't find a solution by ILP
 
@@ -77,8 +77,8 @@ namespace MorphingClass.CGeneralizationMethods
         //comment the following if you want to process on all instances
         protected void UpdateStartEnd()
         {
-            //_intStart = 417;
-            //_intEndCount = _intStart + 3;
+            //_intStart = 358;
+            //_intEndCount = _intStart + 1;
 
             if (CConstants.strRunContinuousGeneralizer!="")
             {
@@ -336,8 +336,7 @@ namespace MorphingClass.CGeneralizationMethods
 
                 //get the RegionNum index
                 var intRegionNum = Convert.ToInt32(pObjValueLtLt[i][intRegionNumATIndex]);
-                int intRegionIndex;
-                pRegionPVDt.Dt.TryGetValue(intRegionNum, out intRegionIndex);
+                pRegionPVDt.Dt.TryGetValue(intRegionNum, out int intRegionIndex);
 
                 //add the Cph into the corresponding Region
                 pCrgLt[intRegionIndex].AddCph(new CPatch(pCpgLt[i], -1, pCpgLt[i].intTypeIndex), pCpgLt[i]);
@@ -616,7 +615,7 @@ namespace MorphingClass.CGeneralizationMethods
 
                 if (pobjDataLtLt.Count == 734)
                 {
-                    ExportCmpGreedyAStar(pAreaAgg_Base.strLineLt, objDataLtONMIdSS, strResultFileName, pParameterInitialize.strSavePath);
+                    ExportCmpGreedyAStar(pAreaAgg_Base.strAStarCostLineLt, objDataLtONMIdSS, strResultFileName, pParameterInitialize.strSavePath);
                 }
             }
 
@@ -647,7 +646,7 @@ namespace MorphingClass.CGeneralizationMethods
         }
 
 
-        public static void ExportCmpGreedyAStar(List<string> strLineLt,
+        public static void ExportCmpGreedyAStar(List<string> strAStarCostLineLt,
             SortedSet<IList<object>> objDataLtONMIdSS, string strName, string strSavePath)
         {
             var IDCostDt = new Dictionary<int, double>();
@@ -656,33 +655,83 @@ namespace MorphingClass.CGeneralizationMethods
                 IDCostDt.Add(Convert.ToInt32(objDataLt[0]), Convert.ToDouble(objDataLt[13]));
             }
 
+            //K: overestimation steps: R: Ratio of diff to AStar cost; ID
+            var strOutputSD_K_R_ID = new SortedDictionary<Tuple<int, double, int>, string>(new CTernaryTupleCmp<int, double, int>());
             string strData = "\n\nComparison between Greedy and AStar200000:\n";
-            string strFormatCmp = "{0,5}{1,16}{2,12}{3,12}{4,14}{5,12}";
+            string strFormatCmp = "{0,5}{1,16}{2,15}{3,15}{4,15}{5,15}";
             strData += string.Format(strFormatCmp,
                 "ID", "EstSteps/Gap%", "AStarCost", "GreedyCost", "Greedy-AStar", "Diff/AStar") + "\n";
-            for (int i = 1; i < strLineLt.Count; i++) //the first line is for headings
+            for (int i = 1; i < strAStarCostLineLt.Count; i++) //the first line is for headings
             {
-                var strDetail = strLineLt[i].Split(new char[] { ' ', '\t' }, 
+                var strDetail = strAStarCostLineLt[i].Split(new char[] { ' ', '\t' },
                     StringSplitOptions.RemoveEmptyEntries); //use white space to split
                 var intID = Convert.ToInt32(strDetail[0]);
                 var dblAStarCost = Convert.ToDouble(strDetail[2]);
-                double dblGreedyCost;
-                IDCostDt.TryGetValue(intID, out dblGreedyCost);
+                IDCostDt.TryGetValue(intID, out double dblGreedyCost);
                 var dblDiff = dblGreedyCost - dblAStarCost;
                 double dblRatio = 10000;
-                if (dblGreedyCost==0)
+
+                if (dblAStarCost == 0)
                 {
-                    //in this case, dblAStarCost == 0
-                    dblRatio = 1; 
+                    if (dblDiff<0)
+                    {
+                        throw new ArgumentOutOfRangeException("impossible case!");
+                    }
+                    else if(dblDiff == 0)
+                    {
+                        dblRatio = 0;
+                    }
+                    else //if(dblDiff > 0)
+                    {
+                        dblRatio = 10000;
+                    }
                 }
-                else if (dblAStarCost > 0)
+                else //if (dblAStarCost > 0)
                 {
                     dblRatio = dblDiff / dblAStarCost;
                 }
 
 
-                strData += string.Format(strFormatCmp, strDetail[0], strDetail[1], strDetail[2],
-                dblGreedyCost.ToString("F4"), dblDiff.ToString("F4"), dblRatio.ToString("F4")) + "\n";
+                //if (dblDiff == 0)
+                //{
+                //    dblRatio = 0;
+                //}
+                //else if (dblDiff > 0)
+                //{
+                //    if (true)
+                //    {
+
+                //    }
+                //}
+
+                //if (dblGreedyCost == 0)
+                //{
+                //    //in this case, dblAStarCost == 0
+                //    dblRatio = 1;
+                //}
+                //else if (dblAStarCost > 0)
+                //{
+                //    dblRatio = dblDiff / dblAStarCost;
+                //}
+
+                int intK = 0;
+                if (Convert.ToInt32(strDetail[1]) > 0) //if overestimated step is larger than 0
+                {
+                    intK = -1; //we will put the entires (that are with overestimation) at the beginning
+                }
+
+                var strOutput = string.Format(strFormatCmp, strDetail[0], strDetail[1], strDetail[2],
+                dblGreedyCost.ToString("F8"), dblDiff.ToString("F8"), dblRatio.ToString("F8")) + "\n";
+
+                strOutputSD_K_R_ID.Add(new Tuple<int, double, int>(intK, dblRatio, intID), strOutput);
+
+                //strData += string.Format(strFormatCmp, strDetail[0], strDetail[1], strDetail[2],
+                //dblGreedyCost.ToString("F4"), dblDiff.ToString("F4"), dblRatio.ToString("F4")) + "\n";
+            }
+
+            foreach (var stroutput in strOutputSD_K_R_ID.Values)
+            {
+                strData += stroutput;
             }
 
             using (var writer = new StreamWriter(strSavePath + "\\" + strName + ".txt", true))
@@ -712,12 +761,9 @@ namespace MorphingClass.CGeneralizationMethods
 
         public static void ExportStatistic(CStrObjLtDt StrObjLtDt, string strName, string strSavePath)
         { 
-            List<object> objEstStepsLt;
-            StrObjLtDt.TryGetValue("EstSteps/Gap%", out objEstStepsLt);
-            List<object> objTimeLt;
-            StrObjLtDt.TryGetValue("Time(ms)", out objTimeLt);
-            List<object> objNLt;
-            StrObjLtDt.TryGetValue("n", out objNLt);
+            StrObjLtDt.TryGetValue("EstSteps/Gap%", out List<object> objEstStepsLt);
+            StrObjLtDt.TryGetValue("Time(ms)", out List<object> objTimeLt);
+            StrObjLtDt.TryGetValue("n", out List<object> objNLt);
             double dblLogEstStepsSum = 0;
             var dblRngCountLtLt = new List <List< double>>
             {
@@ -748,7 +794,7 @@ namespace MorphingClass.CGeneralizationMethods
                 intEstStepsCountlt[Convert.ToInt16(dblLogEstSteps)]++;
 
 
-                int intI = Convert.ToInt32(objNLt[i]) / 5;
+                int intI = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(objNLt[i]) / 5) - 1);
                 if (intI > 5)
                 {
                     intI = 5;
@@ -1233,10 +1279,8 @@ List<string> strLayerNameLt,
             {
                 foreach (var kvp in crg.CphCpgSD_Area_CphGID)
                 {
-                    int intType;
-                    pTypePVDt.Dt_R.TryGetValue(kvp.Value.intTypeIndex, out intType);
-                    ISymbol pSymbol;
-                    pintTypeSymbolDt.TryGetValue(intType, out pSymbol);
+                    pTypePVDt.Dt_R.TryGetValue(kvp.Value.intTypeIndex, out int intType);
+                    pintTypeSymbolDt.TryGetValue(intType, out ISymbol pSymbol);
                     var pfillSymbol=pSymbol as IFillSymbol;
                     strIpeContAllLayers += CToIpe.TranCpgToIpe(kvp.Key.GetSoloCpg(), 
                         pfillSymbol, pFLayerEnv, pIpeEnv, strBoundWidth);

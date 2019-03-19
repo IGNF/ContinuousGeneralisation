@@ -360,7 +360,7 @@ namespace MorphingClass.CGeneralizationMethods
             SortedDictionary<CCorrCphs, CCorrCphs> ExistingCorrCphsSD, double[,] padblTD, int intEstSteps)
         {
 
-            var newcph = crg. ComputeNewCph(unitingCorrCphs, ExistingCphSDLt);
+            var newcph = crg.ComputeNewCph(unitingCorrCphs, ExistingCphSDLt);
             var newAdjCorrCphsSD = CRegion. ComputeNewAdjCorrCphsSDAndUpdateExistingCorrCphsSD(pAdjCorrCphsSD,
                 unitingCorrCphs, newcph, ExistingCorrCphsSD);
 
@@ -416,7 +416,7 @@ namespace MorphingClass.CGeneralizationMethods
             int intactiveTypeIndex = crg.GetCphTypeIndex(activecph);
             int intpassiveTypeIndex = crg.GetCphTypeIndex(passivecph);
 
-            var newcrg = crg.GenerateCrgChildAndComputeCost(lscrg, newAdjCorrCphsSD,
+            var newcrg = crg.GenerateCrgChildAndComputeExactCost(lscrg, newAdjCorrCphsSD,
              activecph, passivecph, unitedcph, unitingCorrCphs, padblTD);
 
             if (ExistingCrgSDLt[newcrg.GetCphCount()].TryGetValue(newcrg, out CRegion outcrg))
@@ -433,17 +433,36 @@ namespace MorphingClass.CGeneralizationMethods
                     if (Q.Remove(outcrg) == true)
                     {
 
-                        //we don't use newcrg dicrectly because some regions may use ourcrg as their child
-                        outcrg.cenumColor = newcrg.cenumColor;
-                        outcrg.dblCostExactType = newcrg.dblCostExactType;
-                        outcrg.dblCostExactComp = newcrg.dblCostExactComp;
-                        outcrg.dblCostExactArea = newcrg.dblCostExactArea;
-                        outcrg.dblCostExact = newcrg.dblCostExact;
-                        outcrg.d = newcrg.dblCostExact + outcrg.dblCostEst;
+                        //if (outcrg.GID == 1698)
+                        //{
+                        //    Console.WriteLine("Before Replacing Region 1698");
+                        //    foreach (var cpg in outcrg.CphCpgSD_Area_CphGID.Values)
+                        //    {
+                        //        Console.WriteLine(cpg.ID);
+                        //    }
+                        //}
 
-                        outcrg.AggCphs = newcrg.AggCphs;
-                        outcrg.parent = newcrg.parent;
-                        newcrg = outcrg;
+
+                        //we don't use newcrg dicrectly because some regions may use outcrg as their child
+                        //outcrg.cenumColor = newcrg.cenumColor;
+                        //outcrg.dblCostExactType = newcrg.dblCostExactType;
+                        //outcrg.dblCostExactComp = newcrg.dblCostExactComp;
+                        //outcrg.dblCostExactArea = newcrg.dblCostExactArea;
+                        //outcrg.dblCostExact = newcrg.dblCostExact;
+                        //outcrg.d = newcrg.dblCostExact + outcrg.dblCostEst;
+                        //outcrg.CphCpgSD_Area_CphGID = newcrg.CphCpgSD_Area_CphGID;
+                        //outcrg.AggCphs = newcrg.AggCphs;
+                        //outcrg.parent = newcrg.parent;
+                        //newcrg = outcrg;
+
+
+                        newcrg.dblCostEst = outcrg.dblCostEst;
+                        newcrg.dblCostEstType = outcrg.dblCostEstType;
+                        newcrg.dblCostEstComp = outcrg.dblCostEstComp;
+                        newcrg.dblCostEstArea = outcrg.dblCostEstArea;
+                        newcrg.d = newcrg.dblCostExact + outcrg.dblCostEst;
+
+
 
                         //var cphcount = newcrg.GetCphCount();
                         //var dblCostExactType = newcrg.dblCostExactType;
@@ -464,14 +483,29 @@ namespace MorphingClass.CGeneralizationMethods
                         //    "    EstType: " + dblCostEstType + "    EstComp: " + dblCostEstComp +
                         //    "    EstSum: " + newcrg.dblCostEst);
 
+                        //if (outcrg.GID == 1682)
+                        //{
+                        //    Console.WriteLine("Replacing Region 1682");
+                        //    foreach (var cpg in outcrg.CphCpgSD_Area_CphGID.Values)
+                        //    {
+                        //        Console.WriteLine(cpg.ID);
+                        //    }
+                        //}
 
                         Q.Add(newcrg);
+
+                        //We also need to update ExistingCrgSDLt, otherwise we will have an error when Q.Remove(outcrg):
+                        //we will take outcrg from ExistingCrgSDLt and then remove outcrg from Q.
+                        //outcrg and newcrg are the same accoriding to the comparer of ExistingCrgSDLt,
+                        //but they are different accoriding to the comparer of Q.
+                        ExistingCrgSDLt[newcrg.GetCphCount()].Remove(outcrg);
+                        ExistingCrgSDLt[newcrg.GetCphCount()].Add(newcrg, newcrg);                        
                     }
                     else
                     {
                         if (intEstSteps == 0)
                         {
-                            throw new ArgumentException("outcrg should be removed! you might be overestimating!");
+                            throw new ArgumentException("We should be able to remove outcrg! We might be overestimating!");
                         }
                         else
                         {
@@ -488,27 +522,6 @@ namespace MorphingClass.CGeneralizationMethods
             else
             {
                 ComputeEstCost(lscrg, sscrg, newcrg,  padblTD, intEstSteps);
-
-
-                //var cphcount = newcrg.GetCphCount();
-                //var dblCostExactType = newcrg.dblCostExactType;
-                //var dblCostEstType = newcrg.dblCostEstType;
-                //var dblCostExactComp = newcrg.dblCostExactComp * newcrg.dblArea;
-                //var dblCostEstComp = newcrg.dblCostEstComp * newcrg.dblArea;
-
-                //if ((newcrg.GetCphCount() == 3 || newcrg.GetCphCount() == 4) 
-                //    && newcrg.dblCostEstType == 0 && newcrg.dblCostEstComp == 0)
-                //{
-                //    int sst = 9;
-                //}
-
-                //var dblCostExactArea = newcrg.dblCostExactArea;
-                //var dblCostExact = newcrg.dblCostExact;
-                //var d = newcrg.dblCostExact + newcrg.dblCostEst;
-                //Console.WriteLine("  GID: " + newcrg.GID + "    CphCount: " + cphcount +
-                //    "    EstType: " + dblCostEstType + "    EstComp: " + dblCostEstComp +
-                //    "    EstSum: " + newcrg.dblCostEst);
-
 
                 Q.Add(newcrg);
                 ExistingCrgSDLt[newcrg.GetCphCount()].Add(newcrg, newcrg);

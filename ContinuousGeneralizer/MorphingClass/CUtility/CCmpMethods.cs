@@ -255,9 +255,8 @@ namespace MorphingClass.CUtility
         }
 
         public static int CmpWithSameElements<T, TOrder>(IEnumerable<T> TEb1, IEnumerable<T> TEb2, 
-            Func<T, TOrder> orderFunc, IComparer<TOrder> cmp = null, bool blnReverse = false)
+            Func<T, TOrder> orderFunc =null, IComparer<TOrder> cmp = null, bool blnReverse = false)
         {
-            
             if (cmp == null) { cmp = Comparer<TOrder>.Default; }
 
             var TEt1 = TEb1.GetEnumerator();

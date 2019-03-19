@@ -37,16 +37,12 @@ namespace MorphingClass.CGeometry
         //this comparer should be used for checking existing Crgs
         public static CCmpCrg_CphGIDTypeIndex pCmpCrg_CphGIDTypeIndex = new CCmpCrg_CphGIDTypeIndex();
 
-        //this comparer should be used for counting uncolored Crgs
-        public static CCmpCrg_CphGID pCmpCrg_CphGID 
-            = new CCmpCrg_CphGID();  //this variable should be used for CRegion itself
-
         public static CCmpCrg_nmID pCmpCrg_nmID
     = new CCmpCrg_nmID();  //this variable should be used for CRegion itself
 
         public SortedDictionary<CCorrCphs, CCorrCphs> AdjCorrCphsSD { get; set; }  //compare GID of CorrCphs
 
-        //Why did I use SortedDictionary? We use this comparator CPatch .pCmpCPatch_Area_CphGID
+        //Why did I use SortedDictionary? Because we use comparator CPatch .pCmpCPatch_Area_CphGID.
         /// <summary>
         /// Cpg is the Core Cpolygon
         /// </summary>
@@ -99,10 +95,10 @@ namespace MorphingClass.CGeometry
             {
                 CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpDbl_CoordVerySmall.sComparer);
                 _dblCostEstType = value;
-                if (value < 0)
-                {
-                    _dblCostEstType = 0;
-                }
+                //if (value < 0)
+                //{
+                //    _dblCostEstType = 0;
+                //}
             }
         }
 
@@ -114,10 +110,10 @@ namespace MorphingClass.CGeometry
             {
                 CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpDbl_CoordVerySmall.sComparer);
                 _dblCostEstComp = value;
-                if (value < 0)
-                {
-                    _dblCostEstComp = 0;
-                }
+                //if (value < 0)
+                //{
+                //    _dblCostEstComp = 0;
+                //}
             }
         }
 
@@ -129,10 +125,10 @@ namespace MorphingClass.CGeometry
             {
                 CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpDbl_CoordVerySmall.sComparer);
                 _dblCostExactType = value;
-                if (value < 0)
-                {
-                    _dblCostExactType = 0;
-                }
+                //if (value < 0)
+                //{
+                //    _dblCostExactType = 0;
+                //}
             }
         }
 
@@ -144,10 +140,10 @@ namespace MorphingClass.CGeometry
             {
                 CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpDbl_CoordVerySmall.sComparer);
                 _dblCostExactComp = value;
-                if (value < 0)
-                {
-                    _dblCostExactComp = 0;
-                }
+                //if (value < 0)
+                //{
+                //    _dblCostExactComp = 0;
+                //}
             }
         }
 
@@ -159,10 +155,10 @@ namespace MorphingClass.CGeometry
             {
                 CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpDbl_CoordVerySmall.sComparer);
                 _dblCostExact = value;
-                if (value < 0)
-                {
-                    _dblCostExact = 0;
-                }
+                //if (value < 0)
+                //{
+                //    _dblCostExact = 0;
+                //}
             }
         }
 
@@ -174,10 +170,10 @@ namespace MorphingClass.CGeometry
             {
                 CHelpFunc.InBoundOrReport(value, 0, CConstants.dblVeryLarge, CCmpDbl_CoordVerySmall.sComparer);
                 _dblCostEst = value;
-                if (value < 0)
-                {
-                    _dblCostEst = 0;
-                }
+                //if (value < 0)
+                //{
+                //    _dblCostEst = 0;
+                //}
             }
         }
 
@@ -246,6 +242,11 @@ namespace MorphingClass.CGeometry
             return this.CphCpgSD_Area_CphGID.Values.Select(cpg => cpg.intTypeIndex).ToList();
         }
 
+        public List<int> GetCphCoreCpgGIDCol()
+        {
+            return this.CphCpgSD_Area_CphGID.Values.Select(cpg => cpg.GID).ToList();
+        }
+
         public int GetCphTypeIndex(CPatch cph)
         {            
             return GetCoreCpg(cph).intTypeIndex;
@@ -253,8 +254,7 @@ namespace MorphingClass.CGeometry
 
         public CPolygon GetCoreCpg(CPatch cph)
         {
-            CPolygon corecpg;
-            if (this.CphCpgSD_Area_CphGID.TryGetValue(cph, out corecpg) == false)
+            if (this.CphCpgSD_Area_CphGID.TryGetValue(cph, out CPolygon corecpg) == false)
             {
                 throw new ArgumentNullException("The patch does not exist!");
             }
@@ -298,6 +298,21 @@ namespace MorphingClass.CGeometry
                     var cphRecord = new CCphRecord(neighborcph, pCorrCphs);
                     yield return cphRecord;
                 }
+            }
+        }
+        public static CPatch TryGetNeighbor(CPatch cph, CCorrCphs unitingCorrCphs)
+        {
+            if (cph.CompareTo(unitingCorrCphs.FrCph) == 0)
+            {
+                return unitingCorrCphs.ToCph;
+            }
+            else if (cph.CompareTo(unitingCorrCphs.ToCph) == 0)
+            {
+                return unitingCorrCphs.FrCph;
+            }
+            else
+            {
+                return null;
             }
         }
 
@@ -358,7 +373,7 @@ namespace MorphingClass.CGeometry
             var ExistingCorrCphsSD0 = new SortedDictionary<CCorrCphs, CCorrCphs>(CCorrCphs.pCmpCCorrCphs_CphsGID);
             //why SortedDictionary? Because we want to get the value of an element. 
             //The element may have the same key with another element.
-            SortedDictionary<CEdge, CPatch> cedgeSD = new SortedDictionary<CEdge, CPatch>(new CCmpCEdgeCoordinates());  
+            var cedgeSD = new SortedDictionary<CEdge, CPatch>(new CCmpCEdgeCoordinates());  
             var pAdjCorrCphsSD = new SortedDictionary<CCorrCphs, CCorrCphs>();
 
             if (this.GetCphCount() > 1)
@@ -375,17 +390,15 @@ namespace MorphingClass.CGeometry
                         {
                             //cedge.PrintMySelf();
 
-                            CPatch EdgeShareCph;
-                            bool isShareEdge = cedgeSD.TryGetValue(cedge, out EdgeShareCph);
+                            bool isShareEdge = cedgeSD.TryGetValue(cedge, out CPatch EdgeShareCph);
 
                             //if cedge already exists in cedgeSD, then we now have found the Patch which shares this cedge
                             if (isShareEdge == true)  
                             {
-                                CCorrCphs ExsitedCorrCphs;   //SharedEdgesLk belongs to cph.AdjacentSD
                                 var CorrCphs = new CCorrCphs(cph, EdgeShareCph);
 
                                 //whether we have already known that cph and EdgeShareCph are adjacent patches
-                                bool isKnownAdjacent = ExistingCorrCphsSD0.TryGetValue(CorrCphs, out ExsitedCorrCphs);  
+                                bool isKnownAdjacent = ExistingCorrCphsSD0.TryGetValue(CorrCphs, out CCorrCphs ExsitedCorrCphs);  
                                 if (isKnownAdjacent == true)
                                 {
                                     ExsitedCorrCphs.SharedCEdgeLt.Add(cedge);
@@ -478,21 +491,7 @@ namespace MorphingClass.CGeometry
 
         
 
-        public static CPatch TryGetNeighbor(CPatch cph, CCorrCphs unitingCorrCphs)
-        {
-            if (cph.CompareTo(unitingCorrCphs.FrCph) == 0)
-            {
-                return unitingCorrCphs.ToCph;
-            }
-            else if (cph.CompareTo(unitingCorrCphs.ToCph) == 0)
-            {
-                return unitingCorrCphs.FrCph;
-            }
-            else
-            {
-                return null;
-            }
-        }
+
 
         public CPatch ComputeNewCph(CCorrCphs unitingCorrCphs, List<SortedDictionary<CPatch, CPatch>> ExistingCphSDLt)
         {
@@ -633,39 +632,83 @@ namespace MorphingClass.CGeometry
 
         
 
-        public CRegion GenerateCrgChildAndComputeCost(CRegion lscrg, SortedDictionary<CCorrCphs, CCorrCphs> newAdjCorrCphsSD,
+        public CRegion GenerateCrgChildAndComputeExactCost(CRegion lscrg, SortedDictionary<CCorrCphs, CCorrCphs> newAdjCorrCphsSD,
             CPatch activecph, CPatch passivecph, CPatch unitedcph, CCorrCphs unitingCorrCphs, double[,] padblTD)
         {
             var intactiveTypeIndex = this.GetCphTypeIndex(activecph);
             var intpassiveTypeIndex = this.GetCphTypeIndex(passivecph);
-            CPolygon corecpg;
-            if (this.CphCpgSD_Area_CphGID.TryGetValue(activecph, out corecpg) == false)
-            {
-                throw new ArgumentOutOfRangeException("this should not happen!");
-            }
+            var corecpg = this.GetCoreCpg(activecph);
 
             var newCphCpgSD = new SortedDictionary<CPatch, CPolygon>(this.CphCpgSD_Area_CphGID, CPatch.pCmpCPatch_Area_CphGID);
-            newCphCpgSD.Remove(activecph);
-            newCphCpgSD.Remove(passivecph);
+            if (newCphCpgSD.Remove(activecph) == false || newCphCpgSD.Remove(passivecph) == false)
+            {
+                throw new ArgumentOutOfRangeException("This should be impossible!");
+            }
             newCphCpgSD.Add(unitedcph, corecpg);
+
+            //var passivecpg = this.GetCoreCpg(passivecph);
+
+            //if (lscrg.GetCphCount() - this.GetCphCount() == 4)
+            //{
+            //    if ((corecpg.ID == 5058 && passivecpg.ID == 5060) || (corecpg.ID == 5060 && passivecpg.ID == 5058))
+            //    {
+            //        Console.WriteLine(passivecpg.ID + "     " + passivecpg.intTypeIndex + "     " + passivecph.dblArea);
+            //        Console.WriteLine(corecpg.ID + "     " + corecpg.intTypeIndex + "     " + activecph.dblArea);
+            //        Console.WriteLine();
+            //    }
+            //}
+
+            //if (lscrg.GetCphCount() - this.GetCphCount() == 5)
+            //{
+            //    if ((corecpg.ID == 5060 && passivecpg.ID == 5061))
+            //    {
+            //        Console.WriteLine(passivecpg.ID + "     " + passivecpg.intTypeIndex + "     " + passivecph.dblArea);
+            //        Console.WriteLine(corecpg.ID + "     " + corecpg.intTypeIndex + "     " + activecph.dblArea);
+            //        Console.WriteLine();
+            //    }
+            //}
+
+
+            //var intLSCphCount = lscrg.GetCphCount();
+            //var intThisCphCount = this.GetCphCount();
+            //if (CRegion._intStaticGID == 1698)
+            //{
+            //    foreach (var cpg in this.CphCpgSD_Area_CphGID.Values)
+            //    {
+            //        Console.WriteLine(cpg.ID);
+            //    }
+            //    int ss = 5;
+            //}
 
             //****if I update the codes below, then I should consider updating the codes in function GenerateCrgAndUpdateQ
             //for transfering information to outcrg
             //e.g., outcrg.newCph = newcrg.newCph;
-            CRegion newcrg = new CRegion(this.ID);
-            newcrg.dblArea = this.dblArea;
-            newcrg.cenumColor = CEnumColor.gray;
-            newcrg.parent = this;
-            newcrg.AggCphs = new CValTri<CPatch, CPatch, CPatch>(activecph, passivecph, unitedcph);
-            newcrg.AdjCorrCphsSD = newAdjCorrCphsSD;
-            newcrg.CphCpgSD_Area_CphGID = newCphCpgSD;
-            newcrg.intSumCphGID = this.intSumCphGID - activecph.GID - passivecph.GID + unitedcph.GID;
-            newcrg.intSumTypeIndex = this.intSumTypeIndex - intpassiveTypeIndex;
-            //newcrg.intEdgeCount = this.intEdgeCount - intDecreaseEdgeCount;
-            newcrg.intInteriorEdgeCount = this.intInteriorEdgeCount - unitingCorrCphs.intSharedCEdgeCount;
-            newcrg.intExteriorEdgeCount = this.intExteriorEdgeCount;
-            newcrg.dblInteriorSegLength = this.dblInteriorSegLength - unitingCorrCphs.dblSharedSegLength;
-            newcrg.dblExteriorSegLength = this.dblExteriorSegLength;
+            var newcrg = new CRegion(this.ID)
+            {
+                dblArea = this.dblArea,
+                cenumColor = CEnumColor.gray,
+                parent = this,
+                AggCphs = new CValTri<CPatch, CPatch, CPatch>(activecph, passivecph, unitedcph),
+                AdjCorrCphsSD = newAdjCorrCphsSD,
+                CphCpgSD_Area_CphGID = newCphCpgSD,
+                intSumCphGID = this.intSumCphGID - activecph.GID - passivecph.GID + unitedcph.GID,
+                intSumTypeIndex = this.intSumTypeIndex - intpassiveTypeIndex,
+                intInteriorEdgeCount = this.intInteriorEdgeCount - unitingCorrCphs.intSharedCEdgeCount,
+                intExteriorEdgeCount = this.intExteriorEdgeCount,
+                dblInteriorSegLength = this.dblInteriorSegLength - unitingCorrCphs.dblSharedSegLength,
+                dblExteriorSegLength = this.dblExteriorSegLength
+                //intEdgeCount = this.intEdgeCount - intDecreaseEdgeCount
+            };
+
+            //if (newcrg.GID == 1698)
+            //{
+            //    Console.WriteLine("face id of region 1698:");
+            //    foreach (var cpg in newcrg.CphCpgSD_Area_CphGID.Values)
+            //    {
+            //        Console.WriteLine(cpg.ID);
+            //    }
+            //    int ss = 5;
+            //}
 
             if (CConstants.blnComputeMinComp == true)
             {
