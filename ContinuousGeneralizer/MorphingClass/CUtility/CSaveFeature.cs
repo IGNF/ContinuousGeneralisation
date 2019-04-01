@@ -427,11 +427,19 @@ esriSimpleLineStyle pesriSimpleLineStyle, esriSimpleFillStyle pesriSimpleFillSty
 
 
 
-        public static int FindFieldNameIndex(List<string> strFieldNameLt, string strFieldName)
+        public static int FindFieldNameIndex(List<string> strFieldNameLt, string strFieldName, string strAlternative = "")
         {
             for (int i = 0; i < strFieldNameLt.Count; i++)
             {
                 if (strFieldNameLt[i] == strFieldName)
+                {
+                    return i;
+                }
+            }
+
+            for (int i = 0; i < strFieldNameLt.Count; i++)
+            {
+                if (strFieldNameLt[i] == strAlternative)
                 {
                     return i;
                 }

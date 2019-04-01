@@ -118,3 +118,4 @@ C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\ContinuousGen
 C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\ContinuousGeneralizer\obj\x86\Debug\ContinuousGeneralizer.pdb
 C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\ContinuousGeneralizer\bin\Debug\System.ValueTuple.dll
 C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\ContinuousGeneralizer\bin\Debug\System.ValueTuple.xml
+C:\MyWork\DailyWork\ContinuousGeneralisation\ContinuousGeneralizer\ContinuousGeneralizer\bin\Debug\MorphingClass.dll.config

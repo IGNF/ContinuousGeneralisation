@@ -1222,5 +1222,36 @@ namespace MorphingClass.CUtility
             blnVisibleLt.Reverse(); //由于之后的“AddLayer”方法总是将新的图层放在第一个位置，so we reverse
             return mapFeature;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="astrHead"></param>
+        /// <param name="aobjData"></param>
+        /// <param name="strFileName"></param>
+        /// <remarks>https://stackoverflow.com/questions/18757097/writing-data-into-csv-file-in-c-sharp</remarks>
+        public static void OutputCSV(string[] astrHead, object[][] aobjData, string strFileName)
+        {
+            //before your loop
+            var csv = new StringBuilder();
+            int intRowCount = aobjData.GetLength(0);
+            int intColCount = astrHead.GetLength(0);
+
+            string strFormat = "{0}";
+            for (int j = 1; j < intColCount; j++)
+            {
+                strFormat += ",{" + j.ToString() + "}";
+            }
+
+            var headLine = string.Format(strFormat, astrHead);
+            csv.AppendLine(headLine);
+
+            for (int i = 0; i < intRowCount; i++)
+            {
+                var dataLine = string.Format(strFormat, aobjData[i]);
+                csv.AppendLine(dataLine);
+            }
+            File.WriteAllText(strFileName, csv.ToString());
+        }
     }
 }

@@ -77,8 +77,8 @@ namespace MorphingClass.CGeneralizationMethods
         //comment the following if you want to process on all instances
         protected void UpdateStartEnd()
         {
-            //_intStart = 358;
-            //_intEndCount = _intStart + 1;
+            _intStart = 358;
+            _intEndCount = _intStart + 10;
 
             if (CConstants.strRunContinuousGeneralizer!="")
             {
@@ -219,33 +219,41 @@ namespace MorphingClass.CGeneralizationMethods
             //var intTypeIndexSD=_intTypeIndexSD;
 
             //RegionNumATIndex: the index of RegionNum in the attribute table 
-            var intLSTypeATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[0], "OBJART");
-            var intSSTypeATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[1], "OBJART");
+            var intLSTypeATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[0], "OBJART", "feature_cl");
+            var intSSTypeATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[1], "OBJART", "feature_cl");
             var intLSFaceIDIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[0], "face_id");
             CHelpFunc.GetCgbTypeAndTypeIndex(pLSCPgLt, _ObjValueLtLtLt[0], intLSTypeATIndex, _TypePVDt);
             CHelpFunc.GetCgbTypeAndTypeIndex(pSSCPgLt, _ObjValueLtLtLt[1], intSSTypeATIndex, _TypePVDt);
             CHelpFunc.SetCpgAttribute<int>(pLSCPgLt, (cpg, intFaceID) => cpg.ID = intFaceID, _ObjValueLtLtLt[0], intLSFaceIDIndex);
+            
+
+            //foreach (var cpg in pLSCPgLt)
+            //{
+            //    if (cpg.ID == 2118 || cpg.ID == 4352)
+            //    {
+            //        var dblArea = (cpg.pPolygon as IArea).Area;
+            //        Console.WriteLine(cpg.ID + " Area: " + dblArea);
+
+
+            //        //cpg.SetAreaSimple();
+            //        //Console.WriteLine(cpg.ID + " AreaSimple: " + cpg.dblAreaSimple);
+            //    }
+            //}
+
 
             //RegionNumATIndex: the index of RegionNum in the attribute table 
             var intLSRegionNumATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[0], "RegionNum");
             var intSSRegionNumATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[1], "RegionNum");
             //private CValMap_Dt<int, int> _RegionPVDt;
-            var pRegionPVDt = new CValMap_Dt<int, int>();
-            int intRegionIndex = 0;
-            for (int i = 0; i < pObjValueLtLtLt[1].Count; i++)
-            {
-                int intRegionNum = Convert.ToInt32(pObjValueLtLtLt[1][i][intSSRegionNumATIndex]);
-                if (pRegionPVDt.Dt.ContainsKey(intRegionNum) == false)
-                {
-                    pRegionPVDt.Dt.Add(intRegionNum, intRegionIndex++);
-                }
-            }
+
+
+            var pCrgIdIndexPVDt = GenerateCrgIdIndexPVDt(pObjValueLtLtLt[1], intSSRegionNumATIndex);
 
             //assign the polygons as well as attributes from a featureLayer into regions, without considering costs
             this.LSCrgLt = GenerateCrgLt(pLSCPgLt, pSSCPgLt.Count, 
-                pObjValueLtLtLt[0], intLSRegionNumATIndex, pRegionPVDt);
+                pObjValueLtLtLt[0], intLSRegionNumATIndex, pCrgIdIndexPVDt);
             this.SSCrgLt = GenerateCrgLt(pSSCPgLt, pSSCPgLt.Count, 
-                pObjValueLtLtLt[1], intSSRegionNumATIndex, pRegionPVDt);
+                pObjValueLtLtLt[1], intSSRegionNumATIndex, pCrgIdIndexPVDt);
 
             _intTypeSymbolDt = CToIpe.GetKeySymbolDt(_ParameterInitialize.pFLayerLt[0], pObjValueLtLtLt[0], intLSTypeATIndex);
 
@@ -266,6 +274,32 @@ namespace MorphingClass.CGeneralizationMethods
             UpdateStartEnd();
         }
 
+
+        private CValMap_Dt<int, int> GenerateCrgIdIndexPVDt (List<List<object>> pObjValueLtLt, int intSSRegionNumATIndex)
+        {
+            var intRegionNumSS = new SortedSet<int>(); //order the regions according to their IDs
+            for (int i = 0; i < pObjValueLtLt.Count; i++)
+            {
+                int intRegionNum = Convert.ToInt32(pObjValueLtLt[i][intSSRegionNumATIndex]);
+                if (intRegionNumSS.Contains(intRegionNum) == false)
+                {
+                    intRegionNumSS.Add(intRegionNum);
+                }
+                else
+                {
+                    throw new ArgumentException("there are two regions with the same region number!");
+                }
+            }
+
+            var pCrgIdIndexPVDt = new CValMap_Dt<int, int>();
+            int intRegionIndex = 0;
+            foreach (var intRegionNum in intRegionNumSS)
+            {
+                pCrgIdIndexPVDt.Dt.Add(intRegionNum, intRegionIndex++);
+            }
+
+            return pCrgIdIndexPVDt;
+        }
 
         protected void EndAffairs(int intNewStart)
         {
@@ -322,7 +356,7 @@ namespace MorphingClass.CGeneralizationMethods
         /// <param name="pRegionPVDt"></param>
         /// <returns></returns>
         protected List<CRegion> GenerateCrgLt(List<CPolygon> pCpgLt, int intCrgNum, 
-            List<List<object>> pObjValueLtLt, int intRegionNumATIndex, CValMap_Dt<int, int> pRegionPVDt)
+            List<List<object>> pObjValueLtLt, int intRegionNumATIndex, CValMap_Dt<int, int> pCrgIdIndexPVDt)
         {
             var pCrgLt = new List<CRegion>(intCrgNum);
             pCrgLt.EveryElementNew();
@@ -336,7 +370,7 @@ namespace MorphingClass.CGeneralizationMethods
 
                 //get the RegionNum index
                 var intRegionNum = Convert.ToInt32(pObjValueLtLt[i][intRegionNumATIndex]);
-                pRegionPVDt.Dt.TryGetValue(intRegionNum, out int intRegionIndex);
+                pCrgIdIndexPVDt.Dt.TryGetValue(intRegionNum, out int intRegionIndex);
 
                 //add the Cph into the corresponding Region
                 pCrgLt[intRegionIndex].AddCph(new CPatch(pCpgLt[i], -1, pCpgLt[i].intTypeIndex), pCpgLt[i]);
@@ -1065,44 +1099,71 @@ namespace MorphingClass.CGeneralizationMethods
         private static void ExportAggSequence(List<CRegion> pInitialCrgLt,
             CParameterInitialize pParameterInitialize, string strResultFileName)
         {
-            int intTotalStepNum = GetTotalStepNum(pInitialCrgLt);
-            var CrgSS = new SortedSet<CRegion>();
+            
+            SortedSet<CRegion> CrgSS;
             if (pParameterInitialize.strAreaAggregation == _strSmallest)
             {
-                CrgSS = new SortedSet<CRegion>(pInitialCrgLt, CRegion.pCmpCrg_MinArea_CphGIDTypeIndex);
+                CrgSS = new SortedSet<CRegion>(CRegion.pCmpCrg_MinArea_CphGIDTypeIndex);
             }
             else
             {
-                CrgSS = new SortedSet<CRegion>(pInitialCrgLt, CRegion.pCmpCrg_CostExact_CphGIDTypeIndex);
+                CrgSS = new SortedSet<CRegion>(CRegion.pCmpCrg_CostExact_CphGIDTypeIndex);
             }
 
-            string strFormatAggSeq = "{0,7}{1,16}{2,16}\n";
-            string strAggSeq = "\n\nAggregation Sequence: \n";
-            strAggSeq += string.Format(strFormatAggSeq, "Step", "FaceID", "   into   FaceID");
+            foreach (var crg in pInitialCrgLt)
+            {
+                //only regions that have children will need aggregation steps
+                if (crg.child != null)
+                {
+                    CrgSS.Add(crg);
+                }
+            }
 
+            const int intColCount = 7;
+            var astrHead = new string[intColCount]{"step",
+                "id_smallest", "id_neighbor", "id_passive", "id_active", "result_type", "if_crg_end" };
+
+            string strFormatAggSeq = "{0,5}{1,14}{2,14}{3,14}{4,14}{5,14}{6,14}\n";
+            string strAggSeq = "\n\naggregation sequence: \n";
+            strAggSeq += string.Format(strFormatAggSeq, astrHead);
+            
+            int intTotalStepNum = GetTotalStepNum(pInitialCrgLt);
+            var aobjData = new object[intTotalStepNum][];
             for (int i = 0; i < intTotalStepNum; i++)
             {
                 var currentMinCrg = CrgSS.Min;
                 CrgSS.Remove(currentMinCrg);
                 var newCrg = currentMinCrg.child;
-                if (newCrg == null)
-                {
-                    i--;
-                }
-                else
-                {
-                    var corecpgPassive = currentMinCrg.GetCoreCpg(newCrg.AggCphs.valPassive);
-                    var corecpgActive = currentMinCrg.GetCoreCpg(newCrg.AggCphs.valActive);
-                    strAggSeq += String.Format(strFormatAggSeq, i+1, corecpgPassive.ID, corecpgActive.ID);
 
-                    CrgSS.Add(newCrg);
+                var corecpgPassive = currentMinCrg.GetCoreCpg(newCrg.AggCphs.valPassive);
+                var corecpgActive = currentMinCrg.GetCoreCpg(newCrg.AggCphs.valActive);
+                var corecpgSmallestCph = corecpgPassive;
+                var corecpgNeighborCph = corecpgActive;
+                if (newCrg.AggCphs.valActive.dblArea < newCrg.AggCphs.valPassive.dblArea)
+                {
+                    corecpgSmallestCph = corecpgActive;
+                    corecpgNeighborCph = corecpgPassive;
                 }
+
+                var strIfCrgEnd = "end";
+                if (newCrg.child != null)
+                {
+                    CrgSS.Add(newCrg);
+                    strIfCrgEnd = "not_end";
+                }
+
+                var aobjdata = new object[intColCount]{i + 1,
+    corecpgSmallestCph.ID, corecpgNeighborCph.ID, corecpgPassive.ID, corecpgActive.ID, corecpgActive.intType, strIfCrgEnd};
+
+                strAggSeq += String.Format(strFormatAggSeq, aobjdata);
+                aobjData[i] = aobjdata;
+
             }
             using (var writer = new StreamWriter(pParameterInitialize.strSavePath + "\\" + strResultFileName + ".txt", true))
             {
                 writer.Write(strAggSeq);
             }
-
+            CHelpFunc.OutputCSV(astrHead, aobjData, pParameterInitialize.strSavePath + "\\" + strResultFileName + ".csv");
         }
 
         public IEnumerable<IFeatureLayer> AggregateStepByStep()

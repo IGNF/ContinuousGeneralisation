@@ -99,9 +99,8 @@ namespace MorphingClass.CMorphingMethods.CMorphingMethodsBase
             {
                 pstrFieldNameLtLt.Add(GetFieldNameLt(pFLayer.FeatureClass));
                 pesriFieldTypeLtLt.Add(GetFieldTypeLt(pFLayer.FeatureClass));
-                List<List<object>> pObjValueLtLt;
                 pObjIGeoLtLt.Add(CHelpFunc.GetObjLtByFeatureLayer(
-                    pFLayer, out pObjValueLtLt, strSpecifiedFieldName, strSpecifiedValue));
+                    pFLayer, out List<List<object>> pObjValueLtLt, strSpecifiedFieldName, strSpecifiedValue));
                 pObjValueLtLtLt.Add(pObjValueLtLt);
                 
             }
