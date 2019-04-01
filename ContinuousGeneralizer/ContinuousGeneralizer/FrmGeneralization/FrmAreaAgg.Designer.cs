@@ -551,7 +551,7 @@
             this.txtNodes.Name = "txtNodes";
             this.txtNodes.Size = new System.Drawing.Size(77, 20);
             this.txtNodes.TabIndex = 99;
-            this.txtNodes.Text = "400";
+            this.txtNodes.Text = "400000";
             this.txtNodes.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // btnRunSpecified

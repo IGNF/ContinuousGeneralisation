@@ -77,8 +77,8 @@ namespace MorphingClass.CGeneralizationMethods
         //comment the following if you want to process on all instances
         protected void UpdateStartEnd()
         {
-            _intStart = 358;
-            _intEndCount = _intStart + 10;
+            //_intStart = 358;
+            //_intEndCount = _intStart + 10;
 
             if (CConstants.strRunContinuousGeneralizer!="")
             {
