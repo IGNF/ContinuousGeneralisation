@@ -283,7 +283,6 @@ namespace MorphingClass.CUtility
         {
             for (int i = 0; i < pObjIGeoLt.Count; i++)
             {
-                Console.WriteLine(i);
                 yield return GenerateCGeoAccordingToInput((IGeometry)pObjIGeoLt[i], i);
             }
         }

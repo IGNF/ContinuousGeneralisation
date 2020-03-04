@@ -77,7 +77,7 @@ namespace MorphingClass.CGeneralizationMethods
         //comment the following if you want to process on all instances
         protected void UpdateStartEnd()
         {
-            //_intStart = 358;
+            //_intStart = 11;
             //_intEndCount = _intStart + 2;
 
             if (CConstants.strRunContinuousGeneralizer!="")
@@ -226,20 +226,6 @@ namespace MorphingClass.CGeneralizationMethods
             CHelpFunc.GetCgbTypeAndTypeIndex(pSSCPgLt, _ObjValueLtLtLt[1], intSSTypeATIndex, _TypePVDt);
             //CHelpFunc.SetCpgAttribute<int>(pLSCPgLt, (cpg, intFaceID) => cpg.ID = intFaceID, _ObjValueLtLtLt[0], intLSFaceIDIndex);
             CHelpFunc.SetCpgID<int>(pLSCPgLt, _ObjValueLtLtLt[0], intLSFaceIDIndex);
-
-
-            //foreach (var cpg in pLSCPgLt)
-            //{
-            //    if (cpg.ID == 2118 || cpg.ID == 4352)
-            //    {
-            //        var dblArea = (cpg.pPolygon as IArea).Area;
-            //        Console.WriteLine(cpg.ID + " Area: " + dblArea);
-
-
-            //        //cpg.SetAreaSimple();
-            //        //Console.WriteLine(cpg.ID + " AreaSimple: " + cpg.dblAreaSimple);
-            //    }
-            //}
 
 
             //RegionNumATIndex: the index of RegionNum in the attribute table 

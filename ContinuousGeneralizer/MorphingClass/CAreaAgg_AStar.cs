@@ -217,6 +217,11 @@ namespace MorphingClass.CGeneralizationMethods
                 var u = Q.Min;
                 if (Q.Remove(u) == false)
                 {
+                    if (Q.Count == 0)
+                    {
+                        throw new ArgumentNullException("Q should not be empty!");
+                    }
+
                     throw new ArgumentException
                         ("cannot move an element in this queue! A solution might be to make dblVerySmall smaller!");
                 }
@@ -265,13 +270,18 @@ namespace MorphingClass.CGeneralizationMethods
                     }
                     else
                     {
-                        int u_type;
-                        int SSCrg_type;
-                            //= SSCrg.GetSoloCphTypeIndex();
+                        //int u_type;
+                        //int SSCrg_type;
+                        //    //= SSCrg.GetSoloCphTypeIndex();
 
-                        _TypePVDt.Dt_R.TryGetValue(u.GetSoloCphTypeIndex(), out u_type);
-                        _TypePVDt.Dt_R.TryGetValue(SSCrg.GetSoloCphTypeIndex(), out SSCrg_type);
-                        throw new ArgumentException("this is impossible!");
+                        //_TypePVDt.Dt_R.TryGetValue(u.GetSoloCphTypeIndex(), out u_type);
+                        //_TypePVDt.Dt_R.TryGetValue(SSCrg.GetSoloCphTypeIndex(), out SSCrg_type);
+
+                        //The target region will be reached earlier than other regions with types other than the target type 
+                        //because of the distance.
+                        //In future, we can prevent regions that do not own the target type 
+                        //so that we can cut some branches earlier ************************Improve********************************
+                        throw new ArgumentException("this should be impossible in practice!");
                         //continue;
                     }
                 }
@@ -331,8 +341,14 @@ namespace MorphingClass.CGeneralizationMethods
             var pAdjCorrCphsSD = crg.AdjCorrCphsSD;
             var mincph = crg.GetSmallestCph();
 
+            var pCphRecords = crg.GetNeighborCphRecords(mincph).ToList();
+            if (pCphRecords.Count == 0)
+            {
+                throw new ArgumentNullException("There is no neighbor of mincph!");
+            }
+
             //for every pair of neighboring Cphs, we aggregate them and generate a new Crg
-            foreach (var pCphRecord in crg.GetNeighborCphRecords(mincph))
+            foreach (var pCphRecord in pCphRecords)
             {
                 foreach (var item in AggregateAndUpdateQ_Common(crg, lscrg, sscrg, Q, pAdjCorrCphsSD, pCphRecord.CorrCphs,
                     ExistingCrgSDLt, ExistingCphSDLt, ExistingCorrCphsSD, padblTD, intEstSteps))
@@ -367,7 +383,7 @@ namespace MorphingClass.CGeneralizationMethods
         {
 
             var newcph = crg.ComputeNewCph(unitingCorrCphs, ExistingCphSDLt);
-            var newAdjCorrCphsSD = CRegion. ComputeNewAdjCorrCphsSDAndUpdateExistingCorrCphsSD(pAdjCorrCphsSD,
+            var newAdjCorrCphsSD = CRegion.ComputeNewAdjCorrCphsSDAndUpdateExistingCorrCphsSD(pAdjCorrCphsSD,
                 unitingCorrCphs, newcph, ExistingCorrCphsSD);
 
 
