@@ -58,6 +58,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btnNewEvaluation = new System.Windows.Forms.Button();
             this.txtEvaluation = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -90,7 +91,6 @@
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.timerAdd = new System.Windows.Forms.Timer(this.components);
-            this.btnNewEvaluation = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -404,6 +404,16 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Evaluation";
             // 
+            // btnNewEvaluation
+            // 
+            this.btnNewEvaluation.Location = new System.Drawing.Point(170, 16);
+            this.btnNewEvaluation.Name = "btnNewEvaluation";
+            this.btnNewEvaluation.Size = new System.Drawing.Size(106, 25);
+            this.btnNewEvaluation.TabIndex = 83;
+            this.btnNewEvaluation.Text = "New Evaluation";
+            this.btnNewEvaluation.UseVisualStyleBackColor = true;
+            this.btnNewEvaluation.Click += new System.EventHandler(this.btnNewEvaluation_Click);
+            // 
             // txtEvaluation
             // 
             this.txtEvaluation.Location = new System.Drawing.Point(6, 19);
@@ -553,7 +563,7 @@
             this.txtNodes.Name = "txtNodes";
             this.txtNodes.Size = new System.Drawing.Size(77, 20);
             this.txtNodes.TabIndex = 99;
-            this.txtNodes.Text = "400000";
+            this.txtNodes.Text = "2000";
             this.txtNodes.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // btnRunSpecified
@@ -740,16 +750,6 @@
             // 
             this.timerAdd.Interval = 500;
             this.timerAdd.Tick += new System.EventHandler(this.timerAdd_Tick);
-            // 
-            // btnNewEvaluation
-            // 
-            this.btnNewEvaluation.Location = new System.Drawing.Point(170, 16);
-            this.btnNewEvaluation.Name = "btnNewEvaluation";
-            this.btnNewEvaluation.Size = new System.Drawing.Size(106, 25);
-            this.btnNewEvaluation.TabIndex = 83;
-            this.btnNewEvaluation.Text = "New Evaluation";
-            this.btnNewEvaluation.UseVisualStyleBackColor = true;
-            this.btnNewEvaluation.Click += new System.EventHandler(this.btnNewEvaluation_Click);
             // 
             // FrmAreaAgg
             // 

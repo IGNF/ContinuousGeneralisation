@@ -717,6 +717,27 @@ namespace MorphingClass.CUtility
             }
         }
 
+        public static void SetCpgID<TOrder>(List<CPolygon> cpglt, 
+    List<List<object>> objltlt, int intAttributeIndex)
+        {
+            for (int i = 0; i < cpglt.Count; i++)
+            {
+                cpglt[i].ID = Convert.ToInt32(objltlt[i][intAttributeIndex]);
+            }
+
+
+
+
+            //var TEt = TEb.GetEnumerator();
+
+            //int intCount = 0;
+            //while (TEt.MoveNext())
+            //{
+            //    TEt.Current.ID = 
+            //    orderAction(TEt.Current, (TOrder)objltlt[intCount++][intAttributeIndex]);
+            //}
+        }
+
 
 
         public static IEnumerable<object> JudgeAndSetAEGeometry<T>(IEnumerable<T> pCGeoEb)

@@ -77,8 +77,8 @@ namespace MorphingClass.CGeneralizationMethods
         //comment the following if you want to process on all instances
         protected void UpdateStartEnd()
         {
-            _intStart = 358;
-            _intEndCount = _intStart + 2;
+            //_intStart = 358;
+            //_intEndCount = _intStart + 2;
 
             if (CConstants.strRunContinuousGeneralizer!="")
             {
@@ -219,14 +219,14 @@ namespace MorphingClass.CGeneralizationMethods
             var pObjValueLtLtLt = this.ObjValueLtLtLt;
             //var intTypeIndexSD=_intTypeIndexSD;
 
-            //RegionNumATIndex: the index of RegionNum in the attribute table 
             var intLSTypeATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[0], "OBJART", "feature_cl");
             var intSSTypeATIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[1], "OBJART", "feature_cl");
             var intLSFaceIDIndex = CSaveFeature.FindFieldNameIndex(pstrFieldNameLtLt[0], "face_id");
             CHelpFunc.GetCgbTypeAndTypeIndex(pLSCPgLt, _ObjValueLtLtLt[0], intLSTypeATIndex, _TypePVDt);
             CHelpFunc.GetCgbTypeAndTypeIndex(pSSCPgLt, _ObjValueLtLtLt[1], intSSTypeATIndex, _TypePVDt);
-            CHelpFunc.SetCpgAttribute<int>(pLSCPgLt, (cpg, intFaceID) => cpg.ID = intFaceID, _ObjValueLtLtLt[0], intLSFaceIDIndex);
-            
+            //CHelpFunc.SetCpgAttribute<int>(pLSCPgLt, (cpg, intFaceID) => cpg.ID = intFaceID, _ObjValueLtLtLt[0], intLSFaceIDIndex);
+            CHelpFunc.SetCpgID<int>(pLSCPgLt, _ObjValueLtLtLt[0], intLSFaceIDIndex);
+
 
             //foreach (var cpg in pLSCPgLt)
             //{
@@ -371,11 +371,14 @@ namespace MorphingClass.CGeneralizationMethods
 
                 //get the RegionNum index
                 var intRegionNum = Convert.ToInt32(pObjValueLtLt[i][intRegionNumATIndex]);
-                pCrgIdIndexPVDt.Dt.TryGetValue(intRegionNum, out int intRegionIndex);
+                if (intRegionNum >= 0)
+                {
+                    pCrgIdIndexPVDt.Dt.TryGetValue(intRegionNum, out int intRegionIndex);
 
-                //add the Cph into the corresponding Region
-                pCrgLt[intRegionIndex].AddCph(new CPatch(pCpgLt[i], -1, pCpgLt[i].intTypeIndex), pCpgLt[i]);
-                pCrgLt[intRegionIndex].ID = intRegionNum;  //set the ID for each region
+                    //add the Cph into the corresponding Region
+                    pCrgLt[intRegionIndex].AddCph(new CPatch(pCpgLt[i], -1, pCpgLt[i].intTypeIndex), pCpgLt[i]);
+                    pCrgLt[intRegionIndex].ID = intRegionNum;  //set the ID for each region
+                }
             }
 
             //set the ID of patches

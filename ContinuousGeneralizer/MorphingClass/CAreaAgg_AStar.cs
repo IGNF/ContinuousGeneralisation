@@ -147,9 +147,9 @@ namespace MorphingClass.CGeneralizationMethods
                 {
                     break;
                 }
-                if (intEstSteps>50)
+                if (intEstSteps>1000)
                 {
-                    intEstSteps = 64;
+                    intEstSteps = 1024;
                     throw new ArgumentException("We cannot solve the problem! Impossible!");
                 }
                 
@@ -265,6 +265,12 @@ namespace MorphingClass.CGeneralizationMethods
                     }
                     else
                     {
+                        int u_type;
+                        int SSCrg_type;
+                            //= SSCrg.GetSoloCphTypeIndex();
+
+                        _TypePVDt.Dt_R.TryGetValue(u.GetSoloCphTypeIndex(), out u_type);
+                        _TypePVDt.Dt_R.TryGetValue(SSCrg.GetSoloCphTypeIndex(), out SSCrg_type);
                         throw new ArgumentException("this is impossible!");
                         //continue;
                     }

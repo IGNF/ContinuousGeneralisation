@@ -152,14 +152,15 @@ namespace ContinuousGeneralizer
             //var frmCurrent = new FrmSelectRandomly(_DataRecords);
             //var frmCurrent = new FrmToIpe(_DataRecords);
             //var frmCurrent = new FrmMatchAndMergePolygons(_DataRecords);
-            var frmCurrent = new FrmIdentifyCorrCpgAddRegionNum(_DataRecords);
+            //var frmCurrent = new FrmIdentifyCorrCpgAddRegionNum(_DataRecords);
+
             //var frmCurrent = new FrmBldgGrow(_DataRecords);
 
             //var frmCurrent = new FrmSTS(_DataRecords);
             //var frmCurrent = new FrmCGABM(_DataRecords);
             //var frmCurrent = new FrmExtractPossibleFiles();
 
-            //var frmCurrent = new FrmAreaAgg(_DataRecords);
+            var frmCurrent = new FrmAreaAgg(_DataRecords);
             //CConstants.strRunContinuousGeneralizer = File.ReadLines(
             //    CHelpFunc.strPathCGBackSlash + "RunContinuousGeneralizer\\RunContinuousGeneralizer.txt").First();
             //if (CConstants.strRunContinuousGeneralizer != "")
@@ -200,7 +201,7 @@ namespace ContinuousGeneralizer
 
 
             //frmCurrent.btnTransform_Click(sender, e);
-            //frmCurrent.btnAStar_Click(sender, e);
+            frmCurrent.btnAStar_Click(sender, e);
             //frmCurrent.btnRun_Click(sender, e);
             //frmCurrent.btnGreedy_Click(sender, e);
             //frmCurrent.btnRunILP_Click(sender, e);
