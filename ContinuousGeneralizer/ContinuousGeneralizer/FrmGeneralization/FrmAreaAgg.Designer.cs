@@ -90,6 +90,7 @@
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.timerAdd = new System.Windows.Forms.Timer(this.components);
+            this.btnNewEvaluation = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -394,6 +395,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.btnNewEvaluation);
             this.groupBox3.Controls.Add(this.txtEvaluation);
             this.groupBox3.Location = new System.Drawing.Point(12, 833);
             this.groupBox3.Name = "groupBox3";
@@ -739,6 +741,16 @@
             this.timerAdd.Interval = 500;
             this.timerAdd.Tick += new System.EventHandler(this.timerAdd_Tick);
             // 
+            // btnNewEvaluation
+            // 
+            this.btnNewEvaluation.Location = new System.Drawing.Point(170, 16);
+            this.btnNewEvaluation.Name = "btnNewEvaluation";
+            this.btnNewEvaluation.Size = new System.Drawing.Size(106, 25);
+            this.btnNewEvaluation.TabIndex = 83;
+            this.btnNewEvaluation.Text = "New Evaluation";
+            this.btnNewEvaluation.UseVisualStyleBackColor = true;
+            this.btnNewEvaluation.Click += new System.EventHandler(this.btnNewEvaluation_Click);
+            // 
             // FrmAreaAgg
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -832,5 +844,6 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txtTimeLimit;
+        private System.Windows.Forms.Button btnNewEvaluation;
     }
 }

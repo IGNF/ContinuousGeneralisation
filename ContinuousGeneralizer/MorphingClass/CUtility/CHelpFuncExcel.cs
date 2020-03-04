@@ -41,7 +41,7 @@ namespace MorphingClass.CUtility
             int intCol = pWorksheet.UsedRange.Columns.Count;
             System.Array values = (System.Array)pWorksheet.UsedRange.Formula;
             object[][] aObj = new object[intRow][];
-            for (int i = 0; i < intRow ; i++)
+            for (int i = 0; i < intRow; i++)
             {
                 aObj[i] = new object[intCol];
                 for (int j = 0; j < intCol; j++)
@@ -56,7 +56,7 @@ namespace MorphingClass.CUtility
         public static string OpenAnExcel()
         {
             OpenFileDialog OFG = new OpenFileDialog();
-            
+
             OFG.Filter = "xlsx files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
             OFG.ShowDialog();
             return OFG.FileName;
@@ -76,7 +76,8 @@ namespace MorphingClass.CUtility
         /// <param name="pParameterResultToExcel">指标结果信息</param>
         /// <param name="strSavePath">保存路径</param>
         /// <remarks>导出时，Excel显示的指标信息为到该点时的指标信息</remarks>
-        public static void ExportEvaluationToExcel(CParameterResult pParameterResultToExcel, CParameterInitialize pParameterInitialize, string strSuffix)
+        public static void ExportEvaluationToExcel(CParameterResult pParameterResultToExcel,
+            CParameterInitialize pParameterInitialize, string strSuffix)
         {
             ////为应付Excel的bug，加入以下两行代码
             //System.Globalization.CultureInfo CurrentCI = System.Threading.Thread.CurrentThread.CurrentCulture;
@@ -136,7 +137,8 @@ namespace MorphingClass.CUtility
         /// </summary>
         /// <param name="pParameterResultToExcel">需保存的数据</param>
         /// <param name="pWorksheet">Excel的Sheet</param>
-        private static void ExportIntegralEvaluation(CParameterResult pParameterResultToExcel, ref Worksheet pWorksheet, ref ToolStripProgressBar tspbMain)
+        private static void ExportIntegralEvaluation(CParameterResult pParameterResultToExcel,
+            ref Worksheet pWorksheet, ref ToolStripProgressBar tspbMain)
         {
             ////为应付Excel的bug，加入以下两行代码
             //System.Globalization.CultureInfo CurrentCI = System.Threading.Thread.CurrentThread.CurrentCulture;
@@ -173,7 +175,8 @@ namespace MorphingClass.CUtility
         /// </summary>
         /// <param name="pParameterResultToExcel">需保存的数据</param>
         /// <param name="pWorksheet">Excel的Sheet</param>
-        private static void ExportTranslationEvaluation(CParameterResult pParameterResultToExcel, ref Worksheet pWorksheet, ref ToolStripProgressBar tspbMain)
+        private static void ExportTranslationEvaluation(CParameterResult pParameterResultToExcel,
+            ref Worksheet pWorksheet, ref ToolStripProgressBar tspbMain)
         {
             ////为应付Excel的bug，加入以下两行代码
             //System.Globalization.CultureInfo CurrentCI = System.Threading.Thread.CurrentThread.CurrentCulture;
@@ -267,7 +270,8 @@ namespace MorphingClass.CUtility
         //}
 
 
-        public static void ExportEvaluationToExcelCorr(CParameterResult pParameterResult, string strPath, string strSuffix = null)
+        public static void ExportEvaluationToExcelCorr(CParameterResult pParameterResult,
+            string strPath, string strSuffix = null)
         {
             string strEvaluationMethod = pParameterResult.enumEvaluationMethod.ToString();
             string strfilename = System.IO.Path.GetFileNameWithoutExtension(strPath);
@@ -278,13 +282,14 @@ namespace MorphingClass.CUtility
 
             for (int i = 0; i < CorrCptsLtLt.Count; i++)
             {
-                string strEntireFileName = strPath + "\\" + strfilename + strEvaluationMethod + 
+                string strEntireFileName = strPath + "\\" + strfilename + strEvaluationMethod +
                     CHelpFunc.JudgeAndAddZero(i, 4) + "__" + dblSumEvaluationLtLt[i].Last().ToString();
 
                 //it's better if we can output a file with ".xlsx", but that causes problems
-                var sw = new StreamWriter(strEntireFileName + ".xls", false, Encoding.GetEncoding(-0));  
+                var sw = new StreamWriter(strEntireFileName + ".xls", false, Encoding.GetEncoding(-0));
 
-                string strColNames = "FrID\t" + "FrX\t" + "FrY\t" + "ToID\t" + "ToX\t" + "ToY\t" + "MoveID\t" + "MoveX\t" + "MoveY\t" 
+                string strColNames =
+                    "FrID\t" + "FrX\t" + "FrY\t" + "ToID\t" + "ToX\t" + "ToY\t" + "MoveID\t" + "MoveX\t" + "MoveY\t"
                     + strEvaluationMethod + "\t" + "Sum" + strEvaluationMethod;
                 sw.WriteLine(strColNames);
 
@@ -329,7 +334,8 @@ namespace MorphingClass.CUtility
         ///// <param name="objHeadEb"></param>
         ///// <param name="strName"></param>
         ///// <param name="strSavePath"></param>
-        //public static string ExportToExcelSW(IEnumerable<IEnumerable<object>> objDataEbEb, IEnumerable<object> objHeadEb, string strName, string strSavePath)
+        //public static string ExportToExcelSW(IEnumerable<IEnumerable<object>> objDataEbEb, IEnumerable<object> objHeadEb, 
+        //string strName, string strSavePath)
         //{
         //    Excel.Application pExcelAPP = new Excel.Application();
         //    pExcelAPP.Visible = false;
@@ -346,7 +352,8 @@ namespace MorphingClass.CUtility
         //    //pWorksheet.Columns.AutoFit();
         //    strfilename = strfilename + strName;
         //    string strEntireFileName = strSavePath + "\\" + strfilename + ".xls";
-        //    pWorkBook.SaveAs(strEntireFileName, 56, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlExclusive);
+        //    pWorkBook.SaveAs(strEntireFileName, 56, 
+        //Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlExclusive);
         //    pWorkBook.Close(false, false, false);
         //    pExcelAPP.Quit();
 
@@ -372,7 +379,7 @@ namespace MorphingClass.CUtility
         //        sw.WriteLine(tempStr);
         //    }
         //    sw.Close();
-            
+
         //    return strEntireFileName;
         //}
 
@@ -384,7 +391,7 @@ namespace MorphingClass.CUtility
         /// <param name="strName"></param>
         /// <param name="strSavePath"></param>
         public static void ExportToExcel(IEnumerable<IEnumerable<object>> objDataEbEb,
-            string strName, string strSavePath, IEnumerable<object> objHeadEb=null)
+            string strName, string strSavePath, IEnumerable<object> objHeadEb = null)
         {
             Excel.Application pExcelAPP = new Excel.Application();
             pExcelAPP.Visible = false;
@@ -395,7 +402,7 @@ namespace MorphingClass.CUtility
             int intCurrentRow = 1;
             int intCurrentCol = 1;
 
-            if (objHeadEb!=null)
+            if (objHeadEb != null)
             {
                 foreach (var objHead in objHeadEb)
                 {
@@ -419,7 +426,8 @@ namespace MorphingClass.CUtility
 
             pWorksheet.Columns.AutoFit();
             string strEntireFileName = strSavePath + "\\" + strName + ".xls";
-            pWorkBook.SaveAs(strEntireFileName, 56, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlExclusive);
+            pWorkBook.SaveAs(strEntireFileName, 56,
+                Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlExclusive);
             pWorkBook.Close(false, false, false);
             pExcelAPP.Quit();
         }
@@ -433,7 +441,8 @@ namespace MorphingClass.CUtility
         //    string strfilename = System.IO.Path.GetFileNameWithoutExtension(strSavePath);
         //    strfilename = strfilename + strName;
         //    string strEntireFileName = strSavePath + "\\" + strfilename;
-        //    pWorkBook.SaveAs(strEntireFileName, XlFileFormat.xlWorkbookNormal, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlExclusive);
+        //    pWorkBook.SaveAs(strEntireFileName, XlFileFormat.xlWorkbookNormal, 
+        //Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlExclusive);
         //    pWorkBook.Close(false, false, false);
         //    pExcelAPP.Quit();
         //    KillExcel();
@@ -668,7 +677,8 @@ namespace MorphingClass.CUtility
         //    string strfilename = System.IO.Path.GetFileNameWithoutExtension(strSavePath);
         //    strfilename = strfilename + strName;
         //    string strEntireFileName = strSavePath + "\\" + strfilename;
-        //    pWorkBook.SaveAs(strEntireFileName, 56, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlExclusive);
+        //    pWorkBook.SaveAs(strEntireFileName, 56, 
+        //Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlExclusive);
         //    //pWorkBook 
         //    //pWorksheet.close
         //    pWorkBook.Close(false, false, false);
@@ -870,7 +880,8 @@ namespace MorphingClass.CUtility
 
         //    pWorksheet.Columns.AutoFit();
         //    pExcelAPP.DisplayAlerts = false;
-        //    pWorkBook.SaveAs(strSavePath + "\\" + strfilename, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlNoChange);
+        //    pWorkBook.SaveAs(strSavePath + "\\" + strfilename, 
+        //Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlNoChange);
         //    pExcelAPP.Quit();
         //    //KillExcel();
         //}
@@ -906,7 +917,8 @@ namespace MorphingClass.CUtility
 
         //    pWorksheet.Columns.AutoFit();
         //    pExcelAPP.DisplayAlerts = false;
-        //    pWorkBook.SaveAs(strSavePath + "\\" + strfilename, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlNoChange);
+        //    pWorkBook.SaveAs(strSavePath + "\\" + strfilename, 
+        //Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlNoChange);
         //    pExcelAPP.Quit();
         //    //KillExcel();
         //}
@@ -949,9 +961,9 @@ namespace MorphingClass.CUtility
             System.Array values = (System.Array)pWorksheet.UsedRange.Formula;
             for (int i = 0; i < intRow - 1; i++)
             {
-                CPoint frcpt = new CPoint(Convert.ToInt32(values.GetValue(i + 2, 1)), 
+                CPoint frcpt = new CPoint(Convert.ToInt32(values.GetValue(i + 2, 1)),
                     Convert.ToDouble(values.GetValue(i + 2, 2)), Convert.ToDouble(values.GetValue(i + 2, 3)));
-                CPoint tocpt = new CPoint(Convert.ToInt32(values.GetValue(i + 2, 4)), 
+                CPoint tocpt = new CPoint(Convert.ToInt32(values.GetValue(i + 2, 4)),
                     Convert.ToDouble(values.GetValue(i + 2, 5)), Convert.ToDouble(values.GetValue(i + 2, 6)));
 
                 if (blnReverse == true)
@@ -1062,7 +1074,7 @@ namespace MorphingClass.CUtility
             List<CPoint> cptlt = new List<CPoint>();
             for (int i = 0; i < intRow - 1; i++)
             {
-                CPoint cpt = new CPoint(i, Convert.ToDouble(values.GetValue(i + 2, 3)), 
+                CPoint cpt = new CPoint(i, Convert.ToDouble(values.GetValue(i + 2, 3)),
                     Convert.ToDouble(values.GetValue(i + 2, 4)), Convert.ToDouble(values.GetValue(i + 2, 5)));
                 cpt.intTrajectory = Convert.ToInt32(values.GetValue(i + 2, 1));
                 cpt.dblTime = Convert.ToDouble(values.GetValue(i + 2, 2));

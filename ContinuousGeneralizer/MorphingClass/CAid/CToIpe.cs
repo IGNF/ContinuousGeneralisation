@@ -33,7 +33,7 @@ namespace MorphingClass.CAid
 
                 if (blnGroup == true)
                 {
-                    strDataOfFLayer = "</group>\n" + strDataOfFLayer + "</group>\n";
+                    strDataOfFLayer = "<group>\n" + strDataOfFLayer + "</group>\n";
                 }
                 strContent += strDataOfFLayer;
 

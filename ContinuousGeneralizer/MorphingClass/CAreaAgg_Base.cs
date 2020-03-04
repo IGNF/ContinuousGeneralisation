@@ -77,8 +77,8 @@ namespace MorphingClass.CGeneralizationMethods
         //comment the following if you want to process on all instances
         protected void UpdateStartEnd()
         {
-            //_intStart = 358;
-            //_intEndCount = _intStart + 10;
+            _intStart = 358;
+            _intEndCount = _intStart + 2;
 
             if (CConstants.strRunContinuousGeneralizer!="")
             {
@@ -206,12 +206,13 @@ namespace MorphingClass.CGeneralizationMethods
                 cpg.FormCEdgeLt();
                 cpg.SetCEdgeLtLength();
             }
-            
+
 
             foreach (var cpg in pSSCPgLt)
             {
                 cpg.FormCEdgeLt();
             }
+
 
             //get region number for each polygon
             var pstrFieldNameLtLt = this.strFieldNameLtLt;
@@ -602,8 +603,7 @@ namespace MorphingClass.CGeneralizationMethods
             //order the the lists according to the order of the keys
             foreach (var strKey in CAreaAgg_Base.strKeyLt)
             {
-                List<object> valuelt;
-                StrObjLtDt.TryGetValue(strKey, out valuelt);
+                StrObjLtDt.TryGetValue(strKey, out List<object> valuelt);
                 TempobjDataLtLt.Add(valuelt);
             }
 
@@ -649,7 +649,8 @@ namespace MorphingClass.CGeneralizationMethods
 
                 if (pobjDataLtLt.Count == 734)
                 {
-                    ExportCmpGreedyAStar(pAreaAgg_Base.strAStarCostLineLt, objDataLtONMIdSS, strResultFileName, pParameterInitialize.strSavePath);
+                    ExportCmpGreedyAStar(pAreaAgg_Base.strAStarCostLineLt, 
+                        objDataLtONMIdSS, strResultFileName, pParameterInitialize.strSavePath);
                 }
             }
 
@@ -707,11 +708,11 @@ namespace MorphingClass.CGeneralizationMethods
 
                 if (dblAStarCost == 0)
                 {
-                    if (dblDiff<0)
+                    if (dblDiff < 0)
                     {
                         throw new ArgumentOutOfRangeException("impossible case!");
                     }
-                    else if(dblDiff == 0)
+                    else if (dblDiff == 0)
                     {
                         dblRatio = 0;
                     }
@@ -725,29 +726,6 @@ namespace MorphingClass.CGeneralizationMethods
                     dblRatio = dblDiff / dblAStarCost;
                 }
 
-
-                //if (dblDiff == 0)
-                //{
-                //    dblRatio = 0;
-                //}
-                //else if (dblDiff > 0)
-                //{
-                //    if (true)
-                //    {
-
-                //    }
-                //}
-
-                //if (dblGreedyCost == 0)
-                //{
-                //    //in this case, dblAStarCost == 0
-                //    dblRatio = 1;
-                //}
-                //else if (dblAStarCost > 0)
-                //{
-                //    dblRatio = dblDiff / dblAStarCost;
-                //}
-
                 int intK = 0;
                 if (Convert.ToInt32(strDetail[1]) > 0) //if overestimated step is larger than 0
                 {
@@ -758,9 +736,6 @@ namespace MorphingClass.CGeneralizationMethods
                 dblGreedyCost.ToString("F8"), dblDiff.ToString("F8"), dblRatio.ToString("F8")) + "\n";
 
                 strOutputSD_K_R_ID.Add(new Tuple<int, double, int>(intK, dblRatio, intID), strOutput);
-
-                //strData += string.Format(strFormatCmp, strDetail[0], strDetail[1], strDetail[2],
-                //dblGreedyCost.ToString("F4"), dblDiff.ToString("F4"), dblRatio.ToString("F4")) + "\n";
             }
 
             foreach (var stroutput in strOutputSD_K_R_ID.Values)
@@ -1058,7 +1033,8 @@ namespace MorphingClass.CGeneralizationMethods
             }
         }
 
-        private static void ExportIDOverEstimation(IEnumerable<IList<object>> objDataLtEb, string strName, string strSavePath, string strMethod)
+        private static void ExportIDOverEstimation(IEnumerable<IList<object>> objDataLtEb, 
+            string strName, string strSavePath, string strMethod)
         {
             string strDataNo = "\n\n\n" + "find NO solution:\n";
             //string strDataNoForm = "";
@@ -1451,6 +1427,25 @@ List<string> strLayerNameLt,
 
             //var lngmemory = GC.GetTotalMemory(true);                                           //for testing
             //var lngmemorycomsuption = CHelpFunc.GetConsumedMemoryInMB(true, lngmemorycheck2);  //for testing
+        }
+
+
+        public double ComputeNewEvaluation()
+        {
+            double dblTotalTypeCost = 0;
+            var pInitialCrgLt = this.InitialCrgLt;
+            for (int i = 0; i < pInitialCrgLt.Count; i++)
+            {
+                var crg = pInitialCrgLt[i];
+                while (crg.child!=null)
+                {
+                    crg = crg.child;
+                }
+                dblTotalTypeCost += crg.dblCostExactType * 6 * crg.dblArea;
+            }
+
+            Console.WriteLine("dblTotalTypeCost: " + dblTotalTypeCost);
+            return dblTotalTypeCost;
         }
 
         #endregion

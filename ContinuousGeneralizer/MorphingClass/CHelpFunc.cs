@@ -283,6 +283,7 @@ namespace MorphingClass.CUtility
         {
             for (int i = 0; i < pObjIGeoLt.Count; i++)
             {
+                Console.WriteLine(i);
                 yield return GenerateCGeoAccordingToInput((IGeometry)pObjIGeoLt[i], i);
             }
         }
@@ -530,14 +531,24 @@ namespace MorphingClass.CUtility
         public static IEnumerable<CPoint> GetIpgExteriorCptLt(IPolygon4 ipg)
         {
             //ipg.Close();
+
+
+            IRing2 pExteriorRing = (ipg.ExteriorRingBag as IGeometryCollection).get_Geometry(0) as IRing2;
+            var cptlt = GetCptEbByICol(pExteriorRing as IPointCollection4).ToList();
+
             if (ipg.ExteriorRingCount != 1)
-            {
+            {                
+                var x1 = cptlt[0].X;
+                var y1 = cptlt[0].Y;
+                //var x = pCol.Point[0].X;
+                //var y = pCol.Point[0].Y;
                 throw new ArgumentException(
                     "I have not considered such a complicated case! A hole contains other holes! ");
             }
 
-            IRing2 pExteriorRing = (ipg.ExteriorRingBag as IGeometryCollection).get_Geometry(0) as IRing2;
-            return GetCptEbByICol(pExteriorRing as IPointCollection4).ToList();
+
+
+            return cptlt;
         }
 
         public static IEnumerable<List<CPoint>> GetIpgInteriorCptLtEb(IPolygon4 ipg)

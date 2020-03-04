@@ -780,6 +780,11 @@ namespace ContinuousGeneralizer.FrmMorphing
             _pCAreaAgg_Base.DetailToIpe();
         }
 
+        private void btnNewEvaluation_Click(object sender, EventArgs e)
+        {
+            var dblTotalTypeCost = _pCAreaAgg_Base.ComputeNewEvaluation();
+        }
+
 
 
 

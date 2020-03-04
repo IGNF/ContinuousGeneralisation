@@ -77,7 +77,7 @@ namespace ContinuousGeneralizer
             //CHelpFunc.strDataFolderName = "CompatibleTriangulation3";
 
 
-            CHelpFunc.strDataFolderName = "AreaAggregation";
+            //CHelpFunc.strDataFolderName = "AreaAggregation";
             ////CHelpFunc.strDataFolderName = "AreaAggregation-664-easy";
             ////CHelpFunc.strDataFolderName = "AreaAggregation-716-VeryEasy";
             ////CHelpFunc.strDataFolderName = "AreaAggregation_Problematic";
@@ -87,7 +87,21 @@ namespace ContinuousGeneralizer
             ////CHelpFunc.strDataFolderName = "AreaAggregation_Simplest_Two";
             ////CHelpFunc.strDataFolderName = "AreaAggregation_Simplest_Three";
             ////CHelpFunc.strDataFolderName = "AreaAggregation-Mostpatches";
-            CHelpFunc.strPath = strWorkPath + "\\AreaAggregation\\" + CHelpFunc.strDataFolderName;
+            //CHelpFunc.strPath = strWorkPath + "\\AreaAggregation\\" + CHelpFunc.strDataFolderName;
+
+
+
+
+
+            //CHelpFunc.strDataFolderName = "top10nl_9x9";
+            //CHelpFunc.strPath = strWorkPath + "\\top10nl_9x9_datasets\\" + CHelpFunc.strDataFolderName;
+
+            CHelpFunc.strDataFolderName = "top10nl_9x9_konrad";
+            CHelpFunc.strPath = strWorkPath + "\\top10nl_9x9_datasets\\" + CHelpFunc.strDataFolderName;
+
+
+
+
 
             //CHelpFunc.strDataFolderName = "SingleLake";
             //CHelpFunc.strPath = strWorkPath + "\\STSModel\\" + CHelpFunc.strDataFolderName;
@@ -137,40 +151,42 @@ namespace ContinuousGeneralizer
             //var frmCurrent = new FrmStatisticsOfDataSets(_DataRecords);
             //var frmCurrent = new FrmSelectRandomly(_DataRecords);
             //var frmCurrent = new FrmToIpe(_DataRecords);
+            //var frmCurrent = new FrmMatchAndMergePolygons(_DataRecords);
+            var frmCurrent = new FrmIdentifyCorrCpgAddRegionNum(_DataRecords);
             //var frmCurrent = new FrmBldgGrow(_DataRecords);
 
             //var frmCurrent = new FrmSTS(_DataRecords);
             //var frmCurrent = new FrmCGABM(_DataRecords);
             //var frmCurrent = new FrmExtractPossibleFiles();
 
-            var frmCurrent = new FrmAreaAgg(_DataRecords);
-            CConstants.strRunContinuousGeneralizer = File.ReadLines(
-                CHelpFunc.strPathCGBackSlash + "RunContinuousGeneralizer\\RunContinuousGeneralizer.txt").First();
-            if (CConstants.strRunContinuousGeneralizer != "")
-            {
-                //0 NonShape
-                //1 MinimizeInteriorBoundaries
-                //2 MaximizeMinComp_EdgeNumber
-                //3 MaxMinC_Comb
-                //4 MaxAvgC_EdgeNo
-                //5 MaxAvgC_Comb
-                _DataRecords.ParameterInitialize.cboShapeConstraint.SelectedIndex = 4;
-                switch (CConstants.strRunContinuousGeneralizer)
-                {
-                    case "Greedy":
-                        frmCurrent.btnGreedy_Click(sender, e);
-                        break;
-                    case "AStar":
-                        frmCurrent.btnAStar_Click(sender, e);
-                        break;
-                    case "ILP":
-                        frmCurrent.btnRunILP_Click(sender, e);
-                        break;
-                    default:
-                        break;
-                }
-                return;
-            }
+            //var frmCurrent = new FrmAreaAgg(_DataRecords);
+            //CConstants.strRunContinuousGeneralizer = File.ReadLines(
+            //    CHelpFunc.strPathCGBackSlash + "RunContinuousGeneralizer\\RunContinuousGeneralizer.txt").First();
+            //if (CConstants.strRunContinuousGeneralizer != "")
+            //{
+            //    //0 NonShape
+            //    //1 MinimizeInteriorBoundaries
+            //    //2 MaximizeMinComp_EdgeNumber
+            //    //3 MaxMinC_Comb
+            //    //4 MaxAvgC_EdgeNo
+            //    //5 MaxAvgC_Comb
+            //    _DataRecords.ParameterInitialize.cboShapeConstraint.SelectedIndex = 4;
+            //    switch (CConstants.strRunContinuousGeneralizer)
+            //    {
+            //        case "Greedy":
+            //            frmCurrent.btnGreedy_Click(sender, e);
+            //            break;
+            //        case "AStar":
+            //            frmCurrent.btnAStar_Click(sender, e);
+            //            break;
+            //        case "ILP":
+            //            frmCurrent.btnRunILP_Click(sender, e);
+            //            break;
+            //        default:
+            //            break;
+            //    }
+            //    return;
+            //}
 
 
 
@@ -184,7 +200,7 @@ namespace ContinuousGeneralizer
 
 
             //frmCurrent.btnTransform_Click(sender, e);
-            frmCurrent.btnAStar_Click(sender, e);
+            //frmCurrent.btnAStar_Click(sender, e);
             //frmCurrent.btnRun_Click(sender, e);
             //frmCurrent.btnGreedy_Click(sender, e);
             //frmCurrent.btnRunILP_Click(sender, e);

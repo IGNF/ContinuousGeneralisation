@@ -80,13 +80,8 @@ namespace MorphingClass.CUtility
         /// then compare FrCpt with ToCpt as well as ToCpt with FrCpt to find whether they are equal</remarks>
         public static int CmpCEdgeCoord(CEdge cedge1, CEdge cedge2, bool blnMayFlip = false)
         {
-            CPoint frcpt1;
-            CPoint tocpt1;
-            GetCpts(cedge1, blnMayFlip, out frcpt1, out tocpt1);
-
-            CPoint frcpt2;
-            CPoint tocpt2;
-            GetCpts(cedge2, blnMayFlip, out frcpt2, out tocpt2);
+            GetCpts(cedge1, blnMayFlip, out CPoint frcpt1, out CPoint tocpt1);
+            GetCpts(cedge2, blnMayFlip, out CPoint frcpt2, out CPoint tocpt2);
 
             int intResultFF = CmpCptYX(frcpt1, frcpt2);
             int intResultTT = CmpCptYX(tocpt1, tocpt2);

@@ -158,6 +158,20 @@ namespace MorphingClass.CGeometry
             }
         }
 
+        public List<CEdge> GetAllCEdgeLt()
+        {
+            this.JudgeAndFormCEdgeLt();
+            var AllCEdgeLt = new List<CEdge>(this.CEdgeLt);
+            if (this.HoleCpgLt != null)
+            {
+                foreach (var holecpg in this.HoleCpgLt)
+                {
+                    AllCEdgeLt.AddRange(holecpg.GetAllCEdgeLt());
+                }
+            }
+            return AllCEdgeLt;
+        }
+
         public override int GetEdgeCount()
         {
             var intEdgeCount = this.CptLt.Count-1;

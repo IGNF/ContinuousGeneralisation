@@ -2478,6 +2478,42 @@ namespace MorphingClass.CUtility
 
         }
 
+        public static double ComputeExteriorLength(IEnumerable<CPolygon> CpgEb)
+        {
+            var cedgelt = new List<CEdge>();
+            foreach (var cpg in CpgEb)
+            {
+                cedgelt.AddRange(cpg.GetAllCEdgeLt());
+            }
+
+            return ComputeExteriorLength(cedgelt);
+        }
+
+        public static double ComputeExteriorLength(IEnumerable<CEdge> CEdgeEb)
+        {
+            var cedgeSS = new SortedSet<CEdge>(new CCmpCEdgeCoordinates());
+            foreach (var cedge in CEdgeEb)
+            {
+                if (cedgeSS.Contains(cedge))
+                {
+                    cedgeSS.Remove(cedge);
+                }
+                else
+                {
+                    cedgeSS.Add(cedge);
+                }
+            }
+
+            double dblExteriorLength = 0;
+            foreach (var cedge in cedgeSS)
+            {
+                cedge.JudgeAndSetLength();
+                dblExteriorLength += cedge.dblLength;
+            }
+
+            return dblExteriorLength;
+        }
+
         //public static IEnumerable<CEdge> RemoveShortEdges(IEnumerable<CEdge> cedgeEb)
         //{
         //    foreach (var cedge in cedgeEb)
