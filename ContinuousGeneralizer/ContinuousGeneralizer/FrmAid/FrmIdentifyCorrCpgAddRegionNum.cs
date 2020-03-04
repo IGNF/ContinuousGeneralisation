@@ -48,7 +48,7 @@ namespace ContinuousGeneralizer.FrmAid
 
         private void FrmIdentifyCorrCpgAddRegionNum_Load(object sender, EventArgs e)
         {
-            CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
+            var ParameterInitialize = _DataRecords.ParameterInitialize;
             ParameterInitialize.cboLayerLt = new List<ComboBox>(2);
 
             ParameterInitialize.cboLayerLt.Add(this.cboLargerScaleLayer);
@@ -60,9 +60,9 @@ namespace ContinuousGeneralizer.FrmAid
 
         public void btnRun_Click(object sender, EventArgs e)
         {
-            CParameterInitialize ParameterInitialize = _DataRecords.ParameterInitialize;
+            var ParameterInitialize = _DataRecords.ParameterInitialize;
 
-            CIdentifyCorrCpgAddRegionNum pIdentifyCorrCpgAddRegionNum = new CIdentifyCorrCpgAddRegionNum(ParameterInitialize);
+            var pIdentifyCorrCpgAddRegionNum = new CIdentifyCorrCpgAddRegionNum(ParameterInitialize);
             pIdentifyCorrCpgAddRegionNum.IdentifyCorrCpgAddRegionNum();
 
             MessageBox.Show("Done!");
