@@ -73,6 +73,11 @@ namespace MorphingClass.CAid
                 {
                     if (cpg.isMatched == false)
                     {
+                        //Console.WriteLine(pSSCPg.CptLt[0].X);
+                        //Console.WriteLine(pSSCPg.CptLt[0].Y);
+                        //Console.WriteLine(cpg.CptLt[0].X);
+                        //Console.WriteLine(cpg.CptLt[0].Y);
+
                         IPolygon4 ipg = cpg.pPolygon;
                         double dblIntersectArea = (pSSCPgTop.Intersect(ipg as IGeometry, esriGeometryDimension.esriGeometry2Dimension) as IArea).Area;
                         double dblIntersectRatio = dblIntersectArea / (ipg as IArea).Area;
@@ -89,7 +94,6 @@ namespace MorphingClass.CAid
                 {
                     SSAttentionCPgLt.Add(pSSCPg);
                 }
-
             }
 
 

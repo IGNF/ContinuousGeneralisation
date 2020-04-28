@@ -344,6 +344,7 @@ namespace MorphingClass.CGeneralizationMethods
             var pCphRecords = crg.GetNeighborCphRecords(mincph).ToList();
             if (pCphRecords.Count == 0)
             {
+                CSaveFeature.SaveCpgEb(mincph.CpgSS, "PolygonsOfMincph");                    
                 throw new ArgumentNullException("There is no neighbor of mincph!");
             }
 
