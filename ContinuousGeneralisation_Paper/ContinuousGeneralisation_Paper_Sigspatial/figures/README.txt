@@ -1,2 +1,0 @@
-All the figures of pdf format in this folder were made by Ipe (see http://ipe.otfried.org/)
-If you want to edit the figures by Ipe, you may want to download the newest version at https://bintray.com/otfried/generic/ipe
