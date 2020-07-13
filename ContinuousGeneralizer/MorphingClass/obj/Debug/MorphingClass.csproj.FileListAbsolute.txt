@@ -1,0 +1,16 @@
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\obj\Debug\MorphingClass.csprojAssemblyReference.cache
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\obj\Debug\MorphingClass.csproj.ResolveComReference.cache
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\obj\Debug\MorphingClass.csproj.CoreCompileInputs.cache
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\Debug\MorphingClass.dll.config
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\Debug\MorphingClass.dll
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\Debug\MorphingClass.pdb
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\Debug\CsvHelper.dll
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\Debug\ESRI.ArcGIS.AxControls.dll
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\Debug\ILOG.Concert.dll
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\Debug\ILOG.CPLEX.dll
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\Debug\System.ValueTuple.dll
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\Debug\CsvHelper.xml
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\bin\Debug\System.ValueTuple.xml
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\obj\Debug\MorphingClass.csproj.CopyComplete
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\obj\Debug\MorphingClass.dll
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\MorphingClass\obj\Debug\MorphingClass.pdb

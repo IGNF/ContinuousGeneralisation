@@ -1,0 +1,10 @@
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\VBClass\bin\Debug\VBClass.dll
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\VBClass\bin\Debug\VBClass.pdb
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\VBClass\bin\Debug\VBClass.xml
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\VBClass\obj\Debug\VBClass.vbprojAssemblyReference.cache
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\VBClass\obj\Debug\VBClass.Resources.resources
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\VBClass\obj\Debug\VBClass.vbproj.GenerateResource.cache
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\VBClass\obj\Debug\VBClass.vbproj.CoreCompileInputs.cache
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\VBClass\obj\Debug\VBClass.dll
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\VBClass\obj\Debug\VBClass.xml
+C:\MyWork\Research\Programs\ContinuousGeneralisation\ContinuousGeneralizer\VBClass\obj\Debug\VBClass.pdb
