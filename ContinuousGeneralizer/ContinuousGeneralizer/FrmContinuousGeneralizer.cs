@@ -52,16 +52,10 @@ namespace ContinuousGeneralizer
         {
             CHelpFunc.strPathCGBackSlash = System.IO.Path.GetFullPath(@"..\..\..\..\"); //the path to folder ContinuousGeneralisation
             string strWorkPath = CHelpFunc.strPathCGBackSlash + "ContinuousGeneralisation_Data";
-
-            //CHelpFunc.strDataFolderName = "Jiangxi";
-            //CHelpFunc.strDataFolderName = "CompatibleTriangulationTestVerySimple";
-            //CHelpFunc.strDataFolderName = "JiangxiOneCounty";
-            //CHelpFunc.strDataFolderName = "railÃ·¼¯ÏßTest";
-            //+ CHelpFunc.strDataFolderName;
+            CHelpFunc.strDataFolderName = "AreaAggregation";
+            CHelpFunc.strPath = strWorkPath + "\\AreaAggregation\\" + CHelpFunc.strDataFolderName;
 
             //CHelpFunc.strDataFolderName = "MainlandChina";
-            //CHelpFunc.strDataFolderName = "MainlandChina-Yunnan";
-            //CHelpFunc.strDataFolderName = "MainlandChina-Guangxi";
             //CHelpFunc.strDataFolderName = "MainlandChina-Tianjin";
             //CHelpFunc.strDataFolderName = "MainlandChina-Animation";
             //CHelpFunc.strDataFolderName = "MainlandChina-Animation-Tianjin";
@@ -75,7 +69,7 @@ namespace ContinuousGeneralizer
             //CHelpFunc.strDataFolderName = "CompatibleTriangulation3";
 
 
-            CHelpFunc.strDataFolderName = "AreaAggregation";
+            //CHelpFunc.strDataFolderName = "AreaAggregation";
             ////CHelpFunc.strDataFolderName = "AreaAggregation-664-easy";
             ////CHelpFunc.strDataFolderName = "AreaAggregation-716-VeryEasy";
             ////CHelpFunc.strDataFolderName = "AreaAggregation_Problematic";
@@ -85,7 +79,7 @@ namespace ContinuousGeneralizer
             ////CHelpFunc.strDataFolderName = "AreaAggregation_Simplest_Two";
             ////CHelpFunc.strDataFolderName = "AreaAggregation_Simplest_Three";
             ////CHelpFunc.strDataFolderName = "AreaAggregation-Mostpatches";
-            CHelpFunc.strPath = strWorkPath + "\\AreaAggregation\\" + CHelpFunc.strDataFolderName;
+            //CHelpFunc.strPath = strWorkPath + "\\AreaAggregation\\" + CHelpFunc.strDataFolderName;
 
 
 
@@ -138,6 +132,9 @@ namespace ContinuousGeneralizer
 
         private void FrmContinuousGeneralizer_Shown(object sender, EventArgs e)
         {
+            var frmCurrent = new FrmAreaAgg(_DataRecords);
+            frmCurrent.Show();
+
             //var frmCurrent = new FrmStatisticsOfDataSets(_DataRecords);
             //var frmCurrent = new FrmSelectRandomly(_DataRecords);
             //var frmCurrent = new FrmToIpe(_DataRecords);
@@ -150,7 +147,7 @@ namespace ContinuousGeneralizer
             //var frmCurrent = new FrmCGABM(_DataRecords);
             //var frmCurrent = new FrmExtractPossibleFiles();
 
-            var frmCurrent = new FrmAreaAgg(_DataRecords);
+            //var frmCurrent = new FrmAreaAgg(_DataRecords);
             //CConstants.strRunContinuousGeneralizer = File.ReadLines(
             //    CHelpFunc.strPathCGBackSlash + "RunContinuousGeneralizer\\RunContinuousGeneralizer.txt").First();
             //if (CConstants.strRunContinuousGeneralizer != "")
@@ -184,7 +181,7 @@ namespace ContinuousGeneralizer
 
 
 
-            frmCurrent.Show();
+            //frmCurrent.Show();
 
 
 

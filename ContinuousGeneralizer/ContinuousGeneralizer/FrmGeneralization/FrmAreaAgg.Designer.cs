@@ -91,6 +91,7 @@
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.timerAdd = new System.Windows.Forms.Timer(this.components);
+            this.label10 = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -563,7 +564,7 @@
             this.txtNodes.Name = "txtNodes";
             this.txtNodes.Size = new System.Drawing.Size(77, 20);
             this.txtNodes.TabIndex = 99;
-            this.txtNodes.Text = "2000";
+            this.txtNodes.Text = "200000";
             this.txtNodes.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // btnRunSpecified
@@ -625,7 +626,7 @@
             this.txtTimeLimit.Name = "txtTimeLimit";
             this.txtTimeLimit.Size = new System.Drawing.Size(77, 20);
             this.txtTimeLimit.TabIndex = 102;
-            this.txtTimeLimit.Text = "200";
+            this.txtTimeLimit.Text = "100";
             this.txtTimeLimit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // btnRunILP_Extend
@@ -660,6 +661,7 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.label10);
             this.groupBox5.Controls.Add(this.chkOutput);
             this.groupBox5.Controls.Add(this.label7);
             this.groupBox5.Controls.Add(this.textBox1);
@@ -750,6 +752,15 @@
             // 
             this.timerAdd.Interval = 500;
             this.timerAdd.Tick += new System.EventHandler(this.timerAdd_Tick);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(102, 22);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(83, 13);
+            this.label10.TabIndex = 103;
+            this.label10.Text = "Maximum nodes";
             // 
             // FrmAreaAgg
             // 
@@ -845,5 +856,6 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txtTimeLimit;
         private System.Windows.Forms.Button btnNewEvaluation;
+        private System.Windows.Forms.Label label10;
     }
 }
