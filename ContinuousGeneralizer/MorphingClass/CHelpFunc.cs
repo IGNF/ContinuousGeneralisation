@@ -908,8 +908,6 @@ namespace MorphingClass.CUtility
             // Instantiate a file geodatabase workspace factory and create a new file geodatabase.
             // The Create method returns a workspace name object.
             IWorkspaceFactory workspaceFactory = new FileGDBWorkspaceFactoryClass();
-            //IWorkspaceName workspaceName = workspaceFactory.Create("C:\\temp\\",
-            //  "Sample.gdb", null, 0);
             IWorkspaceName workspaceName = workspaceFactory.Create(strSavePathBackSlash, strName, null, 0);
 
 

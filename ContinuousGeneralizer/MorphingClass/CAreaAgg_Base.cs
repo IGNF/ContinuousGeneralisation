@@ -83,7 +83,7 @@ namespace MorphingClass.CGeneralizationMethods
             if (CConstants.strRunContinuousGeneralizer!="")
             {
                 var lastLine = File.ReadLines(
-               @"C:\MyWork\DailyWork\ContinuousGeneralisation\RunContinuousGeneralizer\CallRecord.txt").Last();
+                    CHelpFunc.strPathCGBackSlash + "RunContinuousGeneralizer\\CallRecord.txt").Last();
                 _intStart = Convert.ToInt32(lastLine);
                 _intEndCount = _intStart + 1;
             }
@@ -294,7 +294,6 @@ namespace MorphingClass.CGeneralizationMethods
             if (CConstants.strRunContinuousGeneralizer != "")
             {
                 using (var writer = new StreamWriter(strPathRCGBackSlash + "DirectoryPath.txt", false))
-                //@"C:\MyWork\DailyWork\ContinuousGeneralisation\RunContinuousGeneralizer\DirectoryPath.txt", false))
                 {
                     //we save this path so that we can delte the folder in RunContinuousGeneralizer
                     writer.WriteLine(CConstants.ParameterInitialize.strSavePath);
@@ -305,7 +304,6 @@ namespace MorphingClass.CGeneralizationMethods
                 var strMemoryMB = string.Format("{0,15}", dblMemoryMB.ToString("0.000"));
 
                 using (var writer = new StreamWriter(strPathRCGBackSlash + "CallRecord.txt", true))
-                //@"C:\MyWork\DailyWork\ContinuousGeneralisation\RunContinuousGeneralizer\CallRecord.txt", true))
                 {
                     writer.WriteLine(strMemoryMB);
                 }

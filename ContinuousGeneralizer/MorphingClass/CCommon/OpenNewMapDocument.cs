@@ -133,12 +133,6 @@ namespace MorphingClass.CCommon
                 m_controlsSynchronizer.ReplaceMap(map);
                 mapDoc.Close();
             }
-
-
-            //"C:\\Study\\Data\\Morphing Data\\Administrative Boundary\\Hunan\\Hunan.mxd"
-
-
-
         }
 
         /// <summary>

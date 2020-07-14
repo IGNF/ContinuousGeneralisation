@@ -53,12 +53,10 @@ namespace ContinuousGeneralizer
             CHelpFunc.strPathCGBackSlash = System.IO.Path.GetFullPath(@"..\..\..\..\"); //the path to folder ContinuousGeneralisation
             string strWorkPath = CHelpFunc.strPathCGBackSlash + "ContinuousGeneralisation_Data";
 
-            //string strWorkPath = "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\";
             //CHelpFunc.strDataFolderName = "Jiangxi";
             //CHelpFunc.strDataFolderName = "CompatibleTriangulationTestVerySimple";
             //CHelpFunc.strDataFolderName = "JiangxiOneCounty";
             //CHelpFunc.strDataFolderName = "rail梅集线Test";
-            //CHelpFunc.strPath = "C:\\Study\\Data\\Morphing Data\\Rail Data\\" 
             //+ CHelpFunc.strDataFolderName;
 
             //CHelpFunc.strDataFolderName = "MainlandChina";
@@ -77,7 +75,7 @@ namespace ContinuousGeneralizer
             //CHelpFunc.strDataFolderName = "CompatibleTriangulation3";
 
 
-            //CHelpFunc.strDataFolderName = "AreaAggregation";
+            CHelpFunc.strDataFolderName = "AreaAggregation";
             ////CHelpFunc.strDataFolderName = "AreaAggregation-664-easy";
             ////CHelpFunc.strDataFolderName = "AreaAggregation-716-VeryEasy";
             ////CHelpFunc.strDataFolderName = "AreaAggregation_Problematic";
@@ -87,7 +85,7 @@ namespace ContinuousGeneralizer
             ////CHelpFunc.strDataFolderName = "AreaAggregation_Simplest_Two";
             ////CHelpFunc.strDataFolderName = "AreaAggregation_Simplest_Three";
             ////CHelpFunc.strDataFolderName = "AreaAggregation-Mostpatches";
-            //CHelpFunc.strPath = strWorkPath + "\\AreaAggregation\\" + CHelpFunc.strDataFolderName;
+            CHelpFunc.strPath = strWorkPath + "\\AreaAggregation\\" + CHelpFunc.strDataFolderName;
 
 
 
@@ -96,8 +94,8 @@ namespace ContinuousGeneralizer
             //CHelpFunc.strDataFolderName = "top10nl_9x9";
             //CHelpFunc.strPath = strWorkPath + "\\top10nl_9x9_datasets\\" + CHelpFunc.strDataFolderName;
 
-            CHelpFunc.strDataFolderName = "top10nl_9x9_konrad";
-            CHelpFunc.strPath = strWorkPath + "\\top10nl_9x9_datasets\\" + CHelpFunc.strDataFolderName;
+            //CHelpFunc.strDataFolderName = "top10nl_9x9_konrad";
+            //CHelpFunc.strPath = strWorkPath + "\\top10nl_9x9_datasets\\" + CHelpFunc.strDataFolderName;
 
 
 
@@ -135,14 +133,6 @@ namespace ContinuousGeneralizer
             //CHelpFunc.strDataFolderName = "France_TwoSquares_Overlap";
             //CHelpFunc.strPath = strWorkPath + "\\BuildingGrowing\\" + CHelpFunc.strDataFolderName;
 
-            //CHelpFunc.strDataFolderName = "An Approximate Morphing between Polylines";
-            //CHelpFunc.strPath = 
-            //    "C:\\MyWork\\DailyWork\\ContinuousGeneralisation\\ContinuousGeneralisation_Data\\" + _strDataFolderName;
-
-            //        private static string _strDataFolderName = "bayern20171011";
-
-            //        CHelpFunc.strPath =
-            //"C:\\MyWork\\Study_Archive\\Data\\PointData\\PointData\\" + _strDataFolderName;
         }
 
 
@@ -284,7 +274,7 @@ namespace ContinuousGeneralizer
             m_controlsSynchronizer.AddFrameworkControl(axToolbarControl.Object);
             m_controlsSynchronizer.AddFrameworkControl(this.axTOCControl.Object);
             // 添加打开命令按钮到工具条
-            MorphingClass.CCommon.OpenNewMapDocument openMapDoc = new MorphingClass.CCommon.OpenNewMapDocument(m_controlsSynchronizer);
+            var openMapDoc = new MorphingClass.CCommon.OpenNewMapDocument(m_controlsSynchronizer);
             axToolbarControl.AddItem(openMapDoc, -1, 0, false, -1, esriCommandStyles.esriCommandStyleIconOnly);
 
 
